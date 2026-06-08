@@ -537,13 +537,11 @@ func initializedNetwork(accountId: AccountRecordId, arguments: NetworkInitializa
             // help.getConfig round-trip.
             if testingEnvironment {
                 seedAddressList = [
-                    1: ["144.31.238.115"],
-                    2: ["144.31.221.5"]
+                    1: ["5.129.243.207"]
                 ]
             } else {
                 seedAddressList = [
-                    1: ["144.31.238.115"],
-                    2: ["144.31.221.5"]
+                    1: ["5.129.243.207"]
                 ]
             }
             
