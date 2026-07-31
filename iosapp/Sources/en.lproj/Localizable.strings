@@ -7225,7 +7225,7 @@ Sorry for the inconvenience.";
 
 "AuthSessions.HeaderInfo" = "Link [BeHappy Desktop](desktop) or [BeHappy Web](web) by scanning a QR code.";
 "AuthSessions.LinkDesktopDevice" = "Link Desktop Device";
-"AuthSessions.AddDevice.ScanInstallInfo" = "Go to [desktop.behappy.rest](desktop) or [web.behappy.rest](web) to get the QR code";
+"AuthSessions.AddDevice.ScanInstallInfo" = "Go to [desktop.ansible.su](desktop) or [web.ansible.su](web) to get the QR code";
 
 "Channel.AdminLog.MessageSent" = "%@ sent message:";
 

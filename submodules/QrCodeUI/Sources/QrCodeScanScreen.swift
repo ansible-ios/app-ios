@@ -616,9 +616,9 @@ private final class QrCodeScanScreenNode: ViewControllerTracingNode, ASScrollVie
                                 if let url = attributes[NSAttributedString.Key(rawValue: IosappTextAttributes.URL)] as? String {
                                     switch url {
                                     case "desktop":
-                                        self.context.sharedContext.openExternalUrl(context: self.context, urlContext: .generic, url: "https://behappy.rest", forceExternal: true, presentationData: self.context.sharedContext.currentPresentationData.with { $0 }, navigationController: nil, dismissInput: {})
+                                        self.context.sharedContext.openExternalUrl(context: self.context, urlContext: .generic, url: "https://ansible.su", forceExternal: true, presentationData: self.context.sharedContext.currentPresentationData.with { $0 }, navigationController: nil, dismissInput: {})
                                     case "web":
-                                        self.context.sharedContext.openExternalUrl(context: self.context, urlContext: .generic, url: "https://behappy.rest", forceExternal: true, presentationData: self.context.sharedContext.currentPresentationData.with { $0 }, navigationController: nil, dismissInput: {})
+                                        self.context.sharedContext.openExternalUrl(context: self.context, urlContext: .generic, url: "https://ansible.su", forceExternal: true, presentationData: self.context.sharedContext.currentPresentationData.with { $0 }, navigationController: nil, dismissInput: {})
                                     default:
                                         break
                                     }

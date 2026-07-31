@@ -1,6 +1,6 @@
 # BeHappy for iOS
 
-iOS client for the [BeHappy](https://behappy.rest) messaging service.
+iOS client for the [BeHappy](https://ansible.su) messaging service.
 
 > **This project is a fork of [Telegram for iOS](https://github.com/TelegramMessenger/Telegram-iOS).**
 > We are grateful to the Telegram-iOS contributors for their work —
@@ -55,7 +55,7 @@ comply as follows:
 | | Telegram for iOS | BeHappy for iOS |
 |---|---|---|
 | Upstream LICENSE file | Not present | (See NOTICE — fork author license: GPL v2+) |
-| Backend | Telegram DCs | BeHappy servers (`mvsy.behappy.rest`) |
+| Backend | Telegram DCs | BeHappy servers (`mvsy.ansible.su`) |
 | Protocol | MTProto 2.0 | MVSy 1.0 |
 | Trademarks | Telegram | BeHappy |
 | Account compatibility | Telegram accounts | BeHappy accounts (separate system) |
@@ -99,6 +99,6 @@ trademark of this product.
 
 ## Contact
 
-- General: <https://behappy.rest>
+- General: <https://ansible.su>
 - Source code questions: open an issue on this repository
-- License compliance / DMCA: <legal@behappy.rest>
+- License compliance / DMCA: <legal@ansible.su>
