@@ -563,7 +563,10 @@ private final class QrCodeScanScreenNode: ViewControllerTracingNode, ASScrollVie
             let filteredCodes: [CameraCode]
             switch strongSelf.subject {
                 case .authTransfer:
-                    filteredCodes = codes.filter { $0.message.hasPrefix("tg://") }
+                    // Keep this in sync with the scheme check in the .authTransfer
+                    // handler above: we emit bh://login?token=, but still accept
+                    // tg:// so codes from older builds keep working.
+                    filteredCodes = codes.filter { $0.message.hasPrefix("bh://") || $0.message.hasPrefix("tg://") }
                 case .peer:
                     filteredCodes = codes.filter { $0.message.hasPrefix("https://t.me/") || $0.message.hasPrefix("t.me/") }
                 case .cryptoAddress:
