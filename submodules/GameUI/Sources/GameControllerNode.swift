@@ -43,11 +43,11 @@ final class GameControllerNode: ViewControllerTracingNode {
         
         self.backgroundColor = .white
         
-        let js = "var IosappWebviewProxyProto = function() {}; " +
-            "IosappWebviewProxyProto.prototype.postEvent = function(eventName, eventData) { " +
+        let js = "var TelegramWebviewProxyProto = function() {}; " +
+            "TelegramWebviewProxyProto.prototype.postEvent = function(eventName, eventData) { " +
             "window.webkit.messageHandlers.performAction.postMessage({'eventName': eventName, 'eventData': eventData}); " +
             "}; " +
-        "var IosappWebviewProxy = new IosappWebviewProxyProto();"
+        "var TelegramWebviewProxy = new TelegramWebviewProxyProto();"
         
         let configuration = WKWebViewConfiguration()
         let userController = WKUserContentController()

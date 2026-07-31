@@ -154,7 +154,7 @@ final class WebView: WKWebView {
     }
     
     func sendEvent(name: String, data: String?) {
-        let script = "window.Telegram.IosappGameProxy && window.Telegram.IosappGameProxy.receiveEvent && window.Telegram.IosappGameProxy.receiveEvent(\"\(name)\", \(data ?? "null"))"
+        let script = "window.Telegram.TelegramGameProxy && window.Telegram.TelegramGameProxy.receiveEvent && window.Telegram.TelegramGameProxy.receiveEvent(\"\(name)\", \(data ?? "null"))"
         self.evaluateJavaScript(script, completionHandler: { _, _ in
         })
     }
@@ -1996,7 +1996,7 @@ let setupTouchObservers =
 
     document.addEventListener('touchmove', function(event) {
         if (checkForCssChanges(touchedElement)) {
-            IosappWebviewProxy.postEvent("cancellingTouch", {})
+            TelegramWebviewProxy.postEvent("cancellingTouch", {})
             console.log('CSS properties changed during touchmove');
         }
     }, { passive: true });
@@ -2008,11 +2008,11 @@ let setupTouchObservers =
 })();
 """
 
-private let eventProxySource = "var IosappWebviewProxyProto = function() {}; " +
-    "IosappWebviewProxyProto.prototype.postEvent = function(eventName, eventData) { " +
+private let eventProxySource = "var TelegramWebviewProxyProto = function() {}; " +
+    "TelegramWebviewProxyProto.prototype.postEvent = function(eventName, eventData) { " +
     "window.webkit.messageHandlers.performAction.postMessage({'eventName': eventName, 'eventData': eventData}); " +
     "}; " +
-"var IosappWebviewProxy = new IosappWebviewProxyProto();"
+"var TelegramWebviewProxy = new TelegramWebviewProxyProto();"
 
 @available(iOS 16.0, *)
 final class BrowserSearchOptions: UITextSearchOptions {

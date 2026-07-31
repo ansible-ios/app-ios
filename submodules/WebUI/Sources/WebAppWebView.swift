@@ -36,11 +36,11 @@ private class WebViewTouchGestureRecognizer: UITapGestureRecognizer {
     }
 }
 
-private let eventProxySource = "var IosappWebviewProxyProto = function() {}; " +
-    "IosappWebviewProxyProto.prototype.postEvent = function(eventName, eventData) { " +
+private let eventProxySource = "var TelegramWebviewProxyProto = function() {}; " +
+    "TelegramWebviewProxyProto.prototype.postEvent = function(eventName, eventData) { " +
     "window.webkit.messageHandlers.performAction.postMessage({'eventName': eventName, 'eventData': eventData}); " +
     "}; " +
-"var IosappWebviewProxy = new IosappWebviewProxyProto();"
+"var TelegramWebviewProxy = new TelegramWebviewProxyProto();"
 
 private let selectionSource = "var css = '*{-webkit-touch-callout:none;} :not(input):not(textarea):not([\"contenteditable\"=\"true\"]){-webkit-user-select:none;}';"
         + " var head = document.head || document.getElementsByTagName('head')[0];"
@@ -223,7 +223,7 @@ final class WebAppWebView: WKWebView {
     }
     
     func sendEvent(name: String, data: String?) {
-        let script = "window.IosappGameProxy && window.IosappGameProxy.receiveEvent && window.IosappGameProxy.receiveEvent(\"\(name)\", \(data ?? "null"))"
+        let script = "window.TelegramGameProxy && window.TelegramGameProxy.receiveEvent && window.TelegramGameProxy.receiveEvent(\"\(name)\", \(data ?? "null"))"
         self.evaluateJavaScript(script, completionHandler: { _, _ in
         })
     }
