@@ -48,22 +48,31 @@ static NSArray<MTDatacenterAuthPublicKey *> *defaultPublicKeys(bool isProduction
     static NSArray<MTDatacenterAuthPublicKey *> *productionPublicKeys = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        // BeHappy backend RSA public key — same key used by app-desktop
-        // (see behappy-desktop/app-desktop Telegram/SourceFiles/mtproto/mtproto_dc_options.cpp
-        // kTestPublicRSAKeys / kPublicRSAKeys). Expected fingerprint: 7435f2b6146814f.
-        NSString *behappyPublicKey = @"-----BEGIN RSA PUBLIC KEY-----\n"
-             "MIIBCgKCAQEAw3MeemxP1t46Jj1mJg/goMRYh86TbFvXVwjmPtUcE5IOXb1Ib72L\n"
-             "wuujV5j7fLK6Mr7aLuOaVODfKIbViKz56BPnE9b8C1B4yuDpvZKTFngl6Elngp1w\n"
-             "eOar/DuNNNx7PasN9DjBU3zlBJyvT2j/Nbpwe5AhafBYS52qgE8VBcaCqMQ5QufP\n"
-             "9ARtHMMay4jwB9BIocVDwY/JiFn2PGWCn4L+J5abO3f5w9ec/9CkRJOHOZ6pJx/l\n"
-             "sE0JyeLO9CT+xRvhiN6AH+++mvdv5oJgIXDACDMncr47YklNhZCGpUhba7/1AP4N\n"
-             "vi0QtjnTL5xGKWtcHh8BvetE2XHy3mOKhQIDAQAB\n"
+        // Ansible backend RSA public key — same key used by app-desktop
+        // (see ansible-desktop/app-desktop Telegram/SourceFiles/mtproto/mtproto_dc_options.cpp
+        // kTestPublicRSAKeys / kPublicRSAKeys) and by adlib td.
+        // Expected fingerprint: ddcf36f8466e4286.
+        //
+        // Must stay a single key. The server announces TWO fingerprints in
+        // resPQ (07435f2b6146814f legacy + ddcf36f8466e4286) but holds only
+        // ONE private key — the one below. selectPublicKey() iterates the
+        // server list in the outer loop, so shipping the retired key
+        // alongside this one makes it win the match again; the server then
+        // fails to decrypt p_q_inner_data and silently drops the connection
+        // instead of answering req_DH_params.
+        NSString *ansiblePublicKey = @"-----BEGIN RSA PUBLIC KEY-----\n"
+             "MIIBCgKCAQEAvqCL9IFBWxiDU3dFAdFv4vP50Wzv2eXNgH8d7j/ZdzZIMMGbdNgq\n"
+             "+jKXStI6yrnkx6IGq1z9ymGmErbocJ5RLwUh+VqJhKZ683hVsHhPka2/s7So/YRV\n"
+             "NbMjJj4L15CSFdGNPsQNpFCQrGfI71eGh8q2lNuW2cbe+AafWFhqtmfKglJJdwiM\n"
+             "sl+5/FAN2Ks0s5CWNhRNsZmo00eLb4cBxOIh4LVxjlrXgiBQ+b0OKIymqa9/0Hvv\n"
+             "veTrPO6qPkNcMjumx79l3AZtasg821gBHafzTh+acLYJyqtEAlCtAQGYGhcl7wSo\n"
+             "VJyRJX7reja7fCNc4jpAs79VAF8TNCAWSwIDAQAB\n"
              "-----END RSA PUBLIC KEY-----";
         testingPublicKeys = @[
-            [[MTDatacenterAuthPublicKey alloc] initWithPublicKey:behappyPublicKey]
+            [[MTDatacenterAuthPublicKey alloc] initWithPublicKey:ansiblePublicKey]
         ];
         productionPublicKeys = @[
-            [[MTDatacenterAuthPublicKey alloc] initWithPublicKey:behappyPublicKey]
+            [[MTDatacenterAuthPublicKey alloc] initWithPublicKey:ansiblePublicKey]
         ];
     });
     if (isProduction) {
