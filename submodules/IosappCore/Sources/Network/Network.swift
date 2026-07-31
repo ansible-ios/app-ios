@@ -528,13 +528,19 @@ func initializedNetwork(accountId: AccountRecordId, arguments: NetworkInitializa
             
             let seedAddressList: [Int: [String]]
             
-            // BeHappy multi-DC seed list. Kept in sync with the `dcs` PG
-            // table on srv1 and the server's help.getConfig response.
-            // DC1 = srv1 (St. Petersburg), DC2 = srv3-dev (Moscow test env,
-            // 2026-04-16). Clients learn the full vector dynamically via
-            // dcOptions but need the seed to honour FILE_MIGRATE_2 /
-            // PHONE_MIGRATE_2 redirects and to reach DC2 before any
-            // help.getConfig round-trip.
+            // Ansible bootstrap seed — single DC. DC1 = prod-spb
+            // (ws.ansible.su -> 45.93.201.204, migrated 2026-07-12); the
+            // old dev LB 5.129.243.207 and the 144.31.* hosts before it are
+            // decommissioned. Keep in sync with the `dcs` PG table, with the
+            // server's help.getConfig response, and with app-desktop
+            // Telegram/SourceFiles/mtproto/mtproto_dc_options.cpp.
+            //
+            // There is no fallback behind this: the apv3.stel.com DoH
+            // bootstrap is disabled below, so a stale address here means the
+            // client has nowhere to connect. Clients pick up any additional
+            // DCs dynamically via dcOptions. Never mix addresses from two
+            // different deployments in one seed set — they have separate
+            // auth-key state and you get AUTH_KEY_UNREGISTERED.
             if testingEnvironment {
                 seedAddressList = [
                     1: ["45.93.201.204"]
