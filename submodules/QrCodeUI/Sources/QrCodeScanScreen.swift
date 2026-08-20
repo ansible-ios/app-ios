@@ -568,7 +568,7 @@ private final class QrCodeScanScreenNode: ViewControllerTracingNode, ASScrollVie
                     // tg:// so codes from older builds keep working.
                     filteredCodes = codes.filter { $0.message.hasPrefix("bh://") || $0.message.hasPrefix("tg://") }
                 case .peer:
-                    filteredCodes = codes.filter { $0.message.hasPrefix("https://t.me/") || $0.message.hasPrefix("t.me/") }
+                    filteredCodes = codes.filter { $0.message.hasPrefix("https://asme.su/") || $0.message.hasPrefix("asme.su/") }
                 case .cryptoAddress:
                     filteredCodes = codes.filter { $0.message.hasPrefix("ton://") }
                 case .custom:

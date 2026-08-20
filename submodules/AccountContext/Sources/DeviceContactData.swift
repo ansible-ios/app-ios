@@ -204,7 +204,10 @@ public final class DeviceContactInstantMessagingProfileData: Equatable, Hashable
 }
 
 public let phonebookUsernamePathPrefix = "@id"
-private let phonebookUsernamePrefix = "https://t.me/" + phonebookUsernamePathPrefix
+private let phonebookUsernamePrefix = "https://asme.su/" + phonebookUsernamePathPrefix
+// Read-only: app-profile entries written into the device address book by
+// builds from before the asme.su deep-link switch. Never used for writing.
+private let legacyPhonebookUsernamePrefixes = ["https://t.me/" + phonebookUsernamePathPrefix]
 
 public extension DeviceContactUrlData {
     convenience init(appProfile: EnginePeer.Id) {
@@ -213,10 +216,10 @@ public extension DeviceContactUrlData {
 }
 
 public func parseAppSpecificContactReference(_ value: String) -> EnginePeer.Id? {
-    if !value.hasPrefix(phonebookUsernamePrefix) {
+    guard let prefix = ([phonebookUsernamePrefix] + legacyPhonebookUsernamePrefixes).first(where: { value.hasPrefix($0) }) else {
         return nil
     }
-    let idString = String(value[value.index(value.startIndex, offsetBy: phonebookUsernamePrefix.count)...])
+    let idString = String(value[value.index(value.startIndex, offsetBy: prefix.count)...])
     if let id = Int64(idString) {
         return EnginePeer.Id(namespace: Namespaces.Peer.CloudUser, id: EnginePeer.Id.Id._internalFromInt64Value(id))
     }

@@ -553,7 +553,7 @@ func infoItems(data: PeerInfoScreenData?, context: AccountContext, presentationD
                 threadId = message.threadId
             }
             
-            let linkText = "https://t.me/\(mainUsername)/\(threadId)"
+            let linkText = "https://asme.su/\(mainUsername)/\(threadId)"
             
             items[currentPeerInfoSection]!.append(
                 PeerInfoScreenLabeledValueItem(
@@ -611,7 +611,7 @@ func infoItems(data: PeerInfoScreenData?, context: AccountContext, presentationD
                     PeerInfoScreenLabeledValueItem(
                         id: ItemUsername,
                         label: presentationData.strings.Channel_LinkItem,
-                        text: "https://t.me/\(mainUsername)",
+                        text: "https://asme.su/\(mainUsername)",
                         additionalText: additionalUsernames,
                         textColor: .accent,
                         icon: .qrCode,

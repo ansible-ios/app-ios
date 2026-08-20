@@ -214,7 +214,7 @@ extension PeerInfoScreenNode {
         if value.hasPrefix("https://") {
             url = value
         } else {
-            url = "https://t.me/\(value)"
+            url = "https://asme.su/\(value)"
         }
         
         let openShare: (IosappCollectibleItemInfo?) -> Void = { [weak self] collectibleItemInfo in

@@ -28,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Changed
 - Default DC list points to BeHappy servers.
+- Deep links use `asme.su` (server `me_url_prefix`); upstream `t.me` / `telegram.me` / `telegram.dog` / `telesco.pe` are no longer treated as internal hosts.
 - App bundle identifier renamed.
 - Help and support links point to BeHappy resources.
 

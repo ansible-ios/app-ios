@@ -5116,7 +5116,7 @@ public final class ChatControllerImpl: IosappBaseController, ChatController, Gal
             guard let self else {
                 return
             }
-            self.openUrl("https://t.me/nft/\(slug)", concealed: false)
+            self.openUrl("https://asme.su/nft/\(slug)", concealed: false)
         }, openMessageFeeException: { [weak self] in
             guard let self, let peer = self.presentationInterfaceState.renderedPeer?.peer.flatMap(EnginePeer.init) else {
                 return

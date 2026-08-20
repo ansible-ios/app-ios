@@ -124,14 +124,14 @@ extension PeerInfoScreenNode {
                 content = .linkCopied(title: nil, text: self.presentationData.strings.Conversation_LinkCopied)
             } else if let addressName = peer.addressName {
                 if peer is IosappChannel {
-                    text = "https://t.me/\(addressName)"
+                    text = "https://asme.su/\(addressName)"
                     content = .linkCopied(title: nil, text: self.presentationData.strings.Conversation_LinkCopied)
                 } else {
                     text = "@" + addressName
                     content = .copy(text: self.presentationData.strings.Conversation_UsernameCopied)
                 }
             } else {
-                text = "https://t.me/@id\(peer.id.id._internalGetInt64Value())"
+                text = "https://asme.su/@id\(peer.id.id._internalGetInt64Value())"
                 content = .linkCopied(title: nil, text: self.presentationData.strings.Conversation_LinkCopied)
             }
         

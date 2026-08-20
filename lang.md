@@ -1280,7 +1280,7 @@
 | `DialogList.SearchSectionChats` | Chats | |
 | `DialogList.SearchSectionGlobal` | Global Search | |
 | `DialogList.SearchSectionMessages` | Messages | |
-| `Username.LinkHint` | This link opens a chat with you in Telegram:[\nhttps://t.me/%@] | |
+| `Username.LinkHint` | This link opens a chat with you in Telegram:[\nhttps://asme.su/%@] | |
 | `Username.LinkCopied` | Copied link to clipboard | |
 | `SharedMedia.DeleteItemsConfirmation_1` | Delete media file? | |
 | `SharedMedia.DeleteItemsConfirmation_2` | Delete 2 media files? | |
@@ -1582,7 +1582,7 @@
 | `Channel.Edit.LinkItem` | Link | |
 | `Channel.Username.Title` | Link | |
 | `Channel.Username.Help` | You can choose a channel name on **Telegram**. If you do, other people will be able to find your channel by this name.\n\nYou can use **a-z**, **0-9** and underscores. Minimum length is **5** chara... | |
-| `Channel.Username.LinkHint` | This link opens your channel in Telegram:[\nhttps://t.me/%@] | |
+| `Channel.Username.LinkHint` | This link opens your channel in Telegram:[\nhttps://asme.su/%@] | |
 | `Channel.Username.InvalidTooShort` | Channel names must have at least 5 characters. | |
 | `Channel.Username.InvalidStartsWithNumber` | Channel names can't start with a number. | |
 | `Channel.Username.InvalidCharacters` | Sorry, this name is invalid. | |
@@ -3489,7 +3489,7 @@
 | `EmptyGroupInfo.Subtitle` | Groups can have: | |
 | `EmptyGroupInfo.Line1` | Up to %@ members | |
 | `EmptyGroupInfo.Line2` | Persistent chat history | |
-| `EmptyGroupInfo.Line3` | Public links such as t.me/title | |
+| `EmptyGroupInfo.Line3` | Public links such as asme.su/title | |
 | `EmptyGroupInfo.Line4` | Admins with different rights | |
 | `WallpaperPreview.Title` | Background Preview | |
 | `WallpaperPreview.PreviewTopText` | Press Set to apply the background | |
@@ -6136,7 +6136,7 @@
 | `Attachment.DeselectedVideos_any` | %@ videos deselected | |
 | `Attachment.DeselectedItems_1` | %@ item deselected | |
 | `Attachment.DeselectedItems_any` | %@ items deselected | |
-| `PrivacyPhoneNumberSettings.CustomPublicLink` | Users who have your number saved in their contacts will also see it on Telegram.\n\nThis public link opens a chat with you:\n[https://t.me/%@]() | |
+| `PrivacyPhoneNumberSettings.CustomPublicLink` | Users who have your number saved in their contacts will also see it on Telegram.\n\nThis public link opens a chat with you:\n[https://asme.su/%@]() | |
 | `DownloadList.DownloadingHeader` | Downloading | |
 | `DownloadList.DownloadedHeader` | Recently Downloaded | |
 | `DownloadList.PauseAll` | Pause All | |
@@ -6395,7 +6395,7 @@
 | `Premium.Limits.Accounts` | Connected Accounts | |
 | `Premium.Limits.GroupsAndChannelsInfo` | Join up to 1000 channels and large groups | |
 | `Premium.Limits.PinnedChatsInfo` | Pin up to 10 chats in your main chat list | |
-| `Premium.Limits.PublicLinksInfo` | Reserve up to 20 [t.me/name]() links | |
+| `Premium.Limits.PublicLinksInfo` | Reserve up to 20 [asme.su/name]() links | |
 | `Premium.Limits.SavedGifsInfo` | Save up to 400 GIFs in your Favorite GIFs | |
 | `Premium.Limits.FavedStickersInfo` | Save up to 10 stickers in your Favorite stickers | |
 | `Premium.Limits.BioInfo` | Add more symbols and use links in your bio | |
@@ -9450,9 +9450,9 @@
 | `Business.Links.Text` | Give your customers short links that start a chat with you — and suggest the first message from them to you. | |
 | `Business.Links.CreateAction` | Create a Link to Chat | |
 | `Business.Links.LinksSectionHeader` | LINKS TO CHAT | |
-| `Business.Links.SimpleLinkInfoUsernamePhone` | You can also use a simple link for a chat with you — [t.me/%1$@](username) or [t.me/\\u{2060}+\\u{2060}%2$@](phone). | |
-| `Business.Links.SimpleLinkInfoUsername` | You can also use a simple link for a chat with you — [t.me/%@](username). | |
-| `Business.Links.SimpleLinkInfoPhone` | You can also use a simple link for a chat with you — [t.me/\\u{2060}+\\u{2060}%@](phone). | |
+| `Business.Links.SimpleLinkInfoUsernamePhone` | You can also use a simple link for a chat with you — [asme.su/%1$@](username) or [asme.su/\\u{2060}+\\u{2060}%2$@](phone). | |
+| `Business.Links.SimpleLinkInfoUsername` | You can also use a simple link for a chat with you — [asme.su/%@](username). | |
+| `Business.Links.SimpleLinkInfoPhone` | You can also use a simple link for a chat with you — [asme.su/\\u{2060}+\\u{2060}%@](phone). | |
 | `Business.Links.LinkNameTitle` | Link Name | |
 | `Business.Links.LinkNameText` | Add a name for this link that only you will see. | |
 | `Business.Links.LinkNameInputPlaceholder` | Name this link... | |
@@ -12379,7 +12379,7 @@
 | `CocoonInfo.Efficient.Text` | Cocoon has allowed Telegram to reduce translation costs by 6x. | |
 | `CocoonInfo.ForEveryone.Title` | For Everyone | |
 | `CocoonInfo.ForEveryone.Text` | Any developer can use Cocoon for AI features. Learn more at [@cocoon](telegram) or [cocoon.org](web). | |
-| `CocoonInfo.IntergrateInfo` | Want to integrate Cocoon into your projects?\nReach out at [t.me/cocoon?direct]() | |
+| `CocoonInfo.IntergrateInfo` | Want to integrate Cocoon into your projects?\nReach out at [asme.su/cocoon?direct]() | |
 | `CocoonInfo.Understood` | Understood | |
 | `Conversation.Translation.CocoonInfo` | Translations are powered by\n**#Cocoon**. [How does it work?]() | |
 | `Conversation.EmojiStake.Won` | %1$@ won %2$@ | |

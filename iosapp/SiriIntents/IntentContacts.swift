@@ -26,13 +26,15 @@ enum IntentContactsError {
 }
 
 private let phonebookUsernamePathPrefix = "@id"
-private let phonebookUsernamePrefix = "https://t.me/" + phonebookUsernamePathPrefix
+private let phonebookUsernamePrefix = "https://asme.su/" + phonebookUsernamePathPrefix
+// Read-only: entries written by builds from before the asme.su deep-link switch.
+private let legacyPhonebookUsernamePrefixes = ["https://t.me/" + phonebookUsernamePathPrefix]
 
 private func parseAppSpecificContactReference(_ value: String) -> PeerId? {
-    if !value.hasPrefix(phonebookUsernamePrefix) {
+    guard let prefix = ([phonebookUsernamePrefix] + legacyPhonebookUsernamePrefixes).first(where: { value.hasPrefix($0) }) else {
         return nil
     }
-    let idString = String(value[value.index(value.startIndex, offsetBy: phonebookUsernamePrefix.count)...])
+    let idString = String(value[value.index(value.startIndex, offsetBy: prefix.count)...])
     if let id = Int64(idString) {
         return PeerId(namespace: Namespaces.Peer.CloudUser, id: PeerId.Id._internalFromInt64Value(id))
     }

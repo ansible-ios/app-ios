@@ -1214,7 +1214,7 @@
 "DialogList.SearchSectionGlobal" = "Глобальный поиск";
 "DialogList.SearchSectionMessages" = "Сообщения";
 
-"Username.LinkHint" = "По этой ссылке откроется диалог с Вами в Telegram:[\nhttps://t.me/%@]";
+"Username.LinkHint" = "По этой ссылке откроется диалог с Вами в Telegram:[\nhttps://asme.su/%@]";
 "Username.LinkCopied" = "Ссылка скопирована.";
 
 "SharedMedia.DeleteItemsConfirmation_1" = "Удалить %@ файл?";
@@ -1601,7 +1601,7 @@
 
 "Channel.Username.Title" = "Ссылка";
 "Channel.Username.Help" = "Вы можете выбрать публичную ссылку для Вашего канала, в этом случае пользователи смогут найти канал через поиск.\n\nСсылка может содержать только **a-z**, **0-9** и _. Минимальная длина — **5** символов.";
-"Channel.Username.LinkHint" = "Эта ссылка откроет Ваш канал в Telegram:[\nhttps://t.me/%@]";
+"Channel.Username.LinkHint" = "Эта ссылка откроет Ваш канал в Telegram:[\nhttps://asme.su/%@]";
 "Channel.Username.InvalidTooShort" = "Публичная ссылка не может быть короче 5 символов.";
 "Channel.Username.InvalidStartsWithNumber" = "Публичные ссылки не могут начинаться с цифр.";
 "Channel.Username.InvalidCharacters" = "Некорректное имя.";
@@ -4050,7 +4050,7 @@ Unused sets are archived when you add more.";
 "EmptyGroupInfo.Subtitle" = "Возможности групп:";
 "EmptyGroupInfo.Line1" = "До 200,000 участников";
 "EmptyGroupInfo.Line2" = "Общая история переписки";
-"EmptyGroupInfo.Line3" = "Публичные ссылки вида t.me/title";
+"EmptyGroupInfo.Line3" = "Публичные ссылки вида asme.su/title";
 "EmptyGroupInfo.Line4" = "Разный уровень прав";
 
 "WallpaperPreview.Title" = "Предпросмотр обоев";
@@ -7426,7 +7426,7 @@ Sorry for the inconvenience.";
 "Attachment.DeselectedItems_1" = "Отменен выбор %@ элемента.";
 "Attachment.DeselectedItems_any" = "Отменен выбор %@ элемента.";
 
-"PrivacyPhoneNumberSettings.CustomPublicLink" = "Пользователи, которые сохранили Ваш номер в телефонную книгу, будут видеть его и в Telegram.\n\nПубличная ссылка на чат с Вами:\n[https://t.me/%@]()";
+"PrivacyPhoneNumberSettings.CustomPublicLink" = "Пользователи, которые сохранили Ваш номер в телефонную книгу, будут видеть его и в Telegram.\n\nПубличная ссылка на чат с Вами:\n[https://asme.su/%@]()";
 
 "DownloadList.DownloadingHeader" = "Идёт загрузка";
 "DownloadList.DownloadedHeader" = "Недавние загрузки";
@@ -7781,7 +7781,7 @@ Sorry for the inconvenience.";
 
 "Premium.Limits.GroupsAndChannelsInfo" = "До 1000 каналов и больших групп";
 "Premium.Limits.PinnedChatsInfo" = "Закрепление до 10 чатов в основном списке";
-"Premium.Limits.PublicLinksInfo" = "Использование до 20 ссылок вида [t.me/username]()";
+"Premium.Limits.PublicLinksInfo" = "Использование до 20 ссылок вида [asme.su/username]()";
 "Premium.Limits.SavedGifsInfo" = "Сохранение в избранных до 400 GIF";
 "Premium.Limits.FavedStickersInfo" = "Сохранение в избранных до 10 стикеров";
 "Premium.Limits.BioInfo" = "Больше знаков и использование любых ссылок";
@@ -11860,9 +11860,9 @@ Sorry for the inconvenience.";
 "Business.Links.CreateAction" = "Создать ссылку на чат";
 "Business.Links.LinksSectionHeader" = "ССЫЛКИ НА ЧАТ";
 
-"Business.Links.SimpleLinkInfoUsernamePhone" = "Также можно использовать обычную ссылку на чат с Вами: [t.me/%1$@](username) или [t.me/⁠+⁠%2$@](phone).";
-"Business.Links.SimpleLinkInfoUsername" = "Также можно использовать обычную ссылку на чат с Вами — [t.me/%@](username).";
-"Business.Links.SimpleLinkInfoPhone" = "Также можно использовать обычную ссылку на чат с Вами — [t.me/⁠+⁠%@](phone).";
+"Business.Links.SimpleLinkInfoUsernamePhone" = "Также можно использовать обычную ссылку на чат с Вами: [asme.su/%1$@](username) или [asme.su/⁠+⁠%2$@](phone).";
+"Business.Links.SimpleLinkInfoUsername" = "Также можно использовать обычную ссылку на чат с Вами — [asme.su/%@](username).";
+"Business.Links.SimpleLinkInfoPhone" = "Также можно использовать обычную ссылку на чат с Вами — [asme.su/⁠+⁠%@](phone).";
 
 "Business.Links.LinkNameTitle" = "Название ссылки";
 "Business.Links.LinkNameText" = "Ссылке можно дать название. Его будете видеть только Вы.";
@@ -15643,7 +15643,7 @@ Error: %8$@";
 "CocoonInfo.Efficient.Text" = "Благодаря Cocoon стоимость встроенного перевода в Telegram снизилась в 6 раз.";
 "CocoonInfo.ForEveryone.Title" = "Доступность";
 "CocoonInfo.ForEveryone.Text" = "Любой разработчик может использовать [Cocoon](telegram) для решения задач ИИ. Подробнее на [cocoon.org](web).";
-"CocoonInfo.IntergrateInfo" = "Хотите интегрировать Cocoon в свои проекты?\nНапишите в [t.me/cocoon?direct]()";
+"CocoonInfo.IntergrateInfo" = "Хотите интегрировать Cocoon в свои проекты?\nНапишите в [asme.su/cocoon?direct]()";
 "CocoonInfo.Understood" = "ОК";
 
 "Conversation.Translation.CocoonInfo" = "Перевод выполняется с помощью **#Cocoon**.\n[Как это работает?]()";
@@ -16848,7 +16848,7 @@ Error: %8$@";
 "CreateBot.UsernameStatus.LimitExceeded_3_10" = "Вы можете создать не больше %d ботов.";
 "CreateBot.UsernameStatus.LimitExceeded_any" = "Вы можете создать не больше %d ботов.";
 "CreateBot.UsernameStatus.LimitExceeded_many" = "Вы можете создать не больше %d ботов.";
-"CreateBot.UsernameStatus.Link" = "Ссылка: t.me/%@";
+"CreateBot.UsernameStatus.Link" = "Ссылка: asme.su/%@";
 "CreateBot.UsernameStatus.Number" = "Имя пользователя не может начинаться с цифры.";
 "CreateBot.UsernameStatus.Short" = "Имя пользователя должно содержать не меньше 5 символов.";
 "CreateBot.UsernameStatus.Taken" = "Это имя пользователя уже занято.";

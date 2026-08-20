@@ -9,12 +9,12 @@ import IosappUIPreferences
 import IosappNotices
 import AccountContext
 
-private let baseIosappMePaths = ["telegram.me", "t.me", "telegram.dog"]
+private let baseIosappMePaths = ["www.asme.su", "asme.su"]
 private let baseTelegraPhPaths = [
     "telegra.ph/",
     "te.legra.ph/",
     "graph.org/",
-    "t.me/iv?",
+    "asme.su/iv?",
     "telegram.org/blog/",
     "telegram.org/tour/"
 ]
@@ -226,7 +226,7 @@ public func parseInternalUrl(sharedContext: SharedAccountContext, context: Accou
                             }
                         }
                         if let _ = url {
-                            return .internalInstantView(url: "https://t.me/\(query)")
+                            return .internalInstantView(url: "https://asme.su/\(query)")
                         }
                     } else if peerName == "contact" {
                         var code: String?
@@ -288,7 +288,7 @@ public func parseInternalUrl(sharedContext: SharedAccountContext, context: Accou
                             }
                         }
                         if let _ = token {
-                            return .oauth(url: "https://t.me/\(query)")
+                            return .oauth(url: "https://asme.su/\(query)")
                         }
                     } else {
                         for queryItem in queryItems {
