@@ -529,10 +529,11 @@ func initializedNetwork(accountId: AccountRecordId, arguments: NetworkInitializa
             let seedAddressList: [Int: [String]]
             
             // Ansible bootstrap seed — single DC. DC1 = prod-spb
-            // (ws.ansible.su -> 45.93.201.204, migrated 2026-07-12); the
-            // old dev LB 5.129.243.207 and the 144.31.* hosts before it are
-            // decommissioned. Keep in sync with the `dcs` PG table, with the
-            // server's help.getConfig response, and with app-desktop
+            // (ws.ansible.su -> 85.193.80.91, SPB LB, 2026-08-08); the old
+            // MSK LB 45.93.201.204 (2026-07-12), the dev LB 5.129.243.207 and
+            // the 144.31.* hosts before it are decommissioned. Keep in sync
+            // with the `dcs` PG table, with the server's help.getConfig
+            // response, and with app-desktop
             // Telegram/SourceFiles/mtproto/mtproto_dc_options.cpp.
             //
             // There is no fallback behind this: the apv3.stel.com DoH
@@ -543,11 +544,11 @@ func initializedNetwork(accountId: AccountRecordId, arguments: NetworkInitializa
             // auth-key state and you get AUTH_KEY_UNREGISTERED.
             if testingEnvironment {
                 seedAddressList = [
-                    1: ["45.93.201.204"]
+                    1: ["85.193.80.91"]
                 ]
             } else {
                 seedAddressList = [
-                    1: ["45.93.201.204"]
+                    1: ["85.193.80.91"]
                 ]
             }
             
