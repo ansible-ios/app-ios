@@ -22,6 +22,7 @@ import ListActionItemComponent
 import ScrollComponent
 import BlurredBackgroundComponent
 import TextFormat
+import PremiumStarComponent
 import PremiumDiamondComponent
 import BundleIconComponent
 import ConfettiEffect
