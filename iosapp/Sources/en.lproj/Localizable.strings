@@ -7223,7 +7223,7 @@ Sorry for the inconvenience.";
 "Conversation.InviteRequestInfo" = "You received this message because you requested to join %1$@ on %2$@.";
 "Conversation.InviteRequestInfoConfirm" = "I understand";
 
-"AuthSessions.HeaderInfo" = "Link [BeHappy Desktop](desktop) or [BeHappy Web](web) by scanning a QR code.";
+"AuthSessions.HeaderInfo" = "Link [Ansible Desktop](desktop) or [Ansible Web](web) by scanning a QR code.";
 "AuthSessions.LinkDesktopDevice" = "Link Desktop Device";
 "AuthSessions.AddDevice.ScanInstallInfo" = "Go to [desktop.ansible.su](desktop) or [web.ansible.su](web) to get the QR code";
 

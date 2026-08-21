@@ -1,4 +1,4 @@
-BeHappy for iOS
+Ansible for iOS
 ================
 
 This product is a derivative work of Telegram for iOS
@@ -33,7 +33,7 @@ later version) as a conservative, fork-author-imposed license that:
   - Honors the upstream README's "publish your code" requirement.
   - Provides clarity to users and contributors of this fork.
   - Does not purport to relicense any upstream code; the fork-author
-    license applies only to modifications introduced by the BeHappy
+    license applies only to modifications introduced by the Ansible
     iOS Authors and to the fork as a distributed whole, to the extent
     legally permissible.
 
@@ -47,17 +47,17 @@ Copyright Notices
 Original Telegram for iOS:
     Copyright (c) 2014-2026 Telegram FZ-LLC and contributors.
 
-BeHappy iOS modifications:
-    Copyright (c) 2026 The BeHappy iOS Authors.
+Ansible iOS modifications:
+    Copyright (c) 2026 The Ansible iOS Authors.
 
 ------------------------------------------------------------------------
 Source Code Availability
 ------------------------------------------------------------------------
 
 The complete corresponding source code of this software, including any
-modifications made by the BeHappy iOS Authors, is publicly available at:
+modifications made by the Ansible iOS Authors, is publicly available at:
 
-    https://github.com/behappy-ios/Telegram-iOS
+    https://github.com/Ansible-ios/Telegram-iOS
 
 If you received a binary distribution and the source code is no longer
 available at the URL above, please contact:
@@ -71,16 +71,16 @@ Compliance with Upstream README Requirements
 The upstream Telegram-iOS README requests the following from forks:
 
   1. Use your own api_id.
-     → N/A. BeHappy uses its own protocol (MVSy 1.0), not MTProto.
+     → N/A. Ansible uses its own protocol (MVSy 1.0), not MTProto.
         No Telegram api_id is used by this fork.
 
   2. Do not use the name "Telegram" for your app.
-     → Complied. The app is named "BeHappy" throughout user-visible
+     → Complied. The app is named "Ansible" throughout user-visible
         surfaces. The string "Telegram" appears only in source code
         comments and copyright headers as required by attribution.
 
   3. Do not use the Telegram logo.
-     → Complied. BeHappy uses its own independent logo and brand
+     → Complied. Ansible uses its own independent logo and brand
         identity. No Telegram visual assets are bundled in the
         product.
 
@@ -101,11 +101,11 @@ This project:
   - Is NOT affiliated with, endorsed by, or sponsored by Telegram FZ-LLC.
   - Does NOT use the Telegram name, logo, or other Telegram trademarks
     in its branding, user-visible interface, or marketing.
-  - Connects to BeHappy backend servers, NOT to Telegram servers.
+  - Connects to Ansible backend servers, NOT to Telegram servers.
     It cannot be used to access Telegram accounts.
 
-"BeHappy" name, logo, and visual identity are the property of the
-BeHappy iOS Authors.
+"Ansible" name, logo, and visual identity are the property of the
+Ansible iOS Authors.
 
 ------------------------------------------------------------------------
 Submodule and Third-Party Licenses

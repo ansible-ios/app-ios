@@ -558,7 +558,7 @@ func initializedNetwork(accountId: AccountRecordId, arguments: NetworkInitializa
             
             context.keychain = keychain
             var wrappedAdditionalSource: MTSignal?
-            _ = wrappedAdditionalSource // suppress unused-write warning after BeHappy disabled the apv3.stel.com DoH bootstrap
+            _ = wrappedAdditionalSource // suppress unused-write warning after Ansible disabled the apv3.stel.com DoH bootstrap
             #if os(iOS)
             if #available(iOS 10.0, *), !supplementary, arguments.isICloudEnabled {
                 var cloudDataContextValue: CloudDataContext?
@@ -585,7 +585,7 @@ func initializedNetwork(accountId: AccountRecordId, arguments: NetworkInitializa
             #endif
             
             if !supplementary {
-                // BeHappy: do not run Telegram's apv3.stel.com DoH fallback,
+                // Ansible: do not run Telegram's apv3.stel.com DoH fallback,
                 // which would override our DC seed list with Telegram production
                 // IPs the first time help.getConfig hasn't completed yet.
                 // context.setDiscoverBackupAddressListSignal(MTBackupAddressSignals.fetchBackupIps(testingEnvironment, currentContext: context, additionalSource: wrappedAdditionalSource, phoneNumber: phoneNumber, mainDatacenterId: datacenterId))

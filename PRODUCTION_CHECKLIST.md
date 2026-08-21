@@ -1,4 +1,4 @@
-# BeHappy iOS — Production Checklist
+# Ansible iOS — Production Checklist
 
 Текущая конфигурация настроена для **development** с Personal Team.
 Для выпуска в App Store нужно выполнить следующие шаги.
@@ -82,7 +82,7 @@ build-input/bazel-8.4.2-darwin-arm64 run //Telegram:Telegram_xcodeproj
 ---
 
 ## Текущее состояние (development)
-- Название: BeHappy
+- Название: Ansible
 - Bundle ID: app.behappy.messenger
 - Team: D24RCNW45L (Personal Team)
 - Extensions: отключены

@@ -1,4 +1,4 @@
-# BeHappy iOS — Localization Keys
+# Ansible iOS — Localization Keys
 
 Полный список строк для локализации. Всего: **12377 ключей**.
 

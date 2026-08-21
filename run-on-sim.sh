@@ -1,5 +1,5 @@
 #!/bin/bash
-# Build + install + launch BeHappy iOS on the booted iPhone Simulator.
+# Build + install + launch Ansible iOS on the booted iPhone Simulator.
 # Usage: ./run-on-sim.sh
 #
 # Why this exists: Xcode UI build (Cmd+B) currently breaks at the
