@@ -1082,7 +1082,7 @@ final class GiftOptionsScreenComponent: Component {
                         peers: state.peer.flatMap { [$0] } ?? [],
                         isVisible: true,
                         hasIdleAnimations: true,
-                        color: UIColor(rgb: 0xf9b004),
+                        color: UIColor(rgb: 0x2a9ef1),
                         hasLargeParticles: true,
                         action: { [weak self] in
                             guard let self, let component = self.component, let controller = controller(), let navigationController = controller.navigationController as? NavigationController else {
@@ -1241,7 +1241,7 @@ final class GiftOptionsScreenComponent: Component {
             )
             let balanceIconSize = self.balanceIcon.update(
                 transition: .immediate,
-                component: AnyComponent(BundleIconComponent(name: "Premium/Stars/StarSmall", tintColor: nil)),
+                component: AnyComponent(BundleIconComponent(name: "Premium/Stars/BalanceStar", tintColor: nil)),
                 environment: {},
                 containerSize: availableSize
             )

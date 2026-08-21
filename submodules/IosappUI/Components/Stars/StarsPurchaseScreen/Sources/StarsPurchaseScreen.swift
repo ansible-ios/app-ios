@@ -798,7 +798,7 @@ private final class StarsPurchaseScreenComponent: CombinedComponent {
                         peers: peers,
                         isVisible: starIsVisible,
                         hasIdleAnimations: state.hasIdleAnimations,
-                        color: UIColor(rgb: 0xf9b004),
+                        color: UIColor(rgb: 0x2a9ef1),
                         hasLargeParticles: true
                     ),
                     availableSize: CGSize(width: min(414.0, context.availableSize.width), height: 220.0),
@@ -860,7 +860,7 @@ private final class StarsPurchaseScreenComponent: CombinedComponent {
                 transition: .immediate
             )
             let balanceIcon = balanceIcon.update(
-                component: BundleIconComponent(name: "Premium/Stars/StarSmall", tintColor: nil),
+                component: BundleIconComponent(name: "Premium/Stars/BalanceStar", tintColor: nil),
                 availableSize: context.availableSize,
                 transition: .immediate
             )
@@ -1143,9 +1143,9 @@ func generateStarsIcon(amount: Int64) -> UIImage {
     let image = generateGradientTintedImage(
         image: UIImage(bundleImageName: "Peer Info/PremiumIcon"),
         colors: [
-            UIColor(rgb: 0xfed219),
-            UIColor(rgb: 0xf3a103),
-            UIColor(rgb: 0xe78104)
+            UIColor(rgb: 0x86ddff),
+            UIColor(rgb: 0x53c7f5),
+            UIColor(rgb: 0x1a86d9)
         ],
         direction: .diagonal
     )!

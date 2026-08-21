@@ -3818,10 +3818,10 @@ public final class StandaloneReactionAnimation: ASDisplayNode {
             component: AnyComponent(StandalonePremiumStarComponent(
                 theme: theme,
                 colors: [
-                    UIColor(rgb: 0xe57d02),
-                    UIColor(rgb: 0xf09903),
-                    UIColor(rgb: 0xf9b004),
-                    UIColor(rgb: 0xfdd219)
+                    UIColor(rgb: 0x1a86d9),
+                    UIColor(rgb: 0x2a9ef1),
+                    UIColor(rgb: 0x53c7f5),
+                    UIColor(rgb: 0x86ddff)
                 ]
             )),
             environment: {},

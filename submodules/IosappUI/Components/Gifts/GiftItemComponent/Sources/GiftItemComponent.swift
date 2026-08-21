@@ -986,13 +986,13 @@ public final class GiftItemComponent: Component {
                 switch component.subject {
                 case let .premium(_, priceValue), let .starGift(_, priceValue):
                     if case let .starGift(gift, priceValue) = component.subject, gift.flags.contains(.isAuction) {
-                        buttonColor = component.theme.overallDarkAppearance ? UIColor(rgb: 0xffc337) : UIColor(rgb: 0xd3720a)
+                        buttonColor = component.theme.overallDarkAppearance ? UIColor(rgb: 0x53c7f5) : UIColor(rgb: 0x1a86d9)
                         price = priceValue
                     } else {
                         if priceValue.contains("#") {
-                            buttonColor = component.theme.overallDarkAppearance ? UIColor(rgb: 0xffc337) : UIColor(rgb: 0xd3720a)
+                            buttonColor = component.theme.overallDarkAppearance ? UIColor(rgb: 0x53c7f5) : UIColor(rgb: 0x1a86d9)
                             if !component.isSoldOut {
-                                starsColor = UIColor(rgb: 0xffbe27)
+                                starsColor = UIColor(rgb: 0x2a9ef1)
                             }
                         } else {
                             buttonColor = component.theme.list.itemAccentColor
@@ -1044,7 +1044,7 @@ public final class GiftItemComponent: Component {
                 }
                 
                 if let label = component.label {
-                    let labelColor = component.theme.overallDarkAppearance ? UIColor(rgb: 0xffc337) : UIColor(rgb: 0xd3720a)
+                    let labelColor = component.theme.overallDarkAppearance ? UIColor(rgb: 0x53c7f5) : UIColor(rgb: 0x1a86d9)
                     let attributes = MarkdownAttributes(
                         body: MarkdownAttributeSet(font: Font.regular(11.0), textColor: labelColor),
                         bold: MarkdownAttributeSet(font: Font.semibold(11.0), textColor: labelColor),
@@ -1752,8 +1752,8 @@ public final class StarsButtonContentComponent: Component {
             }
             
             let backgroundColor: UIColor
-            if component.color.rgb == 0xd3720a {
-                backgroundColor = UIColor(rgb: 0xffc83d, alpha: 0.2)
+            if component.color.rgb == 0x1a86d9 {
+                backgroundColor = UIColor(rgb: 0x2a9ef1, alpha: 0.2)
             } else {
                 if component.tinted {
                     backgroundColor = component.color

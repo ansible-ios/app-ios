@@ -64,7 +64,6 @@ private final class SheetContent: CombinedComponent {
         let amountAdditionalLabel = Child(MultilineTextComponent.self)
         let periodSection = Child(ListSectionComponent.self)
         let timestampSection = Child(ListSectionComponent.self)
-        let onlyTonSection = Child(ListSectionComponent.self)
         let button = Child(ButtonComponent.self)
         let durationPicker = Child(MenuComponent.self)
         
@@ -586,79 +585,7 @@ private final class SheetContent: CombinedComponent {
             }
             
             var durationFrame = CGRect()
-            if case .starGiftResell = component.mode {
-                contentSize.height += 24.0
-                
-                let onlyTonFooterString = NSAttributedString(attributedString: parseMarkdownIntoAttributedString(environment.strings.Stars_SellGift_OnlyTonInfo, attributes: amountMarkdownAttributes, textAlignment: .natural))
-                let onlyTonFooter = AnyComponent(MultilineTextComponent(
-                    text: .plain(onlyTonFooterString),
-                    maximumNumberOfLines: 0
-                ))
-                
-                let onlyTonSection = onlyTonSection.update(
-                    component: ListSectionComponent(
-                        theme: theme,
-                        style: .glass,
-                        header: nil,
-                        footer: onlyTonFooter,
-                        items: [AnyComponentWithIdentity(
-                            id: "switch",
-                            component: AnyComponent(ListActionItemComponent(
-                                theme: theme,
-                                style: .glass,
-                                title: AnyComponent(VStack([
-                                    AnyComponentWithIdentity(id: AnyHashable(0), component: AnyComponent(MultilineTextComponent(
-                                        text: .plain(NSAttributedString(
-                                            string: environment.strings.Stars_SellGift_OnlyTon,
-                                            font: Font.regular(presentationData.listsFontSize.baseDisplaySize),
-                                            textColor: theme.list.itemPrimaryTextColor
-                                        )),
-                                        maximumNumberOfLines: 1
-                                    ))),
-                                ], alignment: .left, spacing: 2.0)),
-                                accessory: .toggle(ListActionItemComponent.Toggle(style: .regular, isOn: state.currency == .ton, action: { [weak state] _ in
-                                    guard let state else {
-                                        return
-                                    }
-                                    if state.currency == .stars {
-                                        if let amount = state.amount, let tonUsdRate = withdrawConfiguration.tonUsdRate, let usdWithdrawRate = withdrawConfiguration.usdWithdrawRate {
-                                            var convertedValue = min(convertStarsToTon(amount, tonUsdRate: tonUsdRate, starsUsdRate: usdWithdrawRate), resaleConfiguration.starGiftResaleMaxTonAmount)
-                                            if convertedValue < resaleConfiguration.starGiftResaleMinTonAmount {
-                                                convertedValue = resaleConfiguration.starGiftResaleMinTonAmount
-                                                if case .starGiftResell = component.mode, let controller = controller() as? StarsWithdrawScreen {
-                                                    controller.presentMinAmountTooltip(convertedValue, currency: .ton)
-                                                }
-                                            }
-                                            state.amount = StarsAmount(value: convertedValue, nanos: 0)
-                                        } else {
-                                            state.amount = StarsAmount(value: 0, nanos: 0)
-                                        }
-                                        state.currency = .ton
-                                    } else {
-                                        if let amount = state.amount, let tonUsdRate = withdrawConfiguration.tonUsdRate, let usdWithdrawRate = withdrawConfiguration.usdWithdrawRate {
-                                            state.amount = StarsAmount(value: max(min(convertTonToStars(amount, tonUsdRate: tonUsdRate, starsUsdRate: usdWithdrawRate), resaleConfiguration.starGiftResaleMaxStarsAmount), resaleConfiguration.starGiftResaleMinStarsAmount), nanos: 0)
-                                        } else {
-                                            state.amount = StarsAmount(value: 0, nanos: 0)
-                                        }
-                                        state.currency = .stars
-                                    }
-                                    state.updated(transition: .spring(duration: 0.4))
-                                })),
-                                action: nil
-                            ))
-                        )]
-                    ),
-                    environment: {},
-                    availableSize: CGSize(width: context.availableSize.width - sideInset * 2.0, height: .greatestFiniteMagnitude),
-                    transition: context.transition
-                )
-                context.add(onlyTonSection
-                    .position(CGPoint(x: context.availableSize.width / 2.0, y: contentSize.height + onlyTonSection.size.height / 2.0))
-                    .clipsToBounds(true)
-                    .cornerRadius(10.0)
-                )
-                contentSize.height += onlyTonSection.size.height
-            } else if case let .suggestedPost(mode, _, _, _) = component.mode {
+            if case let .suggestedPost(mode, _, _, _) = component.mode {
                 contentSize.height += 24.0
                 
                 let footerString: String
@@ -1199,17 +1126,10 @@ private final class SheetContent: CombinedComponent {
             if case let .starGiftResell(giftToMatch, update, _) = self.mode {
                 let resaleConfiguration = StarsSubscriptionConfiguration.with(appConfiguration: self.context.currentAppConfiguration.with { $0 })
                 if update {
-                    if giftToMatch.resellForTonOnly {
-                        if let resellStars = giftToMatch.resellAmounts?.first(where: { $0.currency == .ton }) {
-                            self.amount = StarsAmount(value: max(resellStars.amount.value, resaleConfiguration.starGiftResaleMinTonAmount), nanos: 0)
-                        }
-                        self.currency = .ton
-                    } else {
-                        if let resellStars = giftToMatch.resellAmounts?.first(where: { $0.currency == .stars }) {
-                            self.amount = StarsAmount(value: max(resellStars.amount.value, resaleConfiguration.starGiftResaleMinStarsAmount), nanos: 0)
-                        }
-                        self.currency = .stars
+                    if let resellStars = giftToMatch.resellAmounts?.first(where: { $0.currency == .stars }) {
+                        self.amount = StarsAmount(value: max(resellStars.amount.value, resaleConfiguration.starGiftResaleMinStarsAmount), nanos: 0)
                     }
+                    self.currency = .stars
                 } else {
                     let _ = (self.context.engine.payments.cachedStarGifts()
                      |> filter { $0 != nil }

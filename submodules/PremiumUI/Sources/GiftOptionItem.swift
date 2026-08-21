@@ -746,9 +746,9 @@ private func generateStarsIcon(amount: Int64) -> UIImage {
     let image = generateGradientTintedImage(
         image: UIImage(bundleImageName: "Peer Info/PremiumIcon"),
         colors: [
-            UIColor(rgb: 0xfed219),
-            UIColor(rgb: 0xf3a103),
-            UIColor(rgb: 0xe78104)
+            UIColor(rgb: 0x86ddff),
+            UIColor(rgb: 0x53c7f5),
+            UIColor(rgb: 0x1a86d9)
         ],
         direction: .diagonal
     )!

@@ -260,8 +260,8 @@ public struct PresentationResourcesSettings {
         context.clear(bounds)
         
         let colorsArray: [CGColor] = [
-            UIColor(rgb: 0xfec80f).cgColor,
-            UIColor(rgb: 0xdd6f12).cgColor
+            UIColor(rgb: 0x2a9ef1).cgColor,
+            UIColor(rgb: 0x2a9ef1).cgColor
         ]
         var locations: [CGFloat] = [0.0, 1.0]
         let gradient = CGGradient(colorsSpace: deviceColorSpace, colors: colorsArray as CFArray, locations: &locations)!

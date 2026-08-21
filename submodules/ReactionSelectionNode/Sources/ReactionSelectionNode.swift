@@ -77,7 +77,7 @@ private final class StarsButtonEffectLayer: SimpleLayer {
     }
     
     private func setup(theme: PresentationTheme) {
-        let color = UIColor(rgb: 0xffbe27, alpha: theme.overallDarkAppearance ? 0.2 : 1.0)
+        let color = UIColor(rgb: 0x2a9ef1, alpha: theme.overallDarkAppearance ? 0.2 : 1.0)
         
         let emitter = CAEmitterCell()
         emitter.name = "emitter"
@@ -105,7 +105,7 @@ private final class StarsButtonEffectLayer: SimpleLayer {
         
         self.emitterLayer.emitterCells = [emitter]
         
-        let gradientColor = UIColor(rgb: 0xffbe27, alpha: theme.overallDarkAppearance ? 0.2 : 1.0)
+        let gradientColor = UIColor(rgb: 0x2a9ef1, alpha: theme.overallDarkAppearance ? 0.2 : 1.0)
         
         self.gradientLayer.type = .radial
         self.gradientLayer.startPoint = CGPoint(x: 0.5, y: 0.5)

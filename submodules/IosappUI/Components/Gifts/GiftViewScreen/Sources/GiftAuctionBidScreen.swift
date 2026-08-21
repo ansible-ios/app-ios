@@ -584,7 +584,7 @@ private final class PeerComponent: Component {
             self.layer.addSublayer(self.separator)
             self.layer.addSublayer(self.selectionLayer)
             
-            self.amountStar.image = UIImage(bundleImageName: "Premium/Stars/StarSmall")
+            self.amountStar.image = UIImage(bundleImageName: "Premium/Stars/BalanceStar")
             self.addSubview(self.amountStar)
             
             self.button.addTarget(self, action: #selector(self.buttonPressed), for: .touchUpInside)
@@ -2203,7 +2203,7 @@ private final class GiftAuctionBidScreenComponent: Component {
             
             let progressFraction: CGFloat = CGFloat(self.amount.sliderValue) / CGFloat(self.amount.maxSliderValue)
                         
-            var sliderColor: UIColor = UIColor(rgb: 0xFFB10D)
+            var sliderColor: UIColor = UIColor(rgb: 0x2a9ef1)
             
             let liveStreamParams = LiveChatMessageParams(appConfig: component.context.currentAppConfiguration.with({ $0 }))
             let color = GroupCallMessagesContext.getStarAmountParamMapping(params: liveStreamParams, value: Int64(self.amount.realValue / 5)).color ?? GroupCallMessagesContext.Message.Color(rawValue: 0x985FDC)

@@ -824,12 +824,12 @@ private final class StarsTransactionSheetContent: CombinedComponent {
                         isVisible: true,
                         hasIdleAnimations: true,
                         colors: [
-                            UIColor(rgb: 0xe57d02),
-                            UIColor(rgb: 0xf09903),
-                            UIColor(rgb: 0xf9b004),
-                            UIColor(rgb: 0xfdd219)
+                            UIColor(rgb: 0x1a86d9),
+                            UIColor(rgb: 0x2a9ef1),
+                            UIColor(rgb: 0x53c7f5),
+                            UIColor(rgb: 0x86ddff)
                         ],
-                        particleColor: UIColor(rgb: 0xf9b004),
+                        particleColor: UIColor(rgb: 0x2a9ef1),
                         backgroundColor: theme.actionSheet.opaqueItemBackgroundColor
                     ),
                     availableSize: CGSize(width: context.availableSize.width, height: 200.0),

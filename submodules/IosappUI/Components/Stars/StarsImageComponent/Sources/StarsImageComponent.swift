@@ -142,8 +142,8 @@ final class StarsParticlesView: UIView {
                         position.x += direction.x * initialOffset * 105.0
                         position.y += direction.y * initialOffset * 105.0
                    
-                        let largeColors: [UInt32] = [0xff9145, 0xfec007, 0xed9303]
-                        let smallColors: [UInt32] = [0xfecc14, 0xf7ab04, 0xff9145, 0xfdda21]
+                        let largeColors: [UInt32] = [0x1a86d9, 0x2a9ef1, 0x53c7f5]
+                        let smallColors: [UInt32] = [0x1a86d9, 0x2a9ef1, 0x53c7f5, 0x86ddff]
                         
                         let particle = Particle(
                             trackIndex: directionIndex,
@@ -999,7 +999,7 @@ public final class StarsImageComponent: Component {
                 let _ = self.amountBackgroundView.update(
                     transition: .immediate,
                     component: AnyComponent(
-                        RoundedRectangle(colors: [UIColor(rgb: 0xffaa01)], cornerRadius: amountBackgroundFrame.height / 2.0, gradientDirection: .horizontal, stroke: 2.0 - UIScreenPixel, strokeColor: component.backgroundColor, size: amountBackgroundFrame.size)
+                        RoundedRectangle(colors: [UIColor(rgb: 0x2a9ef1)], cornerRadius: amountBackgroundFrame.height / 2.0, gradientDirection: .horizontal, stroke: 2.0 - UIScreenPixel, strokeColor: component.backgroundColor, size: amountBackgroundFrame.size)
                     ),
                     environment: {},
                     containerSize: amountBackgroundFrame.size
