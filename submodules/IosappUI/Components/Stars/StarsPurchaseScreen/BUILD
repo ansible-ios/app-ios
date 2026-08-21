@@ -34,7 +34,6 @@ swift_library(
         "//submodules/IosappUI/Components/ScrollComponent",
         "//submodules/IosappUI/Components/TextLoadingEffect",
         "//submodules/IosappUI/Components/Premium/PremiumStarComponent",
-        "//submodules/IosappUI/Components/Premium/PremiumDiamondComponent",
         "//submodules/Components/BlurredBackgroundComponent",
         "//submodules/Components/BundleIconComponent",
         "//submodules/ConfettiEffect",

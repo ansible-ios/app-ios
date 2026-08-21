@@ -22,7 +22,7 @@ import ListActionItemComponent
 import ScrollComponent
 import BlurredBackgroundComponent
 import TextFormat
-import PremiumDiamondComponent
+import PremiumStarComponent
 import BundleIconComponent
 import ConfettiEffect
 import ItemShimmeringLoadingComponent
@@ -760,7 +760,7 @@ private final class StarsPurchaseScreenComponent: CombinedComponent {
     static var body: Body {
         let background = Child(Rectangle.self)
         let scrollContent = Child(ScrollComponent<EnvironmentType>.self)
-        let star = Child(PremiumDiamondComponent.self)
+        let star = Child(PremiumStarComponent.self)
         let avatar = Child(GiftAvatarComponent.self)
         let title = Child(MultilineTextComponent.self)
         let balanceTitle = Child(MultilineTextComponent.self)
@@ -804,9 +804,21 @@ private final class StarsPurchaseScreenComponent: CombinedComponent {
                     transition: context.transition
                 )
             } else {
-                // Ansible: single crystal currency — buy-crystals header uses the blue diamond.
                 header = star.update(
-                    component: PremiumDiamondComponent(theme: environment.theme),
+                    component: PremiumStarComponent(
+                        theme: environment.theme,
+                        isIntro: true,
+                        isVisible: starIsVisible,
+                        hasIdleAnimations: state.hasIdleAnimations,
+                        colors: [
+                            UIColor(rgb: 0xe57d02),
+                            UIColor(rgb: 0xf09903),
+                            UIColor(rgb: 0xf9b004),
+                            UIColor(rgb: 0xfdd219)
+                        ],
+                        particleColor: UIColor(rgb: 0xf9b004),
+                        backgroundColor: nil
+                    ),
                     availableSize: CGSize(width: min(414.0, context.availableSize.width), height: 220.0),
                     transition: context.transition
                 )
@@ -1104,7 +1116,7 @@ public final class StarsPurchaseScreen: ViewControllerComponentContainer {
         super.containerLayoutUpdated(layout, transition: transition)
         
         if !self.didSetReady {
-            if let view = findTaggedComponentViewImpl(view: self.node.view, tag: PremiumDiamondComponent.View.Tag()) as? PremiumDiamondComponent.View {
+            if let view = findTaggedComponentViewImpl(view: self.node.view, tag: PremiumStarComponent.View.Tag()) as? PremiumStarComponent.View {
                 self.didSetReady = true
                 self._ready.set(view.ready)
             } else if let view = findTaggedComponentViewImpl(view: self.node.view, tag: GiftAvatarComponent.View.Tag()) as? GiftAvatarComponent.View {

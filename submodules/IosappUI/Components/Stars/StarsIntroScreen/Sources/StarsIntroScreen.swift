@@ -15,7 +15,7 @@ import ButtonComponent
 import AccountContext
 import SheetComponent
 import BlurredBackgroundComponent
-import PremiumDiamondComponent
+import PremiumStarComponent
 
 private final class SheetContent: CombinedComponent {
     typealias EnvironmentType = ViewControllerComponentContainer.Environment
@@ -42,7 +42,7 @@ private final class SheetContent: CombinedComponent {
     }
         
     static var body: Body {
-        let star = Child(PremiumDiamondComponent.self)
+        let star = Child(PremiumStarComponent.self)
         let title = Child(BalancedTextComponent.self)
         let text = Child(BalancedTextComponent.self)
         let list = Child(List<Empty>.self)
@@ -68,10 +68,21 @@ private final class SheetContent: CombinedComponent {
             let spacing: CGFloat = 16.0
             var contentSize = CGSize(width: context.availableSize.width, height: 152.0)
                                     
-            // Ansible: single crystal currency — the "what are crystals" intro header
-            // uses the blue diamond, not the gold star mesh.
             let star = star.update(
-                component: PremiumDiamondComponent(theme: environment.theme),
+                component: PremiumStarComponent(
+                    theme: environment.theme,
+                    isIntro: true,
+                    isVisible: true,
+                    hasIdleAnimations: true,
+                    colors: [
+                        UIColor(rgb: 0xe57d02),
+                        UIColor(rgb: 0xf09903),
+                        UIColor(rgb: 0xf9b004),
+                        UIColor(rgb: 0xfdd219)
+                    ],
+                    particleColor: UIColor(rgb: 0xf9b004),
+                    backgroundColor: environment.theme.actionSheet.opaqueItemBackgroundColor
+                ),
                 availableSize: CGSize(width: min(414.0, context.availableSize.width), height: 220.0),
                 transition: context.transition
             )
