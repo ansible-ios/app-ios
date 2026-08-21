@@ -208,7 +208,7 @@ public final class QrCodeScanScreen: ViewController {
             }
             switch strongSelf.subject {
                 case let .authTransfer(activeSessionsContext):
-                    if let url = URL(string: code), (url.scheme == "bh" || url.scheme == "tg"), url.host == "login", let parsedToken = parseAuthTransferUrl(url) {
+                    if let url = URL(string: code), url.scheme == "as", url.host == "login", let parsedToken = parseAuthTransferUrl(url) {
                         strongSelf.approveDisposable.set((approveAuthTransferToken(account: strongSelf.context.account, token: parsedToken, activeSessionsContext: activeSessionsContext)
                         |> deliverOnMainQueue).start(next: { session in
                             guard let strongSelf = self else {
@@ -564,9 +564,10 @@ private final class QrCodeScanScreenNode: ViewControllerTracingNode, ASScrollVie
             switch strongSelf.subject {
                 case .authTransfer:
                     // Keep this in sync with the scheme check in the .authTransfer
-                    // handler above: we emit bh://login?token=, but still accept
-                    // tg:// so codes from older builds keep working.
-                    filteredCodes = codes.filter { $0.message.hasPrefix("bh://") || $0.message.hasPrefix("tg://") }
+                    // handler above. Login QR codes are as://login?token= on every
+                    // Ansible client (app-desktop intro_qr.cpp, Android); nothing else
+                    // is accepted here.
+                    filteredCodes = codes.filter { $0.message.hasPrefix("as://") }
                 case .peer:
                     filteredCodes = codes.filter { $0.message.hasPrefix("https://asme.su/") || $0.message.hasPrefix("asme.su/") }
                 case .cryptoAddress:

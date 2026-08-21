@@ -939,7 +939,7 @@ final class ChatPinnedMessageTitlePanelNode: ChatTitleAccessoryPanelNode {
                         return
                     case let .url(url):
                         var isConcealed = true
-                        if url.hasPrefix("tg://") {
+                        if url.hasPrefix("as://") {
                             isConcealed = false
                         }
                         controllerInteraction.openUrl(ChatControllerInteraction.OpenUrl(url: url, concealed: isConcealed, progress: Promise()))
@@ -1032,7 +1032,7 @@ final class ChatPinnedMessageTitlePanelNode: ChatTitleAccessoryPanelNode {
             for media in message.media {
                 if let webpage = media as? IosappMediaWebpage, case let .Loaded(content) = webpage.content, content.type == "telegram_call" {
                     var isConcealed = true
-                    if content.url.hasPrefix("tg://") {
+                    if content.url.hasPrefix("as://") {
                         isConcealed = false
                     }
                     let progressPromise = Promise<Bool>()

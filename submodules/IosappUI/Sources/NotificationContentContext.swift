@@ -108,7 +108,7 @@ public final class NotificationViewControllerImpl {
             })
             semaphore.wait()
             
-            let applicationBindings = IosappApplicationBindings(isMainApp: false, appBundleId: self.initializationData.appBundleId, appBuildType: self.initializationData.appBuildType, containerPath: self.initializationData.appGroupPath, appSpecificScheme: "tgapp", openUrl: { _ in
+            let applicationBindings = IosappApplicationBindings(isMainApp: false, appBundleId: self.initializationData.appBundleId, appBuildType: self.initializationData.appBuildType, containerPath: self.initializationData.appGroupPath, appSpecificScheme: "as", openUrl: { _ in
             }, openUniversalUrl: { _, completion in
                 completion.completion(false)
                 return

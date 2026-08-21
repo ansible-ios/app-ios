@@ -10,7 +10,7 @@ private func generateStarsReactionFile(kind: Int, isAnimatedSticker: Bool) -> Io
     let fileId = baseId + Int64(kind)
     
     var attributes: [IosappMediaFileAttribute] = []
-    attributes.append(IosappMediaFileAttribute.FileName(fileName: isAnimatedSticker ? "sticker.tgs" : "sticker.webp"))
+    attributes.append(IosappMediaFileAttribute.FileName(fileName: isAnimatedSticker ? "sticker.ass" : "sticker.webp"))
     if !isAnimatedSticker {
         attributes.append(.CustomEmoji(isPremium: false, isSingleColor: false, alt: ".", packReference: nil))
     }
@@ -22,7 +22,7 @@ private func generateStarsReactionFile(kind: Int, isAnimatedSticker: Bool) -> Io
         previewRepresentations: [],
         videoThumbnails: [],
         immediateThumbnailData: nil,
-        mimeType: isAnimatedSticker ? "application/x-tgsticker" : "image/webp",
+        mimeType: isAnimatedSticker ? "application/x-ansible-sticker" : "image/webp",
         size: nil,
         attributes: attributes,
         alternativeRepresentations: []

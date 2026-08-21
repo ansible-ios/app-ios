@@ -16,7 +16,7 @@ private func shareLink(for server: ProxyServerSettings) -> String {
     switch server.connection {
     case let .mtp(secret):
         let secret = MTProxySecret.parseData(secret)?.serializeToString() ?? ""
-        link = "tg://proxy?server=\(server.host)&port=\(server.port)"
+        link = "as://proxy?server=\(server.host)&port=\(server.port)"
         link += "&secret=\(secret.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryValueAllowed) ?? "")"
     case let .socks5(username, password):
         link = "https://asme.su/socks?server=\(server.host)&port=\(server.port)"

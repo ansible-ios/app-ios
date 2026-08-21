@@ -144,7 +144,7 @@ public final class ChatMessageAccessibilityData {
                                 case let .Sticker(displayText, _, _):
                                     isSpecialFile = true
                                     text = displayText
-                                    if file.mimeType == "application/x-tgsticker" {
+                                    if file.mimeType == "application/x-ansible-sticker" {
                                         if isIncoming {
                                             if announceIncomingAuthors, let authorName = authorName {
                                                 label = item.presentationData.strings.VoiceOver_Chat_AnimatedStickerFrom(authorName).string
@@ -815,7 +815,7 @@ open class ChatMessageItemView: ListViewItemNode, ChatMessageItemNodeProtocol {
                     item.controllerInteraction.sendMessage(button.title)
                 case let .url(url):
                     var concealed = true
-                    if url.hasPrefix("tg://") {
+                    if url.hasPrefix("as://") {
                         concealed = false
                     }
                 item.controllerInteraction.openUrl(ChatControllerInteraction.OpenUrl(url: url, concealed: concealed, progress: progress))

@@ -60,9 +60,9 @@ public final class HLSQualitySet {
         
         for alternativeRepresentation in baseFile.media.alternativeRepresentations {
             let alternativeFile = alternativeRepresentation
-            if alternativeFile.mimeType == "application/x-tgstoryboard" {
+            if alternativeFile.mimeType == "application/x-ansible-storyboard" {
                 thumbnailFiles.append(baseFile.withMedia(alternativeFile))
-            } else if alternativeFile.mimeType == "application/x-tgstoryboardmap" {
+            } else if alternativeFile.mimeType == "application/x-ansible-storyboardmap" {
                 var qualityId: Int?
                 for attribute in alternativeFile.attributes {
                     switch attribute {

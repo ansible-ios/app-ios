@@ -400,10 +400,10 @@ final class ChatTranslationPanelNode: ASDisplayNode {
                 previewRepresentations: [],
                 videoThumbnails: [],
                 immediateThumbnailData: nil,
-                mimeType: "application/x-tgsticker",
+                mimeType: "application/x-ansible-sticker",
                 size: nil,
                 attributes: [
-                    .FileName(fileName: "sticker.tgs"),
+                    .FileName(fileName: "sticker.ass"),
                     .CustomEmoji(isPremium: false, isSingleColor: true, alt: "", packReference: .animatedEmojiAnimations)
                 ],
                 alternativeRepresentations: []

@@ -28,7 +28,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Changed
 - Default DC list points to BeHappy servers.
-- Deep links use `asme.su` (server `me_url_prefix`); upstream `t.me` / `telegram.me` / `telegram.dog` / `telesco.pe` are no longer treated as internal hosts.
+- Deep links: domain `asme.su` (server `me_url_prefix`) and URL scheme `as://` (registered schemes `ansible`, `as`, `tonsite`); upstream Telegram link domains and schemes are no longer recognised as internal. Login QR codes are `as://login?token=`, shared with app-desktop and Android.
+- Animated stickers use the Ansible wire format: MIME `application/x-ansible-sticker`, file name `sticker.ass` (matches backend, app-desktop and web).
 - App bundle identifier renamed.
 - Help and support links point to BeHappy resources.
 

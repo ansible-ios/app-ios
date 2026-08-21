@@ -94,7 +94,7 @@ public final class ImportStickerPackController: ViewController, StandalonePresen
                                     case .progress:
                                         return (sticker.uuid, .loading, nil)
                                     case let .complete(resource, mimeType):
-                                        if ["application/x-tgsticker", "video/webm"].contains(mimeType) {
+                                        if ["application/x-ansible-sticker", "video/webm"].contains(mimeType) {
                                             return (sticker.uuid, .verified, EngineMediaResource(resource))
                                         } else {
                                             return (sticker.uuid, .declined, nil)

@@ -59,7 +59,7 @@ public class ImportStickerPack {
                 case .image:
                     return "image/png"
                 case .animation:
-                    return "application/x-tgsticker"
+                    return "application/x-ansible-sticker"
                 case let .video(_, mimeType):
                     return mimeType
             }
@@ -140,7 +140,7 @@ public class ImportStickerPack {
                     if case .image = type.contentType {
                         content = .image(data)
                     }
-                case "application/x-tgsticker":
+                case "application/x-ansible-sticker":
                     if case .animation = type.contentType {
                         content = .animation(data)
                     }

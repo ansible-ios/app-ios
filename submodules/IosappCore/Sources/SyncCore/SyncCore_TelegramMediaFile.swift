@@ -1079,7 +1079,7 @@ public final class IosappMediaFile: Media, Equatable, Codable {
     }
     
     public var isAnimatedSticker: Bool {
-        if let _ = self.fileName, self.mimeType == "application/x-tgsticker" {
+        if let _ = self.fileName, self.mimeType == "application/x-ansible-sticker" {
             return true
         }
         return false
@@ -1486,7 +1486,7 @@ public extension IosappMediaFile.Accessor {
         if let _wrappedFile = self._wrappedFile {
             return _wrappedFile.isAnimatedSticker
         }
-        if self._wrapped!.mimeType == "application/x-tgsticker" && self.fileName != nil {
+        if self._wrapped!.mimeType == "application/x-ansible-sticker" && self.fileName != nil {
             return true
         }
         return false

@@ -146,8 +146,8 @@ public extension ImportSticker {
             fileAttributes.append(.Animated)
             fileAttributes.append(.Sticker(displayText: "", packReference: nil, maskData: nil))
             fileAttributes.append(.Video(duration: self.duration ?? 3.0, size: self.dimensions, flags: [], preloadSize: nil, coverTime: nil, videoCodec: nil))
-        } else if self.mimeType == "application/x-tgsticker" {
-            fileAttributes.append(.FileName(fileName: "sticker.tgs"))
+        } else if self.mimeType == "application/x-ansible-sticker" {
+            fileAttributes.append(.FileName(fileName: "sticker.ass"))
             fileAttributes.append(.Animated)
             fileAttributes.append(.Sticker(displayText: "", packReference: nil, maskData: nil))
         } else {
