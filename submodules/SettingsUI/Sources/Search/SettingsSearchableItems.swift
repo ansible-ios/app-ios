@@ -909,23 +909,8 @@ private func premiumSearchableItems(context: AccountContext) -> [SettingsSearcha
         )
     }
     
-    items.append(
-        SettingsSearchableItem(
-            id: "ton",
-            title: strings.Settings_MyTon,
-            alternate: [],
-            icon: .ton,
-            breadcrumbs: [],
-            present: { context, _, present in
-                guard let tonContext = context.tonContext else {
-                    return
-                }
-                let controller = context.sharedContext.makeStarsTransactionsScreen(context: context, starsContext: tonContext)
-                present(.push, controller)
-            }
-        )
-    )
-    
+    // Ansible: TON removed — no "My TON" settings-search entry (it bypassed the hidden row).
+
     items.append(
         SettingsSearchableItem(
             id: "send-gift",

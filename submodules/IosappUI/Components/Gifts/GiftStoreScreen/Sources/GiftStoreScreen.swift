@@ -1260,69 +1260,13 @@ final class GiftStoreScreenComponent: Component {
         }
         
         func presentBalanceMenu() {
-            guard let component = self.component, let starsContext = component.context.starsContext, let tonContext = component.context.tonContext, let controller = self.environment?.controller() else {
+            // Ansible: TON removed — tapping the balance opens the crystal balance
+            // directly; there is no longer a Stars/TON two-item context menu.
+            guard let component = self.component, let starsContext = component.context.starsContext, let controller = self.environment?.controller() else {
                 return
             }
-            let tonBalance = tonContext.currentState?.balance.value ?? 0
-            if tonBalance == 0 {
-                let controller = component.context.sharedContext.makeStarsTransactionsScreen(context: component.context, starsContext: starsContext)
-                controller.push(controller)
-                return
-            }
-            
-            let presentationData = component.context.sharedContext.currentPresentationData.with { $0 }
-                
-            let sourceView = self.balanceBackgroundView
-            
-            let items: Signal<[ContextMenuItem], NoError> = combineLatest(
-                queue: Queue.mainQueue(),
-                starsContext.state,
-                tonContext.state
-            )
-            |> take(1)
-            |> map { starsState, tonState -> [ContextMenuItem] in
-                let starsBalance = starsState?.balance ?? .zero
-                let tonBalance = tonState?.balance.value ?? 0
-                
-                var items: [ContextMenuItem] = []
-                
-                items.append(.action(ContextMenuActionItem(
-                    text: presentationData.strings.Gift_Store_Balance_MyStars,
-                    textLayout: .secondLineWithValue(formatStarsAmountText(starsBalance, dateTimeFormat: presentationData.dateTimeFormat)),
-                    icon: { theme in return generateTintedImage(image: UIImage(bundleImageName: "Chat/Context Menu/Stars"), color: theme.contextMenu.primaryColor) },
-                    action: { [weak self] _, f in
-                        f(.dismissWithoutContent)
-                        guard let self, let component = self.component, let environment = self.environment else {
-                            return
-                        }
-                        Queue.mainQueue().after(0.3) {
-                            let controller = component.context.sharedContext.makeStarsTransactionsScreen(context: component.context, starsContext: starsContext)
-                            environment.controller()?.push(controller)
-                        }
-                    }
-                )))
-                
-                items.append(.action(ContextMenuActionItem(
-                    text: presentationData.strings.Gift_Store_Balance_MyTon,
-                    textLayout: .secondLineWithValue(formatTonAmountText(tonBalance, dateTimeFormat: presentationData.dateTimeFormat)),
-                    icon: { theme in return generateTintedImage(image: UIImage(bundleImageName: "Chat/Context Menu/Ton"), color: theme.contextMenu.primaryColor) },
-                    action: { [weak self] _, f in
-                        f(.dismissWithoutContent)
-                        guard let self, let component = self.component, let environment = self.environment else {
-                            return
-                        }
-                        Queue.mainQueue().after(0.3) {
-                            let controller = component.context.sharedContext.makeStarsTransactionsScreen(context: component.context, starsContext: tonContext)
-                            environment.controller()?.push(controller)
-                        }
-                    }
-                )))
-                
-                return items
-            }
-
-            let contextController = makeContextController(presentationData: presentationData, source: .reference(GiftStoreReferenceContentSource(controller: controller, sourceView: sourceView)), items: items |> map { ContextController.Items(content: .list($0)) }, gesture: nil)
-            controller.presentInGlobalOverlay(contextController)
+            let starsController = component.context.sharedContext.makeStarsTransactionsScreen(context: component.context, starsContext: starsContext)
+            controller.push(starsController)
         }
                 
         func update(component: GiftStoreScreenComponent, availableSize: CGSize, state: State, environment: Environment<EnvironmentType>, transition: ComponentTransition) -> CGSize {

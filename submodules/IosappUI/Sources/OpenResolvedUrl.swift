@@ -1047,14 +1047,9 @@ func openResolvedUrlImpl(
                 }
             }
         case .ton:
+            // Ansible: TON removed as a user-facing currency — the ton deep link no longer
+            // opens a balance screen.
             dismissInput()
-            if let tonContext = context.tonContext {
-                let controller = context.sharedContext.makeStarsTransactionsScreen(context: context, starsContext: tonContext)
-                controller.navigationPresentation = .modal
-                if let navigationController {
-                    navigationController.pushViewController(controller, animated: true)
-                }
-            }
         case let .joinVoiceChat(peerId, invite):
             let _ = (context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: peerId))
             |> deliverOnMainQueue).start(next: { peer in

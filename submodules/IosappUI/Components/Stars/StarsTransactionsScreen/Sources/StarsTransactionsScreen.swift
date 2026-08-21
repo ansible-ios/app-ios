@@ -468,25 +468,10 @@ final class StarsTransactionsScreenComponent: Component {
                 starTransition.setFrame(view: fadeView, frame: fadeFrame)
             }
             
+            // Ansible: single crystal currency — the balance/top-up header always
+            // uses the blue diamond (formerly TON-only), never the gold star mesh.
             let headerComponent: AnyComponent<Empty>
-            if component.starsContext.ton {
-                headerComponent = AnyComponent(PremiumDiamondComponent(theme: environment.theme))
-            } else {
-                headerComponent = AnyComponent(PremiumStarComponent(
-                    theme: environment.theme,
-                    isIntro: true,
-                    isVisible: true,
-                    hasIdleAnimations: true,
-                    colors: [
-                        UIColor(rgb: 0xe57d02),
-                        UIColor(rgb: 0xf09903),
-                        UIColor(rgb: 0xf9b004),
-                        UIColor(rgb: 0xfdd219)
-                    ],
-                    particleColor: UIColor(rgb: 0xf9b004),
-                    backgroundColor: nil
-                ))
-            }
+            headerComponent = AnyComponent(PremiumDiamondComponent(theme: environment.theme))
                     
             let starSize = self.starView.update(
                 transition: .immediate,

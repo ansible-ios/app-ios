@@ -1075,7 +1075,7 @@ private let tintedStarImage: UIImage? = {
     generateImage(CGSize(width: 32.0, height: 32.0), contextGenerator: { size, context in
         context.clear(CGRect(origin: .zero, size: size))
         
-        if let image = generateTintedImage(image: UIImage(bundleImageName: "Item List/PremiumIcon"), color: .white), let cgImage = image.cgImage {
+        if let image = generateTintedImage(image: UIImage(bundleImageName: "Premium/Stars/StarLarge"), color: .white), let cgImage = image.cgImage {
             context.draw(cgImage, in: CGRect(origin: .zero, size: size).insetBy(dx: 4.0, dy: 4.0), byTiling: false)
         }
     })?.withRenderingMode(.alwaysTemplate)

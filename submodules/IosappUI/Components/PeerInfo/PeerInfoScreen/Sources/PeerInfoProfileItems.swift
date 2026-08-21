@@ -87,7 +87,6 @@ func infoItems(data: PeerInfoScreenData?, context: AccountContext, presentationD
         let ItemBlock = 6003
         let ItemEncryptionKey = 6004
         let ItemBalanceHeader = 7000
-        let ItemBalanceTon = 7001
         let ItemBalanceStars = 7002
         let ItemBotPermissionsHeader = 8000
         let ItemBotPermissionsEmojiStatus = 8001
@@ -410,25 +409,12 @@ func infoItems(data: PeerInfoScreenData?, context: AccountContext, presentationD
                     }))
                 }
                                 
-                let revenueBalance = data.revenueStatsState?.balances.currentBalance.amount.value ?? 0
-                let overallRevenueBalance = data.revenueStatsState?.balances.overallRevenue.amount.value ?? 0
-                
                 let starsBalance = data.starsRevenueStatsState?.balances.currentBalance.amount ?? StarsAmount.zero
                 let overallStarsBalance = data.starsRevenueStatsState?.balances.overallRevenue.amount ?? StarsAmount.zero
                 
-                if overallRevenueBalance > 0 || overallStarsBalance > StarsAmount.zero {
+                // Ansible: TON removed — bot balance shows the crystal (Stars) balance only.
+                if overallStarsBalance > StarsAmount.zero {
                     items[.balances]!.append(PeerInfoScreenHeaderItem(id: ItemBalanceHeader, text: presentationData.strings.PeerInfo_BotBalance_Title))
-                    if overallRevenueBalance > 0 {
-                        let string = "*\(formatTonAmountText(revenueBalance, dateTimeFormat: presentationData.dateTimeFormat))"
-                        let attributedString = NSMutableAttributedString(string: string, font: Font.regular(presentationData.listsFontSize.itemListBaseFontSize), textColor: presentationData.theme.list.itemSecondaryTextColor)
-                        if let range = attributedString.string.range(of: "*") {
-                            attributedString.addAttribute(ChatTextInputAttributes.customEmoji, value: ChatTextInputTextCustomEmojiAttribute(interactivelySelectedFromPackId: nil, fileId: 0, file: nil, custom: .ton(tinted: false)), range: NSRange(range, in: attributedString.string))
-                            attributedString.addAttribute(.baselineOffset, value: 1.5, range: NSRange(range, in: attributedString.string))
-                        }
-                        items[.balances]!.append(PeerInfoScreenDisclosureItem(id: ItemBalanceTon, label: .attributedText(attributedString), text: presentationData.strings.PeerInfo_BotBalance_Ton, icon: PresentationResourcesSettings.ton, action: {
-                            interaction.editingOpenRevenue()
-                        }))
-                    }
 
                     if overallStarsBalance > StarsAmount.zero {
                         let formattedLabel = formatStarsAmountText(starsBalance, dateTimeFormat: presentationData.dateTimeFormat)
@@ -725,34 +711,22 @@ func infoItems(data: PeerInfoScreenData?, context: AccountContext, presentationD
                         section = .peerMembers
                     }
                     if cachedData.flags.contains(.canViewRevenue) || cachedData.flags.contains(.canViewStarsRevenue) {
-                        let revenueBalance = data.revenueStatsState?.balances.currentBalance.amount.value ?? 0
                         let starsBalance = data.starsRevenueStatsState?.balances.currentBalance.amount ?? StarsAmount.zero
-                        
-                        let overallRevenueBalance = data.revenueStatsState?.balances.overallRevenue.amount.value ?? 0
                         let overallStarsBalance = data.starsRevenueStatsState?.balances.overallRevenue.amount ?? StarsAmount.zero
                         
-                        if overallRevenueBalance > 0 || overallStarsBalance > StarsAmount.zero {
+                        // Ansible: TON removed — channel balance chip shows the crystal (Stars) balance only.
+                        if overallStarsBalance > StarsAmount.zero {
                             let smallLabelFont = Font.regular(floor(presentationData.listsFontSize.itemListBaseFontSize / 17.0 * 13.0))
                             let labelFont = Font.regular(presentationData.listsFontSize.itemListBaseFontSize)
                             let labelColor = presentationData.theme.list.itemSecondaryTextColor
-                            
+
                             let attributedString = NSMutableAttributedString()
-                            if overallRevenueBalance > 0 {
-                                attributedString.append(NSAttributedString(string: "#\(formatTonAmountText(revenueBalance, dateTimeFormat: presentationData.dateTimeFormat))", font: labelFont, textColor: labelColor))
-                            }
                             if overallStarsBalance > StarsAmount.zero {
-                                if !attributedString.string.isEmpty {
-                                    attributedString.append(NSAttributedString(string: " ", font: labelFont, textColor: labelColor))
-                                }
                                 attributedString.append(NSAttributedString(string: "*", font: labelFont, textColor: labelColor))
-                                
+
                                 let formattedLabel = formatStarsAmountText(starsBalance, dateTimeFormat: presentationData.dateTimeFormat)
                                 let starsAttributedString = tonAmountAttributedString(formattedLabel, integralFont: labelFont, fractionalFont: smallLabelFont, color: labelColor, decimalSeparator: presentationData.dateTimeFormat.decimalSeparator).mutableCopy() as! NSMutableAttributedString
                                 attributedString.append(starsAttributedString)
-                            }
-                            if let range = attributedString.string.range(of: "#") {
-                                attributedString.addAttribute(ChatTextInputAttributes.customEmoji, value: ChatTextInputTextCustomEmojiAttribute(interactivelySelectedFromPackId: nil, fileId: 0, file: nil, custom: .ton(tinted: false)), range: NSRange(range, in: attributedString.string))
-                                attributedString.addAttribute(.baselineOffset, value: 1.5, range: NSRange(range, in: attributedString.string))
                             }
                             if let range = attributedString.string.range(of: "*") {
                                 attributedString.addAttribute(ChatTextInputAttributes.customEmoji, value: ChatTextInputTextCustomEmojiAttribute(interactivelySelectedFromPackId: nil, fileId: 1, file: nil, custom: .stars(tinted: false)), range: NSRange(range, in: attributedString.string))

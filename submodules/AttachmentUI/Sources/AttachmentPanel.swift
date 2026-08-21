@@ -247,13 +247,20 @@ private final class AttachButtonComponent: CombinedComponent {
             case let .app(bot):
                 botPeer = bot.peer
                 name = bot.shortName
-                imageName = ""
                 if let file = bot.icons[.iOSAnimated] {
                     animationFile = file
+                    imageName = ""
                 } else if let file = bot.icons[.iOSStatic] {
                     imageFile = file
+                    imageName = ""
                 } else if let file = bot.icons[.default] {
                     imageFile = file
+                    imageName = ""
+                } else {
+                    // Ansible: attach-menu bots with no server-uploaded icon (e.g. the
+                    // wallet mini-app) fall back to the crystal glyph instead of drawing
+                    // nothing. Same template-tinted path as the built-in attach icons.
+                    imageName = "Chat/Input/Media/PanelCollectibleIcon"
                 }
             case .standalone:
                 name = ""
