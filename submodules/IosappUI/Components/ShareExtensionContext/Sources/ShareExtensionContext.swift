@@ -332,7 +332,7 @@ public class ShareRootControllerImpl {
             immediatePeerId = nil
             #else
             if #available(iOS 13.2, *), let sendMessageIntent = self.getExtensionContext()?.intent as? INSendMessageIntent {
-                if let contact = sendMessageIntent.recipients?.first, let handle = contact.customIdentifier, handle.hasPrefix("tg") {
+                if let contact = sendMessageIntent.recipients?.first, let handle = contact.customIdentifier, handle.hasPrefix("as") {
                     let string = handle.suffix(from: handle.index(handle.startIndex, offsetBy: 2))
                     if let peerId = Int64(string) {
                         immediatePeerId = PeerId(peerId)

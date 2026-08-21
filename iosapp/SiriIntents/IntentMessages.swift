@@ -187,7 +187,7 @@ private func messageWithIosappMessage(_ telegramMessage: Message) -> INMessage? 
         personHandle = INPersonHandle(value: user.phone ?? "", type: .phoneNumber)
     }
     
-    let personIdentifier = "tg\(user.id.toInt64())"
+    let personIdentifier = "as\(user.id.toInt64())"
     let sender = INPerson(personHandle: personHandle, nameComponents: nil, displayName: user.nameOrPhone, image: nil, contactIdentifier: personIdentifier, customIdentifier: personIdentifier)
     let date = Date(timeIntervalSince1970: TimeInterval(telegramMessage.timestamp))
     

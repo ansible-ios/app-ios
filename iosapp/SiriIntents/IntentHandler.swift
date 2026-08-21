@@ -301,7 +301,7 @@ class DefaultIntentHandler: INExtension, INSendMessageIntentHandling, INSearchFo
         
         var allPersonsAlreadyMatched = true
         for person in filteredPersons {
-            if !(person.customIdentifier ?? "").hasPrefix("tg") {
+            if !(person.customIdentifier ?? "").hasPrefix("as") {
                 allPersonsAlreadyMatched = false
                 break
             }
@@ -389,7 +389,7 @@ class DefaultIntentHandler: INExtension, INSendMessageIntentHandling, INSearchFo
                     |> castError(IntentHandlingError.self)
                     |> map { user -> INPerson? in
                         if let user = user {
-                            return personWithUser(stableId: "tg\(peerId)", user: user)
+                            return personWithUser(stableId: "as\(peerId)", user: user)
                         } else {
                             return nil
                         }
@@ -477,7 +477,7 @@ class DefaultIntentHandler: INExtension, INSendMessageIntentHandling, INSearchFo
             guard let account = account else {
                 return .fail(.generic)
             }
-            guard let recipient = intent.recipients?.first, let customIdentifier = recipient.customIdentifier, customIdentifier.hasPrefix("tg") else {
+            guard let recipient = intent.recipients?.first, let customIdentifier = recipient.customIdentifier, customIdentifier.hasPrefix("as") else {
                 return .fail(.generic)
             }
             
@@ -695,7 +695,7 @@ class DefaultIntentHandler: INExtension, INSendMessageIntentHandling, INSearchFo
         |> castError(IntentHandlingError.self)
         |> take(1)
         |> mapToSignal { account -> Signal<PeerId, IntentHandlingError> in
-            guard let contact = intent.contacts?.first, let customIdentifier = contact.customIdentifier, customIdentifier.hasPrefix("tg") else {
+            guard let contact = intent.contacts?.first, let customIdentifier = contact.customIdentifier, customIdentifier.hasPrefix("as") else {
                 return .fail(.generic)
             }
             

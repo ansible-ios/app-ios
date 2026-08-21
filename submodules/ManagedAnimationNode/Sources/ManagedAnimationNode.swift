@@ -96,8 +96,8 @@ public enum ManagedAnimationSource: Equatable {
     var path: String? {
         switch self {
             case let .local(name):
-                if let tgsPath = getAppBundle().path(forResource: name, ofType: "tgs") {
-                    return tgsPath
+                if let assPath = getAppBundle().path(forResource: name, ofType: "ass") {
+                    return assPath
                 }
                 return getAppBundle().path(forResource: name, ofType: "json")
             case let .resource(account, resource):

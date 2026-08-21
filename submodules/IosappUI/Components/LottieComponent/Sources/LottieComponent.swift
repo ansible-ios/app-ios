@@ -70,7 +70,7 @@ public final class LottieComponent: Component {
         override public func load(_ f: @escaping (LottieComponent.ContentData) -> Void) -> Disposable {
             if let url = getAppBundle().url(forResource: self.name, withExtension: "json"), let data = try? Data(contentsOf: url) {
                 f(.animation(data: data, cacheKey: url.path))
-            } else if let url = getAppBundle().url(forResource: self.name, withExtension: "tgs"), let data = try? Data(contentsOf: URL(fileURLWithPath: url.path)), let unpackedData = TGGUnzipData(data, 5 * 1024 * 1024) {
+            } else if let url = getAppBundle().url(forResource: self.name, withExtension: "ass"), let data = try? Data(contentsOf: URL(fileURLWithPath: url.path)), let unpackedData = TGGUnzipData(data, 5 * 1024 * 1024) {
                 f(.animation(data: unpackedData, cacheKey: url.path))
             }
             

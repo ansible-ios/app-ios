@@ -392,7 +392,7 @@ final class ChatTranslationPanelNode: ASDisplayNode {
             
             items.append(.separator)
             
-            let cocoonPath = getAppBundle().url(forResource: "Cocoon", withExtension: "tgs")?.path ?? ""
+            let cocoonPath = getAppBundle().url(forResource: "Cocoon", withExtension: "ass")?.path ?? ""
             let cocoonFile = IosappMediaFile(
                 fileId: MediaId(namespace: Namespaces.Media.CloudFile, id: -123456789),
                 partialReference: nil,

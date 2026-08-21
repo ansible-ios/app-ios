@@ -139,7 +139,7 @@ final class CameraRoundVideoFilter {
             self.logoImage = CIImage(image: logoImage)
         }
         
-        if let path = getAppBundle().path(forResource: "PlaneLogoPlain", ofType: "tgs"), var data = try? Data(contentsOf: URL(fileURLWithPath: path)) {
+        if let path = getAppBundle().path(forResource: "PlaneLogoPlain", ofType: "ass"), var data = try? Data(contentsOf: URL(fileURLWithPath: path)) {
             if let unpackedData = TGGUnzipData(data, 5 * 1024 * 1024) {
                 data = unpackedData
                 self.animation = LottieInstance(data: data, fitzModifier: .none, colorReplacements: [:], cacheKey: "")

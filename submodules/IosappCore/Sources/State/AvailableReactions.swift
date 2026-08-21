@@ -382,15 +382,15 @@ func _internal_setCachedAvailableReactions(transaction: Transaction, availableRe
 func managedSynchronizeAvailableReactions(postbox: Postbox, network: Network) -> Signal<Never, NoError> {
     let starsReaction = sharedStarsReaction
     let mapping: [String: KeyPath<AvailableReactions.Reaction, IosappMediaFile.Accessor>] = [
-        "star_reaction_activate.tgs": \.activateAnimation,
-        "star_reaction_appear.tgs": \.appearAnimation,
-        "star_reaction_effect.tgs": \.effectAnimation,
-        "star_reaction_select.tgs": \.selectAnimation,
+        "star_reaction_activate.ass": \.activateAnimation,
+        "star_reaction_appear.ass": \.appearAnimation,
+        "star_reaction_effect.ass": \.effectAnimation,
+        "star_reaction_select.ass": \.selectAnimation,
         "star_reaction_static_icon.webp": \.staticIcon
     ]
     let optionalMapping: [String: KeyPath<AvailableReactions.Reaction, IosappMediaFile.Accessor?>] = [
-        "star_reaction_center.tgs": \.centerAnimation,
-        "star_reaction_effect.tgs": \.aroundAnimation
+        "star_reaction_center.ass": \.centerAnimation,
+        "star_reaction_effect.ass": \.aroundAnimation
     ]
     for (key, path) in mapping {
         if let filePath = Bundle.main.path(forResource: key, ofType: nil), let data = try? Data(contentsOf: URL(fileURLWithPath: filePath)) {

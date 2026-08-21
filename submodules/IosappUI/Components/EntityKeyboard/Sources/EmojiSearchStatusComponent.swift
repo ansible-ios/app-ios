@@ -644,7 +644,7 @@ final class EmojiSearchStatusComponent: Component {
             
             if case .progress = content {
                 self.currentAnimationState = ProgressAnimationState(content: content, displaySize: displaySize)
-            } else if let name, let data = getAppBundle().path(forResource: name, ofType: isJson ? "json" : "tgs").flatMap({
+            } else if let name, let data = getAppBundle().path(forResource: name, ofType: isJson ? "json" : "ass").flatMap({
                 return try? Data(contentsOf: URL(fileURLWithPath: $0))
             }).flatMap({ data -> Data in
                 if isJson {

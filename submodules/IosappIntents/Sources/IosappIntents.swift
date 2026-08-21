@@ -171,7 +171,7 @@ public func donateSendMessageIntent(account: Account, sharedContext: SharedAccou
             let presentationData = sharedContext.currentPresentationData.with { $0 }
             
             for (peer, _, avatarImage) in peers {
-                let recipientHandle = INPersonHandle(value: "tg\(peer.id.toInt64())", type: .unknown)
+                let recipientHandle = INPersonHandle(value: "as\(peer.id.toInt64())", type: .unknown)
                 let displayTitle: String
                 var nameComponents = PersonNameComponents()
                 

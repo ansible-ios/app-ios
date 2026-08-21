@@ -193,7 +193,7 @@ public final class LottieAnimationComponent: Component {
                     var animation: Animation?
                     if let url = getAppBundle().url(forResource: component.animation.name, withExtension: "json"), let maybeAnimation = Animation.filepath(url.path) {
                         animation = maybeAnimation
-                    } else if let url = getAppBundle().url(forResource: component.animation.name, withExtension: "tgs"), let data = try? Data(contentsOf: URL(fileURLWithPath: url.path)), let unpackedData = TGGUnzipData(data, 5 * 1024 * 1024) {
+                    } else if let url = getAppBundle().url(forResource: component.animation.name, withExtension: "ass"), let data = try? Data(contentsOf: URL(fileURLWithPath: url.path)), let unpackedData = TGGUnzipData(data, 5 * 1024 * 1024) {
                         animation = try? Animation.from(data: unpackedData, strategy: .codable)
                     }
                     

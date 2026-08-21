@@ -2591,7 +2591,7 @@ private func extractAccountManagerState(records: AccountRecordsView<IosappAccoun
                         if let peerByContact = peerByContact {
                             startCall(peerByContact.id)
                             processed = true
-                        } else if let handle = contact.customIdentifier, handle.hasPrefix("tg") {
+                        } else if let handle = contact.customIdentifier, handle.hasPrefix("as") {
                             let string = handle.suffix(from: handle.index(handle.startIndex, offsetBy: 2))
                             if let value = Int64(string) {
                                 startCall(PeerId(value))
@@ -2640,7 +2640,7 @@ private func extractAccountManagerState(records: AccountRecordsView<IosappAccoun
                     return true
                 }
             } else if let sendMessageIntent = userActivity.interaction?.intent as? INSendMessageIntent {
-                if let contact = sendMessageIntent.recipients?.first, let handle = contact.customIdentifier, handle.hasPrefix("tg") {
+                if let contact = sendMessageIntent.recipients?.first, let handle = contact.customIdentifier, handle.hasPrefix("as") {
                     let string = handle.suffix(from: handle.index(handle.startIndex, offsetBy: 2))
                     if let value = Int64(string) {
                         self.openChatWhenReady(accountId: nil, peerId: PeerId(value), threadId: nil, activateInput: true, storyId: nil)

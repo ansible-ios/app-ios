@@ -35,7 +35,7 @@ public final class AnimatedStickerNodeLocalFileSource: AnimatedStickerNodeSource
     }
     
     public var path: String? {
-        if let path = getAppBundle().path(forResource: self.name, ofType: "tgs") {
+        if let path = getAppBundle().path(forResource: self.name, ofType: "ass") {
             return path
         } else if let path = getAppBundle().path(forResource: self.name, ofType: "json") {
             return path

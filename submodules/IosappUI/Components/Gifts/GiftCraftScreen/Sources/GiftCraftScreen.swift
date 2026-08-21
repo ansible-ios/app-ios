@@ -365,7 +365,7 @@ private final class CraftGiftPageContent: Component {
             var craftContentHeight: CGFloat = 0.0
             var infoContentHeight: CGFloat = 0.0
                         
-            let anvilPath = getAppBundle().url(forResource: "Anvil", withExtension: "tgs")?.path ?? ""
+            let anvilPath = getAppBundle().url(forResource: "Anvil", withExtension: "ass")?.path ?? ""
             let anvilFile = IosappMediaFile(
                 fileId: MediaId(namespace: Namespaces.Media.CloudFile, id: -123456789),
                 partialReference: nil,
