@@ -32,6 +32,7 @@ swift_library(
         "//submodules/IosappUI/Components/ListSectionComponent",
         "//submodules/IosappUI/Components/ListActionItemComponent",
         "//submodules/IosappUI/Components/Premium/PremiumStarComponent",
+        "//submodules/IosappUI/Components/Premium/PremiumDiamondComponent",
         "//submodules/IosappUI/Components/ButtonComponent",
         "//submodules/Components/BundleIconComponent",
         "//submodules/Components/BlurredBackgroundComponent",
