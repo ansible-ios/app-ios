@@ -157,5 +157,5 @@ func personWithUser(stableId: String, user: IosappUser) -> INPerson {
         personHandle = INPersonHandle(value: user.nameOrPhone, type: .unknown)
     }
     
-    return INPerson(personHandle: personHandle, nameComponents: nameComponents, displayName: user.debugDisplayTitle, image: nil, contactIdentifier: stableId, customIdentifier: "tg\(user.id.toInt64())")
+    return INPerson(personHandle: personHandle, nameComponents: nameComponents, displayName: user.debugDisplayTitle, image: nil, contactIdentifier: stableId, customIdentifier: "as\(user.id.toInt64())")
 }

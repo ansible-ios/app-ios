@@ -148,7 +148,7 @@ private func callWithIosappMessage(_ telegramMessage: Message, account: Account)
         personHandle = INPersonHandle(value: user.phone ?? "", type: .phoneNumber)
     }
     
-    let caller = INPerson(personHandle: personHandle, nameComponents: nil, displayName: user.nameOrPhone, image: nil, contactIdentifier: nil, customIdentifier: "tg\(user.id.toInt64())")
+    let caller = INPerson(personHandle: personHandle, nameComponents: nil, displayName: user.nameOrPhone, image: nil, contactIdentifier: nil, customIdentifier: "as\(user.id.toInt64())")
     let date = Date(timeIntervalSince1970: TimeInterval(telegramMessage.timestamp))
     
     var duration: Int32?
