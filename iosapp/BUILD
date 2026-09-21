@@ -179,7 +179,6 @@ empty_languages = [
     "nl",
     "pl",
     "pt",
-    "ru",
     "tr",
     "uk",
     "uz",
@@ -269,6 +268,7 @@ filegroup(
     name = "AppStringResources",
     srcs = [
         "Sources/en.lproj/Localizable.strings",
+        "Sources/ru.lproj/Localizable.strings",
     ] + [
         "{}.lproj/Localizable.strings".format(language) for language in empty_languages
     ],

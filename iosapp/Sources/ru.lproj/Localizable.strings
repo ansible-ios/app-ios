@@ -2608,8 +2608,8 @@ Unused sets are archived when you add more.";
 "Conversation.HoldForAudio" = "Звук — удерживайте. Видео — нажмите.";
 "Conversation.HoldForVideo" = "Видео — удерживайте. Звук — нажмите.";
 
-"UserInfo.TelegramCall" = "Позвонить через Telegram";
-"UserInfo.TelegramVideoCall" = "Видеозвонок через Telegram";
+"UserInfo.IosappCall" = "Позвонить через Telegram";
+"UserInfo.IosappVideoCall" = "Видеозвонок через Telegram";
 "UserInfo.PhoneCall" = "Позвонить по телефону";
 
 "SharedMedia.CategoryMedia" = "Медиа";
@@ -3496,15 +3496,15 @@ Unused sets are archived when you add more.";
 "Passport.Address.ScansHelp" = "В документе должны быть Ваши имя и фамилия, адрес, подтверждение (печать, штрих-код, QR-код или фирменный знак), а также дата выдачи, не более трех месяцев назад.";
 
 "Passport.Phone.Title" = "Номер телефона";
-"Passport.Phone.UseTelegramNumber" = "Использовать %@";
-"Passport.Phone.UseTelegramNumberHelp" = "Используйте тот же номер телефона, что и в Telegram";
+"Passport.Phone.UseIosappNumber" = "Использовать %@";
+"Passport.Phone.UseIosappNumberHelp" = "Используйте тот же номер телефона, что и в Telegram";
 "Passport.Phone.EnterOtherNumber" = "ИЛИ ВВЕДИТЕ ДРУГОЙ НОМЕР ТЕЛЕФОНА";
 "Passport.Phone.Help" = "Обратите внимание: на указанный Вами номер телефона придет код подтверждения.";
 "Passport.Phone.Delete" = "Удалить номер телефона";
 
 "Passport.Email.Title" = "Email";
-"Passport.Email.UseTelegramEmail" = "Использовать %@";
-"Passport.Email.UseTelegramEmailHelp" = "Используйте тот же адрес, что и в Telegram";
+"Passport.Email.UseIosappEmail" = "Использовать %@";
+"Passport.Email.UseIosappEmailHelp" = "Используйте тот же адрес, что и в Telegram";
 "Passport.Email.EnterOtherEmail" = "ИЛИ УКАЖИТЕ НОВЫЙ АДРЕС";
 "Passport.Email.EmailPlaceholder" = "Укажите электронную почту";
 "Passport.Email.Help" = "На указанную Вами почту придёт код подтверждения.";
@@ -7533,7 +7533,7 @@ Sorry for the inconvenience.";
 "WebApp.RemoveConfirmationText" = "Удалить **%@** из меню вложений?";
 
 "Notifications.SystemTones" = "СИСТЕМНЫЕ ЗВУКИ";
-"Notifications.TelegramTones" = "ЗВУКИ TELEGRAM";
+"Notifications.IosappTones" = "ЗВУКИ TELEGRAM";
 
 "Notifications.UploadSound" = "Загрузить звук";
 "Notifications.MessageSoundInfo" = "Вы можете добавить сюда звук из любого короткого MP3-файла или голосового сообщения в чате: зажмите его пальцем и выберите «Сохранить звук».";
@@ -8074,8 +8074,8 @@ Sorry for the inconvenience.";
 "Login.EnterCodeSMSTitle" = "Введите код";
 "Login.EnterCodeSMSText" = "Мы отправили SMS с кодом проверки на Ваш телефон **%@**.";
 "Login.SendCodeAsSMS" = "Отправить код в SMS";
-"Login.EnterCodeTelegramTitle" = "Введите код";
-"Login.EnterCodeTelegramText" = "Мы отправили код через **Telegram** на другое устройство, где авторизован %@.";
+"Login.EnterCodeIosappTitle" = "Введите код";
+"Login.EnterCodeIosappText" = "Мы отправили код через **Telegram** на другое устройство, где авторизован %@.";
 "Login.AddEmailTitle" = "Укажите почту для входа";
 "Login.AddEmailText" = "Вы будете получать коды для входа в Telegram на адрес электронной почты, а не через SMS. Пожалуйста, введите адрес, к которому у Вас есть доступ.";
 "Login.AddEmailPlaceholder" = "Введите адрес почты";
@@ -10436,8 +10436,8 @@ Sorry for the inconvenience.";
 "GiftLink.Reason.Unclaimed" = "Незавершённый розыгрыш";
 "GiftLink.Date" = "Дата";
 "GiftLink.NoRecipient" = "Нет получателя";
-"GiftLink.TelegramPremium_1" = "Telegram Premium на %@ месяц";
-"GiftLink.TelegramPremium_any" = "Telegram Premium на %@ месяцев";
+"GiftLink.IosappPremium_1" = "Telegram Premium на %@ месяц";
+"GiftLink.IosappPremium_any" = "Telegram Premium на %@ месяцев";
 "GiftLink.LinkHidden" = "Ссылка видна только получателю.";
 
 "ChannelBoost.EnableColors" = "Цвет канала";
@@ -12231,8 +12231,8 @@ Sorry for the inconvenience.";
 "Chat.Context.Phone.CreateNewContact" = "Создать новый контакт";
 "Chat.Context.Phone.AddToExistingContact" = "Добавить в имеющийся";
 "Chat.Context.Phone.SendMessage" = "Написать";
-"Chat.Context.Phone.TelegramVoiceCall" = "Звонок через Telegram";
-"Chat.Context.Phone.TelegramVideoCall" = "Видеозвонок через Telegram";
+"Chat.Context.Phone.IosappVoiceCall" = "Звонок через Telegram";
+"Chat.Context.Phone.IosappVideoCall" = "Видеозвонок через Telegram";
 "Chat.Context.Phone.InviteToTelegram" = "Пригласить в Telegram";
 "Chat.Context.Phone.CallViaCarrier" = "Позвонить по телефону";
 "Chat.Context.Phone.CopyNumber" = "Копировать номер";
@@ -12288,8 +12288,8 @@ Sorry for the inconvenience.";
 "Stars.Intro.Transaction.FragmentTopUp.Subtitle" = "на Fragment";
 "Stars.Intro.Transaction.FragmentWithdrawal.Title" = "Вывод";
 "Stars.Intro.Transaction.FragmentWithdrawal.Subtitle" = "через Fragment";
-"Stars.Intro.Transaction.TelegramAds.Title" = "Вывод";
-"Stars.Intro.Transaction.TelegramAds.Subtitle" = "через рекламную платформу";
+"Stars.Intro.Transaction.IosappAds.Title" = "Вывод";
+"Stars.Intro.Transaction.IosappAds.Subtitle" = "через рекламную платформу";
 "Stars.Intro.Transaction.Gift" = "Подарок";
 "Stars.Intro.Transaction.ConvertedGift" = "Обмен подарка";
 "Stars.Intro.Transaction.Unsupported.Title" = "Недоступно";
@@ -12338,8 +12338,8 @@ Sorry for the inconvenience.";
 "Stars.Transaction.FragmentTopUp.Subtitle" = "Fragment";
 "Stars.Transaction.FragmentWithdrawal.Title" = "Вывод звёзд";
 "Stars.Transaction.FragmentWithdrawal.Subtitle" = "Fragment";
-"Stars.Transaction.TelegramAds.Title" = "Вывод звёзд";
-"Stars.Transaction.TelegramAds.Subtitle" = "Реклама в Telegram";
+"Stars.Transaction.IosappAds.Title" = "Вывод звёзд";
+"Stars.Transaction.IosappAds.Subtitle" = "Реклама в Telegram";
 "Stars.Transaction.Unsupported.Title" = "Не поддерживается";
 "Stars.Transaction.Refund" = "Возврат";
 
@@ -13152,13 +13152,13 @@ Sorry for the inconvenience.";
 "TopApps.Info.Text" = "В этом каталоге представлены мини-приложения, собирающие наибольшее количество звёзд в среднем за день. Чтобы приложение заняло место в рейтинге, его разработчикам необходимо настроить в боте основное мини-приложение с помощью [@botfather]() (по [инструкции](https://core.telegram.org/bots/webapps#launching-the-main-mini-app)), у него должно быть более **1000** пользователей в день, а его дневная выручка должна составлять более **1000** звёзд (учитывается среднее значение за неделю).";
 "TopApps.Info.Done" = "OK";
 
-"Stars.Intro.Transaction.TelegramBotApi.Title" = "Платная отправка";
-"Stars.Intro.Transaction.TelegramBotApi.Messages_1" = "%@ сообщение";
-"Stars.Intro.Transaction.TelegramBotApi.Messages_any" = "%@ сообщения";
+"Stars.Intro.Transaction.IosappBotApi.Title" = "Платная отправка";
+"Stars.Intro.Transaction.IosappBotApi.Messages_1" = "%@ сообщение";
+"Stars.Intro.Transaction.IosappBotApi.Messages_any" = "%@ сообщения";
 
-"Stars.Transaction.TelegramBotApi.Title" = "Платная отправка";
-"Stars.Transaction.TelegramBotApi.Messages_1" = "%@ сообщение";
-"Stars.Transaction.TelegramBotApi.Messages_any" = "%@ сообщения";
+"Stars.Transaction.IosappBotApi.Title" = "Платная отправка";
+"Stars.Transaction.IosappBotApi.Messages_1" = "%@ сообщение";
+"Stars.Transaction.IosappBotApi.Messages_any" = "%@ сообщения";
 
 "Monetization.Bot.Header" = "Вы сможете получить 50% доходов Telegram от рекламы в Вашем боте в качестве вознаграждения. [Подробнее >]()";
 "Monetization.Bot.BalanceTitle" = "ДОСТУПНЫЙ БАЛАНС";
@@ -13863,11 +13863,11 @@ Sorry for the inconvenience.";
 "Stars.Intro.Transaction.PaidMessage_1" = "Оплата %@ сообщения";
 "Stars.Intro.Transaction.PaidMessage_any" = "Оплата %@ сообщений";
 
-"Stars.Transaction.TelegramPremium_1" = "Premium на %@ месяц";
-"Stars.Transaction.TelegramPremium_any" = "Premium на %@ месяца";
+"Stars.Transaction.IosappPremium_1" = "Premium на %@ месяц";
+"Stars.Transaction.IosappPremium_any" = "Premium на %@ месяца";
 
-"Stars.Intro.Transaction.TelegramPremium_1" = "Premium на %@ месяц";
-"Stars.Intro.Transaction.TelegramPremium_any" = "Premium на %@ месяца";
+"Stars.Intro.Transaction.IosappPremium_1" = "Premium на %@ месяц";
+"Stars.Intro.Transaction.IosappPremium_any" = "Premium на %@ месяца";
 
 "Stars.Purchase.SendMessageInfo" = "Купите звёзды, чтобы написать **%@**.";
 "Stars.Purchase.SendGroupMessageInfo" = "Купите звёзды, чтобы написать в **%@**.";
