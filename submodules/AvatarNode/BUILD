@@ -12,9 +12,9 @@ swift_library(
     deps = [
         "//submodules/AsyncDisplayKit:AsyncDisplayKit",
         "//submodules/Display:Display",
-        "//submodules/TelegramCore:TelegramCore",
+        "//submodules/IosappCore:IosappCore",
         "//submodules/Postbox",
-        "//submodules/TelegramPresentationData:TelegramPresentationData",
+        "//submodules/IosappPresentationData:IosappPresentationData",
         "//submodules/AnimationUI:AnimationUI",
         "//submodules/AppBundle:AppBundle",
         "//submodules/AccountContext:AccountContext",
@@ -22,7 +22,7 @@ swift_library(
         "//submodules/TinyThumbnail:TinyThumbnail",
         "//submodules/FastBlur:FastBlur",
         "//submodules/ComponentFlow",
-        "//submodules/TelegramUI/Components/Stories/AvatarStoryIndicatorComponent",
+        "//submodules/IosappUI/Components/Stories/AvatarStoryIndicatorComponent",
         "//submodules/DirectMediaImageCache",
     ],
     visibility = [

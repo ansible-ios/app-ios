@@ -1,0 +1,6 @@
+namespace IosappCore;
+
+struct MediaId {
+    namespace: int;
+    id: int64;
+}

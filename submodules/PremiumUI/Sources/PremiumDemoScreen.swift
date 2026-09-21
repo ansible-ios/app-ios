@@ -2,10 +2,10 @@ import Foundation
 import UIKit
 import Display
 import AsyncDisplayKit
-import TelegramCore
+import IosappCore
 import SwiftSignalKit
 import AccountContext
-import TelegramPresentationData
+import IosappPresentationData
 import PresentationDataUtils
 import ComponentFlow
 import ViewControllerComponent
@@ -15,7 +15,7 @@ import BundleIconComponent
 import ButtonComponent
 import BlurredBackgroundComponent
 import Markdown
-import TelegramUIPreferences
+import IosappUIPreferences
 import GlassBarButtonComponent
 import LottieComponent
 
@@ -515,7 +515,7 @@ private final class DemoSheetContent: CombinedComponent {
         
         var isPremium: Bool?
         var reactions: [AvailableReactions.Reaction]?
-        var stickers: [TelegramMediaFile]?
+        var stickers: [IosappMediaFile]?
         var appIcons: [PresentationAppIcon]?
         var disposable: Disposable?
         
@@ -535,7 +535,7 @@ private final class DemoSheetContent: CombinedComponent {
             }
             
             let reactionOverrideMessages = self.context.engine.data.get(
-                EngineDataMap(accountSpecificReactionOverrides.map(\.messageId).map(TelegramEngine.EngineData.Item.Messages.Message.init))
+                EngineDataMap(accountSpecificReactionOverrides.map(\.messageId).map(IosappEngine.EngineData.Item.Messages.Message.init))
             )
             
             let accountSpecificStickerOverrides: [ExperimentalUISettings.AccountReactionOverrides.Item]
@@ -545,38 +545,38 @@ private final class DemoSheetContent: CombinedComponent {
                 accountSpecificStickerOverrides = []
             }
             let stickerOverrideMessages = self.context.engine.data.get(
-                EngineDataMap(accountSpecificStickerOverrides.map(\.messageId).map(TelegramEngine.EngineData.Item.Messages.Message.init))
+                EngineDataMap(accountSpecificStickerOverrides.map(\.messageId).map(IosappEngine.EngineData.Item.Messages.Message.init))
             )
             
             self.disposable = (combineLatest(
                 queue: Queue.mainQueue(),
                 self.context.engine.stickers.availableReactions(),
-                self.context.engine.data.subscribe(TelegramEngine.EngineData.Item.OrderedLists.ListItems(collectionId: Namespaces.OrderedItemList.CloudPremiumStickers))
+                self.context.engine.data.subscribe(IosappEngine.EngineData.Item.OrderedLists.ListItems(collectionId: Namespaces.OrderedItemList.CloudPremiumStickers))
                 |> take(1),
                 self.context.engine.data.get(
-                    TelegramEngine.EngineData.Item.Peer.Peer(id: self.context.account.peerId),
-                    TelegramEngine.EngineData.Item.Configuration.PremiumPromo()
+                    IosappEngine.EngineData.Item.Peer.Peer(id: self.context.account.peerId),
+                    IosappEngine.EngineData.Item.Configuration.PremiumPromo()
                 ),
                 reactionOverrideMessages,
                 stickerOverrideMessages
             )
-            |> map { reactions, items, data, reactionOverrideMessages, stickerOverrideMessages -> ([AvailableReactions.Reaction], [TelegramMediaFile], Bool?, PremiumPromoConfiguration?) in
-                var reactionOverrides: [MessageReaction.Reaction: TelegramMediaFile] = [:]
+            |> map { reactions, items, data, reactionOverrideMessages, stickerOverrideMessages -> ([AvailableReactions.Reaction], [IosappMediaFile], Bool?, PremiumPromoConfiguration?) in
+                var reactionOverrides: [MessageReaction.Reaction: IosappMediaFile] = [:]
                 for item in accountSpecificReactionOverrides {
                     if let maybeMessage = reactionOverrideMessages[item.messageId], let message = maybeMessage {
                         for media in message.media {
-                            if let file = media as? TelegramMediaFile, file.fileId == item.mediaId {
+                            if let file = media as? IosappMediaFile, file.fileId == item.mediaId {
                                 reactionOverrides[item.key] = file
                             }
                         }
                     }
                 }
                 
-                var stickerOverrides: [MessageReaction.Reaction: TelegramMediaFile] = [:]
+                var stickerOverrides: [MessageReaction.Reaction: IosappMediaFile] = [:]
                 for item in accountSpecificStickerOverrides {
                     if let maybeMessage = stickerOverrideMessages[item.messageId], let message = maybeMessage {
                         for media in message.media {
-                            if let file = media as? TelegramMediaFile, file.fileId == item.mediaId {
+                            if let file = media as? IosappMediaFile, file.fileId == item.mediaId {
                                 stickerOverrides[item.key] = file
                             }
                         }
@@ -584,7 +584,7 @@ private final class DemoSheetContent: CombinedComponent {
                 }
                 
                 if let reactions = reactions {
-                    var result: [TelegramMediaFile] = []
+                    var result: [IosappMediaFile] = []
                     for item in items {
                         if let mediaItem = item.contents.get(RecentMediaItem.self) {
                             result.append(mediaItem.media._parse())
@@ -593,7 +593,7 @@ private final class DemoSheetContent: CombinedComponent {
                     return (reactions.reactions.filter({ $0.isPremium }).map { reaction -> AvailableReactions.Reaction in
                         var aroundAnimation = reaction.aroundAnimation
                         if let replacementFile = reactionOverrides[reaction.value] {
-                            aroundAnimation = TelegramMediaFile.Accessor(replacementFile)
+                            aroundAnimation = IosappMediaFile.Accessor(replacementFile)
                         }
                         
                         return AvailableReactions.Reaction(
@@ -609,18 +609,18 @@ private final class DemoSheetContent: CombinedComponent {
                             aroundAnimation: aroundAnimation?._parse(),
                             centerAnimation: reaction.centerAnimation?._parse()
                         )
-                    }, result.map { file -> TelegramMediaFile in
+                    }, result.map { file -> IosappMediaFile in
                         for attribute in file.attributes {
                             switch attribute {
                             case let .Sticker(displayText, _, _):
                                 if let replacementFile = stickerOverrides[.builtin(displayText)], let dimensions = replacementFile.dimensions {
                                     let _ = dimensions
-                                    return TelegramMediaFile(
+                                    return IosappMediaFile(
                                         fileId: file.fileId,
                                         partialReference: file.partialReference,
                                         resource: file.resource,
                                         previewRepresentations: file.previewRepresentations,
-                                        videoThumbnails: [TelegramMediaFile.VideoThumbnail(dimensions: dimensions, resource: replacementFile.resource)],
+                                        videoThumbnails: [IosappMediaFile.VideoThumbnail(dimensions: dimensions, resource: replacementFile.resource)],
                                         immediateThumbnailData: file.immediateThumbnailData,
                                         mimeType: file.mimeType,
                                         size: file.size,

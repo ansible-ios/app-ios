@@ -3,16 +3,16 @@ import UIKit
 import AsyncDisplayKit
 import Display
 import SwiftSignalKit
-import TelegramCore
-import TelegramPresentationData
-import TelegramUIPreferences
+import IosappCore
+import IosappPresentationData
+import IosappUIPreferences
 import ItemListUI
 import PresentationDataUtils
 import AccountContext
 import AlertUI
 import PresentationDataUtils
 import AppBundle
-import TelegramStringFormatting
+import IosappStringFormatting
 import ItemListPeerItem
 import ItemListDatePickerItem
 import ItemListPeerActionItem
@@ -1178,7 +1178,7 @@ public func createGiveawayController(context: AccountContext, updatedPresentatio
         |> mapToSignal { state in
             return context.engine.data.get(EngineDataMap(
                 Set([peerId] + state.channels + state.peers).map {
-                    TelegramEngine.EngineData.Item.Peer.Peer(id: $0)
+                    IosappEngine.EngineData.Item.Peer.Peer(id: $0)
                 }
             ))
             |> map { peers in

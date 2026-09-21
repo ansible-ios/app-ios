@@ -1,5 +1,5 @@
 import Foundation
-import TelegramCore
+import IosappCore
 
 /// Recurses the `InstantPage` block tree to locate the anchor `name`, returning the
 /// details-sibling-ordinal path of enclosing `<details>` blocks (outermost first).

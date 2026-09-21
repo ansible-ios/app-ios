@@ -3,9 +3,9 @@ import UIKit
 import AsyncDisplayKit
 import Display
 import AccountContext
-import TelegramCore
+import IosappCore
 import SwiftSignalKit
-import TelegramPresentationData
+import IosappPresentationData
 import AppBundle
 import CoreLocation
 import ComponentFlow
@@ -81,7 +81,7 @@ public final class LocationMapHeaderNode: ASDisplayNode {
     private let weatherButton: HighlightTrackingButton
     private var weatherEmoji: String?
     private var weatherTemperature: String?
-    private var weatherEmojiFile: TelegramMediaFile?
+    private var weatherEmojiFile: IosappMediaFile?
     private weak var weatherContext: AccountContext?
     private let weatherEmojiLoadDisposable = MetaDisposable()
 

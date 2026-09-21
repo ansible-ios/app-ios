@@ -2,18 +2,18 @@ import Foundation
 import UIKit
 import Display
 import SwiftSignalKit
-import TelegramCore
-import TelegramPresentationData
-import TelegramUIPreferences
+import IosappCore
+import IosappPresentationData
+import IosappUIPreferences
 import DeviceAccess
 import ItemListUI
 import PresentationDataUtils
 import AccountContext
 import AlertUI
 import PresentationDataUtils
-import TelegramNotices
+import IosappNotices
 import NotificationSoundSelectionUI
-import TelegramStringFormatting
+import IosappStringFormatting
 import NotificationPeerExceptionController
 
 private struct CounterTagSettings: OptionSet {
@@ -778,7 +778,7 @@ public func notificationsAndSoundsController(context: AccountContext, exceptions
     })
     
     let sharedData = context.sharedContext.accountManager.sharedData(keys: [ApplicationSpecificSharedDataKeys.inAppNotificationSettings])
-    let preferences = context.engine.data.subscribe(TelegramEngine.EngineData.Item.Configuration.ApplicationSpecificPreference(key: PreferencesKeys.globalNotifications))
+    let preferences = context.engine.data.subscribe(IosappEngine.EngineData.Item.Configuration.ApplicationSpecificPreference(key: PreferencesKeys.globalNotifications))
     
     let exceptionsSignal = Signal<NotificationExceptionsList?, NoError>.single(exceptionsList) |> then(context.engine.peers.notificationExceptionsList() |> map(Optional.init))
     

@@ -3,7 +3,7 @@ import UIKit
 import AsyncDisplayKit
 import Display
 import SwiftSignalKit
-import TelegramPresentationData
+import IosappPresentationData
 
 public enum PeekControllerContentPresentation {
     case contained

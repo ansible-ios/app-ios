@@ -4,7 +4,7 @@ import Display
 import ComponentFlow
 import SwiftSignalKit
 import LegacyComponents
-import TelegramCore
+import IosappCore
 
 private let toolSize = CGSize(width: 40.0, height: 176.0)
 

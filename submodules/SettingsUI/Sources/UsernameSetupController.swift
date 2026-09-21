@@ -2,8 +2,8 @@ import Foundation
 import UIKit
 import Display
 import SwiftSignalKit
-import TelegramCore
-import TelegramPresentationData
+import IosappCore
+import IosappPresentationData
 import ItemListUI
 import PresentationDataUtils
 import AccountContext
@@ -56,7 +56,7 @@ private enum UsernameSetupEntry: ItemListNodeEntry {
     case publicLinkInfo(PresentationTheme, String)
     
     case additionalLinkHeader(PresentationTheme, String)
-    case additionalLink(PresentationTheme, TelegramPeerUsername, Int32, Bool)
+    case additionalLink(PresentationTheme, IosappPeerUsername, Int32, Bool)
     case additionalLinkInfo(PresentationTheme, String)
     
     var section: ItemListSectionId {
@@ -370,11 +370,11 @@ private func usernameSetupControllerEntries(presentationData: PresentationData, 
             
             var usernames = peer.usernames
             if let temporaryOrder = temporaryOrder {
-                var usernamesMap: [String: TelegramPeerUsername] = [:]
+                var usernamesMap: [String: IosappPeerUsername] = [:]
                 for username in usernames {
                     usernamesMap[username.username] = username
                 }
-                var sortedUsernames: [TelegramPeerUsername] = []
+                var sortedUsernames: [IosappPeerUsername] = []
                 for username in temporaryOrder {
                     if let username = usernamesMap[username] {
                         sortedUsernames.append(username)
@@ -465,7 +465,7 @@ public func usernameSetupController(context: AccountContext, mode: UsernameSetup
             }))
         }
     }, shareLink: {
-        let _ = (context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: peerId))
+        let _ = (context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: peerId))
         |> mapToSignal { peer -> Signal<EnginePeer, NoError> in
             if let peer {
                 return .single(peer)
@@ -487,7 +487,7 @@ public func usernameSetupController(context: AccountContext, mode: UsernameSetup
                 }
                 if !currentAddressName.isEmpty {
                     dismissInputImpl?()
-                    let shareController = context.sharedContext.makeShareController(context: context, params: ShareControllerParams(subject: .url("https://t.me/\(currentAddressName)"), actionCompleted: {
+                    let shareController = context.sharedContext.makeShareController(context: context, params: ShareControllerParams(subject: .url("https://asme.su/\(currentAddressName)"), actionCompleted: {
                         let presentationData = context.sharedContext.currentPresentationData.with { $0 }
                         presentControllerImpl?(UndoOverlayController(presentationData: presentationData, content: .linkCopied(title: nil, text: presentationData.strings.Conversation_LinkCopied), elevatedLayout: false, animateInAsReplacement: false, action: { _ in return false }), nil)
                     }))
@@ -541,7 +541,7 @@ public func usernameSetupController(context: AccountContext, mode: UsernameSetup
     
     let temporaryOrder = Promise<[String]?>(nil)
         
-    let peerSignal = context.engine.data.subscribe(TelegramEngine.EngineData.Item.Peer.Peer(id: peerId))
+    let peerSignal = context.engine.data.subscribe(IosappEngine.EngineData.Item.Peer.Peer(id: peerId))
     |> deliverOnMainQueue
 
     let signal = combineLatest(
@@ -721,7 +721,7 @@ public func usernameSetupController(context: AccountContext, mode: UsernameSetup
     })
     
     controller.setReorderCompleted({ (entries: [UsernameSetupEntry]) -> Void in
-        var currentUsernames: [TelegramPeerUsername] = []
+        var currentUsernames: [IosappPeerUsername] = []
         for entry in entries {
             switch entry {
             case let .additionalLink(_, username, _, _):

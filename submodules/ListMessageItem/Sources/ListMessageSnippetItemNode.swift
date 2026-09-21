@@ -2,9 +2,9 @@ import Foundation
 import UIKit
 import AsyncDisplayKit
 import Display
-import TelegramCore
+import IosappCore
 import SwiftSignalKit
-import TelegramPresentationData
+import IosappPresentationData
 import ItemListUI
 import PresentationDataUtils
 import TextFormat
@@ -13,7 +13,7 @@ import WebsiteType
 import UrlHandling
 import UrlWhitelist
 import AccountContext
-import TelegramStringFormatting
+import IosappStringFormatting
 import WallpaperResources
 import UrlEscaping
 
@@ -55,7 +55,7 @@ public final class ListMessageSnippetItemNode: ListMessageNode {
     private let iconTextNode: TextNode
     private let iconImageNode: TransformImageNode
     
-    private var currentIconImageRepresentation: TelegramMediaImageRepresentation?
+    private var currentIconImageRepresentation: IosappMediaImageRepresentation?
     private var currentMedia: EngineRawMedia?
     public var currentPrimaryUrl: String?
     private var currentIsInstantView: Bool?
@@ -284,7 +284,7 @@ public final class ListMessageSnippetItemNode: ListMessageNode {
             var linkText: NSAttributedString?
             var iconText: NSAttributedString?
             
-            var iconImageReferenceAndRepresentation: (AnyMediaReference, TelegramMediaImageRepresentation)?
+            var iconImageReferenceAndRepresentation: (AnyMediaReference, IosappMediaImageRepresentation)?
             var updateIconImageSignal: Signal<(TransformImageArguments) -> DrawingContext?, NoError>?
             
             let applyIconTextBackgroundImage = item.systemStyle == .glass ? iconTextGlassBackgroundImage : iconTextBackgroundImage
@@ -293,15 +293,15 @@ public final class ListMessageSnippetItemNode: ListMessageNode {
             
             var isInstantView = false
 
-            var previewWallpaper: TelegramWallpaper?
+            var previewWallpaper: IosappWallpaper?
             var previewWallpaperFileReference: FileMediaReference?
             
-            var selectedMedia: TelegramMediaWebpage?
+            var selectedMedia: IosappMediaWebpage?
             var processed = false
                         
             if let message = item.message {
                 for media in message.media {
-                    if let webpage = media as? TelegramMediaWebpage {
+                    if let webpage = media as? IosappMediaWebpage {
                         selectedMedia = webpage
                         
                         if case let .Loaded(content) = webpage.content {
@@ -332,7 +332,7 @@ public final class ListMessageSnippetItemNode: ListMessageNode {
                                         switch wallpaper {
                                         case let .slug(slug, _, colors, intensity, angle):
                                             previewWallpaperFileReference = .message(message: MessageReference(message), media: file)
-                                            previewWallpaper = .file(TelegramWallpaper.File(id: file.fileId.id, accessHash: 0, isCreator: false, isDefault: false, isPattern: true, isDark: false, slug: slug, file: file, settings: WallpaperSettings(blur: false, motion: false, colors: colors, intensity: intensity, rotation: angle)))
+                                            previewWallpaper = .file(IosappWallpaper.File(id: file.fileId.id, accessHash: 0, isCreator: false, isDefault: false, isPattern: true, isDark: false, slug: slug, file: file, settings: WallpaperSettings(blur: false, motion: false, colors: colors, intensity: intensity, rotation: angle)))
                                         default:
                                             break
                                         }
@@ -365,7 +365,7 @@ public final class ListMessageSnippetItemNode: ListMessageNode {
                             let plainUrlString = NSAttributedString(string: address.replacingOccurrences(of: "https://", with: "").replacingOccurrences(of: "tonsite://", with: ""), font: descriptionFont, textColor: item.presentationData.theme.theme.list.itemAccentColor)
                             let urlString = NSMutableAttributedString()
                             urlString.append(plainUrlString)
-                            urlString.addAttribute(NSAttributedString.Key(rawValue: TelegramTextAttributes.URL), value: content.url, range: NSMakeRange(0, urlString.length))
+                            urlString.addAttribute(NSAttributedString.Key(rawValue: IosappTextAttributes.URL), value: content.url, range: NSMakeRange(0, urlString.length))
                             linkText = urlString
                             
                             descriptionText = mutableDescriptionText
@@ -385,13 +385,13 @@ public final class ListMessageSnippetItemNode: ListMessageNode {
                     }
                     
                     for media in message.media {
-                        if let image = media as? TelegramMediaImage {
+                        if let image = media as? IosappMediaImage {
                             if let representation = imageRepresentationLargerThan(image.representations, size: PixelDimensions(width: 80, height: 80)) {
                                 iconImageReferenceAndRepresentation = (.message(message: MessageReference(message), media: image), representation)
                             }
                             break
                         }
-                        if let file = media as? TelegramMediaFile {
+                        if let file = media as? IosappMediaFile {
                             if let representation = smallestImageRepresentation(file.previewRepresentations) {
                                 iconImageReferenceAndRepresentation = (.message(message: MessageReference(message), media: file), representation)
                             }
@@ -486,7 +486,7 @@ public final class ListMessageSnippetItemNode: ListMessageNode {
                                         if item.presentationData.theme.theme.list.itemAccentColor.isEqual(item.presentationData.theme.theme.list.itemPrimaryTextColor) {
                                             urlAttributedString.addAttribute(NSAttributedString.Key.underlineStyle, value: NSUnderlineStyle.single.rawValue as NSNumber, range: NSMakeRange(0, urlAttributedString.length))
                                         }
-                                        urlAttributedString.addAttribute(NSAttributedString.Key(rawValue: TelegramTextAttributes.URL), value: urlString, range: NSMakeRange(0, urlAttributedString.length))
+                                        urlAttributedString.addAttribute(NSAttributedString.Key(rawValue: IosappTextAttributes.URL), value: urlString, range: NSMakeRange(0, urlAttributedString.length))
                                         linkText = urlAttributedString
 
                                         descriptionText = mutableDescriptionText
@@ -561,7 +561,7 @@ public final class ListMessageSnippetItemNode: ListMessageNode {
                                         if item.presentationData.theme.theme.list.itemAccentColor.isEqual(item.presentationData.theme.theme.list.itemPrimaryTextColor) {
                                             urlAttributedString.addAttribute(NSAttributedString.Key.underlineStyle, value: NSUnderlineStyle.single.rawValue as NSNumber, range: NSMakeRange(0, urlAttributedString.length))
                                         }
-                                        urlAttributedString.addAttribute(NSAttributedString.Key(rawValue: TelegramTextAttributes.URL), value: urlString, range: NSMakeRange(0, urlAttributedString.length))
+                                        urlAttributedString.addAttribute(NSAttributedString.Key(rawValue: IosappTextAttributes.URL), value: urlString, range: NSMakeRange(0, urlAttributedString.length))
                                         linkText = urlAttributedString
                                         
                                         descriptionText = mutableDescriptionText
@@ -660,9 +660,9 @@ public final class ListMessageSnippetItemNode: ListMessageNode {
                 if let previewWallpaper = previewWallpaper, let fileReference = previewWallpaperFileReference {
                     updateIconImageSignal = wallpaperThumbnail(account: item.context.account, accountManager: item.context.sharedContext.accountManager, fileReference: fileReference, wallpaper: previewWallpaper, synchronousLoad: false)
                 } else if let iconImageReferenceAndRepresentation = iconImageReferenceAndRepresentation {
-                    if let imageReference = iconImageReferenceAndRepresentation.0.concrete(TelegramMediaImage.self) {
+                    if let imageReference = iconImageReferenceAndRepresentation.0.concrete(IosappMediaImage.self) {
                         updateIconImageSignal = chatWebpageSnippetPhoto(account: item.context.account, userLocation: (item.message?.id.peerId).flatMap(MediaResourceUserLocation.peer) ?? .other, photoReference: imageReference)
-                    } else if let fileReference = iconImageReferenceAndRepresentation.0.concrete(TelegramMediaFile.self) {
+                    } else if let fileReference = iconImageReferenceAndRepresentation.0.concrete(IosappMediaFile.self) {
                         updateIconImageSignal = chatWebpageSnippetFile(account: item.context.account, userLocation: (item.message?.id.peerId).flatMap(MediaResourceUserLocation.peer) ?? .other, mediaReference: fileReference.abstract, representation: iconImageReferenceAndRepresentation.1)
                     }
                 } else {
@@ -883,7 +883,7 @@ public final class ListMessageSnippetItemNode: ListMessageNode {
     
     func activateMedia() {
         if let item = self.item, let message = item.message, let currentPrimaryUrl = self.currentPrimaryUrl {
-            if let webpage = self.currentMedia as? TelegramMediaWebpage, case let .Loaded(content) = webpage.content {
+            if let webpage = self.currentMedia as? IosappMediaWebpage, case let .Loaded(content) = webpage.content {
                 if content.instantPage != nil {
                     if websiteType(of: content.websiteName) == .instagram {
                         if !item.interaction.openMessage(message, .default) {
@@ -893,7 +893,7 @@ public final class ListMessageSnippetItemNode: ListMessageNode {
                         item.interaction.openInstantPage(message, nil)
                     }
                 } else {
-                    if isTelegramMeLink(content.url) || !item.interaction.openMessage(message, .link) {
+                    if isIosappMeLink(content.url) || !item.interaction.openMessage(message, .link) {
                         item.interaction.openUrl(currentPrimaryUrl, false, false, nil)
                     }
                 }
@@ -927,7 +927,7 @@ public final class ListMessageSnippetItemNode: ListMessageNode {
         let textNodeFrame = self.linkNode.frame
         if let (_, attributes) = self.linkNode.attributesAtPoint(CGPoint(x: point.x - textNodeFrame.minX, y: point.y - textNodeFrame.minY)) {
             let possibleNames: [String] = [
-                TelegramTextAttributes.URL,
+                IosappTextAttributes.URL,
             ]
             for name in possibleNames {
                 if let value = attributes[NSAttributedString.Key(rawValue: name)] as? String {
@@ -950,7 +950,7 @@ public final class ListMessageSnippetItemNode: ListMessageNode {
                                 if case .longTap = gesture {
                                     item.interaction.longTap(ChatControllerInteractionLongTapAction.url(url), message)
                                 } else if url == self.currentPrimaryUrl {
-                                    if let webpage = self.currentMedia as? TelegramMediaWebpage, case let .Loaded(content) = webpage.content, content.instantPage != nil {
+                                    if let webpage = self.currentMedia as? IosappMediaWebpage, case let .Loaded(content) = webpage.content, content.instantPage != nil {
                                         item.interaction.openInstantPage(message, nil)
                                     } else {
                                         item.interaction.openUrl(url, false, false, nil)
@@ -977,7 +977,7 @@ public final class ListMessageSnippetItemNode: ListMessageNode {
                 let textNodeFrame = self.linkNode.frame
                 if let (index, attributes) = self.linkNode.attributesAtPoint(CGPoint(x: point.x - textNodeFrame.minX, y: point.y - textNodeFrame.minY)) {
                     let possibleNames: [String] = [
-                        TelegramTextAttributes.URL
+                        IosappTextAttributes.URL
                     ]
                     for name in possibleNames {
                         if let _ = attributes[NSAttributedString.Key(rawValue: name)] {

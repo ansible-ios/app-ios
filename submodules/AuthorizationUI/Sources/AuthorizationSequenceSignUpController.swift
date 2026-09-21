@@ -3,8 +3,8 @@ import UIKit
 import Display
 import AsyncDisplayKit
 import SwiftSignalKit
-import TelegramCore
-import TelegramPresentationData
+import IosappCore
+import IosappPresentationData
 import PresentationDataUtils
 import LegacyComponents
 import ProgressNavigationButtonNode
@@ -197,7 +197,7 @@ final class AuthorizationSequenceSignUpController: ViewController {
                         dismissImpl?()
                     })
                 ], actionLayout: .vertical, dismissOnOutsideTap: true)
-                contentNode.textAttributeAction = (NSAttributedString.Key(rawValue: TelegramTextAttributes.URL), { value in
+                contentNode.textAttributeAction = (NSAttributedString.Key(rawValue: IosappTextAttributes.URL), { value in
                     if let value = value as? String {
                         strongSelf.openUrl?(value)
                     }

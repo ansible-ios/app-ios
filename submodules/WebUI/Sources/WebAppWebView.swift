@@ -3,7 +3,7 @@ import UIKit
 import Display
 import WebKit
 import SwiftSignalKit
-import TelegramCore
+import IosappCore
 
 private let findActiveElementY = """
 function getOffset(el) {
@@ -138,20 +138,20 @@ final class WebAppWebView: WKWebView {
                 
         if #available(iOS 17.0, *) {
             var uuid: UUID?
-            if let current = UserDefaults.standard.object(forKey: "TelegramWebStoreUUID_\(account.id.int64)") as? String {
+            if let current = UserDefaults.standard.object(forKey: "IosappWebStoreUUID_\(account.id.int64)") as? String {
                 uuid = UUID(uuidString: current)!
             } else {
                 let mainAccountId: Int64
-                if let current = UserDefaults.standard.object(forKey: "TelegramWebStoreMainAccountId") as? Int64 {
+                if let current = UserDefaults.standard.object(forKey: "IosappWebStoreMainAccountId") as? Int64 {
                     mainAccountId = current
                 } else {
                     mainAccountId = account.id.int64
-                    UserDefaults.standard.set(mainAccountId, forKey: "TelegramWebStoreMainAccountId")
+                    UserDefaults.standard.set(mainAccountId, forKey: "IosappWebStoreMainAccountId")
                 }
                 
                 if account.id.int64 != mainAccountId {
                     uuid = UUID()
-                    UserDefaults.standard.set(uuid!.uuidString, forKey: "TelegramWebStoreUUID_\(account.id.int64)")
+                    UserDefaults.standard.set(uuid!.uuidString, forKey: "IosappWebStoreUUID_\(account.id.int64)")
                 }
             }
             

@@ -1,8 +1,8 @@
 import Foundation
 import UIKit
 import Display
-import TelegramCore
-import TelegramPresentationData
+import IosappCore
+import IosappPresentationData
 
 public protocol ShareContentContainerNode: AnyObject {
     func activate()

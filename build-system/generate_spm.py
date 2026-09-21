@@ -9,7 +9,7 @@ import hashlib
 import tempfile
 
 # Read the modules JSON file
-modules_json_path = "bazel-bin/Telegram/spm_build_root_modules.json"
+modules_json_path = "bazel-bin/Iosapp/spm_build_root_modules.json"
 
 with open(modules_json_path, 'r') as f:
     modules = json.load(f)
@@ -270,7 +270,7 @@ combined_lines.append("let products: [Product] = (packageData[\"products\"] as! 
 combined_lines.append("let targets: [Target] = (packageData[\"targets\"] as! [[String: Any]]).map(parseTarget)")
 combined_lines.append("")
 combined_lines.append("let package = Package(")
-combined_lines.append("    name: \"Telegram\",")
+combined_lines.append("    name: \"Iosapp\",")
 combined_lines.append("    platforms: [")
 combined_lines.append("        .iOS(.v13)")
 combined_lines.append("    ],")

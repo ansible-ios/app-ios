@@ -3,12 +3,12 @@ import UIKit
 import Display
 import ComponentFlow
 import SwiftSignalKit
-import TelegramCore
+import IosappCore
 import AccountContext
 import MultilineTextComponent
 import BlurredBackgroundComponent
 import Markdown
-import TelegramPresentationData
+import IosappPresentationData
 import BundleIconComponent
 import ScrollComponent
 import PremiumCoinComponent
@@ -272,9 +272,9 @@ private final class BusinessListComponent: CombinedComponent {
             super.init()
             
             self.disposable = (context.engine.data.get(
-                TelegramEngine.EngineData.Item.Configuration.UserLimits(isPremium: false),
-                TelegramEngine.EngineData.Item.Configuration.UserLimits(isPremium: true),
-                TelegramEngine.EngineData.Item.Peer.Peer(id: context.account.peerId)
+                IosappEngine.EngineData.Item.Configuration.UserLimits(isPremium: false),
+                IosappEngine.EngineData.Item.Configuration.UserLimits(isPremium: true),
+                IosappEngine.EngineData.Item.Peer.Peer(id: context.account.peerId)
             )
             |> deliverOnMainQueue).start(next: { [weak self] limits, premiumLimits, accountPeer in
                 if let strongSelf = self {

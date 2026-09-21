@@ -1,7 +1,7 @@
 import Foundation
 import UIKit
 import Display
-import TelegramCore
+import IosappCore
 import MapKit
 import SwiftSignalKit
 
@@ -88,7 +88,7 @@ private func fetchMapSnapshotResource(resource: MapSnapshotMediaResource) -> Sig
     }
 }
 
-public func chatMapSnapshotData(engine: TelegramEngine, resource: MapSnapshotMediaResource) -> Signal<Data?, NoError> {
+public func chatMapSnapshotData(engine: IosappEngine, resource: MapSnapshotMediaResource) -> Signal<Data?, NoError> {
     return Signal<Data?, NoError> { subscriber in
         let dataDisposable = engine.resources.custom(
             id: resource.id.stringRepresentation,
@@ -108,7 +108,7 @@ public func chatMapSnapshotData(engine: TelegramEngine, resource: MapSnapshotMed
     }
 }
 
-public func chatMapSnapshotImage(engine: TelegramEngine, resource: MapSnapshotMediaResource) -> Signal<(TransformImageArguments) -> DrawingContext?, NoError> {
+public func chatMapSnapshotImage(engine: IosappEngine, resource: MapSnapshotMediaResource) -> Signal<(TransformImageArguments) -> DrawingContext?, NoError> {
     // Emit an initial `nil` so a caller-supplied `emptyColor` placeholder draws during the (async
     // MKMapSnapshotter) load instead of leaving the map area blank; the real snapshot data follows.
     let signal = Signal<Data?, NoError>.single(nil)

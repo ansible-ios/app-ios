@@ -3,7 +3,7 @@ import UIKit
 import UIKit.UIGestureRecognizerSubclass
 import AsyncDisplayKit
 import Display
-import TelegramPresentationData
+import IosappPresentationData
 import TextFormat
 
 private extension CGRect {

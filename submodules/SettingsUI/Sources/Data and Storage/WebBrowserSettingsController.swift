@@ -2,9 +2,9 @@ import Foundation
 import UIKit
 import Display
 import SwiftSignalKit
-import TelegramCore
-import TelegramPresentationData
-import TelegramUIPreferences
+import IosappCore
+import IosappPresentationData
+import IosappUIPreferences
 import PresentationDataUtils
 import ItemListUI
 import AccountContext
@@ -329,7 +329,7 @@ private func webBrowserSettingsControllerEntries(context: AccountContext, presen
     let defaultExternalBrowser = localSettings.defaultWebBrowser ?? "default"
     
     entries.append(.browserHeader(presentationData.theme, presentationData.strings.WebBrowser_OpenLinksIn_Title))
-    entries.append(.browser(presentationData.theme, presentationData.strings.WebBrowser_Telegram, nil, nil, !accountSettings.openExternalBrowser, 0))
+    entries.append(.browser(presentationData.theme, presentationData.strings.WebBrowser_Iosapp, nil, nil, !accountSettings.openExternalBrowser, 0))
         
     var index: Int32 = 1
     for option in options {
@@ -417,7 +417,7 @@ public func webBrowserSettingsController(context: AccountContext) -> ViewControl
     let signal = combineLatest(
         context.sharedContext.presentationData,
         context.sharedContext.accountManager.sharedData(keys: [ApplicationSpecificSharedDataKeys.webBrowserSettings]),
-        context.engine.data.subscribe(TelegramEngine.EngineData.Item.Configuration.ApplicationSpecificPreference(key: PreferencesKeys.webBrowserSettings))
+        context.engine.data.subscribe(IosappEngine.EngineData.Item.Configuration.ApplicationSpecificPreference(key: PreferencesKeys.webBrowserSettings))
     )
     |> deliverOnMainQueue
     |> map { presentationData, sharedData, accountSettingsEntry -> (ItemListControllerState, (ItemListNodeState, Any)) in

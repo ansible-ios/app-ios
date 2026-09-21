@@ -1,7 +1,7 @@
 import Foundation
-import TelegramCore
-import TelegramPresentationData
-import TelegramUIPreferences
+import IosappCore
+import IosappPresentationData
+import IosappUIPreferences
 
 public func stringForEntityFormattedDate(timestamp: Int32, format: MessageTextEntityType.DateTimeFormat, strings: PresentationStrings, dateTimeFormat: PresentationDateTimeFormat) -> String {
     switch format {

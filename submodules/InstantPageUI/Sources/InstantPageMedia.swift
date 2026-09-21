@@ -1,5 +1,5 @@
 import Foundation
-import TelegramCore
+import IosappCore
 
 public struct InstantPageMedia: Equatable {
     public let index: Int

@@ -13,7 +13,7 @@ swift_library(
         "//submodules/SSignalKit/SwiftSignalKit:SwiftSignalKit",
         "//submodules/AsyncDisplayKit:AsyncDisplayKit",
         "//submodules/Display:Display",
-        "//submodules/TelegramCore:TelegramCore",
+        "//submodules/IosappCore:IosappCore",
         "//submodules/AccountContext:AccountContext",
         "//submodules/MediaPlayer:UniversalMediaPlayer",
     ],

@@ -3,8 +3,8 @@ import UIKit
 import Display
 import AsyncDisplayKit
 import SwiftSignalKit
-import TelegramCore
-import TelegramPresentationData
+import IosappCore
+import IosappPresentationData
 import AccountContext
 import PhotoResources
 import GalleryUI
@@ -16,9 +16,9 @@ private struct InstantImageGalleryThumbnailItem: GalleryThumbnailItem {
     let mediaReference: AnyMediaReference
     
     func image(synchronous: Bool) -> (Signal<(TransformImageArguments) -> DrawingContext?, NoError>, CGSize) {
-        if let imageReferene = mediaReference.concrete(TelegramMediaImage.self), let representation = largestImageRepresentation(imageReferene.media.representations) {
+        if let imageReferene = mediaReference.concrete(IosappMediaImage.self), let representation = largestImageRepresentation(imageReferene.media.representations) {
             return (mediaGridMessagePhoto(account: self.account, userLocation: self.userLocation, photoReference: imageReferene), representation.dimensions.cgSize)
-        } else if let fileReference = mediaReference.concrete(TelegramMediaFile.self), let dimensions = fileReference.media.dimensions {
+        } else if let fileReference = mediaReference.concrete(IosappMediaFile.self), let dimensions = fileReference.media.dimensions {
             return (mediaGridMessageVideo(postbox: account.postbox, userLocation: self.userLocation, videoReference: fileReference), dimensions.cgSize)
             } else {
             return (.single({ _ in return nil }), CGSize(width: 128.0, height: 128.0))
@@ -336,7 +336,7 @@ final class InstantImageGalleryItemNode: ZoomableContentGalleryItemNode {
     override func visibilityUpdated(isVisible: Bool) {
         super.visibilityUpdated(isVisible: isVisible)
         
-        if let (context, media) = self.contextAndMedia, let fileReference = media.concrete(TelegramMediaFile.self) {
+        if let (context, media) = self.contextAndMedia, let fileReference = media.concrete(IosappMediaFile.self) {
             if isVisible {
                 self.fetchDisposable.set(context.engine.resources.fetch(reference: fileReference.resourceReference(fileReference.media.resource), userLocation: self.userLocation ?? .other, userContentType: .file).start())
             } else {

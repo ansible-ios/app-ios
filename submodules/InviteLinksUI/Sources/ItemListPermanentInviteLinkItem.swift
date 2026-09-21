@@ -4,11 +4,11 @@ import Display
 import AsyncDisplayKit
 import SwiftSignalKit
 import AccountContext
-import TelegramPresentationData
+import IosappPresentationData
 import ItemListUI
 import AnimatedAvatarSetNode
 import ShimmerEffect
-import TelegramCore
+import IosappCore
 import Markdown
 import TextFormat
 import ComponentFlow
@@ -361,7 +361,7 @@ public class ItemListPermanentInviteLinkItemNode: ListViewItemNode, ItemListItem
                     bold: MarkdownAttributeSet(font: boldTextFont, textColor: textColor),
                     link: MarkdownAttributeSet(font: textFont, textColor: accentColor),
                     linkAttribute: { contents in
-                        return (TelegramTextAttributes.URL, contents)
+                        return (IosappTextAttributes.URL, contents)
                     }
                 )
                 let justCreatedCallTextAttributedString = parseMarkdownIntoAttributedString(item.presentationData.strings.InviteLink_CreatedGroupCallFooter, attributes: markdownAttributes).mutableCopy() as! NSMutableAttributedString

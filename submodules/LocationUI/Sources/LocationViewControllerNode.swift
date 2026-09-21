@@ -2,15 +2,15 @@ import Foundation
 import UIKit
 import Display
 import LegacyComponents
-import TelegramCore
+import IosappCore
 import SwiftSignalKit
 import MergeLists
 import ItemListUI
 import ItemListVenueItem
-import TelegramPresentationData
-import TelegramStringFormatting
-import TelegramUIPreferences
-import TelegramNotices
+import IosappPresentationData
+import IosappStringFormatting
+import IosappUIPreferences
+import IosappNotices
 import AccountContext
 import AppBundle
 import CoreLocation
@@ -25,11 +25,11 @@ import MultilineTextComponent
 import GlassBackgroundComponent
 import Weather
 
-func getLocation(from message: EngineMessage) -> TelegramMediaMap? {
-    if let poll = message.media.first(where: { $0 is TelegramMediaPoll } ) as? TelegramMediaPoll, let map = poll.attachedMedia as? TelegramMediaMap {
+func getLocation(from message: EngineMessage) -> IosappMediaMap? {
+    if let poll = message.media.first(where: { $0 is IosappMediaPoll } ) as? IosappMediaPoll, let map = poll.attachedMedia as? IosappMediaMap {
         return map
     } else {
-        return message.media.first(where: { $0 is TelegramMediaMap } ) as? TelegramMediaMap
+        return message.media.first(where: { $0 is IosappMediaMap } ) as? IosappMediaMap
     }
 }
 
@@ -59,7 +59,7 @@ public enum LocationViewEntryId: Hashable {
 }
 
 public enum LocationViewEntry: Comparable, Identifiable {
-    case info(PresentationTheme, TelegramMediaMap, String?, Double?, ExpectedTravelTime, ExpectedTravelTime, Bool)
+    case info(PresentationTheme, IosappMediaMap, String?, Double?, ExpectedTravelTime, ExpectedTravelTime, Bool)
     case toggleLiveLocation(PresentationTheme, String, String, Double?, Double?, Bool, EngineMessage.Id?)
     case liveLocation(PresentationTheme, PresentationDateTimeFormat, PresentationPersonNameOrder, EngineMessage, Double?, ExpectedTravelTime, ExpectedTravelTime, Int)
     
@@ -459,7 +459,7 @@ final class LocationViewControllerNode: ViewControllerTracingNode, CLLocationMan
         let previousEntries = Atomic<[LocationViewEntry]?>(value: nil)
         let previousHadTravelTimes = Atomic<Bool>(value: false)
         
-        let actualSelfPeer = context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: context.account.peerId))
+        let actualSelfPeer = context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: context.account.peerId))
         let renderSelfPeer: Signal<EnginePeer?, NoError>
         if isStaticLocationView {
             renderSelfPeer = .single(nil)
@@ -565,7 +565,7 @@ final class LocationViewControllerNode: ViewControllerTracingNode, CLLocationMan
                         
                 for message in effectiveLiveLocations {
                     if let location = getLocation(from: message) {
-                        if let channel = message.peers[message.id.peerId] as? TelegramChannel, case .broadcast = channel.info, let threadId = message.threadId, threadId != 1 {
+                        if let channel = message.peers[message.id.peerId] as? IosappChannel, case .broadcast = channel.info, let threadId = message.threadId, threadId != 1 {
                             continue
                         }
                         
@@ -1038,7 +1038,7 @@ final class LocationViewControllerNode: ViewControllerTracingNode, CLLocationMan
             return
         }
         
-        let _ = (self.context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: self.subject.id.peerId))
+        let _ = (self.context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: self.subject.id.peerId))
         |> mapToSignal { peer -> Signal<EnginePeer, NoError> in
             if let peer {
                 return .single(peer)

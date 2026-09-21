@@ -3,16 +3,16 @@ import UIKit
 import SwiftSignalKit
 import ContextUI
 import AccountContext
-import TelegramCore
+import IosappCore
 import Display
-import TelegramUIPreferences
+import IosappUIPreferences
 import OverlayStatusController
 import AlertUI
 import PresentationDataUtils
 import UndoUI
 import PremiumUI
-import TelegramPresentationData
-import TelegramStringFormatting
+import IosappPresentationData
+import IosappStringFormatting
 import ChatTimerScreen
 import NotificationPeerExceptionController
 
@@ -22,7 +22,7 @@ func archiveContextMenuItems(context: AccountContext, group: EngineChatList.Grou
     return combineLatest(
         context.engine.messages.unreadChatListPeerIds(groupId: group, filterPredicate: nil),
         context.engine.data.get(
-            TelegramEngine.EngineData.Item.Configuration.ApplicationSpecificPreference(key: ApplicationSpecificPreferencesKeys.chatArchiveSettings)
+            IosappEngine.EngineData.Item.Configuration.ApplicationSpecificPreference(key: ApplicationSpecificPreferencesKeys.chatArchiveSettings)
         )
     )
     |> map { [weak chatListController] unreadChatListPeerIds, chatArchiveSettingsPreference -> [ContextMenuItem] in
@@ -85,12 +85,12 @@ func chatContextMenuItems(context: AccountContext, peerId: EnginePeer.Id, promoI
     let strings = presentationData.strings
 
     return combineLatest(
-        context.engine.data.get(TelegramEngine.EngineData.Item.Messages.ChatListGroup(id: peerId)),
+        context.engine.data.get(IosappEngine.EngineData.Item.Messages.ChatListGroup(id: peerId)),
         context.engine.peers.recentlySearchedPeers() |> take(1),
         context.engine.data.get(
-            TelegramEngine.EngineData.Item.Peer.Peer(id: context.account.peerId),
-            TelegramEngine.EngineData.Item.Configuration.UserLimits(isPremium: false),
-            TelegramEngine.EngineData.Item.Configuration.UserLimits(isPremium: true)
+            IosappEngine.EngineData.Item.Peer.Peer(id: context.account.peerId),
+            IosappEngine.EngineData.Item.Configuration.UserLimits(isPremium: false),
+            IosappEngine.EngineData.Item.Configuration.UserLimits(isPremium: true)
         )
     )
     |> mapToSignal { peerGroup, recentlySearchedPeers, limitsData -> Signal<[ContextMenuItem], NoError> in
@@ -115,7 +115,7 @@ func chatContextMenuItems(context: AccountContext, peerId: EnginePeer.Id, promoI
         |> mapToSignal { filters, pinnedItemIds -> Signal<[ContextMenuItem], NoError> in
             let isPinned = pinnedItemIds.contains(.peer(peerId))
             
-            let renderedPeer = context.engine.data.get(TelegramEngine.EngineData.Item.Peer.RenderedPeer(id: peerId))
+            let renderedPeer = context.engine.data.get(IosappEngine.EngineData.Item.Peer.RenderedPeer(id: peerId))
             
             return renderedPeer
             |> mapToSignal { renderedPeer -> Signal<[ContextMenuItem], NoError> in
@@ -127,10 +127,10 @@ func chatContextMenuItems(context: AccountContext, peerId: EnginePeer.Id, promoI
                 }
                 
                 return context.engine.data.get(
-                    TelegramEngine.EngineData.Item.Peer.IsContact(id: peer.id),
-                    TelegramEngine.EngineData.Item.Peer.NotificationSettings(id: peer.id),
-                    TelegramEngine.EngineData.Item.NotificationSettings.Global(),
-                    TelegramEngine.EngineData.Item.Messages.PeerReadCounters(id: peer.id)
+                    IosappEngine.EngineData.Item.Peer.IsContact(id: peer.id),
+                    IosappEngine.EngineData.Item.Peer.NotificationSettings(id: peer.id),
+                    IosappEngine.EngineData.Item.NotificationSettings.Global(),
+                    IosappEngine.EngineData.Item.Messages.PeerReadCounters(id: peer.id)
                 )
                 |> map { [weak chatListController] isContact, notificationSettings, globalNotificationSettings, readCounters -> [ContextMenuItem] in
                     if promoInfo != nil {
@@ -526,7 +526,7 @@ func chatContextMenuItems(context: AccountContext, peerId: EnginePeer.Id, promoI
                                             if !didJoin {
                                                 return
                                             }
-                                            let _ = (context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: peerId))
+                                            let _ = (context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: peerId))
                                                      |> deliverOnMainQueue).startStandalone(next: { peer in
                                                 guard let peer = peer else {
                                                     return
@@ -612,10 +612,10 @@ public func chatForumTopicMenuItems(context: AccountContext, peerId: EnginePeer.
     let strings = presentationData.strings
 
     return context.engine.data.get(
-        TelegramEngine.EngineData.Item.Peer.Peer(id: peerId),
-        TelegramEngine.EngineData.Item.Peer.NotificationSettings(id: peerId),
-        TelegramEngine.EngineData.Item.Peer.ThreadData(id: peerId, threadId: threadId),
-        TelegramEngine.EngineData.Item.NotificationSettings.Global()
+        IosappEngine.EngineData.Item.Peer.Peer(id: peerId),
+        IosappEngine.EngineData.Item.Peer.NotificationSettings(id: peerId),
+        IosappEngine.EngineData.Item.Peer.ThreadData(id: peerId, threadId: threadId),
+        IosappEngine.EngineData.Item.NotificationSettings.Global()
     )
     |> mapToSignal { peer, peerNotificationSettings, threadData, globalNotificationSettings -> Signal<[ContextMenuItem], NoError> in
         guard let peer else {
@@ -839,7 +839,7 @@ public func chatForumTopicMenuItems(context: AccountContext, peerId: EnginePeer.
                     f(.dismissWithoutContent)
                     
                     let _ = (context.engine.data.get(
-                        TelegramEngine.EngineData.Item.NotificationSettings.Global()
+                        IosappEngine.EngineData.Item.NotificationSettings.Global()
                     )
                     |> deliverOnMainQueue).startStandalone(next: { globalSettings in
                         let updatePeerSound: (EnginePeer.Id, PeerMessageSound) -> Signal<Void, NoError> = { peerId, sound in
@@ -999,7 +999,7 @@ public func savedMessagesPeerMenuItems(context: AccountContext, threadId: Int64,
 
     return combineLatest(
         context.engine.data.get(
-            TelegramEngine.EngineData.Item.Peer.Peer(id: EnginePeer.Id(threadId))
+            IosappEngine.EngineData.Item.Peer.Peer(id: EnginePeer.Id(threadId))
         ),
         context.engine.peers.getForumChannelPinnedTopics(id: context.account.peerId)
     )

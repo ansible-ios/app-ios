@@ -2,10 +2,10 @@ import Foundation
 import UIKit
 import Display
 import SwiftSignalKit
-import TelegramCore
-import TelegramPresentationData
-import TelegramUIPreferences
-import TelegramStringFormatting
+import IosappCore
+import IosappPresentationData
+import IosappUIPreferences
+import IosappStringFormatting
 import ItemListUI
 import PresentationDataUtils
 import AccountContext
@@ -763,7 +763,7 @@ public func groupStatsController(context: AccountContext, updatedPresentationDat
     |> mapToSignal { peerIds -> Signal<[EnginePeer.Id: EnginePeer]?, NoError> in
         if let peerIds = peerIds {
             return context.engine.data.get(EngineDataMap(
-                peerIds.map(TelegramEngine.EngineData.Item.Peer.Peer.init)
+                peerIds.map(IosappEngine.EngineData.Item.Peer.Peer.init)
             ))
             |> map { peerMap -> [EnginePeer.Id: EnginePeer]? in
                 return peerMap.compactMapValues { $0 }
@@ -826,7 +826,7 @@ public func groupStatsController(context: AccountContext, updatedPresentationDat
     let previousData = Atomic<GroupStats?>(value: nil)
     
     let presentationData = updatedPresentationData?.signal ?? context.sharedContext.presentationData
-    let loadedChannelPeer = context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: peerId))
+    let loadedChannelPeer = context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: peerId))
     |> mapToSignal { peer -> Signal<EnginePeer, NoError> in
         if let peer {
             return .single(peer)
@@ -870,7 +870,7 @@ public func groupStatsController(context: AccountContext, updatedPresentationDat
     }
     openPeerImpl = { [weak controller] peer in
         if let navigationController = controller?.navigationController as? NavigationController {
-            let _ = (context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: peer.id))
+            let _ = (context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: peer.id))
             |> mapToSignal { peer -> Signal<EnginePeer, NoError> in
                 if let peer {
                     return .single(peer)
@@ -889,8 +889,8 @@ public func groupStatsController(context: AccountContext, updatedPresentationDat
     openPeerHistoryImpl = { [weak controller] participantPeerId in
         if let navigationController = controller?.navigationController as? NavigationController {
             let _ = (context.engine.data.get(
-                TelegramEngine.EngineData.Item.Peer.Peer(id: peerId),
-                TelegramEngine.EngineData.Item.Peer.Peer(id: participantPeerId)
+                IosappEngine.EngineData.Item.Peer.Peer(id: peerId),
+                IosappEngine.EngineData.Item.Peer.Peer(id: participantPeerId)
             )
             |> deliverOnMainQueue).start(next: { chatPeer, peer in
                 guard let chatPeer, let peer else {
@@ -902,7 +902,7 @@ public func groupStatsController(context: AccountContext, updatedPresentationDat
     }
     openPeerAdminActionsImpl = { [weak controller] participantPeerId in
         if let navigationController = controller?.navigationController as? NavigationController {
-            let _ = (context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: peerId))
+            let _ = (context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: peerId))
             |> mapToSignal { peer -> Signal<EnginePeer, NoError> in
                 if let peer {
                     return .single(peer)

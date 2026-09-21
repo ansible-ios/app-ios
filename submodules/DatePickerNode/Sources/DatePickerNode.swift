@@ -2,8 +2,8 @@ import Foundation
 import Display
 import UIKit
 import AsyncDisplayKit
-import TelegramPresentationData
-import TelegramStringFormatting
+import IosappPresentationData
+import IosappStringFormatting
 import TextFormat
 import SegmentedControlNode
 import DirectionalPanGesture

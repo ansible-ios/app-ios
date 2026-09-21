@@ -4,13 +4,13 @@ import Display
 import AsyncDisplayKit
 import SwiftSignalKit
 import ComponentFlow
-import TelegramCore
+import IosappCore
 import AccountContext
 import ReactionSelectionNode
-import TelegramPresentationData
+import IosappPresentationData
 import AccountContext
 import AnimatedStickerNode
-import TelegramAnimatedStickerNode
+import IosappAnimatedStickerNode
 import ShimmerEffect
 import StickerResources
 
@@ -18,12 +18,12 @@ final class StickersCarouselComponent: Component {
     public typealias EnvironmentType = DemoPageEnvironment
     
     let context: AccountContext
-    let stickers: [TelegramMediaFile]
+    let stickers: [IosappMediaFile]
     let tapAction: () -> Void
     
     public init(
         context: AccountContext,
-        stickers: [TelegramMediaFile],
+        stickers: [IosappMediaFile],
         tapAction: @escaping () -> Void
     ) {
         self.context = context
@@ -88,7 +88,7 @@ private let itemSize = CGSize(width: 220.0, height: 220.0)
 
 private class StickerNode: ASDisplayNode {
     private let context: AccountContext
-    private let file: TelegramMediaFile
+    private let file: IosappMediaFile
     
     public var imageNode: TransformImageNode
     public var animationNode: AnimatedStickerNode?
@@ -101,7 +101,7 @@ private class StickerNode: ASDisplayNode {
     
     private var setupTimestamp: Double?
     
-    init(context: AccountContext, file: TelegramMediaFile, forceIsPremium: Bool) {
+    init(context: AccountContext, file: IosappMediaFile, forceIsPremium: Bool) {
         self.context = context
         self.file = file
         
@@ -281,7 +281,7 @@ private class StickerNode: ASDisplayNode {
 
 private class StickersCarouselNode: ASDisplayNode, ASScrollViewDelegate {
     private let context: AccountContext
-    private let stickers: [TelegramMediaFile]
+    private let stickers: [IosappMediaFile]
     private let tapAction: () -> Void
     
     private var itemContainerNodes: [ASDisplayNode] = []
@@ -302,7 +302,7 @@ private class StickersCarouselNode: ASDisplayNode, ASScrollViewDelegate {
     private var previousInteractionTimestamp: Double = 0.0
     private var timer: SwiftSignalKit.Timer?
     
-    init(context: AccountContext, stickers: [TelegramMediaFile], tapAction: @escaping () -> Void) {
+    init(context: AccountContext, stickers: [IosappMediaFile], tapAction: @escaping () -> Void) {
         self.context = context
         self.stickers = stickers
         self.tapAction = tapAction

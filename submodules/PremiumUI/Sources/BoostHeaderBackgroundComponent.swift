@@ -8,9 +8,9 @@ import GZip
 import AppBundle
 import LegacyComponents
 import AvatarNode
-import TelegramCore
+import IosappCore
 import MultilineTextComponent
-import TelegramPresentationData
+import IosappPresentationData
 import PremiumStarComponent
 
 private let sceneVersion: Int = 1

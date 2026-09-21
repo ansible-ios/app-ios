@@ -4,9 +4,9 @@ import Display
 import SwiftSignalKit
 import ComponentFlow
 import LegacyComponents
-import TelegramCore
+import IosappCore
 import AccountContext
-import TelegramPresentationData
+import IosappPresentationData
 import SheetComponent
 import ViewControllerComponent
 import BlurredBackgroundComponent

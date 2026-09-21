@@ -1,11 +1,11 @@
 import Foundation
 import SwiftSignalKit
-import TelegramCore
+import IosappCore
 import AccountContext
 import InstantPageUI
 import InstantPageCache
 import UrlHandling
-import TelegramUIPreferences
+import IosappUIPreferences
 
 func faqSearchableItems(context: AccountContext, resolvedUrl: Signal<ResolvedUrl?, NoError>, suggestAccountDeletion: Bool) -> Signal<[SettingsSearchableItem], NoError> {
     let strings = context.sharedContext.currentPresentationData.with { $0 }.strings

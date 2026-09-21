@@ -2,7 +2,7 @@ import Foundation
 import UIKit
 import AsyncDisplayKit
 import Display
-import TelegramPresentationData
+import IosappPresentationData
 
 private let compactInfinityFont = Font.with(size: 14.0, design: .round, weight: .bold)
 private let compactTextFont = Font.with(size: 12.0, design: .round, weight: .bold)

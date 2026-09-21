@@ -2,12 +2,12 @@ import Foundation
 import UIKit
 import Display
 import AsyncDisplayKit
-import TelegramCore
+import IosappCore
 import SwiftSignalKit
 import ItemListUI
 import PresentationDataUtils
-import TelegramPresentationData
-import TelegramUIPreferences
+import IosappPresentationData
+import IosappUIPreferences
 import AccountContext
 import SearchBarNode
 import MergeLists
@@ -410,7 +410,7 @@ public final class InviteRequestsSearchContainerNode: SearchDisplayControllerCon
             }
             
             let _ = (context.engine.data.get(
-                TelegramEngine.EngineData.Item.Peer.Peer(id: peerId)
+                IosappEngine.EngineData.Item.Peer.Peer(id: peerId)
             )
             |> deliverOnMainQueue).start(next: { [weak self] peer in
                 guard let peer = peer else {
@@ -500,7 +500,7 @@ public final class InviteRequestsSearchContainerNode: SearchDisplayControllerCon
             return combineLatest(signal, presentationDataPromise.get(), processedPeerIds.get())
             |> mapToSignal { state, presentationData, processedPeerIds -> Signal<[InviteRequestsSearchEntry]?, NoError> in
                 let isGroup: Bool
-                if let channel = peer as? TelegramChannel, case .broadcast = channel.info {
+                if let channel = peer as? IosappChannel, case .broadcast = channel.info {
                     isGroup = false
                 } else {
                     isGroup = true

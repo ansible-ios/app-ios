@@ -4,7 +4,7 @@ import Display
 import SwiftSignalKit
 import AccountContext
 import NaturalLanguage
-import TelegramCore
+import IosappCore
 import SwiftUI
 import Translation
 import Combine
@@ -437,7 +437,7 @@ public final class ExperimentalInternalTranslationServiceImpl: ExperimentalInter
     }
 }
 
-func alternativeTranslateText(text: String, fromLang: String?, toLang: String) -> Signal<(String, [MessageTextEntity])?, TelegramCore.TranslationError> {
+func alternativeTranslateText(text: String, fromLang: String?, toLang: String) -> Signal<(String, [MessageTextEntity])?, IosappCore.TranslationError> {
     return Signal { subscriber in
         var task: URLSessionTask?
         Queue.concurrentDefaultQueue().async {

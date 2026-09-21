@@ -3,11 +3,11 @@ import UIKit
 import Display
 import AsyncDisplayKit
 import SwiftSignalKit
-import TelegramPresentationData
+import IosappPresentationData
 import ItemListUI
 import PresentationDataUtils
 import AnimatedStickerNode
-import TelegramAnimatedStickerNode
+import IosappAnimatedStickerNode
 import AccountContext
 import Markdown
 import TextFormat
@@ -130,7 +130,7 @@ class RecentSessionsHeaderItemNode: ListViewItemNode {
             }
             
             let attributedText = parseMarkdownIntoAttributedString(item.text, attributes: MarkdownAttributes(body: MarkdownAttributeSet(font: titleFont, textColor: item.theme.list.itemPrimaryTextColor), bold: MarkdownAttributeSet(font: titleFont, textColor: item.theme.list.itemPrimaryTextColor), link: MarkdownAttributeSet(font: titleFont, textColor: item.theme.list.itemAccentColor), linkAttribute: { contents in
-                return (TelegramTextAttributes.URL, contents)
+                return (IosappTextAttributes.URL, contents)
             }))
                 
             let (titleLayout, titleApply) = makeTitleLayout(TextNodeLayoutArguments(attributedString: attributedText, backgroundColor: nil, maximumNumberOfLines: 0, truncationType: .end, constrainedSize: CGSize(width: params.width - params.rightInset - leftInset * 2.0, height: CGFloat.greatestFiniteMagnitude), alignment: .center, lineSpacing: 0.2, cutout: nil, insets: UIEdgeInsets()))
@@ -227,7 +227,7 @@ class RecentSessionsHeaderItemNode: ListViewItemNode {
                         case .tap:
                             if let item = self.item {
                                 if let (_, attributes) = self.titleNode.attributesAtPoint(location) {
-                                    if let url = attributes[NSAttributedString.Key(rawValue: TelegramTextAttributes.URL)] as? String {
+                                    if let url = attributes[NSAttributedString.Key(rawValue: IosappTextAttributes.URL)] as? String {
                                         item.linkAction?(.tap(url))
                                     }
                                 }

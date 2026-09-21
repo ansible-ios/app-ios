@@ -4,7 +4,7 @@ import Display
 import ComponentFlow
 import BlurredBackgroundComponent
 import BundleIconComponent
-import TelegramPresentationData
+import IosappPresentationData
 import ContextReferenceButtonComponent
 import GlassBackgroundComponent
 import EdgeEffect

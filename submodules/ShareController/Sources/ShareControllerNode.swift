@@ -4,14 +4,14 @@ import Display
 import AsyncDisplayKit
 import SwiftSignalKit
 import Postbox
-import TelegramCore
-import TelegramPresentationData
+import IosappCore
+import IosappPresentationData
 import AccountContext
-import TelegramIntents
+import IosappIntents
 import ContextUI
 import ComponentFlow
 import MultilineTextComponent
-import TelegramStringFormatting
+import IosappStringFormatting
 import BundleIconComponent
 import LottieComponent
 import CheckNode
@@ -33,10 +33,10 @@ private final class ShareContentInfoView: UIView {
         var environment: ShareControllerEnvironment
         var theme: PresentationTheme
         var strings: PresentationStrings
-        var collectibleItemInfo: TelegramCollectibleItemInfo
+        var collectibleItemInfo: IosappCollectibleItemInfo
         var availableSize: CGSize
         
-        init(environment: ShareControllerEnvironment, theme: PresentationTheme, strings: PresentationStrings, collectibleItemInfo: TelegramCollectibleItemInfo, availableSize: CGSize) {
+        init(environment: ShareControllerEnvironment, theme: PresentationTheme, strings: PresentationStrings, collectibleItemInfo: IosappCollectibleItemInfo, availableSize: CGSize) {
             self.environment = environment
             self.theme = theme
             self.strings = strings
@@ -94,7 +94,7 @@ private final class ShareContentInfoView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func update(environment: ShareControllerEnvironment, presentationData: PresentationData, collectibleItemInfo: TelegramCollectibleItemInfo, availableSize: CGSize) -> CGSize {
+    func update(environment: ShareControllerEnvironment, presentationData: PresentationData, collectibleItemInfo: IosappCollectibleItemInfo, availableSize: CGSize) -> CGSize {
         let params = Params(
             environment: environment,
             theme: presentationData.theme,
@@ -326,7 +326,7 @@ final class ShareControllerNode: ViewControllerTracingNode, ASScrollViewDelegate
     private let fromForeignApp: Bool
     private let fromPublicChannel: Bool
     private let segmentedValues: [ShareControllerSegmentedValue]?
-    private let collectibleItemInfo: TelegramCollectibleItemInfo?
+    private let collectibleItemInfo: IosappCollectibleItemInfo?
     private let mediaParameters: ShareControllerSubject.MediaParameters?
     private let messageCount: Int
     var canSendInHighQuality = false
@@ -407,7 +407,7 @@ final class ShareControllerNode: ViewControllerTracingNode, ASScrollViewDelegate
         fromPublicChannel: Bool,
         segmentedValues: [ShareControllerSegmentedValue]?,
         shareStory: (() -> Void)?,
-        collectibleItemInfo: TelegramCollectibleItemInfo?,
+        collectibleItemInfo: IosappCollectibleItemInfo?,
         messageCount: Int
     ) {
         self.controller = controller
@@ -1324,15 +1324,15 @@ final class ShareControllerNode: ViewControllerTracingNode, ASScrollViewDelegate
                 for peerId in peerIds {
                     if let view = views.views[PostboxViewKey.basicPeer(peerId)] as? PeerView, let peer = peerViewMainPeer(view) {
                         var peers: [EnginePeer.Id: EnginePeer] = [peer.id: EnginePeer(peer)]
-                        if let channel = peer as? TelegramChannel, channel.isMonoForum, let linkedMonoforumId = channel.linkedMonoforumId, let mainChannel = view.peers[linkedMonoforumId] {
+                        if let channel = peer as? IosappChannel, channel.isMonoForum, let linkedMonoforumId = channel.linkedMonoforumId, let mainChannel = view.peers[linkedMonoforumId] {
                             peers[mainChannel.id] = EnginePeer(mainChannel)
                         }
                         result[peerId] = EngineRenderedPeer(peerId: peer.id, peers: peers, associatedMedia: [:])
-                        if peer is TelegramUser, let cachedPeerDataView = views.views[PostboxViewKey.cachedPeerData(peerId: peerId)] as? CachedPeerDataView {
+                        if peer is IosappUser, let cachedPeerDataView = views.views[PostboxViewKey.cachedPeerData(peerId: peerId)] as? CachedPeerDataView {
                             if let cachedData = cachedPeerDataView.cachedPeerData as? CachedUserData {
                                 requiresStars[peerId] = cachedData.sendPaidMessageStars?.value
                             }
-                        } else if let channel = peer as? TelegramChannel {
+                        } else if let channel = peer as? IosappChannel {
                             requiresStars[peerId] = channel.sendPaidMessageStars?.value
                         }
                     }
@@ -1635,7 +1635,7 @@ final class ShareControllerNode: ViewControllerTracingNode, ASScrollViewDelegate
                 }
                 peers[peer.id] = EnginePeer(peer)
 
-                if let secretChat = peer as? TelegramSecretChat {
+                if let secretChat = peer as? IosappSecretChat {
                     guard let mainPeer = view.peers[secretChat.regularPeerId] else {
                         return nil
                     }
@@ -1664,7 +1664,7 @@ final class ShareControllerNode: ViewControllerTracingNode, ASScrollViewDelegate
             |> mapToSignal { peers -> Signal<([RecentlySearchedPeer], [EnginePeer.Id: Bool]), NoError> in
                 var possiblePremiumRequiredPeers = Set<EnginePeer.Id>()
                 for peer in peers {
-                    if let user = peer.peer.peer as? TelegramUser, user.flags.contains(.requirePremium) {
+                    if let user = peer.peer.peer as? IosappUser, user.flags.contains(.requirePremium) {
                         possiblePremiumRequiredPeers.insert(user.id)
                     }
                 }
@@ -1675,7 +1675,7 @@ final class ShareControllerNode: ViewControllerTracingNode, ASScrollViewDelegate
                 
                 return context.engineData.subscribe(
                     EngineDataMap(
-                        possiblePremiumRequiredPeers.map(TelegramEngine.EngineData.Item.Peer.IsPremiumRequiredForMessaging.init(id:))
+                        possiblePremiumRequiredPeers.map(IosappEngine.EngineData.Item.Peer.IsPremiumRequiredForMessaging.init(id:))
                     )
                 )
                 |> map { peerRequiresPremiumForMessaging -> ([RecentlySearchedPeer], [EnginePeer.Id: Bool]) in

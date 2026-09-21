@@ -3,8 +3,8 @@ import UIKit
 import SwiftSignalKit
 import AsyncDisplayKit
 import Display
-import TelegramCore
-import TelegramPresentationData
+import IosappCore
+import IosappPresentationData
 import AccountContext
 import UrlEscaping
 import ComponentFlow
@@ -18,7 +18,7 @@ public func chatTextLinkEditController(
     text: String,
     link: String?,
     preview: Bool = false,
-    apply: @escaping (String?, TelegramMediaWebpage?) -> Void
+    apply: @escaping (String?, IosappMediaWebpage?) -> Void
 ) -> ViewController {
     let presentationData = context.sharedContext.currentPresentationData.with { $0 }
     let strings = presentationData.strings
@@ -34,7 +34,7 @@ public func chatTextLinkEditController(
         effectiveUpdatedPresentationData = (presentationData, context.sharedContext.presentationData)
     }
 
-    let makeContent: (TelegramMediaWebpage?) -> [AnyComponentWithIdentity<AlertComponentEnvironment>] = { webpage in
+    let makeContent: (IosappMediaWebpage?) -> [AnyComponentWithIdentity<AlertComponentEnvironment>] = { webpage in
         var content: [AnyComponentWithIdentity<AlertComponentEnvironment>] = []
         content.append(AnyComponentWithIdentity(
             id: "title",
@@ -97,21 +97,21 @@ public func chatTextLinkEditController(
     )
 
     let previewDisposable = MetaDisposable()
-    var currentPreview: (link: String, webpage: TelegramMediaWebpage)?
+    var currentPreview: (link: String, webpage: IosappMediaWebpage)?
     if preview {
-        var currentDisplayedPreview: (link: String, webpage: TelegramMediaWebpage?)?
+        var currentDisplayedPreview: (link: String, webpage: IosappMediaWebpage?)?
         previewDisposable.set((inputState.valueSignal
         |> map { value -> String in
             return explicitUrl(value.string)
         }
         |> distinctUntilChanged
-        |> mapToSignal { link -> Signal<(String, TelegramMediaWebpage?), NoError> in
+        |> mapToSignal { link -> Signal<(String, IosappMediaWebpage?), NoError> in
             guard !link.isEmpty && isValidUrl(link, validSchemes: ["http": true, "https": true, "tg": false, "ton": false, "tonsite": true]) else {
                 return .single((link, nil))
             }
 
             let previewSignal = webpagePreview(account: context.account, urls: [link])
-            |> map { result -> (String, TelegramMediaWebpage?) in
+            |> map { result -> (String, IosappMediaWebpage?) in
                 guard case let .result(result) = result, let webpage = result?.webpage, case .Loaded = webpage.content else {
                     return (link, nil)
                 }

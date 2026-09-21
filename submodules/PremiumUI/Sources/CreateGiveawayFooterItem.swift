@@ -3,7 +3,7 @@ import UIKit
 import AsyncDisplayKit
 import Display
 import ComponentFlow
-import TelegramPresentationData
+import IosappPresentationData
 import ItemListUI
 import PresentationDataUtils
 import ButtonComponent

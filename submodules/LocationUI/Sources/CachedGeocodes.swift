@@ -1,8 +1,8 @@
 import Foundation
 import UIKit
 import SwiftSignalKit
-import TelegramCore
-import TelegramUIPreferences
+import IosappCore
+import IosappUIPreferences
 import PersistentStringHash
 import AccountContext
 import Geocoding
@@ -31,17 +31,17 @@ public final class CachedGeocode: Codable {
     }
 }
 
-private func cachedGeocode(engine: TelegramEngine, address: DeviceContactAddressData) -> Signal<CachedGeocode?, NoError> {
+private func cachedGeocode(engine: IosappEngine, address: DeviceContactAddressData) -> Signal<CachedGeocode?, NoError> {
     let key = EngineDataBuffer(length: 8)
     key.setInt64(0, value: Int64(bitPattern: address.string.persistentHashValue))
     
-    return engine.data.get(TelegramEngine.EngineData.Item.ItemCache.Item(collectionId: ApplicationSpecificItemCacheCollectionId.cachedGeocodes, id: key))
+    return engine.data.get(IosappEngine.EngineData.Item.ItemCache.Item(collectionId: ApplicationSpecificItemCacheCollectionId.cachedGeocodes, id: key))
     |> map { entry -> CachedGeocode? in
         return entry?.get(CachedGeocode.self)
     }
 }
 
-private func updateCachedGeocode(engine: TelegramEngine, address: DeviceContactAddressData, latitude: Double, longitude: Double) -> Signal<(Double, Double), NoError> {
+private func updateCachedGeocode(engine: IosappEngine, address: DeviceContactAddressData, latitude: Double, longitude: Double) -> Signal<(Double, Double), NoError> {
     let key = EngineDataBuffer(length: 8)
     key.setInt64(0, value: Int64(bitPattern: address.string.persistentHashValue))
     
@@ -50,7 +50,7 @@ private func updateCachedGeocode(engine: TelegramEngine, address: DeviceContactA
     |> then(.single((latitude, longitude)))
 }
 
-public func geocodeAddress(engine: TelegramEngine, address: DeviceContactAddressData) -> Signal<(Double, Double)?, NoError> {
+public func geocodeAddress(engine: IosappEngine, address: DeviceContactAddressData) -> Signal<(Double, Double)?, NoError> {
     return cachedGeocode(engine: engine, address: address)
     |> mapToSignal { cached -> Signal<(Double, Double)?, NoError> in
         if let cached = cached {

@@ -1,7 +1,7 @@
 import Foundation
-import TelegramCore
+import IosappCore
 import SwiftSignalKit
-import TelegramUIPreferences
+import IosappUIPreferences
 import RangeSet
 
 public enum FetchManagerCategory: Int32 {

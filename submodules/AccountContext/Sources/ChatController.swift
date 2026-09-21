@@ -1,12 +1,12 @@
 import Foundation
 import UIKit
-import TelegramCore
+import IosappCore
 import TextFormat
 import AsyncDisplayKit
 import Display
 import SwiftSignalKit
-import TelegramPresentationData
-import TelegramUIPreferences
+import IosappPresentationData
+import IosappUIPreferences
 
 public final class ChatMessageItemAssociatedData: Equatable {
     public enum ChannelDiscussionGroupStatus: Equatable {
@@ -58,7 +58,7 @@ public final class ChatMessageItemAssociatedData: Equatable {
     public let maxReadStoryId: Int32?
     public let recommendedChannels: RecommendedChannels?
     public let audioTranscriptionTrial: AudioTranscription.TrialState
-    public let chatThemes: [TelegramTheme]
+    public let chatThemes: [IosappTheme]
     public let deviceContactsNumbers: Set<String>
     public let isStandalone: Bool
     public let isInline: Bool
@@ -98,7 +98,7 @@ public final class ChatMessageItemAssociatedData: Equatable {
         maxReadStoryId: Int32? = nil,
         recommendedChannels: RecommendedChannels? = nil,
         audioTranscriptionTrial: AudioTranscription.TrialState = .defaultValue,
-        chatThemes: [TelegramTheme] = [],
+        chatThemes: [IosappTheme] = [],
         deviceContactsNumbers: Set<String> = Set(),
         isStandalone: Bool = false,
         isInline: Bool = false,
@@ -265,7 +265,7 @@ public extension ChatMessageItemAssociatedData {
         }
     }
 
-    func isPollVotingRestricted(poll: TelegramMediaPoll, accountTestingEnvironment: Bool, currentTimestamp: Int32) -> Bool {
+    func isPollVotingRestricted(poll: IosappMediaPoll, accountTestingEnvironment: Bool, currentTimestamp: Int32) -> Bool {
         if !poll.countries.isEmpty, let accountCountry = self.accountCountry, !poll.countries.contains(accountCountry) {
             return true
         }
@@ -701,7 +701,7 @@ public struct ChatTextInputStateText: Codable, Equatable {
         return lhs.text == rhs.text && lhs.attributes == rhs.attributes
     }
     
-    public func attributedText(files: [Int64: TelegramMediaFile] = [:]) -> NSAttributedString {
+    public func attributedText(files: [Int64: IosappMediaFile] = [:]) -> NSAttributedString {
         let result = NSMutableAttributedString(string: self.text)
         for attribute in self.attributes {
             switch attribute.type {
@@ -758,7 +758,7 @@ public enum ChatControllerSubject: Equatable {
         public var replyMessageId: EngineMessage.Id?
         public var replyQuote: String?
         public var url: String
-        public var webpage: TelegramMediaWebpage
+        public var webpage: IosappMediaWebpage
         public var linkBelowText: Bool
         public var largeMedia: Bool
         
@@ -769,7 +769,7 @@ public enum ChatControllerSubject: Equatable {
             replyMessageId: EngineMessage.Id?,
             replyQuote: String?,
             url: String,
-            webpage: TelegramMediaWebpage,
+            webpage: IosappMediaWebpage,
             linkBelowText: Bool,
             largeMedia: Bool
         ) {
@@ -973,7 +973,7 @@ public enum ChatPresentationInputQueryResult: Equatable {
     case hashtags([String], String)
     case mentions([EnginePeer])
     case commands(ChatInputQueryCommandsResult)
-    case emojis([(String, TelegramMediaFile?, String)], NSRange)
+    case emojis([(String, IosappMediaFile?, String)], NSRange)
     case contextRequestResult(EnginePeer?, ChatContextResultCollection?)
     
     public static func ==(lhs: ChatPresentationInputQueryResult, rhs: ChatPresentationInputQueryResult) -> Bool {
@@ -1085,9 +1085,9 @@ public protocol PeerInfoScreen: ViewController {
 
 public extension EngineRawPeer {
     func canSetupAutoremoveTimeout(accountPeerId: EnginePeer.Id) -> Bool {
-        if let _ = self as? TelegramSecretChat {
+        if let _ = self as? IosappSecretChat {
             return false
-        } else if let group = self as? TelegramGroup {
+        } else if let group = self as? IosappGroup {
             if case .creator = group.role {
                 return true
             } else if case let .admin(rights, _) = group.role {
@@ -1095,11 +1095,11 @@ public extension EngineRawPeer {
                     return true
                 }
             }
-        } else if let user = self as? TelegramUser {
+        } else if let user = self as? IosappUser {
             if user.id != accountPeerId && user.botInfo == nil {
                 return true
             }
-        } else if let channel = self as? TelegramChannel {
+        } else if let channel = self as? IosappChannel {
             if channel.hasPermission(.deleteAllMessages) {
                 return true
             }
@@ -1287,7 +1287,7 @@ public enum ChatQuickReplyShortcutType {
 
 public enum ChatCustomContentsKind: Equatable {
     case quickReplyMessageInput(shortcut: String, shortcutType: ChatQuickReplyShortcutType)
-    case businessLinkSetup(link: TelegramBusinessChatLinks.Link)
+    case businessLinkSetup(link: IosappBusinessChatLinks.Link)
     case hashTagSearch(publicPosts: Bool)
 }
 

@@ -11,9 +11,9 @@ swift_library(
     ],
     deps = [
     	"//submodules/Display:Display",
-        "//submodules/TelegramCore:TelegramCore",
-        "//submodules/TelegramPresentationData:TelegramPresentationData",
-        "//submodules/TelegramStringFormatting:TelegramStringFormatting",
+        "//submodules/IosappCore:IosappCore",
+        "//submodules/IosappPresentationData:IosappPresentationData",
+        "//submodules/IosappStringFormatting:IosappStringFormatting",
     ],
     visibility = [
         "//visibility:public",

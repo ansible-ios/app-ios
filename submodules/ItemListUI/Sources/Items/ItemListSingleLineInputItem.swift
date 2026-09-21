@@ -3,7 +3,7 @@ import UIKit
 import Display
 import AsyncDisplayKit
 import SwiftSignalKit
-import TelegramPresentationData
+import IosappPresentationData
 import TextNodeWithEntities
 import AccountContext
 

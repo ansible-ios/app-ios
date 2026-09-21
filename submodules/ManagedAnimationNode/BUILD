@@ -13,7 +13,7 @@ swift_library(
         "//submodules/Display:Display",
         "//submodules/SSignalKit/SwiftSignalKit:SwiftSignalKit",
         "//submodules/AsyncDisplayKit:AsyncDisplayKit",
-        "//submodules/TelegramCore:TelegramCore",
+        "//submodules/IosappCore:IosappCore",
         "//submodules/GZip:GZip",
         "//submodules/rlottie:RLottieBinding",
         "//submodules/AppBundle:AppBundle",

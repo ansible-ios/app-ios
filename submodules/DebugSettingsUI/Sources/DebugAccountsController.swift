@@ -2,8 +2,8 @@ import Foundation
 import UIKit
 import Display
 import SwiftSignalKit
-import TelegramCore
-import TelegramPresentationData
+import IosappCore
+import IosappPresentationData
 import ItemListUI
 import PresentationDataUtils
 import AccountContext
@@ -29,7 +29,7 @@ private enum DebugAccountsControllerSection: Int32 {
 }
 
 private enum DebugAccountsControllerEntry: ItemListNodeEntry {
-    case record(PresentationTheme, AccountRecord<TelegramAccountManagerTypes.Attribute>, Bool)
+    case record(PresentationTheme, AccountRecord<IosappAccountManagerTypes.Attribute>, Bool)
     case loginNewAccount(PresentationTheme)
     
     var section: ItemListSectionId {
@@ -86,7 +86,7 @@ private enum DebugAccountsControllerEntry: ItemListNodeEntry {
     }
 }
 
-private func debugAccountsControllerEntries(view: AccountRecordsView<TelegramAccountManagerTypes>, presentationData: PresentationData) -> [DebugAccountsControllerEntry] {
+private func debugAccountsControllerEntries(view: AccountRecordsView<IosappAccountManagerTypes>, presentationData: PresentationData) -> [DebugAccountsControllerEntry] {
     var entries: [DebugAccountsControllerEntry] = []
     
     for entry in view.records.sorted(by: {
@@ -100,7 +100,7 @@ private func debugAccountsControllerEntries(view: AccountRecordsView<TelegramAcc
     return entries
 }
 
-public func debugAccountsController(context: AccountContext, accountManager: AccountManager<TelegramAccountManagerTypes>) -> ViewController {
+public func debugAccountsController(context: AccountContext, accountManager: AccountManager<IosappAccountManagerTypes>) -> ViewController {
     var presentControllerImpl: ((ViewController, ViewControllerPresentationArguments?) -> Void)?
     
     let arguments = DebugAccountsControllerArguments(context: context, presentController: { controller, arguments in

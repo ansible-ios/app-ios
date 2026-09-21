@@ -1,35 +1,35 @@
 import Foundation
 import UIKit
 import SwiftSignalKit
-import TelegramApi
-import TelegramCore
-import TelegramUIPreferences
+import IosappApi
+import IosappCore
+import IosappUIPreferences
 import PersistentStringHash
 
 public final class CachedWallpaper: Codable {
-    public let wallpaper: TelegramWallpaper
+    public let wallpaper: IosappWallpaper
     
-    public init(wallpaper: TelegramWallpaper) {
+    public init(wallpaper: IosappWallpaper) {
         self.wallpaper = wallpaper
     }
     
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: StringCodingKey.self)
 
-        self.wallpaper = (try container.decode(TelegramWallpaperNativeCodable.self, forKey: "wallpaper")).value
+        self.wallpaper = (try container.decode(IosappWallpaperNativeCodable.self, forKey: "wallpaper")).value
     }
     
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: StringCodingKey.self)
 
-        try container.encode(TelegramWallpaperNativeCodable(self.wallpaper), forKey: "wallpaper")
+        try container.encode(IosappWallpaperNativeCodable(self.wallpaper), forKey: "wallpaper")
     }
 }
 
-public func cachedWallpaper(engine: TelegramEngine, network: Network, slug: String, settings: WallpaperSettings?, update: Bool = false) -> Signal<CachedWallpaper?, NoError> {
+public func cachedWallpaper(engine: IosappEngine, network: Network, slug: String, settings: WallpaperSettings?, update: Bool = false) -> Signal<CachedWallpaper?, NoError> {
     let slugKey = EngineDataBuffer(length: 8)
     slugKey.setInt64(0, value: Int64(bitPattern: slug.persistentHashValue))
-    return engine.data.get(TelegramEngine.EngineData.Item.ItemCache.Item(collectionId: ApplicationSpecificItemCacheCollectionId.cachedWallpapers, id: slugKey))
+    return engine.data.get(IosappEngine.EngineData.Item.ItemCache.Item(collectionId: ApplicationSpecificItemCacheCollectionId.cachedWallpapers, id: slugKey))
     |> mapToSignal { entry -> Signal<CachedWallpaper?, NoError> in
         if !update, let entry = entry?.get(CachedWallpaper.self) {
             if let settings = settings {
@@ -40,7 +40,7 @@ public func cachedWallpaper(engine: TelegramEngine, network: Network, slug: Stri
         } else {
             return getWallpaper(network: network, slug: slug)
             |> map(Optional.init)
-            |> `catch` { _ -> Signal<TelegramWallpaper?, NoError> in
+            |> `catch` { _ -> Signal<IosappWallpaper?, NoError> in
                 return .single(nil)
             }
             |> mapToSignal { wallpaper -> Signal<CachedWallpaper?, NoError> in
@@ -50,7 +50,7 @@ public func cachedWallpaper(engine: TelegramEngine, network: Network, slug: Stri
                 if var wallpaper = wallpaper {
                     switch wallpaper {
                     case let .file(file):
-                        wallpaper = .file(TelegramWallpaper.File(id: file.id, accessHash: file.accessHash, isCreator: file.isCreator, isDefault: file.isDefault, isPattern: file.isPattern, isDark: file.isDark, slug: file.slug, file: file.file.withUpdatedResource(WallpaperDataResource(slug: slug)), settings: file.settings))
+                        wallpaper = .file(IosappWallpaper.File(id: file.id, accessHash: file.accessHash, isCreator: file.isCreator, isDefault: file.isDefault, isPattern: file.isPattern, isDark: file.isDark, slug: file.slug, file: file.file.withUpdatedResource(WallpaperDataResource(slug: slug)), settings: file.settings))
                     default:
                         break
                     }
@@ -74,7 +74,7 @@ public func cachedWallpaper(engine: TelegramEngine, network: Network, slug: Stri
     }
 }
 
-public func updateCachedWallpaper(engine: TelegramEngine, wallpaper: TelegramWallpaper) {
+public func updateCachedWallpaper(engine: IosappEngine, wallpaper: IosappWallpaper) {
     guard case let .file(file) = wallpaper, file.id != 0 else {
         return
     }

@@ -2,14 +2,14 @@ import Foundation
 import UIKit
 import AsyncDisplayKit
 import SwiftSignalKit
-import TelegramCore
+import IosappCore
 import Display
 import Postbox
-import TelegramPresentationData
+import IosappPresentationData
 import UniversalMediaPlayer
 import AccountContext
 import RadialStatusNode
-import TelegramUniversalVideoContent
+import IosappUniversalVideoContent
 import PresentationDataUtils
 import OverlayStatusController
 import StickerPackPreviewUI
@@ -18,7 +18,7 @@ import AnimationUI
 import ContextUI
 import SaveToCameraRoll
 import UndoUI
-import TelegramUIPreferences
+import IosappUIPreferences
 import OpenInExternalAppUI
 import AVKit
 import TextFormat
@@ -42,7 +42,7 @@ import GlassBackgroundComponent
 
 public enum UniversalVideoGalleryItemContentInfo {
     case message(Message, GalleryMediaSubject?)
-    case webPage(TelegramMediaWebpage, Media, ((@escaping () -> GalleryTransitionArguments?, NavigationController?, (ViewController, Any?) -> Void) -> Void)?)
+    case webPage(IosappMediaWebpage, Media, ((@escaping () -> GalleryTransitionArguments?, NavigationController?, (ViewController, Any?) -> Void) -> Void)?)
 }
 
 public class UniversalVideoGalleryItem: GalleryItem {
@@ -125,7 +125,7 @@ public class UniversalVideoGalleryItem: GalleryItem {
                 if case let .paidMediaIndex(index) = mediaSubject {
                     mediaIndex = index
                 }
-                if case let .full(fullMedia) = paidContent.extendedMedia[Int(mediaIndex)], let m = fullMedia as? TelegramMediaFile {
+                if case let .full(fullMedia) = paidContent.extendedMedia[Int(mediaIndex)], let m = fullMedia as? IosappMediaFile {
                     mediaReference = .message(message: MessageReference(message), media: m)
                 }
                 if let mediaReference = mediaReference {
@@ -133,9 +133,9 @@ public class UniversalVideoGalleryItem: GalleryItem {
                         return (0, item)
                     }
                 }
-            } else if let poll = message.media.first(where: { $0 is TelegramMediaPoll }) as? TelegramMediaPoll, case let .pollOption(opaqueIdentifier) = mediaSubject {
+            } else if let poll = message.media.first(where: { $0 is IosappMediaPoll }) as? IosappMediaPoll, case let .pollOption(opaqueIdentifier) = mediaSubject {
                 var mediaReference: AnyMediaReference?
-                if let optionMedia = poll.options.first(where: { $0.opaqueIdentifier == opaqueIdentifier })?.media as? TelegramMediaFile {
+                if let optionMedia = poll.options.first(where: { $0.opaqueIdentifier == opaqueIdentifier })?.media as? IosappMediaFile {
                     mediaReference = .message(message: MessageReference(message), media: optionMedia)
                 }
                 if let mediaReference {
@@ -146,9 +146,9 @@ public class UniversalVideoGalleryItem: GalleryItem {
             }  else if let id = message.groupInfo?.stableId {
                 var mediaReference: AnyMediaReference?
                 for m in message.media {
-                    if let m = m as? TelegramMediaImage {
+                    if let m = m as? IosappMediaImage {
                         mediaReference = .message(message: MessageReference(message), media: m)
-                    } else if let m = m as? TelegramMediaFile, m.isVideo {
+                    } else if let m = m as? IosappMediaFile, m.isVideo {
                         mediaReference = .message(message: MessageReference(message), media: m)
                     }
                 }
@@ -158,7 +158,7 @@ public class UniversalVideoGalleryItem: GalleryItem {
                     }
                 }
             }
-        } else if case let .webPage(webPage, media, _) = contentInfo, let file = media as? TelegramMediaFile  {
+        } else if case let .webPage(webPage, media, _) = contentInfo, let file = media as? IosappMediaFile  {
             if let item = ChatMediaGalleryThumbnailItem(account: self.context.account, userLocation: .other, mediaReference: .webPage(webPage: WebpageReference(webPage), media: file)) {
                 return (0, item)
             }
@@ -780,7 +780,7 @@ private final class NativePictureInPictureContentImpl: NSObject, AVPictureInPict
 
         if let (messageId, _) = hiddenMedia {
             var hadMessage: Bool?
-            self.messageRemovedDisposable = (context.engine.data.subscribe(TelegramEngine.EngineData.Item.Messages.Message(id: messageId))
+            self.messageRemovedDisposable = (context.engine.data.subscribe(IosappEngine.EngineData.Item.Messages.Message(id: messageId))
             |> map { message -> Bool in
                 if let _ = message {
                     return true
@@ -1043,8 +1043,8 @@ final class UniversalVideoGalleryItemNode: ZoomableContentGalleryItemNode {
             
             if playerStatusValue.duration >= 60.0 * 10.0 {
                 var publicLinkPrefix: ShareControllerSubject.PublicLinkPrefix?
-                if case let .message(message, _) = self.item?.contentInfo, message.id.namespace == Namespaces.Message.Cloud, let peer = message.peers[message.id.peerId] as? TelegramChannel, let username = peer.username ?? peer.usernames.first?.username {
-                    let visibleString = "t.me/\(username)/\(message.id.id)"
+                if case let .message(message, _) = self.item?.contentInfo, message.id.namespace == Namespaces.Message.Cloud, let peer = message.peers[message.id.peerId] as? IosappChannel, let username = peer.username ?? peer.usernames.first?.username {
+                    let visibleString = "asme.su/\(username)/\(message.id.id)"
                     publicLinkPrefix = ShareControllerSubject.PublicLinkPrefix(
                         visibleString: visibleString,
                         actualString: "https://\(visibleString)"
@@ -1439,7 +1439,7 @@ final class UniversalVideoGalleryItemNode: ZoomableContentGalleryItemNode {
             if let content = item.content as? NativeVideoContent {
                 isAnimated = content.fileReference.media.isAnimated
                 self.videoFramePreview = MediaPlayerFramePreview(postbox: item.context.account.postbox, userLocation: content.userLocation, userContentType: .video, fileReference: content.fileReference)
-                if case let .message(message, _) = item.contentInfo, let _ = message.effectiveMedia.first(where: { $0 is TelegramMediaImage }) {
+                if case let .message(message, _) = item.contentInfo, let _ = message.effectiveMedia.first(where: { $0 is IosappMediaImage }) {
                     self.isLivePhoto = true
                     disablePlayerControls = true
                     isAnimated = false
@@ -1633,13 +1633,13 @@ final class UniversalVideoGalleryItemNode: ZoomableContentGalleryItemNode {
                     }))
                 }
                 
-                var file: TelegramMediaFile?
+                var file: IosappMediaFile?
                 var isWebpage = false
                 for m in message.effectiveMedia {
-                    if let m = m as? TelegramMediaFile, m.isVideo {
+                    if let m = m as? IosappMediaFile, m.isVideo {
                         file = m
                         break
-                    } else if let m = m as? TelegramMediaWebpage, case let .Loaded(content) = m.content, let f = content.file, f.isVideo {
+                    } else if let m = m as? IosappMediaWebpage, case let .Loaded(content) = m.content, let f = content.file, f.isVideo {
                         file = f
                         isWebpage = true
                         break
@@ -1885,7 +1885,7 @@ final class UniversalVideoGalleryItemNode: ZoomableContentGalleryItemNode {
             self.zoomableContent = (videoSize, videoNode)
             
             
-            if case let .message(message, _) = item.contentInfo, let content = item.content as? NativeVideoContent, let image = message.effectiveMedia.first(where: { $0 is TelegramMediaImage }), let imageReference = content.fileReference.abstract.withUpdatedMedia(image).concrete(TelegramMediaImage.self) {
+            if case let .message(message, _) = item.contentInfo, let content = item.content as? NativeVideoContent, let image = message.effectiveMedia.first(where: { $0 is IosappMediaImage }), let imageReference = content.fileReference.abstract.withUpdatedMedia(image).concrete(IosappMediaImage.self) {
                 let imageNode = TransformImageNode()
                 imageNode.alpha = 1.0
                 imageNode.isUserInteractionEnabled = false
@@ -1919,38 +1919,38 @@ final class UniversalVideoGalleryItemNode: ZoomableContentGalleryItemNode {
             
             if let contentInfo = item.contentInfo, case let .message(message, mediaSubject) = contentInfo {
                 var hasMoreButton = false
-                var file: TelegramMediaFile?
+                var file: IosappMediaFile?
                 for m in message.media {
-                    if let _ = m as? TelegramMediaImage {
+                    if let _ = m as? IosappMediaImage {
                         hasMoreButton = true
-                    } else if let m = m as? TelegramMediaFile, m.isVideo {
+                    } else if let m = m as? IosappMediaFile, m.isVideo {
                         file = m
                         break
-                    } else if let m = m as? TelegramMediaWebpage, case let .Loaded(content) = m.content, let f = content.file, f.isVideo {
+                    } else if let m = m as? IosappMediaWebpage, case let .Loaded(content) = m.content, let f = content.file, f.isVideo {
                         file = f
                         break
-                    } else if let paidContent = m as? TelegramMediaPaidContent {
+                    } else if let paidContent = m as? IosappMediaPaidContent {
                         var mediaIndex: Int = 0
                         if case let .paidMediaIndex(index) = mediaSubject {
                             mediaIndex = index
                         }
                         let media = paidContent.extendedMedia[mediaIndex]
-                        if case let .full(fullMedia) = media, let m = fullMedia as? TelegramMediaFile {
+                        if case let .full(fullMedia) = media, let m = fullMedia as? IosappMediaFile {
                             file = m
                         }
                         break
-                    } else if let poll = m as? TelegramMediaPoll {
+                    } else if let poll = m as? IosappMediaPoll {
                         switch mediaSubject {
                         case .pollDescription:
-                            if let f = poll.attachedMedia as? TelegramMediaFile {
+                            if let f = poll.attachedMedia as? IosappMediaFile {
                                 file = f
                             }
                         case let .pollOption(opaqueIdentifier):
-                            if let f = poll.options.first(where: { $0.opaqueIdentifier == opaqueIdentifier })?.media as? TelegramMediaFile {
+                            if let f = poll.options.first(where: { $0.opaqueIdentifier == opaqueIdentifier })?.media as? IosappMediaFile {
                                 file = f
                             }
                         case .pollSolution:
-                            if let f = poll.results.solution?.media as? TelegramMediaFile {
+                            if let f = poll.results.solution?.media as? IosappMediaFile {
                                 file = f
                             }
                         default:
@@ -3135,9 +3135,9 @@ final class UniversalVideoGalleryItemNode: ZoomableContentGalleryItemNode {
         switch item.contentInfo {
         case let .message(message, _):
             for media in message.effectiveMedia {
-                if let media = media as? TelegramMediaImage {
+                if let media = media as? IosappMediaImage {
                     hiddenMedia = (message.id, media)
-                } else if let media = media as? TelegramMediaFile, media.isVideo {
+                } else if let media = media as? IosappMediaFile, media.isVideo {
                     hiddenMedia = (message.id, media)
                 }
             }
@@ -3253,28 +3253,28 @@ final class UniversalVideoGalleryItemNode: ZoomableContentGalleryItemNode {
         }
     }
 
-    private func contentInfo() -> (message: Message, file: TelegramMediaFile?, isWebpage: Bool)? {
+    private func contentInfo() -> (message: Message, file: IosappMediaFile?, isWebpage: Bool)? {
         guard let item = self.item else {
             return nil
         }
         if let contentInfo = item.contentInfo, case let .message(message, mediaSubject) = contentInfo {
-            var file: TelegramMediaFile?
+            var file: IosappMediaFile?
             var isWebpage = false
             for m in message.media {
-                if let paidContent = m as? TelegramMediaPaidContent {
+                if let paidContent = m as? IosappMediaPaidContent {
                     var mediaIndex: Int = 0
                     if case let .paidMediaIndex(index) = mediaSubject {
                         mediaIndex = index
                     }
                     let media = paidContent.extendedMedia[mediaIndex]
-                    if case let .full(fullMedia) = media, let fullMedia = fullMedia as? TelegramMediaFile, fullMedia.isVideo {
+                    if case let .full(fullMedia) = media, let fullMedia = fullMedia as? IosappMediaFile, fullMedia.isVideo {
                         file = fullMedia
                     }
                     break
-                } else if let m = m as? TelegramMediaFile, m.isVideo {
+                } else if let m = m as? IosappMediaFile, m.isVideo {
                     file = m
                     break
-                } else if let m = m as? TelegramMediaWebpage, case let .Loaded(content) = m.content {
+                } else if let m = m as? IosappMediaWebpage, case let .Loaded(content) = m.content {
                     if let f = content.file, f.isVideo {
                         file = f
                     }
@@ -3293,11 +3293,11 @@ final class UniversalVideoGalleryItemNode: ZoomableContentGalleryItemNode {
         }
         var canDelete = false
         if let peer = message.peers[message.id.peerId] {
-            if peer is TelegramUser || peer is TelegramSecretChat {
+            if peer is IosappUser || peer is IosappSecretChat {
                 canDelete = true
-            } else if let _ = peer as? TelegramGroup {
+            } else if let _ = peer as? IosappGroup {
                 canDelete = true
-            } else if let channel = peer as? TelegramChannel {
+            } else if let channel = peer as? IosappChannel {
                 if message.flags.contains(.Incoming) {
                     canDelete = channel.hasPermission(.deleteAllMessages)
                 } else {
@@ -3309,7 +3309,7 @@ final class UniversalVideoGalleryItemNode: ZoomableContentGalleryItemNode {
         } else {
             canDelete = false
         }
-        if let _ = message.media.first(where: { $0 is TelegramMediaPoll }) {
+        if let _ = message.media.first(where: { $0 is IosappMediaPoll }) {
             canDelete = false
         }
         return canDelete
@@ -3536,7 +3536,7 @@ final class UniversalVideoGalleryItemNode: ZoomableContentGalleryItemNode {
         
         let peer: Signal<EnginePeer?, NoError>
         if let (message, _, _) = self.contentInfo() {
-            peer = self.context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: message.id.peerId))
+            peer = self.context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: message.id.peerId))
         } else {
             peer = .single(nil)
         }
@@ -3858,7 +3858,7 @@ final class UniversalVideoGalleryItemNode: ZoomableContentGalleryItemNode {
                     })))
                 }
                 
-                if let (message, _, _) = strongSelf.contentInfo(), let image = message.effectiveMedia.first(where: { $0 is TelegramMediaImage }) as? TelegramMediaImage, !message.isCopyProtected() && !item.peerIsCopyProtected && message.paidContent == nil {
+                if let (message, _, _) = strongSelf.contentInfo(), let image = message.effectiveMedia.first(where: { $0 is IosappMediaImage }) as? IosappMediaImage, !message.isCopyProtected() && !item.peerIsCopyProtected && message.paidContent == nil {
                     let context = strongSelf.context
                     var videoReference: AnyMediaReference?
                     if let video = image.video {
@@ -3882,7 +3882,7 @@ final class UniversalVideoGalleryItemNode: ZoomableContentGalleryItemNode {
                                 
                 if let (message, _, _) = strongSelf.contentInfo() {
                     for media in message.media {
-                        if let webpage = media as? TelegramMediaWebpage, case let .Loaded(content) = webpage.content {
+                        if let webpage = media as? IosappMediaWebpage, case let .Loaded(content) = webpage.content {
                             let url = content.url
                             
                             let item = OpenInItem.url(url: url)

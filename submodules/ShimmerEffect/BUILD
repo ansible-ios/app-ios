@@ -13,7 +13,7 @@ swift_library(
         "//submodules/AsyncDisplayKit:AsyncDisplayKit",
         "//submodules/Display:Display",
         "//submodules/Components/HierarchyTrackingLayer:HierarchyTrackingLayer",
-        "//submodules/TelegramUI/Components/Utils/GenerateStickerPlaceholderImage",
+        "//submodules/IosappUI/Components/Utils/GenerateStickerPlaceholderImage",
     ],
     visibility = [
         "//visibility:public",

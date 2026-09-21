@@ -12,8 +12,8 @@ swift_library(
     deps = [
         "//submodules/AsyncDisplayKit",
         "//submodules/Display",
-        "//submodules/TelegramPresentationData",
-        "//submodules/TelegramStringFormatting",
+        "//submodules/IosappPresentationData",
+        "//submodules/IosappStringFormatting",
         "//submodules/SegmentedControlNode",
         "//submodules/DirectionalPanGesture",
         "//submodules/TextFormat",

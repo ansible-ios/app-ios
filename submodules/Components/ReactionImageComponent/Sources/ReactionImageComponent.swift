@@ -3,9 +3,9 @@ import AsyncDisplayKit
 import Display
 import ComponentFlow
 import SwiftSignalKit
-import TelegramCore
+import IosappCore
 import AccountContext
-import TelegramPresentationData
+import IosappPresentationData
 import UIKit
 import WebPBinding
 import RLottieBinding
@@ -15,7 +15,7 @@ import EmojiTextAttachmentView
 
 public let sharedReactionStaticImage = Queue(name: "SharedReactionStaticImage", qos: .default)
 
-public func reactionStaticImage(context: AccountContext, animation: TelegramMediaFile, pixelSize: CGSize, queue: Queue) -> Signal<EngineMediaResource.ResourceData, NoError> {
+public func reactionStaticImage(context: AccountContext, animation: IosappMediaFile, pixelSize: CGSize, queue: Queue) -> Signal<EngineMediaResource.ResourceData, NoError> {
     return context.engine.resources.custom(id: "\(animation.resource.id.stringRepresentation):reaction-static-\(pixelSize.width)x\(pixelSize.height)-v10", fetch: EngineMediaResource.Fetch {
         return Signal { subscriber in
             let fetchDisposable = context.engine.resources.fetch(reference: MediaResourceReference.standalone(resource: animation.resource), userLocation: .other, userContentType: .image).start()
@@ -120,8 +120,8 @@ public final class ReactionImageNode: ASDisplayNode {
     public init(context: AccountContext, availableReactions: AvailableReactions?, reaction: MessageReaction.Reaction, displayPixelSize: CGSize) {
         self.iconNode = ASImageNode()
         
-        var file: TelegramMediaFile?
-        var animationFile: TelegramMediaFile?
+        var file: IosappMediaFile?
+        var animationFile: IosappMediaFile?
         if let availableReactions = availableReactions {
             for availableReaction in availableReactions.reactions {
                 if availableReaction.value == reaction {

@@ -2,8 +2,8 @@ import Foundation
 import UIKit
 import AsyncDisplayKit
 import Display
-import TelegramCore
-import TelegramPresentationData
+import IosappCore
+import IosappPresentationData
 import AvatarNode
 import AccountContext
 import SelectablePeerNode
@@ -32,8 +32,8 @@ private final class MoreNode: ASDisplayNode {
 
 final class JoinLinkPreviewPeerContentNode: ASDisplayNode, ShareContentContainerNode {
     enum Content {
-        case invite(isGroup: Bool, image: TelegramMediaImageRepresentation?, title: String, about: String?, memberCount: Int32, members: [EnginePeer])
-        case request(isGroup: Bool, image: TelegramMediaImageRepresentation?, title: String, about: String?, memberCount: Int32, isVerified: Bool, isFake: Bool, isScam: Bool)
+        case invite(isGroup: Bool, image: IosappMediaImageRepresentation?, title: String, about: String?, memberCount: Int32, members: [EnginePeer])
+        case request(isGroup: Bool, image: IosappMediaImageRepresentation?, title: String, about: String?, memberCount: Int32, isVerified: Bool, isFake: Bool, isScam: Bool)
         
         var isGroup: Bool {
             switch self {
@@ -42,7 +42,7 @@ final class JoinLinkPreviewPeerContentNode: ASDisplayNode, ShareContentContainer
             }
         }
         
-        var image: TelegramMediaImageRepresentation? {
+        var image: IosappMediaImageRepresentation? {
             switch self {
                 case let .invite(_, image, _, _, _, _), let .request(_, image, _, _, _, _, _, _):
                     return image
@@ -166,7 +166,7 @@ final class JoinLinkPreviewPeerContentNode: ASDisplayNode, ShareContentContainer
         
         super.init()
         
-        let peer = TelegramGroup(id: EnginePeer.Id(0), title: content.title, photo: content.image.flatMap { [$0] } ?? [], participantCount: Int(content.memberCount), role: .member, membership: .Left, flags: [], defaultBannedRights: nil, migrationReference: nil, creationDate: 0, version: 0)
+        let peer = IosappGroup(id: EnginePeer.Id(0), title: content.title, photo: content.image.flatMap { [$0] } ?? [], participantCount: Int(content.memberCount), role: .member, membership: .Left, flags: [], defaultBannedRights: nil, migrationReference: nil, creationDate: 0, version: 0)
         
         self.addSubnode(self.avatarNode)
         self.avatarNode.setPeer(context: context, theme: theme, peer: EnginePeer(peer), emptyColor: theme.list.mediaPlaceholderColor)

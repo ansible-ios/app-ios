@@ -2,9 +2,9 @@ import Foundation
 import UIKit
 import Display
 import SwiftSignalKit
-import TelegramCore
-import TelegramPresentationData
-import TelegramUIPreferences
+import IosappCore
+import IosappPresentationData
+import IosappUIPreferences
 import ItemListUI
 import PresentationDataUtils
 import AccountContext
@@ -25,7 +25,7 @@ private final class RecentSessionsControllerArguments {
     let terminateOtherSessions: () -> Void
     
     let openSession: (RecentAccountSession) -> Void
-    let openConnectedBotSession: (TelegramAccountConnectedBot) -> Void
+    let openConnectedBotSession: (IosappAccountConnectedBot) -> Void
     let openWebSession: (WebAuthorization, EnginePeer?) -> Void
     
     let removeWebSession: (Int64) -> Void
@@ -39,7 +39,7 @@ private final class RecentSessionsControllerArguments {
     let openDesktopLink: () -> Void
     let openWebLink: () -> Void
     
-    init(context: AccountContext, setSessionIdWithRevealedOptions: @escaping (Int64?, Int64?) -> Void, removeSession: @escaping (Int64) -> Void, terminateOtherSessions: @escaping () -> Void, openSession: @escaping (RecentAccountSession) -> Void, openConnectedBotSession: @escaping (TelegramAccountConnectedBot) -> Void, openWebSession: @escaping (WebAuthorization, EnginePeer?) -> Void, removeWebSession: @escaping (Int64) -> Void, terminateAllWebSessions: @escaping () -> Void, addDevice: @escaping () -> Void, openOtherAppsUrl: @escaping () -> Void, setupAuthorizationTTL: @escaping () -> Void, openDesktopLink: @escaping () -> Void, openWebLink: @escaping () -> Void) {
+    init(context: AccountContext, setSessionIdWithRevealedOptions: @escaping (Int64?, Int64?) -> Void, removeSession: @escaping (Int64) -> Void, terminateOtherSessions: @escaping () -> Void, openSession: @escaping (RecentAccountSession) -> Void, openConnectedBotSession: @escaping (IosappAccountConnectedBot) -> Void, openWebSession: @escaping (WebAuthorization, EnginePeer?) -> Void, removeWebSession: @escaping (Int64) -> Void, terminateAllWebSessions: @escaping () -> Void, addDevice: @escaping () -> Void, openOtherAppsUrl: @escaping () -> Void, setupAuthorizationTTL: @escaping () -> Void, openDesktopLink: @escaping () -> Void, openWebLink: @escaping () -> Void) {
         self.context = context
         self.setSessionIdWithRevealedOptions = setSessionIdWithRevealedOptions
         self.removeSession = removeSession
@@ -123,7 +123,7 @@ private enum RecentSessionsEntry: ItemListNodeEntry {
     case pendingSessionsInfo(SortIndex, String)
     case otherSessionsHeader(SortIndex, String)
     case addDevice(SortIndex, String)
-    case connectedBot(sortIndex: SortIndex, strings: PresentationStrings, dateTimeFormat: PresentationDateTimeFormat, nameDisplayOrder: PresentationPersonNameOrder, bot: TelegramAccountConnectedBot, peer: EnginePeer?, enabled: Bool)
+    case connectedBot(sortIndex: SortIndex, strings: PresentationStrings, dateTimeFormat: PresentationDateTimeFormat, nameDisplayOrder: PresentationPersonNameOrder, bot: IosappAccountConnectedBot, peer: EnginePeer?, enabled: Bool)
     case session(index: Int32, sortIndex: SortIndex, strings: PresentationStrings, dateTimeFormat: PresentationDateTimeFormat, session: RecentAccountSession, enabled: Bool, editing: Bool, revealed: Bool)
     case website(index: Int32, sortIndex: SortIndex, strings: PresentationStrings, dateTimeFormat: PresentationDateTimeFormat, nameDisplayOrder: PresentationPersonNameOrder, website: WebAuthorization, peer: EnginePeer?, enabled: Bool, editing: Bool, revealed: Bool)
     case devicesInfo(SortIndex, String)
@@ -509,7 +509,7 @@ private struct RecentSessionsControllerState: Equatable {
     }
 }
 
-private func recentSessionsControllerEntries(presentationData: PresentationData, state: RecentSessionsControllerState, sessionsState: ActiveSessionsContextState, connectedBot: TelegramAccountConnectedBot?, connectedBotPeer: EnginePeer?, enableQRLogin: Bool) -> [RecentSessionsEntry] {
+private func recentSessionsControllerEntries(presentationData: PresentationData, state: RecentSessionsControllerState, sessionsState: ActiveSessionsContextState, connectedBot: IosappAccountConnectedBot?, connectedBotPeer: EnginePeer?, enableQRLogin: Bool) -> [RecentSessionsEntry] {
     var entries: [RecentSessionsEntry] = []
     
     entries.append(.header(SortIndex(section: 0, item: 0), presentationData.strings.AuthSessions_HeaderInfo))
@@ -594,7 +594,7 @@ private func recentSessionsControllerEntries(presentationData: PresentationData,
             entries.append(.terminateAllWebSessions(SortIndex(section: 0, item: 0), presentationData.strings.AuthSessions_LogOutApplications))
             entries.append(.currentSessionInfo(SortIndex(section: 0, item: 1), presentationData.strings.AuthSessions_LogOutApplicationsHelp))
             
-            entries.append(.otherSessionsHeader(SortIndex(section: 0, item: 2), presentationData.strings.AuthSessions_LoggedInWithTelegram))
+            entries.append(.otherSessionsHeader(SortIndex(section: 0, item: 2), presentationData.strings.AuthSessions_LoggedInWithIosapp))
             
             let filteredWebsites: [WebAuthorization] = websites.sorted(by: { lhs, rhs in
                 return lhs.dateActive > rhs.dateActive
@@ -733,7 +733,7 @@ public func recentSessionsController(context: AccountContext, activeSessionsCont
     let updateSessionDisposable = MetaDisposable()
     actionsDisposable.add(updateSessionDisposable)
     
-    let connectedBotAndPeerValue = Atomic<(TelegramAccountConnectedBot?, EnginePeer?)>(value: (nil, nil))
+    let connectedBotAndPeerValue = Atomic<(IosappAccountConnectedBot?, EnginePeer?)>(value: (nil, nil))
     
     let arguments = RecentSessionsControllerArguments(context: context, setSessionIdWithRevealedOptions: { sessionId, fromSessionId in
         updateState { state in
@@ -953,7 +953,7 @@ public func recentSessionsController(context: AccountContext, activeSessionsCont
     
     let previousMode = Atomic<RecentSessionsMode>(value: .sessions)
     
-    let enableQRLogin = context.engine.data.subscribe(TelegramEngine.EngineData.Item.Configuration.ApplicationSpecificPreference(key: PreferencesKeys.appConfiguration))
+    let enableQRLogin = context.engine.data.subscribe(IosappEngine.EngineData.Item.Configuration.ApplicationSpecificPreference(key: PreferencesKeys.appConfiguration))
     |> map { view -> Bool in
         guard let appConfiguration = view?.get(AppConfiguration.self) else {
             return false
@@ -966,14 +966,14 @@ public func recentSessionsController(context: AccountContext, activeSessionsCont
     |> distinctUntilChanged
     
     let connectedBotAndPeer = context.engine.data.subscribe(
-        TelegramEngine.EngineData.Item.Peer.BusinessConnectedBot(id: context.account.peerId)
+        IosappEngine.EngineData.Item.Peer.BusinessConnectedBot(id: context.account.peerId)
     )
-    |> mapToSignal { connectedBot -> Signal<(TelegramAccountConnectedBot?, EnginePeer?), NoError> in
+    |> mapToSignal { connectedBot -> Signal<(IosappAccountConnectedBot?, EnginePeer?), NoError> in
         guard let connectedBot else {
             return .single((nil, nil))
         }
         return context.engine.data.subscribe(
-            TelegramEngine.EngineData.Item.Peer.Peer(id: connectedBot.id)
+            IosappEngine.EngineData.Item.Peer.Peer(id: connectedBot.id)
         )
         |> map { peer in
             return (connectedBot, peer)

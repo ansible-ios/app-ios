@@ -3,10 +3,10 @@ import UIKit
 import Display
 import SwiftSignalKit
 import AsyncDisplayKit
-import TelegramCore
-import TelegramPresentationData
-import TelegramUIPreferences
-import TelegramStringFormatting
+import IosappCore
+import IosappPresentationData
+import IosappUIPreferences
+import IosappStringFormatting
 import ItemListUI
 import ItemListPeerItem
 import PresentationDataUtils
@@ -350,13 +350,13 @@ public func messageStatsController(context: AccountContext, updatedPresentationD
         
         forwardsContext = StoryStatsPublicForwardsContext(account: context.account, subject: .message(messageId: id))
         
-        pollDataPromise.set(context.engine.data.get(TelegramEngine.EngineData.Item.Messages.Message(id: id))
+        pollDataPromise.set(context.engine.data.get(IosappEngine.EngineData.Item.Messages.Message(id: id))
         |> map { message -> PollStatsContext? in
             guard let message else {
                 return nil
             }
             for media in message.media {
-                if let poll = media as? TelegramMediaPoll, poll.results.canViewStats {
+                if let poll = media as? IosappMediaPoll, poll.results.canViewStats {
                     return PollStatsContext(account: context.account, messageId: message.id)
                 }
             }
@@ -416,7 +416,7 @@ public func messageStatsController(context: AccountContext, updatedPresentationD
     if case let .story(peerId, id, storyItem, fromStory) = subject, !fromStory {
         let _ = id
         iconNodePromise.set(
-            context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: peerId))
+            context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: peerId))
             |> deliverOnMainQueue
             |> map { peer -> ASDisplayNode? in
                 if let peer = peer?._asPeer() {
@@ -497,7 +497,7 @@ public func messageStatsController(context: AccountContext, updatedPresentationD
     }
     navigateToMessageImpl = { [weak controller] messageId in
         let _ = (context.engine.data.get(
-            TelegramEngine.EngineData.Item.Peer.Peer(id: messageId.peerId)
+            IosappEngine.EngineData.Item.Peer.Peer(id: messageId.peerId)
         )
         |> deliverOnMainQueue).start(next: { peer in
             guard let peer = peer else {
@@ -594,7 +594,7 @@ public func messageStatsController(context: AccountContext, updatedPresentationD
         
         items.append(.action(ContextMenuActionItem(text: title, icon: { theme in generateTintedImage(image: UIImage(bundleImageName: iconName), color: theme.contextMenu.primaryColor) }, action: { [weak controller] c, _ in
             c?.dismiss(completion: {
-                let _ = (context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: peerId))
+                let _ = (context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: peerId))
                 |> deliverOnMainQueue).start(next: { peer in
                     guard let peer = peer, let navigationController = controller?.navigationController as? NavigationController else {
                         return

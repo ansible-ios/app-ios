@@ -3,11 +3,11 @@ import UIKit
 import Display
 import AsyncDisplayKit
 import Postbox
-import TelegramCore
+import IosappCore
 import SwiftSignalKit
 import AccountContext
-import TelegramPresentationData
-import TelegramUIPreferences
+import IosappPresentationData
+import IosappUIPreferences
 import MergeLists
 import StickerPeekUI
 import OverlayStatusController
@@ -389,7 +389,7 @@ private final class FeaturedStickersScreenNode: ViewControllerTracingNode {
         self.disposable = (combineLatest(queue: .mainQueue(),
             mappedFeatured,
             self.additionalPacks.get(),
-            context.engine.data.subscribe(TelegramEngine.EngineData.Item.ItemCollections.InstalledPackIds(namespace: Namespaces.ItemCollection.CloudStickerPacks)),
+            context.engine.data.subscribe(IosappEngine.EngineData.Item.ItemCollections.InstalledPackIds(namespace: Namespaces.ItemCollection.CloudStickerPacks)),
             context.sharedContext.presentationData
         )
         |> map { featuredEntries, additionalPacks, installedPackIds, presentationData -> FeaturedTransition in
@@ -1363,7 +1363,7 @@ private final class FeaturedPaneSearchContentNode: ASDisplayNode {
                 )
             }
             
-            let installedPackIds = context.engine.data.subscribe(TelegramEngine.EngineData.Item.ItemCollections.InstalledPackIds(namespace: Namespaces.ItemCollection.CloudStickerPacks))
+            let installedPackIds = context.engine.data.subscribe(IosappEngine.EngineData.Item.ItemCollections.InstalledPackIds(namespace: Namespaces.ItemCollection.CloudStickerPacks))
             |> map { installedPackIds -> Set<ItemCollectionId> in
                 return Set(installedPackIds)
             }

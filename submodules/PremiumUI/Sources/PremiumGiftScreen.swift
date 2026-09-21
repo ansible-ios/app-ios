@@ -3,8 +3,8 @@ import UIKit
 import Display
 import ComponentFlow
 import SwiftSignalKit
-import TelegramCore
-import TelegramPresentationData
+import IosappCore
+import IosappPresentationData
 import PresentationDataUtils
 import ViewControllerComponent
 import AccountContext
@@ -115,8 +115,8 @@ private final class PremiumGiftScreenContentComponent: CombinedComponent {
             super.init()
             
             self.disposable = (context.engine.data.subscribe(
-                TelegramEngine.EngineData.Item.Configuration.App(),
-                TelegramEngine.EngineData.Item.Configuration.PremiumPromo()
+                IosappEngine.EngineData.Item.Configuration.App(),
+                IosappEngine.EngineData.Item.Configuration.PremiumPromo()
             )
             |> deliverOnMainQueue).start(next: { [weak self] appConfiguration, promoConfiguration in
                 if let strongSelf = self {
@@ -596,7 +596,7 @@ private final class PremiumGiftScreenContentComponent: CombinedComponent {
             let termsFont = Font.regular(13.0)
             let termsTextColor = environment.theme.list.freeTextColor
             let termsMarkdownAttributes = MarkdownAttributes(body: MarkdownAttributeSet(font: termsFont, textColor: termsTextColor), bold: MarkdownAttributeSet(font: termsFont, textColor: termsTextColor), link: MarkdownAttributeSet(font: termsFont, textColor: environment.theme.list.itemAccentColor), linkAttribute: { contents in
-                return (TelegramTextAttributes.URL, contents)
+                return (IosappTextAttributes.URL, contents)
             })
                        
             let termsString: MultilineTextComponent.TextContent = .markdown(
@@ -606,12 +606,12 @@ private final class PremiumGiftScreenContentComponent: CombinedComponent {
             
             let controller = environment.controller
             let termsTapActionImpl: ([NSAttributedString.Key: Any]) -> Void = { attributes in
-                if let url = attributes[NSAttributedString.Key(rawValue: TelegramTextAttributes.URL)] as? String,
+                if let url = attributes[NSAttributedString.Key(rawValue: IosappTextAttributes.URL)] as? String,
                     let controller = controller() as? PremiumGiftScreen, let navigationController = controller.navigationController as? NavigationController {
                     if url.hasPrefix("https://apps.apple.com/account/subscriptions") {
                         controller.context.sharedContext.applicationBindings.openSubscriptions()
-                    } else if url.hasPrefix("https://") || url.hasPrefix("tg://") {
-                        controller.context.sharedContext.openExternalUrl(context: controller.context, urlContext: .generic, url: url, forceExternal: !url.hasPrefix("tg://") && !url.contains("?start="), presentationData: controller.context.sharedContext.currentPresentationData.with({$0}), navigationController: nil, dismissInput: {})
+                    } else if url.hasPrefix("https://") || url.hasPrefix("as://") {
+                        controller.context.sharedContext.openExternalUrl(context: controller.context, urlContext: .generic, url: url, forceExternal: !url.hasPrefix("as://") && !url.contains("?start="), presentationData: controller.context.sharedContext.currentPresentationData.with({$0}), navigationController: nil, dismissInput: {})
                     } else {
                         let context = controller.context
                         let signal: Signal<ResolvedUrl, NoError>?
@@ -644,8 +644,8 @@ private final class PremiumGiftScreenContentComponent: CombinedComponent {
                     lineSpacing: 0.0,
                     highlightColor: environment.theme.list.itemAccentColor.withAlphaComponent(0.2),
                     highlightAction: { attributes in
-                        if let _ = attributes[NSAttributedString.Key(rawValue: TelegramTextAttributes.URL)] {
-                            return NSAttributedString.Key(rawValue: TelegramTextAttributes.URL)
+                        if let _ = attributes[NSAttributedString.Key(rawValue: IosappTextAttributes.URL)] {
+                            return NSAttributedString.Key(rawValue: IosappTextAttributes.URL)
                         } else {
                             return nil
                         }
@@ -821,7 +821,7 @@ private final class PremiumGiftScreenComponent: CombinedComponent {
                 queue: Queue.mainQueue(),
                 availableProducts,
                 context.engine.data.get(
-                    EngineDataMap(peerIds.map(TelegramEngine.EngineData.Item.Peer.Peer.init(id:)))
+                    EngineDataMap(peerIds.map(IosappEngine.EngineData.Item.Peer.Peer.init(id:)))
                 )
             ).start(next: { [weak self] products, peers in
                 if let strongSelf = self {

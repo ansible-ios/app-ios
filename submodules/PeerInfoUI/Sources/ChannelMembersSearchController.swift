@@ -1,9 +1,9 @@
 import Foundation
 import UIKit
 import Display
-import TelegramCore
+import IosappCore
 import SwiftSignalKit
-import TelegramPresentationData
+import IosappPresentationData
 import AccountContext
 import SearchUI
 import CounterControllerTitleView
@@ -91,7 +91,7 @@ public final class ChannelMembersSearchControllerImpl: ViewController, ChannelMe
             }
         })
         
-        let _ = (params.context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: self.peerId))
+        let _ = (params.context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: self.peerId))
         |> take(1)
         |> deliverOnMainQueue).start(next: { [weak self] peer in
             guard let self, let peer else {

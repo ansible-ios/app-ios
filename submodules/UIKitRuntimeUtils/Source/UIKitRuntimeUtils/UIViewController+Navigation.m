@@ -174,7 +174,7 @@ static NSMutableArray<CALayerSpringParametersOverride *> *currentSpringParameter
     return array;
 }
 
-@implementation CALayer (TelegramAddAnimation)
+@implementation CALayer (IosappAddAnimation)
 
 + (void)pushSpringParametersOverride:(CALayerSpringParametersOverride * _Nonnull)springParametersOverride {
     if (springParametersOverride) {
@@ -318,11 +318,11 @@ static NSMutableArray<CALayerSpringParametersOverride *> *currentSpringParameter
 
 @end
 
-@interface UIWindow (Telegram)
+@interface UIWindow (Iosapp)
 
 @end
 
-@implementation UIWindow (Telegram)
+@implementation UIWindow (Iosapp)
 
 - (instancetype)_65087dc8_initWithFrame:(CGRect)frame {
     return [self _65087dc8_initWithFrame:frame];
@@ -336,11 +336,11 @@ static NSMutableArray<CALayerSpringParametersOverride *> *currentSpringParameter
 
 @end
 
-@interface UIFocusSystem (Telegram)
+@interface UIFocusSystem (Iosapp)
 
 @end
 
-@implementation UIFocusSystem (Telegram)
+@implementation UIFocusSystem (Iosapp)
 
 - (void)_65087dc8_updateFocusIfNeeded {
     //TODO:Re-enable
@@ -517,7 +517,7 @@ static NSMutableDictionary<NSString *, TrustedWebRecord *> *trustedWebRecords() 
 
 @end
 
-@implementation NSBundle (Telegram)
+@implementation NSBundle (Iosapp)
 
 - (id)_65087dc8_objectForInfoDictionaryKey:(NSString *)key {
     if ([key isEqualToString:@"WKAppBoundDomains"]) {

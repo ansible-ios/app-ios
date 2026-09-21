@@ -1,0 +1,6 @@
+namespace IosappCore;
+
+struct ItemCollectionId {
+    namespace: int;
+    id: int64;
+}

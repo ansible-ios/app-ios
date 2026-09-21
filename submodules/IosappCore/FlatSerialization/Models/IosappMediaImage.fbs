@@ -1,0 +1,53 @@
+include "MediaId.fbs";
+include "IosappMediaImageRepresentation.fbs";
+include "StickerPackReference.fbs";
+include "PartialMediaReference.fbs";
+include "IosappMediaFile.fbs";
+
+namespace IosappCore;
+
+table IosappMediaImageReference {
+    imageId:int64 (id: 0);
+    accessHash:int64 (id: 1);
+    fileReference:[ubyte] (id: 2);
+}
+
+table VideoRepresentation {
+    width:int32 (id: 0);
+    height:int32 (id: 1);
+    resource:IosappMediaResource (id: 2, required);
+    startTimestamp:float32 (id: 3);
+}
+
+table EmojiMarkup_Content_Emoji {
+    fileId:int64 (id: 0);
+}
+
+table EmojiMarkup_Content_Sticker {
+    packReference:StickerPackReference (id: 0, required);
+    fileId:int64 (id: 1);
+}
+
+union EmojiMarkup_Content {
+    EmojiMarkup_Content_Emoji,
+    EmojiMarkup_Content_Sticker
+}
+
+table EmojiMarkup {
+    content:EmojiMarkup_Content (id: 1, required);
+    backgroundColors:[int32] (id: 2);
+}
+
+table IosappMediaImage {
+    imageId:MediaId (id: 0, required);
+    representations:[IosappMediaImageRepresentation] (id: 1);
+    videoRepresentations:[VideoRepresentation] (id: 2);
+    immediateThumbnailData:[ubyte] (id: 3);
+    emojiMarkup:EmojiMarkup (id: 4);
+    reference:IosappMediaImageReference (id: 5);
+    partialReference:PartialMediaReference (id: 6);
+    flags:int32 (id: 7);
+    video:IosappMediaFile (id: 8);
+}
+
+root_type IosappMediaImage;

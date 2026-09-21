@@ -1,5 +1,5 @@
 import Foundation
-import TelegramCore
+import IosappCore
 import TextFormat
 
 /// Reconstructs a markdown source string from an `InstantPage`.

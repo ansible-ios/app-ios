@@ -1,6 +1,6 @@
 import Foundation
 import UIKit
-import TelegramCore
+import IosappCore
 
 struct SecureIdEncryptedFormData {
     let form: EncryptedSecureIdForm

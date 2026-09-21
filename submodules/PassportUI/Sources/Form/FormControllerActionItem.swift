@@ -2,7 +2,7 @@ import Foundation
 import UIKit
 import AsyncDisplayKit
 import Display
-import TelegramPresentationData
+import IosappPresentationData
 
 private let textFont = Font.regular(17.0)
 

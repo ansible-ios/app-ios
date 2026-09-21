@@ -3,8 +3,8 @@ import UIKit
 import Display
 import AsyncDisplayKit
 import SwiftSignalKit
-import TelegramPresentationData
-import TelegramUIPreferences
+import IosappPresentationData
+import IosappUIPreferences
 import AppBundle
 
 private func generateArrowImage(color: UIColor) -> UIImage? {

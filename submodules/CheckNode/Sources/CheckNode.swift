@@ -3,7 +3,7 @@ import UIKit
 import AsyncDisplayKit
 import Display
 import LegacyComponents
-import TelegramPresentationData
+import IosappPresentationData
 
 public struct CheckNodeTheme: Equatable {
     public var backgroundColor: UIColor

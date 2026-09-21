@@ -2,17 +2,17 @@ import Foundation
 import UIKit
 import AsyncDisplayKit
 import Display
-import TelegramCore
+import IosappCore
 import SwiftSignalKit
 import PassKit
-import TelegramPresentationData
+import IosappPresentationData
 import ItemListUI
 import PresentationDataUtils
 import AccountContext
 import AlertUI
 import PresentationDataUtils
-import TelegramNotices
-import TelegramStringFormatting
+import IosappNotices
+import IosappStringFormatting
 import PasswordSetupUI
 import Stripe
 import LocalAuth
@@ -61,7 +61,7 @@ enum BotCheckoutEntry: ItemListNodeEntry {
         case phoneInfo
     }
 
-    case header(PresentationTheme, TelegramMediaInvoice, String)
+    case header(PresentationTheme, IosappMediaInvoice, String)
     case price(Int, PresentationTheme, String, String, Bool, Bool, Int?)
     case tip(Int, PresentationTheme, String, String, String, Int64, Int64, [(String, Int64)])
     case paymentMethod(PresentationTheme, String, String)
@@ -331,7 +331,7 @@ private func currentTotalPrice(paymentForm: BotPaymentForm?, validatedFormInfo: 
     return totalPrice
 }
 
-private func botCheckoutControllerEntries(presentationData: PresentationData, state: BotCheckoutControllerState, invoice: TelegramMediaInvoice, paymentForm: BotPaymentForm?, formInfo: BotPaymentRequestedInfo?, validatedFormInfo: BotPaymentValidatedFormInfo?, currentShippingOptionId: String?, currentPaymentMethod: BotCheckoutPaymentMethod?, currentTip: Int64?, botPeer: EnginePeer?) -> [BotCheckoutEntry] {
+private func botCheckoutControllerEntries(presentationData: PresentationData, state: BotCheckoutControllerState, invoice: IosappMediaInvoice, paymentForm: BotPaymentForm?, formInfo: BotPaymentRequestedInfo?, validatedFormInfo: BotPaymentValidatedFormInfo?, currentShippingOptionId: String?, currentPaymentMethod: BotCheckoutPaymentMethod?, currentTip: Int64?, botPeer: EnginePeer?) -> [BotCheckoutEntry] {
     var entries: [BotCheckoutEntry] = []
     
     var botName = ""
@@ -518,14 +518,14 @@ private final class RecurrentConfirmationNode: ASDisplayNode {
         super.init()
         
         self.textNode.highlightAttributeAction = { attributes in
-            if let _ = attributes[NSAttributedString.Key(rawValue: TelegramTextAttributes.URL)] {
-                return NSAttributedString.Key(rawValue: TelegramTextAttributes.URL)
+            if let _ = attributes[NSAttributedString.Key(rawValue: IosappTextAttributes.URL)] {
+                return NSAttributedString.Key(rawValue: IosappTextAttributes.URL)
             } else {
                 return nil
             }
         }
         self.textNode.tapAttributeAction = { [weak self] attributes, _ in
-            if let _ = attributes[NSAttributedString.Key(rawValue: TelegramTextAttributes.URL)] {
+            if let _ = attributes[NSAttributedString.Key(rawValue: IosappTextAttributes.URL)] {
                 self?.openTerms()
             }
         }
@@ -551,7 +551,7 @@ private final class RecurrentConfirmationNode: ASDisplayNode {
         }
         
         if let (_, attributes) = self.textNode.attributesAtPoint(self.view.convert(point, to: self.textNode.view)) {
-            if attributes[NSAttributedString.Key(rawValue: TelegramTextAttributes.URL)] == nil {
+            if attributes[NSAttributedString.Key(rawValue: IosappTextAttributes.URL)] == nil {
                 return self.view
             }
         }
@@ -586,7 +586,7 @@ private final class RecurrentConfirmationNode: ASDisplayNode {
                 bold: MarkdownAttributeSet(font: Font.semibold(13.0), textColor: presentationData.theme.list.freeTextColor),
                 link: MarkdownAttributeSet(font: Font.regular(13.0), textColor: presentationData.theme.list.itemAccentColor),
                 linkAttribute: { contents in
-                    return (TelegramTextAttributes.URL, contents)
+                    return (IosappTextAttributes.URL, contents)
                 }
             )
         )
@@ -695,7 +695,7 @@ final class BotCheckoutControllerNode: ItemListControllerNode, PKPaymentAuthoriz
     private var passwordTip: String?
     private var passwordTipDisposable: Disposable?
     
-    init(controller: BotCheckoutController?, navigationBar: NavigationBar, context: AccountContext, invoice: TelegramMediaInvoice, source: BotPaymentInvoiceSource, inputData: Promise<BotCheckoutController.InputData?>, present: @escaping (ViewController, Any?) -> Void, dismissAnimated: @escaping () -> Void, completed: @escaping (String, EngineMessage.Id?) -> Void) {
+    init(controller: BotCheckoutController?, navigationBar: NavigationBar, context: AccountContext, invoice: IosappMediaInvoice, source: BotPaymentInvoiceSource, inputData: Promise<BotCheckoutController.InputData?>, present: @escaping (ViewController, Any?) -> Void, dismissAnimated: @escaping () -> Void, completed: @escaping (String, EngineMessage.Id?) -> Void) {
         self.controller = controller
         self.navigationBar = navigationBar
         self.context = context
@@ -736,7 +736,7 @@ final class BotCheckoutControllerNode: ItemListControllerNode, PKPaymentAuthoriz
         |> mapToSignal { peerId -> Signal<EnginePeer?, NoError> in
             if let peerId = peerId {
                 return context.engine.data.get(
-                    TelegramEngine.EngineData.Item.Peer.Peer(id: peerId)
+                    IosappEngine.EngineData.Item.Peer.Peer(id: peerId)
                 )
             } else {
                 return .single(nil)
@@ -1398,7 +1398,7 @@ final class BotCheckoutControllerNode: ItemListControllerNode, PKPaymentAuthoriz
                         return
                     }
                     let _ = (context.engine.data.get(
-                        TelegramEngine.EngineData.Item.Peer.Peer(id: botPeerId)
+                        IosappEngine.EngineData.Item.Peer.Peer(id: botPeerId)
                     )
                     |> deliverOnMainQueue).start(next: { [weak self] botPeer in
                         if let strongSelf = self, let botPeer = botPeer {
@@ -1470,10 +1470,10 @@ final class BotCheckoutControllerNode: ItemListControllerNode, PKPaymentAuthoriz
         
         if !liabilityNoticeAccepted, let paymentBotId = paymentForm.paymentBotId {
             let botPeer: Signal<EnginePeer?, NoError> = self.context.engine.data.get(
-                TelegramEngine.EngineData.Item.Peer.Peer(id: paymentBotId)
+                IosappEngine.EngineData.Item.Peer.Peer(id: paymentBotId)
             )
             let providerPeer: Signal<EnginePeer?, NoError> = paymentForm.providerId.flatMap { 
-                self.context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: $0))
+                self.context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: $0))
             } ?? .single(nil)
             let _ = (combineLatest(
                 ApplicationSpecificNotice.getBotPaymentLiability(accountManager: self.context.sharedContext.accountManager, peerId: paymentBotId),

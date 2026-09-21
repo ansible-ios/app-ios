@@ -4,11 +4,11 @@ import Display
 import AsyncDisplayKit
 import ComponentFlow
 import SwiftSignalKit
-import TelegramCore
+import IosappCore
 import PhotoResources
 import AvatarStoryIndicatorComponent
 import AccountContext
-import TelegramPresentationData
+import IosappPresentationData
 
 final class StoryIconNode: ASDisplayNode {
     private let imageNode = TransformImageNode()
@@ -41,10 +41,10 @@ final class StoryIconNode: ASDisplayNode {
         var updateImageSignal: Signal<(TransformImageArguments) -> DrawingContext?, NoError>?
         var dimensions: CGSize?
         if let peerReference = PeerReference(peer), let media {
-            if let image = media as? TelegramMediaImage {
+            if let image = media as? IosappMediaImage {
                 updateImageSignal = mediaGridMessagePhoto(account: context.account, userLocation: .peer(peer.id), photoReference: .story(peer: peerReference, id: storyItem.id, media: image))
                 dimensions = largestRepresentationForPhoto(image)?.dimensions.cgSize
-            } else if let file = media as? TelegramMediaFile {
+            } else if let file = media as? IosappMediaFile {
                 updateImageSignal = mediaGridMessageVideo(postbox: context.account.postbox, userLocation: .peer(peer.id), videoReference: .story(peer: peerReference, id: storyItem.id, media: file), autoFetchFullSizeThumbnail: true)
                 dimensions = file.dimensions?.cgSize
             }

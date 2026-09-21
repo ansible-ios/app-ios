@@ -4,9 +4,9 @@ import Display
 import AsyncDisplayKit
 import ComponentFlow
 import SwiftSignalKit
-import TelegramCore
+import IosappCore
 import AccountContext
-import TelegramPresentationData
+import IosappPresentationData
 import ContextUI
 import UndoUI
 import ListActionItemComponent
@@ -136,7 +136,7 @@ final class BrowserAddressListComponent: Component {
         
     final class View: UIView, UIScrollViewDelegate {
         struct State {
-            let recent: [TelegramMediaWebpage]
+            let recent: [IosappMediaWebpage]
             let isRecentExpanded: Bool
             let bookmarks: [EngineMessage]
         }
@@ -365,7 +365,7 @@ final class BrowserAddressListComponent: Component {
                             containerSize: itemFrame.size
                         )
                     } else {
-                        var webPage: TelegramMediaWebpage?
+                        var webPage: IosappMediaWebpage?
                         var itemMessage: EngineMessage?
 
                         if section.id == 0 {
@@ -373,7 +373,7 @@ final class BrowserAddressListComponent: Component {
                         } else if section.id == 1 {
                             let message = state.bookmarks[i]
                             if let primaryUrl = getPrimaryUrl(message: message) {
-                                if let foundWebpage = message.engineMedia.compactMap({ engineMedia -> TelegramMediaWebpage? in
+                                if let foundWebpage = message.engineMedia.compactMap({ engineMedia -> IosappMediaWebpage? in
                                     if case let .webpage(webpage) = engineMedia {
                                         return webpage
                                     }
@@ -381,7 +381,7 @@ final class BrowserAddressListComponent: Component {
                                 }).first {
                                     webPage = foundWebpage
                                 } else {
-                                    webPage = TelegramMediaWebpage(webpageId: EngineMedia.Id(namespace: 0, id: 0), content: .Loaded(TelegramMediaWebpageLoadedContent(url: primaryUrl, displayUrl: "", hash: 0, type: nil, websiteName: "", title: message.text, text: "", embedUrl: nil, embedType: nil, embedSize: nil, duration: nil, author: nil, isMediaLargeByDefault: nil, imageIsVideoCover: false, image: nil, file: nil, story: nil, attributes: [], instantPage: nil)))
+                                    webPage = IosappMediaWebpage(webpageId: EngineMedia.Id(namespace: 0, id: 0), content: .Loaded(IosappMediaWebpageLoadedContent(url: primaryUrl, displayUrl: "", hash: 0, type: nil, websiteName: "", title: message.text, text: "", embedUrl: nil, embedType: nil, embedSize: nil, duration: nil, author: nil, isMediaLargeByDefault: nil, imageIsVideoCover: false, image: nil, file: nil, story: nil, attributes: [], instantPage: nil)))
                                 }
                                 itemMessage = message
                             } else {
@@ -571,7 +571,7 @@ final class BrowserAddressListComponent: Component {
                 component: AnyComponent(BrowserAddressListItemComponent(
                     context: component.context,
                     theme: component.theme,
-                    webPage: TelegramMediaWebpage(webpageId: EngineMedia.Id(namespace: 0, id: 0), content: .Loaded(TelegramMediaWebpageLoadedContent(url: "https://telegram.org", displayUrl: "https://telegram.org", hash: 0, type: nil, websiteName: "Telegram", title: "Telegram Telegram", text: "Telegram", embedUrl: nil, embedType: nil, embedSize: nil, duration: nil, author: nil, isMediaLargeByDefault: nil, imageIsVideoCover: false, image: nil, file: nil, story: nil, attributes: [], instantPage: nil))),
+                    webPage: IosappMediaWebpage(webpageId: EngineMedia.Id(namespace: 0, id: 0), content: .Loaded(IosappMediaWebpageLoadedContent(url: "https://telegram.org", displayUrl: "https://telegram.org", hash: 0, type: nil, websiteName: "Iosapp", title: "Iosapp Iosapp", text: "Iosapp", embedUrl: nil, embedType: nil, embedSize: nil, duration: nil, author: nil, isMediaLargeByDefault: nil, imageIsVideoCover: false, image: nil, file: nil, story: nil, attributes: [], instantPage: nil))),
                     message: nil,
                     hasNext: true,
                     insets: .zero,

@@ -1,5 +1,5 @@
 import Foundation
-import TelegramCore
+import IosappCore
 
 public extension EngineRawMessage {
     func isRestricted(platform: String, contentSettings: ContentSettings) -> Bool {

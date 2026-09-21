@@ -2,10 +2,10 @@ import Foundation
 import UIKit
 import Display
 import SwiftSignalKit
-import TelegramCore
-import TelegramPresentationData
-import TelegramUIPreferences
-import TelegramStringFormatting
+import IosappCore
+import IosappPresentationData
+import IosappUIPreferences
+import IosappStringFormatting
 import ItemListUI
 import PresentationDataUtils
 import AccountContext
@@ -321,8 +321,8 @@ public func incomingMessagePrivacyScreen(context: AccountContext, value: GlobalP
                         }
                     }
                     let _ = (context.engine.data.get(
-                        EngineDataMap(filteredIds.map(TelegramEngine.EngineData.Item.Peer.Peer.init)),
-                        EngineDataMap(filteredIds.map(TelegramEngine.EngineData.Item.Peer.ParticipantCount.init))
+                        EngineDataMap(filteredIds.map(IosappEngine.EngineData.Item.Peer.Peer.init)),
+                        EngineDataMap(filteredIds.map(IosappEngine.EngineData.Item.Peer.ParticipantCount.init))
                     )
                     |> map { peerMap, participantCountMap -> [EnginePeer.Id: SelectivePrivacyPeer] in
                         var updatedPeers: [EnginePeer.Id: SelectivePrivacyPeer] = [:]
@@ -407,8 +407,8 @@ public func incomingMessagePrivacyScreen(context: AccountContext, value: GlobalP
     )
     
     let enableSetting: Signal<Bool, NoError> = context.engine.data.subscribe(
-        TelegramEngine.EngineData.Item.Peer.Peer(id: context.account.peerId),
-        TelegramEngine.EngineData.Item.Configuration.App()
+        IosappEngine.EngineData.Item.Peer.Peer(id: context.account.peerId),
+        IosappEngine.EngineData.Item.Configuration.App()
     )
     |> map { accountPeer, appConfig -> Bool in
         if let accountPeer, accountPeer.isPremium {

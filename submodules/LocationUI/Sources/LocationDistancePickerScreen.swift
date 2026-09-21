@@ -1,11 +1,11 @@
 import Foundation
 import UIKit
 import Display
-import TelegramCore
+import IosappCore
 import SwiftSignalKit
 import AccountContext
-import TelegramPresentationData
-import TelegramStringFormatting
+import IosappPresentationData
+import IosappStringFormatting
 import PresentationDataUtils
 import ComponentFlow
 import ViewControllerComponent

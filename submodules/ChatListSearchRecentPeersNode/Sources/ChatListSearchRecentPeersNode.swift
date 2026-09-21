@@ -3,14 +3,14 @@ import UIKit
 import AsyncDisplayKit
 import Display
 import SwiftSignalKit
-import TelegramCore
-import TelegramPresentationData
+import IosappCore
+import IosappPresentationData
 import MergeLists
 import HorizontalPeerItem
 import ListSectionHeaderNode
 import ContextUI
 import AccountContext
-import TelegramUIPreferences
+import IosappUIPreferences
 import AnimationCache
 import MultiAnimationRenderer
 
@@ -83,7 +83,7 @@ private struct ChatListSearchRecentPeersEntry: Comparable, Identifiable {
         contentSettings: ContentSettings,
         animationCache: AnimationCache,
         animationRenderer: MultiAnimationRenderer,
-        resolveInlineStickers: @escaping ([Int64]) -> Signal<[Int64: TelegramMediaFile], NoError>,
+        resolveInlineStickers: @escaping ([Int64]) -> Signal<[Int64: IosappMediaFile], NoError>,
         mode: HorizontalPeerItemMode,
         peerSelected: @escaping (EnginePeer) -> Void,
         peerContextAction: @escaping (EnginePeer, ASDisplayNode, ContextGesture?, CGPoint?) -> Void,
@@ -128,7 +128,7 @@ private func preparedRecentPeersTransition(
     contentSettings: ContentSettings,
     animationCache: AnimationCache,
     animationRenderer: MultiAnimationRenderer,
-    resolveInlineStickers: @escaping ([Int64]) -> Signal<[Int64: TelegramMediaFile], NoError>,
+    resolveInlineStickers: @escaping ([Int64]) -> Signal<[Int64: IosappMediaFile], NoError>,
     mode: HorizontalPeerItemMode,
     peerSelected: @escaping (EnginePeer) -> Void,
     peerContextAction: @escaping (EnginePeer, ASDisplayNode, ContextGesture?, CGPoint?) -> Void,
@@ -203,7 +203,7 @@ public final class ChatListSearchRecentPeersNode: ASDisplayNode {
         contentSettings: ContentSettings,
         animationCache: AnimationCache,
         animationRenderer: MultiAnimationRenderer,
-        resolveInlineStickers: @escaping ([Int64]) -> Signal<[Int64: TelegramMediaFile], NoError>,
+        resolveInlineStickers: @escaping ([Int64]) -> Signal<[Int64: IosappMediaFile], NoError>,
         theme: PresentationTheme,
         mode: HorizontalPeerItemMode,
         strings: PresentationStrings,
@@ -277,7 +277,7 @@ public final class ChatListSearchRecentPeersNode: ASDisplayNode {
                         for peerView in peerViews {
                             if let peer = peerViewMainPeer(peerView) {
                                 var isMuted: Bool = false
-                                if let notificationSettings = peerView.notificationSettings as? TelegramPeerNotificationSettings {
+                                if let notificationSettings = peerView.notificationSettings as? IosappPeerNotificationSettings {
                                     switch notificationSettings.muteState {
                                     case .muted:
                                         isMuted = true

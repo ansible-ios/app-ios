@@ -1,8 +1,8 @@
 import Foundation
 import Display
 import SwiftSignalKit
-import TelegramCore
-import TelegramPresentationData
+import IosappCore
+import IosappPresentationData
 
 public protocol ContactSelectionController: ViewController {
     var result: Signal<([ContactListPeer], ContactListAction, Bool, Int32?, NSAttributedString?, ChatSendMessageActionSheetController.SendParameters?)?, NoError> { get }
@@ -15,7 +15,7 @@ public protocol ContactSelectionController: ViewController {
 
 public enum ContactSelectionControllerMode {
     case generic
-    case starsGifting(birthdays: [EnginePeer.Id: TelegramBirthday]?, hasActions: Bool, showSelf: Bool, selfSubtitle: String?)
+    case starsGifting(birthdays: [EnginePeer.Id: IosappBirthday]?, hasActions: Bool, showSelf: Bool, selfSubtitle: String?)
 }
 
 public struct ContactListAdditionalOption: Equatable {

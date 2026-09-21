@@ -3,13 +3,13 @@ import UIKit
 import Display
 import AsyncDisplayKit
 import SwiftSignalKit
-import TelegramCore
-import TelegramPresentationData
+import IosappCore
+import IosappPresentationData
 import ItemListUI
 import PresentationDataUtils
 import StickerResources
 import AnimatedStickerNode
-import TelegramAnimatedStickerNode
+import IosappAnimatedStickerNode
 import ShimmerEffect
 import AccountContext
 
@@ -128,7 +128,7 @@ public final class ItemListStickerPackItem: ListViewItem, ItemListItem, ItemList
 }
 
 public enum StickerPackThumbnailItem: Equatable {
-    case still(TelegramMediaImageRepresentation)
+    case still(IosappMediaImageRepresentation)
     case animated(EngineMediaResource, PixelDimensions, Bool, Bool)
 
     public static func ==(lhs: StickerPackThumbnailItem, rhs: StickerPackThumbnailItem) -> Bool {
@@ -507,8 +507,8 @@ class ItemListStickerPackItemNode: ItemListRevealOptionsItemNode {
                 if itemFile.isAnimatedSticker || itemFile.isVideoSticker {
                     thumbnailItem = .animated(EngineMediaResource(itemFile.resource), itemFile.dimensions ?? PixelDimensions(width: 100, height: 100), itemFile.isVideoSticker, itemFile.isCustomTemplateEmoji)
                     resourceReference = MediaResourceReference.media(media: .standalone(media: itemFile), resource: itemFile.resource)
-                } else if let dimensions = itemFile.dimensions, let resource = chatMessageStickerResource(file: itemFile, small: true) as? TelegramMediaResource {
-                    thumbnailItem = .still(TelegramMediaImageRepresentation(dimensions: dimensions, resource: resource, progressiveSizes: [], immediateThumbnailData: nil, hasVideo: false, isPersonal: false))
+                } else if let dimensions = itemFile.dimensions, let resource = chatMessageStickerResource(file: itemFile, small: true) as? IosappMediaResource {
+                    thumbnailItem = .still(IosappMediaImageRepresentation(dimensions: dimensions, resource: resource, progressiveSizes: [], immediateThumbnailData: nil, hasVideo: false, isPersonal: false))
                     resourceReference = MediaResourceReference.media(media: .standalone(media: itemFile), resource: resource)
                 }
             }

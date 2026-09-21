@@ -3,9 +3,9 @@ import UIKit
 import Display
 import AsyncDisplayKit
 import SwiftSignalKit
-import TelegramCore
-import TelegramPresentationData
-import TelegramUIPreferences
+import IosappCore
+import IosappPresentationData
+import IosappUIPreferences
 import ItemListUI
 import PresentationDataUtils
 import AccountContext
@@ -54,12 +54,12 @@ final class PeerNameColorChatPreviewItem: ListViewItem, ItemListItem, ListItemCo
     let sectionId: ItemListSectionId
     let fontSize: PresentationFontSize
     let chatBubbleCorners: PresentationChatBubbleCorners
-    let wallpaper: TelegramWallpaper
+    let wallpaper: IosappWallpaper
     let dateTimeFormat: PresentationDateTimeFormat
     let nameDisplayOrder: PresentationPersonNameOrder
     let messageItems: [MessageItem]
     
-    init(context: AccountContext, theme: PresentationTheme, componentTheme: PresentationTheme, strings: PresentationStrings, sectionId: ItemListSectionId, fontSize: PresentationFontSize, chatBubbleCorners: PresentationChatBubbleCorners, wallpaper: TelegramWallpaper, dateTimeFormat: PresentationDateTimeFormat, nameDisplayOrder: PresentationPersonNameOrder, messageItems: [MessageItem]) {
+    init(context: AccountContext, theme: PresentationTheme, componentTheme: PresentationTheme, strings: PresentationStrings, sectionId: ItemListSectionId, fontSize: PresentationFontSize, chatBubbleCorners: PresentationChatBubbleCorners, wallpaper: IosappWallpaper, dateTimeFormat: PresentationDateTimeFormat, nameDisplayOrder: PresentationPersonNameOrder, messageItems: [MessageItem]) {
         self.context = context
         self.theme = theme
         self.componentTheme = componentTheme
@@ -206,8 +206,8 @@ final class PeerNameColorChatPreviewItemNode: ListViewItemNode {
                 var peers = EngineSimpleDictionary<EnginePeer.Id, EngineRawPeer>()
                 let messages = EngineSimpleDictionary<EngineMessage.Id, EngineRawMessage>()
                 
-                peers[authorPeerId] = TelegramUser(id: authorPeerId, accessHash: nil, firstName: nil, lastName: nil, username: nil, phone: nil, photo: [], botInfo: nil, restrictionInfo: nil, flags: [], emojiStatus: nil, usernames: [], storiesHidden: nil, nameColor: nil, backgroundEmojiId: nil, profileColor: nil, profileBackgroundEmojiId: nil, subscriberCount: nil, verificationIconFileId: nil)
-                peers[botPeerId] = TelegramUser(id: botPeerId, accessHash: nil, firstName: messageItem.botAddress, lastName: "", username: messageItem.botAddress, phone: nil, photo: [], botInfo: nil, restrictionInfo: nil, flags: [], emojiStatus: nil, usernames: [], storiesHidden: nil, nameColor: nil, backgroundEmojiId: nil, profileColor: nil, profileBackgroundEmojiId: nil, subscriberCount: nil, verificationIconFileId: nil)
+                peers[authorPeerId] = IosappUser(id: authorPeerId, accessHash: nil, firstName: nil, lastName: nil, username: nil, phone: nil, photo: [], botInfo: nil, restrictionInfo: nil, flags: [], emojiStatus: nil, usernames: [], storiesHidden: nil, nameColor: nil, backgroundEmojiId: nil, profileColor: nil, profileBackgroundEmojiId: nil, subscriberCount: nil, verificationIconFileId: nil)
+                peers[botPeerId] = IosappUser(id: botPeerId, accessHash: nil, firstName: messageItem.botAddress, lastName: "", username: messageItem.botAddress, phone: nil, photo: [], botInfo: nil, restrictionInfo: nil, flags: [], emojiStatus: nil, usernames: [], storiesHidden: nil, nameColor: nil, backgroundEmojiId: nil, profileColor: nil, profileBackgroundEmojiId: nil, subscriberCount: nil, verificationIconFileId: nil)
                 
                 let media = messageItem.media
                 var attributes: [EngineMessage.Attribute] = []

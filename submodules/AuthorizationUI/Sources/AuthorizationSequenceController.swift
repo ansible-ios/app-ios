@@ -2,12 +2,12 @@ import Foundation
 import UIKit
 import AsyncDisplayKit
 import Display
-import TelegramCore
+import IosappCore
 import SwiftSignalKit
 import MtProtoKit
 import MessageUI
 import CoreTelephony
-import TelegramPresentationData
+import IosappPresentationData
 import PresentationDataUtils
 import TextFormat
 import AccountContext
@@ -16,7 +16,7 @@ import PhoneNumberFormat
 import LegacyComponents
 import LegacyMediaPickerUI
 import PasswordSetupUI
-import TelegramNotices
+import IosappNotices
 import AuthenticationServices
 import Markdown
 import AlertUI
@@ -57,8 +57,8 @@ public final class AuthorizationSequenceController: NavigationController, ASAuth
     }
     private var didSetReady = false
     
-    fileprivate var engine: TelegramEngineUnauthorized {
-        return TelegramEngineUnauthorized(account: self.account)
+    fileprivate var engine: IosappEngineUnauthorized {
+        return IosappEngineUnauthorized(account: self.account)
     }
     
     private var inAppPurchaseManager: InAppPurchaseManager!
@@ -422,7 +422,7 @@ public final class AuthorizationSequenceController: NavigationController, ASAuth
                             if let regex = try? NSRegularExpression(pattern: "\\#", options: []) {
                                 let matches = regex.matches(in: text.string, options: [], range: NSMakeRange(0, text.length))
                                 if let first = matches.first {
-                                    text.addAttribute(NSAttributedString.Key(rawValue: TelegramTextAttributes.Spoiler), value: true, range: NSRange(location: first.range.location, length: matches.count))
+                                    text.addAttribute(NSAttributedString.Key(rawValue: IosappTextAttributes.Spoiler), value: true, range: NSRange(location: first.range.location, length: matches.count))
                                 }
                             }
                             
@@ -560,7 +560,7 @@ public final class AuthorizationSequenceController: NavigationController, ASAuth
                                                     })]), on: .root, blockInteraction: false, completion: {})
                                                 })
                                             ], actionLayout: .vertical, dismissOnOutsideTap: true)
-                                            contentNode.textAttributeAction = (NSAttributedString.Key(rawValue: TelegramTextAttributes.URL), { value in
+                                            contentNode.textAttributeAction = (NSAttributedString.Key(rawValue: IosappTextAttributes.URL), { value in
                                                 if let value = value as? String {
                                                     strongSelf.openUrl(value)
                                                 }
@@ -1466,7 +1466,7 @@ public final class AuthorizationSequenceController: NavigationController, ASAuth
         let appVersion = (Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String) ?? "unknown"
         let systemVersion = UIDevice.current.systemVersion
         let locale = Locale.current.identifier
-        emailBody.append("Telegram: \(appVersion)\n")
+        emailBody.append("Iosapp: \(appVersion)\n")
         emailBody.append("OS: \(systemVersion)\n")
         emailBody.append("Locale: \(locale)\n")
         emailBody.append("MNC: \(mnc)")

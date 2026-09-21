@@ -1,19 +1,19 @@
 import UIKit
 import AsyncDisplayKit
 import Display
-import TelegramCore
+import IosappCore
 import SwiftSignalKit
-import TelegramPresentationData
+import IosappPresentationData
 import AccountContext
 import PresentationDataUtils
 import RadialStatusNode
 import AnimatedStickerNode
-import TelegramAnimatedStickerNode
+import IosappAnimatedStickerNode
 import AppBundle
 import ZipArchive
 import MimeTypes
 import ConfettiEffect
-import TelegramUniversalVideoContent
+import IosappUniversalVideoContent
 import SolidRoundedButtonNode
 import ActivityIndicator
 
@@ -88,16 +88,16 @@ private final class ImportManager {
     
     private let account: Account
     private let archivePath: String?
-    private let entries: [(SSZipEntry, String, TelegramEngine.HistoryImport.MediaType)]
+    private let entries: [(SSZipEntry, String, IosappEngine.HistoryImport.MediaType)]
     
-    private var session: TelegramEngine.HistoryImport.Session?
+    private var session: IosappEngine.HistoryImport.Session?
     
     private let disposable = MetaDisposable()
     
     private let totalBytes: Int64
     private let totalMediaBytes: Int64
     private let mainFileSize: Int64
-    private var pendingEntries: [(SSZipEntry, String, TelegramEngine.HistoryImport.MediaType)]
+    private var pendingEntries: [(SSZipEntry, String, IosappEngine.HistoryImport.MediaType)]
     private var entryProgress: [String: (Int64, Int64)] = [:]
     private var activeEntries: [String: Disposable] = [:]
     
@@ -111,7 +111,7 @@ private final class ImportManager {
         return self.statePromise.get()
     }
     
-    init(account: Account, peerId: EnginePeer.Id, mainFile: EngineTempBox.File, archivePath: String?, entries: [(SSZipEntry, String, TelegramEngine.HistoryImport.MediaType)]) {
+    init(account: Account, peerId: EnginePeer.Id, mainFile: EngineTempBox.File, archivePath: String?, entries: [(SSZipEntry, String, IosappEngine.HistoryImport.MediaType)]) {
         self.account = account
         self.archivePath = archivePath
         self.entries = entries
@@ -134,7 +134,7 @@ private final class ImportManager {
             Logger.shared.log("ChatImportScreen", "    \(entry.1)")
         }
         
-        self.disposable.set((TelegramEngine(account: self.account).historyImport.initSession(peerId: peerId, file: mainFile, mediaCount: Int32(entries.count))
+        self.disposable.set((IosappEngine(account: self.account).historyImport.initSession(peerId: peerId, file: mainFile, mediaCount: Int32(entries.count))
         |> mapError { error -> ImportError in
             switch error {
             case .chatAdminRequired:
@@ -200,7 +200,7 @@ private final class ImportManager {
             self.failWithError(.generic)
             return
         }
-        self.disposable.set((TelegramEngine(account: self.account).historyImport.startImport(session: session)
+        self.disposable.set((IosappEngine(account: self.account).historyImport.startImport(session: session)
         |> deliverOnMainQueue).startStrict(error: { [weak self] _ in
             guard let strongSelf = self else {
                 return
@@ -278,7 +278,7 @@ private final class ImportManager {
                 if !pathExtension.isEmpty, let value = TGMimeTypeMap.mimeType(forExtension: pathExtension) {
                     mimeType = value
                 }
-                return TelegramEngine(account: account).historyImport.uploadMedia(session: session, file: tempFile, disposeFileAfterDone: true, fileName: entry.0.path, mimeType: mimeType, type: entry.2)
+                return IosappEngine(account: account).historyImport.uploadMedia(session: session, file: tempFile, disposeFileAfterDone: true, fileName: entry.0.path, mimeType: mimeType, type: entry.2)
                 |> mapError { error -> ImportError in
                     switch error {
                     case .chatAdminRequired:
@@ -460,7 +460,7 @@ public final class ChatImportActivityScreen: ViewController {
             if let path = getAppBundle().path(forResource: "BlankVideo", ofType: "m4v"), let size = fileSize(path) {
                 let decoration = ChatBubbleVideoDecoration(corners: ImageCorners(), nativeSize: CGSize(width: 100.0, height: 100.0), contentMode: .aspectFit, backgroundColor: .black)
                 
-                let dummyFile = TelegramMediaFile(fileId: EngineMedia.Id(namespace: 0, id: 1), partialReference: nil, resource: LocalFileReferenceMediaResource(localFilePath: path, randomId: 12345), previewRepresentations: [], videoThumbnails: [], immediateThumbnailData: nil, mimeType: "video/mp4", size: size, attributes: [.Video(duration: 1, size: PixelDimensions(width: 100, height: 100), flags: [], preloadSize: nil, coverTime: nil, videoCodec: nil)], alternativeRepresentations: [])
+                let dummyFile = IosappMediaFile(fileId: EngineMedia.Id(namespace: 0, id: 1), partialReference: nil, resource: LocalFileReferenceMediaResource(localFilePath: path, randomId: 12345), previewRepresentations: [], videoThumbnails: [], immediateThumbnailData: nil, mimeType: "video/mp4", size: size, attributes: [.Video(duration: 1, size: PixelDimensions(width: 100, height: 100), flags: [], preloadSize: nil, coverTime: nil, videoCodec: nil)], alternativeRepresentations: [])
                 
                 let videoContent = NativeVideoContent(id: .message(1, EngineMedia.Id(namespace: 0, id: 1)), userLocation: .other, fileReference: .standalone(media: dummyFile), streamVideo: .none, loopVideo: true, enableSound: false, fetchAutomatically: true, onlyFullSizeThumbnail: false, continuePlayingWithoutSoundOnLostAudioSession: false, placeholderColor: .black, storeAfterDownload: nil)
                 
@@ -480,7 +480,7 @@ public final class ChatImportActivityScreen: ViewController {
                     
                     if let application = UIApplication.value(forKeyPath: #keyPath(UIApplication.shared)) as? UIApplication {
                         let selector = NSSelectorFromString("openURL:")
-                        let url = URL(string: "tg://localpeer?id=\(controller.peerId.toInt64())")!
+                        let url = URL(string: "as://localpeer?id=\(controller.peerId.toInt64())")!
                         application.perform(selector, with: url)
                     }
                 }
@@ -749,7 +749,7 @@ public final class ChatImportActivityScreen: ViewController {
     private let mainEntry: EngineTempBox.File
     private let totalBytes: Int64
     private let totalMediaBytes: Int64
-    private let otherEntries: [(SSZipEntry, String, TelegramEngine.HistoryImport.MediaType)]
+    private let otherEntries: [(SSZipEntry, String, IosappEngine.HistoryImport.MediaType)]
     
     private var importManager: ImportManager?
     private var progressEstimator: ProgressEstimator?
@@ -766,14 +766,14 @@ public final class ChatImportActivityScreen: ViewController {
         }
     }
     
-    public init(context: AccountContext, cancel: @escaping () -> Void, peerId: EnginePeer.Id, archivePath: String?, mainEntry: EngineTempBox.File, otherEntries: [(SSZipEntry, String, TelegramEngine.HistoryImport.MediaType)]) {
+    public init(context: AccountContext, cancel: @escaping () -> Void, peerId: EnginePeer.Id, archivePath: String?, mainEntry: EngineTempBox.File, otherEntries: [(SSZipEntry, String, IosappEngine.HistoryImport.MediaType)]) {
         self.context = context
         self.cancel = cancel
         self.peerId = peerId
         self.archivePath = archivePath
         self.mainEntry = mainEntry
         
-        self.otherEntries = otherEntries.map { entry -> (SSZipEntry, String, TelegramEngine.HistoryImport.MediaType) in
+        self.otherEntries = otherEntries.map { entry -> (SSZipEntry, String, IosappEngine.HistoryImport.MediaType) in
             return (entry.0, entry.1, entry.2)
         }
         

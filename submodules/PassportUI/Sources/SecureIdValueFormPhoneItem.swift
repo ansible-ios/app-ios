@@ -2,8 +2,8 @@ import Foundation
 import UIKit
 import AsyncDisplayKit
 import Display
-import TelegramCore
-import TelegramPresentationData
+import IosappCore
+import IosappPresentationData
 import PhoneInputNode
 
 private let textFont = Font.regular(17.0)

@@ -4,8 +4,8 @@ import AsyncDisplayKit
 import Display
 import SwiftSignalKit
 import UniversalMediaPlayer
-import TelegramUniversalVideoContent
-import TelegramCore
+import IosappUniversalVideoContent
+import IosappCore
 import AccountContext
 import ComponentFlow
 import GradientBackground
@@ -13,7 +13,7 @@ import AnimationCache
 import MultiAnimationRenderer
 import EntityKeyboard
 import AnimatedStickerNode
-import TelegramAnimatedStickerNode
+import IosappAnimatedStickerNode
 import StickerResources
 
 private let maxVideoLoopCount = 2
@@ -23,11 +23,11 @@ public final class AvatarVideoNode: ASDisplayNode {
     
     private var backgroundNode: ASImageNode
     
-    private var emojiMarkup: TelegramMediaImage.EmojiMarkup?
+    private var emojiMarkup: IosappMediaImage.EmojiMarkup?
     
     private var videoFileDisposable: Disposable?
     private var fileDisposable = MetaDisposable()
-    private var animationFile: TelegramMediaFile?
+    private var animationFile: IosappMediaFile?
     private var itemLayer: EmojiKeyboardItemLayer?
     private var useAnimationNode = false
     private var animationNode: AnimatedStickerNode?
@@ -103,12 +103,12 @@ public final class AvatarVideoNode: ASDisplayNode {
         } else {
             let itemNativeFitSize = self.internalSize.width > 100.0 ? CGSize(width: 192.0, height: 192.0) : CGSize(width: 64.0, height: 64.0)
             
-            let animationData = EntityKeyboardAnimationData(file: TelegramMediaFile.Accessor(animationFile))
+            let animationData = EntityKeyboardAnimationData(file: IosappMediaFile.Accessor(animationFile))
             let itemLayer = EmojiKeyboardItemLayer(
                 item: EmojiPagerContentComponent.Item(
                     animationData: animationData,
                     content: .animation(animationData),
-                    itemFile: TelegramMediaFile.Accessor(animationFile),
+                    itemFile: IosappMediaFile.Accessor(animationFile),
                     subgroupId: nil,
                     icon: .none,
                     tintMode: animationData.isTemplate ? .primary : .none
@@ -156,7 +156,7 @@ public final class AvatarVideoNode: ASDisplayNode {
         }
     }
     
-    public func update(markup: TelegramMediaImage.EmojiMarkup, size: CGSize, useAnimationNode: Bool = true) {
+    public func update(markup: IosappMediaImage.EmojiMarkup, size: CGSize, useAnimationNode: Bool = true) {
         guard markup != self.emojiMarkup else {
             return
         }
@@ -187,7 +187,7 @@ public final class AvatarVideoNode: ASDisplayNode {
             }))
         case let .sticker(packReference, fileId):
             self.fileDisposable.set((self.context.engine.stickers.loadedStickerPack(reference: packReference, forceActualized: false)
-            |> map { pack -> TelegramMediaFile? in
+            |> map { pack -> IosappMediaFile? in
                 if case let .result(_, items, _) = pack, let item = items.first(where: { $0.file.fileId.id == fileId }) {
                     return item.file._parse()
                 }
@@ -202,7 +202,7 @@ public final class AvatarVideoNode: ASDisplayNode {
         }
     }
     
-    public func update(peer: EnginePeer, photo: TelegramMediaImage, size: CGSize) {
+    public func update(peer: EnginePeer, photo: IosappMediaImage, size: CGSize) {
         self.internalSize = size
         if let markup = photo.emojiMarkup {
             self.update(markup: markup, size: size, useAnimationNode: false)
@@ -210,7 +210,7 @@ public final class AvatarVideoNode: ASDisplayNode {
             self.backgroundNode.image = nil
             
             let videoId = photo.id?.id ?? peer.id.id._internalGetInt64Value()
-            let videoFileReference = FileMediaReference.avatarList(peer: peerReference, media: TelegramMediaFile(fileId: EngineMedia.Id(namespace: Namespaces.Media.LocalFile, id: 0), partialReference: nil, resource: video.resource, previewRepresentations: photo.representations, videoThumbnails: [], immediateThumbnailData: photo.immediateThumbnailData, mimeType: "video/mp4", size: nil, attributes: [.Animated, .Video(duration: 0, size: video.dimensions, flags: [], preloadSize: nil, coverTime: nil, videoCodec: nil)], alternativeRepresentations: []))
+            let videoFileReference = FileMediaReference.avatarList(peer: peerReference, media: IosappMediaFile(fileId: EngineMedia.Id(namespace: Namespaces.Media.LocalFile, id: 0), partialReference: nil, resource: video.resource, previewRepresentations: photo.representations, videoThumbnails: [], immediateThumbnailData: photo.immediateThumbnailData, mimeType: "video/mp4", size: nil, attributes: [.Animated, .Video(duration: 0, size: video.dimensions, flags: [], preloadSize: nil, coverTime: nil, videoCodec: nil)], alternativeRepresentations: []))
             let videoContent = NativeVideoContent(id: .profileVideo(videoId, nil), userLocation: .other, fileReference: videoFileReference, streamVideo: isMediaStreamable(resource: video.resource) ? .conservative : .none, loopVideo: true, enableSound: false, fetchAutomatically: true, onlyFullSizeThumbnail: false, useLargeThumbnail: true, autoFetchFullSizeThumbnail: true, startTimestamp: video.startTimestamp, continuePlayingWithoutSoundOnLostAudioSession: false, placeholderColor: .clear, captureProtected: false, storeAfterDownload: nil)
             if videoContent.id != self.videoContent?.id {
                 self.videoNode?.removeFromSupernode()
@@ -245,12 +245,12 @@ public final class AvatarVideoNode: ASDisplayNode {
             
             if useDirectCache {
                 if self.videoItemLayer == nil {
-                    let animationData = EntityKeyboardAnimationData(file: TelegramMediaFile.Accessor(videoContent.fileReference.media))
+                    let animationData = EntityKeyboardAnimationData(file: IosappMediaFile.Accessor(videoContent.fileReference.media))
                     let videoItemLayer = EmojiKeyboardItemLayer(
                         item: EmojiPagerContentComponent.Item(
                             animationData: animationData,
                             content: .animation(animationData),
-                            itemFile: TelegramMediaFile.Accessor(videoContent.fileReference.media),
+                            itemFile: IosappMediaFile.Accessor(videoContent.fileReference.media),
                             subgroupId: nil,
                             icon: .none,
                             tintMode: .none

@@ -1,8 +1,8 @@
 import UIKit
 import Display
 import ContextUI
-import TelegramPresentationData
-import TelegramCore
+import IosappPresentationData
+import IosappCore
 
 private final class LocationLiveLocationReferenceContentSource: ContextReferenceContentSource {
     private let sourceView: UIView

@@ -3,9 +3,9 @@ import UIKit
 import Display
 import ComponentFlow
 import SwiftSignalKit
-import TelegramCore
+import IosappCore
 import MultilineTextComponent
-import TelegramPresentationData
+import IosappPresentationData
 import PhotoResources
 import AccountContext
 import ContextUI
@@ -24,22 +24,22 @@ private let iconTextBackgroundImage = generateImage(CGSize(width: 40.0, height: 
 final class BrowserAddressListItemComponent: Component {
     let context: AccountContext
     let theme: PresentationTheme
-    let webPage: TelegramMediaWebpage
+    let webPage: IosappMediaWebpage
     var message: EngineMessage?
     let hasNext: Bool
     let insets: UIEdgeInsets
     let action: () -> Void
-    let contextAction: ((TelegramMediaWebpage, EngineMessage?, ContextExtractedContentContainingView, ContextGesture) -> Void)?
+    let contextAction: ((IosappMediaWebpage, EngineMessage?, ContextExtractedContentContainingView, ContextGesture) -> Void)?
 
     init(
         context: AccountContext,
         theme: PresentationTheme,
-        webPage: TelegramMediaWebpage,
+        webPage: IosappMediaWebpage,
         message: EngineMessage?,
         hasNext: Bool,
         insets: UIEdgeInsets,
         action: @escaping () -> Void,
-        contextAction: ((TelegramMediaWebpage, EngineMessage?, ContextExtractedContentContainingView, ContextGesture) -> Void)?
+        contextAction: ((IosappMediaWebpage, EngineMessage?, ContextExtractedContentContainingView, ContextGesture) -> Void)?
     ) {
         self.context = context
         self.theme = theme
@@ -84,7 +84,7 @@ final class BrowserAddressListItemComponent: Component {
         private var component: BrowserAddressListItemComponent?
         private weak var state: EmptyComponentState?
         
-        private var currentIconImageRepresentation: TelegramMediaImageRepresentation?
+        private var currentIconImageRepresentation: IosappMediaImageRepresentation?
         
         override init(frame: CGRect) {
             super.init(frame: frame)
@@ -176,7 +176,7 @@ final class BrowserAddressListItemComponent: Component {
             let title: String
             let subtitle: String
             var parsedUrl: URL?
-            var iconImageReferenceAndRepresentation: (AnyMediaReference, TelegramMediaImageRepresentation)?
+            var iconImageReferenceAndRepresentation: (AnyMediaReference, IosappMediaImageRepresentation)?
             var updateIconImageSignal: Signal<(TransformImageArguments) -> DrawingContext?, NoError>?
             
             if case let .Loaded(content) = component.webPage.content {
@@ -206,9 +206,9 @@ final class BrowserAddressListItemComponent: Component {
                 
                 if currentIconImageRepresentation != iconImageReferenceAndRepresentation?.1 {
                     if let iconImageReferenceAndRepresentation = iconImageReferenceAndRepresentation {
-                        if let imageReference = iconImageReferenceAndRepresentation.0.concrete(TelegramMediaImage.self) {
+                        if let imageReference = iconImageReferenceAndRepresentation.0.concrete(IosappMediaImage.self) {
                             updateIconImageSignal = chatWebpageSnippetPhoto(account: component.context.account, userLocation: (component.message?.id.peerId).flatMap(MediaResourceUserLocation.peer) ?? .other, photoReference: imageReference)
-                        } else if let fileReference = iconImageReferenceAndRepresentation.0.concrete(TelegramMediaFile.self) {
+                        } else if let fileReference = iconImageReferenceAndRepresentation.0.concrete(IosappMediaFile.self) {
                             updateIconImageSignal = chatWebpageSnippetFile(account: component.context.account, userLocation: (component.message?.id.peerId).flatMap(MediaResourceUserLocation.peer) ?? .other, mediaReference: fileReference.abstract, representation: iconImageReferenceAndRepresentation.1)
                         }
                     } else {

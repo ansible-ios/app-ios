@@ -3,9 +3,9 @@ import UIKit
 import Display
 import AsyncDisplayKit
 import SwiftSignalKit
-import TelegramPresentationData
+import IosappPresentationData
 import SwitchNode
-import TelegramCore
+import IosappCore
 import ItemListUI
 import ReactionImageComponent
 import AccountContext

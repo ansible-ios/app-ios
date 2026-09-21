@@ -2,9 +2,9 @@ import Foundation
 import UIKit
 import Display
 import SwiftSignalKit
-import TelegramCore
-import TelegramPresentationData
-import TelegramUIPreferences
+import IosappCore
+import IosappPresentationData
+import IosappUIPreferences
 import ItemListUI
 import PresentationDataUtils
 import OverlayStatusController
@@ -241,8 +241,8 @@ public func channelDiscussionGroupSetupController(context: AccountContext, updat
         var hasLinkedDiscussionPeerValue: Bool
     }
     let peerView: Signal<PeerData, NoError> = context.engine.data.subscribe(
-        TelegramEngine.EngineData.Item.Peer.Peer(id: peerId),
-        TelegramEngine.EngineData.Item.Peer.LinkedDiscussionPeerId(id: peerId)
+        IosappEngine.EngineData.Item.Peer.Peer(id: peerId),
+        IosappEngine.EngineData.Item.Peer.LinkedDiscussionPeerId(id: peerId)
     )
     |> mapToSignal { peer, linkedDiscussionPeerId -> Signal<PeerData, NoError> in
         var linkedDiscussionPeer: Signal<EnginePeer?, NoError>
@@ -251,7 +251,7 @@ public func channelDiscussionGroupSetupController(context: AccountContext, updat
             hasLinkedDiscussionPeerValue = true
             if let linkedDiscussionPeerIdValue = linkedDiscussionPeerId {
                 linkedDiscussionPeer = context.engine.data.subscribe(
-                    TelegramEngine.EngineData.Item.Peer.Peer(id: linkedDiscussionPeerIdValue)
+                    IosappEngine.EngineData.Item.Peer.Peer(id: linkedDiscussionPeerIdValue)
                 )
             } else {
                 linkedDiscussionPeer = .single(nil)
@@ -282,7 +282,7 @@ public func channelDiscussionGroupSetupController(context: AccountContext, updat
     actionsDisposable.add(applyGroupDisposable)
     
     let arguments = ChannelDiscussionGroupSetupControllerArguments(context: context, createGroup: {
-        let _ = (context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: peerId))
+        let _ = (context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: peerId))
         |> deliverOnMainQueue).start(next: { peer in
             guard let peer = peer else {
                 return
@@ -331,9 +331,9 @@ public func channelDiscussionGroupSetupController(context: AccountContext, updat
         dismissInputImpl?()
         
         let _ = (context.engine.data.get(
-            TelegramEngine.EngineData.Item.Peer.LinkedDiscussionPeerId(id: peerId),
-            TelegramEngine.EngineData.Item.Peer.Peer(id: peerId),
-            TelegramEngine.EngineData.Item.Peer.Peer(id: groupId)
+            IosappEngine.EngineData.Item.Peer.LinkedDiscussionPeerId(id: peerId),
+            IosappEngine.EngineData.Item.Peer.Peer(id: peerId),
+            IosappEngine.EngineData.Item.Peer.Peer(id: groupId)
         )
         |> deliverOnMainQueue).start(next: { linkedDiscussionPeerId, channelPeer, groupPeer in
             guard let channelPeer = channelPeer, let groupPeer = groupPeer else {
@@ -375,7 +375,7 @@ public func channelDiscussionGroupSetupController(context: AccountContext, updat
                         |> mapToSignal { resultPeerId -> Signal<Bool, ChannelDiscussionGroupError> in
                             updatedPeerId = resultPeerId
                             
-                            return context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: resultPeerId))
+                            return context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: resultPeerId))
                             |> castError(ChannelDiscussionGroupError.self)
                             |> mapToSignal { groupPeer -> Signal<Bool, ChannelDiscussionGroupError> in
                                 if let groupPeer = groupPeer {
@@ -518,8 +518,8 @@ public func channelDiscussionGroupSetupController(context: AccountContext, updat
         })
     }, unlinkGroup: {
         let _ = (context.engine.data.get(
-            TelegramEngine.EngineData.Item.Peer.LinkedDiscussionPeerId(id: peerId),
-            TelegramEngine.EngineData.Item.Peer.Peer(id: peerId)
+            IosappEngine.EngineData.Item.Peer.LinkedDiscussionPeerId(id: peerId),
+            IosappEngine.EngineData.Item.Peer.Peer(id: peerId)
         )
         |> deliverOnMainQueue).start(next: { linkedDiscussionPeerId, peer in
             guard case let .channel(peer) = peer else {
@@ -672,7 +672,7 @@ public func channelDiscussionGroupSetupController(context: AccountContext, updat
         controller?.present(c, in: .window(.root), with: a)
     }
     navigateToGroupImpl = { [weak controller] groupId in
-        let _ = (context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: groupId))
+        let _ = (context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: groupId))
         |> deliverOnMainQueue).start(next: { peer in
             guard let peer = peer else {
                 return

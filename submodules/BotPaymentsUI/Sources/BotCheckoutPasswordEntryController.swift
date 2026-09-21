@@ -1,9 +1,9 @@
 import Foundation
 import UIKit
 import Display
-import TelegramCore
+import IosappCore
 import SwiftSignalKit
-import TelegramPresentationData
+import IosappPresentationData
 import AccountContext
 import ComponentFlow
 import AlertComponent

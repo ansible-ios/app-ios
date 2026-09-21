@@ -3,9 +3,9 @@ import AsyncDisplayKit
 import Display
 import ComponentFlow
 import SwiftSignalKit
-import TelegramCore
+import IosappCore
 import AccountContext
-import TelegramPresentationData
+import IosappPresentationData
 import UIKit
 import AnimatedAvatarSetNode
 import ReactionImageComponent
@@ -85,7 +85,7 @@ public final class ReactionIconView: PortalSourceView {
     
     private var context: AccountContext?
     private var fileId: Int64?
-    private var file: TelegramMediaFile?
+    private var file: IosappMediaFile?
     private var animationCache: AnimationCache?
     private var animationRenderer: MultiAnimationRenderer?
     private var contentTintColor: UIColor?
@@ -121,7 +121,7 @@ public final class ReactionIconView: PortalSourceView {
     public func update(
         size: CGSize,
         context: AccountContext,
-        file: TelegramMediaFile?,
+        file: IosappMediaFile?,
         fileId: Int64,
         animationCache: AnimationCache,
         animationRenderer: MultiAnimationRenderer,
@@ -1334,11 +1334,11 @@ public final class ReactionButtonAsyncNode: ContextControllerSourceView {
 public final class ReactionButtonComponent: Equatable {
     public struct Reaction: Equatable {
         public var value: MessageReaction.Reaction
-        public var centerAnimation: TelegramMediaFile?
+        public var centerAnimation: IosappMediaFile?
         public var animationFileId: Int64?
         public var title: String?
         
-        public init(value: MessageReaction.Reaction, centerAnimation: TelegramMediaFile?, animationFileId: Int64?, title: String?) {
+        public init(value: MessageReaction.Reaction, centerAnimation: IosappMediaFile?, animationFileId: Int64?, title: String?) {
             self.value = value
             self.centerAnimation = centerAnimation
             self.animationFileId = animationFileId

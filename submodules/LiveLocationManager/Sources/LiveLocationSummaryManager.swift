@@ -1,11 +1,11 @@
 import Foundation
-import TelegramCore
+import IosappCore
 import SwiftSignalKit
 import AccountContext
 
 private final class LiveLocationSummaryContext {
     private let queue: Queue
-    private let engine: TelegramEngine
+    private let engine: IosappEngine
     private var subscribers = Bag<([EngineMessage.Id: EngineMessage]) -> Void>()
     
     var messageIds = Set<EngineMessage.Id>() {
@@ -18,7 +18,7 @@ private final class LiveLocationSummaryContext {
                     self.messages = [:]
                 } else {
                     self.disposable.set((self.engine.data.subscribe(
-                        TelegramEngine.EngineData.Item.Messages.Messages(ids: self.messageIds)
+                        IosappEngine.EngineData.Item.Messages.Messages(ids: self.messageIds)
                     )
                     |> deliverOn(self.queue)).start(next: { [weak self] messages in
                         if let strongSelf = self {
@@ -42,7 +42,7 @@ private final class LiveLocationSummaryContext {
     
     private let disposable = MetaDisposable()
     
-    init(queue: Queue, engine: TelegramEngine) {
+    init(queue: Queue, engine: IosappEngine) {
         self.queue = queue
         self.engine = engine
     }
@@ -79,7 +79,7 @@ private final class LiveLocationSummaryContext {
 
 private final class LiveLocationPeerSummaryContext {
     private let queue: Queue
-    private let engine: TelegramEngine
+    private let engine: IosappEngine
     private let accountPeerId: EnginePeer.Id
     private let peerId: EnginePeer.Id
     private let becameEmpty: () -> Void
@@ -116,7 +116,7 @@ private final class LiveLocationPeerSummaryContext {
     
     private let peerDisposable = MetaDisposable()
     
-    init(queue: Queue, engine: TelegramEngine, accountPeerId: EnginePeer.Id, peerId: EnginePeer.Id, becameEmpty: @escaping () -> Void) {
+    init(queue: Queue, engine: IosappEngine, accountPeerId: EnginePeer.Id, peerId: EnginePeer.Id, becameEmpty: @escaping () -> Void) {
         self.queue = queue
         self.engine = engine
         self.accountPeerId = accountPeerId
@@ -187,13 +187,13 @@ private final class LiveLocationPeerSummaryContext {
 
 public final class LiveLocationSummaryManagerImpl: LiveLocationSummaryManager {
     private let queue: Queue
-    private let engine: TelegramEngine
+    private let engine: IosappEngine
     private let accountPeerId: EnginePeer.Id
     
     private let globalContext: LiveLocationSummaryContext
     private var peerContexts: [EnginePeer.Id: LiveLocationPeerSummaryContext] = [:]
     
-    init(queue: Queue, engine: TelegramEngine, accountPeerId: EnginePeer.Id) {
+    init(queue: Queue, engine: IosappEngine, accountPeerId: EnginePeer.Id) {
         assert(queue.isCurrent())
         self.queue = queue
         self.engine = engine

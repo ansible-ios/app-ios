@@ -3,9 +3,9 @@ import UIKit
 import Display
 import AsyncDisplayKit
 import SwiftSignalKit
-import TelegramCore
-import TelegramPresentationData
-import TelegramUIPreferences
+import IosappCore
+import IosappPresentationData
+import IosappUIPreferences
 import MergeLists
 import ItemListUI
 import ContextUI
@@ -136,7 +136,7 @@ enum ThemeSettingsColorOption: Equatable {
         }
     }
     
-    var wallpaper: TelegramWallpaper? {
+    var wallpaper: IosappWallpaper? {
         switch self {
             case let .accentColor(color):
                 return color.wallpaper

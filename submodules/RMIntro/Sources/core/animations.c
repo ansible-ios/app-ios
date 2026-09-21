@@ -422,7 +422,7 @@ void on_surface_created() {
 
 
 
-    // Telegram
+    // Iosapp
     telegram_sphere = create_textured_rectangle(CSizeMake(148, 148), telegram_sphere_texture);
     telegram_plane = create_textured_rectangle(CSizeMake(82, 74), telegram_plane_texture);
     telegram_plane.params.anchor=xyzMake(6, -5, 0);

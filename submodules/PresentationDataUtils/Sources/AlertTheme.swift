@@ -3,7 +3,7 @@ import Display
 import AlertUI
 import AccountContext
 import SwiftSignalKit
-import TelegramPresentationData
+import IosappPresentationData
 import AlertComponent
 
 public func textAlertController(

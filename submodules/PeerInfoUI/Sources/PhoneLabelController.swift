@@ -2,12 +2,12 @@ import Foundation
 import UIKit
 import Display
 import SwiftSignalKit
-import TelegramCore
-import TelegramPresentationData
+import IosappCore
+import IosappPresentationData
 import ItemListUI
 import PresentationDataUtils
 import AccountContext
-import TelegramStringFormatting
+import IosappStringFormatting
 
 private struct PhoneLabelArguments {
     let selectLabel: (String) -> Void

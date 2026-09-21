@@ -3,15 +3,15 @@ import UIKit
 import Display
 import AsyncDisplayKit
 import SwiftSignalKit
-import TelegramCore
-import TelegramPresentationData
+import IosappCore
+import IosappPresentationData
 import AccountContext
 import LocalAuth
 import AppBundle
 import PasscodeInputFieldNode
 import MonotonicTime
 import GradientBackground
-import TelegramUIPreferences
+import IosappUIPreferences
 
 private extension CGRect {
     var center: CGPoint {
@@ -24,11 +24,11 @@ private let subtitleFont = Font.regular(15.0)
 private let buttonFont = Font.regular(17.0)
 
 final class PasscodeEntryControllerNode: ASDisplayNode {
-    private let accountManager: AccountManager<TelegramAccountManagerTypes>
+    private let accountManager: AccountManager<IosappAccountManagerTypes>
     private var presentationData: PresentationData
     private var theme: PresentationTheme
     private var strings: PresentationStrings
-    private var wallpaper: TelegramWallpaper
+    private var wallpaper: IosappWallpaper
     private let passcodeType: PasscodeEntryFieldType
     private let biometricsType: LocalAuthBiometricAuthentication?
     private let arguments: PasscodeEntryControllerPresentationArguments
@@ -63,7 +63,7 @@ final class PasscodeEntryControllerNode: ASDisplayNode {
     var energyUsageSettings: EnergyUsageSettings = .default
     var energyUsageSettingsDisposable: Disposable?
     
-    init(accountManager: AccountManager<TelegramAccountManagerTypes>, presentationData: PresentationData, theme: PresentationTheme, strings: PresentationStrings, wallpaper: TelegramWallpaper, passcodeType: PasscodeEntryFieldType, biometricsType: LocalAuthBiometricAuthentication?, arguments: PasscodeEntryControllerPresentationArguments, modalPresentation: Bool) {
+    init(accountManager: AccountManager<IosappAccountManagerTypes>, presentationData: PresentationData, theme: PresentationTheme, strings: PresentationStrings, wallpaper: IosappWallpaper, passcodeType: PasscodeEntryFieldType, biometricsType: LocalAuthBiometricAuthentication?, arguments: PasscodeEntryControllerPresentationArguments, modalPresentation: Bool) {
         self.accountManager = accountManager
         self.presentationData = presentationData
         self.theme = theme

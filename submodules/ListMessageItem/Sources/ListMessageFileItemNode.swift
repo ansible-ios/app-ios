@@ -2,13 +2,13 @@ import Foundation
 import UIKit
 import AsyncDisplayKit
 import Display
-import TelegramCore
+import IosappCore
 import SwiftSignalKit
-import TelegramPresentationData
+import IosappPresentationData
 import ItemListUI
 import PresentationDataUtils
 import AccountContext
-import TelegramStringFormatting
+import IosappStringFormatting
 import AccountContext
 import RadialStatusNode
 import SemanticStatusNode
@@ -120,9 +120,9 @@ private struct FetchControls {
 }
 
 private enum FileIconImage: Equatable {
-    case imageRepresentation(EngineRawMedia, TelegramMediaImageRepresentation)
-    case albumArt(TelegramMediaFile, SharedMediaPlaybackAlbumArt)
-    case roundVideo(TelegramMediaFile)
+    case imageRepresentation(EngineRawMedia, IosappMediaImageRepresentation)
+    case albumArt(IosappMediaFile, SharedMediaPlaybackAlbumArt)
+    case roundVideo(IosappMediaFile)
     
     static func ==(lhs: FileIconImage, rhs: FileIconImage) -> Bool {
         switch lhs {
@@ -684,7 +684,7 @@ public final class ListMessageFileItemNode: ListMessageNode {
             if let message = message {
                 var effectiveMessageMedia = message.effectiveMedia
                 for media in message.media {
-                    if let storyMedia = media as? TelegramMediaStory {
+                    if let storyMedia = media as? IosappMediaStory {
                         if let story = message.associatedStories[storyMedia.storyId], !story.data.isEmpty, case let .item(storyItem) = story.get(Stories.StoredItem.self), let media = selectStoryMedia(item: storyItem, preferredHighQuality: item.interaction.preferredStoryHighQuality) {
                             effectiveMessageMedia = [media]
                             break
@@ -693,7 +693,7 @@ public final class ListMessageFileItemNode: ListMessageNode {
                 }
                 
                 for media in effectiveMessageMedia {
-                    if let file = media as? TelegramMediaFile {
+                    if let file = media as? IosappMediaFile {
                         selectedMedia = file
                         
                         isInstantVideo = file.isInstantVideo
@@ -841,7 +841,7 @@ public final class ListMessageFileItemNode: ListMessageNode {
                         }
                         
                         break
-                    } else if let image = media as? TelegramMediaImage {
+                    } else if let image = media as? IosappMediaImage {
                         selectedMedia = image
                         
                         let fileName: String = item.presentationData.strings.Message_Photo
@@ -920,20 +920,20 @@ public final class ListMessageFileItemNode: ListMessageNode {
                     let context = item.context
                     updatedFetchControls = FetchControls(fetch: { [weak self] in
                         if let strongSelf = self {
-                            if let file = selectedMedia as? TelegramMediaFile {
+                            if let file = selectedMedia as? IosappMediaFile {
                                 strongSelf.fetchDisposable.set(messageMediaFileInteractiveFetched(context: context, message: message, file: file, userInitiated: true).start())
-                            } else if let image = selectedMedia as? TelegramMediaImage, let representation = image.representations.last {
+                            } else if let image = selectedMedia as? IosappMediaImage, let representation = image.representations.last {
                                 strongSelf.fetchDisposable.set(messageMediaImageInteractiveFetched(context: context, message: message, image: image, resource: representation.resource, userInitiated: true, storeToDownloadsPeerId: nil).start())
                             }
                         }
                     }, cancel: {
-                        if let file = selectedMedia as? TelegramMediaFile {
+                        if let file = selectedMedia as? IosappMediaFile {
                             if item.isDownloadList {
                                 context.fetchManager.toggleInteractiveFetchPaused(resourceId: file.resource.id.stringRepresentation, isPaused: true)
                             } else {
                                 messageMediaFileCancelInteractiveFetch(context: context, messageId: message.id, file: file)
                             }
-                        } else if let image = selectedMedia as? TelegramMediaImage, let representation = image.representations.last {
+                        } else if let image = selectedMedia as? IosappMediaImage, let representation = image.representations.last {
                             if item.isDownloadList {
                                 context.fetchManager.toggleInteractiveFetchPaused(resourceId: representation.resource.id.stringRepresentation, isPaused: true)
                             } else {
@@ -944,7 +944,7 @@ public final class ListMessageFileItemNode: ListMessageNode {
                 }
                 
                 if statusUpdated && item.displayFileInfo {
-                    if let file = selectedMedia as? TelegramMediaFile {
+                    if let file = selectedMedia as? IosappMediaFile {
                         updatedStatusSignal = messageFileMediaResourceStatus(context: item.context, file: file, message: EngineMessage(message), isRecentActions: false, isSharedMedia: true, isGlobalSearch: item.isGlobalSearchResult, isDownloadList: item.isDownloadList, isSavedMusic: item.isSavedMusic, isAttachMusic: item.isAttachMusic || item.isStoryMusic)
                         |> mapToSignal { value -> Signal<FileMediaResourceStatus, NoError> in
                             if case .Fetching = value.fetchStatus, !item.isDownloadList {
@@ -974,7 +974,7 @@ public final class ListMessageFileItemNode: ListMessageNode {
                         if isVoice {
                             updatedPlaybackStatusSignal = messageFileMediaPlaybackStatus(context: item.context, file: file, message: EngineMessage(message), isRecentActions: false, isGlobalSearch: item.isGlobalSearchResult, isDownloadList: item.isDownloadList, isSavedMusic: false)
                         }
-                    } else if let image = selectedMedia as? TelegramMediaImage {
+                    } else if let image = selectedMedia as? IosappMediaImage {
                         updatedStatusSignal = messageImageMediaResourceStatus(context: item.context, image: image, message: EngineMessage(message), isRecentActions: false, isSharedMedia: true, isGlobalSearch: item.isGlobalSearchResult || item.isDownloadList)
                         |> mapToSignal { value -> Signal<FileMediaResourceStatus, NoError> in
                             if case .Fetching = value.fetchStatus, !item.isDownloadList {
@@ -1084,9 +1084,9 @@ public final class ListMessageFileItemNode: ListMessageNode {
                     if let iconImage = iconImage {
                         switch iconImage {
                             case let .imageRepresentation(media, representation):
-                                if let file = media as? TelegramMediaFile {
+                                if let file = media as? IosappMediaFile {
                                     updateIconImageSignal = chatWebpageSnippetFile(account: item.context.account, userLocation: .peer(message.id.peerId), mediaReference: FileMediaReference.message(message: MessageReference(message), media: file).abstract, representation: representation)
-                                } else if let image = media as? TelegramMediaImage {
+                                } else if let image = media as? IosappMediaImage {
                                     updateIconImageSignal = mediaGridMessagePhoto(account: item.context.account, userLocation: .peer(message.id.peerId), photoReference: ImageMediaReference.message(message: MessageReference(message), media: image))
                                 } else {
                                     updateIconImageSignal = .complete()
@@ -1416,7 +1416,7 @@ public final class ListMessageFileItemNode: ListMessageNode {
                         let descriptionFrame = strongSelf.descriptionNode.frame
                         shapes.append(.roundedRectLine(startPoint: CGPoint(x: descriptionFrame.minX, y: descriptionFrame.minY + floorToScreenPixels((descriptionFrame.height - lineDiameter) / 2.0)), width: descriptionLineWidth, diameter: lineDiameter))
                         
-                        if let media = selectedMedia as? TelegramMediaFile, media.isInstantVideo {
+                        if let media = selectedMedia as? IosappMediaFile, media.isInstantVideo {
                             shapes.append(.circle(iconFrame))
                         } else {
                             shapes.append(.roundedRect(rect: iconFrame, cornerRadius: iconCornerRadius))
@@ -1440,7 +1440,7 @@ public final class ListMessageFileItemNode: ListMessageNode {
         var isAudio = false
         var isVoice = false
         var isInstantVideo = false
-        if let file = media as? TelegramMediaFile {
+        if let file = media as? IosappMediaFile {
             isAudio = file.isMusic || file.isVoice
             isVoice = file.isVoice
             isInstantVideo = file.isInstantVideo
@@ -1572,7 +1572,7 @@ public final class ListMessageFileItemNode: ListMessageNode {
             
             switch maybeFetchStatus {
             case .Fetching(_, let progress), .Paused(let progress):
-                if let file = self.currentMedia as? TelegramMediaFile, let size = file.size {
+                if let file = self.currentMedia as? IosappMediaFile, let size = file.size {
                     downloadingString = "\(dataSizeString(Int(Float(size) * progress), forceDecimal: true, formatting: DataSizeStringFormatting(chatPresentationData: item.presentationData))) / \(dataSizeString(size, forceDecimal: true, formatting: DataSizeStringFormatting(chatPresentationData: item.presentationData)))"
                 }
                 descriptionOffset = 14.0

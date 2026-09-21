@@ -1,9 +1,9 @@
 import Foundation
-import TelegramCore
+import IosappCore
 
 private let minimalStreamableSize: Int = 384 * 1024
 
-public func isMediaStreamable(message: EngineMessage, media: TelegramMediaFile) -> Bool {
+public func isMediaStreamable(message: EngineMessage, media: IosappMediaFile) -> Bool {
     if message.containsSecretMedia {
         return false
     }
@@ -32,7 +32,7 @@ public func isMediaStreamable(message: EngineMessage, media: TelegramMediaFile) 
     return false
 }
 
-public func isMediaStreamable(media: TelegramMediaFile) -> Bool {
+public func isMediaStreamable(media: IosappMediaFile) -> Bool {
     guard let size = media.size else {
         return false
     }
@@ -50,7 +50,7 @@ public func isMediaStreamable(media: TelegramMediaFile) -> Bool {
     return false
 }
 
-public func isMediaStreamable(resource: TelegramMediaResource) -> Bool {
+public func isMediaStreamable(resource: IosappMediaResource) -> Bool {
     if let size = resource.size, size >= minimalStreamableSize  {
         return true
     } else {

@@ -2,9 +2,9 @@ import Foundation
 import UIKit
 import AsyncDisplayKit
 import Display
-import TelegramCore
+import IosappCore
 import SwiftSignalKit
-import TelegramPresentationData
+import IosappPresentationData
 import AvatarNode
 import PeerOnlineMarkerNode
 import LegacyComponents
@@ -16,7 +16,7 @@ import ComponentFlow
 import EmojiStatusComponent
 import AnimationCache
 import MultiAnimationRenderer
-import TelegramUIPreferences
+import IosappUIPreferences
 
 private let avatarFont = avatarPlaceholderFont(size: 24.0)
 private let textFont = Font.regular(11.0)
@@ -207,7 +207,7 @@ public final class SelectablePeerNode: ASDisplayNode {
         }
     }
     
-    public func setup(accountPeerId: EnginePeer.Id, stateManager: AccountStateManager, energyUsageSettings: EnergyUsageSettings, contentSettings: ContentSettings, animationCache: AnimationCache, animationRenderer: MultiAnimationRenderer, resolveInlineStickers: @escaping ([Int64]) -> Signal<[Int64: TelegramMediaFile], NoError>, theme: PresentationTheme, strings: PresentationStrings, peer: EngineRenderedPeer, requiresPremiumForMessaging: Bool, requiresStars: Int64? = nil, customTitle: String? = nil, iconId: Int64? = nil, iconColor: Int32? = nil, online: Bool = false, numberOfLines: Int = 2, synchronousLoad: Bool) {
+    public func setup(accountPeerId: EnginePeer.Id, stateManager: AccountStateManager, energyUsageSettings: EnergyUsageSettings, contentSettings: ContentSettings, animationCache: AnimationCache, animationRenderer: MultiAnimationRenderer, resolveInlineStickers: @escaping ([Int64]) -> Signal<[Int64: IosappMediaFile], NoError>, theme: PresentationTheme, strings: PresentationStrings, peer: EngineRenderedPeer, requiresPremiumForMessaging: Bool, requiresStars: Int64? = nil, customTitle: String? = nil, iconId: Int64? = nil, iconColor: Int32? = nil, online: Bool = false, numberOfLines: Int = 2, synchronousLoad: Bool) {
         let isFirstTime = self.peer == nil
         self.peer = peer
         guard let mainPeer = peer.chatOrMonoforumMainPeer else {

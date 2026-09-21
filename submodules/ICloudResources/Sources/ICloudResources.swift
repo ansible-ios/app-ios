@@ -1,6 +1,6 @@
 import Foundation
 import UIKit
-import TelegramCore
+import IosappCore
 import SwiftSignalKit
 import Display
 import Pdf
@@ -23,7 +23,7 @@ public struct ICloudFileResourceId {
     }
 }
 
-public class ICloudFileResource: TelegramMediaResource {
+public class ICloudFileResource: IosappMediaResource {
     public let urlData: String
     public let thumbnail: Bool
     

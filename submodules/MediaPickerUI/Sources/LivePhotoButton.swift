@@ -8,7 +8,7 @@ import ViewControllerComponent
 import MultilineTextComponent
 import GlassBackgroundComponent
 import ContextUI
-import TelegramPresentationData
+import IosappPresentationData
 import AccountContext
 import BundleIconComponent
 

@@ -1,0 +1,27 @@
+load("@build_bazel_rules_swift//swift:swift.bzl", "swift_library")
+
+swift_library(
+    name = "ChatListFilterTabContainerNode",
+    module_name = "ChatListFilterTabContainerNode",
+    srcs = glob([
+        "Sources/**/*.swift",
+    ]),
+    copts = [
+        "-warnings-as-errors",
+    ],
+    deps = [
+        "//submodules/AsyncDisplayKit",
+        "//submodules/Display",
+        "//submodules/IosappCore",
+        "//submodules/IosappPresentationData",
+        "//submodules/IosappUI/Components/TextNodeWithEntities",
+        "//submodules/AccountContext",
+        "//submodules/ComponentFlow",
+        "//submodules/Components/ComponentDisplayAdapters",
+        "//submodules/IosappUI/Components/GlassBackgroundComponent",
+        "//submodules/IosappUI/Components/LiquidLens",
+    ],
+    visibility = [
+        "//visibility:public",
+    ],
+)

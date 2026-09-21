@@ -3,9 +3,9 @@ import UIKit
 import Display
 import AsyncDisplayKit
 import SwiftSignalKit
-import TelegramCore
-import TelegramPresentationData
-import TelegramUIPreferences
+import IosappCore
+import IosappPresentationData
+import IosappUIPreferences
 import ItemListUI
 import PresentationDataUtils
 import AccountContext
@@ -19,14 +19,14 @@ class ForwardPrivacyChatPreviewItem: ListViewItem, ItemListItem {
     let sectionId: ItemListSectionId
     let fontSize: PresentationFontSize
     let chatBubbleCorners: PresentationChatBubbleCorners
-    let wallpaper: TelegramWallpaper
+    let wallpaper: IosappWallpaper
     let dateTimeFormat: PresentationDateTimeFormat
     let nameDisplayOrder: PresentationPersonNameOrder
     let peerName: String
     let linkEnabled: Bool
     let tooltipText: String
     
-    init(context: AccountContext, theme: PresentationTheme, strings: PresentationStrings, systemStyle: ItemListSystemStyle = .legacy, sectionId: ItemListSectionId, fontSize: PresentationFontSize, chatBubbleCorners: PresentationChatBubbleCorners, wallpaper: TelegramWallpaper, dateTimeFormat: PresentationDateTimeFormat, nameDisplayOrder: PresentationPersonNameOrder, peerName: String, linkEnabled: Bool, tooltipText: String) {
+    init(context: AccountContext, theme: PresentationTheme, strings: PresentationStrings, systemStyle: ItemListSystemStyle = .legacy, sectionId: ItemListSectionId, fontSize: PresentationFontSize, chatBubbleCorners: PresentationChatBubbleCorners, wallpaper: IosappWallpaper, dateTimeFormat: PresentationDateTimeFormat, nameDisplayOrder: PresentationPersonNameOrder, peerName: String, linkEnabled: Bool, tooltipText: String) {
         self.context = context
         self.theme = theme
         self.strings = strings
@@ -146,7 +146,7 @@ class ForwardPrivacyChatPreviewItemNode: ListViewItemNode {
             var peers = EngineSimpleDictionary<EnginePeer.Id, EngineRawPeer>()
             let messages = EngineSimpleDictionary<EngineMessage.Id, EngineRawMessage>()
             
-            peers[peerId] = TelegramUser(id: peerId, accessHash: nil, firstName: item.peerName, lastName: "", username: nil, phone: nil, photo: [], botInfo: nil, restrictionInfo: nil, flags: [], emojiStatus: nil, usernames: [], storiesHidden: nil, nameColor: .preset(.blue), backgroundEmojiId: nil, profileColor: nil, profileBackgroundEmojiId: nil, subscriberCount: nil, verificationIconFileId: nil)
+            peers[peerId] = IosappUser(id: peerId, accessHash: nil, firstName: item.peerName, lastName: "", username: nil, phone: nil, photo: [], botInfo: nil, restrictionInfo: nil, flags: [], emojiStatus: nil, usernames: [], storiesHidden: nil, nameColor: .preset(.blue), backgroundEmojiId: nil, profileColor: nil, profileBackgroundEmojiId: nil, subscriberCount: nil, verificationIconFileId: nil)
             
             let forwardInfo = EngineMessage.ForwardInfo(author: item.linkEnabled ? peers[peerId] : nil, source: nil, sourceMessageId: nil, date: 0, authorSignature: item.linkEnabled ? nil : item.peerName, psaType: nil, flags: [])
 

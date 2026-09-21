@@ -3,9 +3,9 @@ import UIKit
 import ImageIO
 import AsyncDisplayKit
 import Display
-import TelegramCore
+import IosappCore
 import SwiftSignalKit
-import TelegramPresentationData
+import IosappPresentationData
 import AccountContext
 import RadialStatusNode
 import PhotoResources
@@ -13,7 +13,7 @@ import MediaResources
 import LocationResources
 import LiveLocationPositionNode
 import AppBundle
-import TelegramUIPreferences
+import IosappUIPreferences
 import ContextUI
 import Tuples
 
@@ -52,7 +52,7 @@ private func externalImagePixelDimensions(data: Data) -> PixelDimensions? {
 
 final class InstantPageImageNode: ASDisplayNode, InstantPageNode, InstantPageExternalMediaDimensionsNode {
     private let context: AccountContext
-    private let webPage: TelegramMediaWebpage
+    private let webPage: IosappMediaWebpage
     private var theme: InstantPageTheme
     let media: InstantPageMedia
     let attributes: [InstantPageImageAttribute]
@@ -94,7 +94,7 @@ final class InstantPageImageNode: ASDisplayNode, InstantPageNode, InstantPageExt
     // enclosing V2 media view drives the dust cover + reveal timing. Default off (no effect on web IV).
     private var contentBlurredSignal: Signal<(TransformImageArguments) -> DrawingContext?, NoError>?
     
-    init(context: AccountContext, sourceLocation: InstantPageSourceLocation, theme: InstantPageTheme, webPage: TelegramMediaWebpage, media: InstantPageMedia, attributes: [InstantPageImageAttribute], interactive: Bool, roundCorners: Bool, fit: Bool, openMedia: @escaping (InstantPageMedia) -> Void, longPressMedia: @escaping (InstantPageMedia) -> Void, activatePinchPreview: ((PinchSourceContainerNode) -> Void)?, pinchPreviewFinished: ((InstantPageNode) -> Void)?, imageReferenceForMedia: ((TelegramMediaImage) -> ImageMediaReference)? = nil, fileReferenceForMedia: ((TelegramMediaFile) -> FileMediaReference)? = nil, autoDownloadImage: ((TelegramMediaImage) -> Bool)? = nil, autoDownloadFile: ((TelegramMediaFile) -> Bool)? = nil, emptyColor: UIColor? = nil, getPreloadedResource: @escaping (String) -> Data?) {
+    init(context: AccountContext, sourceLocation: InstantPageSourceLocation, theme: InstantPageTheme, webPage: IosappMediaWebpage, media: InstantPageMedia, attributes: [InstantPageImageAttribute], interactive: Bool, roundCorners: Bool, fit: Bool, openMedia: @escaping (InstantPageMedia) -> Void, longPressMedia: @escaping (InstantPageMedia) -> Void, activatePinchPreview: ((PinchSourceContainerNode) -> Void)?, pinchPreviewFinished: ((InstantPageNode) -> Void)?, imageReferenceForMedia: ((IosappMediaImage) -> ImageMediaReference)? = nil, fileReferenceForMedia: ((IosappMediaFile) -> FileMediaReference)? = nil, autoDownloadImage: ((IosappMediaImage) -> Bool)? = nil, autoDownloadFile: ((IosappMediaFile) -> Bool)? = nil, emptyColor: UIColor? = nil, getPreloadedResource: @escaping (String) -> Data?) {
         self.context = context
         self.theme = theme
         self.webPage = webPage

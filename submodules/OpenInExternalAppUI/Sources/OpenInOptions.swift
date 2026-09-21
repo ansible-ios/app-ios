@@ -1,6 +1,6 @@
 import Foundation
 import UIKit
-import TelegramCore
+import IosappCore
 import CoreLocation
 import MapKit
 import AccountContext
@@ -8,7 +8,7 @@ import UrlEscaping
 
 public enum OpenInItem {
     case url(url: String)
-    case location(location: TelegramMediaMap, directions: OpenInLocationDirections?)
+    case location(location: IosappMediaMap, directions: OpenInLocationDirections?)
 }
 
 public enum OpenInLocationDirections: Equatable {
@@ -236,12 +236,12 @@ private func allOpenInOptions(context: AccountContext, item: OpenInItem) -> [Ope
                         case .transit:
                             directionsMode = "transit"
                     }
-                    return .openUrl(url: "comgooglemaps-x-callback://?daddr=\(coordinates)&directionsmode=\(directionsMode)&x-success=telegram://?resume=true&x-source=Telegram")
+                    return .openUrl(url: "comgooglemaps-x-callback://?daddr=\(coordinates)&directionsmode=\(directionsMode)&x-success=telegram://?resume=true&x-source=Iosapp")
                 } else {
                     if let venue = location.venue, let venueId = venue.id, let provider = venue.provider, provider == "gplaces" {
                         return .openUrl(url: "https://www.google.com/maps/search/?api=1&query=\(venue.address ?? "")&query_place_id=\(venueId)")
                     } else {
-                        return .openUrl(url: "comgooglemaps-x-callback://?center=\(coordinates)&q=\(coordinates)&x-success=telegram://?resume=true&x-source=Telegram")
+                        return .openUrl(url: "comgooglemaps-x-callback://?center=\(coordinates)&q=\(coordinates)&x-success=telegram://?resume=true&x-source=Iosapp")
                     }
                 }
             }))
@@ -320,9 +320,9 @@ private func allOpenInOptions(context: AccountContext, item: OpenInItem) -> [Ope
                     } else {
                         destName = ""
                     }
-                    return .openUrl(url: "moovit://directions?dest_lat=\(lat)&dest_lon=\(lon)&dest_name=\(destName)&partner_id=Telegram")
+                    return .openUrl(url: "moovit://directions?dest_lat=\(lat)&dest_lon=\(lon)&dest_name=\(destName)&partner_id=Iosapp")
                 } else {
-                    return .openUrl(url: "moovit://nearby?lat=\(lat)&lon=\(lon)&partner_id=Telegram")
+                    return .openUrl(url: "moovit://nearby?lat=\(lat)&lon=\(lon)&partner_id=Iosapp")
                 }
             }))
         

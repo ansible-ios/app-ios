@@ -11,11 +11,11 @@ swift_library(
     ],
     deps = [
         "//submodules/Display",
-        "//submodules/TelegramPresentationData",
+        "//submodules/IosappPresentationData",
         "//submodules/ListSectionHeaderNode",
         "//submodules/ComponentFlow",
         "//submodules/Components/ComponentDisplayAdapters",
-        "//submodules/TelegramUI/Components/EdgeEffect",
+        "//submodules/IosappUI/Components/EdgeEffect",
     ],
     visibility = [
         "//visibility:public",

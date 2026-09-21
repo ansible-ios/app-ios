@@ -2,7 +2,7 @@ import Foundation
 import UIKit
 import Display
 import SwiftSignalKit
-import TelegramCore
+import IosappCore
 import AccountContext
 import TextFormat
 import UrlWhitelist
@@ -39,7 +39,7 @@ func fetchFavicon(context: AccountContext, url: String, size: CGSize) -> Signal<
 
 func getPrimaryUrl(message: EngineMessage) -> String? {
     var primaryUrl: String?
-    if let webPage = message.media.first(where: { $0 is TelegramMediaWebpage }) as? TelegramMediaWebpage, let url = webPage.content.url {
+    if let webPage = message.media.first(where: { $0 is IosappMediaWebpage }) as? IosappMediaWebpage, let url = webPage.content.url {
         primaryUrl = url
     } else {
         var entities = message.textEntitiesAttribute?.entities

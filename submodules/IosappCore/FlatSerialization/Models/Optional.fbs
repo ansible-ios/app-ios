@@ -1,0 +1,5 @@
+namespace IosappCore;
+
+struct OptionalBool {
+    value:bool (id: 0);
+}

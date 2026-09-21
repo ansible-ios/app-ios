@@ -1,5 +1,5 @@
 import XCTest
-import TelegramCore
+import IosappCore
 @testable import TextFormat
 
 final class CodeBlockMarkersTests: XCTestCase {

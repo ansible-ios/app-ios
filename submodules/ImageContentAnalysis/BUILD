@@ -12,8 +12,8 @@ swift_library(
     deps = [
     	"//submodules/Display:Display",
         "//submodules/SSignalKit/SwiftSignalKit:SwiftSignalKit",
-        "//submodules/TelegramCore:TelegramCore",
-        "//submodules/TelegramUIPreferences:TelegramUIPreferences",
+        "//submodules/IosappCore:IosappCore",
+        "//submodules/IosappUIPreferences:IosappUIPreferences",
         "//submodules/AccountContext:AccountContext",
     ],
     visibility = [

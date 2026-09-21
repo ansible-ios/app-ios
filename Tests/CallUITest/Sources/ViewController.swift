@@ -4,7 +4,7 @@ import MetalEngine
 import Display
 import CallScreen
 import ComponentFlow
-import TelegramPresentationData
+import IosappPresentationData
 
 private extension UIScreen {
     private static let cornerRadiusKey: String = {

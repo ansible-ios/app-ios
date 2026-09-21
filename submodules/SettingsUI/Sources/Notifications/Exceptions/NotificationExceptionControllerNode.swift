@@ -2,10 +2,10 @@ import Foundation
 import UIKit
 import Display
 import AsyncDisplayKit
-import TelegramCore
+import IosappCore
 import SwiftSignalKit
-import TelegramPresentationData
-import TelegramUIPreferences
+import IosappPresentationData
+import IosappUIPreferences
 import ItemListUI
 import PresentationDataUtils
 import MergeLists
@@ -17,7 +17,7 @@ import ContactsPeerItem
 import ChatListSearchItemHeader
 import ChatListUI
 import ItemListPeerActionItem
-import TelegramStringFormatting
+import IosappStringFormatting
 import NotificationPeerExceptionController
 import Postbox
 
@@ -294,7 +294,7 @@ private enum NotificationExceptionEntry : ItemListNodeEntry {
     
     typealias ItemGenerationArguments = NotificationExceptionArguments
     
-    case peer(index: Int, peer: EnginePeer, theme: PresentationTheme, strings: PresentationStrings, dateFormat: PresentationDateTimeFormat, nameDisplayOrder: PresentationPersonNameOrder, description: String, notificationSettings: TelegramPeerNotificationSettings, revealed: Bool, editing: Bool, isSearching: Bool)
+    case peer(index: Int, peer: EnginePeer, theme: PresentationTheme, strings: PresentationStrings, dateFormat: PresentationDateTimeFormat, nameDisplayOrder: PresentationPersonNameOrder, description: String, notificationSettings: IosappPeerNotificationSettings, revealed: Bool, editing: Bool, isSearching: Bool)
     case addPeer(index: Int, peer: EnginePeer, theme: PresentationTheme, strings: PresentationStrings, dateFormat: PresentationDateTimeFormat, nameDisplayOrder: PresentationPersonNameOrder)
     case addException(PresentationTheme, PresentationStrings, NotificationExceptionMode.Mode, Bool)
     case removeAll(PresentationTheme, PresentationStrings)
@@ -516,12 +516,12 @@ final class NotificationExceptionsControllerNode: ViewControllerTracingNode {
             updateState { current in
                 peerIds = peerIds.union(current.mode.peerIds)
                 updateNotificationsDisposable.set((context.engine.data.subscribe(EngineDataMap(
-                    peerIds.map(TelegramEngine.EngineData.Item.Peer.NotificationSettings.init)
+                    peerIds.map(IosappEngine.EngineData.Item.Peer.NotificationSettings.init)
                 ))
                 |> deliverOnMainQueue).start(next: { notificationSettingsMap in
                     let _ = (context.engine.data.get(
-                        EngineDataMap(notificationSettingsMap.keys.map(TelegramEngine.EngineData.Item.Peer.Peer.init)),
-                        EngineDataMap(notificationSettingsMap.keys.map(TelegramEngine.EngineData.Item.Peer.NotificationSettings.init))
+                        EngineDataMap(notificationSettingsMap.keys.map(IosappEngine.EngineData.Item.Peer.Peer.init)),
+                        EngineDataMap(notificationSettingsMap.keys.map(IosappEngine.EngineData.Item.Peer.NotificationSettings.init))
                     )
                     |> deliverOnMainQueue).start(next: { peerMap, notificationSettingsMap in
                         updateState { current in
@@ -593,8 +593,8 @@ final class NotificationExceptionsControllerNode: ViewControllerTracingNode {
             (self?.searchDisplayController?.contentNode as? NotificationExceptionsSearchContainerNode)?.listNode.clearHighlightAnimated(true)
             
             let _ = (context.engine.data.get(
-                TelegramEngine.EngineData.Item.Peer.Peer(id: peerId),
-                TelegramEngine.EngineData.Item.NotificationSettings.Global()
+                IosappEngine.EngineData.Item.Peer.Peer(id: peerId),
+                IosappEngine.EngineData.Item.NotificationSettings.Global()
             )
             |> deliverOnMainQueue).start(next: { peer, globalSettings in
                 completion()
@@ -626,7 +626,7 @@ final class NotificationExceptionsControllerNode: ViewControllerTracingNode {
                 presentControllerImpl?(notificationPeerExceptionController(context: context, peer: peer, threadId: nil, isStories: isStories, canRemove: canRemove, defaultSound: defaultSound, defaultStoriesSound: defaultSound, updatePeerSound: { peerId, sound in
                     _ = updatePeerSound(peer.id, sound).start(next: { _ in
                         updateNotificationsDisposable.set(nil)
-                        _ = combineLatest(updatePeerSound(peer.id, sound), context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: peerId)) |> deliverOnMainQueue).start(next: { _, peer in
+                        _ = combineLatest(updatePeerSound(peer.id, sound), context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: peerId)) |> deliverOnMainQueue).start(next: { _, peer in
                             if let peer = peer {
                                 updateState { value in
                                     return value.withUpdatedPeerSound(peer, sound)
@@ -637,7 +637,7 @@ final class NotificationExceptionsControllerNode: ViewControllerTracingNode {
                     })
                 }, updatePeerNotificationInterval: { peerId, muteInterval in
                     updateNotificationsDisposable.set(nil)
-                    _ = combineLatest(updatePeerNotificationInterval(peerId, muteInterval), context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: peerId)) |> deliverOnMainQueue).start(next: { _, peer in
+                    _ = combineLatest(updatePeerNotificationInterval(peerId, muteInterval), context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: peerId)) |> deliverOnMainQueue).start(next: { _, peer in
                         if let peer = peer {
                             updateState { value in
                                 return value.withUpdatedPeerMuteInterval(peer, muteInterval)
@@ -647,7 +647,7 @@ final class NotificationExceptionsControllerNode: ViewControllerTracingNode {
                     })
                 }, updatePeerDisplayPreviews: { peerId, displayPreviews in
                     updateNotificationsDisposable.set(nil)
-                    _ = combineLatest(updatePeerDisplayPreviews(peerId, displayPreviews), context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: peerId)) |> deliverOnMainQueue).start(next: { _, peer in
+                    _ = combineLatest(updatePeerDisplayPreviews(peerId, displayPreviews), context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: peerId)) |> deliverOnMainQueue).start(next: { _, peer in
                         if let peer = peer {
                             updateState { value in
                                 return value.withUpdatedPeerDisplayPreviews(peer, displayPreviews)
@@ -657,7 +657,7 @@ final class NotificationExceptionsControllerNode: ViewControllerTracingNode {
                     })
                 }, updatePeerStoriesMuted: { peerId, mute in
                     updateNotificationsDisposable.set(nil)
-                    let _ = combineLatest(updatePeerStoriesMuted(peerId, mute), context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: peerId)) |> deliverOnMainQueue).start(next: { _, peer in
+                    let _ = combineLatest(updatePeerStoriesMuted(peerId, mute), context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: peerId)) |> deliverOnMainQueue).start(next: { _, peer in
                         if let peer = peer {
                             updateState { value in
                                 return value.withUpdatedPeerStoriesMuted(peer, mute)
@@ -667,7 +667,7 @@ final class NotificationExceptionsControllerNode: ViewControllerTracingNode {
                     })
                 }, updatePeerStoriesHideSender: { peerId, hideSender in
                     updateNotificationsDisposable.set(nil)
-                    let _ = combineLatest(updatePeerStoriesHideSender(peerId, hideSender), context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: peerId)) |> deliverOnMainQueue).start(next: { _, peer in
+                    let _ = combineLatest(updatePeerStoriesHideSender(peerId, hideSender), context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: peerId)) |> deliverOnMainQueue).start(next: { _, peer in
                         if let peer = peer {
                             updateState { value in
                                 return value.withUpdatedPeerStoriesHideSender(peer, hideSender)
@@ -677,7 +677,7 @@ final class NotificationExceptionsControllerNode: ViewControllerTracingNode {
                     })
                 }, updatePeerStorySound: { peerId, sound in
                     updateNotificationsDisposable.set(nil)
-                    let _ = combineLatest(updatePeerStorySound(peerId, sound), context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: peerId)) |> deliverOnMainQueue).start(next: { _, peer in
+                    let _ = combineLatest(updatePeerStorySound(peerId, sound), context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: peerId)) |> deliverOnMainQueue).start(next: { _, peer in
                         if let peer = peer {
                             updateState { value in
                                 return value.withUpdatedPeerStorySound(peer, sound)
@@ -689,7 +689,7 @@ final class NotificationExceptionsControllerNode: ViewControllerTracingNode {
                     let _ = (context.engine.peers.removeCustomNotificationSettings(peerIds: [peerId])
                     |> map { _ -> EnginePeer? in }
                     |> then(
-                        context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: peerId))
+                        context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: peerId))
                     )).start(next: { peer in
                         guard let peer = peer else {
                             return
@@ -791,7 +791,7 @@ final class NotificationExceptionsControllerNode: ViewControllerTracingNode {
             self?.view.endEditing(true)
         }
         
-        let preferences = context.engine.data.subscribe(TelegramEngine.EngineData.Item.Configuration.ApplicationSpecificPreference(key: PreferencesKeys.globalNotifications))
+        let preferences = context.engine.data.subscribe(IosappEngine.EngineData.Item.Configuration.ApplicationSpecificPreference(key: PreferencesKeys.globalNotifications))
 
         let previousEntriesHolder = Atomic<([NotificationExceptionEntry], PresentationTheme, PresentationStrings)?>(value: nil)
 
@@ -1010,11 +1010,11 @@ private final class NotificationExceptionsSearchContainerNode: SearchDisplayCont
         
         let updateNotificationsView: (@escaping () -> Void) -> Void = { completion in
             updateNotificationsDisposable.set(context.engine.data.subscribe(EngineDataMap(
-                mode.peerIds.map(TelegramEngine.EngineData.Item.Peer.NotificationSettings.init)
+                mode.peerIds.map(IosappEngine.EngineData.Item.Peer.NotificationSettings.init)
             )).start(next: { notificationSettingsMap in
                 let _ = (context.engine.data.get(
-                    EngineDataMap(notificationSettingsMap.keys.map(TelegramEngine.EngineData.Item.Peer.Peer.init)),
-                    EngineDataMap(notificationSettingsMap.keys.map(TelegramEngine.EngineData.Item.Peer.NotificationSettings.init))
+                    EngineDataMap(notificationSettingsMap.keys.map(IosappEngine.EngineData.Item.Peer.Peer.init)),
+                    EngineDataMap(notificationSettingsMap.keys.map(IosappEngine.EngineData.Item.Peer.NotificationSettings.init))
                 )
                 |> deliverOnMainQueue).start(next: { peerMap, notificationSettingsMap in
                     updateState { current in
@@ -1045,7 +1045,7 @@ private final class NotificationExceptionsSearchContainerNode: SearchDisplayCont
             
         }
         
-        let preferences = context.engine.data.subscribe(TelegramEngine.EngineData.Item.Configuration.ApplicationSpecificPreference(key: PreferencesKeys.globalNotifications))
+        let preferences = context.engine.data.subscribe(IosappEngine.EngineData.Item.Configuration.ApplicationSpecificPreference(key: PreferencesKeys.globalNotifications))
 
         let previousEntriesHolder = Atomic<([NotificationExceptionEntry], PresentationTheme, PresentationStrings)?>(value: nil)
 

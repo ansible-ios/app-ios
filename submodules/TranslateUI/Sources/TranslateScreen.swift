@@ -2,11 +2,11 @@ import Foundation
 import UIKit
 import Display
 import AsyncDisplayKit
-import TelegramCore
+import IosappCore
 import SwiftSignalKit
 import AccountContext
 import SwiftUI
-import TelegramUIPreferences
+import IosappUIPreferences
 
 public func presentTranslateScreen(
     context: AccountContext,

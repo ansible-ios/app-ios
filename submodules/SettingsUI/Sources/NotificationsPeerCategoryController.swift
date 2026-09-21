@@ -3,18 +3,18 @@ import UIKit
 import Display
 import AsyncDisplayKit
 import SwiftSignalKit
-import TelegramCore
-import TelegramPresentationData
-import TelegramUIPreferences
+import IosappCore
+import IosappPresentationData
+import IosappUIPreferences
 import DeviceAccess
 import ItemListUI
 import PresentationDataUtils
 import AccountContext
 import AlertUI
 import PresentationDataUtils
-import TelegramNotices
+import IosappNotices
 import NotificationSoundSelectionUI
-import TelegramStringFormatting
+import IosappStringFormatting
 import ItemListPeerItem
 import ItemListPeerActionItem
 import NotificationPeerExceptionController
@@ -118,7 +118,7 @@ private enum NotificationsPeerCategoryEntry: ItemListNodeEntry {
   
     case exceptionsHeader(PresentationTheme, String)
     case addException(PresentationTheme, String)
-    case exception(Int32, PresentationTheme, PresentationStrings, PresentationDateTimeFormat, PresentationPersonNameOrder, EnginePeer, String, TelegramPeerNotificationSettings, Bool, Bool, Bool)
+    case exception(Int32, PresentationTheme, PresentationStrings, PresentationDateTimeFormat, PresentationPersonNameOrder, EnginePeer, String, IosappPeerNotificationSettings, Bool, Bool, Bool)
     case removeAllExceptions(PresentationTheme, String)
     
     var section: ItemListSectionId {
@@ -659,14 +659,14 @@ public func notificationsPeerCategoryController(context: AccountContext, categor
         updateState { current in
             peerIds = peerIds.union(current.mode.peerIds)
             let combinedPeerNotificationSettings = context.engine.data.subscribe(EngineDataMap(
-                peerIds.map(TelegramEngine.EngineData.Item.Peer.NotificationSettings.init)
+                peerIds.map(IosappEngine.EngineData.Item.Peer.NotificationSettings.init)
             ))
             
             updateNotificationsDisposable.set((combinedPeerNotificationSettings
             |> deliverOnMainQueue).start(next: { combinedPeerNotificationSettings in
                 let _ = (context.engine.data.get(
-                    EngineDataMap(combinedPeerNotificationSettings.keys.map(TelegramEngine.EngineData.Item.Peer.Peer.init)),
-                    EngineDataMap(combinedPeerNotificationSettings.keys.map(TelegramEngine.EngineData.Item.Peer.NotificationSettings.init))
+                    EngineDataMap(combinedPeerNotificationSettings.keys.map(IosappEngine.EngineData.Item.Peer.Peer.init)),
+                    EngineDataMap(combinedPeerNotificationSettings.keys.map(IosappEngine.EngineData.Item.Peer.NotificationSettings.init))
                 )
                 |> deliverOnMainQueue).start(next: { peerMap, notificationSettingsMap in
                     updateState { current in
@@ -697,8 +697,8 @@ public func notificationsPeerCategoryController(context: AccountContext, categor
     
     let presentPeerSettings: (EnginePeer.Id, @escaping () -> Void) -> Void = { peerId, completion in
         let _ = (context.engine.data.get(
-            TelegramEngine.EngineData.Item.Peer.Peer(id: peerId),
-            TelegramEngine.EngineData.Item.NotificationSettings.Global()
+            IosappEngine.EngineData.Item.Peer.Peer(id: peerId),
+            IosappEngine.EngineData.Item.NotificationSettings.Global()
         )
         |> deliverOnMainQueue).start(next: { peer, globalSettings in
             completion()
@@ -728,7 +728,7 @@ public func notificationsPeerCategoryController(context: AccountContext, categor
             pushControllerImpl?(notificationPeerExceptionController(context: context, peer: peer, threadId: nil, isStories: isStories, canRemove: canRemove, defaultSound: defaultSound, defaultStoriesSound: defaultSound, updatePeerSound: { peerId, sound in
                 _ = updatePeerSound(peer.id, sound).start(next: { _ in
                     updateNotificationsDisposable.set(nil)
-                    _ = combineLatest(updatePeerSound(peer.id, sound), context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: peerId)) |> deliverOnMainQueue).start(next: { _, peer in
+                    _ = combineLatest(updatePeerSound(peer.id, sound), context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: peerId)) |> deliverOnMainQueue).start(next: { _, peer in
                         if let peer = peer {
                             updateState { value in
                                 return value.withUpdatedPeerSound(peer, sound)
@@ -739,7 +739,7 @@ public func notificationsPeerCategoryController(context: AccountContext, categor
                 })
             }, updatePeerNotificationInterval: { peerId, muteInterval in
                 updateNotificationsDisposable.set(nil)
-                _ = combineLatest(updatePeerNotificationInterval(peerId, muteInterval), context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: peerId)) |> deliverOnMainQueue).start(next: { _, peer in
+                _ = combineLatest(updatePeerNotificationInterval(peerId, muteInterval), context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: peerId)) |> deliverOnMainQueue).start(next: { _, peer in
                     if let peer = peer {
                         updateState { value in
                             return value.withUpdatedPeerMuteInterval(peer, muteInterval)
@@ -749,7 +749,7 @@ public func notificationsPeerCategoryController(context: AccountContext, categor
                 })
             }, updatePeerDisplayPreviews: { peerId, displayPreviews in
                 updateNotificationsDisposable.set(nil)
-                _ = combineLatest(updatePeerDisplayPreviews(peerId, displayPreviews), context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: peerId)) |> deliverOnMainQueue).start(next: { _, peer in
+                _ = combineLatest(updatePeerDisplayPreviews(peerId, displayPreviews), context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: peerId)) |> deliverOnMainQueue).start(next: { _, peer in
                     if let peer = peer {
                         updateState { value in
                             return value.withUpdatedPeerDisplayPreviews(peer, displayPreviews)
@@ -759,7 +759,7 @@ public func notificationsPeerCategoryController(context: AccountContext, categor
                 })
             }, updatePeerStoriesMuted: { peerId, mute in
                 updateNotificationsDisposable.set(nil)
-                let _ = combineLatest(updatePeerStoriesMuted(peerId, mute), context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: peerId)) |> deliverOnMainQueue).start(next: { _, peer in
+                let _ = combineLatest(updatePeerStoriesMuted(peerId, mute), context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: peerId)) |> deliverOnMainQueue).start(next: { _, peer in
                     if let peer = peer {
                         updateState { value in
                             return value.withUpdatedPeerStoriesMuted(peer, mute)
@@ -769,7 +769,7 @@ public func notificationsPeerCategoryController(context: AccountContext, categor
                 })
             }, updatePeerStoriesHideSender: { peerId, hideSender in
                 updateNotificationsDisposable.set(nil)
-                let _ = combineLatest(updatePeerStoriesHideSender(peerId, hideSender), context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: peerId)) |> deliverOnMainQueue).start(next: { _, peer in
+                let _ = combineLatest(updatePeerStoriesHideSender(peerId, hideSender), context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: peerId)) |> deliverOnMainQueue).start(next: { _, peer in
                     if let peer = peer {
                         updateState { value in
                             return value.withUpdatedPeerStoriesHideSender(peer, hideSender)
@@ -779,7 +779,7 @@ public func notificationsPeerCategoryController(context: AccountContext, categor
                 })
             }, updatePeerStorySound: { peerId, sound in
                 updateNotificationsDisposable.set(nil)
-                let _ = combineLatest(updatePeerStorySound(peerId, sound), context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: peerId)) |> deliverOnMainQueue).start(next: { _, peer in
+                let _ = combineLatest(updatePeerStorySound(peerId, sound), context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: peerId)) |> deliverOnMainQueue).start(next: { _, peer in
                     if let peer = peer {
                         updateState { value in
                             return value.withUpdatedPeerStorySound(peer, sound)
@@ -792,7 +792,7 @@ public func notificationsPeerCategoryController(context: AccountContext, categor
                     let _ = (
                         context.engine.peers.removeCustomStoryNotificationSettings(peerIds: [peerId])
                         |> map { _ -> EnginePeer? in }
-                        |> then(context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: peerId)))
+                        |> then(context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: peerId)))
                     ).start(next: { peer in
                         guard let peer = peer else {
                             return
@@ -808,7 +808,7 @@ public func notificationsPeerCategoryController(context: AccountContext, categor
                     let _ = (
                         context.engine.peers.removeCustomNotificationSettings(peerIds: [peerId])
                         |> map { _ -> EnginePeer? in }
-                        |> then(context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: peerId)))
+                        |> then(context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: peerId)))
                     ).start(next: { peer in
                         guard let peer = peer else {
                             return
@@ -1007,7 +1007,7 @@ public func notificationsPeerCategoryController(context: AccountContext, categor
     })
     
     let sharedData = context.sharedContext.accountManager.sharedData(keys: [ApplicationSpecificSharedDataKeys.inAppNotificationSettings])
-    let preferences = context.engine.data.subscribe(TelegramEngine.EngineData.Item.Configuration.ApplicationSpecificPreference(key: PreferencesKeys.globalNotifications))
+    let preferences = context.engine.data.subscribe(IosappEngine.EngineData.Item.Configuration.ApplicationSpecificPreference(key: PreferencesKeys.globalNotifications))
     
     var automaticData: Signal<([EnginePeer], [EnginePeer.Id: EnginePeer.NotificationSettings]), NoError> = .single(([], [:]))
     if case .stories = category {
@@ -1019,7 +1019,7 @@ public func notificationsPeerCategoryController(context: AccountContext, categor
             let peers = peersValue.prefix(5).map(EnginePeer.init)
             return context.engine.data.subscribe(
                 EngineDataMap(peers.map { peer in
-                    return TelegramEngine.EngineData.Item.Peer.NotificationSettings(id: peer.id)
+                    return IosappEngine.EngineData.Item.Peer.NotificationSettings(id: peer.id)
                 })
             )
             |> map { settings -> ([EnginePeer], [EnginePeer.Id: EnginePeer.NotificationSettings]) in
@@ -1028,7 +1028,7 @@ public func notificationsPeerCategoryController(context: AccountContext, categor
                     if let value = settings[peer.id] {
                         settingsMap[peer.id] = value
                     } else {
-                        settingsMap[peer.id] = EnginePeer.NotificationSettings(TelegramPeerNotificationSettings.defaultSettings)
+                        settingsMap[peer.id] = EnginePeer.NotificationSettings(IosappPeerNotificationSettings.defaultSettings)
                     }
                 }
                 return (peers, settingsMap)

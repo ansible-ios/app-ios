@@ -1,7 +1,7 @@
 import Foundation
 import SwiftSignalKit
-import TelegramCore
-import TelegramUIPreferences
+import IosappCore
+import IosappUIPreferences
 import AccountContext
 
 public let maximumNumberOfAccounts = 3

@@ -1,11 +1,11 @@
 import Foundation
 import UIKit
-import TelegramCore
+import IosappCore
 import SwiftSignalKit
 import AsyncDisplayKit
 import Display
-import TelegramPresentationData
-import TelegramUIPreferences
+import IosappPresentationData
+import IosappUIPreferences
 import ActivityIndicator
 import AccountContext
 import AppBundle
@@ -148,7 +148,7 @@ public final class InstantPagePeerReferenceNode: ASDisplayNode, InstantPageNode 
         let engine = context.engine
         let signal: Signal<EnginePeer, NoError> = actualizedPeer(accountPeerId: account.peerId, postbox: account.postbox, network: account.network, peer: initialPeer._asPeer())
         |> mapToSignal({ peer -> Signal<EnginePeer, NoError> in
-            if let peer = peer as? TelegramChannel, let username = peer.addressName, peer.accessHash == nil {
+            if let peer = peer as? IosappChannel, let username = peer.addressName, peer.accessHash == nil {
                 return .single(.channel(peer)) |> then(engine.peers.resolvePeerByName(name: username, referrer: nil)
                 |> mapToSignal({ result -> Signal<EnginePeer, NoError> in
                     guard case let .result(updatedPeer) = result else {

@@ -10,7 +10,7 @@ swift_library(
         "-warnings-as-errors",
     ],
     deps = [
-    	"//submodules/TelegramCore:TelegramCore",
+    	"//submodules/IosappCore:IosappCore",
         "//submodules/SSignalKit/SwiftSignalKit:SwiftSignalKit",
         "//submodules/UrlEscaping:UrlEscaping",
     ],

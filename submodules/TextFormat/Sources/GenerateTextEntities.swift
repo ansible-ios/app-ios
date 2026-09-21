@@ -1,12 +1,12 @@
 import Foundation
 import UIKit
-import TelegramCore
+import IosappCore
 import Emoji
 
 private let whitelistedHosts: Set<String> = Set([
     "telegram.org",
-    "t.me",
-    "telegram.me",
+    "asme.su",
+    "www.asme.su",
     "telegra.ph",
     "telesco.pe",
     "fragment.com"

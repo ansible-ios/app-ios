@@ -2,12 +2,12 @@ import Foundation
 import UIKit
 import Display
 import SwiftSignalKit
-import TelegramCore
-import TelegramPresentationData
-import TelegramUIPreferences
+import IosappCore
+import IosappPresentationData
+import IosappUIPreferences
 import ItemListUI
 import PresentationDataUtils
-import TelegramStringFormatting
+import IosappStringFormatting
 import TextFormat
 import AccountContext
 import DeviceLocationManager
@@ -70,7 +70,7 @@ private enum ThemeAutoNightSettingsControllerEntry: ItemListNodeEntry {
     case settingInfo(PresentationTheme, String)
     
     case themeHeader(PresentationTheme, String)
-    case themeItem(PresentationTheme, PresentationStrings, [PresentationThemeReference], [PresentationThemeReference], PresentationThemeReference, [Int64: PresentationThemeAccentColor], [Int64: TelegramWallpaper])
+    case themeItem(PresentationTheme, PresentationStrings, [PresentationThemeReference], [PresentationThemeReference], PresentationThemeReference, [Int64: PresentationThemeAccentColor], [Int64: IosappWallpaper])
     
     var section: ItemListSectionId {
         switch self {
@@ -550,10 +550,10 @@ public func themeAutoNightSettingsController(context: AccountContext) -> ViewCon
             return
         }
         
-        let resolvedWallpaper: Signal<TelegramWallpaper?, NoError>
+        let resolvedWallpaper: Signal<IosappWallpaper?, NoError>
         if case let .file(file) = presentationTheme.chat.defaultWallpaper, file.id == 0 {
             resolvedWallpaper = cachedWallpaper(engine: context.engine, network: context.account.network, slug: file.slug, settings: file.settings)
-            |> map { wallpaper -> TelegramWallpaper? in
+            |> map { wallpaper -> IosappWallpaper? in
                 return wallpaper?.wallpaper
             }
         } else {
@@ -577,7 +577,7 @@ public func themeAutoNightSettingsController(context: AccountContext) -> ViewCon
         }).start()
     })
     
-    let cloudThemes = Promise<[TelegramTheme]>()
+    let cloudThemes = Promise<[IosappTheme]>()
     let updatedCloudThemes = context.engine.themes.themes(accountManager: context.sharedContext.accountManager)
     cloudThemes.set(updatedCloudThemes)
     

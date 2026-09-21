@@ -3,11 +3,11 @@ import UIKit
 import Display
 import AsyncDisplayKit
 import SwiftSignalKit
-import TelegramPresentationData
+import IosappPresentationData
 import ActivityIndicator
 import ItemListUI
 import AccountContext
-import TelegramCore
+import IosappCore
 import TextNodeWithEntities
 
 public class ChatListFilterTagSectionHeaderItem: ListViewItem, ItemListItem {

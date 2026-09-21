@@ -3,9 +3,9 @@ import UIKit
 import AsyncDisplayKit
 import Display
 import SwiftSignalKit
-import TelegramCore
-import TelegramPresentationData
-import TelegramUIPreferences
+import IosappCore
+import IosappPresentationData
+import IosappUIPreferences
 import ItemListUI
 import PresentationDataUtils
 import OverlayStatusController
@@ -14,7 +14,7 @@ import AlertUI
 import PresentationDataUtils
 import AppBundle
 import ContextUI
-import TelegramStringFormatting
+import IosappStringFormatting
 import ItemListPeerActionItem
 import ItemListPeerItem
 import UndoUI
@@ -380,7 +380,7 @@ public func folderInviteLinkListController(context: AccountContext, updatedPrese
         }, completed: { peerIds in
             let _ = (context.engine.data.get(
                 EngineDataList(
-                    peerIds.map(TelegramEngine.EngineData.Item.Peer.Peer.init)
+                    peerIds.map(IosappEngine.EngineData.Item.Peer.Peer.init)
                 )
             )
             |> deliverOnMainQueue).start(next: { peerList in
@@ -410,7 +410,7 @@ public func folderInviteLinkListController(context: AccountContext, updatedPrese
 
                 presentControllerImpl?(UndoOverlayController(presentationData: presentationData, content: .forward(savedMessages: savedMessages, text: text), elevatedLayout: false, animateInAsReplacement: true, action: { action in
                     if savedMessages, action == .info {
-                        let _ = (context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: context.account.peerId))
+                        let _ = (context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: context.account.peerId))
                         |> deliverOnMainQueue).start(next: { peer in
                             guard let peer else {
                                 return
@@ -560,7 +560,7 @@ public func folderInviteLinkListController(context: AccountContext, updatedPrese
         }
     }, toggleAllSelected: {
         let _ = (context.engine.data.get(
-            EngineDataList(combinedPeerIds.map(TelegramEngine.EngineData.Item.Peer.Peer.init(id:)))
+            EngineDataList(combinedPeerIds.map(IosappEngine.EngineData.Item.Peer.Peer.init(id:)))
         )
         |> deliverOnMainQueue).start(next: { allPeers in
             let allPeers = allPeers.compactMap({ $0 })
@@ -587,7 +587,7 @@ public func folderInviteLinkListController(context: AccountContext, updatedPrese
     })
     
     let allPeers = context.engine.data.subscribe(
-        EngineDataList(combinedPeerIds.map(TelegramEngine.EngineData.Item.Peer.Peer.init(id:)))
+        EngineDataList(combinedPeerIds.map(IosappEngine.EngineData.Item.Peer.Peer.init(id:)))
     )
     |> map { peers -> [EnginePeer] in
         return peers.compactMap({ peer -> EnginePeer? in

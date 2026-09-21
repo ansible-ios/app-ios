@@ -1,5 +1,5 @@
 import Foundation
-import TelegramCore
+import IosappCore
 import PersistentStringHash
 
 public struct InstantPageExternalMediaResourceId {
@@ -14,7 +14,7 @@ public struct InstantPageExternalMediaResourceId {
     }
 }
 
-public class InstantPageExternalMediaResource: TelegramMediaResource {
+public class InstantPageExternalMediaResource: IosappMediaResource {
     public let url: String
 
     public var size: Int64? {

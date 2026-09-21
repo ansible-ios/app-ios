@@ -2,7 +2,7 @@ import Foundation
 import UIKit
 import Display
 import AsyncDisplayKit
-import TelegramCore
+import IosappCore
 import AccountContext
 
 public class ListMessageNode: ListViewItemNode {

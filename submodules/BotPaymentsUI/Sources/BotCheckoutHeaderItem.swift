@@ -3,8 +3,8 @@ import UIKit
 import Display
 import AsyncDisplayKit
 import SwiftSignalKit
-import TelegramCore
-import TelegramPresentationData
+import IosappCore
+import IosappPresentationData
 import ItemListUI
 import PresentationDataUtils
 import PhotoResources
@@ -12,12 +12,12 @@ import PhotoResources
 class BotCheckoutHeaderItem: ListViewItem, ItemListItem {
     let account: Account
     let theme: PresentationTheme
-    let invoice: TelegramMediaInvoice
+    let invoice: IosappMediaInvoice
     let source: BotPaymentInvoiceSource
     let botName: String
     let sectionId: ItemListSectionId
     
-    init(account: Account, theme: PresentationTheme, invoice: TelegramMediaInvoice, source: BotPaymentInvoiceSource, botName: String, sectionId: ItemListSectionId) {
+    init(account: Account, theme: PresentationTheme, invoice: IosappMediaInvoice, source: BotPaymentInvoiceSource, botName: String, sectionId: ItemListSectionId) {
         self.account = account
         self.theme = theme
         self.invoice = invoice

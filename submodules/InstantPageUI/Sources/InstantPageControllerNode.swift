@@ -1,13 +1,13 @@
 import Foundation
 import UIKit
 import Postbox
-import TelegramCore
+import IosappCore
 import SwiftSignalKit
 import AsyncDisplayKit
 import Display
 import SafariServices
-import TelegramPresentationData
-import TelegramUIPreferences
+import IosappPresentationData
+import IosappUIPreferences
 import AccountContext
 import SaveToCameraRoll
 import GalleryUI
@@ -37,7 +37,7 @@ final class InstantPageControllerNode: ASDisplayNode, ASScrollViewDelegate {
     private let pushController: (ViewController) -> Void
     private let openPeer: (EnginePeer) -> Void
     
-    private var webPage: (webPage: TelegramMediaWebpage, instantPage: InstantPage?)?
+    private var webPage: (webPage: IosappMediaWebpage, instantPage: InstantPage?)?
     private var initialAnchor: String?
     private var pendingAnchor: String?
     private var initialState: InstantPageStoredState?
@@ -154,7 +154,7 @@ final class InstantPageControllerNode: ASDisplayNode, ASScrollViewDelegate {
                 }, completed: { [weak self] peerIds in
                     let _ = (context.engine.data.get(
                         EngineDataList(
-                            peerIds.map(TelegramEngine.EngineData.Item.Peer.Peer.init)
+                            peerIds.map(IosappEngine.EngineData.Item.Peer.Peer.init)
                         )
                     )
                     |> deliverOnMainQueue).start(next: { [weak self] peerList in
@@ -188,7 +188,7 @@ final class InstantPageControllerNode: ASDisplayNode, ASScrollViewDelegate {
                             }
                             strongSelf.present(UndoOverlayController(presentationData: presentationData, content: .forward(savedMessages: savedMessages, text: text), elevatedLayout: false, animateInAsReplacement: true, action: { action in
                                 if savedMessages, let self, action == .info {
-                                    let _ = (self.context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: self.context.account.peerId))
+                                    let _ = (self.context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: self.context.account.peerId))
                                     |> deliverOnMainQueue).start(next: { [weak self] peer in
                                         guard let self, let peer else {
                                             return
@@ -346,7 +346,7 @@ final class InstantPageControllerNode: ASDisplayNode, ASScrollViewDelegate {
         self.scrollNode.view.addGestureRecognizer(recognizer)
     }
     
-    func updateWebPage(_ webPage: TelegramMediaWebpage?, anchor: String?, state: InstantPageStoredState? = nil) {
+    func updateWebPage(_ webPage: IosappMediaWebpage?, anchor: String?, state: InstantPageStoredState? = nil) {
         if self.webPage?.webPage != webPage {
             if self.webPage != nil && self.currentLayout != nil {
                 if let snaphotView = self.scrollNode.view.snapshotView(afterScreenUpdates: false) {
@@ -1230,7 +1230,7 @@ final class InstantPageControllerNode: ASDisplayNode, ASScrollViewDelegate {
         return false
     }
     
-    private func resolvedWebPage() -> (webPage: TelegramMediaWebpage, instantPage: InstantPage?)? {
+    private func resolvedWebPage() -> (webPage: IosappMediaWebpage, instantPage: InstantPage?)? {
         guard let (webPage, instantPage) = self.webPage else {
             return nil
         }
@@ -1254,7 +1254,7 @@ final class InstantPageControllerNode: ASDisplayNode, ASScrollViewDelegate {
         }
         
         var imageUpdated = false
-        let effectiveImage = content.image.map { image -> TelegramMediaImage in
+        let effectiveImage = content.image.map { image -> IosappMediaImage in
             if let updated = self.updatedImageIfNeeded(image) {
                 imageUpdated = true
                 return updated
@@ -1264,7 +1264,7 @@ final class InstantPageControllerNode: ASDisplayNode, ASScrollViewDelegate {
         }
         
         var fileUpdated = false
-        let effectiveFile = content.file.map { file -> TelegramMediaFile in
+        let effectiveFile = content.file.map { file -> IosappMediaFile in
             if let updated = self.updatedFileIfNeeded(file) {
                 fileUpdated = true
                 return updated
@@ -1277,7 +1277,7 @@ final class InstantPageControllerNode: ASDisplayNode, ASScrollViewDelegate {
             return (webPage, instantPage)
         }
         
-        let effectiveContent = TelegramMediaWebpageLoadedContent(
+        let effectiveContent = IosappMediaWebpageLoadedContent(
             url: content.url,
             displayUrl: content.displayUrl,
             hash: content.hash,
@@ -1298,20 +1298,20 @@ final class InstantPageControllerNode: ASDisplayNode, ASScrollViewDelegate {
             attributes: content.attributes,
             instantPage: effectiveInstantPage
         )
-        return (TelegramMediaWebpage(webpageId: webPage.webpageId, content: .Loaded(effectiveContent)), effectiveInstantPage)
+        return (IosappMediaWebpage(webpageId: webPage.webpageId, content: .Loaded(effectiveContent)), effectiveInstantPage)
     }
     
     private func updatedMediaIfNeeded(_ media: Media) -> Media? {
-        if let image = media as? TelegramMediaImage {
+        if let image = media as? IosappMediaImage {
             return self.updatedImageIfNeeded(image)
-        } else if let file = media as? TelegramMediaFile {
+        } else if let file = media as? IosappMediaFile {
             return self.updatedFileIfNeeded(file)
         } else {
             return nil
         }
     }
     
-    private func updatedImageIfNeeded(_ image: TelegramMediaImage) -> TelegramMediaImage? {
+    private func updatedImageIfNeeded(_ image: IosappMediaImage) -> IosappMediaImage? {
         guard let dimensions = self.resolvedExternalMediaDimensions[image.imageId] else {
             return nil
         }
@@ -1323,7 +1323,7 @@ final class InstantPageControllerNode: ASDisplayNode, ASScrollViewDelegate {
             guard representation.resource is InstantPageExternalMediaResource, representation.dimensions != dimensions else {
                 continue
             }
-            updatedRepresentations[i] = TelegramMediaImageRepresentation(
+            updatedRepresentations[i] = IosappMediaImageRepresentation(
                 dimensions: dimensions,
                 resource: representation.resource,
                 progressiveSizes: representation.progressiveSizes,
@@ -1338,7 +1338,7 @@ final class InstantPageControllerNode: ASDisplayNode, ASScrollViewDelegate {
         guard didUpdate else {
             return nil
         }
-        return TelegramMediaImage(
+        return IosappMediaImage(
             imageId: image.imageId,
             representations: updatedRepresentations,
             videoRepresentations: image.videoRepresentations,
@@ -1351,7 +1351,7 @@ final class InstantPageControllerNode: ASDisplayNode, ASScrollViewDelegate {
         )
     }
     
-    private func updatedFileIfNeeded(_ file: TelegramMediaFile) -> TelegramMediaFile? {
+    private func updatedFileIfNeeded(_ file: IosappMediaFile) -> IosappMediaFile? {
         guard let dimensions = self.resolvedExternalMediaDimensions[file.fileId], file.resource is InstantPageExternalMediaResource else {
             return nil
         }
@@ -1361,7 +1361,7 @@ final class InstantPageControllerNode: ASDisplayNode, ASScrollViewDelegate {
             return nil
         }
         
-        return TelegramMediaFile(
+        return IosappMediaFile(
             fileId: file.fileId,
             partialReference: file.partialReference,
             resource: file.resource,
@@ -1376,8 +1376,8 @@ final class InstantPageControllerNode: ASDisplayNode, ASScrollViewDelegate {
         )
     }
     
-    private func fileAttributesWithResolvedDimensions(_ attributes: [TelegramMediaFileAttribute], dimensions: PixelDimensions) -> ([TelegramMediaFileAttribute], Bool) {
-        var updatedAttributes: [TelegramMediaFileAttribute] = []
+    private func fileAttributesWithResolvedDimensions(_ attributes: [IosappMediaFileAttribute], dimensions: PixelDimensions) -> ([IosappMediaFileAttribute], Bool) {
+        var updatedAttributes: [IosappMediaFileAttribute] = []
         var didUpdate = false
         var hasSizeAttribute = false
         
@@ -1415,12 +1415,12 @@ final class InstantPageControllerNode: ASDisplayNode, ASScrollViewDelegate {
     private func longPressMedia(_ media: InstantPageMedia) {
         let controller = makeContextMenuController(actions: [ContextMenuAction(content: .text(title: self.strings.Conversation_ContextMenuCopy, accessibilityLabel: self.strings.Conversation_ContextMenuCopy), action: { [weak self] in
             if let strongSelf = self, case let .image(image) = media.media {
-                let media = TelegramMediaImage(imageId: MediaId(namespace: 0, id: 0), representations: image.representations, immediateThumbnailData: image.immediateThumbnailData, reference: nil, partialReference: nil, flags: [])
+                let media = IosappMediaImage(imageId: MediaId(namespace: 0, id: 0), representations: image.representations, immediateThumbnailData: image.immediateThumbnailData, reference: nil, partialReference: nil, flags: [])
                 let _ = copyToPasteboard(context: strongSelf.context, userLocation: strongSelf.sourceLocation.userLocation, mediaReference: .standalone(media: media)).start()
             }
         }), ContextMenuAction(content: .text(title: self.strings.Conversation_LinkDialogSave, accessibilityLabel: self.strings.Conversation_LinkDialogSave), action: { [weak self] in
             if let strongSelf = self, case let .image(image) = media.media {
-                let media = TelegramMediaImage(imageId: MediaId(namespace: 0, id: 0), representations: image.representations, immediateThumbnailData: image.immediateThumbnailData, reference: nil, partialReference: nil, flags: [])
+                let media = IosappMediaImage(imageId: MediaId(namespace: 0, id: 0), representations: image.representations, immediateThumbnailData: image.immediateThumbnailData, reference: nil, partialReference: nil, flags: [])
                 let _ = saveToCameraRoll(context: strongSelf.context, userLocation: strongSelf.sourceLocation.userLocation, mediaReference: .standalone(media: media)).start()
             }
         }), ContextMenuAction(content: .text(title: self.strings.Conversation_ContextMenuShare, accessibilityLabel: self.strings.Conversation_ContextMenuShare), action: { [weak self] in
@@ -1769,7 +1769,7 @@ final class InstantPageControllerNode: ASDisplayNode, ASScrollViewDelegate {
                                         strongSelf.context.sharedContext.navigateToChatController(NavigateToChatControllerParams(navigationController: navigationController, context: strongSelf.context, chatLocation: .peer(peer), botAppStart: botAppStart))
                                     }
                                 case .info:
-                                    let _ = (strongSelf.context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: peer.id))
+                                    let _ = (strongSelf.context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: peer.id))
                                     |> deliverOnMainQueue).start(next: { peer in
                                         if let strongSelf = self, let peer = peer {
                                             if let controller = strongSelf.context.sharedContext.makePeerInfoController(context: strongSelf.context, updatedPresentationData: nil, peer: peer, mode: .generic, avatarInitiallyExpanded: false, fromChat: false, requestsContext: nil) {

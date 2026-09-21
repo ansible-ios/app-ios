@@ -1,7 +1,7 @@
 import Foundation
 import Security
 import SwiftSignalKit
-import TelegramCore
+import IosappCore
 import AccountContext
 
 final class WebAppSecureStorage {
@@ -64,7 +64,7 @@ final class WebAppSecureStorage {
     static func setValue(context: AccountContext, botId: EnginePeer.Id, key: String, value: String?) -> Signal<Never, WebAppSecureStorage.Error> {
         return combineLatest(
             context.engine.peers.secureBotStorageUuid(),
-            context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: context.account.peerId))
+            context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: context.account.peerId))
         )
         |> castError(WebAppSecureStorage.Error.self)
         |> mapToSignal { uuid, accountPeer in

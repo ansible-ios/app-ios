@@ -6,7 +6,7 @@ import SwiftSignalKit
 import CoreImage
 import Vision
 import VideoToolbox
-import TelegramCore
+import IosappCore
 
 public enum VideoCaptureResult: Equatable {
     public struct Result {

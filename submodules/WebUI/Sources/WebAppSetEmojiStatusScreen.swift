@@ -3,10 +3,10 @@ import UIKit
 import Display
 import ComponentFlow
 import SwiftSignalKit
-import TelegramCore
+import IosappCore
 import Markdown
 import TextFormat
-import TelegramPresentationData
+import IosappPresentationData
 import ViewControllerComponent
 import SheetComponent
 import BalancedTextComponent
@@ -25,7 +25,7 @@ private final class SheetContent: CombinedComponent {
     let context: AccountContext
     let botName: String
     let accountPeer: EnginePeer
-    let file: TelegramMediaFile
+    let file: IosappMediaFile
     let duration: Int32?
     let dismiss: () -> Void
     
@@ -33,7 +33,7 @@ private final class SheetContent: CombinedComponent {
         context: AccountContext,
         botName: String,
         accountPeer: EnginePeer,
-        file: TelegramMediaFile,
+        file: IosappMediaFile,
         duration: Int32?,
         dismiss: @escaping () -> Void
     ) {
@@ -150,7 +150,7 @@ private final class SheetContent: CombinedComponent {
             let textColor = theme.actionSheet.primaryTextColor
             let linkColor = theme.actionSheet.controlAccentColor
             let markdownAttributes = MarkdownAttributes(body: MarkdownAttributeSet(font: textFont, textColor: textColor), bold: MarkdownAttributeSet(font: boldTextFont, textColor: textColor), link: MarkdownAttributeSet(font: textFont, textColor: linkColor), linkAttribute: { contents in
-                return (TelegramTextAttributes.URL, contents)
+                return (IosappTextAttributes.URL, contents)
             })
             
             var textString: String
@@ -238,14 +238,14 @@ private final class WebAppSetEmojiStatusSheetComponent: CombinedComponent {
     private let context: AccountContext
     private let botName: String
     private let accountPeer: EnginePeer
-    private let file: TelegramMediaFile
+    private let file: IosappMediaFile
     private let duration: Int32?
     
     init(
         context: AccountContext,
         botName: String,
         accountPeer: EnginePeer,
-        file: TelegramMediaFile,
+        file: IosappMediaFile,
         duration: Int32?
     ) {
         self.context = context
@@ -350,7 +350,7 @@ public final class WebAppSetEmojiStatusScreen: ViewControllerComponentContainer 
         context: AccountContext,
         botName: String,
         accountPeer: EnginePeer,
-        file: TelegramMediaFile,
+        file: IosappMediaFile,
         duration: Int32?,
         completion: @escaping (Bool) -> Void
     ) {

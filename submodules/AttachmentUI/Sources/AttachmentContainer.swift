@@ -5,7 +5,7 @@ import SwiftSignalKit
 import UIKitRuntimeUtils
 import Display
 import DirectionalPanGesture
-import TelegramPresentationData
+import IosappPresentationData
 import MapKit
 import WebKit
 import ComponentFlow

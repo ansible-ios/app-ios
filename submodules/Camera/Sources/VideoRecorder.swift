@@ -3,7 +3,7 @@ import AVFoundation
 import UIKit
 import CoreImage
 import SwiftSignalKit
-import TelegramCore
+import IosappCore
 
 private extension CMSampleBuffer {
     var endTime: CMTime {

@@ -2,8 +2,8 @@ import Foundation
 import UIKit
 import Display
 import AsyncDisplayKit
-import TelegramCore
-import TelegramPresentationData
+import IosappCore
+import IosappPresentationData
 import Emoji
 
 private let alphanumericCharacters = CharacterSet.alphanumerics
@@ -435,11 +435,11 @@ public final class ChatTextInputTextCustomEmojiAttribute: NSObject, Codable {
     
     public let interactivelySelectedFromPackId: EngineItemCollectionId?
     public let fileId: Int64
-    public let file: TelegramMediaFile?
+    public let file: IosappMediaFile?
     public let custom: Custom?
     public let enableAnimation: Bool
     
-    public init(interactivelySelectedFromPackId: EngineItemCollectionId?, fileId: Int64, file: TelegramMediaFile?, custom: Custom? = nil, enableAnimation: Bool = true) {
+    public init(interactivelySelectedFromPackId: EngineItemCollectionId?, fileId: Int64, file: IosappMediaFile?, custom: Custom? = nil, enableAnimation: Bool = true) {
         self.interactivelySelectedFromPackId = interactivelySelectedFromPackId
         self.fileId = fileId
         self.file = file
@@ -453,7 +453,7 @@ public final class ChatTextInputTextCustomEmojiAttribute: NSObject, Codable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.interactivelySelectedFromPackId = try container.decodeIfPresent(EngineItemCollectionId.self, forKey: .interactivelySelectedFromPackId)
         self.fileId = try container.decode(Int64.self, forKey: .fileId)
-        self.file = try container.decodeIfPresent(TelegramMediaFile.self, forKey: .file)
+        self.file = try container.decodeIfPresent(IosappMediaFile.self, forKey: .file)
         self.custom = nil
         self.enableAnimation = try container.decodeIfPresent(Bool.self, forKey: .enableAnimation) ?? true
     }

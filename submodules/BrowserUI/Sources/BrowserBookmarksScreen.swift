@@ -4,11 +4,11 @@ import AccountContext
 import AsyncDisplayKit
 import Display
 import SwiftSignalKit
-import TelegramCore
-import TelegramPresentationData
+import IosappCore
+import IosappPresentationData
 import PresentationDataUtils
 import ChatControllerInteraction
-import TelegramUIPreferences
+import IosappUIPreferences
 import ChatPresentationInterfaceState
 import TextFormat
 import UrlWhitelist
@@ -260,7 +260,7 @@ public final class BrowserBookmarksScreen: ViewController {
                 let presentationData = self.context.sharedContext.currentPresentationData.with { $0 }
                 
                 var itemList: [ContextMenuItem] = []
-                let foundWebpage = message.engineMedia.compactMap { engineMedia -> TelegramMediaWebpage? in
+                let foundWebpage = message.engineMedia.compactMap { engineMedia -> IosappMediaWebpage? in
                     if case let .webpage(webpage) = engineMedia {
                         return webpage
                     }

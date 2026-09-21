@@ -3,8 +3,8 @@ import UIKit
 import AsyncDisplayKit
 import Display
 import SwiftSignalKit
-import TelegramCore
-import TelegramPresentationData
+import IosappCore
+import IosappPresentationData
 import AccountContext
 import UniversalMediaPlayer
 import SemanticStatusNode
@@ -35,7 +35,7 @@ public struct InstantPageAudioColorOverride: Equatable {
 final class InstantPageV2AudioContentNode: ASDisplayNode {
     private let context: AccountContext
     private let message: MessageReference?
-    private let file: TelegramMediaFile
+    private let file: IosappMediaFile
     private let incoming: Bool
     // nil → chat-bubble palette (real messages); non-nil → editor accent/text override (see the struct).
     private let colorOverride: InstantPageAudioColorOverride?
@@ -56,8 +56,8 @@ final class InstantPageV2AudioContentNode: ASDisplayNode {
     var fetch: () -> Void = {}
 
     private var resourceStatusDisposable: Disposable?
-    // EngineMediaResourceStatus is the TelegramCore typealias for Postbox's MediaResourceStatus;
-    // using it keeps this file off `import Postbox` (TelegramCore doesn't re-export Postbox).
+    // EngineMediaResourceStatus is the IosappCore typealias for Postbox's MediaResourceStatus;
+    // using it keeps this file off `import Postbox` (IosappCore doesn't re-export Postbox).
     private var fetchStatus: EngineMediaResourceStatus?
 
     private var playbackStatusDisposable: Disposable?
@@ -75,7 +75,7 @@ final class InstantPageV2AudioContentNode: ASDisplayNode {
     private static let controlAreaWidth: CGFloat = 12.0 + 40.0 + 8.0
     private static let normHeight: CGFloat = 44.0
 
-    init(context: AccountContext, message: MessageReference?, file: TelegramMediaFile, incoming: Bool, presentationData: PresentationData, colorOverride: InstantPageAudioColorOverride? = nil) {
+    init(context: AccountContext, message: MessageReference?, file: IosappMediaFile, incoming: Bool, presentationData: PresentationData, colorOverride: InstantPageAudioColorOverride? = nil) {
         self.context = context
         self.message = message
         self.file = file
@@ -238,7 +238,7 @@ final class InstantPageV2AudioContentNode: ASDisplayNode {
     }
 
     // Line 1: track title at 17pt (= baseDisplaySize at the default font setting; scales with it).
-    private static func titleString(file: TelegramMediaFile, incoming: Bool, presentationData: PresentationData, overrideColor: UIColor? = nil) -> NSAttributedString {
+    private static func titleString(file: IosappMediaFile, incoming: Bool, presentationData: PresentationData, overrideColor: UIColor? = nil) -> NSAttributedString {
         let messageTheme = incoming ? presentationData.theme.chat.message.incoming : presentationData.theme.chat.message.outgoing
         let titleFont = Font.regular(floor(presentationData.chatFontSize.baseDisplaySize * 17.0 / 17.0))
         var title = file.fileName ?? "Unknown Track"
@@ -250,7 +250,7 @@ final class InstantPageV2AudioContentNode: ASDisplayNode {
 
     // Line 2: "<duration> · <performer>" at 15pt (omits the "· performer" tail when there's no
     // performer; omits the duration when it's absent).
-    private static func descriptionString(file: TelegramMediaFile, incoming: Bool, presentationData: PresentationData, overrideColor: UIColor? = nil) -> NSAttributedString {
+    private static func descriptionString(file: IosappMediaFile, incoming: Bool, presentationData: PresentationData, overrideColor: UIColor? = nil) -> NSAttributedString {
         let messageTheme = incoming ? presentationData.theme.chat.message.incoming : presentationData.theme.chat.message.outgoing
         let descriptionFont = Font.with(size: floor(presentationData.chatFontSize.baseDisplaySize * 15.0 / 17.0), design: .regular, weight: .regular, traits: [.monospacedNumbers])
         var performer = ""

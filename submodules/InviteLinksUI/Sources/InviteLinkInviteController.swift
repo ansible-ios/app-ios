@@ -1,16 +1,16 @@
 import Foundation
 import UIKit
 import SwiftSignalKit
-import TelegramPresentationData
+import IosappPresentationData
 import AppBundle
 import AsyncDisplayKit
-import TelegramCore
+import IosappCore
 import Display
 import AccountContext
 import ItemListUI
 import ItemListPeerItem
 import SectionHeaderItem
-import TelegramStringFormatting
+import IosappStringFormatting
 import MergeLists
 import ContextUI
 import OverlayStatusController
@@ -409,7 +409,7 @@ public final class InviteLinkInviteController: ViewController {
                     
                     if let invite {
                         if case let .groupOrChannel(peerId) = self.mode {
-                            let _ = (context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: peerId))
+                            let _ = (context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: peerId))
                             |> mapToSignal { peer -> Signal<EnginePeer, NoError> in
                                 if let peer {
                                     return .single(peer)
@@ -448,7 +448,7 @@ public final class InviteLinkInviteController: ViewController {
                             return
                         }
                         
-                        let _ = (context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: peerId))
+                        let _ = (context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: peerId))
                         |> mapToSignal { peer -> Signal<EnginePeer, NoError> in
                             if let peer {
                                 return .single(peer)
@@ -561,7 +561,7 @@ public final class InviteLinkInviteController: ViewController {
                     if let strongSelf = self {
                         let _ = (strongSelf.context.engine.data.get(
                             EngineDataList(
-                                peerIds.map(TelegramEngine.EngineData.Item.Peer.Peer.init)
+                                peerIds.map(IosappEngine.EngineData.Item.Peer.Peer.init)
                             )
                         )
                         |> deliverOnMainQueue).start(next: { [weak self] peerList in
@@ -592,7 +592,7 @@ public final class InviteLinkInviteController: ViewController {
 
                                 strongSelf.controller?.present(UndoOverlayController(presentationData: presentationData, content: .forward(savedMessages: savedMessages, text: text), elevatedLayout: false, animateInAsReplacement: true, action: { action in
                                     if savedMessages, let self, action == .info {
-                                        let _ = (self.context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: self.context.account.peerId))
+                                        let _ = (self.context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: self.context.account.peerId))
                                         |> deliverOnMainQueue).start(next: { [weak self] peer in
                                             guard let self, let peer else {
                                                 return
@@ -643,7 +643,7 @@ public final class InviteLinkInviteController: ViewController {
                         var entries: [InviteLinkInviteEntry] = []
                         
                         let helpText: String
-                        if let peer = peerViewMainPeer(view) as? TelegramChannel, case .broadcast = peer.info {
+                        if let peer = peerViewMainPeer(view) as? IosappChannel, case .broadcast = peer.info {
                             helpText = presentationData.strings.InviteLink_CreatePrivateLinkHelpChannel
                         } else {
                             helpText = presentationData.strings.InviteLink_CreatePrivateLinkHelp

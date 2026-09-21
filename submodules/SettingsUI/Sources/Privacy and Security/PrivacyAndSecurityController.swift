@@ -3,14 +3,14 @@ import UIKit
 import Display
 import SwiftSignalKit
 import Postbox
-import TelegramCore
-import TelegramPresentationData
-import TelegramUIPreferences
-import TelegramCallsUI
+import IosappCore
+import IosappPresentationData
+import IosappUIPreferences
+import IosappCallsUI
 import ItemListUI
 import PresentationDataUtils
 import AccountContext
-import TelegramNotices
+import IosappNotices
 import LocalAuth
 import AppBundle
 import OpenInExternalAppUI
@@ -928,7 +928,7 @@ public func privacyAndSecurityController(
         twoStepAuth.set(hasTwoStepAuthDataValue)
     }
 
-    let passkeysDataValue = Promise<[TelegramPasskey]?>(nil)
+    let passkeysDataValue = Promise<[IosappPasskey]?>(nil)
     let hasPasskeysDataValue = passkeysDataValue.get()
     |> mapToSignal { data -> Signal<Bool?, NoError> in
         if let data = data {
@@ -981,7 +981,7 @@ public func privacyAndSecurityController(
 
     let updateHasPasskeys: () -> Void = {
         let signal = context.engine.auth.passkeysData()
-        |> map { value -> [TelegramPasskey]? in
+        |> map { value -> [IosappPasskey]? in
             return value
         }
         |> deliverOnMainQueue
@@ -1058,7 +1058,7 @@ public func privacyAndSecurityController(
         let privacySignal = privacySettingsPromise.get()
         |> take(1)
         
-        let callsSignal = combineLatest(context.sharedContext.accountManager.sharedData(keys: [ApplicationSpecificSharedDataKeys.voiceCallSettings]), context.engine.data.subscribe(TelegramEngine.EngineData.Item.Configuration.ApplicationSpecificPreference(key: PreferencesKeys.voipConfiguration)))
+        let callsSignal = combineLatest(context.sharedContext.accountManager.sharedData(keys: [ApplicationSpecificSharedDataKeys.voiceCallSettings]), context.engine.data.subscribe(IosappEngine.EngineData.Item.Configuration.ApplicationSpecificPreference(key: PreferencesKeys.voipConfiguration)))
         |> take(1)
         |> map { sharedData, view -> (VoiceCallSettings, VoipConfiguration) in
             let voiceCallSettings: VoiceCallSettings = sharedData.entries[ApplicationSpecificSharedDataKeys.voiceCallSettings]?.get(VoiceCallSettings.self) ?? .defaultSettings
@@ -1170,7 +1170,7 @@ public func privacyAndSecurityController(
         }))
     }, openVoiceMessagePrivacy: {
         let signal = combineLatest(
-            context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: context.account.peerId)),
+            context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: context.account.peerId)),
             privacySettingsPromise.get()
         )
         |> take(1)
@@ -1274,7 +1274,7 @@ public func privacyAndSecurityController(
             }
         })
     }, openTwoStepVerification: { data in
-        let _ = (context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: context.account.peerId))
+        let _ = (context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: context.account.peerId))
         |> deliverOnMainQueue).start(next: { peer in
             if let data = data {
                 switch data {
@@ -1581,7 +1581,7 @@ public func privacyAndSecurityController(
     
     let webBrowserData = combineLatest(
         context.sharedContext.accountManager.sharedData(keys: [ApplicationSpecificSharedDataKeys.contactSynchronizationSettings, ApplicationSpecificSharedDataKeys.webBrowserSettings]),
-        context.engine.data.subscribe(TelegramEngine.EngineData.Item.Configuration.ApplicationSpecificPreference(key: PreferencesKeys.webBrowserSettings))
+        context.engine.data.subscribe(IosappEngine.EngineData.Item.Configuration.ApplicationSpecificPreference(key: PreferencesKeys.webBrowserSettings))
     )
     
     let signal = combineLatest(
@@ -1597,8 +1597,8 @@ public func privacyAndSecurityController(
         context.sharedContext.accountManager.accessChallengeData(),
         combineLatest(twoStepAuth.get(), twoStepAuthDataValue.get()),
         combineLatest(passkeys.get(), passkeysDataValue.get()),
-        context.engine.data.subscribe(TelegramEngine.EngineData.Item.Configuration.App()),
-        context.engine.data.subscribe(TelegramEngine.EngineData.Item.Peer.Peer(id: context.account.peerId)),
+        context.engine.data.subscribe(IosappEngine.EngineData.Item.Configuration.App()),
+        context.engine.data.subscribe(IosappEngine.EngineData.Item.Peer.Peer(id: context.account.peerId)),
         loginEmail
     )
     |> map { presentationData, state, privacySettings, noticeView, webBrowserData, recentPeers, blockedPeersState, activeWebsitesState, accessChallengeData, twoStepAuth, passkeys, appConfiguration, accountPeer, loginEmail -> (ItemListControllerState, (ItemListNodeState, Any)) in
@@ -1632,7 +1632,7 @@ public func privacyAndSecurityController(
                 defaultWebBrowser = "Safari"
             }
         } else {
-            defaultWebBrowser = presentationData.strings.WebBrowser_Telegram
+            defaultWebBrowser = presentationData.strings.WebBrowser_Iosapp
         }
         
         let listState = ItemListNodeState(presentationData: ItemListPresentationData(presentationData), entries: privacyAndSecurityControllerEntries(presentationData: presentationData, state: state, privacySettings: privacySettings, accessChallengeData: accessChallengeData.data, blockedPeerCount: blockedPeersState.totalCount, activeWebsitesCount: activeWebsitesState.sessions.count, hasTwoStepAuth: twoStepAuth.0, twoStepAuthData: twoStepAuth.1, hasPasskeys: passkeys.0, displayPasskeys: displayPasskeys, canAutoarchive: canAutoarchive, isPremiumDisabled: isPremiumDisabled, isPremium: isPremium, loginEmail: loginEmail, accountPeer: accountPeer, defaultWebBrowser: defaultWebBrowser, appConfiguration: appConfiguration), style: .blocks, ensureVisibleItemTag: focusOnItemTag, animateChanges: false)

@@ -3,10 +3,10 @@ import UIKit
 import Display
 import AsyncDisplayKit
 import SwiftSignalKit
-import TelegramPresentationData
+import IosappPresentationData
 import AccountContext
 import ContextUI
-import TelegramCore
+import IosappCore
 import TextFormat
 import ReactionSelectionNode
 import ViewControllerComponent
@@ -22,7 +22,7 @@ import EmojiTextAttachmentView
 
 public final class ChatSendMessageScreenEffectIcon: Component {
     public enum Content: Equatable {
-        case file(TelegramMediaFile)
+        case file(IosappMediaFile)
         case text(String)
     }
     

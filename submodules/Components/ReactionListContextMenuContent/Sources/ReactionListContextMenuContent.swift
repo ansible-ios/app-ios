@@ -4,9 +4,9 @@ import Display
 import ComponentFlow
 import MultilineTextComponent
 import SwiftSignalKit
-import TelegramCore
+import IosappCore
 import AccountContext
-import TelegramPresentationData
+import IosappPresentationData
 import UIKit
 import AnimatedAvatarSetNode
 import ContextUI
@@ -17,7 +17,7 @@ import MultiAnimationRenderer
 import EmojiTextAttachmentView
 import TextFormat
 import EmojiStatusComponent
-import TelegramStringFormatting
+import IosappStringFormatting
 
 private let avatarFont = avatarPlaceholderFont(size: 16.0)
 
@@ -91,7 +91,7 @@ public final class ReactionListContextMenuContent: ContextControllerItemsContent
             var reactionLayer: InlineStickerItemLayer?
             
             private var iconFrame: CGRect?
-            private var file: TelegramMediaFile?
+            private var file: IosappMediaFile?
             private var fileDisposable: Disposable?
             
             private var theme: PresentationTheme?
@@ -384,7 +384,7 @@ public final class ReactionListContextMenuContent: ContextControllerItemsContent
 
             private var reactionLayer: InlineStickerItemLayer?
             private var iconFrame: CGRect?
-            private var file: TelegramMediaFile?
+            private var file: IosappMediaFile?
             private var fileDisposable: Disposable?
             private var longTapRecognizer: UILongPressGestureRecognizer?
             private var skipNextTapAction = false

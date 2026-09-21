@@ -3,7 +3,7 @@ import UIKit
 import SwiftSignalKit
 import Display
 import ImageIO
-import TelegramCore
+import IosappCore
 import TinyThumbnail
 import FastBlur
 import Postbox
@@ -27,7 +27,7 @@ public enum PeerAvatarImageType {
     case complete
 }
 
-public func peerAvatarImageData(postbox: Postbox, peerReference: PeerReference?, authorOfMessage: MessageReference?, representation: TelegramMediaImageRepresentation?, synchronousLoad: Bool) -> Signal<(Data, PeerAvatarImageType)?, NoError>? {
+public func peerAvatarImageData(postbox: Postbox, peerReference: PeerReference?, authorOfMessage: MessageReference?, representation: IosappMediaImageRepresentation?, synchronousLoad: Bool) -> Signal<(Data, PeerAvatarImageType)?, NoError>? {
     if let smallProfileImage = representation {
         let resourceData = postbox.mediaBox.resourceData(smallProfileImage.resource, attemptSynchronously: synchronousLoad)
         let imageData = resourceData
@@ -85,7 +85,7 @@ public func peerAvatarImageData(postbox: Postbox, peerReference: PeerReference?,
     }
 }
 
-public func peerAvatarCompleteImage(account: Account, peer: EnginePeer, forceProvidedRepresentation: Bool = false, representation: TelegramMediaImageRepresentation? = nil, size: CGSize, round: Bool = true, font: UIFont = avatarPlaceholderFont(size: 13.0), drawLetters: Bool = true, fullSize: Bool = false, blurred: Bool = false) -> Signal<UIImage?, NoError> {
+public func peerAvatarCompleteImage(account: Account, peer: EnginePeer, forceProvidedRepresentation: Bool = false, representation: IosappMediaImageRepresentation? = nil, size: CGSize, round: Bool = true, font: UIFont = avatarPlaceholderFont(size: 13.0), drawLetters: Bool = true, fullSize: Bool = false, blurred: Bool = false) -> Signal<UIImage?, NoError> {
     return peerAvatarCompleteImage(
         postbox: account.postbox,
         peer: peer,
@@ -100,7 +100,7 @@ public func peerAvatarCompleteImage(account: Account, peer: EnginePeer, forcePro
     )
 }
 
-public func peerAvatarCompleteImage(postbox: Postbox, peer: EnginePeer, forceProvidedRepresentation: Bool = false, representation: TelegramMediaImageRepresentation? = nil, size: CGSize, round: Bool = true, font: UIFont = avatarPlaceholderFont(size: 13.0), drawLetters: Bool = true, fullSize: Bool = false, blurred: Bool = false) -> Signal<UIImage?, NoError> {
+public func peerAvatarCompleteImage(postbox: Postbox, peer: EnginePeer, forceProvidedRepresentation: Bool = false, representation: IosappMediaImageRepresentation? = nil, size: CGSize, round: Bool = true, font: UIFont = avatarPlaceholderFont(size: 13.0), drawLetters: Bool = true, fullSize: Bool = false, blurred: Bool = false) -> Signal<UIImage?, NoError> {
     let iconSignal: Signal<UIImage?, NoError>
     
     let clipStyle: AvatarNodeClipStyle
@@ -114,7 +114,7 @@ public func peerAvatarCompleteImage(postbox: Postbox, peer: EnginePeer, forcePro
         clipStyle = .none
     }
     
-    let thumbnailRepresentation: TelegramMediaImageRepresentation?
+    let thumbnailRepresentation: IosappMediaImageRepresentation?
     if forceProvidedRepresentation {
         thumbnailRepresentation = representation
     } else {
@@ -166,7 +166,7 @@ public func peerAvatarCompleteImage(postbox: Postbox, peer: EnginePeer, forcePro
     return iconSignal
 }
 
-public func peerAvatarImage(account: Account, peerReference: PeerReference?, authorOfMessage: MessageReference?, representation: TelegramMediaImageRepresentation?, displayDimensions: CGSize = CGSize(width: 60.0, height: 60.0), clipStyle: AvatarNodeClipStyle = .round, blurred: Bool = false, inset: CGFloat = 0.0, emptyColor: UIColor? = nil, synchronousLoad: Bool = false, provideUnrounded: Bool = false, cutoutRect: CGRect? = nil) -> Signal<(UIImage, UIImage)?, NoError>? {
+public func peerAvatarImage(account: Account, peerReference: PeerReference?, authorOfMessage: MessageReference?, representation: IosappMediaImageRepresentation?, displayDimensions: CGSize = CGSize(width: 60.0, height: 60.0), clipStyle: AvatarNodeClipStyle = .round, blurred: Bool = false, inset: CGFloat = 0.0, emptyColor: UIColor? = nil, synchronousLoad: Bool = false, provideUnrounded: Bool = false, cutoutRect: CGRect? = nil) -> Signal<(UIImage, UIImage)?, NoError>? {
     return peerAvatarImage(
         postbox: account.postbox,
         peerReference: peerReference,
@@ -183,7 +183,7 @@ public func peerAvatarImage(account: Account, peerReference: PeerReference?, aut
     )
 }
     
-public func peerAvatarImage(postbox: Postbox, peerReference: PeerReference?, authorOfMessage: MessageReference?, representation: TelegramMediaImageRepresentation?, displayDimensions: CGSize = CGSize(width: 60.0, height: 60.0), clipStyle: AvatarNodeClipStyle = .round, blurred: Bool = false, inset: CGFloat = 0.0, emptyColor: UIColor? = nil, synchronousLoad: Bool = false, provideUnrounded: Bool = false, cutoutRect: CGRect? = nil) -> Signal<(UIImage, UIImage)?, NoError>? {
+public func peerAvatarImage(postbox: Postbox, peerReference: PeerReference?, authorOfMessage: MessageReference?, representation: IosappMediaImageRepresentation?, displayDimensions: CGSize = CGSize(width: 60.0, height: 60.0), clipStyle: AvatarNodeClipStyle = .round, blurred: Bool = false, inset: CGFloat = 0.0, emptyColor: UIColor? = nil, synchronousLoad: Bool = false, provideUnrounded: Bool = false, cutoutRect: CGRect? = nil) -> Signal<(UIImage, UIImage)?, NoError>? {
     if let imageData = peerAvatarImageData(postbox: postbox, peerReference: peerReference, authorOfMessage: authorOfMessage, representation: representation, synchronousLoad: synchronousLoad) {
         return imageData
         |> mapToSignal { data -> Signal<(UIImage, UIImage)?, NoError> in

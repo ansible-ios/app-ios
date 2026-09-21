@@ -1,10 +1,10 @@
 import Foundation
 import UIKit
-import TelegramCore
+import IosappCore
 import AsyncDisplayKit
 import Display
-import TelegramPresentationData
-import TelegramUIPreferences
+import IosappPresentationData
+import IosappUIPreferences
 import AccountContext
 import ContextUI
 

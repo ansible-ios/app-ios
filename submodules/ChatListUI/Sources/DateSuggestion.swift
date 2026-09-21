@@ -1,6 +1,6 @@
 import Foundation
-import TelegramPresentationData
-import TelegramStringFormatting
+import IosappPresentationData
+import IosappStringFormatting
 
 private let telegramReleaseDate = Date(timeIntervalSince1970: 1376438400.0)
 

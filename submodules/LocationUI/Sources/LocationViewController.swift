@@ -2,10 +2,10 @@ import Foundation
 import UIKit
 import Display
 import LegacyComponents
-import TelegramCore
+import IosappCore
 import SwiftSignalKit
-import TelegramPresentationData
-import TelegramStringFormatting
+import IosappPresentationData
+import IosappStringFormatting
 import AccountContext
 import AppBundle
 import CoreLocation
@@ -16,13 +16,13 @@ import UndoUI
 import MapKit
 
 public class LocationViewParams {
-    let sendLiveLocation: (TelegramMediaMap) -> Void
+    let sendLiveLocation: (IosappMediaMap) -> Void
     let stopLiveLocation: (EngineMessage.Id?) -> Void
     let openUrl: (String) -> Void
     let openPeer: (EnginePeer) -> Void
     let showAll: Bool
         
-    public init(sendLiveLocation: @escaping (TelegramMediaMap) -> Void, stopLiveLocation: @escaping (EngineMessage.Id?) -> Void, openUrl: @escaping (String) -> Void, openPeer: @escaping (EnginePeer) -> Void, showAll: Bool = false) {
+    public init(sendLiveLocation: @escaping (IosappMediaMap) -> Void, stopLiveLocation: @escaping (EngineMessage.Id?) -> Void, openUrl: @escaping (String) -> Void, openPeer: @escaping (EnginePeer) -> Void, showAll: Bool = false) {
         self.sendLiveLocation = sendLiveLocation
         self.stopLiveLocation = stopLiveLocation
         self.openUrl = openUrl
@@ -36,14 +36,14 @@ final class LocationViewInteraction {
     let updateMapMode: (LocationMapMode) -> Void
     let toggleTrackingMode: () -> Void
     let goToCoordinate: (CLLocationCoordinate2D) -> Void
-    let requestDirections: (TelegramMediaMap, String?, OpenInLocationDirections) -> Void
+    let requestDirections: (IosappMediaMap, String?, OpenInLocationDirections) -> Void
     let share: () -> Void
     let setupProximityNotification: (Bool, EngineMessage.Id?) -> Void
     let sendLiveLocation: (Int32?, Bool, EngineMessage.Id?) -> Void
     let stopLiveLocation: () -> Void
     let present: (ViewController) -> Void
     
-    init(toggleMapModeSelection: @escaping () -> Void, updateMapMode: @escaping (LocationMapMode) -> Void, toggleTrackingMode: @escaping () -> Void, goToCoordinate: @escaping (CLLocationCoordinate2D) -> Void, requestDirections: @escaping (TelegramMediaMap, String?, OpenInLocationDirections) -> Void, share: @escaping () -> Void, setupProximityNotification: @escaping (Bool, EngineMessage.Id?) -> Void, sendLiveLocation: @escaping (Int32?, Bool, EngineMessage.Id?) -> Void, stopLiveLocation: @escaping () -> Void, present: @escaping (ViewController) -> Void) {
+    init(toggleMapModeSelection: @escaping () -> Void, updateMapMode: @escaping (LocationMapMode) -> Void, toggleTrackingMode: @escaping () -> Void, goToCoordinate: @escaping (CLLocationCoordinate2D) -> Void, requestDirections: @escaping (IosappMediaMap, String?, OpenInLocationDirections) -> Void, share: @escaping () -> Void, setupProximityNotification: @escaping (Bool, EngineMessage.Id?) -> Void, sendLiveLocation: @escaping (Int32?, Bool, EngineMessage.Id?) -> Void, stopLiveLocation: @escaping () -> Void, present: @escaping (ViewController) -> Void) {
         self.toggleMapModeSelection = toggleMapModeSelection
         self.updateMapMode = updateMapMode
         self.toggleTrackingMode = toggleTrackingMode
@@ -246,7 +246,7 @@ public final class LocationViewController: ViewController {
                     }
                     strongSelf.controllerNode.setProximityIndicator(radius: 0)
                     
-                    let _ = (strongSelf.context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: strongSelf.subject.id.peerId))
+                    let _ = (strongSelf.context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: strongSelf.subject.id.peerId))
                     |> mapToSignal { peer -> Signal<EnginePeer, NoError> in
                         if let peer {
                             return .single(peer)
@@ -350,10 +350,10 @@ public final class LocationViewController: ViewController {
                 if let distance = distance {
                     let _ = (strongSelf.controllerNode.coordinate
                     |> deliverOnMainQueue).start(next: { coordinate in
-                        params.sendLiveLocation(TelegramMediaMap(coordinate: coordinate, liveBroadcastingTimeout: 30 * 60, proximityNotificationRadius: distance))
+                        params.sendLiveLocation(IosappMediaMap(coordinate: coordinate, liveBroadcastingTimeout: 30 * 60, proximityNotificationRadius: distance))
                     })
                     
-                    let _ = (strongSelf.context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: strongSelf.subject.id.peerId))
+                    let _ = (strongSelf.context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: strongSelf.subject.id.peerId))
                     |> mapToSignal { peer -> Signal<EnginePeer, NoError> in
                         if let peer {
                             return .single(peer)
@@ -397,7 +397,7 @@ public final class LocationViewController: ViewController {
                         )
                     })
                 } else {
-                    let _  = (context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: subject.id.peerId))
+                    let _  = (context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: subject.id.peerId))
                     |> mapToSignal { peer -> Signal<EnginePeer, NoError> in
                         if let peer {
                             return .single(peer)
@@ -433,7 +433,7 @@ public final class LocationViewController: ViewController {
                                 } else {
                                     let _ = (strongSelf.controllerNode.coordinate
                                     |> deliverOnMainQueue).start(next: { coordinate in
-                                        params.sendLiveLocation(TelegramMediaMap(coordinate: coordinate, liveBroadcastingTimeout: period))
+                                        params.sendLiveLocation(IosappMediaMap(coordinate: coordinate, liveBroadcastingTimeout: period))
                                     })
                                     
                                     strongSelf.controllerNode.showAll()

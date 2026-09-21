@@ -3,9 +3,9 @@ import UIKit
 import Display
 import AsyncDisplayKit
 import SwiftSignalKit
-import TelegramCore
+import IosappCore
 import MessageUI
-import TelegramPresentationData
+import IosappPresentationData
 import AccountContext
 import ShareController
 import AlertUI
@@ -127,7 +127,7 @@ public class InviteContactsController: ViewController, MFMessageComposeViewContr
             self?.activateSearch()
         }
         
-        self.contactsNode.requestShareTelegram = { [weak self] in
+        self.contactsNode.requestShareIosapp = { [weak self] in
             if let strongSelf = self {
                 let url = strongSelf.presentationData.strings.InviteText_URL
                 let body = strongSelf.presentationData.strings.InviteText_SingleContact(url).string

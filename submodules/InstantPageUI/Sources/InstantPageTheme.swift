@@ -1,8 +1,8 @@
 import Foundation
 import UIKit
 import Display
-import TelegramPresentationData
-import TelegramUIPreferences
+import IosappPresentationData
+import IosappUIPreferences
 
 public enum InstantPageFontStyle {
     case sans

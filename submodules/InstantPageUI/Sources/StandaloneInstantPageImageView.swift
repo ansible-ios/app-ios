@@ -3,8 +3,8 @@ import UIKit
 import AsyncDisplayKit
 import Display
 import AccountContext
-import TelegramCore
-import TelegramUIPreferences
+import IosappCore
+import IosappUIPreferences
 
 /// A self-contained, host-embeddable view that renders ONE standalone medium (image or video) via the
 /// (module-internal) `InstantPageImageNode`. Built for the rich-text composer, which needs to show a
@@ -17,7 +17,7 @@ public final class StandaloneInstantPageImageView: UIView {
     public init(context: AccountContext, media: EngineMedia, attributes: [InstantPageImageAttribute] = []) {
         // A synthetic, content-free webpage — the node only needs it for media-reference plumbing.
         // Precedent: ChatMessageRichDataBubbleContentNode.swift:371.
-        let webpage = TelegramMediaWebpage(webpageId: EngineMedia.Id(namespace: 0, id: 0), content: .Loaded(TelegramMediaWebpageLoadedContent(
+        let webpage = IosappMediaWebpage(webpageId: EngineMedia.Id(namespace: 0, id: 0), content: .Loaded(IosappMediaWebpageLoadedContent(
             url: "", displayUrl: "", hash: 0, type: nil, websiteName: nil, title: nil, text: nil,
             embedUrl: nil, embedType: nil, embedSize: nil, duration: nil, author: nil,
             isMediaLargeByDefault: nil, imageIsVideoCover: false, image: nil, file: nil, story: nil,

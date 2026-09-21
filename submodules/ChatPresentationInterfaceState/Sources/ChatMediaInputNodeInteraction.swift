@@ -1,6 +1,6 @@
 import Foundation
-import TelegramCore
-import TelegramUIPreferences
+import IosappCore
+import IosappUIPreferences
 
 public struct ChatInterfaceStickerSettings: Equatable {
     public init() {
@@ -36,7 +36,7 @@ public final class ChatMediaInputNodeInteraction {
     public var highlightedStickerEngineItemCollectionId: EngineItemCollectionId?
     public var highlightedEngineItemCollectionId: EngineItemCollectionId?
     public var highlightedGifMode: ChatMediaInputGifMode = .recent
-    public var previewedStickerPackItemFile: TelegramMediaFile?
+    public var previewedStickerPackItemFile: IosappMediaFile?
     public var appearanceTransition: CGFloat = 1.0
     public var displayStickerPlaceholder = true
     public var displayStickerPackManageControls = true

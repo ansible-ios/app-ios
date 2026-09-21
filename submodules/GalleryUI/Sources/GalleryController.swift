@@ -5,12 +5,12 @@ import QuickLook
 import Postbox
 import SwiftSignalKit
 import AsyncDisplayKit
-import TelegramCore
+import IosappCore
 import SafariServices
-import TelegramPresentationData
+import IosappPresentationData
 import TextFormat
 import AccountContext
-import TelegramUniversalVideoContent
+import IosappUniversalVideoContent
 import WebsiteType
 import OpenInExternalAppUI
 import ScreenCaptureDetection
@@ -21,9 +21,9 @@ private func tagsForMessage(_ message: Message) -> MessageTags? {
     //TODO:rewrite to take all media (effectiveMedia returns all rich-text media; we stop at the first)
     for media in message.effectiveMedia {
         switch media {
-        case _ as TelegramMediaImage:
+        case _ as IosappMediaImage:
             return .photoOrVideo
-        case let file as TelegramMediaFile:
+        case let file as IosappMediaFile:
             if file.isVideo {
                 if file.isAnimated {
                     return .gif
@@ -45,11 +45,11 @@ private func tagsForMessage(_ message: Message) -> MessageTags? {
 }
 
 private func galleryMediaForMedia(media: Media) -> Media? {
-     if let invoice = media as? TelegramMediaInvoice, let extendedMedia = invoice.extendedMedia, case let .full(fullMedia) = extendedMedia {
+     if let invoice = media as? IosappMediaInvoice, let extendedMedia = invoice.extendedMedia, case let .full(fullMedia) = extendedMedia {
         return fullMedia
-    } else if let media = media as? TelegramMediaImage {
+    } else if let media = media as? IosappMediaImage {
         return media
-    } else if let file = media as? TelegramMediaFile {
+    } else if let file = media as? IosappMediaFile {
         if file.mimeType.hasPrefix("audio/") {
             return nil
         } else if !file.isVideo && file.mimeType.hasPrefix("video/") {
@@ -61,19 +61,19 @@ private func galleryMediaForMedia(media: Media) -> Media? {
     return nil
 }
 
-func mediaForMessage(message: Message, mediaSubject: GalleryMediaSubject? = nil) -> [(Media, TelegramMediaImage?)] {
+func mediaForMessage(message: Message, mediaSubject: GalleryMediaSubject? = nil) -> [(Media, IosappMediaImage?)] {
     //TODO:rewrite to take all media (effectiveMedia returns all rich-text media; we return the first match)
     for media in message.effectiveMedia {
         if let result = galleryMediaForMedia(media: media) {
             return [(result, nil)]
-        } else if let poll = media as? TelegramMediaPoll {
+        } else if let poll = media as? IosappMediaPoll {
             switch mediaSubject {
             case .pollDescription:
                 if let attachedMedia = poll.attachedMedia, let result = galleryMediaForMedia(media: attachedMedia) {
                     return [(result, nil)]
                 }
             case .pollOption:
-                var results: [(Media, TelegramMediaImage?)] = []
+                var results: [(Media, IosappMediaImage?)] = []
                 for option in poll.options {
                     if let optionMedia = option.media, let result = galleryMediaForMedia(media: optionMedia) {
                         results.append((result, nil))
@@ -87,15 +87,15 @@ func mediaForMessage(message: Message, mediaSubject: GalleryMediaSubject? = nil)
             default:
                 break
             }
-        } else if let paidContent = media as? TelegramMediaPaidContent {
-            var results: [(Media, TelegramMediaImage?)] = []
+        } else if let paidContent = media as? IosappMediaPaidContent {
+            var results: [(Media, IosappMediaImage?)] = []
             for case let .full(fullMedia) in paidContent.extendedMedia {
                 if let result = galleryMediaForMedia(media: fullMedia) {
                     results.append((result, nil))
                 }
             }
             return results
-        } else if let webpage = media as? TelegramMediaWebpage {
+        } else if let webpage = media as? IosappMediaWebpage {
             switch webpage.content {
                 case let .Loaded(content):
                     if let embedUrl = content.embedUrl, !embedUrl.isEmpty {
@@ -128,7 +128,7 @@ func paidMediaIndexForSubject(_ mediaSubject: GalleryMediaSubject?) -> Int? {
     return index
 }
 
-func selectedMediaAndMediaImageForMessage(message: Message, mediaSubject: GalleryMediaSubject?) -> (Media, TelegramMediaImage?)? {
+func selectedMediaAndMediaImageForMessage(message: Message, mediaSubject: GalleryMediaSubject?) -> (Media, IosappMediaImage?)? {
     let messageMedia = mediaForMessage(message: message, mediaSubject: mediaSubject)
     switch mediaSubject {
     case let .paidMediaIndex(mediaIndex):
@@ -136,7 +136,7 @@ func selectedMediaAndMediaImageForMessage(message: Message, mediaSubject: Galler
             return messageMedia[mediaIndex]
         }
     case let .pollOption(opaqueIdentifier):
-        if let poll = message.media.first(where: { $0 is TelegramMediaPoll }) as? TelegramMediaPoll, let optionMedia = poll.options.first(where: { $0.opaqueIdentifier == opaqueIdentifier })?.media {
+        if let poll = message.media.first(where: { $0 is IosappMediaPoll }) as? IosappMediaPoll, let optionMedia = poll.options.first(where: { $0.opaqueIdentifier == opaqueIdentifier })?.media {
             return messageMedia.first(where: { $0.0.id == optionMedia.id })
         }
     default:
@@ -233,7 +233,7 @@ public func galleryCaptionStringWithAppliedEntities(context: AccountContext, tex
 
 func galleryMessageCaptionText(_ message: Message, mediaSubject: GalleryMediaSubject?) -> (String, [MessageTextEntity]) {
     for media in message.media {
-        if let poll = media as? TelegramMediaPoll, let mediaSubject {
+        if let poll = media as? IosappMediaPoll, let mediaSubject {
             switch mediaSubject {
             case .pollDescription:
                 break
@@ -249,7 +249,7 @@ func galleryMessageCaptionText(_ message: Message, mediaSubject: GalleryMediaSub
                 break
             }
         }
-        if let _ = media as? TelegramMediaWebpage {
+        if let _ = media as? IosappMediaWebpage {
             return ("", [])
         }
     }
@@ -278,7 +278,7 @@ public func galleryItemForEntry(
     performAction: @escaping (GalleryControllerInteractionTapAction) -> Void = { _ in },
     openActionOptions: @escaping (GalleryControllerInteractionTapAction, Message) -> Void = { _, _ in },
     storeMediaPlaybackState: @escaping (MessageId, Double?, Double) -> Void = { _, _, _ in },
-    generateStoreAfterDownload: ((Message, TelegramMediaFile) -> (() -> Void)?)? = nil,
+    generateStoreAfterDownload: ((Message, IosappMediaFile) -> (() -> Void)?)? = nil,
     sendSticker: ((FileMediaReference) -> Void)?,
     present: @escaping (ViewController, Any?) -> Void) -> GalleryItem?
 {
@@ -289,7 +289,7 @@ public func galleryItemForEntry(
         return nil
     }
     
-    if let image = media as? TelegramMediaImage {
+    if let image = media as? IosappMediaImage {
         if let file = image.video {
             let captureProtected = message.isCopyProtected() || message.containsSecretMedia || message.minAutoremoveOrClearTimeout == viewOnceTimeout || message.paidContent != nil || peerIsCopyProtected
             
@@ -345,7 +345,7 @@ public func galleryItemForEntry(
                 present: present
             )
         }
-    } else if let file = media as? TelegramMediaFile {
+    } else if let file = media as? IosappMediaFile {
         if file.isVideo {
             let content: UniversalVideoContent
             let captureProtected = message.isCopyProtected() || message.containsSecretMedia || message.minAutoremoveOrClearTimeout == viewOnceTimeout || message.paidContent != nil || peerIsCopyProtected
@@ -474,7 +474,7 @@ public func galleryItemForEntry(
                 )
             }
         }
-    } else if let webpage = media as? TelegramMediaWebpage, case let .Loaded(webpageContent) = webpage.content {
+    } else if let webpage = media as? IosappMediaWebpage, case let .Loaded(webpageContent) = webpage.content {
         var content: UniversalVideoContent?
         switch websiteType(of: webpageContent.websiteName) {
         case .instagram where webpageContent.file != nil && webpageContent.image != nil && webpageContent.file!.isVideo:
@@ -666,13 +666,13 @@ private func galleryEntriesForMessageHistoryEntries(_ entries: [MessageHistoryEn
                         results.append(GalleryEntry(entry: entry, mediaSubject: .paidMediaIndex(i), location: MessageHistoryEntryLocation(index: i, count: messageMedia.count)))
                     }
                 case .pollOption:
-                    if let poll = entry.message.media.first(where: { $0 is TelegramMediaPoll }) as? TelegramMediaPoll {
+                    if let poll = entry.message.media.first(where: { $0 is IosappMediaPoll }) as? IosappMediaPoll {
                         for option in poll.options {
                             if let optionMedia = option.media {
                                 var isGalleryMedia = false
-                                if optionMedia is TelegramMediaImage {
+                                if optionMedia is IosappMediaImage {
                                     isGalleryMedia = true
-                                } else if let file = optionMedia as? TelegramMediaFile, file.isVideo || file.mimeType.hasPrefix("image/") {
+                                } else if let file = optionMedia as? IosappMediaFile, file.isVideo || file.mimeType.hasPrefix("image/") {
                                     isGalleryMedia = true
                                 }
                                 if isGalleryMedia {
@@ -758,7 +758,7 @@ public class GalleryController: ViewController, StandalonePresentableController,
     
     private var screenCaptureEventsDisposable: Disposable?
     
-    private let generateStoreAfterDownload: ((Message, TelegramMediaFile) -> (() -> Void)?)?
+    private let generateStoreAfterDownload: ((Message, IosappMediaFile) -> (() -> Void)?)?
     
     public var centralItemUpdated: ((MessageId) -> Void)?
     public var onDidAppear: (() -> Void)?
@@ -781,7 +781,7 @@ public class GalleryController: ViewController, StandalonePresentableController,
         replaceRootController: @escaping (ViewController, Promise<Bool>?) -> Void,
         baseNavigationController: NavigationController?,
         actionInteraction: GalleryControllerActionInteraction? = nil,
-        generateStoreAfterDownload: ((Message, TelegramMediaFile) -> (() -> Void)?)? = nil
+        generateStoreAfterDownload: ((Message, IosappMediaFile) -> (() -> Void)?)? = nil
     ) {
         self.context = context
         self.source = source
@@ -848,9 +848,9 @@ public class GalleryController: ViewController, StandalonePresentableController,
                     guard let message = transaction.getMessage(messageId) else {
                         return nil
                     }
-                    if let peer = message.peers[message.id.peerId] as? TelegramGroup, let migrationPeerId = peer.migrationReference?.peerId, let migrationPeer = transaction.getPeer(migrationPeerId) {
+                    if let peer = message.peers[message.id.peerId] as? IosappGroup, let migrationPeerId = peer.migrationReference?.peerId, let migrationPeer = transaction.getPeer(migrationPeerId) {
                         return (message, migrationPeer.isCopyProtectionEnabled)
-                    } else if let peer = message.peers[message.id.peerId] as? TelegramUser, let cachedUserData = transaction.getPeerCachedData(peerId: peer.id) as? CachedUserData {
+                    } else if let peer = message.peers[message.id.peerId] as? IosappUser, let cachedUserData = transaction.getPeerCachedData(peerId: peer.id) as? CachedUserData {
                         return (message, cachedUserData.flags.contains(.copyProtectionEnabled) || cachedUserData.flags.contains(.myCopyProtectionEnabled))
                     }
                     return (message, false)
@@ -935,7 +935,7 @@ public class GalleryController: ViewController, StandalonePresentableController,
         var isFirstTime = true
         self.disposable.set(combineLatest(
             messageView,
-            self.context.engine.data.subscribe(TelegramEngine.EngineData.Item.Configuration.ApplicationSpecificPreference(key: PreferencesKeys.appConfiguration)) |> take(1),
+            self.context.engine.data.subscribe(IosappEngine.EngineData.Item.Configuration.ApplicationSpecificPreference(key: PreferencesKeys.appConfiguration)) |> take(1),
             translateToLanguage |> take(1)
         ).start(next: { [weak self] view, preferencesView, translateToLanguage in
             let f: () -> Void = {
@@ -1148,7 +1148,7 @@ public class GalleryController: ViewController, StandalonePresentableController,
                     case let .textMention(mention):
                         strongSelf.actionInteraction?.openPeerMention(mention)
                     case let .peerMention(peerId, _):
-                        let _ = (strongSelf.context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: peerId))
+                        let _ = (strongSelf.context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: peerId))
                         |> deliverOnMainQueue).start(next: { peer in
                             if let strongSelf = self, let peer = peer {
                                 strongSelf.actionInteraction?.openPeer(peer)
@@ -1262,7 +1262,7 @@ public class GalleryController: ViewController, StandalonePresentableController,
                             if let strongSelf = self {
                                 strongSelf.dismiss(forceAway: false)
                                 
-                                let _ = (strongSelf.context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: peerId))
+                                let _ = (strongSelf.context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: peerId))
                                 |> deliverOnMainQueue).start(next: { peer in
                                     if let strongSelf = self, let peer = peer {
                                         strongSelf.actionInteraction?.openPeer(peer)
@@ -1353,7 +1353,7 @@ public class GalleryController: ViewController, StandalonePresentableController,
                         strongSelf.present(actionSheet, in: .window(.root))
                     case let .timecode(timecode, text):
                         let isCopyLink: Bool
-                        if message.id.namespace == Namespaces.Message.Cloud, let _ = message.peers[message.id.peerId] as? TelegramChannel, !(message.media.first is TelegramMediaAction) {
+                        if message.id.namespace == Namespaces.Message.Cloud, let _ = message.peers[message.id.peerId] as? IosappChannel, !(message.media.first is IosappMediaAction) {
                             isCopyLink = true
                         } else {
                             isCopyLink = false
@@ -1371,7 +1371,7 @@ public class GalleryController: ViewController, StandalonePresentableController,
                             }),
                             ActionSheetButtonItem(title: isCopyLink ? strongSelf.presentationData.strings.Conversation_ContextMenuCopyLink : strongSelf.presentationData.strings.Conversation_LinkDialogCopy, color: .accent, action: { [weak actionSheet, weak self] in
                                 actionSheet?.dismissAnimated()
-                                if isCopyLink, let channel = message.peers[message.id.peerId] as? TelegramChannel {
+                                if isCopyLink, let channel = message.peers[message.id.peerId] as? IosappChannel {
                                     let _ = (context.engine.messages.exportMessageLink(peerId: message.id.peerId, messageId: message.id, isThread: false)
                                     |> map { result -> String? in
                                         return result

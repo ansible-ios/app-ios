@@ -5,7 +5,7 @@ import Display
 import SSignalKit
 import SwiftSignalKit
 import LegacyComponents
-import TelegramPresentationData
+import IosappPresentationData
 import Camera
 import DeviceModel
 import TooltipUI
@@ -708,7 +708,7 @@ open class LegacyController: ViewController, PresentableController {
         super.containerLayoutUpdated(layout, transition: transition)
         
         self.controllerNode.containerLayoutUpdated(layout, navigationBarHeight: self.navigationLayout(layout: layout).navigationFrame.maxY, transition: transition)
-        if let legacyTelegramController = self.legacyController as? TGViewController {
+        if let legacyIosappController = self.legacyController as? TGViewController {
             var duration: TimeInterval = 0.0
             if case let .animated(transitionDuration, _) = transition {
                 duration = transitionDuration
@@ -721,10 +721,10 @@ open class LegacyController: ViewController, PresentableController {
             
             let size = CGSize(width: layout.size.width - layout.intrinsicInsets.left - layout.intrinsicInsets.right, height: layout.size.height)
             
-            legacyTelegramController.intrinsicSize = size
-            legacyTelegramController._updateInset(for: orientation, force: false, notify: true)
+            legacyIosappController.intrinsicSize = size
+            legacyIosappController._updateInset(for: orientation, force: false, notify: true)
             if self.enableContainerLayoutUpdates {
-                legacyTelegramController.layoutController(for: size, duration: duration)
+                legacyIosappController.layoutController(for: size, duration: duration)
             }
         }
         let updatedSizeClass: UIUserInterfaceSizeClass

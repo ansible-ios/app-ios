@@ -2,8 +2,8 @@ import Foundation
 import UIKit
 import Vision
 import SwiftSignalKit
-import TelegramCore
-import TelegramUIPreferences
+import IosappCore
+import IosappUIPreferences
 import AccountContext
 
 private final class CachedImageRecognizedContent: Codable {
@@ -26,20 +26,20 @@ private final class CachedImageRecognizedContent: Codable {
     }
 }
 
-private func cachedImageRecognizedContent(engine: TelegramEngine, messageId: EngineMessage.Id) -> Signal<CachedImageRecognizedContent?, NoError> {
+private func cachedImageRecognizedContent(engine: IosappEngine, messageId: EngineMessage.Id) -> Signal<CachedImageRecognizedContent?, NoError> {
     let key = EngineDataBuffer(length: 20)
     key.setInt32(0, value: messageId.namespace)
     key.setInt32(4, value: messageId.peerId.namespace._internalGetInt32Value())
     key.setInt64(8, value: messageId.peerId.id._internalGetInt64Value())
     key.setInt32(16, value: messageId.id)
     
-    return engine.data.get(TelegramEngine.EngineData.Item.ItemCache.Item(collectionId: ApplicationSpecificItemCacheCollectionId.cachedImageRecognizedContent, id: key))
+    return engine.data.get(IosappEngine.EngineData.Item.ItemCache.Item(collectionId: ApplicationSpecificItemCacheCollectionId.cachedImageRecognizedContent, id: key))
     |> map { entry -> CachedImageRecognizedContent? in
         return entry?.get(CachedImageRecognizedContent.self)
     }
 }
 
-private func updateCachedImageRecognizedContent(engine: TelegramEngine, messageId: EngineMessage.Id, content: CachedImageRecognizedContent?) -> Signal<Never, NoError> {
+private func updateCachedImageRecognizedContent(engine: IosappEngine, messageId: EngineMessage.Id, content: CachedImageRecognizedContent?) -> Signal<Never, NoError> {
     let key = EngineDataBuffer(length: 20)
     key.setInt32(0, value: messageId.namespace)
     key.setInt32(4, value: messageId.peerId.namespace._internalGetInt32Value())

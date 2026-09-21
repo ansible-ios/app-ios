@@ -1,0 +1,48 @@
+include "PeerId.fbs";
+include "IosappMediaImageRepresentation.fbs";
+include "IosappChatAdminRights.fbs";
+include "IosappChatBannedRights.fbs";
+
+namespace IosappCore;
+
+table IosappGroupRole_Creator {
+    rank:string (id: 0);
+}
+
+table IosappGroupRole_Admin {
+    rights:IosappChatAdminRights (id: 0, required);
+    rank:string (id: 1);
+}
+
+table IosappGroupRole_Member {}
+
+union IosappGroupRole_Value {
+    IosappGroupRole_Creator,
+    IosappGroupRole_Admin,
+    IosappGroupRole_Member
+}
+
+table IosappGroupRole {
+    value:IosappGroupRole_Value (id: 1, required);
+}
+
+table IosappGroupToChannelMigrationReference {
+    peerId:int64 (id: 0);
+    accessHash:int64 (id: 1);
+}
+
+table IosappGroup {
+    id:PeerId (id: 0, required);
+    title:string (id: 1, required);
+    photo:[IosappMediaImageRepresentation] (id: 2, required);
+    participantCount:int32 (id: 3);
+    role:IosappGroupRole (id: 4, required);
+    membership:int32 (id: 5);
+    flags:int32 (id: 6);
+    defaultBannedRights:IosappChatBannedRights (id: 7);
+    migrationReference:IosappGroupToChannelMigrationReference (id: 8);
+    creationDate:int32 (id: 9);
+    version:int32 (id: 10);
+}
+
+root_type IosappGroup;

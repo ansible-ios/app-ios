@@ -2,8 +2,8 @@ import Foundation
 import UIKit
 import Display
 import SwiftSignalKit
-import TelegramCore
-import TelegramPresentationData
+import IosappCore
+import IosappPresentationData
 import AccountContext
 import SearchUI
 import NotificationPeerExceptionController

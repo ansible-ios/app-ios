@@ -2,10 +2,10 @@ import Foundation
 import UIKit
 import AsyncDisplayKit
 import Display
-import TelegramCore
+import IosappCore
 import Postbox
 import SwiftSignalKit
-import TelegramPresentationData
+import IosappPresentationData
 import AnimationUI
 import AppBundle
 import AccountContext
@@ -188,7 +188,7 @@ public enum AvatarNodeExplicitIcon {
 
 private enum AvatarNodeState: Equatable {
     case empty
-    case peerAvatar(EnginePeer.Id, PeerColor?, [String], TelegramMediaImageRepresentation?, AvatarNodeClipStyle, CGRect?)
+    case peerAvatar(EnginePeer.Id, PeerColor?, [String], IosappMediaImageRepresentation?, AvatarNodeClipStyle, CGRect?)
     case custom(letter: [String], explicitColorIndex: Int?, explicitIcon: AvatarNodeExplicitIcon?)
 }
 
@@ -222,7 +222,7 @@ public enum AvatarNodeIcon: Equatable {
 
 public enum AvatarNodeImageOverride: Equatable {
     case none
-    case image(TelegramMediaImageRepresentation)
+    case image(IosappMediaImageRepresentation)
     case savedMessagesIcon
     case repliesIcon
     case anonymousSavedMessagesIcon(isColored: Bool)
@@ -588,7 +588,7 @@ public final class AvatarNode: ASDisplayNode {
             cutoutRect: CGRect? = nil
         ) {
             var synchronousLoad = synchronousLoad
-            var representation: TelegramMediaImageRepresentation?
+            var representation: IosappMediaImageRepresentation?
             var icon = AvatarNodeIcon.none
             if let overrideImage = overrideImage {
                 switch overrideImage {
@@ -795,7 +795,7 @@ public final class AvatarNode: ASDisplayNode {
             cutoutRect: CGRect? = nil
         ) {
             var synchronousLoad = synchronousLoad
-            var representation: TelegramMediaImageRepresentation?
+            var representation: IosappMediaImageRepresentation?
             var icon = AvatarNodeIcon.none
             if let overrideImage = overrideImage {
                 switch overrideImage {

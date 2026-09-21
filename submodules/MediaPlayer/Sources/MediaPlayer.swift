@@ -3,8 +3,8 @@ import UIKit
 import SwiftSignalKit
 import Postbox
 import CoreMedia
-import TelegramCore
-import TelegramAudio
+import IosappCore
+import IosappAudio
 
 private let traceEvents = false
 

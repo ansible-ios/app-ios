@@ -3,11 +3,11 @@ import UIKit
 import Display
 import ComponentFlow
 import SwiftSignalKit
-import TelegramCore
+import IosappCore
 import Markdown
 import TextFormat
-import TelegramPresentationData
-import TelegramStringFormatting
+import IosappPresentationData
+import IosappStringFormatting
 import ViewControllerComponent
 import SheetComponent
 import BundleIconComponent

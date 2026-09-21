@@ -2,18 +2,18 @@ import Foundation
 import UIKit
 import AsyncDisplayKit
 import Display
-import TelegramCore
+import IosappCore
 import SwiftSignalKit
-import TelegramPresentationData
+import IosappPresentationData
 import TextFormat
 import AuthenticationServices
 import CodeInputView
 import PhoneNumberFormat
 import AnimatedStickerNode
-import TelegramAnimatedStickerNode
+import IosappAnimatedStickerNode
 import SolidRoundedButtonNode
 import AuthorizationUtils
-import TelegramStringFormatting
+import IosappStringFormatting
 import TextNodeWithEntities
 
 final class AuthorizationSequenceCodeEntryControllerNode: ASDisplayNode, UITextFieldDelegate {
@@ -548,10 +548,10 @@ final class AuthorizationSequenceCodeEntryControllerNode: ASDisplayNode, UITextF
                 self.titleNode.attributedText = NSAttributedString(string: self.strings.Login_EnterPhraseTitle, font: Font.semibold(28.0), textColor: self.theme.list.itemPrimaryTextColor)
                 textFieldPlaceholder = self.strings.Login_EnterPhrasePlaceholder
             default:
-                self.titleNode.attributedText = NSAttributedString(string: self.strings.Login_EnterCodeTelegramTitle, font: Font.semibold(28.0), textColor: self.theme.list.itemPrimaryTextColor)
+                self.titleNode.attributedText = NSAttributedString(string: self.strings.Login_EnterCodeIosappTitle, font: Font.semibold(28.0), textColor: self.theme.list.itemPrimaryTextColor)
             }
         } else {
-            self.titleNode.attributedText = NSAttributedString(string: self.strings.Login_EnterCodeTelegramTitle, font: Font.semibold(40.0), textColor: self.theme.list.itemPrimaryTextColor)
+            self.titleNode.attributedText = NSAttributedString(string: self.strings.Login_EnterCodeIosappTitle, font: Font.semibold(40.0), textColor: self.theme.list.itemPrimaryTextColor)
         }
         
         self.textField.textField.attributedPlaceholder = NSAttributedString(string: textFieldPlaceholder, font: Font.regular(20.0), textColor: self.theme.list.itemPlaceholderTextColor)

@@ -1,9 +1,9 @@
 import Foundation
 import UIKit
-import TelegramCore
+import IosappCore
 import AsyncDisplayKit
-import TelegramPresentationData
-import TelegramUIPreferences
+import IosappPresentationData
+import IosappUIPreferences
 import AccountContext
 import ContextUI
 
@@ -13,17 +13,17 @@ public final class InstantPageArticleItem: InstantPageItem {
     public let separatesTiles: Bool = false
     public let medias: [InstantPageMedia] = []
     let userLocation: MediaResourceUserLocation
-    let webPage: TelegramMediaWebpage
+    let webPage: IosappMediaWebpage
     
     let contentItems: [InstantPageItem]
     let contentSize: CGSize
-    let cover: TelegramMediaImage?
+    let cover: IosappMediaImage?
     let url: String
     let webpageId: EngineMedia.Id
     let rtl: Bool
     let hasRTL: Bool
     
-    init(frame: CGRect, userLocation: MediaResourceUserLocation, webPage: TelegramMediaWebpage, contentItems: [InstantPageItem], contentSize: CGSize, cover: TelegramMediaImage?, url: String, webpageId: EngineMedia.Id, rtl: Bool, hasRTL: Bool) {
+    init(frame: CGRect, userLocation: MediaResourceUserLocation, webPage: IosappMediaWebpage, contentItems: [InstantPageItem], contentSize: CGSize, cover: IosappMediaImage?, url: String, webpageId: EngineMedia.Id, rtl: Bool, hasRTL: Bool) {
         self.frame = frame
         self.userLocation = userLocation
         self.webPage = webPage
@@ -72,7 +72,7 @@ public final class InstantPageArticleItem: InstantPageItem {
     }
 }
 
-func layoutArticleItem(theme: InstantPageTheme, userLocation: MediaResourceUserLocation, webPage: TelegramMediaWebpage, title: NSAttributedString, description: NSAttributedString, cover: TelegramMediaImage?, url: String, webpageId: EngineMedia.Id, boundingWidth: CGFloat, rtl: Bool) -> InstantPageArticleItem {
+func layoutArticleItem(theme: InstantPageTheme, userLocation: MediaResourceUserLocation, webPage: IosappMediaWebpage, title: NSAttributedString, description: NSAttributedString, cover: IosappMediaImage?, url: String, webpageId: EngineMedia.Id, boundingWidth: CGFloat, rtl: Bool) -> InstantPageArticleItem {
     let inset: CGFloat = 17.0
     let imageSpacing: CGFloat = 10.0
     var sideInset = inset

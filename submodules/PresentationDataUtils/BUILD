@@ -12,14 +12,14 @@ swift_library(
     deps = [
         "//submodules/Display:Display",
         "//submodules/SSignalKit/SwiftSignalKit:SwiftSignalKit",
-        "//submodules/TelegramCore:TelegramCore",
+        "//submodules/IosappCore:IosappCore",
         "//submodules/AccountContext:AccountContext",
-        "//submodules/TelegramPresentationData:TelegramPresentationData",
+        "//submodules/IosappPresentationData:IosappPresentationData",
         "//submodules/AlertUI:AlertUI",
         "//submodules/ItemListUI:ItemListUI",
         "//submodules/SolidRoundedButtonNode:SolidRoundedButtonNode",
         "//submodules/OverlayStatusController:OverlayStatusController",
-        "//submodules/TelegramUI/Components/AlertComponent",
+        "//submodules/IosappUI/Components/AlertComponent",
     ],
     visibility = [
         "//visibility:public",

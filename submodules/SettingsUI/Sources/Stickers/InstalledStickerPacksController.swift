@@ -2,9 +2,9 @@ import Foundation
 import UIKit
 import Display
 import SwiftSignalKit
-import TelegramCore
-import TelegramPresentationData
-import TelegramUIPreferences
+import IosappCore
+import IosappPresentationData
+import IosappUIPreferences
 import ItemListUI
 import PresentationDataUtils
 import TextFormat
@@ -897,7 +897,7 @@ public func installedStickerPacksController(context: AccountContext, mode: Insta
         } |> deliverOnMainQueue).start()
     })
     let stickerPacks = Promise<[EngineRawItemCollectionInfoEntry]>()
-    stickerPacks.set(context.engine.data.subscribe(TelegramEngine.EngineData.Item.ItemCollections.InstalledPackInfos(namespace: namespaceForMode(mode))))
+    stickerPacks.set(context.engine.data.subscribe(IosappEngine.EngineData.Item.ItemCollections.InstalledPackInfos(namespace: namespaceForMode(mode))))
     let temporaryPackOrder = Promise<[EngineItemCollectionId]?>(nil)
     
     let featured = Promise<[FeaturedStickerPackItem]>()
@@ -909,8 +909,8 @@ public func installedStickerPacksController(context: AccountContext, mode: Insta
             featured.set(context.account.viewTracker.featuredStickerPacks())
             archivedPromise.set(.single(archivedPacks) |> then(context.engine.stickers.archivedStickerPacks() |> map(Optional.init)))
             quickReaction = combineLatest(
-                context.engine.data.subscribe(TelegramEngine.EngineData.Item.Peer.Peer(id: context.account.peerId)),
-                context.engine.data.subscribe(TelegramEngine.EngineData.Item.Configuration.ApplicationSpecificPreference(key: PreferencesKeys.reactionSettings))
+                context.engine.data.subscribe(IosappEngine.EngineData.Item.Peer.Peer(id: context.account.peerId)),
+                context.engine.data.subscribe(IosappEngine.EngineData.Item.Configuration.ApplicationSpecificPreference(key: PreferencesKeys.reactionSettings))
             )
             |> map { peer, preferencesView -> MessageReaction.Reaction? in
                 let reactionSettings: ReactionSettings
@@ -926,7 +926,7 @@ public func installedStickerPacksController(context: AccountContext, mode: Insta
                 return reactionSettings.effectiveQuickReaction(hasPremium: hasPremium)
             }
             |> distinctUntilChanged
-            emojiCount.set(context.engine.data.subscribe(TelegramEngine.EngineData.Item.ItemCollections.InstalledPackInfos(namespace: Namespaces.ItemCollection.CloudEmojiPacks))
+            emojiCount.set(context.engine.data.subscribe(IosappEngine.EngineData.Item.ItemCollections.InstalledPackInfos(namespace: Namespaces.ItemCollection.CloudEmojiPacks))
             |> map { entries in
                 return Int32(entries.count)
             })
@@ -1083,7 +1083,7 @@ public func installedStickerPacksController(context: AccountContext, mode: Insta
                             }
                         }
                     }
-                    let text = packNames.map { "https://t.me/addstickers/\($0)" }.joined(separator: "\n")
+                    let text = packNames.map { "https://asme.su/addstickers/\($0)" }.joined(separator: "\n")
                     let shareController = context.sharedContext.makeShareController(context: context, params: ShareControllerParams(subject: .text(text), externalShare: true))
                     presentControllerImpl?(shareController, nil)
                 })])
@@ -1315,7 +1315,7 @@ public func installedStickerPacksController(context: AccountContext, mode: Insta
         (controller?.navigationController as? NavigationController)?.pushViewController(c)
     }
     navigateToChatControllerImpl = { [weak controller] peerId in
-        let _ = (context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: peerId))
+        let _ = (context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: peerId))
         |> deliverOnMainQueue).start(next: { peer in
             guard let peer = peer else {
                 return

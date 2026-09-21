@@ -1,5 +1,5 @@
 import Foundation
-import TelegramCore
+import IosappCore
 
 public enum WebsiteType {
     case generic
@@ -23,7 +23,7 @@ public enum InstantPageType {
     case album
 }
 
-public func instantPageType(of webpage: TelegramMediaWebpageLoadedContent) -> InstantPageType {
+public func instantPageType(of webpage: IosappMediaWebpageLoadedContent) -> InstantPageType {
     if let type = webpage.type, type == "telegram_album" {
         return .album
     }
@@ -36,7 +36,7 @@ public func instantPageType(of webpage: TelegramMediaWebpageLoadedContent) -> In
     }
 }
 
-public func defaultWebpageImageSizeIsSmall(webpage: TelegramMediaWebpageLoadedContent) -> Bool {
+public func defaultWebpageImageSizeIsSmall(webpage: IosappMediaWebpageLoadedContent) -> Bool {
     let type = websiteType(of: webpage.websiteName)
     
     let mainMedia: EngineMedia?

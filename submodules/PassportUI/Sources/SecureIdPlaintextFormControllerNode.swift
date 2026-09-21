@@ -2,9 +2,9 @@ import Foundation
 import UIKit
 import AsyncDisplayKit
 import Display
-import TelegramCore
+import IosappCore
 import SwiftSignalKit
-import TelegramPresentationData
+import IosappPresentationData
 import AccountContext
 import AlertUI
 import PresentationDataUtils
@@ -558,11 +558,11 @@ public enum SecureIdPlaintextFormEntry: FormControllerEntry {
     public func item(params: SecureIdPlaintextFormParams, strings: PresentationStrings) -> FormControllerItem {
         switch self {
             case let .immediatelyAvailablePhone(value):
-                return FormControllerActionItem(type: .accent, title: strings.Passport_Phone_UseTelegramNumber(formatPhoneNumber(value)).string, activated: {
+                return FormControllerActionItem(type: .accent, title: strings.Passport_Phone_UseIosappNumber(formatPhoneNumber(value)).string, activated: {
                     params.usePhone(value)
                 })
             case .immediatelyAvailablePhoneInfo:
-                return FormControllerTextItem(text: strings.Passport_Phone_UseTelegramNumberHelp)
+                return FormControllerTextItem(text: strings.Passport_Phone_UseIosappNumberHelp)
             case .numberInputHeader:
                 return FormControllerHeaderItem(text: strings.Passport_Phone_EnterOtherNumber)
             case let .numberInput(countryCode, number):
@@ -591,11 +591,11 @@ public enum SecureIdPlaintextFormEntry: FormControllerEntry {
             case .numberVerifyInfo:
                 return FormControllerTextItem(text: strings.ChangePhoneNumberCode_Help)
             case let .immediatelyAvailableEmail(value):
-                return FormControllerActionItem(type: .accent, title: strings.Passport_Email_UseTelegramEmail(value).string, activated: {
+                return FormControllerActionItem(type: .accent, title: strings.Passport_Email_UseIosappEmail(value).string, activated: {
                     params.useEmailAddress(value)
                 })
             case .immediatelyAvailableEmailInfo:
-                return FormControllerTextItem(text: strings.Passport_Email_UseTelegramEmailHelp)
+                return FormControllerTextItem(text: strings.Passport_Email_UseIosappEmailHelp)
             case .emailInputHeader:
                 return FormControllerHeaderItem(text: strings.Passport_Email_EnterOtherEmail)
             case let .emailAddress(address):

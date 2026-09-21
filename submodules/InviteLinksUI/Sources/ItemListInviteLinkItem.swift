@@ -3,10 +3,10 @@ import UIKit
 import Display
 import AsyncDisplayKit
 import SwiftSignalKit
-import TelegramPresentationData
+import IosappPresentationData
 import ItemListUI
 import ShimmerEffect
-import TelegramCore
+import IosappCore
 import TextNodeWithEntities
 import AccountContext
 import TextFormat

@@ -11,7 +11,7 @@ swift_library(
     ],
     deps = [
         "//submodules/SSignalKit/SwiftSignalKit:SwiftSignalKit",
-        "//submodules/TelegramCore:TelegramCore",
+        "//submodules/IosappCore:IosappCore",
         "//submodules/ImageCompression:ImageCompression",
         "//submodules/PersistentStringHash:PersistentStringHash",
     ],

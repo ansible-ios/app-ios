@@ -1,8 +1,8 @@
 import Foundation
 import UIKit
 import SwiftSignalKit
-import TelegramCore
-import TelegramUIPreferences
+import IosappCore
+import IosappUIPreferences
 import AccountContext
 import MusicAlbumArtResources
 
@@ -20,7 +20,7 @@ struct InstantPageMediaPlaylistItemId: SharedMediaPlaylistItemId {
     }
 }
 
-private func extractFileMedia(_ item: InstantPageMedia) -> TelegramMediaFile? {
+private func extractFileMedia(_ item: InstantPageMedia) -> IosappMediaFile? {
     if case let .file(file) = item.media {
         return file
     } else {
@@ -29,19 +29,19 @@ private func extractFileMedia(_ item: InstantPageMedia) -> TelegramMediaFile? {
 }
 
 final class InstantPageMediaPlaylistItem: SharedMediaPlaylistItem {
-    let webPage: TelegramMediaWebpage
+    let webPage: IosappMediaWebpage
     let messageReference: MessageReference?
     let id: SharedMediaPlaylistItemId
     let item: InstantPageMedia
 
-    init(webPage: TelegramMediaWebpage, messageReference: MessageReference?, item: InstantPageMedia) {
+    init(webPage: IosappMediaWebpage, messageReference: MessageReference?, item: InstantPageMedia) {
         self.webPage = webPage
         self.messageReference = messageReference
         self.id = InstantPageMediaPlaylistItemId(index: item.index)
         self.item = item
     }
 
-    private func fileReference(_ file: TelegramMediaFile) -> FileMediaReference {
+    private func fileReference(_ file: IosappMediaFile) -> FileMediaReference {
         // Require a resolvable message id (mirrors the playlist-key fallback in
         // InstantPageV2MediaAudioView): a `.none`-content reference can't revalidate, so fall
         // back to the webpage reference in that case.
@@ -153,7 +153,7 @@ struct InstantPagePlaylistLocation: Equatable, SharedMediaPlaylistLocation {
 }
 
 public final class InstantPageMediaPlaylist: SharedMediaPlaylist {
-    private let webPage: TelegramMediaWebpage
+    private let webPage: IosappMediaWebpage
     private let messageReference: MessageReference?
     private let items: [InstantPageMedia]
     private let initialItemIndex: Int
@@ -176,7 +176,7 @@ public final class InstantPageMediaPlaylist: SharedMediaPlaylist {
         return self.stateValue.get()
     }
     
-    public init(playlistId: InstantPageMediaPlaylistId, webPage: TelegramMediaWebpage, messageReference: MessageReference?, items: [InstantPageMedia], initialItemIndex: Int) {
+    public init(playlistId: InstantPageMediaPlaylistId, webPage: IosappMediaWebpage, messageReference: MessageReference?, items: [InstantPageMedia], initialItemIndex: Int) {
         assert(Queue.mainQueue().isCurrent())
 
         self.id = playlistId

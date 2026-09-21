@@ -2,7 +2,7 @@ import Foundation
 import UIKit
 import AsyncDisplayKit
 import Display
-import TelegramPresentationData
+import IosappPresentationData
 import AppBundle
 
 private let templateLoupeIcon = UIImage(bundleImageName: "Components/Search Bar/Loupe")

@@ -2,8 +2,8 @@ import Foundation
 import UIKit
 import AsyncDisplayKit
 import Display
-import TelegramCore
-import TelegramPresentationData
+import IosappCore
+import IosappPresentationData
 
 public protocol InstantPageExternalMediaDimensionsNode: AnyObject {
     var updateExternalMediaDimensions: ((EngineMedia.Id, PixelDimensions) -> Void)? { get set }

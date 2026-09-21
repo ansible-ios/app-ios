@@ -1,9 +1,9 @@
 import Foundation
 import UIKit
 import AsyncDisplayKit
-import TelegramCore
+import IosappCore
 import SwiftSignalKit
-import TelegramAudio
+import IosappAudio
 import Display
 
 public enum CallAlreadyInProgressType {

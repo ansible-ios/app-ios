@@ -5,7 +5,7 @@ import Display
 import AsyncDisplayKit
 import AppBundle
 import GraphCore
-import TelegramPresentationData
+import IosappPresentationData
 
 public enum ChartType {
     case lines

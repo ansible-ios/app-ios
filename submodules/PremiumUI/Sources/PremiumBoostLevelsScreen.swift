@@ -2,11 +2,11 @@ import Foundation
 import UIKit
 import Display
 import AsyncDisplayKit
-import TelegramCore
+import IosappCore
 import SwiftSignalKit
 import AccountContext
-import TelegramPresentationData
-import TelegramUIPreferences
+import IosappPresentationData
+import IosappUIPreferences
 import PresentationDataUtils
 import ComponentFlow
 import ViewControllerComponent
@@ -310,7 +310,7 @@ private final class SheetContent: CombinedComponent {
             let textColor = theme.actionSheet.primaryTextColor
             let linkColor = theme.actionSheet.controlAccentColor
             let markdownAttributes = MarkdownAttributes(body: MarkdownAttributeSet(font: textFont, textColor: textColor), bold: MarkdownAttributeSet(font: boldTextFont, textColor: textColor), link: MarkdownAttributeSet(font: textFont, textColor: linkColor), linkAttribute: { contents in
-                return (TelegramTextAttributes.URL, contents)
+                return (IosappTextAttributes.URL, contents)
             })
             
             let gradientColors = [
@@ -880,7 +880,7 @@ private final class PremiumBoostLevelsSheetComponent: CombinedComponent {
                 peerIds.append(userId)
             }
             self.peerDisposable = (context.engine.data.get(
-                EngineDataMap(peerIds.map(TelegramEngine.EngineData.Item.Peer.Peer.init(id:)))
+                EngineDataMap(peerIds.map(IosappEngine.EngineData.Item.Peer.Peer.init(id:)))
             ) |> deliverOnMainQueue).startStrict(next: { [weak self] peers in
                 guard let self else {
                     return
@@ -1099,7 +1099,7 @@ private final class PremiumBoostLevelsSheetComponent: CombinedComponent {
                             )
                             controller.present(alertController, in: .window(.root))
                         } else {
-                            let _ = (context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: peerId))
+                            let _ = (context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: peerId))
                             |> deliverOnMainQueue).start(next: { [weak controller] peer in
                                 guard let peer, let controller else {
                                     return
@@ -1136,7 +1136,7 @@ private final class PremiumBoostLevelsSheetComponent: CombinedComponent {
                         if !canBoostAgain {
                             controller.dismissAnimated()
                         } else {
-                            let _ = (context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: peerId))
+                            let _ = (context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: peerId))
                             |> deliverOnMainQueue).start(next: { [weak controller] peer in
                                 guard let peer, let controller else {
                                     return

@@ -11,7 +11,7 @@ swift_library(
     ],
     deps = [
     	"//submodules/Display:Display",
-    	"//submodules/TelegramCore:TelegramCore",
+    	"//submodules/IosappCore:IosappCore",
     	"//submodules/TextFormat:TextFormat",
     ],
     visibility = [

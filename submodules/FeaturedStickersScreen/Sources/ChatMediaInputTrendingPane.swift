@@ -2,9 +2,9 @@ import Foundation
 import UIKit
 import AsyncDisplayKit
 import Display
-import TelegramCore
+import IosappCore
 import SwiftSignalKit
-import TelegramPresentationData
+import IosappPresentationData
 import MergeLists
 import OverlayStatusController
 import AccountContext
@@ -453,7 +453,7 @@ public final class ChatMediaInputTrendingPane: ChatMediaInputPane {
         let previousEntries = Atomic<[TrendingPaneEntry]?>(value: nil)
         let context = self.context
         let forceTheme = self.forceTheme
-        self.disposable = (combineLatest(context.account.viewTracker.featuredStickerPacks(), context.engine.data.subscribe(TelegramEngine.EngineData.Item.ItemCollections.InstalledPackInfos(namespace: Namespaces.ItemCollection.CloudStickerPacks)), context.sharedContext.presentationData)
+        self.disposable = (combineLatest(context.account.viewTracker.featuredStickerPacks(), context.engine.data.subscribe(IosappEngine.EngineData.Item.ItemCollections.InstalledPackInfos(namespace: Namespaces.ItemCollection.CloudStickerPacks)), context.sharedContext.presentationData)
         |> map { trendingEntries, packsEntries, presentationData -> TrendingPaneTransition in
             var presentationData = presentationData
             if let forceTheme {

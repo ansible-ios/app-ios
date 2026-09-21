@@ -3,17 +3,17 @@ import UIKit
 import AsyncDisplayKit
 import Display
 import SwiftSignalKit
-import TelegramCore
+import IosappCore
 import AccountContext
-import TelegramPresentationData
+import IosappPresentationData
 import PhotoResources
 import PeerAvatarGalleryUI
-import TelegramStringFormatting
-import TelegramUniversalVideoContent
+import IosappStringFormatting
+import IosappUniversalVideoContent
 import GalleryUI
 import UniversalMediaPlayer
 import RadialStatusNode
-import TelegramUIPreferences
+import IosappUIPreferences
 import AvatarNode
 import AvatarVideoNode
 import ComponentFlow
@@ -95,7 +95,7 @@ private struct CustomListItemResourceId {
 public enum PeerInfoAvatarListItem: Equatable {
     case custom(ASDisplayNode)
     case topImage([ImageRepresentationWithReference], [VideoRepresentationWithReference], Data?)
-    case image(TelegramMediaImageReference?, [ImageRepresentationWithReference], [VideoRepresentationWithReference], Data?, Bool, TelegramMediaImage.EmojiMarkup?)
+    case image(IosappMediaImageReference?, [ImageRepresentationWithReference], [VideoRepresentationWithReference], Data?, Bool, IosappMediaImage.EmojiMarkup?)
     
     var id: EngineMediaResource.Id {
         switch self {
@@ -184,7 +184,7 @@ public enum PeerInfoAvatarListItem: Equatable {
         }
     }
     
-    var emojiMarkup: TelegramMediaImage.EmojiMarkup? {
+    var emojiMarkup: IosappMediaImage.EmojiMarkup? {
         switch self {
             case let .image(_, _, _, _, _, emojiMarkup):
                 return emojiMarkup
@@ -475,7 +475,7 @@ public final class PeerInfoAvatarListItemNode: ASDisplayNode {
         let videoRepresentations: [VideoRepresentationWithReference]
         let immediateThumbnailData: Data?
         var id: Int64
-        let markup: TelegramMediaImage.EmojiMarkup?
+        let markup: IosappMediaImage.EmojiMarkup?
         switch item {
         case let .custom(node):
             representations = []
@@ -535,7 +535,7 @@ public final class PeerInfoAvatarListItemNode: ASDisplayNode {
                 self.isReady.set(.single(true))
             }
         } else if let video = videoRepresentations.last, let peerReference = PeerReference(self.peer) {
-            let videoFileReference = FileMediaReference.avatarList(peer: peerReference, media: TelegramMediaFile(fileId: EngineMedia.Id(namespace: Namespaces.Media.LocalFile, id: 0), partialReference: nil, resource: video.representation.resource, previewRepresentations: representations.map { $0.representation }, videoThumbnails: [], immediateThumbnailData: immediateThumbnailData, mimeType: "video/mp4", size: nil, attributes: [.Animated, .Video(duration: 0, size: video.representation.dimensions, flags: [], preloadSize: nil, coverTime: nil, videoCodec: nil)], alternativeRepresentations: []))
+            let videoFileReference = FileMediaReference.avatarList(peer: peerReference, media: IosappMediaFile(fileId: EngineMedia.Id(namespace: Namespaces.Media.LocalFile, id: 0), partialReference: nil, resource: video.representation.resource, previewRepresentations: representations.map { $0.representation }, videoThumbnails: [], immediateThumbnailData: immediateThumbnailData, mimeType: "video/mp4", size: nil, attributes: [.Animated, .Video(duration: 0, size: video.representation.dimensions, flags: [], preloadSize: nil, coverTime: nil, videoCodec: nil)], alternativeRepresentations: []))
             let videoContent = NativeVideoContent(id: .profileVideo(id, nil), userLocation: .other, fileReference: videoFileReference, streamVideo: isMediaStreamable(resource: video.representation.resource) ? .conservative : .none, loopVideo: true, enableSound: false, fetchAutomatically: true, onlyFullSizeThumbnail: fullSizeOnly, useLargeThumbnail: true, autoFetchFullSizeThumbnail: true, startTimestamp: video.representation.startTimestamp, continuePlayingWithoutSoundOnLostAudioSession: false, placeholderColor: .clear, storeAfterDownload: nil)
             
             if videoContent.id != self.videoContent?.id {
@@ -1443,7 +1443,7 @@ public final class PeerInfoAvatarListContainerNode: ASDisplayNode {
     }
     
     private var additionalEntryProgress: Signal<Float?, NoError>? = nil
-    public func update(size: CGSize, peer: EnginePeer?, customNode: ASDisplayNode? = nil, additionalEntry: Signal<(TelegramMediaImageRepresentation, Float)?, NoError> = .single(nil), isExpanded: Bool, transition: ContainedViewLayoutTransition) {
+    public func update(size: CGSize, peer: EnginePeer?, customNode: ASDisplayNode? = nil, additionalEntry: Signal<(IosappMediaImageRepresentation, Float)?, NoError> = .single(nil), isExpanded: Bool, transition: ContainedViewLayoutTransition) {
         self.validLayout = size
         let previousExpanded = self.isExpanded
         self.isExpanded = isExpanded

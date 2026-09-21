@@ -1,5 +1,5 @@
 import Foundation
-import TelegramCore
+import IosappCore
 import SwiftSignalKit
 import AccountContext
 import StringTransliteration
@@ -15,7 +15,7 @@ public func searchPeerMembers(context: AccountContext, peerId: EnginePeer.Id, ch
     
     if peerId.namespace == Namespaces.Peer.CloudChannel {
         return context.engine.data.get(
-            TelegramEngine.EngineData.Item.Peer.ParticipantCount(id: peerId)
+            IosappEngine.EngineData.Item.Peer.ParticipantCount(id: peerId)
         )
         |> mapToSignal { participantCount -> Signal<([EnginePeer], Bool), NoError> in
             if case .peer = chatLocation, let memberCount = participantCount, memberCount <= 64 {
@@ -95,7 +95,7 @@ public func searchPeerMembers(context: AccountContext, peerId: EnginePeer.Id, ch
                 return .single(result)
             case .memberSuggestion:
                 return context.engine.data.get(
-                    TelegramEngine.EngineData.Item.Peer.Peer(id: peerId)
+                    IosappEngine.EngineData.Item.Peer.Peer(id: peerId)
                 )
                 |> map { peer -> [EnginePeer] in
                     var result = result

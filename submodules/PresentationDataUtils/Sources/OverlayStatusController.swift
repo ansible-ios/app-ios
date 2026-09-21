@@ -1,7 +1,7 @@
 import Foundation
 import UIKit
 import OverlayStatusController
-import TelegramPresentationData
+import IosappPresentationData
 import Display
 
 public func OverlayStatusController(theme: PresentationTheme, type: OverlayStatusControllerType) -> ViewController {

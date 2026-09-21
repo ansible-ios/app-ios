@@ -4,15 +4,15 @@ import AsyncDisplayKit
 import AVFoundation
 import Display
 import SwiftSignalKit
-import TelegramCore
+import IosappCore
 import AnimatedStickerNode
-import TelegramAnimatedStickerNode
+import IosappAnimatedStickerNode
 import StickerResources
 import AccountContext
 import MediaEditor
 import UniversalMediaPlayer
-import TelegramPresentationData
-import TelegramUniversalVideoContent
+import IosappPresentationData
+import IosappUniversalVideoContent
 import DustEffect
 import DynamicCornerRadiusView
 
@@ -116,7 +116,7 @@ public class DrawingStickerEntityView: DrawingEntityView {
         self.progressDisposable.dispose()
     }
     
-    private var file: TelegramMediaFile? {
+    private var file: IosappMediaFile? {
         if case let .file(file, _) = self.stickerEntity.content {
             return file.media
         } else {
@@ -149,7 +149,7 @@ public class DrawingStickerEntityView: DrawingEntityView {
         }
     }
     
-    private var video: TelegramMediaFile? {
+    private var video: IosappMediaFile? {
         if case let .video(file) = self.stickerEntity.content {
             return file
         } else {
@@ -303,7 +303,7 @@ public class DrawingStickerEntityView: DrawingEntityView {
                 self.setupWithImage(image, overlayImage: self.stickerEntity.overlayRenderImage)
             }
             
-            var file: TelegramMediaFile?
+            var file: IosappMediaFile?
             for attribute in gift.attributes {
                 if case let .model(_, fileValue, _, _) = attribute {
                     file = fileValue
@@ -371,7 +371,7 @@ public class DrawingStickerEntityView: DrawingEntityView {
         self.setNeedsLayout()
     }
     
-    private func setupWithVideo(_ file: TelegramMediaFile) {
+    private func setupWithVideo(_ file: IosappMediaFile) {
         let videoNode = UniversalVideoNode(
             context: self.context,
             postbox: self.context.account.postbox,
@@ -461,7 +461,7 @@ public class DrawingStickerEntityView: DrawingEntityView {
         if self.isPlaying != isPlaying {
             self.isPlaying = isPlaying
             
-            var file: TelegramMediaFile?
+            var file: IosappMediaFile?
             if let fileValue = self.file {
                 file = fileValue
             } else if case let .gift(gift, _) = self.stickerEntity.content {
@@ -885,7 +885,7 @@ public class DrawingStickerEntityView: DrawingEntityView {
                 return entities
             }
         } else if case let .gift(gift, _) = self.stickerEntity.content {
-            var file: TelegramMediaFile?
+            var file: IosappMediaFile?
             for attribute in gift.attributes {
                 if case let .model(_, fileValue, _, _) = attribute {
                     file = fileValue

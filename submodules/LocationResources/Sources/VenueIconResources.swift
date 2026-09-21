@@ -1,7 +1,7 @@
 import Foundation
 import UIKit
 import Display
-import TelegramCore
+import IosappCore
 import SwiftSignalKit
 import AppBundle
 import PersistentStringHash
@@ -34,7 +34,7 @@ public class VenueIconResource {
     }
 }
 
-private func fetchVenueIconResource(engine: TelegramEngine, resource: VenueIconResource) -> Signal<EngineMediaResource.Fetch.Result, EngineMediaResource.Fetch.Error> {
+private func fetchVenueIconResource(engine: IosappEngine, resource: VenueIconResource) -> Signal<EngineMediaResource.Fetch.Result, EngineMediaResource.Fetch.Error> {
     return Signal { subscriber in
         let url = "https://ss3.4sqi.net/img/categories_v2/\(resource.type)_88.png"
         
@@ -48,7 +48,7 @@ private func fetchVenueIconResource(engine: TelegramEngine, resource: VenueIconR
     }
 }
 
-private func venueIconData(engine: TelegramEngine, resource: VenueIconResource) -> Signal<Data?, NoError> {
+private func venueIconData(engine: IosappEngine, resource: VenueIconResource) -> Signal<Data?, NoError> {
     let resourceData = engine.resources.custom(
         id: resource.id.stringRepresentation,
         fetch: EngineMediaResource.Fetch {
@@ -134,7 +134,7 @@ public struct VenueIconArguments: TransformImageCustomArguments {
     }
 }
 
-public func venueIcon(engine: TelegramEngine, type: String, flag: String? = nil, background: Bool) -> Signal<(TransformImageArguments) -> DrawingContext?, NoError> {
+public func venueIcon(engine: IosappEngine, type: String, flag: String? = nil, background: Bool) -> Signal<(TransformImageArguments) -> DrawingContext?, NoError> {
     let isBuiltinIcon = ["", "home", "work"].contains(type) || flag != nil
     let data: Signal<Data?, NoError> = isBuiltinIcon ? .single(nil) : venueIconData(engine: engine, resource: VenueIconResource(type: type))
     return data |> map { data in

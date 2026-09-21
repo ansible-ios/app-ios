@@ -3,12 +3,12 @@ import UIKit
 import Display
 import AsyncDisplayKit
 import SwiftSignalKit
-import TelegramCore
-import TelegramPresentationData
-import TelegramUIPreferences
+import IosappCore
+import IosappPresentationData
+import IosappUIPreferences
 import AccountContext
 import LocalAuth
-import TelegramStringFormatting
+import IosappStringFormatting
 
 public final class PasscodeEntryControllerPresentationArguments {
     let animated: Bool
@@ -36,8 +36,8 @@ public final class PasscodeEntryController: ViewController {
         return self.displayNode as! PasscodeEntryControllerNode
     }
     
-    private let applicationBindings: TelegramApplicationBindings
-    private let accountManager: AccountManager<TelegramAccountManagerTypes>
+    private let applicationBindings: IosappApplicationBindings
+    private let accountManager: AccountManager<IosappAccountManagerTypes>
     private var energyUsageSettings: EnergyUsageSettings?
     private let appLockContext: AppLockContext
     private let presentationDataSignal: Signal<PresentationData, NoError>
@@ -59,7 +59,7 @@ public final class PasscodeEntryController: ViewController {
     private var inBackground: Bool = false
     private var inBackgroundDisposable: Disposable?
     
-    public init(applicationBindings: TelegramApplicationBindings, accountManager: AccountManager<TelegramAccountManagerTypes>, appLockContext: AppLockContext, presentationData: PresentationData, presentationDataSignal: Signal<PresentationData, NoError>, statusBarHost: StatusBarHost?, challengeData: PostboxAccessChallengeData, biometrics: PasscodeEntryControllerBiometricsMode, arguments: PasscodeEntryControllerPresentationArguments) {
+    public init(applicationBindings: IosappApplicationBindings, accountManager: AccountManager<IosappAccountManagerTypes>, appLockContext: AppLockContext, presentationData: PresentationData, presentationDataSignal: Signal<PresentationData, NoError>, statusBarHost: StatusBarHost?, challengeData: PostboxAccessChallengeData, biometrics: PasscodeEntryControllerBiometricsMode, arguments: PasscodeEntryControllerPresentationArguments) {
         self.applicationBindings = applicationBindings
         self.accountManager = accountManager
         self.appLockContext = appLockContext

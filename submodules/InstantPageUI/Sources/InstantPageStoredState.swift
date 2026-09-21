@@ -1,8 +1,8 @@
 import Foundation
 import UIKit
 import SwiftSignalKit
-import TelegramCore
-import TelegramUIPreferences
+import IosappCore
+import IosappUIPreferences
 
 public final class InstantPageStoredDetailsState: Codable {
     public let index: Int32
@@ -56,17 +56,17 @@ public final class InstantPageStoredState: Codable {
     }
 }
 
-public func instantPageStoredState(engine: TelegramEngine, webPage: TelegramMediaWebpage) -> Signal<InstantPageStoredState?, NoError> {
+public func instantPageStoredState(engine: IosappEngine, webPage: IosappMediaWebpage) -> Signal<InstantPageStoredState?, NoError> {
     let key = EngineDataBuffer(length: 8)
     key.setInt64(0, value: webPage.webpageId.id)
     
-    return engine.data.get(TelegramEngine.EngineData.Item.ItemCache.Item(collectionId: ApplicationSpecificItemCacheCollectionId.instantPageStoredState, id: key))
+    return engine.data.get(IosappEngine.EngineData.Item.ItemCache.Item(collectionId: ApplicationSpecificItemCacheCollectionId.instantPageStoredState, id: key))
     |> map { entry -> InstantPageStoredState? in
         return entry?.get(InstantPageStoredState.self)
     }
 }
 
-public func updateInstantPageStoredStateInteractively(engine: TelegramEngine, webPage: TelegramMediaWebpage, state: InstantPageStoredState?) -> Signal<Never, NoError> {
+public func updateInstantPageStoredStateInteractively(engine: IosappEngine, webPage: IosappMediaWebpage, state: InstantPageStoredState?) -> Signal<Never, NoError> {
     let key = EngineDataBuffer(length: 8)
     key.setInt64(0, value: webPage.webpageId.id)
     

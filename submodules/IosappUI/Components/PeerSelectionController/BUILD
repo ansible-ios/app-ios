@@ -1,0 +1,46 @@
+load("@build_bazel_rules_swift//swift:swift.bzl", "swift_library")
+
+swift_library(
+    name = "PeerSelectionController",
+    module_name = "PeerSelectionController",
+    srcs = glob([
+        "Sources/**/*.swift",
+    ]),
+    copts = [
+        "-warnings-as-errors",
+    ],
+    deps = [
+        "//submodules/SSignalKit/SwiftSignalKit",
+        "//submodules/Display",
+        "//submodules/IosappCore",
+        "//submodules/IosappPresentationData",
+        "//submodules/ProgressNavigationButtonNode",
+        "//submodules/AccountContext",
+        "//submodules/SearchUI",
+        "//submodules/ChatListUI",
+        "//submodules/SearchBarNode",
+        "//submodules/ContactListUI",
+        "//submodules/IosappUI/Components/SegmentControlComponent",
+        "//submodules/AttachmentTextInputPanelNode",
+        "//submodules/ChatPresentationInterfaceState",
+        "//submodules/ChatSendMessageActionUI",
+        "//submodules/ChatTextLinkEditUI",
+        "//submodules/IosappUI/Components/AnimationCache",
+        "//submodules/IosappUI/Components/MultiAnimationRenderer",
+        "//submodules/AnimatedStickerNode",
+        "//submodules/IosappAnimatedStickerNode",
+        "//submodules/SolidRoundedButtonNode",
+        "//submodules/ContextUI",
+        "//submodules/TextFormat",
+        "//submodules/IosappUI/Components/Chat/ForwardAccessoryPanelNode",
+        "//submodules/CounterControllerTitleView",
+        "//submodules/IosappUI/Components/ChatList/ChatListFilterTabContainerNode",
+        "//submodules/ComponentFlow",
+        "//submodules/Components/ComponentDisplayAdapters",
+        "//submodules/IosappUI/Components/EdgeEffect",
+        "//submodules/UndoUI",
+    ],
+    visibility = [
+        "//visibility:public",
+    ],
+)

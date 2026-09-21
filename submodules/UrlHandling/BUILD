@@ -11,11 +11,11 @@ swift_library(
     ],
     deps = [
         "//submodules/SSignalKit/SwiftSignalKit:SwiftSignalKit",
-        "//submodules/TelegramCore:TelegramCore",
+        "//submodules/IosappCore:IosappCore",
         "//submodules/MtProtoKit:MtProtoKit",
         "//submodules/AccountContext:AccountContext",
-        "//submodules/TelegramUIPreferences:TelegramUIPreferences",
-        "//submodules/TelegramNotices:TelegramNotices",
+        "//submodules/IosappUIPreferences:IosappUIPreferences",
+        "//submodules/IosappNotices:IosappNotices",
     ],
     visibility = [
         "//visibility:public",

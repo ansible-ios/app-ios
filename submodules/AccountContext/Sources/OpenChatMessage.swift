@@ -1,11 +1,11 @@
 import Foundation
 import UIKit
-import TelegramCore
+import IosappCore
 import SwiftSignalKit
 import Display
 import AsyncDisplayKit
 import UniversalMediaPlayer
-import TelegramPresentationData
+import IosappPresentationData
 import TextFormat
 
 public enum ChatControllerInteractionOpenMessageMode {

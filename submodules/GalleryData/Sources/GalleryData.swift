@@ -1,12 +1,12 @@
 import Foundation
 import Display
 import AsyncDisplayKit
-import TelegramCore
+import IosappCore
 import SwiftSignalKit
 import PassKit
 import Lottie
-import TelegramUIPreferences
-import TelegramPresentationData
+import IosappUIPreferences
+import IosappPresentationData
 import AccountContext
 import InstantPageUI
 import PeerAvatarGalleryUI
@@ -17,16 +17,16 @@ import StoryContainerScreen
 
 public enum ChatMessageGalleryControllerData {
     case url(String)
-    case pass(TelegramMediaFile)
+    case pass(IosappMediaFile)
     case instantPage(InstantPageGalleryController, Int, EngineRawMedia)
-    case map(TelegramMediaMap)
-    case stickerPack(StickerPackReference, TelegramMediaFile?)
-    case audio(TelegramMediaFile)
-    case document(TelegramMediaFile, Bool)
+    case map(IosappMediaMap)
+    case stickerPack(StickerPackReference, IosappMediaFile?)
+    case audio(IosappMediaFile)
+    case document(IosappMediaFile, Bool)
     case gallery(Signal<GalleryController, NoError>)
     case secretGallery(SecretMediaPreviewController)
     case chatAvatars(AvatarGalleryController, EngineRawMedia)
-    case theme(TelegramMediaFile)
+    case theme(IosappMediaFile)
     case other(EngineRawMedia)
     case story(Signal<StoryContainerScreen, NoError>)
 }
@@ -114,8 +114,8 @@ public func chatMessageGalleryControllerData(
     
     var galleryMedia: EngineRawMedia?
     var otherMedia: EngineRawMedia?
-    var instantPageMedia: (TelegramMediaWebpage, [InstantPageGalleryEntry])?
-    if message.media.isEmpty, let entities = message.textEntitiesAttribute?.entities, entities.count == 1, let firstEntity = entities.first, case let .CustomEmoji(_, fileId) = firstEntity.type, let file = message.associatedMedia[EngineMedia.Id(namespace: Namespaces.Media.CloudFile, id: fileId)] as? TelegramMediaFile {
+    var instantPageMedia: (IosappMediaWebpage, [InstantPageGalleryEntry])?
+    if message.media.isEmpty, let entities = message.textEntitiesAttribute?.entities, entities.count == 1, let firstEntity = entities.first, case let .CustomEmoji(_, fileId) = firstEntity.type, let file = message.associatedMedia[EngineMedia.Id(namespace: Namespaces.Media.CloudFile, id: fileId)] as? IosappMediaFile {
         for attribute in file.attributes {
             if case let .CustomEmoji(_, _, _, reference) = attribute {
                 if let reference = reference {
@@ -126,16 +126,16 @@ public func chatMessageGalleryControllerData(
         }
     }
     for media in message.effectiveMedia {
-        if let poll = media as? TelegramMediaPoll {
+        if let poll = media as? IosappMediaPoll {
             standalone = true
             galleryMedia = poll
-        } else if let paidContent = media as? TelegramMediaPaidContent, let extendedMedia = paidContent.extendedMedia.first, case .full = extendedMedia {
+        } else if let paidContent = media as? IosappMediaPaidContent, let extendedMedia = paidContent.extendedMedia.first, case .full = extendedMedia {
             standalone = true
             galleryMedia = paidContent
-        } else if let invoice = media as? TelegramMediaInvoice, let extendedMedia = invoice.extendedMedia, case let .full(fullMedia) = extendedMedia {
+        } else if let invoice = media as? IosappMediaInvoice, let extendedMedia = invoice.extendedMedia, case let .full(fullMedia) = extendedMedia {
             standalone = true
             galleryMedia = fullMedia
-        } else if let action = media as? TelegramMediaAction {
+        } else if let action = media as? IosappMediaAction {
             switch action.action {
             case let .photoUpdated(image), let .suggestedProfilePhoto(image):
                 if let peer = messageMainPeer(EngineMessage(message)), let image = image {
@@ -159,11 +159,11 @@ public func chatMessageGalleryControllerData(
             default:
                 break
             }
-        } else if let file = media as? TelegramMediaFile {
+        } else if let file = media as? IosappMediaFile {
             galleryMedia = file
-        } else if let image = media as? TelegramMediaImage {
+        } else if let image = media as? IosappMediaImage {
             galleryMedia = image
-        } else if let webpage = media as? TelegramMediaWebpage, case let .Loaded(content) = webpage.content {
+        } else if let webpage = media as? IosappMediaWebpage, case let .Loaded(content) = webpage.content {
             if let file = content.file {
                 galleryMedia = file
             } else if let image = content.image {
@@ -195,9 +195,9 @@ public func chatMessageGalleryControllerData(
                     }
                 }
             }
-        } else if let mapMedia = media as? TelegramMediaMap {
+        } else if let mapMedia = media as? IosappMediaMap {
             galleryMedia = mapMedia
-        } else if let contactMedia = media as? TelegramMediaContact {
+        } else if let contactMedia = media as? IosappMediaContact {
             otherMedia = contactMedia
         }
     }
@@ -238,31 +238,31 @@ public func chatMessageGalleryControllerData(
         return .instantPage(gallery, centralIndex, galleryMedia)
     } else if let galleryMedia = galleryMedia {
         var galleryMedia = galleryMedia
-        if let poll = galleryMedia as? TelegramMediaPoll {
+        if let poll = galleryMedia as? IosappMediaPoll {
             if mediaSubject == nil || mediaSubject == .pollDescription, let attachedMedia = poll.attachedMedia {
-                if let file = attachedMedia as? TelegramMediaFile, file.isMusic {
+                if let file = attachedMedia as? IosappMediaFile, file.isMusic {
                     galleryMedia = file
-                } else if let map = attachedMedia as? TelegramMediaMap {
+                } else if let map = attachedMedia as? IosappMediaMap {
                     galleryMedia = map
                 }
             } else if case let .pollOption(opaqueIdentifier) = mediaSubject, let optionMedia = poll.options.first(where: { $0.opaqueIdentifier == opaqueIdentifier })?.media {
-                if let file = optionMedia as? TelegramMediaFile, file.isMusic {
+                if let file = optionMedia as? IosappMediaFile, file.isMusic {
                     galleryMedia = file
-                } else if let map = optionMedia as? TelegramMediaMap {
+                } else if let map = optionMedia as? IosappMediaMap {
                     galleryMedia = map
                 }
             } else if case .pollSolution = mediaSubject, let solutionMedia = poll.results.solution?.media {
-                if let file = solutionMedia as? TelegramMediaFile, file.isMusic {
+                if let file = solutionMedia as? IosappMediaFile, file.isMusic {
                     galleryMedia = file
-                } else if let map = solutionMedia as? TelegramMediaMap {
+                } else if let map = solutionMedia as? IosappMediaMap {
                     galleryMedia = map
                 }
             }
         }
         
-        if let mapMedia = galleryMedia as? TelegramMediaMap {
+        if let mapMedia = galleryMedia as? IosappMediaMap {
             return .map(mapMedia)
-        } else if let file = galleryMedia as? TelegramMediaFile, (file.isSticker || file.isAnimatedSticker) {
+        } else if let file = galleryMedia as? IosappMediaFile, (file.isSticker || file.isAnimatedSticker) {
             for attribute in file.attributes {
                 if case let .Sticker(_, reference, _) = attribute {
                     if let reference = reference {
@@ -271,14 +271,14 @@ public func chatMessageGalleryControllerData(
                     break
                 }
             }
-        } else if let file = galleryMedia as? TelegramMediaFile, file.isAnimatedSticker {
+        } else if let file = galleryMedia as? IosappMediaFile, file.isAnimatedSticker {
             return nil
-        } else if let file = galleryMedia as? TelegramMediaFile, file.isMusic || file.isVoice || file.isInstantVideo {
+        } else if let file = galleryMedia as? IosappMediaFile, file.isMusic || file.isVoice || file.isInstantVideo {
             return .audio(file)
-        } else if let file = galleryMedia as? TelegramMediaFile, file.mimeType == "application/vnd.apple.pkpass" || (file.fileName != nil && file.fileName!.lowercased().hasSuffix(".pkpass")) {
+        } else if let file = galleryMedia as? IosappMediaFile, file.mimeType == "application/vnd.apple.pkpass" || (file.fileName != nil && file.fileName!.lowercased().hasSuffix(".pkpass")) {
             return .pass(file)
         } else {
-            if let file = galleryMedia as? TelegramMediaFile {
+            if let file = galleryMedia as? IosappMediaFile {
                 if let fileName = file.fileName {
                     let ext = (fileName as NSString).pathExtension.lowercased()
                     if ext == "tgios-theme" {

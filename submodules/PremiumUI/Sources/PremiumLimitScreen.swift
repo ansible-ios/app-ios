@@ -2,10 +2,10 @@ import Foundation
 import UIKit
 import Display
 import AsyncDisplayKit
-import TelegramCore
+import IosappCore
 import SwiftSignalKit
 import AccountContext
-import TelegramPresentationData
+import IosappPresentationData
 import PresentationDataUtils
 import ComponentFlow
 import ViewControllerComponent
@@ -803,9 +803,9 @@ private final class LimitSheetContent: CombinedComponent {
             super.init()
             
             self.disposable = (context.engine.data.get(
-                TelegramEngine.EngineData.Item.Configuration.UserLimits(isPremium: false),
-                TelegramEngine.EngineData.Item.Configuration.UserLimits(isPremium: true),
-                TelegramEngine.EngineData.Item.Peer.Peer(id: context.account.peerId)
+                IosappEngine.EngineData.Item.Configuration.UserLimits(isPremium: false),
+                IosappEngine.EngineData.Item.Configuration.UserLimits(isPremium: true),
+                IosappEngine.EngineData.Item.Peer.Peer(id: context.account.peerId)
             ) |> deliverOnMainQueue).start(next: { [weak self] result in
                 if let strongSelf = self {
                     let (limits, premiumLimits, accountPeer) = result
@@ -1373,7 +1373,7 @@ private final class LimitSheetContent: CombinedComponent {
                 let textColor = theme.actionSheet.primaryTextColor
                 let linkColor = theme.actionSheet.controlAccentColor
                 let markdownAttributes = MarkdownAttributes(body: MarkdownAttributeSet(font: textFont, textColor: textColor), bold: MarkdownAttributeSet(font: boldTextFont, textColor: textColor), link: MarkdownAttributeSet(font: textFont, textColor: linkColor), linkAttribute: { contents in
-                    return (TelegramTextAttributes.URL, contents)
+                    return (IosappTextAttributes.URL, contents)
                 })
                 
                 var textChild: _UpdatedChildComponent?

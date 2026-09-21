@@ -50,7 +50,7 @@ swift_library(
         "//submodules/Display",
         "//submodules/MetalEngine",
         "//submodules/LottieCpp",
-        "//submodules/TelegramUI/Components/LottieMetal",
+        "//submodules/IosappUI/Components/LottieMetal",
         "//submodules/rlottie:RLottieBinding",
         "//Tests/LottieMetalTest/QOILoader",
         "//Tests/LottieMetalTest/SoftwareLottieRenderer",
@@ -102,7 +102,7 @@ plist_fragment(
     <key>CFBundleIdentifier</key>
     <string>ph.telegra.Telegraph</string>
     <key>CFBundleName</key>
-    <string>Telegram</string>
+    <string>Iosapp</string>
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleSignature</key>
@@ -192,7 +192,7 @@ ios_application(
     bundle_id = "ph.telegra.Telegraph",
     families = ["iphone", "ipad"],
     minimum_os_version = "12.0",
-    provisioning_profile = "@build_configuration//provisioning:Telegram.mobileprovision",
+    provisioning_profile = "@build_configuration//provisioning:Iosapp.mobileprovision",
     infoplists = [
         ":AppInfoPlist",
         ":BuildNumberInfoPlist",

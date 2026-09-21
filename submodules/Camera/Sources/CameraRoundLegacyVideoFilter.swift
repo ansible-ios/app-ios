@@ -6,7 +6,7 @@ import CoreMedia
 import CoreVideo
 import Metal
 import Display
-import TelegramCore
+import IosappCore
 
 final class CameraRoundLegacyVideoFilter {
     private let ciContext: CIContext

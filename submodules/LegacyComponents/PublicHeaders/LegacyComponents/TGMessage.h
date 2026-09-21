@@ -284,7 +284,7 @@ static inline TGMessageSortKey TGTaggedMessageSortKeyExtract(NSData *data, int32
 
 @interface NSTextCheckingResult (TGMessage)
 
-- (bool)isTelegramHiddenLink;
+- (bool)isIosappHiddenLink;
 
 @end
 

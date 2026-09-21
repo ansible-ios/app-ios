@@ -6,11 +6,11 @@ import SolidRoundedButtonNode
 import SwiftSignalKit
 import OverlayStatusController
 import AnimatedStickerNode
-import TelegramAnimatedStickerNode
+import IosappAnimatedStickerNode
 import AccountContext
-import TelegramPresentationData
+import IosappPresentationData
 import PresentationDataUtils
-import TelegramCore
+import IosappCore
 
 public enum TwoFactorAuthSplashMode {
     public struct Intro {
@@ -43,13 +43,13 @@ public enum TwoFactorAuthSplashMode {
 
 public final class TwoFactorAuthSplashScreen: ViewController {
     private let sharedContext: SharedAccountContext
-    private let engine: SomeTelegramEngine
+    private let engine: SomeIosappEngine
     private var presentationData: PresentationData
     private var mode: TwoFactorAuthSplashMode
     
     public var dismissConfirmation: ((@escaping () -> Void) -> Bool)?
     
-    public init(sharedContext: SharedAccountContext, engine: SomeTelegramEngine, mode: TwoFactorAuthSplashMode, presentation: ViewControllerNavigationPresentation = .modalInLargeLayout) {
+    public init(sharedContext: SharedAccountContext, engine: SomeIosappEngine, mode: TwoFactorAuthSplashMode, presentation: ViewControllerNavigationPresentation = .modalInLargeLayout) {
         self.sharedContext = sharedContext
         self.engine = engine
         self.mode = mode

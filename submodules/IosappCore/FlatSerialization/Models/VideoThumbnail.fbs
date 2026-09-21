@@ -1,0 +1,11 @@
+include "IosappMediaResource.fbs";
+
+namespace IosappCore;
+
+table VideoThumbnail {
+    width:int32 (id: 0);
+    height:int32 (id: 1);
+    resource:IosappMediaResource (id: 2, required);
+}
+
+root_type VideoThumbnail;

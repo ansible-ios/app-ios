@@ -4,8 +4,8 @@ import AsyncDisplayKit
 import Display
 import SwiftSignalKit
 import AccountContext
-import TelegramCore
-import TelegramPresentationData
+import IosappCore
+import IosappPresentationData
 
 /// A self-contained, host-embeddable view that renders ONE standalone audio file (music or voice) as a
 /// playable music/voice row, mirroring `StandaloneInstantPageImageView`. Built for the RichTextEditor,
@@ -18,7 +18,7 @@ import TelegramPresentationData
 public final class StandaloneInstantPageAudioView: UIView {
     private let audioNode: InstantPageV2AudioContentNode
 
-    public init(context: AccountContext, file: TelegramMediaFile, colorOverride: InstantPageAudioColorOverride? = nil) {
+    public init(context: AccountContext, file: IosappMediaFile, colorOverride: InstantPageAudioColorOverride? = nil) {
         let presentationData = context.sharedContext.currentPresentationData.with { $0 }
         // Authoring: always outgoing, no message reference. `colorOverride` (when the host supplies it) makes the
         // row track the editor's accent/text scheme instead of the outgoing-bubble palette (see the struct).
@@ -27,7 +27,7 @@ public final class StandaloneInstantPageAudioView: UIView {
         self.addSubview(self.audioNode.view)
 
         // A synthetic, content-free webpage — the playlist only needs it for media-reference plumbing.
-        let webpage = TelegramMediaWebpage(webpageId: EngineMedia.Id(namespace: 0, id: 0), content: .Loaded(TelegramMediaWebpageLoadedContent(
+        let webpage = IosappMediaWebpage(webpageId: EngineMedia.Id(namespace: 0, id: 0), content: .Loaded(IosappMediaWebpageLoadedContent(
             url: "", displayUrl: "", hash: 0, type: nil, websiteName: nil, title: nil, text: nil,
             embedUrl: nil, embedType: nil, embedSize: nil, duration: nil, author: nil,
             isMediaLargeByDefault: nil, imageIsVideoCover: false, image: nil, file: nil, story: nil,

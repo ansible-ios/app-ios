@@ -3,7 +3,7 @@ import UIKit
 import AsyncDisplayKit
 import Display
 import SwiftSignalKit
-import TelegramPresentationData
+import IosappPresentationData
 import AuthorizationUtils
 
 private func timerValueString(days: Int32, hours: Int32, minutes: Int32, color: UIColor, strings: PresentationStrings) -> NSAttributedString {

@@ -3,13 +3,13 @@ import UIKit
 import Display
 import AsyncDisplayKit
 import SwiftSignalKit
-import TelegramCore
-import TelegramPresentationData
-import TelegramUIPreferences
+import IosappCore
+import IosappPresentationData
+import IosappUIPreferences
 import ItemListUI
 import PresentationDataUtils
 import AvatarNode
-import TelegramStringFormatting
+import IosappStringFormatting
 import LocalizedPeerData
 import AccountContext
 import AppBundle
@@ -539,7 +539,7 @@ final class ItemListConnectedBotSessionItem: ListViewItem, ItemListItem {
     let systemStyle: ItemListSystemStyle
     let dateTimeFormat: PresentationDateTimeFormat
     let nameDisplayOrder: PresentationPersonNameOrder
-    let bot: TelegramAccountConnectedBot
+    let bot: IosappAccountConnectedBot
     let peer: EnginePeer?
     let enabled: Bool
     let sectionId: ItemListSectionId
@@ -551,7 +551,7 @@ final class ItemListConnectedBotSessionItem: ListViewItem, ItemListItem {
         systemStyle: ItemListSystemStyle,
         dateTimeFormat: PresentationDateTimeFormat,
         nameDisplayOrder: PresentationPersonNameOrder,
-        bot: TelegramAccountConnectedBot,
+        bot: IosappAccountConnectedBot,
         peer: EnginePeer?,
         enabled: Bool,
         sectionId: ItemListSectionId,

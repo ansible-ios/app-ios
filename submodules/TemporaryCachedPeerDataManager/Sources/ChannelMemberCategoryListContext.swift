@@ -1,5 +1,5 @@
 import Foundation
-import TelegramCore
+import IosappCore
 import Postbox
 import SwiftSignalKit
 
@@ -99,7 +99,7 @@ private extension CachedChannelAdminRank {
 }
 
 private final class ChannelMemberSingleCategoryListContext: ChannelMemberCategoryListContext {
-    private let engine: TelegramEngine
+    private let engine: IosappEngine
     private let postbox: Postbox
     private let network: Network
     private let accountPeerId: PeerId
@@ -150,7 +150,7 @@ private final class ChannelMemberSingleCategoryListContext: ChannelMemberCategor
     
     private var headUpdateTimer: SwiftSignalKit.Timer?
     
-    init(engine: TelegramEngine, postbox: Postbox, network: Network, accountPeerId: PeerId, peerId: PeerId, batchCount: Int32?, category: ChannelMemberListCategory) {
+    init(engine: IosappEngine, postbox: Postbox, network: Network, accountPeerId: PeerId, peerId: PeerId, batchCount: Int32?, category: ChannelMemberListCategory) {
         self.engine = engine
         self.postbox = postbox
         self.network = network
@@ -634,7 +634,7 @@ private final class ChannelMemberMultiCategoryListContext: ChannelMemberCategory
         }
     }
     
-    init(engine: TelegramEngine, postbox: Postbox, network: Network, accountPeerId: PeerId, peerId: PeerId, categories: [ChannelMemberListCategory]) {
+    init(engine: IosappEngine, postbox: Postbox, network: Network, accountPeerId: PeerId, peerId: PeerId, categories: [ChannelMemberListCategory]) {
         self.contexts = categories.map { category in
             return ChannelMemberSingleCategoryListContext(engine: engine, postbox: postbox, network: network, accountPeerId: accountPeerId, peerId: peerId, batchCount: nil, category: category)
         }
@@ -752,7 +752,7 @@ private final class PeerChannelMemberContextWithSubscribers {
 }
 
 final class PeerChannelMemberCategoriesContext {
-    private let engine: TelegramEngine
+    private let engine: IosappEngine
     private let postbox: Postbox
     private let network: Network
     private let accountPeerId: PeerId
@@ -762,7 +762,7 @@ final class PeerChannelMemberCategoriesContext {
     
     private var contexts: [PeerChannelMemberContextKey: PeerChannelMemberContextWithSubscribers] = [:]
     
-    init(engine: TelegramEngine, postbox: Postbox, network: Network, accountPeerId: PeerId, peerId: PeerId, batchCount: Int32?, becameEmpty: @escaping (Bool) -> Void) {
+    init(engine: IosappEngine, postbox: Postbox, network: Network, accountPeerId: PeerId, peerId: PeerId, batchCount: Int32?, becameEmpty: @escaping (Bool) -> Void) {
         self.engine = engine
         self.postbox = postbox
         self.network = network

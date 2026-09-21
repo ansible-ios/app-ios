@@ -3,13 +3,13 @@ import UIKit
 import AsyncDisplayKit
 import Display
 import LegacyComponents
-import TelegramCore
+import IosappCore
 import SwiftSignalKit
 import MergeLists
 import ItemListUI
 import ItemListVenueItem
-import TelegramPresentationData
-import TelegramStringFormatting
+import IosappPresentationData
+import IosappStringFormatting
 import AccountContext
 import AppBundle
 import CoreLocation
@@ -49,11 +49,11 @@ private extension MapGeoAddress {
 }
 
 private enum LocationPickerEntry: Comparable, Identifiable {
-    case city(PresentationTheme, String, String, TelegramMediaMap?, Int64?, String?, CLLocationCoordinate2D?, String?, MapGeoAddress?)
-    case location(PresentationTheme, String, String, TelegramMediaMap?, Int64?, String?, CLLocationCoordinate2D?, String?, MapGeoAddress?, Bool)
+    case city(PresentationTheme, String, String, IosappMediaMap?, Int64?, String?, CLLocationCoordinate2D?, String?, MapGeoAddress?)
+    case location(PresentationTheme, String, String, IosappMediaMap?, Int64?, String?, CLLocationCoordinate2D?, String?, MapGeoAddress?, Bool)
     case liveLocation(PresentationTheme, String, String, CLLocationCoordinate2D?)
     case header(PresentationTheme, String)
-    case venue(PresentationTheme, TelegramMediaMap?, Int64?, String?, Int)
+    case venue(PresentationTheme, IosappMediaMap?, Int64?, String?, Int)
     case attribution(PresentationTheme, LocationAttribution)
     
     var stableId: LocationPickerEntryId {
@@ -158,12 +158,12 @@ private enum LocationPickerEntry: Comparable, Identifiable {
         }
     }
     
-    func item(engine: TelegramEngine, presentationData: PresentationData, interaction: LocationPickerInteraction?) -> ListViewItem {
+    func item(engine: IosappEngine, presentationData: PresentationData, interaction: LocationPickerInteraction?) -> ListViewItem {
         switch self {
             case let .city(_, title, subtitle, _, _, _, coordinate, name, address):
                 let icon: LocationActionListItemIcon
                 if let name {
-                    icon = .venue(TelegramMediaMap(latitude: 0, longitude: 0, heading: nil, accuracyRadius: nil, venue: MapVenue(title: name, address: presentationData.strings.Location_TypeCity, provider: "city", id: address?.country, type: "building/default"), liveBroadcastingTimeout: nil, liveProximityNotificationRadius: nil))
+                    icon = .venue(IosappMediaMap(latitude: 0, longitude: 0, heading: nil, accuracyRadius: nil, venue: MapVenue(title: name, address: presentationData.strings.Location_TypeCity, provider: "city", id: address?.country, type: "building/default"), liveBroadcastingTimeout: nil, liveProximityNotificationRadius: nil))
                 } else {
                     icon = .location
                 }
@@ -209,7 +209,7 @@ private enum LocationPickerEntry: Comparable, Identifiable {
     }
 }
 
-private func preparedTransition(from fromEntries: [LocationPickerEntry], to toEntries: [LocationPickerEntry], isLoading: Bool, isEmpty: Bool, crossFade: Bool, engine: TelegramEngine, presentationData: PresentationData, interaction: LocationPickerInteraction?) -> LocationPickerTransaction {
+private func preparedTransition(from fromEntries: [LocationPickerEntry], to toEntries: [LocationPickerEntry], isLoading: Bool, isEmpty: Bool, crossFade: Bool, engine: IosappEngine, presentationData: PresentationData, interaction: LocationPickerInteraction?) -> LocationPickerTransaction {
     let (deleteIndices, indicesAndItems, updateIndices) = mergeListsStableWithUpdates(leftList: fromEntries, rightList: toEntries)
     
     let deletions = deleteIndices.map { ListViewDeleteItem(index: $0, directionHint: nil) }
@@ -223,7 +223,7 @@ enum LocationPickerLocation: Equatable {
     case none
     case selecting
     case location(CLLocationCoordinate2D, String?, Bool)
-    case venue(TelegramMediaMap, Int64?, String?)
+    case venue(IosappMediaMap, Int64?, String?)
     
     var isCustom: Bool {
         switch self {
@@ -445,7 +445,7 @@ final class LocationPickerControllerNode: ViewControllerTracingNode, CLLocationM
         
         let personalAddresses = self.context.account.postbox.peerView(id: self.context.account.peerId)
         |> mapToSignal { view -> Signal<(DeviceContactAddressData?, DeviceContactAddressData?)?, NoError> in
-            if let user = peerViewMainPeer(view) as? TelegramUser, let phoneNumber = user.phone {
+            if let user = peerViewMainPeer(view) as? IosappUser, let phoneNumber = user.phone {
                 return ((context.sharedContext.contactDataManager?.basicData() ?? .single([:])) |> take(1))
                 |> mapToSignal { basicData -> Signal<DeviceContactExtendedData?, NoError> in
                     var stableId: String?
@@ -489,10 +489,10 @@ final class LocationPickerControllerNode: ViewControllerTracingNode, CLLocationM
             }
         }
         
-        let personalVenues: Signal<[TelegramMediaMap]?, NoError> = .single(nil)
+        let personalVenues: Signal<[IosappMediaMap]?, NoError> = .single(nil)
         |> then(
             personalAddresses
-            |> mapToSignal { homeAndWorkAddresses -> Signal<[TelegramMediaMap]?, NoError> in
+            |> mapToSignal { homeAndWorkAddresses -> Signal<[IosappMediaMap]?, NoError> in
                 if let (homeAddress, workAddress) = homeAndWorkAddresses {
                     let home: Signal<(Double, Double)?, NoError>
                     let work: Signal<(Double, Double)?, NoError>
@@ -507,13 +507,13 @@ final class LocationPickerControllerNode: ViewControllerTracingNode, CLLocationM
                         work = .single(nil)
                     }
                     return combineLatest(home, work)
-                    |> map { homeCoordinate, workCoordinate -> [TelegramMediaMap]? in
-                        var venues: [TelegramMediaMap] = []
+                    |> map { homeCoordinate, workCoordinate -> [IosappMediaMap]? in
+                        var venues: [IosappMediaMap] = []
                         if let (latitude, longitude) = homeCoordinate, let address = homeAddress {
-                            venues.append(TelegramMediaMap(latitude: latitude, longitude: longitude, heading: nil, accuracyRadius: nil, venue: MapVenue(title: presentationData.strings.Map_Home, address: address.displayString, provider: nil, id: "home", type: "home"), liveBroadcastingTimeout: nil, liveProximityNotificationRadius: nil))
+                            venues.append(IosappMediaMap(latitude: latitude, longitude: longitude, heading: nil, accuracyRadius: nil, venue: MapVenue(title: presentationData.strings.Map_Home, address: address.displayString, provider: nil, id: "home", type: "home"), liveBroadcastingTimeout: nil, liveProximityNotificationRadius: nil))
                         }
                         if let (latitude, longitude) = workCoordinate, let address = workAddress {
-                            venues.append(TelegramMediaMap(latitude: latitude, longitude: longitude, heading: nil, accuracyRadius: nil, venue: MapVenue(title: presentationData.strings.Map_Work, address: address.displayString, provider: nil, id: "work", type: "work"), liveBroadcastingTimeout: nil, liveProximityNotificationRadius: nil))
+                            venues.append(IosappMediaMap(latitude: latitude, longitude: longitude, heading: nil, accuracyRadius: nil, venue: MapVenue(title: presentationData.strings.Map_Work, address: address.displayString, provider: nil, id: "work", type: "work"), liveBroadcastingTimeout: nil, liveProximityNotificationRadius: nil))
                         }
                         return venues
                     }
@@ -530,14 +530,14 @@ final class LocationPickerControllerNode: ViewControllerTracingNode, CLLocationM
             venuesLocation = throttledUserLocation(userLocation)
         }
         
-        let venues: Signal<([(TelegramMediaMap, String)], Int64)?, NoError> = .single(nil)
+        let venues: Signal<([(IosappMediaMap, String)], Int64)?, NoError> = .single(nil)
         |> then(
             venuesLocation
-            |> mapToSignal { location -> Signal<([(TelegramMediaMap, String)], Int64)?, NoError> in
+            |> mapToSignal { location -> Signal<([(IosappMediaMap, String)], Int64)?, NoError> in
                 if let location = location, location.horizontalAccuracy > 0 {
                     return combineLatest(nearbyVenues(context: context, story: source == .story, latitude: location.coordinate.latitude, longitude: location.coordinate.longitude), personalVenues)
-                    |> map { contextResult, personalVenues -> ([(TelegramMediaMap, String)], Int64)? in
-                        var resultVenues: [(TelegramMediaMap, String)] = []
+                    |> map { contextResult, personalVenues -> ([(IosappMediaMap, String)], Int64)? in
+                        var resultVenues: [(IosappMediaMap, String)] = []
                         if let personalVenues = personalVenues {
                             for venue in personalVenues {
                                 let venueLocation = CLLocation(latitude: venue.latitude, longitude: venue.longitude)
@@ -568,20 +568,20 @@ final class LocationPickerControllerNode: ViewControllerTracingNode, CLLocationM
             }
         )
         
-        let foundVenues: Signal<([(TelegramMediaMap, String)], Int64, CLLocation)?, NoError> = .single(nil)
+        let foundVenues: Signal<([(IosappMediaMap, String)], Int64, CLLocation)?, NoError> = .single(nil)
         |> then(
             self.searchVenuesPromise.get()
             |> distinctUntilChanged(isEqual: { lhs, rhs in
                 return locationCoordinatesAreEqual(lhs, rhs)
             })
-            |> mapToSignal { coordinate -> Signal<([(TelegramMediaMap, String)], Int64, CLLocation)?, NoError> in
+            |> mapToSignal { coordinate -> Signal<([(IosappMediaMap, String)], Int64, CLLocation)?, NoError> in
                 if let coordinate = coordinate {
                     return (.single(nil)
                     |> then(
                         nearbyVenues(context: context, story: source == .story, latitude: coordinate.latitude, longitude: coordinate.longitude)
-                        |> map { contextResult -> ([(TelegramMediaMap, String)], Int64, CLLocation)? in
+                        |> map { contextResult -> ([(IosappMediaMap, String)], Int64, CLLocation)? in
                             if let contextResult {
-                                var resultVenues: [(TelegramMediaMap, String)] = []
+                                var resultVenues: [(IosappMediaMap, String)] = []
                                 for result in contextResult.results {
                                     switch result.message {
                                         case let .mapLocation(mapMedia, _):
@@ -710,7 +710,7 @@ final class LocationPickerControllerNode: ViewControllerTracingNode, CLLocationM
                 
                 entries.append(.header(presentationData.theme, presentationData.strings.Map_ChooseAPlace.uppercased()))
                 
-                let displayedVenues: [(TelegramMediaMap, String)]?
+                let displayedVenues: [(IosappMediaMap, String)]?
                 let queryId: Int64?
                 if foundVenues != nil || state.searchingVenuesAround {
                     displayedVenues = foundVenues
@@ -977,7 +977,7 @@ final class LocationPickerControllerNode: ViewControllerTracingNode, CLLocationM
             }
             self.headerNode.mapNode.hasPickerAnnotation = true
         case .pick:
-            self.headerNode.mapNode.userLocationAnnotation = LocationPinAnnotation(context: context, theme: self.presentationData.theme, location: TelegramMediaMap(coordinate: CLLocationCoordinate2DMake(0, 0)), queryId: nil, resultId: nil, forcedSelection: true)
+            self.headerNode.mapNode.userLocationAnnotation = LocationPinAnnotation(context: context, theme: self.presentationData.theme, location: IosappMediaMap(coordinate: CLLocationCoordinate2DMake(0, 0)), queryId: nil, resultId: nil, forcedSelection: true)
             self.headerNode.mapNode.hasPickerAnnotation = true
         }
         

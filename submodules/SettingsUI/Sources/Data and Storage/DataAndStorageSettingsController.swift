@@ -2,10 +2,10 @@ import Foundation
 import UIKit
 import Display
 import SwiftSignalKit
-import TelegramCore
+import IosappCore
 import LegacyComponents
-import TelegramPresentationData
-import TelegramUIPreferences
+import IosappPresentationData
+import IosappUIPreferences
 import ItemListUI
 import PresentationDataUtils
 import AccountContext
@@ -652,7 +652,7 @@ private func dataAndStorageControllerEntries(context: AccountContext, state: Dat
             case .socks5:
                 proxyValue = presentationData.strings.ChatSettings_ConnectionType_UseSocks5
             case .mtp:
-                proxyValue = presentationData.strings.SocksProxySetup_ProxyTelegram
+                proxyValue = presentationData.strings.SocksProxySetup_ProxyIosapp
         }
     } else {
         proxyValue = presentationData.strings.GroupInfo_SharedMediaNone
@@ -913,7 +913,7 @@ public func dataAndStorageController(context: AccountContext, focusOnItemTag: Da
         }
     })
     
-    let preferences = context.engine.data.subscribe(TelegramEngine.EngineData.Item.Configuration.ApplicationSpecificPreference(key: ApplicationSpecificPreferencesKeys.mediaAutoSaveSettings))
+    let preferences = context.engine.data.subscribe(IosappEngine.EngineData.Item.Configuration.ApplicationSpecificPreference(key: ApplicationSpecificPreferencesKeys.mediaAutoSaveSettings))
     |> map { entry -> MediaAutoSaveSettings in
         return entry?.get(MediaAutoSaveSettings.self) ?? MediaAutoSaveSettings.default
     }
@@ -922,7 +922,7 @@ public func dataAndStorageController(context: AccountContext, focusOnItemTag: Da
     |> mapToSignal { mediaAutoSaveSettings -> Signal<[EnginePeer.Id: EnginePeer?], NoError> in
         let peerIds = mediaAutoSaveSettings.exceptions.map(\.id)
         return context.engine.data.get(EngineDataMap(
-            peerIds.map(TelegramEngine.EngineData.Item.Peer.Peer.init(id:))
+            peerIds.map(IosappEngine.EngineData.Item.Peer.Peer.init(id:))
         ))
     }
 

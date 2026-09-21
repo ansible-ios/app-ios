@@ -2,9 +2,9 @@ import Foundation
 import UIKit
 import AsyncDisplayKit
 import Display
-import TelegramCore
+import IosappCore
 import SwiftSignalKit
-import TelegramPresentationData
+import IosappPresentationData
 import PresentationDataUtils
 import AccountContext
 import MergeLists
@@ -13,13 +13,13 @@ import ContextUI
 import ContactListUI
 import ContactsPeerItem
 import PhotoResources
-import TelegramUIPreferences
+import IosappUIPreferences
 import UniversalMediaPlayer
-import TelegramBaseController
+import IosappBaseController
 import OverlayStatusController
 import ListMessageItem
 import AnimatedStickerNode
-import TelegramAnimatedStickerNode
+import IosappAnimatedStickerNode
 import ChatListSearchItemHeader
 import PhoneNumberFormat
 import InstantPageUI
@@ -225,7 +225,7 @@ private enum ChatListRecentEntry: Comparable, Identifiable {
                             status = .custom(string: NSAttributedString(string: strings.Bot_GenericBotStatus), multiline: false, isActive: false, icon: nil)
                         }
                     } else if user.id != context.account.peerId && !servicePeer {
-                        let presence = peer.presence ?? TelegramUserPresence(status: .none, lastActivity: 0)
+                        let presence = peer.presence ?? IosappUserPresence(status: .none, lastActivity: 0)
                         status = .presence(EnginePeer.Presence(presence), timeFormat)
                     } else {
                         status = .none
@@ -464,9 +464,9 @@ public enum ChatListSearchEntry: Comparable, Identifiable {
     case adPeer(AdPeer, Int, PresentationTheme, PresentationStrings, PresentationPersonNameOrder, PresentationPersonNameOrder, ChatListSearchSectionExpandType, String?)
     case localPeer(EnginePeer, EnginePeer?, (Int32, Bool)?, Int, PresentationTheme, PresentationStrings, PresentationPersonNameOrder, PresentationPersonNameOrder, ChatListSearchSectionExpandType, PeerStoryStats?, Bool, Bool)
     case globalPeer(FoundPeer, (Int32, Bool)?, Int, PresentationTheme, PresentationStrings, PresentationPersonNameOrder, PresentationPersonNameOrder, ChatListSearchSectionExpandType, PeerStoryStats?, Bool, String?)
-    case message(EngineMessage, EngineRenderedPeer, EnginePeerReadCounters?, EngineMessageHistoryThread.Info?, ChatListPresentationData, Int32, Bool?, Bool, MessageOrderingKey, (id: String, size: Int64, isFirstInList: Bool)?, MessageSection, Bool, PeerStoryStats?, Bool, TelegramSearchPeersScope)
-    case messagePlaceholder(Int32, ChatListPresentationData, TelegramSearchPeersScope)
-    case emptyMessagesFooter(ChatListPresentationData, TelegramSearchPeersScope, String?)
+    case message(EngineMessage, EngineRenderedPeer, EnginePeerReadCounters?, EngineMessageHistoryThread.Info?, ChatListPresentationData, Int32, Bool?, Bool, MessageOrderingKey, (id: String, size: Int64, isFirstInList: Bool)?, MessageSection, Bool, PeerStoryStats?, Bool, IosappSearchPeersScope)
+    case messagePlaceholder(Int32, ChatListPresentationData, IosappSearchPeersScope)
+    case emptyMessagesFooter(ChatListPresentationData, IosappSearchPeersScope, String?)
     case addContact(String, PresentationTheme, PresentationStrings)
 
     public var stableId: ChatListSearchEntryStableId {
@@ -729,7 +729,7 @@ public enum ChatListSearchEntry: Comparable, Identifiable {
         openStories: @escaping (EnginePeer.Id, AvatarNode) -> Void,
         openPublicPosts: @escaping () -> Void,
         openMessagesFilter: @escaping (ASDisplayNode) -> Void,
-        switchMessagesFilter: @escaping (TelegramSearchPeersScope) -> Void
+        switchMessagesFilter: @escaping (IosappSearchPeersScope) -> Void
     ) -> ListViewItem {
         switch self {
             case let .topic(peer, threadInfo, _, theme, strings, expandType):
@@ -1317,10 +1317,10 @@ public struct ChatListSearchContainerTransition {
     public let isLoading: Bool
     public let query: String?
     public let approvedGlobalPostQueryState: ApprovedGlobalPostQueryState?
-    public let globalSearchStateValue: TelegramGlobalPostSearchState?
+    public let globalSearchStateValue: IosappGlobalPostSearchState?
     public var animated: Bool
 
-    public init(deletions: [ListViewDeleteItem], insertions: [ListViewInsertItem], updates: [ListViewUpdateItem], displayingResults: Bool, isEmpty: Bool, isLoading: Bool, query: String?, approvedGlobalPostQueryState: ApprovedGlobalPostQueryState?, globalSearchStateValue: TelegramGlobalPostSearchState?, animated: Bool) {
+    public init(deletions: [ListViewDeleteItem], insertions: [ListViewInsertItem], updates: [ListViewUpdateItem], displayingResults: Bool, isEmpty: Bool, isLoading: Bool, query: String?, approvedGlobalPostQueryState: ApprovedGlobalPostQueryState?, globalSearchStateValue: IosappGlobalPostSearchState?, animated: Bool) {
         self.deletions = deletions
         self.insertions = insertions
         self.updates = updates
@@ -1394,7 +1394,7 @@ public func chatListSearchContainerPreparedTransition(
     searchPeer: @escaping (EnginePeer) -> Void,
     searchQuery: String?,
     approvedGlobalPostQueryState: ApprovedGlobalPostQueryState?,
-    globalSearchStateValue: TelegramGlobalPostSearchState?,
+    globalSearchStateValue: IosappGlobalPostSearchState?,
     searchOptions: ChatListSearchOptions?,
     messageContextAction: ((EngineMessage, ASDisplayNode?, CGRect?, UIGestureRecognizer?, ChatListSearchPaneKey, (id: String, size: Int64, isFirstInList: Bool)?) -> Void)?,
     openClearRecentlyDownloaded: @escaping () -> Void,
@@ -1402,7 +1402,7 @@ public func chatListSearchContainerPreparedTransition(
     openStories: @escaping (EnginePeer.Id, AvatarNode) -> Void,
     openPublicPosts: @escaping () -> Void,
     openMessagesFilter: @escaping (ASDisplayNode) -> Void,
-    switchMessagesFilter: @escaping (TelegramSearchPeersScope) -> Void
+    switchMessagesFilter: @escaping (IosappSearchPeersScope) -> Void
 ) -> ChatListSearchContainerTransition {
     let (deleteIndices, indicesAndItems, updateIndices) = mergeListsStableWithUpdates(leftList: fromEntries, rightList: toEntries)
 
@@ -1512,7 +1512,7 @@ private struct DownloadItem: Equatable {
     }
 }
 
-private func filteredPeerSearchQueryResults(value: ([FoundPeer], [FoundPeer]), scope: TelegramSearchPeersScope) -> ([FoundPeer], [FoundPeer]) {
+private func filteredPeerSearchQueryResults(value: ([FoundPeer], [FoundPeer]), scope: IosappSearchPeersScope) -> ([FoundPeer], [FoundPeer]) {
     switch scope {
     case .everywhere, .privateChats, .bots, .groups, .globalPosts:
         return value
@@ -1539,9 +1539,9 @@ private func filteredPeerSearchQueryResults(value: ([FoundPeer], [FoundPeer]), s
 final class GlobalPeerSearchContext {
     private struct SearchKey: Hashable {
         var query: String
-        var scope: TelegramSearchPeersScope?
+        var scope: IosappSearchPeersScope?
 
-        init(query: String, scope: TelegramSearchPeersScope?) {
+        init(query: String, scope: IosappSearchPeersScope?) {
             self.query = query
             self.scope = scope
         }
@@ -1549,7 +1549,7 @@ final class GlobalPeerSearchContext {
 
     private final class QueryContext {
         var value: ([FoundPeer], [FoundPeer])?
-        let subscribers = Bag<(TelegramSearchPeersScope, (([FoundPeer], [FoundPeer])) -> Void)>()
+        let subscribers = Bag<(IosappSearchPeersScope, (([FoundPeer], [FoundPeer])) -> Void)>()
         let disposable = MetaDisposable()
 
         init() {
@@ -1568,8 +1568,8 @@ final class GlobalPeerSearchContext {
             self.queue = queue
         }
 
-        func searchRemotePeers(engine: TelegramEngine, query: String, scope: TelegramSearchPeersScope, onNext: @escaping (([FoundPeer], [FoundPeer])) -> Void) -> Disposable {
-            var keyScope: TelegramSearchPeersScope?
+        func searchRemotePeers(engine: IosappEngine, query: String, scope: IosappSearchPeersScope, onNext: @escaping (([FoundPeer], [FoundPeer])) -> Void) -> Disposable {
+            var keyScope: IosappSearchPeersScope?
             switch scope {
             case .channels, .bots:
                 keyScope = scope
@@ -1635,7 +1635,7 @@ final class GlobalPeerSearchContext {
         })
     }
 
-    func searchRemotePeers(engine: TelegramEngine, query: String, scope: TelegramSearchPeersScope = .everywhere) -> Signal<([FoundPeer], [FoundPeer]), NoError> {
+    func searchRemotePeers(engine: IosappEngine, query: String, scope: IosappSearchPeersScope = .everywhere) -> Signal<([FoundPeer], [FoundPeer]), NoError> {
         return self.impl.signalWith { impl, subscriber in
             return impl.searchRemotePeers(engine: engine, query: query, scope: scope, onNext: subscriber.putNext)
         }
@@ -1699,7 +1699,7 @@ final class ChatListSearchListPaneNode: ASDisplayNode, ChatListSearchPaneNode {
     private var searchQueryValue: String?
     private var searchOptionsValue: ChatListSearchOptions?
     private var approvedGlobalPostQueryStateValue: ApprovedGlobalPostQueryState?
-    private var globalPostSearchStateValue: TelegramGlobalPostSearchState?
+    private var globalPostSearchStateValue: IosappGlobalPostSearchState?
     private var globalPostSearchUnlockTimer: Foundation.Timer?
     private var isPremium: Bool = false
 
@@ -1757,10 +1757,10 @@ final class ChatListSearchListPaneNode: ASDisplayNode, ChatListSearchPaneNode {
     private var approvedSearchQueryDisposable: Disposable?
     private var searchOptionsDisposable: Disposable?
 
-    private let searchScopePromise = ValuePromise<TelegramSearchPeersScope>(.everywhere)
+    private let searchScopePromise = ValuePromise<IosappSearchPeersScope>(.everywhere)
 
     private let approvedGlobalPostQueryState = ValuePromise<ApprovedGlobalPostQueryState?>(nil, ignoreRepeated: true)
-    private let globalPostSearchState = Promise<TelegramGlobalPostSearchState?>()
+    private let globalPostSearchState = Promise<IosappGlobalPostSearchState?>()
 
     private var refreshGlobalPostSearchStateDisposable: Disposable?
 
@@ -2030,7 +2030,7 @@ final class ChatListSearchListPaneNode: ASDisplayNode, ChatListSearchPaneNode {
                 for entry in entries {
                     switch entry.id.locationKey {
                     case let .messageId(id):
-                        itemSignals.append(context.engine.data.get(TelegramEngine.EngineData.Item.Messages.Message(id: id))
+                        itemSignals.append(context.engine.data.get(IosappEngine.EngineData.Item.Messages.Message(id: id))
                         |> map { message -> DownloadItem? in
                             if let message = message {
                                 return DownloadItem(resourceId: entry.resourceReference.resource.id, message: message, priority: entry.priority, isPaused: entry.isPaused)
@@ -2070,7 +2070,7 @@ final class ChatListSearchListPaneNode: ASDisplayNode, ChatListSearchPaneNode {
         let adsHiddenPromise = self.adsHiddenPromise
 
         let isPremium = context.engine.data.subscribe(
-            TelegramEngine.EngineData.Item.Peer.Peer(id: context.account.peerId)
+            IosappEngine.EngineData.Item.Peer.Peer(id: context.account.peerId)
         )
         |> map { peer -> Bool in
             guard case let .user(user) = peer else {
@@ -2141,13 +2141,13 @@ final class ChatListSearchListPaneNode: ASDisplayNode, ChatListSearchPaneNode {
 
                 func messageMatchesTokens(message: EngineMessage, tokens: [ValueBoxKey]) -> Bool {
                     for media in message.effectiveMedia {
-                        if let file = media as? TelegramMediaFile {
+                        if let file = media as? IosappMediaFile {
                             if let fileName = file.fileName {
                                 if matchStringIndexTokens(stringIndexTokens(fileName, transliteration: .none), with: tokens) {
                                     return true
                                 }
                             }
-                        } else if let _ = media as? TelegramMediaImage {
+                        } else if let _ = media as? IosappMediaImage {
                             if matchStringIndexTokens(stringIndexTokens("Photo Image", transliteration: .none), with: tokens) {
                                 return true
                             }
@@ -2184,7 +2184,7 @@ final class ChatListSearchListPaneNode: ASDisplayNode, ChatListSearchPaneNode {
                         }
 
                         var peer = EngineRenderedPeer(message: message)
-                        if let group = item.message.peers[message.id.peerId] as? TelegramGroup, let migrationReference = group.migrationReference {
+                        if let group = item.message.peers[message.id.peerId] as? IosappGroup, let migrationReference = group.migrationReference {
                             if let channelPeer = message.peers[migrationReference.peerId] {
                                 peer = EngineRenderedPeer(peer: EnginePeer(channelPeer))
                             }
@@ -2217,7 +2217,7 @@ final class ChatListSearchListPaneNode: ASDisplayNode, ChatListSearchPaneNode {
                         }
 
                         var peer = EngineRenderedPeer(message: message)
-                        if let group = item.message.peers[message.id.peerId] as? TelegramGroup, let migrationReference = group.migrationReference {
+                        if let group = item.message.peers[message.id.peerId] as? IosappGroup, let migrationReference = group.migrationReference {
                             if let channelPeer = message.peers[migrationReference.peerId] {
                                 peer = EngineRenderedPeer(peer: EnginePeer(channelPeer))
                             }
@@ -2229,7 +2229,7 @@ final class ChatListSearchListPaneNode: ASDisplayNode, ChatListSearchPaneNode {
                 }
             }
 
-            let accountPeer = context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: context.account.peerId))
+            let accountPeer = context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: context.account.peerId))
             |> mapToSignal { peer -> Signal<EnginePeer, NoError> in
                 if let peer {
                     return .single(peer)
@@ -2264,7 +2264,7 @@ final class ChatListSearchListPaneNode: ASDisplayNode, ChatListSearchPaneNode {
                 } else if let communityId {
                     let queryTokens = stringIndexTokens(query.lowercased(), transliteration: .combined)
                     foundLocalPeers = context.engine.data.subscribe(
-                        TelegramEngine.EngineData.Item.Peer.CachedData(id: communityId)
+                        IosappEngine.EngineData.Item.Peer.CachedData(id: communityId)
                     )
                     |> mapToSignal { cachedData -> Signal<(peers: [EngineRenderedPeer], unread: [EnginePeer.Id: (Int32, Bool)], recentlySearchedPeerIds: Set<EnginePeer.Id>), NoError> in
                         guard let communityData = cachedData as? CachedCommunityData else {
@@ -2277,21 +2277,21 @@ final class ChatListSearchListPaneNode: ASDisplayNode, ChatListSearchPaneNode {
 
                         return context.engine.data.subscribe(
                             EngineDataMap(
-                                peerIds.map { peerId -> TelegramEngine.EngineData.Item.Peer.Peer in
-                                    return TelegramEngine.EngineData.Item.Peer.Peer(id: peerId)
+                                peerIds.map { peerId -> IosappEngine.EngineData.Item.Peer.Peer in
+                                    return IosappEngine.EngineData.Item.Peer.Peer(id: peerId)
                                 }
                             ),
                             EngineDataMap(
-                                peerIds.map { peerId -> TelegramEngine.EngineData.Item.Peer.NotificationSettings in
-                                    return TelegramEngine.EngineData.Item.Peer.NotificationSettings(id: peerId)
+                                peerIds.map { peerId -> IosappEngine.EngineData.Item.Peer.NotificationSettings in
+                                    return IosappEngine.EngineData.Item.Peer.NotificationSettings(id: peerId)
                                 }
                             ),
                             EngineDataMap(
-                                peerIds.map { peerId -> TelegramEngine.EngineData.Item.Messages.PeerUnreadState in
-                                    return TelegramEngine.EngineData.Item.Messages.PeerUnreadState(id: peerId)
+                                peerIds.map { peerId -> IosappEngine.EngineData.Item.Messages.PeerUnreadState in
+                                    return IosappEngine.EngineData.Item.Messages.PeerUnreadState(id: peerId)
                                 }
                             ),
-                            TelegramEngine.EngineData.Item.NotificationSettings.Global()
+                            IosappEngine.EngineData.Item.NotificationSettings.Global()
                         )
                         |> map { peers, notificationSettings, unreadCounts, globalNotificationSettings -> (peers: [EngineRenderedPeer], unread: [EnginePeer.Id: (Int32, Bool)], recentlySearchedPeerIds: Set<EnginePeer.Id>) in
                             var resultPeers: [EngineRenderedPeer] = []
@@ -2392,7 +2392,7 @@ final class ChatListSearchListPaneNode: ASDisplayNode, ChatListSearchPaneNode {
                     |> mapToSignal { peers -> Signal<[EngineRenderedPeer], NoError> in
                         return context.engine.data.subscribe(
                             EngineDataMap(peers.map { peer in
-                                return TelegramEngine.EngineData.Item.Messages.ChatListIndex(id: peer.peerId)
+                                return IosappEngine.EngineData.Item.Messages.ChatListIndex(id: peer.peerId)
                             })
                         )
                         |> map { chatListIndices -> [EngineRenderedPeer] in
@@ -2412,7 +2412,7 @@ final class ChatListSearchListPaneNode: ASDisplayNode, ChatListSearchPaneNode {
                         updatedLocalPeers,
                         fixedOrRemovedRecentlySearchedPeers
                     )
-                    |> mapToSignal { local, allRecentlySearched -> Signal<([EnginePeer.Id: Optional<EnginePeer.NotificationSettings>], [EnginePeer.Id: TelegramEngine.EngineData.Item.Messages.PeerUnreadState.Result], [EngineRenderedPeer], Set<EnginePeer.Id>, EngineGlobalNotificationSettings), NoError> in
+                    |> mapToSignal { local, allRecentlySearched -> Signal<([EnginePeer.Id: Optional<EnginePeer.NotificationSettings>], [EnginePeer.Id: IosappEngine.EngineData.Item.Messages.PeerUnreadState.Result], [EngineRenderedPeer], Set<EnginePeer.Id>, EngineGlobalNotificationSettings), NoError> in
                         let recentlySearched = allRecentlySearched.filter { peer in
                             guard let peer = peer.peer.peer else {
                                 return false
@@ -2438,16 +2438,16 @@ final class ChatListSearchListPaneNode: ASDisplayNode, ChatListSearchPaneNode {
 
                         return context.engine.data.subscribe(
                             EngineDataMap(
-                                peerIds.map { peerId -> TelegramEngine.EngineData.Item.Peer.NotificationSettings in
-                                    return TelegramEngine.EngineData.Item.Peer.NotificationSettings(id: peerId)
+                                peerIds.map { peerId -> IosappEngine.EngineData.Item.Peer.NotificationSettings in
+                                    return IosappEngine.EngineData.Item.Peer.NotificationSettings(id: peerId)
                                 }
                             ),
                             EngineDataMap(
-                                peerIds.map { peerId -> TelegramEngine.EngineData.Item.Messages.PeerUnreadState in
-                                    return TelegramEngine.EngineData.Item.Messages.PeerUnreadState(id: peerId)
+                                peerIds.map { peerId -> IosappEngine.EngineData.Item.Messages.PeerUnreadState in
+                                    return IosappEngine.EngineData.Item.Messages.PeerUnreadState(id: peerId)
                                 }
                             ),
-                            TelegramEngine.EngineData.Item.NotificationSettings.Global()
+                            IosappEngine.EngineData.Item.NotificationSettings.Global()
                         )
                         |> map { notificationSettings, unreadCounts, globalNotificationSettings in
                             return (notificationSettings, unreadCounts, peers, Set(recentlySearched.map(\.peer.peerId)), globalNotificationSettings)
@@ -2508,21 +2508,21 @@ final class ChatListSearchListPaneNode: ASDisplayNode, ChatListSearchPaneNode {
 
                     return context.engine.data.subscribe(
                         EngineDataMap(
-                            peerIds.map { peerId -> TelegramEngine.EngineData.Item.Peer.Peer in
-                                return TelegramEngine.EngineData.Item.Peer.Peer(id: peerId)
+                            peerIds.map { peerId -> IosappEngine.EngineData.Item.Peer.Peer in
+                                return IosappEngine.EngineData.Item.Peer.Peer(id: peerId)
                             }
                         ),
                         EngineDataMap(
-                            peerIds.map { peerId -> TelegramEngine.EngineData.Item.Peer.NotificationSettings in
-                                return TelegramEngine.EngineData.Item.Peer.NotificationSettings(id: peerId)
+                            peerIds.map { peerId -> IosappEngine.EngineData.Item.Peer.NotificationSettings in
+                                return IosappEngine.EngineData.Item.Peer.NotificationSettings(id: peerId)
                             }
                         ),
                         EngineDataMap(
-                            peerIds.map { peerId -> TelegramEngine.EngineData.Item.Messages.PeerUnreadCount in
-                                return TelegramEngine.EngineData.Item.Messages.PeerUnreadCount(id: peerId)
+                            peerIds.map { peerId -> IosappEngine.EngineData.Item.Messages.PeerUnreadCount in
+                                return IosappEngine.EngineData.Item.Messages.PeerUnreadCount(id: peerId)
                             }
                         ),
-                        TelegramEngine.EngineData.Item.NotificationSettings.Global()
+                        IosappEngine.EngineData.Item.NotificationSettings.Global()
                     )
                     |> map { peers, notificationSettings, unreadCounts, globalNotificationSettings -> (peers: [EngineRenderedPeer], unread: [EnginePeer.Id: (Int32, Bool)], recentlySearchedPeerIds: Set<EnginePeer.Id>) in
                         var resultPeers: [EngineRenderedPeer] = []
@@ -2605,21 +2605,21 @@ final class ChatListSearchListPaneNode: ASDisplayNode, ChatListSearchPaneNode {
 
                     return context.engine.data.subscribe(
                         EngineDataMap(
-                            peerIds.map { peerId -> TelegramEngine.EngineData.Item.Peer.Peer in
-                                return TelegramEngine.EngineData.Item.Peer.Peer(id: peerId)
+                            peerIds.map { peerId -> IosappEngine.EngineData.Item.Peer.Peer in
+                                return IosappEngine.EngineData.Item.Peer.Peer(id: peerId)
                             }
                         ),
                         EngineDataMap(
-                            peerIds.map { peerId -> TelegramEngine.EngineData.Item.Peer.NotificationSettings in
-                                return TelegramEngine.EngineData.Item.Peer.NotificationSettings(id: peerId)
+                            peerIds.map { peerId -> IosappEngine.EngineData.Item.Peer.NotificationSettings in
+                                return IosappEngine.EngineData.Item.Peer.NotificationSettings(id: peerId)
                             }
                         ),
                         EngineDataMap(
-                            peerIds.map { peerId -> TelegramEngine.EngineData.Item.Messages.PeerUnreadCount in
-                                return TelegramEngine.EngineData.Item.Messages.PeerUnreadCount(id: peerId)
+                            peerIds.map { peerId -> IosappEngine.EngineData.Item.Messages.PeerUnreadCount in
+                                return IosappEngine.EngineData.Item.Messages.PeerUnreadCount(id: peerId)
                             }
                         ),
-                        TelegramEngine.EngineData.Item.NotificationSettings.Global()
+                        IosappEngine.EngineData.Item.NotificationSettings.Global()
                     )
                     |> map { peers, notificationSettings, unreadCounts, globalNotificationSettings -> (peers: [EngineRenderedPeer], unread: [EnginePeer.Id: (Int32, Bool)], recentlySearchedPeerIds: Set<EnginePeer.Id>) in
                         var resultPeers: [EngineRenderedPeer] = []
@@ -3381,7 +3381,7 @@ final class ChatListSearchListPaneNode: ASDisplayNode, ChatListSearchPaneNode {
 
                 if let message = resolvedMessage {
                     var peer = EngineRenderedPeer(message: message)
-                    if let group = message.peers[message.id.peerId] as? TelegramGroup, let migrationReference = group.migrationReference {
+                    if let group = message.peers[message.id.peerId] as? IosappGroup, let migrationReference = group.migrationReference {
                         if let channelPeer = message.peers[migrationReference.peerId] {
                             peer = EngineRenderedPeer(peer: EnginePeer(channelPeer))
                         }
@@ -3438,7 +3438,7 @@ final class ChatListSearchListPaneNode: ASDisplayNode, ChatListSearchPaneNode {
                                     firstHeaderId = headerId
                                 }
                                 var peer = EngineRenderedPeer(message: message)
-                                if let group = message.peers[message.id.peerId] as? TelegramGroup, let migrationReference = group.migrationReference {
+                                if let group = message.peers[message.id.peerId] as? IosappGroup, let migrationReference = group.migrationReference {
                                     if let channelPeer = message.peers[migrationReference.peerId] {
                                         peer = EngineRenderedPeer(peer: EnginePeer(channelPeer))
                                     }
@@ -3628,7 +3628,7 @@ final class ChatListSearchListPaneNode: ASDisplayNode, ChatListSearchPaneNode {
             guard let self else {
                 return
             }
-            let _ = (self.context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: peerId))
+            let _ = (self.context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: peerId))
             |> deliverOnMainQueue).startStandalone(next: { [weak self] peer in
                 guard let self, let peer else {
                     return
@@ -3781,7 +3781,7 @@ final class ChatListSearchListPaneNode: ASDisplayNode, ChatListSearchPaneNode {
             chatListInteraction?.searchTextHighightState = query
         })
         self.globalPostSearchState.set(context.engine.data.subscribe(
-            TelegramEngine.EngineData.Item.Messages.GlobalPostSearchState()
+            IosappEngine.EngineData.Item.Messages.GlobalPostSearchState()
         ))
         self.approvedSearchQueryDisposable = (combineLatest(queue: .mainQueue(), self.approvedGlobalPostQueryState.get(), self.globalPostSearchState.get(), isPremium)
         |> deliverOnMainQueue).startStrict(next: { [weak self] approvedGlobalPostQueryState, globalPostSearchState, isPremium in
@@ -3867,10 +3867,10 @@ final class ChatListSearchListPaneNode: ASDisplayNode, ChatListSearchPaneNode {
 
             return context.engine.data.subscribe(
                 EngineDataMap(
-                    storyStatsIds.map(TelegramEngine.EngineData.Item.Peer.StoryStats.init(id:))
+                    storyStatsIds.map(IosappEngine.EngineData.Item.Peer.StoryStats.init(id:))
                 ),
                 EngineDataMap(
-                    requiresPremiumForMessagingPeerIds.map(TelegramEngine.EngineData.Item.Peer.IsPremiumRequiredForMessaging.init(id:))
+                    requiresPremiumForMessagingPeerIds.map(IosappEngine.EngineData.Item.Peer.IsPremiumRequiredForMessaging.init(id:))
                 )
             )
             |> map { stats, requiresPremiumForMessaging -> ([ChatListSearchEntry], Bool, String?)? in
@@ -4114,10 +4114,10 @@ final class ChatListSearchListPaneNode: ASDisplayNode, ChatListSearchPaneNode {
             fixedRecentlySearchedPeers |> mapToSignal { peers -> Signal<([RecentlySearchedPeer], [EnginePeer.Id: PeerStoryStats], [EnginePeer.Id: Bool], Set<EnginePeer.Id>), NoError> in
                 return context.engine.data.subscribe(
                     EngineDataMap(peers.map(\.peer.peerId).map { id in
-                        return TelegramEngine.EngineData.Item.Peer.StoryStats(id: id)
+                        return IosappEngine.EngineData.Item.Peer.StoryStats(id: id)
                     }),
                     EngineDataMap(peers.map(\.peer.peerId).map { id in
-                        return TelegramEngine.EngineData.Item.Peer.IsPremiumRequiredForMessaging(id: id)
+                        return IosappEngine.EngineData.Item.Peer.IsPremiumRequiredForMessaging(id: id)
                     })
                 )
                 |> map { stats, isPremiumRequiredForMessaging -> ([RecentlySearchedPeer], [EnginePeer.Id: PeerStoryStats], [EnginePeer.Id: Bool], Set<EnginePeer.Id>) in
@@ -4127,7 +4127,7 @@ final class ChatListSearchListPaneNode: ASDisplayNode, ChatListSearchPaneNode {
                         isPremiumRequiredForMessaging = [:]
                     } else {
                         for peer in peers {
-                            if let user = peer.peer.peer as? TelegramUser, user.flags.contains(.requirePremium) {
+                            if let user = peer.peer.peer as? IosappUser, user.flags.contains(.requirePremium) {
                                 refreshIsPremiumRequiredForMessaging.insert(user.id)
                             }
                         }
@@ -4150,7 +4150,7 @@ final class ChatListSearchListPaneNode: ASDisplayNode, ChatListSearchPaneNode {
                 }
             },
             presentationDataPromise.get(),
-            context.engine.data.subscribe(TelegramEngine.EngineData.Item.NotificationSettings.Global())
+            context.engine.data.subscribe(IosappEngine.EngineData.Item.NotificationSettings.Global())
         )
         |> mapToSignal { hasRecentPeers, peersAndStories, presentationData, globalNotificationSettings -> Signal<RecentItems, NoError> in
             let (peers, peerStoryStats, requiresPremiumForMessaging, refreshIsPremiumRequiredForMessaging) = peersAndStories
@@ -4230,36 +4230,36 @@ final class ChatListSearchListPaneNode: ASDisplayNode, ChatListSearchPaneNode {
 
                 return context.engine.data.subscribe(
                     EngineDataMap(
-                        allChannelIds.map { peerId -> TelegramEngine.EngineData.Item.Peer.Peer in
-                            return TelegramEngine.EngineData.Item.Peer.Peer(id: peerId)
+                        allChannelIds.map { peerId -> IosappEngine.EngineData.Item.Peer.Peer in
+                            return IosappEngine.EngineData.Item.Peer.Peer(id: peerId)
                         }
                     ),
                     EngineDataMap(
-                        allChannelIds.map { peerId -> TelegramEngine.EngineData.Item.Peer.NotificationSettings in
-                            return TelegramEngine.EngineData.Item.Peer.NotificationSettings(id: peerId)
+                        allChannelIds.map { peerId -> IosappEngine.EngineData.Item.Peer.NotificationSettings in
+                            return IosappEngine.EngineData.Item.Peer.NotificationSettings(id: peerId)
                         }
                     ),
                     EngineDataMap(
-                        allChannelIds.map { peerId -> TelegramEngine.EngineData.Item.Messages.PeerUnreadCount in
-                            return TelegramEngine.EngineData.Item.Messages.PeerUnreadCount(id: peerId)
+                        allChannelIds.map { peerId -> IosappEngine.EngineData.Item.Messages.PeerUnreadCount in
+                            return IosappEngine.EngineData.Item.Messages.PeerUnreadCount(id: peerId)
                         }
                     ),
                     EngineDataMap(
-                        allChannelIds.map { peerId -> TelegramEngine.EngineData.Item.Peer.StoryStats in
-                            return TelegramEngine.EngineData.Item.Peer.StoryStats(id: peerId)
+                        allChannelIds.map { peerId -> IosappEngine.EngineData.Item.Peer.StoryStats in
+                            return IosappEngine.EngineData.Item.Peer.StoryStats(id: peerId)
                         }
                     ),
                     EngineDataMap(
-                        allChannelIds.map { peerId -> TelegramEngine.EngineData.Item.Messages.PeerReadCounters in
-                            return TelegramEngine.EngineData.Item.Messages.PeerReadCounters(id: peerId)
+                        allChannelIds.map { peerId -> IosappEngine.EngineData.Item.Messages.PeerReadCounters in
+                            return IosappEngine.EngineData.Item.Messages.PeerReadCounters(id: peerId)
                         }
                     ),
                     EngineDataMap(
-                        allChannelIds.map { peerId -> TelegramEngine.EngineData.Item.Peer.ParticipantCount in
-                            return TelegramEngine.EngineData.Item.Peer.ParticipantCount(id: peerId)
+                        allChannelIds.map { peerId -> IosappEngine.EngineData.Item.Peer.ParticipantCount in
+                            return IosappEngine.EngineData.Item.Peer.ParticipantCount(id: peerId)
                         }
                     ),
-                    TelegramEngine.EngineData.Item.NotificationSettings.Global()
+                    IosappEngine.EngineData.Item.NotificationSettings.Global()
                 )
                 |> map { peers, notificationSettings, unreadCounts, storyStats, readCounters, participantCounts, globalNotificationSettings -> RecentItems in
                     /*#if DEBUG
@@ -4411,31 +4411,31 @@ final class ChatListSearchListPaneNode: ASDisplayNode, ChatListSearchPaneNode {
 
                 return context.engine.data.subscribe(
                     EngineDataMap(
-                        allAppIds.map { peerId -> TelegramEngine.EngineData.Item.Peer.Peer in
-                            return TelegramEngine.EngineData.Item.Peer.Peer(id: peerId)
+                        allAppIds.map { peerId -> IosappEngine.EngineData.Item.Peer.Peer in
+                            return IosappEngine.EngineData.Item.Peer.Peer(id: peerId)
                         }
                     ),
                     EngineDataMap(
-                        allAppIds.map { peerId -> TelegramEngine.EngineData.Item.Peer.NotificationSettings in
-                            return TelegramEngine.EngineData.Item.Peer.NotificationSettings(id: peerId)
+                        allAppIds.map { peerId -> IosappEngine.EngineData.Item.Peer.NotificationSettings in
+                            return IosappEngine.EngineData.Item.Peer.NotificationSettings(id: peerId)
                         }
                     ),
                     EngineDataMap(
-                        allAppIds.map { peerId -> TelegramEngine.EngineData.Item.Messages.PeerUnreadCount in
-                            return TelegramEngine.EngineData.Item.Messages.PeerUnreadCount(id: peerId)
+                        allAppIds.map { peerId -> IosappEngine.EngineData.Item.Messages.PeerUnreadCount in
+                            return IosappEngine.EngineData.Item.Messages.PeerUnreadCount(id: peerId)
                         }
                     ),
                     EngineDataMap(
-                        allAppIds.map { peerId -> TelegramEngine.EngineData.Item.Peer.StoryStats in
-                            return TelegramEngine.EngineData.Item.Peer.StoryStats(id: peerId)
+                        allAppIds.map { peerId -> IosappEngine.EngineData.Item.Peer.StoryStats in
+                            return IosappEngine.EngineData.Item.Peer.StoryStats(id: peerId)
                         }
                     ),
                     EngineDataMap(
-                        allAppIds.map { peerId -> TelegramEngine.EngineData.Item.Messages.PeerReadCounters in
-                            return TelegramEngine.EngineData.Item.Messages.PeerReadCounters(id: peerId)
+                        allAppIds.map { peerId -> IosappEngine.EngineData.Item.Messages.PeerReadCounters in
+                            return IosappEngine.EngineData.Item.Messages.PeerReadCounters(id: peerId)
                         }
                     ),
-                    TelegramEngine.EngineData.Item.NotificationSettings.Global()
+                    IosappEngine.EngineData.Item.NotificationSettings.Global()
                 )
                 |> map { peers, notificationSettings, unreadCounts, storyStats, readCounters, globalNotificationSettings -> RecentItems in
                     var result: [ChatListRecentEntry] = []
@@ -4671,7 +4671,7 @@ final class ChatListSearchListPaneNode: ASDisplayNode, ChatListSearchPaneNode {
                                 return
                             }
                             dismissImpl?()
-                            if let value = attributes[NSAttributedString.Key(rawValue: TelegramTextAttributes.URL)] as? String {
+                            if let value = attributes[NSAttributedString.Key(rawValue: IosappTextAttributes.URL)] as? String {
                                 if !value.isEmpty {
                                     context.sharedContext.openExternalUrl(context: context, urlContext: .generic, url: value, forceExternal: false, presentationData: context.sharedContext.currentPresentationData.with { $0 }, navigationController: navigationController, dismissInput: {})
                                 } else {
@@ -5933,7 +5933,7 @@ public final class ChatListSearchShimmerNode: ASDisplayNode {
 
             let chatListPresentationData = ChatListPresentationData(theme: presentationData.theme, fontSize: presentationData.chatFontSize, strings: presentationData.strings, dateTimeFormat: presentationData.dateTimeFormat, nameSortOrder: presentationData.nameSortOrder, nameDisplayOrder: presentationData.nameDisplayOrder, disableAnimations: true)
 
-            let peer1: EnginePeer = .user(TelegramUser(id: EnginePeer.Id(namespace: Namespaces.Peer.CloudUser, id: EnginePeer.Id.Id._internalFromInt64Value(0)), accessHash: nil, firstName: "FirstName", lastName: nil, username: nil, phone: nil, photo: [], botInfo: nil, restrictionInfo: nil, flags: [], emojiStatus: nil, usernames: [], storiesHidden: nil, nameColor: nil, backgroundEmojiId: nil, profileColor: nil, profileBackgroundEmojiId: nil, subscriberCount: nil, verificationIconFileId: nil))
+            let peer1: EnginePeer = .user(IosappUser(id: EnginePeer.Id(namespace: Namespaces.Peer.CloudUser, id: EnginePeer.Id.Id._internalFromInt64Value(0)), accessHash: nil, firstName: "FirstName", lastName: nil, username: nil, phone: nil, photo: [], botInfo: nil, restrictionInfo: nil, flags: [], emojiStatus: nil, usernames: [], storiesHidden: nil, nameColor: nil, backgroundEmojiId: nil, profileColor: nil, profileBackgroundEmojiId: nil, subscriberCount: nil, verificationIconFileId: nil))
             let timestamp1: Int32 = 100000
             var peers: [EnginePeer.Id: EnginePeer] = [:]
             peers[peer1.id] = peer1
@@ -6020,7 +6020,7 @@ public final class ChatListSearchShimmerNode: ASDisplayNode {
                         return nil
                     case .links:
                         var media: [EngineMedia] = []
-                        media.append(.webpage(TelegramMediaWebpage(webpageId: EngineMedia.Id(namespace: 0, id: 0), content: .Loaded(TelegramMediaWebpageLoadedContent(url: "https://telegram.org", displayUrl: "https://telegram.org", hash: 0, type: nil, websiteName: "Telegram", title: "Telegram Telegram", text: "Telegram", embedUrl: nil, embedType: nil, embedSize: nil, duration: nil, author: nil, isMediaLargeByDefault: nil, imageIsVideoCover: false, image: nil, file: nil, story: nil, attributes: [], instantPage: nil)))))
+                        media.append(.webpage(IosappMediaWebpage(webpageId: EngineMedia.Id(namespace: 0, id: 0), content: .Loaded(IosappMediaWebpageLoadedContent(url: "https://telegram.org", displayUrl: "https://telegram.org", hash: 0, type: nil, websiteName: "Iosapp", title: "Iosapp Iosapp", text: "Iosapp", embedUrl: nil, embedType: nil, embedSize: nil, duration: nil, author: nil, isMediaLargeByDefault: nil, imageIsVideoCover: false, image: nil, file: nil, story: nil, attributes: [], instantPage: nil)))))
                         let message = EngineMessage(
                             stableId: 0,
                             stableVersion: 0,
@@ -6051,7 +6051,7 @@ public final class ChatListSearchShimmerNode: ASDisplayNode {
                         return ListMessageItem(presentationData: ChatPresentationData(presentationData: presentationData), context: context, chatLocation: .peer(id: peer1.id), interaction: ListMessageItemInteraction.default, message: message._asMessage(), selection: hasSelection ? .selectable(selected: false, num: nil) : .none, displayHeader: false, customHeader: nil, hintIsLink: true, isGlobalSearchResult: true)
                     case .files:
                         var media: [EngineMedia] = []
-                        media.append(.file(TelegramMediaFile(fileId: EngineMedia.Id(namespace: 0, id: 0), partialReference: nil, resource: LocalFileMediaResource(fileId: 0), previewRepresentations: [], videoThumbnails: [], immediateThumbnailData: nil, mimeType: "application/text", size: 0, attributes: [.FileName(fileName: "Text.txt")], alternativeRepresentations: [])))
+                        media.append(.file(IosappMediaFile(fileId: EngineMedia.Id(namespace: 0, id: 0), partialReference: nil, resource: LocalFileMediaResource(fileId: 0), previewRepresentations: [], videoThumbnails: [], immediateThumbnailData: nil, mimeType: "application/text", size: 0, attributes: [.FileName(fileName: "Text.txt")], alternativeRepresentations: [])))
                         let message = EngineMessage(
                             stableId: 0,
                             stableVersion: 0,
@@ -6082,7 +6082,7 @@ public final class ChatListSearchShimmerNode: ASDisplayNode {
                         return ListMessageItem(presentationData: ChatPresentationData(presentationData: presentationData), context: context, chatLocation: .peer(id: peer1.id), interaction: ListMessageItemInteraction.default, message: message._asMessage(), selection: hasSelection ? .selectable(selected: false, num: nil) : .none, displayHeader: false, customHeader: nil, hintIsLink: false, isGlobalSearchResult: true)
                     case .music:
                         var media: [EngineMedia] = []
-                        media.append(.file(TelegramMediaFile(fileId: EngineMedia.Id(namespace: 0, id: 0), partialReference: nil, resource: LocalFileMediaResource(fileId: 0), previewRepresentations: [], videoThumbnails: [], immediateThumbnailData: nil, mimeType: "audio/ogg", size: 0, attributes: [.Audio(isVoice: false, duration: 0, title: nil, performer: nil, waveform: Data())], alternativeRepresentations: [])))
+                        media.append(.file(IosappMediaFile(fileId: EngineMedia.Id(namespace: 0, id: 0), partialReference: nil, resource: LocalFileMediaResource(fileId: 0), previewRepresentations: [], videoThumbnails: [], immediateThumbnailData: nil, mimeType: "audio/ogg", size: 0, attributes: [.Audio(isVoice: false, duration: 0, title: nil, performer: nil, waveform: Data())], alternativeRepresentations: [])))
                         let message = EngineMessage(
                             stableId: 0,
                             stableVersion: 0,
@@ -6113,7 +6113,7 @@ public final class ChatListSearchShimmerNode: ASDisplayNode {
                         return ListMessageItem(presentationData: ChatPresentationData(presentationData: presentationData), context: context, chatLocation: .peer(id: peer1.id), interaction: ListMessageItemInteraction.default, message: message._asMessage(), selection: hasSelection ? .selectable(selected: false, num: nil) : .none, displayHeader: false, customHeader: nil, hintIsLink: false, isGlobalSearchResult: true)
                     case .voice, .instantVideo:
                         var media: [EngineMedia] = []
-                        media.append(.file(TelegramMediaFile(fileId: EngineMedia.Id(namespace: 0, id: 0), partialReference: nil, resource: LocalFileMediaResource(fileId: 0), previewRepresentations: [], videoThumbnails: [], immediateThumbnailData: nil, mimeType: "audio/ogg", size: 0, attributes: [.Audio(isVoice: true, duration: 0, title: nil, performer: nil, waveform: Data())], alternativeRepresentations: [])))
+                        media.append(.file(IosappMediaFile(fileId: EngineMedia.Id(namespace: 0, id: 0), partialReference: nil, resource: LocalFileMediaResource(fileId: 0), previewRepresentations: [], videoThumbnails: [], immediateThumbnailData: nil, mimeType: "audio/ogg", size: 0, attributes: [.Audio(isVoice: true, duration: 0, title: nil, performer: nil, waveform: Data())], alternativeRepresentations: [])))
                         let message = EngineMessage(
                             stableId: 0,
                             stableVersion: 0,
@@ -6236,7 +6236,7 @@ public final class ChatListSearchShimmerNode: ASDisplayNode {
                             context.fill(itemNode.separatorNode.frame.offsetBy(dx: 0.0, dy: currentY))
                         } else if let itemNode = itemNodes[sampleIndex] as? ListMessageFileItemNode {
                             var isVoice = false
-                            if let media = itemNode.currentMedia as? TelegramMediaFile {
+                            if let media = itemNode.currentMedia as? IosappMediaFile {
                                 isVoice = media.isVoice
                                 if media.isMusic || media.isVoice {
                                     context.fillEllipse(in: CGRect(x: 12.0 + selectionOffset, y: currentY + 8.0, width: 40.0, height: 40.0))

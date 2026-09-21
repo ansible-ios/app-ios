@@ -4,7 +4,7 @@ import Display
 import AsyncDisplayKit
 import AvatarNode
 import SwiftSignalKit
-import TelegramCore
+import IosappCore
 import AccountContext
 import AudioBlob
 

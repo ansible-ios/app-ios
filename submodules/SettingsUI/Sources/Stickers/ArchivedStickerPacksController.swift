@@ -2,9 +2,9 @@ import Foundation
 import UIKit
 import Display
 import SwiftSignalKit
-import TelegramCore
-import TelegramPresentationData
-import TelegramUIPreferences
+import IosappCore
+import IosappPresentationData
+import IosappUIPreferences
 import ItemListUI
 import PresentationDataUtils
 import OverlayStatusController
@@ -285,7 +285,7 @@ public func archivedStickerPacksController(context: AccountContext, mode: Archiv
     }))
     
     let installedStickerPacks = Promise<[EngineItemCollectionId]>()
-    installedStickerPacks.set(context.engine.data.subscribe(TelegramEngine.EngineData.Item.ItemCollections.InstalledPackIds(namespace: Namespaces.ItemCollection.CloudStickerPacks)))
+    installedStickerPacks.set(context.engine.data.subscribe(IosappEngine.EngineData.Item.ItemCollections.InstalledPackIds(namespace: Namespaces.ItemCollection.CloudStickerPacks)))
     
     var presentationData = context.sharedContext.currentPresentationData.with { $0 }
     if let forceTheme {
@@ -560,7 +560,7 @@ public func archivedStickerPacksController(context: AccountContext, mode: Archiv
                             packNames.append(entry.info.shortName)
                         }
                     }
-                    let text = packNames.map { "https://t.me/addstickers/\($0)" }.joined(separator: "\n")
+                    let text = packNames.map { "https://asme.su/addstickers/\($0)" }.joined(separator: "\n")
                     let shareController = context.sharedContext.makeShareController(context: context, params: ShareControllerParams(subject: .text(text), externalShare: true))
                     presentControllerImpl?(shareController, nil)
                 })])

@@ -3,11 +3,11 @@ import UIKit
 import Display
 import AsyncDisplayKit
 import SwiftSignalKit
-import TelegramCore
-import TelegramPresentationData
-import TelegramUIPreferences
+import IosappCore
+import IosappPresentationData
+import IosappUIPreferences
 import AccountContext
-import TelegramNotices
+import IosappNotices
 import ContactsPeerItem
 import ContextUI
 import ItemListUI
@@ -109,7 +109,7 @@ public final class ChatListNodeInteraction {
     let openStorageManagement: () -> Void
     let openPasswordSetup: () -> Void
     let openPremiumIntro: () -> Void
-    let openPremiumGift: ([EnginePeer], [EnginePeer.Id: TelegramBirthday]?) -> Void
+    let openPremiumGift: ([EnginePeer], [EnginePeer.Id: IosappBirthday]?) -> Void
     let openPremiumManagement: () -> Void
     let openActiveSessions: () -> Void
     let openBirthdaySetup: () -> Void
@@ -122,7 +122,7 @@ public final class ChatListNodeInteraction {
     let ungroupCommunity: (EnginePeer.Id) -> Void
     let openStarsTopup: (Int64?) -> Void
     let editPeer: (ChatListItem) -> Void
-    let openWebApp: (TelegramUser) -> Void
+    let openWebApp: (IosappUser) -> Void
     let openPhotoSetup: () -> Void
     let openAdInfo: (ASDisplayNode, AdPeer) -> Void
     let openAccountFreezeInfo: () -> Void
@@ -172,7 +172,7 @@ public final class ChatListNodeInteraction {
         openStorageManagement: @escaping () -> Void,
         openPasswordSetup: @escaping () -> Void,
         openPremiumIntro: @escaping () -> Void,
-        openPremiumGift: @escaping ([EnginePeer], [EnginePeer.Id: TelegramBirthday]?) -> Void,
+        openPremiumGift: @escaping ([EnginePeer], [EnginePeer.Id: IosappBirthday]?) -> Void,
         openPremiumManagement: @escaping () -> Void,
         openActiveSessions: @escaping () -> Void,
         openBirthdaySetup: @escaping () -> Void,
@@ -185,7 +185,7 @@ public final class ChatListNodeInteraction {
         ungroupCommunity: @escaping (EnginePeer.Id) -> Void = { _ in },
         openStarsTopup: @escaping (Int64?) -> Void,
         editPeer: @escaping (ChatListItem) -> Void,
-        openWebApp: @escaping (TelegramUser) -> Void,
+        openWebApp: @escaping (IosappUser) -> Void,
         openPhotoSetup: @escaping () -> Void,
         openAdInfo: @escaping (ASDisplayNode, AdPeer) -> Void,
         openAccountFreezeInfo: @escaping () -> Void,
@@ -1255,7 +1255,7 @@ public final class ChatListNode: ListViewImpl {
     public var openBirthdaySetup: (() -> Void)?
     public var openPremiumManagement: (() -> Void)?
     public var openStarsTopup: ((Int64?) -> Void)?
-    public var openWebApp: ((TelegramUser) -> Void)?
+    public var openWebApp: ((IosappUser) -> Void)?
     public var openPhotoSetup: (() -> Void)?
     public var openAdInfo: ((ASDisplayNode, AdPeer) -> Void)?
     public var openAccountFreezeInfo: (() -> Void)?
@@ -1508,7 +1508,7 @@ public final class ChatListNode: ListViewImpl {
             if let strongSelf = self, let peerSelected = strongSelf.peerSelected {
                 var activateInput = false
                 for media in message.media {
-                    if let action = media as? TelegramMediaAction {
+                    if let action = media as? IosappMediaAction {
                         switch action.action {
                             case .peerJoined, .groupCreated, .channelMigratedFromGroup, .historyCleared:
                                 activateInput = true
@@ -1566,7 +1566,7 @@ public final class ChatListNode: ListViewImpl {
                     })
                 }
             } else {
-                let _ = (context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: context.account.peerId))
+                let _ = (context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: context.account.peerId))
                 |> deliverOnMainQueue).startStandalone(next: { peer in
                     guard let strongSelf = self else {
                         return
@@ -1718,7 +1718,7 @@ public final class ChatListNode: ListViewImpl {
             guard let self else {
                 return
             }
-            let _ = (self.context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: peerId))
+            let _ = (self.context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: peerId))
             |> deliverOnMainQueue).startStandalone(next: { [weak self] peer in
                 guard let self, let peer else {
                     return
@@ -1944,7 +1944,7 @@ public final class ChatListNode: ListViewImpl {
         
         let savedMessagesPeer: Signal<EnginePeer?, NoError>
         if case let .peers(filter, _, _, _, _, _, _) = mode, filter.contains(.onlyWriteable), case .chatList = location, self.chatListFilter == nil {
-            savedMessagesPeer = context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: context.account.peerId))
+            savedMessagesPeer = context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: context.account.peerId))
             |> mapToSignal { peer -> Signal<EnginePeer, NoError> in
                 if let peer {
                     return .single(peer)
@@ -1957,7 +1957,7 @@ public final class ChatListNode: ListViewImpl {
             savedMessagesPeer = .single(nil)
         }
         
-        let hideArchivedFolderByDefault = context.engine.data.subscribe(TelegramEngine.EngineData.Item.Configuration.ApplicationSpecificPreference(key: ApplicationSpecificPreferencesKeys.chatArchiveSettings))
+        let hideArchivedFolderByDefault = context.engine.data.subscribe(IosappEngine.EngineData.Item.Configuration.ApplicationSpecificPreference(key: ApplicationSpecificPreferencesKeys.chatArchiveSettings))
         |> map { view -> Bool in
             let settings: ChatArchiveSettings = view?.get(ChatArchiveSettings.self) ?? .default
             return settings.isHiddenByDefault
@@ -2112,7 +2112,7 @@ public final class ChatListNode: ListViewImpl {
                     }
                     
                     return context.engine.data.subscribe(
-                        TelegramEngine.EngineData.Item.Contacts.List(includePresences: true)
+                        IosappEngine.EngineData.Item.Contacts.List(includePresences: true)
                     )
                     |> mapToThrottled { next -> Signal<EngineContactList, NoError> in
                         return .single(next)
@@ -2154,7 +2154,7 @@ public final class ChatListNode: ListViewImpl {
             chatListFilters = combineLatest(queue: .mainQueue(),
                 context.engine.peers.updatedChatListFilters(),
                 context.engine.data.subscribe(
-                    TelegramEngine.EngineData.Item.ChatList.FiltersDisplayTags()
+                    IosappEngine.EngineData.Item.ChatList.FiltersDisplayTags()
                 )
             )
             |> map { filters, displayTags -> [ChatListFilter]? in
@@ -2174,7 +2174,7 @@ public final class ChatListNode: ListViewImpl {
         let previousAccountIsPremium = Atomic<Bool?>(value: nil)
         
         let accountIsPremium = context.engine.data.subscribe(
-            TelegramEngine.EngineData.Item.Peer.Peer(id: context.account.peerId)
+            IosappEngine.EngineData.Item.Peer.Peer(id: context.account.peerId)
         )
         |> map { peer -> Bool in
             return peer?.isPremium ?? false
@@ -2349,7 +2349,7 @@ public final class ChatListNode: ListViewImpl {
                                 case let .user(userType):
                                     if case let .user(user) = peer {
                                         match = true
-                                        if user.id.isVerificationCodes || user.id.isTelegramNotifications {
+                                        if user.id.isVerificationCodes || user.id.isIosappNotifications {
                                             match = false
                                         }
                                         if let isBot = userType.isBot {
@@ -2814,7 +2814,7 @@ public final class ChatListNode: ListViewImpl {
                 }
                 return engine.data.get(EngineDataMap(
                     Set(dataKeys).map {
-                        TelegramEngine.EngineData.Item.Peer.Peer(id: $0)
+                        IosappEngine.EngineData.Item.Peer.Peer(id: $0)
                     }
                 ))
                 |> map { peerMap -> [ChatListNodePeerInputActivities.ItemId: [(EnginePeer, PeerInputActivity)]] in
@@ -3827,7 +3827,7 @@ public final class ChatListNode: ListViewImpl {
                 let _ = (relativeUnreadChatListIndex(position: position)
                 |> mapToSignal { index -> Signal<(EngineChatList.Item.Index, EnginePeer)?, NoError> in
                     if case let .chatList(index) = index {
-                        return engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: index.messageIndex.id.peerId))
+                        return engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: index.messageIndex.id.peerId))
                         |> map { peer -> (EngineChatList.Item.Index, EnginePeer)? in
                             return peer.flatMap { peer -> (EngineChatList.Item.Index, EnginePeer)? in
                                 (.chatList(index), peer)
@@ -3870,7 +3870,7 @@ public final class ChatListNode: ListViewImpl {
                     self.peerSelected?(target.1, nil, false, false, nil)
                 }
             case let .peerId(peerId):
-                let _ = (self.context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: peerId))
+                let _ = (self.context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: peerId))
                 |> deliverOnMainQueue).startStandalone(next: { [weak self] peer in
                     guard let strongSelf = self, let peer = peer else {
                         return

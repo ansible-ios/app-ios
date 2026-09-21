@@ -1,0 +1,18 @@
+namespace IosappCore;
+
+table IosappPeerAccessHash_Personal {
+    accessHash:int64 (id: 0);
+}
+
+table IosappPeerAccessHash_GenericPublic {
+    accessHash:int64 (id: 0);
+}
+
+union IosappPeerAccessHash_Value {
+    IosappPeerAccessHash_Personal,
+    IosappPeerAccessHash_GenericPublic
+}
+
+table IosappPeerAccessHash {
+    value:IosappPeerAccessHash_Value (id: 1, required);
+}

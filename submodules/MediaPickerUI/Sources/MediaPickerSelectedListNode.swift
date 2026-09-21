@@ -4,9 +4,9 @@ import AsyncDisplayKit
 import Display
 import SwiftSignalKit
 import Postbox
-import TelegramCore
-import TelegramPresentationData
-import TelegramStringFormatting
+import IosappCore
+import IosappPresentationData
+import IosappStringFormatting
 import LegacyComponents
 import CheckNode
 import MosaicLayout
@@ -573,7 +573,7 @@ private class MessageBackgroundNode: ASDisplayNode {
     
     private var absoluteRect: (CGRect, CGSize)?
     
-    func update(size: CGSize, theme: PresentationTheme, wallpaper: TelegramWallpaper, graphics: PrincipalThemeEssentialGraphics, wallpaperBackgroundNode: WallpaperBackgroundNode?, transition: ContainedViewLayoutTransition) {
+    func update(size: CGSize, theme: PresentationTheme, wallpaper: IosappWallpaper, graphics: PrincipalThemeEssentialGraphics, wallpaperBackgroundNode: WallpaperBackgroundNode?, transition: ContainedViewLayoutTransition) {
         self.backgroundNode.setType(type: .outgoing(.Extracted), highlighted: false, graphics: graphics, maskMode: false, hasWallpaper: wallpaper.hasWallpaper, transition: transition, backgroundNode: wallpaperBackgroundNode)
         self.backgroundWallpaperNode.setType(type: .outgoing(.Extracted), theme: ChatPresentationThemeData(theme: theme, wallpaper: wallpaper), essentialGraphics: graphics, maskMode: true, backgroundNode: wallpaperBackgroundNode)
         self.shadowNode.setType(type: .outgoing(.Extracted), hasWallpaper: wallpaper.hasWallpaper, graphics: graphics)
@@ -622,7 +622,7 @@ final class MediaPickerSelectedListNode: ASDisplayNode, ASScrollViewDelegate, AS
     
     var interaction: MediaPickerInteraction?
     
-    private var validLayout: (size: CGSize, insets: UIEdgeInsets, items: [TGMediaSelectableItem], grouped: Bool, theme: PresentationTheme, wallpaper: TelegramWallpaper, bubbleCorners: PresentationChatBubbleCorners)?
+    private var validLayout: (size: CGSize, insets: UIEdgeInsets, items: [TGMediaSelectableItem], grouped: Bool, theme: PresentationTheme, wallpaper: IosappWallpaper, bubbleCorners: PresentationChatBubbleCorners)?
     
     private var didSetReady = false
     private var ready = Promise<Bool>()
@@ -1048,14 +1048,14 @@ final class MediaPickerSelectedListNode: ASDisplayNode, ASScrollViewDelegate, AS
         if !self.isExternalPreview {
             let peerId = PeerId(namespace: Namespaces.Peer.CloudUser, id: PeerId.Id._internalFromInt64Value(1))
             var peers = SimpleDictionary<PeerId, Peer>()
-            peers[peerId] = TelegramUser(id: peerId, accessHash: nil, firstName: "", lastName: "", username: nil, phone: nil, photo: [], botInfo: nil, restrictionInfo: nil, flags: [], emojiStatus: nil, usernames: [], storiesHidden: nil, nameColor: nil, backgroundEmojiId: nil, profileColor: nil, profileBackgroundEmojiId: nil, subscriberCount: nil, verificationIconFileId: nil)
+            peers[peerId] = IosappUser(id: peerId, accessHash: nil, firstName: "", lastName: "", username: nil, phone: nil, photo: [], botInfo: nil, restrictionInfo: nil, flags: [], emojiStatus: nil, usernames: [], storiesHidden: nil, nameColor: nil, backgroundEmojiId: nil, profileColor: nil, profileBackgroundEmojiId: nil, subscriberCount: nil, verificationIconFileId: nil)
             
             let previewText = groupLayouts.count > 1 ? presentationData.strings.Attachment_MessagesPreview : presentationData.strings.Attachment_MessagePreview
             
-            let previewMessage = Message(stableId: 0, stableVersion: 0, id: MessageId(peerId: peerId, namespace: 0, id: 0), globallyUniqueId: nil, groupingKey: nil, groupInfo: nil, threadId: nil, timestamp: 0, flags: [], tags: [], globalTags: [], localTags: [], customTags: [], forwardInfo: nil, author: peers[peerId], text: "", attributes: [], media: [TelegramMediaAction(action: .customText(text: previewText, entities: [], additionalAttributes: nil))], peers: peers, associatedMessages: SimpleDictionary(), associatedMessageIds: [], associatedMedia: [:], associatedThreadInfo: nil, associatedStories: [:])
+            let previewMessage = Message(stableId: 0, stableVersion: 0, id: MessageId(peerId: peerId, namespace: 0, id: 0), globallyUniqueId: nil, groupingKey: nil, groupInfo: nil, threadId: nil, timestamp: 0, flags: [], tags: [], globalTags: [], localTags: [], customTags: [], forwardInfo: nil, author: peers[peerId], text: "", attributes: [], media: [IosappMediaAction(action: .customText(text: previewText, entities: [], additionalAttributes: nil))], peers: peers, associatedMessages: SimpleDictionary(), associatedMessageIds: [], associatedMedia: [:], associatedThreadInfo: nil, associatedStories: [:])
             let previewItem = self.context.sharedContext.makeChatMessagePreviewItem(context: context, messages: [previewMessage], theme: theme, strings: presentationData.strings, wallpaper: wallpaper, fontSize: presentationData.chatFontSize, chatBubbleCorners: bubbleCorners, dateTimeFormat: presentationData.dateTimeFormat, nameOrder: presentationData.nameDisplayOrder, forcedResourceStatus: nil, tapMessage: nil, clickThroughMessage: nil, backgroundNode: self.wallpaperBackgroundNode, availableReactions: nil, accountPeer: nil, isCentered: true, isPreview: true, isStandalone: false, rank: nil, rankRole: nil)
             
-            let dragMessage = Message(stableId: 0, stableVersion: 0, id: MessageId(peerId: peerId, namespace: 0, id: 0), globallyUniqueId: nil, groupingKey: nil, groupInfo: nil, threadId: nil, timestamp: 0, flags: [], tags: [], globalTags: [], localTags: [], customTags: [], forwardInfo: nil, author: peers[peerId], text: "", attributes: [], media: [TelegramMediaAction(action: .customText(text: presentationData.strings.Attachment_DragToReorder, entities: [], additionalAttributes: nil))], peers: peers, associatedMessages: SimpleDictionary(), associatedMessageIds: [], associatedMedia: [:], associatedThreadInfo: nil, associatedStories: [:])
+            let dragMessage = Message(stableId: 0, stableVersion: 0, id: MessageId(peerId: peerId, namespace: 0, id: 0), globallyUniqueId: nil, groupingKey: nil, groupInfo: nil, threadId: nil, timestamp: 0, flags: [], tags: [], globalTags: [], localTags: [], customTags: [], forwardInfo: nil, author: peers[peerId], text: "", attributes: [], media: [IosappMediaAction(action: .customText(text: presentationData.strings.Attachment_DragToReorder, entities: [], additionalAttributes: nil))], peers: peers, associatedMessages: SimpleDictionary(), associatedMessageIds: [], associatedMedia: [:], associatedThreadInfo: nil, associatedStories: [:])
             let dragItem = self.context.sharedContext.makeChatMessagePreviewItem(context: context, messages: [dragMessage], theme: theme, strings: presentationData.strings, wallpaper: wallpaper, fontSize: presentationData.chatFontSize, chatBubbleCorners: bubbleCorners, dateTimeFormat: presentationData.dateTimeFormat, nameOrder: presentationData.nameDisplayOrder, forcedResourceStatus: nil, tapMessage: nil, clickThroughMessage: nil, backgroundNode: self.wallpaperBackgroundNode, availableReactions: nil, accountPeer: nil, isCentered: true, isPreview: true, isStandalone: false, rank: nil, rankRole: nil)
             
             let headerItems: [ListViewItem] = [previewItem, dragItem]
@@ -1312,7 +1312,7 @@ final class MediaPickerSelectedListNode: ASDisplayNode, ASScrollViewDelegate, AS
         return self.contentSize
     }
     
-    func updateLayout(size: CGSize, insets: UIEdgeInsets, items: [TGMediaSelectableItem], grouped: Bool, theme: PresentationTheme, wallpaper: TelegramWallpaper, bubbleCorners: PresentationChatBubbleCorners, transition: ContainedViewLayoutTransition) {
+    func updateLayout(size: CGSize, insets: UIEdgeInsets, items: [TGMediaSelectableItem], grouped: Bool, theme: PresentationTheme, wallpaper: IosappWallpaper, bubbleCorners: PresentationChatBubbleCorners, transition: ContainedViewLayoutTransition) {
         let previous = self.validLayout
         self.validLayout = (size, insets, items, grouped, theme, wallpaper, bubbleCorners)
         

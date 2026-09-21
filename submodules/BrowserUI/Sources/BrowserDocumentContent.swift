@@ -2,10 +2,10 @@ import Foundation
 import UIKit
 import Display
 import ComponentFlow
-import TelegramCore
+import IosappCore
 import SwiftSignalKit
-import TelegramPresentationData
-import TelegramUIPreferences
+import IosappPresentationData
+import IosappUIPreferences
 import PresentationDataUtils
 import AccountContext
 @preconcurrency import WebKit
@@ -132,7 +132,7 @@ final class BrowserDocumentContent: UIView, BrowserContent, WKNavigationDelegate
         
         let fontFamily = state.isSerif ? "'Georgia, serif'" : "null"
         let textSizeAdjust = state.size != 100 ? "'\(state.size)%'" : "null"
-        let js = "\(setupFontFunctions) setTelegramFontOverrides(\(fontFamily), \(textSizeAdjust))";
+        let js = "\(setupFontFunctions) setIosappFontOverrides(\(fontFamily), \(textSizeAdjust))";
         self.webView.evaluateJavaScript(js) { _, _ in }
     }
     

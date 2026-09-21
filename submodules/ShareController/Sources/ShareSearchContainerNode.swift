@@ -1,11 +1,11 @@
 import Foundation
 import UIKit
 import AsyncDisplayKit
-import TelegramCore
+import IosappCore
 import Postbox
 import SwiftSignalKit
 import Display
-import TelegramPresentationData
+import IosappPresentationData
 import MergeLists
 import AccountContext
 
@@ -286,7 +286,7 @@ final class ShareSearchContainerNode: ASDisplayNode, ShareContentContainerNode {
         let foundItems = combineLatest(self.searchQuery.get(), self.themePromise.get())
         |> mapToSignal { query, theme -> Signal<([ShareSearchPeerEntry]?, Bool), NoError> in
             if !query.isEmpty {
-                let accountPeer = context.engineData.get(TelegramEngine.EngineData.Item.Peer.Peer(id: context.accountPeerId))
+                let accountPeer = context.engineData.get(IosappEngine.EngineData.Item.Peer.Peer(id: context.accountPeerId))
                 |> mapToSignal { peer -> Signal<EnginePeer, NoError> in
                     if let peer {
                         return .single(peer)
@@ -329,7 +329,7 @@ final class ShareSearchContainerNode: ASDisplayNode, ShareContentContainerNode {
                     var result = Set<EnginePeer.Id>()
                     
                     for peer in foundPeers.foundLocalPeers {
-                        if let user = peer.peer as? TelegramUser, user.flags.contains(.requirePremium) {
+                        if let user = peer.peer as? IosappUser, user.flags.contains(.requirePremium) {
                             result.insert(user.id)
                         }
                     }
@@ -355,7 +355,7 @@ final class ShareSearchContainerNode: ASDisplayNode, ShareContentContainerNode {
                     
                     return context.engineData.subscribe(
                         EngineDataMap(
-                            peerIds.map(TelegramEngine.EngineData.Item.Peer.IsPremiumRequiredForMessaging.init(id:))
+                            peerIds.map(IosappEngine.EngineData.Item.Peer.IsPremiumRequiredForMessaging.init(id:))
                         )
                     )
                 }

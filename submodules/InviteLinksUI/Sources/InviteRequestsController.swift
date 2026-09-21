@@ -3,9 +3,9 @@ import UIKit
 import AsyncDisplayKit
 import Display
 import SwiftSignalKit
-import TelegramCore
-import TelegramPresentationData
-import TelegramUIPreferences
+import IosappCore
+import IosappPresentationData
+import IosappUIPreferences
 import ItemListUI
 import PresentationDataUtils
 import OverlayStatusController
@@ -14,7 +14,7 @@ import AlertUI
 import PresentationDataUtils
 import AppBundle
 import ContextUI
-import TelegramStringFormatting
+import IosappStringFormatting
 import ItemListPeerActionItem
 import ItemListPeerItem
 import UndoUI
@@ -184,7 +184,7 @@ public func inviteRequestsController(context: AccountContext, updatedPresentatio
         importersContext.update(peer.id, action: .approve)
                 
         let _ = (context.engine.data.get(
-            TelegramEngine.EngineData.Item.Peer.Peer(id: peerId)
+            IosappEngine.EngineData.Item.Peer.Peer(id: peerId)
         )
         |> deliverOnMainQueue).start(next: { chatPeer in
             guard let chatPeer = chatPeer else {
@@ -220,7 +220,7 @@ public func inviteRequestsController(context: AccountContext, updatedPresentatio
         }
         
         let _ = (context.engine.data.get(
-            TelegramEngine.EngineData.Item.Peer.Peer(id: peerId)
+            IosappEngine.EngineData.Item.Peer.Peer(id: peerId)
         )
         |> deliverOnMainQueue).start(next: { chatPeer in
             guard let chatPeer = chatPeer else {
@@ -278,7 +278,7 @@ public func inviteRequestsController(context: AccountContext, updatedPresentatio
     let signal = combineLatest(queue: .mainQueue(),
         presentationData,
         context.engine.data.subscribe(
-            TelegramEngine.EngineData.Item.Peer.Peer(id: peerId)
+            IosappEngine.EngineData.Item.Peer.Peer(id: peerId)
         ),
         importersContext.state,
         statePromise.get()

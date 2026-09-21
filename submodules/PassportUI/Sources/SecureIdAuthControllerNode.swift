@@ -3,9 +3,9 @@ import UIKit
 import SwiftSignalKit
 import Display
 import AsyncDisplayKit
-import TelegramCore
-import TelegramPresentationData
-import TelegramUIPreferences
+import IosappCore
+import IosappPresentationData
+import IosappUIPreferences
 import ActivityIndicator
 import AccountContext
 

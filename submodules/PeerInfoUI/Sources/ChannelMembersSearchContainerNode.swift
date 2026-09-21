@@ -3,9 +3,9 @@ import UIKit
 import AsyncDisplayKit
 import Display
 import SwiftSignalKit
-import TelegramCore
-import TelegramPresentationData
-import TelegramUIPreferences
+import IosappCore
+import IosappPresentationData
+import IosappUIPreferences
 import MergeLists
 import AccountContext
 import TemporaryCachedPeerDataManager
@@ -452,7 +452,7 @@ public final class ChannelMembersSearchContainerNode: SearchDisplayControllerCon
                 state.revealedPeerId = nil
                 return state
             }
-            let signal = context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: memberId))
+            let signal = context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: memberId))
             |> mapToSignal { peer -> Signal<EnginePeer, NoError> in
                 if let peer {
                     return .single(peer)
@@ -491,7 +491,7 @@ public final class ChannelMembersSearchContainerNode: SearchDisplayControllerCon
                             }
                         }
                         
-                        return context.peerChannelMemberCategoriesContextsManager.updateMemberBannedRights(engine: context.engine, peerId: peerId, memberId: memberId, bannedRights: TelegramChatBannedRights(flags: [.banReadMessages], untilDate: Int32.max))
+                        return context.peerChannelMemberCategoriesContextsManager.updateMemberBannedRights(engine: context.engine, peerId: peerId, memberId: memberId, bannedRights: IosappChatBannedRights(flags: [.banReadMessages], untilDate: Int32.max))
                         |> afterDisposed {
                             Queue.mainQueue().async {
                                 updateState { state in
@@ -540,7 +540,7 @@ public final class ChannelMembersSearchContainerNode: SearchDisplayControllerCon
         if let searchContext = searchContext {
             emptyQueryItems = combineLatest(queue: .mainQueue(), statePromise.get(), searchContext.state.get(), context.account.postbox.peerView(id: peerId) |> take(1), presentationDataPromise.get())
             |> map { state, searchState, peerView, presentationData -> [ChannelMembersSearchEntry]? in
-                if let channel = peerView.peers[peerId] as? TelegramChannel {
+                if let channel = peerView.peers[peerId] as? IosappChannel {
                     var entries: [ChannelMembersSearchEntry] = []
                     
                     var index = 0
@@ -629,8 +629,8 @@ public final class ChannelMembersSearchContainerNode: SearchDisplayControllerCon
             guard let query = query, !query.isEmpty else {
                 return .single(nil)
             }
-            let isChannelOrCommunity = peerView.peers[peerId] is TelegramChannel ||  peerView.peers[peerId] is TelegramCommunity
-            let isCreator = (peerView.peers[peerId] as? TelegramChannel)?.flags.contains(.isCreator) == true || (peerView.peers[peerId] as? TelegramCommunity)?.flags.contains(.isCreator) == true
+            let isChannelOrCommunity = peerView.peers[peerId] is IosappChannel ||  peerView.peers[peerId] is IosappCommunity
+            let isCreator = (peerView.peers[peerId] as? IosappChannel)?.flags.contains(.isCreator) == true || (peerView.peers[peerId] as? IosappCommunity)?.flags.contains(.isCreator) == true
             
             if isChannelOrCommunity {
                 updateActivity(true)
@@ -775,16 +775,16 @@ public final class ChannelMembersSearchContainerNode: SearchDisplayControllerCon
                                     canPromote = false
                                     canRestrict = false
                                 case let .member(_, _, adminRights, bannedRights, _, _):
-                                    if (peerView.peers[peerId] as? TelegramChannel)?.hasPermission(.addAdmins) == true {
+                                    if (peerView.peers[peerId] as? IosappChannel)?.hasPermission(.addAdmins) == true {
                                         canPromote = true
-                                    } else if (peerView.peers[peerId] as? TelegramCommunity)?.hasPermission(.addAdmins) == true {
+                                    } else if (peerView.peers[peerId] as? IosappCommunity)?.hasPermission(.addAdmins) == true {
                                         canPromote = true
                                     } else {
                                         canPromote = false
                                     }
-                                    if (peerView.peers[peerId] as? TelegramChannel)?.hasPermission(.banMembers) == true {
+                                    if (peerView.peers[peerId] as? IosappChannel)?.hasPermission(.banMembers) == true {
                                         canRestrict = true
-                                    } else if (peerView.peers[peerId] as? TelegramCommunity)?.hasPermission(.banUsers) == true {
+                                    } else if (peerView.peers[peerId] as? IosappCommunity)?.hasPermission(.banUsers) == true {
                                         canRestrict = true
                                     } else {
                                         canRestrict = false
@@ -959,7 +959,7 @@ public final class ChannelMembersSearchContainerNode: SearchDisplayControllerCon
                     
                     return entries
                 }
-            } else if let group = peerView.peers[peerId] as? TelegramGroup, let cachedData = peerView.cachedData as? CachedGroupData {
+            } else if let group = peerView.peers[peerId] as? IosappGroup, let cachedData = peerView.cachedData as? CachedGroupData {
                 updateActivity(true)
                 let foundGroupMembers: Signal<[RenderedChannelParticipant], NoError>
                 let foundMembers: Signal<[RenderedChannelParticipant], NoError>
@@ -998,7 +998,7 @@ public final class ChannelMembersSearchContainerNode: SearchDisplayControllerCon
                                             peers[creator.id] = creator
                                         }
                                         peers[peer.id] = EnginePeer(peer)
-                                        renderedParticipant = RenderedChannelParticipant(participant: .member(id: peer.id, invitedAt: 0, adminInfo: ChannelParticipantAdminInfo(rights: TelegramChatAdminRights(rights: TelegramChatAdminRightsFlags.peerSpecific(peer: .legacyGroup(group))), promotedBy: creatorPeer?.id ?? context.account.peerId, canBeEditedByAccountPeer: creatorPeer?.id == context.account.peerId), banInfo: nil, rank: nil, subscriptionUntilDate: nil), peer: EnginePeer(peer), peers: peers)
+                                        renderedParticipant = RenderedChannelParticipant(participant: .member(id: peer.id, invitedAt: 0, adminInfo: ChannelParticipantAdminInfo(rights: IosappChatAdminRights(rights: IosappChatAdminRightsFlags.peerSpecific(peer: .legacyGroup(group))), promotedBy: creatorPeer?.id ?? context.account.peerId, canBeEditedByAccountPeer: creatorPeer?.id == context.account.peerId), banInfo: nil, rank: nil, subscriptionUntilDate: nil), peer: EnginePeer(peer), peers: peers)
                                     case .member:
                                         var peers: [EnginePeer.Id: EnginePeer] = [:]
                                         peers[peer.id] = EnginePeer(peer)

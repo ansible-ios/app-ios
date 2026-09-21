@@ -2,11 +2,11 @@ import Foundation
 import UIKit
 import Display
 import AsyncDisplayKit
-import TelegramCore
+import IosappCore
 import SwiftSignalKit
 import AccountContext
-import TelegramPresentationData
-import TelegramUIPreferences
+import IosappPresentationData
+import IosappUIPreferences
 import MergeLists
 import ShimmerEffect
 import ContextUI
@@ -143,7 +143,7 @@ private final class StickerPackContainer: ASDisplayNode {
     private let sendSticker: ((FileMediaReference, UIView?, CGRect?) -> Bool)?
     private let sendEmoji: ((String, ChatTextInputTextCustomEmojiAttribute) -> Void)?
     private let backgroundNode: ASImageNode
-    private let previewIconFile: TelegramMediaFile?
+    private let previewIconFile: IosappMediaFile?
     private var mainPreviewIcon: ComponentView<Empty>?
     private let gridNode: GridNode
     private let buttonNode: HighlightableButtonNode
@@ -205,7 +205,7 @@ private final class StickerPackContainer: ASDisplayNode {
         presentationData: PresentationData,
         stickerPacks: [StickerPackReference],
         loadedStickerPacks: [LoadedStickerPack],
-        previewIconFile: TelegramMediaFile?,
+        previewIconFile: IosappMediaFile?,
         decideNextAction: @escaping (StickerPackContainer, StickerPackAction) -> StickerPackNextAction,
         requestDismiss: @escaping () -> Void,
         expandProgressUpdated: @escaping (StickerPackContainer, ContainedViewLayoutTransition, ContainedViewLayoutTransition) -> Void,
@@ -250,14 +250,14 @@ private final class StickerPackContainer: ASDisplayNode {
         self.titleNode.textAlignment = .center
         self.titleNode.maximumNumberOfLines = 2
         self.titleNode.highlightAttributeAction = { attributes in
-            if let _ = attributes[NSAttributedString.Key(rawValue: TelegramTextAttributes.PeerTextMention)] {
-                return NSAttributedString.Key(rawValue: TelegramTextAttributes.PeerTextMention)
+            if let _ = attributes[NSAttributedString.Key(rawValue: IosappTextAttributes.PeerTextMention)] {
+                return NSAttributedString.Key(rawValue: IosappTextAttributes.PeerTextMention)
             } else {
                 return nil
             }
         }
         self.titleNode.tapAttributeAction = { attributes, _ in
-            if let mention = attributes[NSAttributedString.Key(rawValue: TelegramTextAttributes.PeerTextMention)] as? String, mention.count > 1 {
+            if let mention = attributes[NSAttributedString.Key(rawValue: IosappTextAttributes.PeerTextMention)] as? String, mention.count > 1 {
                 openMention(String(mention[mention.index(after:  mention.startIndex)...]))
             }
         }
@@ -410,7 +410,7 @@ private final class StickerPackContainer: ASDisplayNode {
             return context.engine.stickers.loadedStickerPack(reference: packReference, forceActualized: true, ignoreCache: ignoreCache)
         })
         
-        self.itemsDisposable = combineLatest(queue: Queue.mainQueue(), fetchedStickerPacks, context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: context.account.peerId))).start(next: { [weak self] contents, peer in
+        self.itemsDisposable = combineLatest(queue: Queue.mainQueue(), fetchedStickerPacks, context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: context.account.peerId))).start(next: { [weak self] contents, peer in
             guard let strongSelf = self else {
                 return
             }
@@ -490,7 +490,7 @@ private final class StickerPackContainer: ASDisplayNode {
                     let accountPeerId = strongSelf.context.account.peerId
                     return combineLatest(
                         strongSelf.context.engine.stickers.isStickerSaved(id: item.file.fileId),
-                        strongSelf.context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: accountPeerId)) |> map { peer -> Bool in
+                        strongSelf.context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: accountPeerId)) |> map { peer -> Bool in
                             var hasPremium = false
                             if case let .user(user) = peer, user.isPremium {
                                 hasPremium = true
@@ -804,7 +804,7 @@ private final class StickerPackContainer: ASDisplayNode {
         }
     }
     
-    private func emojiSuggestionPeekContent(itemLayer: CALayer, file: TelegramMediaFile) -> Signal<(UIView, CGRect, PeekControllerContent)?, NoError> {
+    private func emojiSuggestionPeekContent(itemLayer: CALayer, file: IosappMediaFile) -> Signal<(UIView, CGRect, PeekControllerContent)?, NoError> {
         let context = self.context
         
         var collectionId: EngineItemCollectionId?
@@ -826,7 +826,7 @@ private final class StickerPackContainer: ASDisplayNode {
         
         let accountPeerId = context.account.peerId
         
-        return context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: accountPeerId))
+        return context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: accountPeerId))
         |> map { peer -> Bool in
             var hasPremium = false
             if case let .user(user) = peer, user.isPremium {
@@ -853,7 +853,7 @@ private final class StickerPackContainer: ASDisplayNode {
                 }*/
             }
             
-            let sendEmoji: (TelegramMediaFile) -> Void = { file in
+            let sendEmoji: (IosappMediaFile) -> Void = { file in
                 guard let self else {
                     return
                 }
@@ -879,7 +879,7 @@ private final class StickerPackContainer: ASDisplayNode {
                     self.sendEmoji?(text, emojiAttribute)
                 }
             }
-            let setStatus: (TelegramMediaFile) -> Void = { file in
+            let setStatus: (IosappMediaFile) -> Void = { file in
                 guard let self else {
                     return
                 }
@@ -899,7 +899,7 @@ private final class StickerPackContainer: ASDisplayNode {
                 let undoController = UndoOverlayController(presentationData: presentationData, content: .sticker(context: context, file: file, loop: true, title: nil, text: presentationData.strings.EmojiStatus_AppliedText, undoText: nil, customAction: nil), elevatedLayout: false, animateInAsReplacement: animateInAsReplacement, action: { _ in return false })
                 controller.present(undoController, in: .window(.root))
             }
-            let copyEmoji: (TelegramMediaFile) -> Void = { file in
+            let copyEmoji: (IosappMediaFile) -> Void = { file in
                 var text = "."
                 var emojiAttribute: ChatTextInputTextCustomEmojiAttribute?
                 loop: for attribute in file.attributes {
@@ -1087,18 +1087,18 @@ private final class StickerPackContainer: ASDisplayNode {
                     links += "\n"
                 }
                 if info.id.namespace == Namespaces.ItemCollection.CloudEmojiPacks {
-                    links += "https://t.me/addemoji/\(info.shortName)"
+                    links += "https://asme.su/addemoji/\(info.shortName)"
                 } else {
-                    links += "https://t.me/addstickers/\(info.shortName)"
+                    links += "https://asme.su/addstickers/\(info.shortName)"
                 }
             }
             text = links
             shareSubject = .text(text)
         } else if let (info, _, _) = self.currentStickerPack {
             if info.id.namespace == Namespaces.ItemCollection.CloudEmojiPacks {
-                text = "https://t.me/addemoji/\(info.shortName)"
+                text = "https://asme.su/addemoji/\(info.shortName)"
             } else {
-                text = "https://t.me/addstickers/\(info.shortName)"
+                text = "https://asme.su/addstickers/\(info.shortName)"
             }
             shareSubject = .url(text)
         } else {
@@ -1377,7 +1377,7 @@ private final class StickerPackContainer: ASDisplayNode {
         navigationController?.pushViewController(controller)
     }
     
-    private func openEditSticker(_ initialFile: TelegramMediaFile, isEditing: Bool) {
+    private func openEditSticker(_ initialFile: IosappMediaFile, isEditing: Bool) {
         guard let (info, items, _) = self.currentStickerPack else {
             return
         }
@@ -2364,7 +2364,7 @@ private final class StickerPackScreenNode: ViewControllerTracingNode {
     private weak var controller: StickerPackScreenImpl?
     private var presentationData: PresentationData
     private let stickerPacks: [StickerPackReference]
-    private let previewIconFile: TelegramMediaFile?
+    private let previewIconFile: IosappMediaFile?
     private let modalProgressUpdated: (CGFloat, ContainedViewLayoutTransition) -> Void
     private let dismissed: () -> Void
     private let presentInGlobalOverlay: (ViewController, Any?) -> Void
@@ -2398,7 +2398,7 @@ private final class StickerPackScreenNode: ViewControllerTracingNode {
         context: AccountContext,
         controller: StickerPackScreenImpl,
         stickerPacks: [StickerPackReference],
-        previewIconFile: TelegramMediaFile?,
+        previewIconFile: IosappMediaFile?,
         initialSelectedStickerPackIndex: Int,
         modalProgressUpdated: @escaping (CGFloat, ContainedViewLayoutTransition) -> Void,
         dismissed: @escaping () -> Void,
@@ -2839,7 +2839,7 @@ public final class StickerPackScreenImpl: ViewController, StickerPackScreen {
     
     private let stickerPacks: [StickerPackReference]
     fileprivate let loadedStickerPacks: [LoadedStickerPack]
-    let previewIconFile: TelegramMediaFile?
+    let previewIconFile: IosappMediaFile?
     
     private let initialSelectedStickerPackIndex: Int
     fileprivate weak var parentNavigationController: NavigationController?
@@ -2879,7 +2879,7 @@ public final class StickerPackScreenImpl: ViewController, StickerPackScreen {
         updatedPresentationData: (initial: PresentationData, signal: Signal<PresentationData, NoError>)? = nil,
         stickerPacks: [StickerPackReference],
         loadedStickerPacks: [LoadedStickerPack],
-        previewIconFile: TelegramMediaFile?,
+        previewIconFile: IosappMediaFile?,
         selectedStickerPackIndex: Int = 0,
         mainActionTitle: String? = nil,
         actionTitle: String? = nil,
@@ -3126,7 +3126,7 @@ public func StickerPackScreen(
     mainStickerPack: StickerPackReference,
     stickerPacks: [StickerPackReference],
     loadedStickerPacks: [LoadedStickerPack] = [],
-    previewIconFile: TelegramMediaFile? = nil,
+    previewIconFile: IosappMediaFile? = nil,
     mainActionTitle: String? = nil,
     actionTitle: String? = nil,
     isEditing: Bool = false,

@@ -1,10 +1,10 @@
 import Foundation
-import TelegramCore
+import IosappCore
 import SwiftSignalKit
 import Display
 import MergeLists
 import SearchUI
-import TelegramUIPreferences
+import IosappUIPreferences
 
 struct ChatListNodeView {
     let originalList: EngineChatList

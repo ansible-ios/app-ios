@@ -1,11 +1,11 @@
 import Foundation
 import UIKit
-import TelegramCore
+import IosappCore
 import Display
-import TelegramPresentationData
-import TelegramUIPreferences
+import IosappPresentationData
+import IosappUIPreferences
 import TextFormat
-import TelegramStringFormatting
+import IosappStringFormatting
 import MosaicLayout
 
 // MARK: - Public layout data types
@@ -24,14 +24,14 @@ public struct InstantPageV2Layout {
     /// form the `WebpageReference` for `ImageMediaReference.webPage(...)`. May
     /// be nil for non-webpage-anchored layouts; in that case the lookup proceeds
     /// but no fetch signal can be bound (image view simply isn't created).
-    public let webpage: TelegramMediaWebpage?
+    public let webpage: IosappMediaWebpage?
 
     /// Set by `layoutInstantPageV2` when the page contains at least one `.relative` `textDate`.
     /// The minimum refresh period (seconds, >=10) across all relative dates; the rich-data bubble
     /// schedules a timer on it to keep "N minutes ago" fresh. nil => no relative date => no timer.
     public var formattedDateUpdatePeriod: Int32? = nil
 
-    public init(contentSize: CGSize, items: [InstantPageV2LaidOutItem], detailsIndices: [Int], media: [EngineMedia.Id: EngineMedia] = [:], webpage: TelegramMediaWebpage? = nil) {
+    public init(contentSize: CGSize, items: [InstantPageV2LaidOutItem], detailsIndices: [Int], media: [EngineMedia.Id: EngineMedia] = [:], webpage: IosappMediaWebpage? = nil) {
         self.contentSize = contentSize
         self.items = items
         self.detailsIndices = detailsIndices
@@ -267,11 +267,11 @@ public struct InstantPageV2MediaImageItem {
     public var frame: CGRect
     public let cornerRadius: CGFloat
     public let media: InstantPageMedia
-    public let webPage: TelegramMediaWebpage
+    public let webPage: IosappMediaWebpage
     public let attributes: [InstantPageImageAttribute]   // always empty for image; kept for symmetry
     public let spoiler: Bool
 
-    public init(frame: CGRect, cornerRadius: CGFloat, media: InstantPageMedia, webPage: TelegramMediaWebpage, attributes: [InstantPageImageAttribute], spoiler: Bool = false) {
+    public init(frame: CGRect, cornerRadius: CGFloat, media: InstantPageMedia, webPage: IosappMediaWebpage, attributes: [InstantPageImageAttribute], spoiler: Bool = false) {
         self.frame = frame
         self.cornerRadius = cornerRadius
         self.media = media
@@ -284,9 +284,9 @@ public struct InstantPageV2MediaImageItem {
 public struct InstantPageV2MediaAudioItem {
     public var frame: CGRect
     public let media: InstantPageMedia
-    public let webPage: TelegramMediaWebpage
+    public let webPage: IosappMediaWebpage
 
-    public init(frame: CGRect, media: InstantPageMedia, webPage: TelegramMediaWebpage) {
+    public init(frame: CGRect, media: InstantPageMedia, webPage: IosappMediaWebpage) {
         self.frame = frame
         self.media = media
         self.webPage = webPage
@@ -297,11 +297,11 @@ public struct InstantPageV2MediaVideoItem {
     public var frame: CGRect
     public let cornerRadius: CGFloat
     public let media: InstantPageMedia
-    public let webPage: TelegramMediaWebpage
+    public let webPage: IosappMediaWebpage
     public let attributes: [InstantPageImageAttribute]   // always empty
     public let spoiler: Bool
 
-    public init(frame: CGRect, cornerRadius: CGFloat, media: InstantPageMedia, webPage: TelegramMediaWebpage, attributes: [InstantPageImageAttribute], spoiler: Bool = false) {
+    public init(frame: CGRect, cornerRadius: CGFloat, media: InstantPageMedia, webPage: IosappMediaWebpage, attributes: [InstantPageImageAttribute], spoiler: Bool = false) {
         self.frame = frame
         self.cornerRadius = cornerRadius
         self.media = media
@@ -315,10 +315,10 @@ public struct InstantPageV2MediaMapItem {
     public var frame: CGRect
     public let cornerRadius: CGFloat
     public let media: InstantPageMedia
-    public let webPage: TelegramMediaWebpage
+    public let webPage: IosappMediaWebpage
     public let attributes: [InstantPageImageAttribute]   // [InstantPageMapAttribute] with zoom + dimensions
 
-    public init(frame: CGRect, cornerRadius: CGFloat, media: InstantPageMedia, webPage: TelegramMediaWebpage, attributes: [InstantPageImageAttribute]) {
+    public init(frame: CGRect, cornerRadius: CGFloat, media: InstantPageMedia, webPage: IosappMediaWebpage, attributes: [InstantPageImageAttribute]) {
         self.frame = frame
         self.cornerRadius = cornerRadius
         self.media = media
@@ -331,10 +331,10 @@ public struct InstantPageV2MediaCoverImageItem {
     public var frame: CGRect
     public let cornerRadius: CGFloat
     public let media: InstantPageMedia                   // media.media == .webpage(synthesized fake webpage with cover image)
-    public let webPage: TelegramMediaWebpage             // the parent IV's webpage (for WebpageReference)
+    public let webPage: IosappMediaWebpage             // the parent IV's webpage (for WebpageReference)
     public let attributes: [InstantPageImageAttribute]   // always empty
 
-    public init(frame: CGRect, cornerRadius: CGFloat, media: InstantPageMedia, webPage: TelegramMediaWebpage, attributes: [InstantPageImageAttribute]) {
+    public init(frame: CGRect, cornerRadius: CGFloat, media: InstantPageMedia, webPage: IosappMediaWebpage, attributes: [InstantPageImageAttribute]) {
         self.frame = frame
         self.cornerRadius = cornerRadius
         self.media = media
@@ -352,9 +352,9 @@ public struct InstantPageV2MediaPlaceholderItem {
 public struct InstantPageV2SlideshowItem {
     public var frame: CGRect
     public let medias: [InstantPageMedia]
-    public let webPage: TelegramMediaWebpage
+    public let webPage: IosappMediaWebpage
 
-    public init(frame: CGRect, medias: [InstantPageMedia], webPage: TelegramMediaWebpage) {
+    public init(frame: CGRect, medias: [InstantPageMedia], webPage: IosappMediaWebpage) {
         self.frame = frame
         self.medias = medias
         self.webPage = webPage
@@ -409,7 +409,7 @@ public struct InstantPageV2AnchorItem {
 // MARK: - Public entry points
 
 public func layoutInstantPageV2(
-    webpage: TelegramMediaWebpage,
+    webpage: IosappMediaWebpage,
     instantPage: InstantPage,
     userLocation: MediaResourceUserLocation,
     boundingWidth: CGFloat,
@@ -603,7 +603,7 @@ private struct LayoutContext {
     let dateTimeFormat: PresentationDateTimeFormat
     let formatDate: (Int32, MessageTextEntityType.DateTimeFormat) -> String
     let userLocation: MediaResourceUserLocation
-    let webpage: TelegramMediaWebpage
+    let webpage: IosappMediaWebpage
     let media: [EngineMedia.Id: EngineMedia]
     let cachedMessageSyntaxHighlight: CachedMessageSyntaxHighlight?
     let rtl: Bool
@@ -910,7 +910,7 @@ private func layoutBlock(
             let embedHeight: CGFloat = CGFloat(dimensions?.height ?? 240)
             let naturalSize = CGSize(width: boundingWidth, height: embedHeight)
             let size = PixelDimensions(width: Int32(naturalSize.width), height: Int32(naturalSize.height))
-            let loadedContent = TelegramMediaWebpageLoadedContent(
+            let loadedContent = IosappMediaWebpageLoadedContent(
                 url: url,
                 displayUrl: url,
                 hash: 0,
@@ -931,7 +931,7 @@ private func layoutBlock(
                 attributes: [],
                 instantPage: nil
             )
-            let coverWebpage = TelegramMediaWebpage(
+            let coverWebpage = IosappMediaWebpage(
                 webpageId: EngineMedia.Id(namespace: Namespaces.Media.LocalWebpage, id: -1),
                 content: .Loaded(loadedContent)
             )
@@ -1011,7 +1011,7 @@ private func layoutBlock(
             effectiveDimensions = PixelDimensions(width: 600, height: 300)
         }
         let naturalSize = CGSize(width: CGFloat(effectiveDimensions.width), height: CGFloat(effectiveDimensions.height))
-        let map = TelegramMediaMap(
+        let map = IosappMediaMap(
             latitude: latitude,
             longitude: longitude,
             heading: nil,
@@ -3369,7 +3369,7 @@ func layoutTextItem(
                     let x = lowerX < upperX ? lowerX : upperX
                     markedItems.append(InstantPageTextMarkedItem(frame: CGRect(x: workingLineOrigin.x + x, y: workingLineOrigin.y + (lineAscent - fontLineHeight) + delta, width: abs(upperX - lowerX), height: lineHeight), color: color, range: range))
                 }
-                if attributes[NSAttributedString.Key(rawValue: TelegramTextAttributes.Spoiler)] != nil {
+                if attributes[NSAttributedString.Key(rawValue: IosappTextAttributes.Spoiler)] != nil {
                     let lowerX = floor(CTLineGetOffsetForStringIndex(line, range.location, nil))
                     let upperX = ceil(CTLineGetOffsetForStringIndex(line, range.location + range.length, nil))
                     let x = lowerX < upperX ? lowerX : upperX

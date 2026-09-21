@@ -1,5 +1,5 @@
-#ifndef Telegram_NetworkLogging_h
-#define Telegram_NetworkLogging_h
+#ifndef Iosapp_NetworkLogging_h
+#define Iosapp_NetworkLogging_h
 
 #import <Foundation/Foundation.h>
 

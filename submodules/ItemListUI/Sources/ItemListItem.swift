@@ -1,8 +1,8 @@
 import Foundation
 import UIKit
 import Display
-import TelegramUIPreferences
-import TelegramPresentationData
+import IosappUIPreferences
+import IosappPresentationData
 
 public protocol ItemListItemTag {
     func isEqual(to other: ItemListItemTag) -> Bool

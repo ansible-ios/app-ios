@@ -3,14 +3,14 @@ import UIKit
 import AsyncDisplayKit
 import SwiftSignalKit
 import Display
-import TelegramPresentationData
+import IosappPresentationData
 import ActivityIndicator
 import RadialStatusNode
 import AnimatedStickerNode
-import TelegramAnimatedStickerNode
+import IosappAnimatedStickerNode
 import AppBundle
-import TelegramUniversalVideoContent
-import TelegramCore
+import IosappUniversalVideoContent
+import IosappCore
 import AccountContext
 
 private func fileSize(_ path: String, useTotalFileAllocatedSize: Bool = false) -> Int64? {
@@ -281,7 +281,7 @@ public final class ShareProlongedLoadingContainerNode: ASDisplayNode, ShareConte
             let decoration = ChatBubbleVideoDecoration(corners: ImageCorners(), nativeSize: CGSize(width: 100.0, height: 100.0), contentMode: .aspectFit, backgroundColor: .black)
             let _ = decoration
             
-            let dummyFile = TelegramMediaFile(fileId: EngineMedia.Id(namespace: 0, id: 1), partialReference: nil, resource: LocalFileReferenceMediaResource(localFilePath: path, randomId: 12345), previewRepresentations: [], videoThumbnails: [], immediateThumbnailData: nil, mimeType: "video/mp4", size: size, attributes: [.Video(duration: 1, size: PixelDimensions(width: 100, height: 100), flags: [], preloadSize: nil, coverTime: nil, videoCodec: nil)], alternativeRepresentations: [])
+            let dummyFile = IosappMediaFile(fileId: EngineMedia.Id(namespace: 0, id: 1), partialReference: nil, resource: LocalFileReferenceMediaResource(localFilePath: path, randomId: 12345), previewRepresentations: [], videoThumbnails: [], immediateThumbnailData: nil, mimeType: "video/mp4", size: size, attributes: [.Video(duration: 1, size: PixelDimensions(width: 100, height: 100), flags: [], preloadSize: nil, coverTime: nil, videoCodec: nil)], alternativeRepresentations: [])
             
             let videoContent = NativeVideoContent(id: .message(1, EngineMedia.Id(namespace: 0, id: 1)), userLocation: .other, fileReference: .standalone(media: dummyFile), streamVideo: .none, loopVideo: true, enableSound: false, fetchAutomatically: true, onlyFullSizeThumbnail: false, continuePlayingWithoutSoundOnLostAudioSession: false, placeholderColor: .black, storeAfterDownload: nil)
             let _ = videoContent

@@ -4,15 +4,15 @@ import Display
 import AsyncDisplayKit
 import SwiftSignalKit
 import AccountContext
-import TelegramPresentationData
+import IosappPresentationData
 import ItemListUI
 import SolidRoundedButtonNode
-import TelegramCore
+import IosappCore
 import TextFormat
 import ComponentFlow
 import ButtonComponent
 import BundleIconComponent
-import TelegramStringFormatting
+import IosappStringFormatting
 
 final class MonetizationBalanceItem: ListViewItem, ItemListItem {
     let context: AccountContext

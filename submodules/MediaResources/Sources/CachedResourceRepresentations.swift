@@ -1,7 +1,7 @@
 import Foundation
 import UIKit
 import SwiftSignalKit
-import TelegramCore
+import IosappCore
 
 public final class CachedStickerAJpegRepresentation: EngineRawCachedMediaResourceRepresentation {
     public let size: CGSize?

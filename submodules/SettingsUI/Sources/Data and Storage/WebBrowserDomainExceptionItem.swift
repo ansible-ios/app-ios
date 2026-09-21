@@ -3,8 +3,8 @@ import UIKit
 import Display
 import AsyncDisplayKit
 import SwiftSignalKit
-import TelegramPresentationData
-import TelegramCore
+import IosappPresentationData
+import IosappCore
 import AccountContext
 import ItemListUI
 import StickerResources
@@ -111,7 +111,7 @@ final class WebBrowserDomainExceptionItemNode: ItemListRevealOptionsItemNode, It
     
     private var item: WebBrowserDomainExceptionItem?
     private var layoutParams: ListViewItemLayoutParams?
-    private var currentIconFile: TelegramMediaFile?
+    private var currentIconFile: IosappMediaFile?
     
     override public var canBeSelected: Bool {
         return false

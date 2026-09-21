@@ -1,0 +1,48 @@
+load("@build_bazel_rules_swift//swift:swift.bzl", "swift_library")
+
+swift_library(
+    name = "StickerPickerScreen",
+    module_name = "StickerPickerScreen",
+    srcs = glob([
+        "Sources/**/*.swift",
+    ]),
+    copts = [
+        "-warnings-as-errors",
+    ],
+    deps = [
+        "//submodules/AsyncDisplayKit",
+        "//submodules/Display",
+        "//submodules/Postbox",
+        "//submodules/IosappCore",
+        "//submodules/SSignalKit/SwiftSignalKit",
+        "//submodules/ComponentFlow",
+        "//submodules/Components/ViewControllerComponent",
+        "//submodules/Components/ComponentDisplayAdapters",
+        "//submodules/Components/MultilineTextComponent",
+        "//submodules/IosappPresentationData",
+        "//submodules/IosappUIPreferences",
+        "//submodules/AccountContext",
+        "//submodules/AppBundle",
+        "//submodules/IosappStringFormatting",
+        "//submodules/PresentationDataUtils",
+        "//submodules/IosappNotices",
+        "//submodules/FeaturedStickersScreen",
+        "//submodules/Components/PagerComponent",
+        "//submodules/Components/BundleIconComponent",
+        "//submodules/IosappUI/Components/EntityKeyboardGifContent",
+        "//submodules/IosappUI/Components/EntityKeyboard",
+        "//submodules/IosappUI/Components/ChatEntityKeyboardInputNode",
+        "//submodules/IosappUI/Components/ButtonComponent",
+        "//submodules/IosappUI/Components/LottieComponent",
+        "//submodules/IosappUI/Components/LottieComponentResourceContent",
+        "//submodules/ChatPresentationInterfaceState",
+        "//submodules/IosappUI/Components/MediaEditor",
+        "//submodules/IosappUI/Components/CameraButtonComponent",
+        "//submodules/ContextUI",
+        "//submodules/UndoUI",
+        "//submodules/IosappUI/Components/TextLoadingEffect",
+    ],
+    visibility = [
+        "//visibility:public",
+    ],
+)

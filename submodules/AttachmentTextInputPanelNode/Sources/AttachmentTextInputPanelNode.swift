@@ -3,9 +3,9 @@ import UIKit
 import Display
 import AsyncDisplayKit
 import SwiftSignalKit
-import TelegramCore
+import IosappCore
 import MobileCoreServices
-import TelegramPresentationData
+import IosappPresentationData
 import TextFormat
 import AccountContext
 import TouchDownGesture
@@ -203,7 +203,7 @@ private func makeTextInputTheme(context: AccountContext, interfaceState: ChatPre
     let lineStyle: ChatInputTextView.Theme.Quote.LineStyle
     let authorNameColor: UIColor
 
-    if let peer = interfaceState.renderedPeer?.peer as? TelegramChannel, case .broadcast = peer.info, let nameColor = peer.nameColor {
+    if let peer = interfaceState.renderedPeer?.peer as? IosappChannel, case .broadcast = peer.info, let nameColor = peer.nameColor {
         let colors = context.peerNameColors.get(nameColor)
         authorNameColor = colors.main
 
@@ -528,10 +528,10 @@ public class AttachmentTextInputPanelNode: ASDisplayNode, TGCaptionPanelView, AS
         self.updateSendButtonEnabled(isCaption || isAttachment, animated: false)
 
         if self.isCaption || self.isAttachment {
-            let _ = (self.context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: self.context.account.peerId))
+            let _ = (self.context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: self.context.account.peerId))
             |> mapToSignal { peer -> Signal<Int32, NoError> in
                 if let peer = peer {
-                    return self.context.engine.data.get(TelegramEngine.EngineData.Item.Configuration.UserLimits.init(isPremium: peer.isPremium))
+                    return self.context.engine.data.get(IosappEngine.EngineData.Item.Configuration.UserLimits.init(isPremium: peer.isPremium))
                     |> map { limits in
                         return limits.maxCaptionLength
                     }

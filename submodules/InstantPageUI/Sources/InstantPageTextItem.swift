@@ -1,10 +1,10 @@
 import Foundation
 import UIKit
-import TelegramCore
+import IosappCore
 import Display
 import AsyncDisplayKit
-import TelegramPresentationData
-import TelegramUIPreferences
+import IosappPresentationData
+import IosappUIPreferences
 import TextFormat
 import AccountContext
 import ContextUI
@@ -469,13 +469,13 @@ public final class InstantPageTextItem: InstantPageItem {
     public func linkSelectionRects(at point: CGPoint) -> [CGRect] {
         if let (index, dict) = self.attributesAtPoint(point) {
             let interactiveKeys = [
-                TelegramTextAttributes.URL,
-                TelegramTextAttributes.PeerMention,
-                TelegramTextAttributes.PeerTextMention,
-                TelegramTextAttributes.BotCommand,
-                TelegramTextAttributes.Hashtag,
-                TelegramTextAttributes.BankCard,
-                TelegramTextAttributes.Date
+                IosappTextAttributes.URL,
+                IosappTextAttributes.PeerMention,
+                IosappTextAttributes.PeerTextMention,
+                IosappTextAttributes.BotCommand,
+                IosappTextAttributes.Hashtag,
+                IosappTextAttributes.BankCard,
+                IosappTextAttributes.Date
             ]
             for key in interactiveKeys {
                 let attrKey = NSAttributedString.Key(rawValue: key)
@@ -495,7 +495,7 @@ public final class InstantPageTextItem: InstantPageItem {
     
     public func urlAttribute(at point: CGPoint) -> InstantPageUrlItem? {
         if let (_, dict) = self.attributesAtPoint(point) {
-            if let url = dict[NSAttributedString.Key(rawValue: TelegramTextAttributes.URL)] as? InstantPageUrlItem {
+            if let url = dict[NSAttributedString.Key(rawValue: IosappTextAttributes.URL)] as? InstantPageUrlItem {
                 return url
             }
         }
@@ -735,7 +735,7 @@ func attributedStringForRichText(_ text: RichText, styleStack: InstantPageTextSt
         case let .plain(string):
             var attributes = styleStack.textAttributes()
             if let url = url {
-                attributes[NSAttributedString.Key(rawValue: TelegramTextAttributes.URL)] = url
+                attributes[NSAttributedString.Key(rawValue: IosappTextAttributes.URL)] = url
             }
             return NSAttributedString(string: string, attributes: attributes)
         case let .bold(text):
@@ -840,7 +840,7 @@ func attributedStringForRichText(_ text: RichText, styleStack: InstantPageTextSt
             guard let attachment = instantPageMathAttachment(latex: latex, fontSize: fontSize, textColor: textColor, mode: .inline) else {
                 var fallbackAttributes = attributes
                 if let url = url {
-                    fallbackAttributes[NSAttributedString.Key(rawValue: TelegramTextAttributes.URL)] = url
+                    fallbackAttributes[NSAttributedString.Key(rawValue: IosappTextAttributes.URL)] = url
                 }
                 return NSAttributedString(string: latex, attributes: fallbackAttributes)
             }
@@ -904,7 +904,7 @@ func attributedStringForRichText(_ text: RichText, styleStack: InstantPageTextSt
             styleStack.pop()
             let mutable = result.mutableCopy() as! NSMutableAttributedString
             if mutable.length != 0 {
-                mutable.addAttribute(NSAttributedString.Key(rawValue: TelegramTextAttributes.PeerTextMention), value: mutable.string, range: NSRange(location: 0, length: mutable.length))
+                mutable.addAttribute(NSAttributedString.Key(rawValue: IosappTextAttributes.PeerTextMention), value: mutable.string, range: NSRange(location: 0, length: mutable.length))
             }
             return mutable
         case let .textMentionName(text, peerId):
@@ -913,8 +913,8 @@ func attributedStringForRichText(_ text: RichText, styleStack: InstantPageTextSt
             styleStack.pop()
             let mutable = result.mutableCopy() as! NSMutableAttributedString
             if mutable.length != 0 {
-                let mention = TelegramPeerMention(peerId: EnginePeer.Id(namespace: Namespaces.Peer.CloudUser, id: EnginePeer.Id.Id._internalFromInt64Value(peerId)), mention: mutable.string)
-                mutable.addAttribute(NSAttributedString.Key(rawValue: TelegramTextAttributes.PeerMention), value: mention, range: NSRange(location: 0, length: mutable.length))
+                let mention = IosappPeerMention(peerId: EnginePeer.Id(namespace: Namespaces.Peer.CloudUser, id: EnginePeer.Id.Id._internalFromInt64Value(peerId)), mention: mutable.string)
+                mutable.addAttribute(NSAttributedString.Key(rawValue: IosappTextAttributes.PeerMention), value: mention, range: NSRange(location: 0, length: mutable.length))
             }
             return mutable
         case let .textHashtag(text):
@@ -923,7 +923,7 @@ func attributedStringForRichText(_ text: RichText, styleStack: InstantPageTextSt
             styleStack.pop()
             let mutable = result.mutableCopy() as! NSMutableAttributedString
             if mutable.length != 0 {
-                mutable.addAttribute(NSAttributedString.Key(rawValue: TelegramTextAttributes.Hashtag), value: TelegramHashtag(peerName: nil, hashtag: mutable.string), range: NSRange(location: 0, length: mutable.length))
+                mutable.addAttribute(NSAttributedString.Key(rawValue: IosappTextAttributes.Hashtag), value: IosappHashtag(peerName: nil, hashtag: mutable.string), range: NSRange(location: 0, length: mutable.length))
             }
             return mutable
         case let .textCashtag(text):
@@ -932,7 +932,7 @@ func attributedStringForRichText(_ text: RichText, styleStack: InstantPageTextSt
             styleStack.pop()
             let mutable = result.mutableCopy() as! NSMutableAttributedString
             if mutable.length != 0 {
-                mutable.addAttribute(NSAttributedString.Key(rawValue: TelegramTextAttributes.Hashtag), value: TelegramHashtag(peerName: nil, hashtag: mutable.string), range: NSRange(location: 0, length: mutable.length))
+                mutable.addAttribute(NSAttributedString.Key(rawValue: IosappTextAttributes.Hashtag), value: IosappHashtag(peerName: nil, hashtag: mutable.string), range: NSRange(location: 0, length: mutable.length))
             }
             return mutable
         case let .textBotCommand(text):
@@ -941,7 +941,7 @@ func attributedStringForRichText(_ text: RichText, styleStack: InstantPageTextSt
             styleStack.pop()
             let mutable = result.mutableCopy() as! NSMutableAttributedString
             if mutable.length != 0 {
-                mutable.addAttribute(NSAttributedString.Key(rawValue: TelegramTextAttributes.BotCommand), value: mutable.string, range: NSRange(location: 0, length: mutable.length))
+                mutable.addAttribute(NSAttributedString.Key(rawValue: IosappTextAttributes.BotCommand), value: mutable.string, range: NSRange(location: 0, length: mutable.length))
             }
             return mutable
         case let .textBankCard(text):
@@ -950,7 +950,7 @@ func attributedStringForRichText(_ text: RichText, styleStack: InstantPageTextSt
             styleStack.pop()
             let mutable = result.mutableCopy() as! NSMutableAttributedString
             if mutable.length != 0 {
-                mutable.addAttribute(NSAttributedString.Key(rawValue: TelegramTextAttributes.BankCard), value: mutable.string, range: NSRange(location: 0, length: mutable.length))
+                mutable.addAttribute(NSAttributedString.Key(rawValue: IosappTextAttributes.BankCard), value: mutable.string, range: NSRange(location: 0, length: mutable.length))
             }
             return mutable
         case let .textCustomEmoji(fileId, _):
@@ -992,7 +992,7 @@ func attributedStringForRichText(_ text: RichText, styleStack: InstantPageTextSt
             let result = attributedStringForRichText(text, styleStack: styleStack, url: url, formatDate: formatDate)
             let mutable = result.mutableCopy() as! NSMutableAttributedString
             if mutable.length != 0 {
-                mutable.addAttribute(NSAttributedString.Key(rawValue: TelegramTextAttributes.Spoiler), value: true, range: NSRange(location: 0, length: mutable.length))
+                mutable.addAttribute(NSAttributedString.Key(rawValue: IosappTextAttributes.Spoiler), value: true, range: NSRange(location: 0, length: mutable.length))
             }
             return mutable
         case let .textDate(text, date, format):
@@ -1001,7 +1001,7 @@ func attributedStringForRichText(_ text: RichText, styleStack: InstantPageTextSt
                 let result = attributedStringForRichText(.plain(formatted), styleStack: styleStack, url: url, formatDate: formatDate)
                 let mutable = result.mutableCopy() as! NSMutableAttributedString
                 if mutable.length != 0 {
-                    mutable.addAttribute(NSAttributedString.Key(rawValue: TelegramTextAttributes.Date), value: date, range: NSRange(location: 0, length: mutable.length))
+                    mutable.addAttribute(NSAttributedString.Key(rawValue: IosappTextAttributes.Date), value: date, range: NSRange(location: 0, length: mutable.length))
                 }
                 return mutable
             } else {
@@ -1010,7 +1010,7 @@ func attributedStringForRichText(_ text: RichText, styleStack: InstantPageTextSt
     }
 }
 
-func layoutTextItemWithString(_ string: NSAttributedString, boundingWidth: CGFloat, horizontalInset: CGFloat = 0.0, alignment: NSTextAlignment = .natural, offset: CGPoint, media: [EngineMedia.Id: EngineMedia] = [:], webpage: TelegramMediaWebpage? = nil, minimizeWidth: Bool = false, fitToWidth: Bool = false, maxNumberOfLines: Int = 0, opaqueBackground: Bool = false) -> (InstantPageTextItem?, [InstantPageItem], CGSize) {
+func layoutTextItemWithString(_ string: NSAttributedString, boundingWidth: CGFloat, horizontalInset: CGFloat = 0.0, alignment: NSTextAlignment = .natural, offset: CGPoint, media: [EngineMedia.Id: EngineMedia] = [:], webpage: IosappMediaWebpage? = nil, minimizeWidth: Bool = false, fitToWidth: Bool = false, maxNumberOfLines: Int = 0, opaqueBackground: Bool = false) -> (InstantPageTextItem?, [InstantPageItem], CGSize) {
     if string.length == 0 {
         return (nil, [], CGSize())
     }

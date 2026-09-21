@@ -3,9 +3,9 @@ import UIKit
 import AsyncDisplayKit
 import Display
 import SwiftSignalKit
-import TelegramCore
-import TelegramPresentationData
-import TelegramUIPreferences
+import IosappCore
+import IosappPresentationData
+import IosappUIPreferences
 import MergeLists
 import AccountContext
 import SearchUI
@@ -17,7 +17,7 @@ import PhoneNumberFormat
 import ItemListUI
 import SearchBarNode
 import ListMessageItem
-import TelegramBaseController
+import IosappBaseController
 import OverlayStatusController
 import UniversalMediaPlayer
 import PresentationDataUtils
@@ -28,7 +28,7 @@ import InstantPageUI
 import ChatInterfaceState
 import UndoUI
 import TextFormat
-import TelegramAnimatedStickerNode
+import IosappAnimatedStickerNode
 import AnimationCache
 import MultiAnimationRenderer
 import PremiumUI
@@ -462,7 +462,7 @@ public final class ChatListSearchContainerNode: SearchDisplayControllerContentNo
             suggestedPeers = .single([])
         }
         
-        let accountPeer = self.context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: self.context.account.peerId))
+        let accountPeer = self.context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: self.context.account.peerId))
         |> mapToSignal { peer -> Signal<EnginePeer, NoError> in
             if let peer {
                 return .single(peer)
@@ -573,7 +573,7 @@ public final class ChatListSearchContainerNode: SearchDisplayControllerContentNo
         }).strict()
         
         if case let .forum(peerId) = location {
-            let _ = (context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: peerId))
+            let _ = (context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: peerId))
             |> deliverOnMainQueue).startStandalone(next: { [weak self] peer in
                 self?.forumPeer = peer
                 self?.updateSearchOptions(nil)
@@ -894,8 +894,8 @@ public final class ChatListSearchContainerNode: SearchDisplayControllerContentNo
                         return
                     }
                     let _ = (strongSelf.context.engine.data.get(EngineDataMap(
-                        messageIds.map { id -> TelegramEngine.EngineData.Item.Messages.Message in
-                            return TelegramEngine.EngineData.Item.Messages.Message(id: id)
+                        messageIds.map { id -> IosappEngine.EngineData.Item.Messages.Message in
+                            return IosappEngine.EngineData.Item.Messages.Message(id: id)
                         }
                     ))
                     |> map { messageMap -> [EngineMessage] in
@@ -926,8 +926,8 @@ public final class ChatListSearchContainerNode: SearchDisplayControllerContentNo
                         return
                     }
                     let _ = (strongSelf.context.engine.data.get(EngineDataMap(
-                        messageIds.map { id -> TelegramEngine.EngineData.Item.Messages.Message in
-                            return TelegramEngine.EngineData.Item.Messages.Message(id: id)
+                        messageIds.map { id -> IosappEngine.EngineData.Item.Messages.Message in
+                            return IosappEngine.EngineData.Item.Messages.Message(id: id)
                         }
                     ))
                     |> map { messageMap -> [EngineMessage] in
@@ -956,7 +956,7 @@ public final class ChatListSearchContainerNode: SearchDisplayControllerContentNo
                                         type = .user
                                     }
                                     break
-                                } else if let channel = message.peers[message.id.peerId] as? TelegramChannel, case .broadcast = channel.info {
+                                } else if let channel = message.peers[message.id.peerId] as? IosappChannel, case .broadcast = channel.info {
                                     type = .channel
                                     break
                                 }
@@ -1117,7 +1117,7 @@ public final class ChatListSearchContainerNode: SearchDisplayControllerContentNo
             let items = combineLatest(queue: .mainQueue(),
                 context.sharedContext.chatAvailableMessageActions(engine: context.engine, accountPeerId: context.account.peerId, messageIds: [message.id], messages: [message.id: message], peers: [:]),
                 isCachedValue |> take(1),
-                context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: context.account.peerId))
+                context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: context.account.peerId))
             )
             |> deliverOnMainQueue
             |> map { [weak self] actions, isCachedValue, accountPeer -> [ContextMenuItem] in
@@ -1386,8 +1386,8 @@ public final class ChatListSearchContainerNode: SearchDisplayControllerContentNo
         if let messageIds = messageIds ?? self.stateValue.selectedMessageIds, !messageIds.isEmpty {
             if isDownloads {
                 let _ = (self.context.engine.data.get(EngineDataMap(
-                    messageIds.map { id -> TelegramEngine.EngineData.Item.Messages.Message in
-                        return TelegramEngine.EngineData.Item.Messages.Message(id: id)
+                    messageIds.map { id -> IosappEngine.EngineData.Item.Messages.Message in
+                        return IosappEngine.EngineData.Item.Messages.Message(id: id)
                     }
                 ))
                 |> map { messageMap -> [EngineMessage] in
@@ -1421,7 +1421,7 @@ public final class ChatListSearchContainerNode: SearchDisplayControllerContentNo
                             var resourceIds = Set<EngineMediaResource.Id>()
                             for message in messages {
                                 for media in message.effectiveMedia {
-                                    if let file = media as? TelegramMediaFile {
+                                    if let file = media as? IosappMediaFile {
                                         resourceIds.insert(EngineMediaResource.Id(file.resource.id))
                                     }
                                 }
@@ -1604,7 +1604,7 @@ public final class ChatListSearchContainerNode: SearchDisplayControllerContentNo
                 
                 (strongSelf.navigationController?.topViewController as? ViewController)?.present(UndoOverlayController(presentationData: presentationData, content: .forward(savedMessages: savedMessages, text: text), elevatedLayout: false, animateInAsReplacement: true, action: { action in
                     if savedMessages, let self, action == .info {
-                        let _ = (self.context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: self.context.account.peerId))
+                        let _ = (self.context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: self.context.account.peerId))
                         |> deliverOnMainQueue).start(next: { [weak self] peer in
                             guard let self, let peer else {
                                 return
@@ -1629,7 +1629,7 @@ public final class ChatListSearchContainerNode: SearchDisplayControllerContentNo
                         let presentationData = strongSelf.context.sharedContext.currentPresentationData.with { $0 }
                         (strongSelf.navigationController?.topViewController as? ViewController)?.present(UndoOverlayController(presentationData: presentationData, content: .forward(savedMessages: true, text: messages.count == 1 ? presentationData.strings.Conversation_ForwardTooltip_SavedMessages_One : presentationData.strings.Conversation_ForwardTooltip_SavedMessages_Many), elevatedLayout: false, animateInAsReplacement: true, action: { action in
                             if let self, action == .info {
-                                let _ = (self.context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: self.context.account.peerId))
+                                let _ = (self.context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: self.context.account.peerId))
                                 |> deliverOnMainQueue).start(next: { [weak self] peer in
                                     guard let self, let peer else {
                                         return

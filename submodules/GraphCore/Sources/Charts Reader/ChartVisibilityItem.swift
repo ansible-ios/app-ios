@@ -3,7 +3,7 @@
 //  GraphCore
 //
 //  Created by Mikhail Filimonov on 26.02.2020.
-//  Copyright © 2020 Telegram. All rights reserved.
+//  Copyright © 2020 Iosapp. All rights reserved.
 //
 
 import Foundation

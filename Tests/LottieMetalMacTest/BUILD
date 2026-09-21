@@ -82,7 +82,7 @@ plist_fragment(
     <key>CFBundleInfoDictionaryVersion</key>
     <string>6.0</string>
     <key>CFBundleName</key>
-    <string>Telegram</string>
+    <string>Iosapp</string>
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>NSMainStoryboardFile</key>

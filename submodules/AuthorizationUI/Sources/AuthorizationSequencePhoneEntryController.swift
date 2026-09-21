@@ -3,8 +3,8 @@ import UIKit
 import Display
 import AsyncDisplayKit
 import SwiftSignalKit
-import TelegramCore
-import TelegramPresentationData
+import IosappCore
+import IosappPresentationData
 import PresentationDataUtils
 import ProgressNavigationButtonNode
 import AccountContext
@@ -191,7 +191,7 @@ public final class AuthorizationSequencePhoneEntryController: ViewController, MF
         }
         
         if let account = self.account {
-            loadServerCountryCodes(accountManager: sharedContext.accountManager, engine: TelegramEngineUnauthorized(account: account), completion: { [weak self] in
+            loadServerCountryCodes(accountManager: sharedContext.accountManager, engine: IosappEngineUnauthorized(account: account), completion: { [weak self] in
                 if let strongSelf = self {
                     strongSelf.controllerNode.updateCountryCode()
                 }
@@ -219,7 +219,7 @@ public final class AuthorizationSequencePhoneEntryController: ViewController, MF
                     return Data(base64Encoded: string)
                 }
                 
-                let engine = TelegramEngineUnauthorized(account: account)
+                let engine = IosappEngineUnauthorized(account: account)
                 let passkeyDataString = await engine.auth.requestPasskeyLoginData(apiId: self.apiId, apiHash: self.apiHash).get()
                 guard let passkeyDataString, let passkeyData = passkeyDataString.data(using: .utf8) else {
                     return

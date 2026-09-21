@@ -1,5 +1,5 @@
-#ifndef Telegram_FastBlur_h
-#define Telegram_FastBlur_h
+#ifndef Iosapp_FastBlur_h
+#define Iosapp_FastBlur_h
 
 #import <Foundation/Foundation.h>
 

@@ -1,0 +1,23 @@
+include "PeerId.fbs";
+include "IosappPeerAccessHash.fbs";
+include "IosappMediaImageRepresentation.fbs";
+include "IosappChatAdminRights.fbs";
+include "IosappChatBannedRights.fbs";
+include "Optional.fbs";
+
+namespace IosappCore;
+
+table IosappCommunity {
+    id:PeerId (id: 0, required);
+    accessHash:IosappPeerAccessHash (id: 1);
+    title:string (id: 2, required);
+    photo:[IosappMediaImageRepresentation] (id: 3);
+    creationDate:int32 (id: 4);
+    participationStatus:int32 (id: 5);
+    flags:int32 (id: 6);
+    collapsedInDialogs:OptionalBool (id: 7);
+    adminRights:IosappChatAdminRights (id: 8);
+    defaultBannedRights:IosappChatBannedRights (id: 9);
+}
+
+root_type IosappCommunity;

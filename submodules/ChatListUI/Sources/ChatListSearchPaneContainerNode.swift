@@ -3,13 +3,13 @@ import UIKit
 import AsyncDisplayKit
 import Display
 import SwiftSignalKit
-import TelegramPresentationData
-import TelegramCore
+import IosappPresentationData
+import IosappCore
 import AccountContext
 import ContextUI
 import AnimationCache
 import MultiAnimationRenderer
-import TelegramNotices
+import IosappNotices
 
 protocol ChatListSearchPaneNode: ASDisplayNode {
     var isReady: Signal<Bool, NoError> { get }

@@ -1,0 +1,45 @@
+load("@build_bazel_rules_swift//swift:swift.bzl", "swift_library")
+
+swift_library(
+    name = "ChatScheduleTimeController",
+    module_name = "ChatScheduleTimeController",
+    srcs = glob([
+        "Sources/**/*.swift",
+    ]),
+    copts = [
+        "-warnings-as-errors",
+    ],
+    deps = [
+        "//submodules/SSignalKit/SwiftSignalKit",
+        "//submodules/AsyncDisplayKit",
+        "//submodules/Display",
+        "//submodules/IosappCore",
+        "//submodules/AccountContext",
+        "//submodules/IosappPresentationData",
+        "//submodules/IosappStringFormatting",
+        "//submodules/TextFormat",
+        "//submodules/SolidRoundedButtonNode",
+        "//submodules/PresentationDataUtils",
+        "//submodules/UIKitRuntimeUtils",
+        "//submodules/ComponentFlow",
+        "//submodules/IosappUI/Components/ToastComponent",
+        "//submodules/Markdown",
+        "//submodules/UndoUI",
+        "//submodules/TooltipUI",
+        "//submodules/IosappUI/Components/LottieComponent",
+        "//submodules/Components/MultilineTextComponent",
+        "//submodules/Components/BundleIconComponent",
+        "//submodules/Components/ComponentDisplayAdapters",
+        "//submodules/Components/ViewControllerComponent",
+        "//submodules/Components/SheetComponent",
+        "//submodules/DatePickerNode",
+        "//submodules/IosappUI/Components/ButtonComponent",
+        "//submodules/IosappUI/Components/GlassBackgroundComponent",
+        "//submodules/IosappUI/Components/GlassBarButtonComponent",
+        "//submodules/IosappUI/Components/PlainButtonComponent",
+        "//submodules/Components/LottieAnimationComponent",
+    ],
+    visibility = [
+        "//visibility:public",
+    ],
+)

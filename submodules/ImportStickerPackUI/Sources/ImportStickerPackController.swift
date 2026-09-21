@@ -2,9 +2,9 @@ import Foundation
 import UIKit
 import Display
 import AsyncDisplayKit
-import TelegramCore
+import IosappCore
 import SwiftSignalKit
-import TelegramUIPreferences
+import IosappUIPreferences
 import AccountContext
 import StickerResources
 import AlertUI
@@ -79,7 +79,7 @@ public final class ImportStickerPackController: ViewController, StandalonePresen
             
             if case .image = self.stickerPack.type.contentType {
             } else {
-                let _ = (self.context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: self.context.account.peerId))
+                let _ = (self.context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: self.context.account.peerId))
                 |> mapToSignal { peer -> Signal<EnginePeer, NoError> in
                     if let peer {
                         return .single(peer)
@@ -101,7 +101,7 @@ public final class ImportStickerPackController: ViewController, StandalonePresen
                                     case .progress:
                                         return (sticker.uuid, .loading, nil)
                                     case let .complete(resource, mimeType):
-                                        if ["application/x-tgsticker", "video/webm"].contains(mimeType) {
+                                        if ["application/x-ansible-sticker", "video/webm"].contains(mimeType) {
                                             return (sticker.uuid, .verified, resource)
                                         } else {
                                             return (sticker.uuid, .declined, nil)

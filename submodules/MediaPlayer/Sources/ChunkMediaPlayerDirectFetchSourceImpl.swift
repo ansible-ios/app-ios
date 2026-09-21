@@ -1,7 +1,7 @@
 import Foundation
 import UIKit
 import SwiftSignalKit
-import TelegramCore
+import IosappCore
 import FFMpegBinding
 import RangeSet
 import CoreMedia

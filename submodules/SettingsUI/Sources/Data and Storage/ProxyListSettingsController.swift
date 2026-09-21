@@ -2,8 +2,8 @@ import Foundation
 import UIKit
 import Display
 import SwiftSignalKit
-import TelegramCore
-import TelegramPresentationData
+import IosappCore
+import IosappPresentationData
 import MtProtoKit
 import ItemListUI
 import PresentationDataUtils
@@ -286,7 +286,7 @@ private func proxySettingsControllerEntries(theme: PresentationTheme, strings: P
                 case .socks5:
                     text = strings.ChatSettings_ConnectionType_UseSocks5
                 case .mtp:
-                    text = strings.SocksProxySetup_ProxyTelegram
+                    text = strings.SocksProxySetup_ProxyIosapp
             }
             switch status {
                 case .notAvailable:
@@ -331,7 +331,7 @@ public func proxySettingsController(context: AccountContext, mode: ProxySettings
     return proxySettingsController(accountManager: context.sharedContext.accountManager, sharedContext: context.sharedContext, context: context, network: context.account.network, mode: mode, presentationData: presentationData, updatedPresentationData: context.sharedContext.presentationData, focusOnItemTag: focusOnItemTag)
 }
 
-public func proxySettingsController(accountManager: AccountManager<TelegramAccountManagerTypes>, sharedContext: SharedAccountContext, context: AccountContext? = nil, network: Network, mode: ProxySettingsControllerMode, presentationData: PresentationData, updatedPresentationData: Signal<PresentationData, NoError>, focusOnItemTag: ProxySettingsEntryTag? = nil) -> ViewController {
+public func proxySettingsController(accountManager: AccountManager<IosappAccountManagerTypes>, sharedContext: SharedAccountContext, context: AccountContext? = nil, network: Network, mode: ProxySettingsControllerMode, presentationData: PresentationData, updatedPresentationData: Signal<PresentationData, NoError>, focusOnItemTag: ProxySettingsEntryTag? = nil) -> ViewController {
     var pushControllerImpl: ((ViewController) -> Void)?
     var dismissImpl: (() -> Void)?
     let stateValue = Atomic(value: ProxySettingsControllerState())
@@ -544,10 +544,10 @@ public func proxySettingsController(accountManager: AccountManager<TelegramAccou
                     switch server.connection {
                     case let .mtp(secret):
                         let secret = MTProxySecret.parseData(secret)?.serializeToString() ?? ""
-                        string = "https://t.me/proxy?server=\(server.host)&port=\(server.port)"
+                        string = "https://asme.su/proxy?server=\(server.host)&port=\(server.port)"
                         string += "&secret=\((secret as NSString).addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryValueAllowed) ?? "")"
                     case let .socks5(username, password):
-                        string = "https://t.me/socks?server=\(server.host)&port=\(server.port)"
+                        string = "https://asme.su/socks?server=\(server.host)&port=\(server.port)"
                         if let username = username, let password = password {
                             string += "&user=\((username as NSString).addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryValueAllowed) ?? "")&pass=\((password as NSString).addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryValueAllowed) ?? "")"
                         }

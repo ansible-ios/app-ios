@@ -2,9 +2,9 @@ import Foundation
 import UIKit
 import Display
 import SwiftSignalKit
-import TelegramCore
-import TelegramPresentationData
-import TelegramUIPreferences
+import IosappCore
+import IosappPresentationData
+import IosappUIPreferences
 import ItemListUI
 import PresentationDataUtils
 import AccountContext
@@ -516,7 +516,7 @@ public func saveIncomingMediaController(context: AccountContext, scope: SaveInco
             controller.peerSelected = { [weak controller] peer, _ in
                 let peerId = peer.id
                 
-                let preferences = context.engine.data.subscribe(TelegramEngine.EngineData.Item.Configuration.ApplicationSpecificPreference(key: ApplicationSpecificPreferencesKeys.mediaAutoSaveSettings))
+                let preferences = context.engine.data.subscribe(IosappEngine.EngineData.Item.Configuration.ApplicationSpecificPreference(key: ApplicationSpecificPreferencesKeys.mediaAutoSaveSettings))
                 |> map { entry -> MediaAutoSaveSettings in
                     return entry?.get(MediaAutoSaveSettings.self) ?? MediaAutoSaveSettings.default
                 }
@@ -619,7 +619,7 @@ public func saveIncomingMediaController(context: AccountContext, scope: SaveInco
         }
     )
     
-    let preferences = context.engine.data.subscribe(TelegramEngine.EngineData.Item.Configuration.ApplicationSpecificPreference(key: ApplicationSpecificPreferencesKeys.mediaAutoSaveSettings))
+    let preferences = context.engine.data.subscribe(IosappEngine.EngineData.Item.Configuration.ApplicationSpecificPreference(key: ApplicationSpecificPreferencesKeys.mediaAutoSaveSettings))
     |> map { entry -> MediaAutoSaveSettings in
         return entry?.get(MediaAutoSaveSettings.self) ?? MediaAutoSaveSettings.default
     }
@@ -628,13 +628,13 @@ public func saveIncomingMediaController(context: AccountContext, scope: SaveInco
     switch scope {
     case let .peer(id):
         peer = context.engine.data.subscribe(
-            TelegramEngine.EngineData.Item.Peer.Peer(id: id),
-            TelegramEngine.EngineData.Item.Peer.Presence(id: id)
+            IosappEngine.EngineData.Item.Peer.Peer(id: id),
+            IosappEngine.EngineData.Item.Peer.Presence(id: id)
         )
     case let .addPeer(id, _):
         peer = context.engine.data.subscribe(
-            TelegramEngine.EngineData.Item.Peer.Peer(id: id),
-            TelegramEngine.EngineData.Item.Peer.Presence(id: id)
+            IosappEngine.EngineData.Item.Peer.Peer(id: id),
+            IosappEngine.EngineData.Item.Peer.Presence(id: id)
         )
     default:
         peer = .single((nil, nil))
@@ -644,7 +644,7 @@ public func saveIncomingMediaController(context: AccountContext, scope: SaveInco
     |> mapToSignal { mediaAutoSaveSettings -> Signal<[EnginePeer.Id: EnginePeer?], NoError> in
         let peerIds = mediaAutoSaveSettings.exceptions.map(\.id)
         return context.engine.data.get(EngineDataMap(
-            peerIds.map(TelegramEngine.EngineData.Item.Peer.Peer.init(id:))
+            peerIds.map(IosappEngine.EngineData.Item.Peer.Peer.init(id:))
         ))
     }
     

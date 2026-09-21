@@ -3,25 +3,25 @@ import UIKit
 import Display
 import AsyncDisplayKit
 import SwiftSignalKit
-import TelegramCore
-import TelegramPresentationData
-import TelegramUIPreferences
+import IosappCore
+import IosappPresentationData
+import IosappUIPreferences
 import DeviceAccess
 import AccountContext
 import AlertUI
 import PresentationDataUtils
-import TelegramPermissions
-import TelegramNotices
+import IosappPermissions
+import IosappNotices
 import ContactsPeerItem
 import SearchUI
-import TelegramPermissionsUI
+import IosappPermissionsUI
 import AppBundle
 import StickerResources
 import ContextUI
 import QrCodeUI
 import StoryContainerScreen
 import ChatListHeaderComponent
-import TelegramIntents
+import IosappIntents
 import UndoUI
 import ShareController
 import SearchBarNode
@@ -192,7 +192,7 @@ public class ContactsController: ViewController {
         }).strict()
         
         if #available(iOSApplicationExtension 10.0, iOS 10.0, *) {
-            self.authorizationDisposable = (combineLatest(DeviceAccess.authorizationStatus(subject: .contacts), combineLatest(context.sharedContext.accountManager.noticeEntry(key: ApplicationSpecificNotice.permissionWarningKey(permission: .contacts)!), context.engine.data.subscribe(TelegramEngine.EngineData.Item.Configuration.ApplicationSpecificPreference(key: PreferencesKeys.contactsSettings)), context.sharedContext.accountManager.sharedData(keys: [ApplicationSpecificSharedDataKeys.contactSynchronizationSettings]))
+            self.authorizationDisposable = (combineLatest(DeviceAccess.authorizationStatus(subject: .contacts), combineLatest(context.sharedContext.accountManager.noticeEntry(key: ApplicationSpecificNotice.permissionWarningKey(permission: .contacts)!), context.engine.data.subscribe(IosappEngine.EngineData.Item.Configuration.ApplicationSpecificPreference(key: PreferencesKeys.contactsSettings)), context.sharedContext.accountManager.sharedData(keys: [ApplicationSpecificSharedDataKeys.contactSynchronizationSettings]))
             |> map { noticeView, preferences, sharedData -> (Bool, ContactsSortOrder) in
                 let settings: ContactsSettings = preferences?.get(ContactsSettings.self) ?? ContactsSettings.defaultSettings
                 let synchronizeDeviceContacts: Bool = settings.synchronizeContacts
@@ -422,7 +422,7 @@ public class ContactsController: ViewController {
                     let controller = QrCodeScanScreen(context: strongSelf.context, subject: .peer)
                     controller.showMyCode = { [weak self, weak controller] in
                         if let strongSelf = self {
-                            let _ = (strongSelf.context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: strongSelf.context.account.peerId))
+                            let _ = (strongSelf.context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: strongSelf.context.account.peerId))
                             |> mapToSignal { peer -> Signal<EnginePeer, NoError> in
                                 if let peer {
                                     return .single(peer)

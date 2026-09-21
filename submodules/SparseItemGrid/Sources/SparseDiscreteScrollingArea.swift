@@ -4,7 +4,7 @@ import Display
 import AsyncDisplayKit
 import ComponentFlow
 import SwiftSignalKit
-import TelegramPresentationData
+import IosappPresentationData
 
 public final class SparseDiscreteScrollingArea: ASDisplayNode {
     private final class DragGesture: UIGestureRecognizer {

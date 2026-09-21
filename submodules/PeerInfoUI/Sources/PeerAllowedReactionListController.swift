@@ -3,9 +3,9 @@ import UIKit
 import Display
 import AsyncDisplayKit
 import SwiftSignalKit
-import TelegramCore
-import TelegramPresentationData
-import TelegramUIPreferences
+import IosappCore
+import IosappPresentationData
+import IosappUIPreferences
 import ItemListUI
 import PresentationDataUtils
 import AccountContext
@@ -354,7 +354,7 @@ public func peerAllowedReactionListController(
     let _ = dismissImpl
     
     let actionsDisposable = DisposableSet()
-    actionsDisposable.add((combineLatest(context.engine.data.get(TelegramEngine.EngineData.Item.Peer.AllowedReactions(id: peerId)), context.engine.stickers.availableReactions() |> take(1))
+    actionsDisposable.add((combineLatest(context.engine.data.get(IosappEngine.EngineData.Item.Peer.AllowedReactions(id: peerId)), context.engine.stickers.availableReactions() |> take(1))
     |> deliverOnMainQueue).start(next: { allowedReactions, availableReactions in
         updateState { state in
             var state = state
@@ -505,8 +505,8 @@ public func peerAllowedReactionListController(
     controller.willDisappear = { _ in
         let _ = (combineLatest(
             context.engine.data.get(
-                TelegramEngine.EngineData.Item.Peer.Peer(id: peerId),
-                TelegramEngine.EngineData.Item.Peer.AllowedReactions(id: peerId)
+                IosappEngine.EngineData.Item.Peer.Peer(id: peerId),
+                IosappEngine.EngineData.Item.Peer.AllowedReactions(id: peerId)
             ),
             context.engine.stickers.availableReactions() |> take(1)
         )

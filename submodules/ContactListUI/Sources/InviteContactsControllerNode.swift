@@ -2,10 +2,10 @@ import Display
 import UIKit
 import AsyncDisplayKit
 import UIKit
-import TelegramCore
+import IosappCore
 import SwiftSignalKit
-import TelegramPresentationData
-import TelegramUIPreferences
+import IosappPresentationData
+import IosappUIPreferences
 import MergeLists
 import ActivityIndicator
 import AccountContext
@@ -24,11 +24,11 @@ private enum InviteContactsEntryId: Hashable {
 
 private final class InviteContactsInteraction {
     let toggleContact: (String) -> Void
-    let shareTelegram: () -> Void
+    let shareIosapp: () -> Void
     
-    init(toggleContact: @escaping (String) -> Void, shareTelegram: @escaping () -> Void) {
+    init(toggleContact: @escaping (String) -> Void, shareIosapp: @escaping () -> Void) {
         self.toggleContact = toggleContact
-        self.shareTelegram = shareTelegram
+        self.shareIosapp = shareIosapp
     }
 }
 
@@ -56,7 +56,7 @@ private enum InviteContactsEntry: Comparable, Identifiable {
                 } else {
                     status = .none
                 }
-                let peer: EnginePeer = .user(TelegramUser(id: EnginePeer.Id(namespace: .max, id: EnginePeer.Id.Id._internalFromInt64Value(0)), accessHash: nil, firstName: contact.firstName, lastName: contact.lastName, username: nil, phone: nil, photo: [], botInfo: nil, restrictionInfo: nil, flags: [], emojiStatus: nil, usernames: [], storiesHidden: nil, nameColor: nil, backgroundEmojiId: nil, profileColor: nil, profileBackgroundEmojiId: nil, subscriberCount: nil, verificationIconFileId: nil))
+                let peer: EnginePeer = .user(IosappUser(id: EnginePeer.Id(namespace: .max, id: EnginePeer.Id.Id._internalFromInt64Value(0)), accessHash: nil, firstName: contact.firstName, lastName: contact.lastName, username: nil, phone: nil, photo: [], botInfo: nil, restrictionInfo: nil, flags: [], emojiStatus: nil, usernames: [], storiesHidden: nil, nameColor: nil, backgroundEmojiId: nil, profileColor: nil, profileBackgroundEmojiId: nil, subscriberCount: nil, verificationIconFileId: nil))
                 return ContactsPeerItem(presentationData: ItemListPresentationData(presentationData), systemStyle: .glass, sortOrder: nameSortOrder, displayOrder: nameDisplayOrder, context: context, peerMode: .peer, peer: .peer(peer: peer, chatPeer: peer), status: status, enabled: true, selection: selection, editing: ContactsPeerItemEditing(editable: false, editing: false, revealed: false), index: nil, header: ChatListSearchItemHeader(type: .contacts, theme: theme, strings: strings, actionTitle: nil, action: nil), action: { _ in
                     interaction.toggleContact(id)
                 })
@@ -185,8 +185,8 @@ struct InviteContactsGroupSelectionState: Equatable {
 private func inviteContactsEntries(accountPeer: EnginePeer?, sortedContacts: [(DeviceContactStableId, DeviceContactBasicData, Int32)]?, selectionState: InviteContactsGroupSelectionState, theme: PresentationTheme, strings: PresentationStrings, nameSortOrder: PresentationPersonNameOrder, nameDisplayOrder: PresentationPersonNameOrder, interaction: InviteContactsInteraction) -> [InviteContactsEntry] {
     var entries: [InviteContactsEntry] = []
         
-    entries.append(.option(0, ContactListAdditionalOption(title: strings.Contacts_ShareTelegram, icon: .generic(UIImage(bundleImageName: "Contact List/InviteActionIcon")!), action: {
-        interaction.shareTelegram()
+    entries.append(.option(0, ContactListAdditionalOption(title: strings.Contacts_ShareIosapp, icon: .generic(UIImage(bundleImageName: "Contact List/InviteActionIcon")!), action: {
+        interaction.shareIosapp()
     }), theme, strings))
     
     var index = 0
@@ -235,7 +235,7 @@ final class InviteContactsControllerNode: ASDisplayNode {
     
     var requestActivateSearch: (() -> Void)?
     var requestDeactivateSearch: (() -> Void)?
-    var requestShareTelegram: (() -> Void)?
+    var requestShareIosapp: (() -> Void)?
     var requestShare: (([(DeviceContactBasicData, Int32)]) -> Void)?
     var selectionChanged: (() -> Void)?
     
@@ -336,12 +336,12 @@ final class InviteContactsControllerNode: ASDisplayNode {
             if let strongSelf = self {
                 strongSelf.selectionState = strongSelf.selectionState.withToggledContactId(id)
             }
-        }, shareTelegram: { [weak self] in
-            self?.requestShareTelegram?()
+        }, shareIosapp: { [weak self] in
+            self?.requestShareIosapp?()
         })
         
         let existingNumbers: Signal<(Set<String>, Set<EnginePeer.Id>), NoError> = context.engine.data.subscribe(
-            TelegramEngine.EngineData.Item.Contacts.List(includePresences: false)
+            IosappEngine.EngineData.Item.Contacts.List(includePresences: false)
         )
         |> map { view -> (Set<String>, Set<EnginePeer.Id>) in
             var existingNumbers = Set<String>()

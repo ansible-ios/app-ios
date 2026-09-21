@@ -13,13 +13,13 @@ void setBridgingShortTraceFunction(void (*f)(NSString *, NSString *)) {
     bridgingShortTrace = f;
 }
 
-static void TGTelegramLoggingFunction(NSString *format) {
+static void TGIosappLoggingFunction(NSString *format) {
     if (bridgingTrace) {
         bridgingTrace(@"MT", format);
     }
 }
 
-static void TGTelegramShortLoggingFunction(NSString *format) {
+static void TGIosappShortLoggingFunction(NSString *format) {
     if (bridgingShortTrace) {
         bridgingShortTrace(@"MT", format);
     }
@@ -28,8 +28,8 @@ static void TGTelegramShortLoggingFunction(NSString *format) {
 void NetworkRegisterLoggingFunction() {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        MTLogSetLoggingFunction(&TGTelegramLoggingFunction);
-        MTLogSetShortLoggingFunction(&TGTelegramShortLoggingFunction);
+        MTLogSetLoggingFunction(&TGIosappLoggingFunction);
+        MTLogSetShortLoggingFunction(&TGIosappShortLoggingFunction);
     });
 }
 

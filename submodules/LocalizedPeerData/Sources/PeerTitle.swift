@@ -1,7 +1,7 @@
 import Foundation
-import TelegramCore
-import TelegramPresentationData
-import TelegramUIPreferences
+import IosappCore
+import IosappPresentationData
+import IosappUIPreferences
 //import PhoneNumberFormat
 
 public extension EnginePeer {

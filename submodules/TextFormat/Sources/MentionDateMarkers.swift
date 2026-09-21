@@ -1,11 +1,11 @@
 import Foundation
-import TelegramCore
+import IosappCore
 
 /// KNOWN LIMITATION (accepted): mentions and dates are stored in the Document's shared `link` field as
-/// these `tg://` marker URLs. A `textUrl` link whose string happens to equal one of these markers
-/// (e.g. a `[x](tg://user?id=123)` arriving via markdown/paste/edit — the in-app link editor rejects
-/// `tg://` schemes) is reinterpreted as a mention/date on a Document round-trip. This is low-probability
-/// (a real text mention is a `.TextMention` entity, never a `tg://user` textUrl) and accepted rather
+/// these `as://` marker URLs. A `textUrl` link whose string happens to equal one of these markers
+/// (e.g. a `[x](as://user?id=123)` arriving via markdown/paste/edit — the in-app link editor rejects
+/// `as://` schemes) is reinterpreted as a mention/date on a Document round-trip. This is low-probability
+/// (a real text mention is a `.TextMention` entity, never a `as://user` textUrl) and accepted rather
 /// than adding dedicated model fields; revisit if it ever surfaces in practice.
 ///
 /// Private markdown-link URL carrying a text mention's peer id between the chat composer's
@@ -14,13 +14,13 @@ import TelegramCore
 /// is encoded as the single `Int64` the draft persistence already uses (`EnginePeer.Id.toInt64()`),
 /// so the peer namespace round-trips inside it.
 public func mentionMarkdownURL(peerId: EnginePeer.Id) -> String {
-    return "tg://user?id=\(peerId.toInt64())"
+    return "as://user?id=\(peerId.toInt64())"
 }
 
-/// Parses the peer id out of a `tg://user?id=<int64>` marker URL. Returns nil for any other URL
+/// Parses the peer id out of a `as://user?id=<int64>` marker URL. Returns nil for any other URL
 /// (ordinary links flow through unchanged).
 public func parseMentionPeerId(fromURL url: String) -> EnginePeer.Id? {
-    let prefix = "tg://user?id="
+    let prefix = "as://user?id="
     guard url.hasPrefix(prefix), let raw = Int64(url.dropFirst(prefix.count)) else {
         return nil
     }
@@ -32,12 +32,12 @@ public func parseMentionPeerId(fromURL url: String) -> EnginePeer.Id? {
 /// a Document round-trip — whether originating from an edited message / legacy draft or a future
 /// native creation path.
 public func dateMarkdownURL(timestamp: Int32) -> String {
-    return "tg://timestamp?t=\(timestamp)"
+    return "as://timestamp?t=\(timestamp)"
 }
 
-/// Parses the timestamp out of a `tg://timestamp?t=<int32>` marker URL. Returns nil for any other URL.
+/// Parses the timestamp out of a `as://timestamp?t=<int32>` marker URL. Returns nil for any other URL.
 public func parseDate(fromURL url: String) -> Int32? {
-    let prefix = "tg://timestamp?t="
+    let prefix = "as://timestamp?t="
     guard url.hasPrefix(prefix), let value = Int32(url.dropFirst(prefix.count)) else {
         return nil
     }
@@ -52,7 +52,7 @@ public enum ChatLinkClass {
 }
 
 /// Single read-back chokepoint: decides whether a `link` is a mention, a date, or an ordinary URL.
-/// Precedence is prefix-ordered so a real user URL (or a near-miss like `tg://username`) falls to `.url`.
+/// Precedence is prefix-ordered so a real user URL (or a near-miss like `as://username`) falls to `.url`.
 public func classifyChatLink(_ link: String) -> ChatLinkClass {
     if let peerId = parseMentionPeerId(fromURL: link) {
         return .mention(peerId)

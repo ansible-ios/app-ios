@@ -4,11 +4,11 @@ import AsyncDisplayKit
 import Display
 import SwiftSignalKit
 import AccountContext
-import TelegramCore
-import TelegramPresentationData
+import IosappCore
+import IosappPresentationData
 import GalleryUI
 import UniversalMediaPlayer
-import TelegramUniversalVideoContent
+import IosappUniversalVideoContent
 import InvisibleInkDustNode
 
 // Mutable weak box: lets a wrapper hand its `openMedia` closure a back-reference to itself,
@@ -86,7 +86,7 @@ final class MediaSpoilerDustOverlay {
 func makeMediaWrapper(
     frame: CGRect,
     media: InstantPageMedia,
-    webPage: TelegramMediaWebpage,
+    webPage: IosappMediaWebpage,
     attributes: [InstantPageImageAttribute],
     renderContext: InstantPageV2RenderContext,
     theme: InstantPageTheme,
@@ -421,7 +421,7 @@ final class InstantPageV2MediaVideoView: UIView, InstantPageItemView {
             }
             var imageReference: ImageMediaReference?
             if let presentation = smallestImageRepresentation(file.previewRepresentations) {
-                let image = TelegramMediaImage(imageId: EngineMedia.Id(namespace: 0, id: 0), representations: [presentation], immediateThumbnailData: file.immediateThumbnailData, reference: nil, partialReference: nil, flags: [])
+                let image = IosappMediaImage(imageId: EngineMedia.Id(namespace: 0, id: 0), representations: [presentation], immediateThumbnailData: file.immediateThumbnailData, reference: nil, partialReference: nil, flags: [])
                 imageReference = renderContext.imageReference(image)
             }
             let content = NativeVideoContent(
@@ -673,8 +673,8 @@ final class InstantPageV2MediaAudioView: UIView, InstantPageItemView {
 
         let presentationData = renderContext.context.sharedContext.currentPresentationData.with { $0 }
         let incoming = renderContext.message?.isIncoming == true
-        let audioFile: TelegramMediaFile
-        if case let .file(f) = item.media.media { audioFile = f } else { audioFile = TelegramMediaFile(fileId: EngineMedia.Id(namespace: Namespaces.Media.LocalFile, id: 0), partialReference: nil, resource: EmptyMediaResource(), previewRepresentations: [], videoThumbnails: [], immediateThumbnailData: nil, mimeType: "audio/mpeg", size: nil, attributes: [], alternativeRepresentations: []) }
+        let audioFile: IosappMediaFile
+        if case let .file(f) = item.media.media { audioFile = f } else { audioFile = IosappMediaFile(fileId: EngineMedia.Id(namespace: Namespaces.Media.LocalFile, id: 0), partialReference: nil, resource: EmptyMediaResource(), previewRepresentations: [], videoThumbnails: [], immediateThumbnailData: nil, mimeType: "audio/mpeg", size: nil, attributes: [], alternativeRepresentations: []) }
         self.audioNode = InstantPageV2AudioContentNode(context: renderContext.context, message: renderContext.message, file: audioFile, incoming: incoming, presentationData: presentationData)
 
         super.init(frame: item.frame)

@@ -14,7 +14,7 @@ swift_library(
         "//submodules/DeviceAccess",
         "//submodules/DeviceLocationManager",
         "//submodules/SSignalKit/SwiftSignalKit:SwiftSignalKit",
-        "//submodules/TelegramCore:TelegramCore",
+        "//submodules/IosappCore:IosappCore",
     ],
     visibility = [
         "//visibility:public",

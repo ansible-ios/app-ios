@@ -2,9 +2,9 @@ import Foundation
 import UIKit
 import Display
 import SwiftSignalKit
-import TelegramCore
-import TelegramPresentationData
-import TelegramUIPreferences
+import IosappCore
+import IosappPresentationData
+import IosappUIPreferences
 import ItemListUI
 import PresentationDataUtils
 import AccountContext
@@ -196,7 +196,7 @@ public func featuredStickerPacksController(context: AccountContext) -> ViewContr
     }))
     
     let stickerPacks = Promise<[EngineRawItemCollectionInfoEntry]>()
-    stickerPacks.set(context.engine.data.subscribe(TelegramEngine.EngineData.Item.ItemCollections.InstalledPackInfos(namespace: Namespaces.ItemCollection.CloudStickerPacks)))
+    stickerPacks.set(context.engine.data.subscribe(IosappEngine.EngineData.Item.ItemCollections.InstalledPackInfos(namespace: Namespaces.ItemCollection.CloudStickerPacks)))
     
     let featured = Promise<[FeaturedStickerPackItem]>()
     featured.set(context.account.viewTracker.featuredStickerPacks())

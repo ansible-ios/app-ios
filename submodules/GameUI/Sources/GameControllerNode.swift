@@ -3,9 +3,9 @@ import UIKit
 import Display
 import AsyncDisplayKit
 import WebKit
-import TelegramCore
+import IosappCore
 import SwiftSignalKit
-import TelegramPresentationData
+import IosappPresentationData
 import AccountContext
 import ShareController
 import UndoUI
@@ -112,7 +112,7 @@ final class GameControllerNode: ViewControllerTracingNode {
         var botPeer: EnginePeer?
         var gameName: String?
         for media in message.media {
-            if let game = media as? TelegramMediaGame {
+            if let game = media as? IosappMediaGame {
                 inner: for attribute in message.attributes {
                     if let attribute = attribute as? InlineBotMessageAttribute, let peerId = attribute.peerId {
                         botPeer = message.peers[peerId].flatMap(EnginePeer.init)
@@ -147,7 +147,7 @@ final class GameControllerNode: ViewControllerTracingNode {
                 if eventName == "share_score" {
                     self.present(self.context.sharedContext.makeShareController(context: self.context, params: ShareControllerParams(subject: .fromExternal(1, { [weak self] peerIds, threadIds, requireStars, text, account, _ in
                         if let strongSelf = self, let message = strongSelf.message, let account = account as? ShareControllerAppAccountContext {
-                            let signals = peerIds.map { TelegramEngine(account: account.context.account).messages.forwardGameWithScore(messageId: message.id, to: $0, threadId: threadIds[$0], as: nil) }
+                            let signals = peerIds.map { IosappEngine(account: account.context.account).messages.forwardGameWithScore(messageId: message.id, to: $0, threadId: threadIds[$0], as: nil) }
                             return .single(.preparing(false))
                             |> castError(ShareControllerError.self)
                             |> then(
@@ -169,7 +169,7 @@ final class GameControllerNode: ViewControllerTracingNode {
     
     func shareWithoutScore() {
         if let (botPeer, gameName) = self.shareData(), let addressName = botPeer.addressName, !addressName.isEmpty, !gameName.isEmpty {
-            let url = "https://t.me/\(addressName)?game=\(gameName)"
+            let url = "https://asme.su/\(addressName)?game=\(gameName)"
             
             let context = self.context
             let shareController = context.sharedContext.makeShareController(context: context, params: ShareControllerParams(subject: .url(url), showInChat: nil, externalShare: true, actionCompleted: { [weak self] in

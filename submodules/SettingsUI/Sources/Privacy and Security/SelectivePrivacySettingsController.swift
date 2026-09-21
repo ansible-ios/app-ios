@@ -2,9 +2,9 @@ import Foundation
 import UIKit
 import Display
 import SwiftSignalKit
-import TelegramCore
-import TelegramPresentationData
-import TelegramUIPreferences
+import IosappCore
+import IosappPresentationData
+import IosappUIPreferences
 import ItemListUI
 import PresentationDataUtils
 import AccountContext
@@ -51,7 +51,7 @@ private final class SelectivePrivacySettingsControllerArguments {
     let displayLockedInfo: () -> Void
     let displayLockedGiftsInfo: () -> Void
     let openProfileEdit: () -> Void
-    let updateDisallowedGifts: ((TelegramDisallowedGifts, Bool) -> Void)?
+    let updateDisallowedGifts: ((IosappDisallowedGifts, Bool) -> Void)?
     let updateShowGiftButton: ((Bool) -> Void)?
     
     var cachedGiftIcon: (UIImage, PresentationTheme)?
@@ -71,7 +71,7 @@ private final class SelectivePrivacySettingsControllerArguments {
         displayLockedInfo: @escaping () -> Void,
         displayLockedGiftsInfo: @escaping () -> Void,
         openProfileEdit: @escaping () -> Void,
-        updateDisallowedGifts: ((TelegramDisallowedGifts, Bool) -> Void)?,
+        updateDisallowedGifts: ((IosappDisallowedGifts, Bool) -> Void)?,
         updateShowGiftButton: ((Bool) -> Void)?
     ) {
         self.context = context
@@ -162,7 +162,7 @@ public enum SelectivePrivacyEntryTag: ItemListItemTag, Equatable {
 
 private enum SelectivePrivacySettingsEntry: ItemListNodeEntry {
     case forwardsPreviewHeader(PresentationTheme, String)
-    case forwardsPreview(PresentationTheme, TelegramWallpaper, PresentationFontSize, PresentationChatBubbleCorners, PresentationStrings, PresentationDateTimeFormat, PresentationPersonNameOrder, String, Bool, String)
+    case forwardsPreview(PresentationTheme, IosappWallpaper, PresentationFontSize, PresentationChatBubbleCorners, PresentationStrings, PresentationDateTimeFormat, PresentationPersonNameOrder, String, Bool, String)
     case birthdayHeader(PresentationTheme, String)
     case settingHeader(PresentationTheme, String)
     case everybody(PresentationTheme, String, Bool, Bool, Bool)
@@ -192,7 +192,7 @@ private enum SelectivePrivacySettingsEntry: ItemListNodeEntry {
     case subscribeToPremium(PresentationTheme, String)
     case subscribeToPremiumInfo(PresentationTheme, String)
     case setPublicPhoto(PresentationTheme, String)
-    case removePublicPhoto(PresentationTheme, String, EnginePeer, TelegramMediaImage?, UIImage?)
+    case removePublicPhoto(PresentationTheme, String, EnginePeer, IosappMediaImage?, UIImage?)
     case publicPhotoInfo(PresentationTheme, String)
     case disallowedGiftsHeader(PresentationTheme, String)
     case disallowedGiftsUnlimited(PresentationTheme, String, Bool, Bool)
@@ -810,12 +810,12 @@ private struct SelectivePrivacySettingsControllerState: Equatable {
     let phoneDiscoveryEnabled: Bool?
     let hideReadTimeEnabled: Bool?
     
-    let disallowedGifts: TelegramDisallowedGifts?
+    let disallowedGifts: IosappDisallowedGifts?
     let showGiftButton: Bool?
     
     let uploadedPhoto: UIImage?
     
-    init(setting: SelectivePrivacySettingType, enableFor: [EnginePeer.Id: SelectivePrivacyPeer], enableForPremium: Bool, disableFor: [EnginePeer.Id: SelectivePrivacyPeer], enableForCloseFriends: Bool, enableForBots: Bool, saving: Bool, callDataSaving: VoiceCallDataSaving?, callP2PMode: SelectivePrivacySettingType?, callP2PEnableFor: [EnginePeer.Id: SelectivePrivacyPeer]?, callP2PDisableFor: [EnginePeer.Id: SelectivePrivacyPeer]?, callP2PEnableForCloseFriends: Bool?, callIntegrationAvailable: Bool?, callIntegrationEnabled: Bool?, phoneDiscoveryEnabled: Bool?, hideReadTimeEnabled: Bool?, disallowedGifts: TelegramDisallowedGifts?, showGiftButton: Bool?, uploadedPhoto: UIImage?) {
+    init(setting: SelectivePrivacySettingType, enableFor: [EnginePeer.Id: SelectivePrivacyPeer], enableForPremium: Bool, disableFor: [EnginePeer.Id: SelectivePrivacyPeer], enableForCloseFriends: Bool, enableForBots: Bool, saving: Bool, callDataSaving: VoiceCallDataSaving?, callP2PMode: SelectivePrivacySettingType?, callP2PEnableFor: [EnginePeer.Id: SelectivePrivacyPeer]?, callP2PDisableFor: [EnginePeer.Id: SelectivePrivacyPeer]?, callP2PEnableForCloseFriends: Bool?, callIntegrationAvailable: Bool?, callIntegrationEnabled: Bool?, phoneDiscoveryEnabled: Bool?, hideReadTimeEnabled: Bool?, disallowedGifts: IosappDisallowedGifts?, showGiftButton: Bool?, uploadedPhoto: UIImage?) {
         self.setting = setting
         self.enableFor = enableFor
         self.enableForPremium = enableForPremium
@@ -959,7 +959,7 @@ private struct SelectivePrivacySettingsControllerState: Equatable {
         return SelectivePrivacySettingsControllerState(setting: self.setting, enableFor: self.enableFor, enableForPremium: self.enableForPremium, disableFor: self.disableFor, enableForCloseFriends: self.enableForCloseFriends, enableForBots: self.enableForBots, saving: self.saving, callDataSaving: self.callDataSaving, callP2PMode: self.callP2PMode, callP2PEnableFor: self.callP2PEnableFor, callP2PDisableFor: self.callP2PDisableFor, callP2PEnableForCloseFriends: self.callP2PEnableForCloseFriends, callIntegrationAvailable: self.callIntegrationAvailable, callIntegrationEnabled: self.callIntegrationEnabled, phoneDiscoveryEnabled: self.phoneDiscoveryEnabled, hideReadTimeEnabled: hideReadTimeEnabled, disallowedGifts: self.disallowedGifts, showGiftButton: self.showGiftButton, uploadedPhoto: self.uploadedPhoto)
     }
     
-    func withUpdatedDisallowedGifts(_ disallowedGifts: TelegramDisallowedGifts) -> SelectivePrivacySettingsControllerState {
+    func withUpdatedDisallowedGifts(_ disallowedGifts: IosappDisallowedGifts) -> SelectivePrivacySettingsControllerState {
         return SelectivePrivacySettingsControllerState(setting: self.setting, enableFor: self.enableFor, enableForPremium: self.enableForPremium, disableFor: self.disableFor, enableForCloseFriends: self.enableForCloseFriends, enableForBots: self.enableForBots, saving: self.saving, callDataSaving: self.callDataSaving, callP2PMode: self.callP2PMode, callP2PEnableFor: self.callP2PEnableFor, callP2PDisableFor: self.callP2PDisableFor, callP2PEnableForCloseFriends: self.callP2PEnableForCloseFriends, callIntegrationAvailable: self.callIntegrationAvailable, callIntegrationEnabled: self.callIntegrationEnabled, phoneDiscoveryEnabled: self.phoneDiscoveryEnabled, hideReadTimeEnabled: self.hideReadTimeEnabled, disallowedGifts: disallowedGifts, showGiftButton: self.showGiftButton, uploadedPhoto: self.uploadedPhoto)
     }
     
@@ -968,7 +968,7 @@ private struct SelectivePrivacySettingsControllerState: Equatable {
     }
 }
 
-private func selectivePrivacySettingsControllerEntries(presentationData: PresentationData, kind: SelectivePrivacySettingsKind, state: SelectivePrivacySettingsControllerState, peerName: String, phoneNumber: String, peer: EnginePeer?, birthday: TelegramBirthday?, publicPhoto: TelegramMediaImage??) -> [SelectivePrivacySettingsEntry] {
+private func selectivePrivacySettingsControllerEntries(presentationData: PresentationData, kind: SelectivePrivacySettingsKind, state: SelectivePrivacySettingsControllerState, peerName: String, phoneNumber: String, peer: EnginePeer?, birthday: IosappBirthday?, publicPhoto: IosappMediaImage??) -> [SelectivePrivacySettingsEntry] {
     var entries: [SelectivePrivacySettingsEntry] = []
     
     let isPremium = peer?.isPremium ?? false
@@ -978,7 +978,7 @@ private func selectivePrivacySettingsControllerEntries(presentationData: Present
     let disableForText: String
     let enableForText: String
     
-    let phoneLink = "https://t.me/+\(phoneNumber)"
+    let phoneLink = "https://asme.su/+\(phoneNumber)"
     var settingInfoLink = phoneLink
     
     switch kind {
@@ -1459,8 +1459,8 @@ public func selectivePrivacySettingsController(
                 }
                 
                 let _ = (context.engine.data.get(
-                    EngineDataMap(filteredIds.map(TelegramEngine.EngineData.Item.Peer.Peer.init)),
-                    EngineDataMap(filteredIds.map(TelegramEngine.EngineData.Item.Peer.ParticipantCount.init))
+                    EngineDataMap(filteredIds.map(IosappEngine.EngineData.Item.Peer.Peer.init)),
+                    EngineDataMap(filteredIds.map(IosappEngine.EngineData.Item.Peer.ParticipantCount.init))
                 )
                 |> map { peerMap, participantCountMap -> [EnginePeer.Id: SelectivePrivacyPeer] in
                     var updatedPeers: [EnginePeer.Id: SelectivePrivacyPeer] = [:]
@@ -1657,7 +1657,7 @@ public func selectivePrivacySettingsController(
     }, openProfileEdit: {
         if openedFromBirthdayScreen {
             dismissImpl?()
-        } else if let rootController = context.sharedContext.mainWindow?.viewController as? TelegramRootControllerInterface {
+        } else if let rootController = context.sharedContext.mainWindow?.viewController as? IosappRootControllerInterface {
             rootController.openBirthdaySetup()
             rootController.popToRoot(animated: true)
         }
@@ -1711,9 +1711,9 @@ public func selectivePrivacySettingsController(
         context.sharedContext.presentationData,
         statePromise.get(),
         context.engine.data.subscribe(
-            TelegramEngine.EngineData.Item.Peer.Peer(id: context.account.peerId),
-            TelegramEngine.EngineData.Item.Peer.PublicPhoto(id: context.account.peerId),
-            TelegramEngine.EngineData.Item.Peer.Birthday(id: context.account.peerId)
+            IosappEngine.EngineData.Item.Peer.Peer(id: context.account.peerId),
+            IosappEngine.EngineData.Item.Peer.PublicPhoto(id: context.account.peerId),
+            IosappEngine.EngineData.Item.Peer.Birthday(id: context.account.peerId)
         )
     ) |> deliverOnMainQueue
     |> map { presentationData, state, data -> (ItemListControllerState, (ItemListNodeState, Any)) in
@@ -1764,7 +1764,7 @@ public func selectivePrivacySettingsController(
         let callIntegrationEnabled: Bool?
         let phoneDiscoveryEnabled: Bool?
         let hideReadTimeEnabled: Bool?
-        let disallowedGifts: TelegramDisallowedGifts?
+        let disallowedGifts: IosappDisallowedGifts?
         let showGiftButton: Bool?
     }
     
@@ -1778,7 +1778,7 @@ public func selectivePrivacySettingsController(
         var callDataSaving: VoiceCallDataSaving?
         var callIntegrationEnabled: Bool?
         var hideReadTimeEnabled: Bool?
-        var disallowedGifts: TelegramDisallowedGifts?
+        var disallowedGifts: IosappDisallowedGifts?
         var showGiftButton: Bool?
         
         updateState { state in
@@ -1807,7 +1807,7 @@ public func selectivePrivacySettingsController(
                     disallowedGifts = value
                 }
                 if let value = state.showGiftButton {
-                    if disallowedGifts != TelegramDisallowedGifts.All {
+                    if disallowedGifts != IosappDisallowedGifts.All {
                         showGiftButton = value
                     } else {
                         showGiftButton = false

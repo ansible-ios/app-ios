@@ -2,13 +2,13 @@ import Foundation
 import UIKit
 import Display
 import SwiftSignalKit
-import TelegramCore
-import TelegramPresentationData
-import TelegramUIPreferences
+import IosappCore
+import IosappPresentationData
+import IosappUIPreferences
 import ItemListUI
 import ItemListPeerItem
 import AccountContext
-import TelegramIntents
+import IosappIntents
 import AccountUtils
 
 public enum IntentsEntryTag: ItemListItemTag, Equatable {

@@ -3,9 +3,9 @@ import UIKit
 import AsyncDisplayKit
 import Display
 import SwiftSignalKit
-import TelegramCore
-import TelegramPresentationData
-import TelegramUIPreferences
+import IosappCore
+import IosappPresentationData
+import IosappUIPreferences
 import ItemListUI
 import PresentationDataUtils
 import OverlayStatusController
@@ -14,7 +14,7 @@ import AlertUI
 import PresentationDataUtils
 import AppBundle
 import ContextUI
-import TelegramStringFormatting
+import IosappStringFormatting
 import UndoUI
 import ItemListDatePickerItem
 import TextFormat
@@ -621,7 +621,7 @@ public func inviteLinkEditController(context: AccountContext, updatedPresentatio
         guard let inviteLink = invite?.link else {
             return
         }
-        let _ = (context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: peerId))
+        let _ = (context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: peerId))
         |> mapToSignal { peer -> Signal<EnginePeer, NoError> in
             if let peer {
                 return .single(peer)
@@ -687,7 +687,7 @@ public func inviteLinkEditController(context: AccountContext, updatedPresentatio
         presentationData,
         statePromise.get(),
         context.engine.data.subscribe(
-            TelegramEngine.EngineData.Item.Peer.Peer(id: peerId)
+            IosappEngine.EngineData.Item.Peer.Peer(id: peerId)
         ))
     |> deliverOnMainQueue
     |> map { presentationData, state, peer -> (ItemListControllerState, (ItemListNodeState, Any)) in

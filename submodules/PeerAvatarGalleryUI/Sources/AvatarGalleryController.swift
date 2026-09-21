@@ -4,8 +4,8 @@ import Display
 import QuickLook
 import SwiftSignalKit
 import AsyncDisplayKit
-import TelegramCore
-import TelegramPresentationData
+import IosappCore
+import IosappPresentationData
 import AccountContext
 import GalleryUI
 import ContextUI
@@ -36,7 +36,7 @@ private final class AvatarGalleryContextReferenceContentSource: ContextReference
     }
 }
 
-private func avatarGalleryEntryMatchesImage(_ entry: AvatarGalleryEntry, _ image: TelegramMediaImage) -> Bool {
+private func avatarGalleryEntryMatchesImage(_ entry: AvatarGalleryEntry, _ image: IosappMediaImage) -> Bool {
     guard
         let entryRepresentation = largestImageRepresentation(entry.representations.map({ $0.representation })),
         let imageRepresentation = largestImageRepresentation(image.representations)
@@ -59,7 +59,7 @@ private func avatarGalleryEntryWithVideoRepresentations(_ entry: AvatarGalleryEn
 }
 
 public func peerInfoProfilePhotos(context: AccountContext, peerId: EnginePeer.Id) -> Signal<Any, NoError> {
-    return context.engine.data.subscribe(TelegramEngine.EngineData.Item.Peer.Peer(id: peerId))
+    return context.engine.data.subscribe(IosappEngine.EngineData.Item.Peer.Peer(id: peerId))
     |> mapToSignal { peer -> Signal<[AvatarGalleryEntry]?, NoError> in
         guard let peer = peer else {
             return .single(nil)
@@ -73,8 +73,8 @@ public func peerInfoProfilePhotos(context: AccountContext, peerId: EnginePeer.Id
                 return context.account.postbox.peerView(id: peerId)
                 |> mapToSignal { peerView -> Signal<(Bool, [AvatarGalleryEntry])?, NoError>in
                     if let peer = peerViewMainPeer(peerView) {
-                        var secondEntry: TelegramMediaImage?
-                        var lastEntry: TelegramMediaImage?
+                        var secondEntry: IosappMediaImage?
+                        var lastEntry: IosappMediaImage?
                         if let cachedData = peerView.cachedData as? CachedUserData {
                             if let firstRepresentation = firstEntry.representations.first, firstRepresentation.representation.isPersonal {
                                 if firstRepresentation.representation.hasVideo, case let .known(photo) = cachedData.personalPhoto, let peerReference = PeerReference(peer) {
@@ -128,9 +128,9 @@ public func peerInfoProfilePhotosWithCache(context: AccountContext, peerId: Engi
 
 public enum AvatarGalleryEntry: Equatable {
     case topImage([ImageRepresentationWithReference], [VideoRepresentationWithReference], EnginePeer?, GalleryItemIndexData?, Data?, String?)
-    case image(EngineMedia.Id, TelegramMediaImageReference?, [ImageRepresentationWithReference], [VideoRepresentationWithReference], EnginePeer?, Int32?, GalleryItemIndexData?, EngineMessage.Id?, Data?, String?, Bool, TelegramMediaImage.EmojiMarkup?)
+    case image(EngineMedia.Id, IosappMediaImageReference?, [ImageRepresentationWithReference], [VideoRepresentationWithReference], EnginePeer?, Int32?, GalleryItemIndexData?, EngineMessage.Id?, Data?, String?, Bool, IosappMediaImage.EmojiMarkup?)
     
-    public init(representation: TelegramMediaImageRepresentation, peer: EnginePeer) {
+    public init(representation: IosappMediaImageRepresentation, peer: EnginePeer) {
         self = .topImage([ImageRepresentationWithReference(representation: representation, reference: MediaResourceReference.standalone(resource: representation.resource))], [], peer, nil, nil, nil)
     }
     
@@ -185,7 +185,7 @@ public enum AvatarGalleryEntry: Equatable {
         }
     }
     
-    public var emojiMarkup: TelegramMediaImage.EmojiMarkup? {
+    public var emojiMarkup: IosappMediaImage.EmojiMarkup? {
         switch self {
             case .topImage:
                 return nil
@@ -247,7 +247,7 @@ public func normalizeEntries(_ entries: [AvatarGalleryEntry]) -> [AvatarGalleryE
    return updatedEntries
 }
 
-public func initialAvatarGalleryEntries(account: Account, engine: TelegramEngine, peer: EnginePeer) -> Signal<[AvatarGalleryEntry]?, NoError> {
+public func initialAvatarGalleryEntries(account: Account, engine: IosappEngine, peer: EnginePeer) -> Signal<[AvatarGalleryEntry]?, NoError> {
     var initialEntries: [AvatarGalleryEntry] = []
     if !peer.profileImageRepresentations.isEmpty, let peerReference = PeerReference(peer) {
         initialEntries.append(.topImage(peer.profileImageRepresentations.map({ ImageRepresentationWithReference(representation: $0, reference: MediaResourceReference.avatar(peer: peerReference, resource: $0.resource)) }), [], peer, nil, nil, nil))
@@ -263,9 +263,9 @@ public func initialAvatarGalleryEntries(account: Account, engine: TelegramEngine
         return .single(initialEntries)
     }
     
-    return engine.data.get(TelegramEngine.EngineData.Item.Peer.Photo(id: peer.id))
+    return engine.data.get(IosappEngine.EngineData.Item.Peer.Photo(id: peer.id))
     |> map { peerPhoto in
-        var initialPhoto: TelegramMediaImage?
+        var initialPhoto: IosappMediaImage?
         if case let .known(value) = peerPhoto {
             initialPhoto = value
         }
@@ -286,7 +286,7 @@ public func initialAvatarGalleryEntries(account: Account, engine: TelegramEngine
     }
 }
 
-public func fetchedAvatarGalleryEntries(engine: TelegramEngine, account: Account, peer: EnginePeer) -> Signal<[AvatarGalleryEntry], NoError> {
+public func fetchedAvatarGalleryEntries(engine: IosappEngine, account: Account, peer: EnginePeer) -> Signal<[AvatarGalleryEntry], NoError> {
     return initialAvatarGalleryEntries(account: account, engine: engine, peer: peer)
     |> map { entries -> [AvatarGalleryEntry] in
         return entries ?? []
@@ -345,7 +345,7 @@ public func fetchedAvatarGalleryEntries(engine: TelegramEngine, account: Account
     }
 }
 
-public func fetchedAvatarGalleryEntries(engine: TelegramEngine, account: Account, peer: EnginePeer, firstEntry: AvatarGalleryEntry, secondEntry: TelegramMediaImage?, lastEntry: TelegramMediaImage?) -> Signal<(Bool, [AvatarGalleryEntry]), NoError> {
+public func fetchedAvatarGalleryEntries(engine: IosappEngine, account: Account, peer: EnginePeer, firstEntry: AvatarGalleryEntry, secondEntry: IosappMediaImage?, lastEntry: IosappMediaImage?) -> Signal<(Bool, [AvatarGalleryEntry]), NoError> {
     let initialEntries = [firstEntry]
     return Signal<(Bool, [AvatarGalleryEntry]), NoError>.single((false, initialEntries))
     |> then(
@@ -398,16 +398,16 @@ public func fetchedAvatarGalleryEntries(engine: TelegramEngine, account: Account
                 } else {
                     var photos = photos
                     if let secondEntry {
-                        photos.insert(TelegramPeerPhoto(image: secondEntry, reference: secondEntry.reference, date: photos.first?.date ?? 0, index: 1, totalCount: 0, messageId: nil), at: 1)
+                        photos.insert(IosappPeerPhoto(image: secondEntry, reference: secondEntry.reference, date: photos.first?.date ?? 0, index: 1, totalCount: 0, messageId: nil), at: 1)
                     }
                     if let lastEntry {
-                        photos.append(TelegramPeerPhoto(image: lastEntry, reference: lastEntry.reference, date: 0, index: photos.count, totalCount: 0, messageId: nil))
+                        photos.append(IosappPeerPhoto(image: lastEntry, reference: lastEntry.reference, date: 0, index: photos.count, totalCount: 0, messageId: nil))
                     }
                     for photo in photos {
                         let indexData = GalleryItemIndexData(position: index, totalCount: Int32(photos.count))
                         if result.isEmpty, let first = initialEntries.first {
                             var videoRepresentations: [VideoRepresentationWithReference] = first.videoRepresentations
-                            var emojiMarkup: TelegramMediaImage.EmojiMarkup? = first.emojiMarkup
+                            var emojiMarkup: IosappMediaImage.EmojiMarkup? = first.emojiMarkup
                             let isPersonal = first.representations.first?.representation.isPersonal == true
                             if videoRepresentations.isEmpty, !isPersonal {
                                 videoRepresentations = photo.image.videoRepresentations.map({ VideoRepresentationWithReference(representation: $0, reference: MediaResourceReference.avatarList(peer: peerReference, resource: $0.resource)) })

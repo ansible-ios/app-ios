@@ -1,5 +1,5 @@
 import XCTest
-import TelegramCore
+import IosappCore
 import Postbox
 @testable import TextFormat
 
@@ -112,8 +112,8 @@ final class ChatInputContentConversionTests: XCTestCase {
 
     // MARK: - Task 6: round-trip identity
 
-    private func file(_ id: Int64) -> TelegramMediaFile {
-        TelegramMediaFile(
+    private func file(_ id: Int64) -> IosappMediaFile {
+        IosappMediaFile(
             fileId: MediaId(namespace: 0, id: id),
             partialReference: nil,
             resource: LocalFileMediaResource(fileId: id),
@@ -303,7 +303,7 @@ final class ChatInputContentConversionTests: XCTestCase {
     // Legacy composer render-only filter: the flat `NSAttributedString` projection drops `.media`/`.table` blocks and
     // renders heading/list paragraphs as plain text (the legacy UITextView can't carry structural content).
     func test_attributedString_filtersStructuralBlocksForLegacyComposer() {
-        let image = TelegramMediaImage(imageId: MediaId(namespace: 1, id: 1001), representations: [], immediateThumbnailData: nil, reference: nil, partialReference: nil, flags: [])
+        let image = IosappMediaImage(imageId: MediaId(namespace: 1, id: 1001), representations: [], immediateThumbnailData: nil, reference: nil, partialReference: nil, flags: [])
         let media = ChatInputMedia(media: image, kind: .image, naturalSize: ChatInputSize(width: 0, height: 0), displayWidth: nil, alignment: .center, caption: [ChatInputRun(text: "CAPTION")])
         let table = ChatInputTable(columns: [ChatInputColumnSpec(width: 0)], rows: [ChatInputTableRow(height: nil, isHeader: false, cells: [ChatInputTableCell(runs: [ChatInputRun(text: "CELL")], background: nil)])])
         let content = ChatInputContent(blocks: [

@@ -1,8 +1,8 @@
 import Foundation
 import SwiftSignalKit
-import TelegramCore
-import TelegramPresentationData
-import TelegramUIPreferences
+import IosappCore
+import IosappPresentationData
+import IosappUIPreferences
 import AnimationCache
 import MultiAnimationRenderer
 import Display
@@ -16,13 +16,13 @@ public protocol ShareControllerAccountContext: AnyObject {
     var accountId: AccountRecordId { get }
     var accountPeerId: EnginePeer.Id { get }
     var stateManager: AccountStateManager { get }
-    var engineData: TelegramEngine.EngineData { get }
+    var engineData: IosappEngine.EngineData { get }
     var animationCache: AnimationCache { get }
     var animationRenderer: MultiAnimationRenderer { get }
     var contentSettings: ContentSettings { get }
     var appConfiguration: AppConfiguration { get }
     
-    func resolveInlineStickers(fileIds: [Int64]) -> Signal<[Int64: TelegramMediaFile], NoError>
+    func resolveInlineStickers(fileIds: [Int64]) -> Signal<[Int64: IosappMediaFile], NoError>
 }
 
 public protocol ShareControllerEnvironment: AnyObject {
@@ -49,7 +49,7 @@ public final class ShareControllerAppAccountContext: ShareControllerAccountConte
     public var stateManager: AccountStateManager {
         return self.context.account.stateManager
     }
-    public var engineData: TelegramEngine.EngineData {
+    public var engineData: IosappEngine.EngineData {
         return self.context.engine.data
     }
     public var animationCache: AnimationCache {
@@ -69,7 +69,7 @@ public final class ShareControllerAppAccountContext: ShareControllerAccountConte
         self.context = context
     }
     
-    public func resolveInlineStickers(fileIds: [Int64]) -> Signal<[Int64: TelegramMediaFile], NoError> {
+    public func resolveInlineStickers(fileIds: [Int64]) -> Signal<[Int64: IosappMediaFile], NoError> {
         return self.context.engine.stickers.resolveInlineStickers(fileIds: fileIds)
     }
 }
@@ -112,7 +112,7 @@ public enum ShareControllerSubject {
     case messages([EngineRawMessage])
     case image([ImageRepresentationWithReference])
     case media(AnyMediaReference, MediaParameters?)
-    case mapMedia(TelegramMediaMap)
+    case mapMedia(IosappMediaMap)
     case fromExternal(Int, ([EnginePeer.Id], [EnginePeer.Id: Int64], [EnginePeer.Id: StarsAmount], String, ShareControllerAccountContext, Bool) -> Signal<ShareControllerExternalStatus, ShareControllerError>)
 }
 
@@ -160,7 +160,7 @@ public final class ShareControllerParams {
     public let forceTheme: PresentationTheme?
     public let forcedActionTitle: String?
     public let shareAsLink: Bool
-    public let collectibleItemInfo: TelegramCollectibleItemInfo?
+    public let collectibleItemInfo: IosappCollectibleItemInfo?
 
     public let actionCompleted: (() -> Void)?
     public let dismissed: ((Bool) -> Void)?
@@ -186,7 +186,7 @@ public final class ShareControllerParams {
         forceTheme: PresentationTheme? = nil,
         forcedActionTitle: String? = nil,
         shareAsLink: Bool = false,
-        collectibleItemInfo: TelegramCollectibleItemInfo? = nil,
+        collectibleItemInfo: IosappCollectibleItemInfo? = nil,
         actionCompleted: (() -> Void)? = nil,
         dismissed: ((Bool) -> Void)? = nil,
         completed: (([EnginePeer.Id]) -> Void)? = nil,

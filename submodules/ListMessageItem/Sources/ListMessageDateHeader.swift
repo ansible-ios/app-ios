@@ -2,9 +2,9 @@ import Foundation
 import UIKit
 import Display
 import AsyncDisplayKit
-import TelegramPresentationData
-import TelegramUIPreferences
-import TelegramStringFormatting
+import IosappPresentationData
+import IosappUIPreferences
+import IosappStringFormatting
 import ListSectionHeaderNode
 
 private let timezoneOffset: Int32 = {

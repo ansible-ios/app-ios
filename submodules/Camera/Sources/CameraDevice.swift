@@ -1,7 +1,7 @@
 import Foundation
 import AVFoundation
 import SwiftSignalKit
-import TelegramCore
+import IosappCore
 
 private let defaultFPS: Double = 30.0
 

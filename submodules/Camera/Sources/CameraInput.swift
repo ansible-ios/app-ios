@@ -1,5 +1,5 @@
 import AVFoundation
-import TelegramCore
+import IosappCore
 
 class CameraInput {
     var videoInput: AVCaptureDeviceInput?

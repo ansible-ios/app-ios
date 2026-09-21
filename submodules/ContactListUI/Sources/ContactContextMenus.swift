@@ -3,7 +3,7 @@ import UIKit
 import SwiftSignalKit
 import ContextUI
 import AccountContext
-import TelegramCore
+import IosappCore
 import Display
 import AlertUI
 import PresentationDataUtils
@@ -16,12 +16,12 @@ func contactContextMenuItems(context: AccountContext, peerId: EnginePeer.Id, con
     let strings = context.sharedContext.currentPresentationData.with({ $0 }).strings
     
     return context.engine.data.get(
-        TelegramEngine.EngineData.Item.Peer.Peer(id: peerId),
-        TelegramEngine.EngineData.Item.Peer.AreVoiceCallsAvailable(id: peerId),
-        TelegramEngine.EngineData.Item.Peer.AreVideoCallsAvailable(id: peerId),
-        TelegramEngine.EngineData.Item.Peer.NotificationSettings(id: peerId),
-        TelegramEngine.EngineData.Item.NotificationSettings.Global(),
-        TelegramEngine.EngineData.Item.Contacts.Top()
+        IosappEngine.EngineData.Item.Peer.Peer(id: peerId),
+        IosappEngine.EngineData.Item.Peer.AreVoiceCallsAvailable(id: peerId),
+        IosappEngine.EngineData.Item.Peer.AreVideoCallsAvailable(id: peerId),
+        IosappEngine.EngineData.Item.Peer.NotificationSettings(id: peerId),
+        IosappEngine.EngineData.Item.NotificationSettings.Global(),
+        IosappEngine.EngineData.Item.Contacts.Top()
     )
     |> map { [weak contactsController] peer, areVoiceCallsAvailable, areVideoCallsAvailable, notificationSettings, globalSettings, topSearchPeers -> [ContextMenuItem] in
         guard let peer else {
@@ -36,7 +36,7 @@ func contactContextMenuItems(context: AccountContext, peerId: EnginePeer.Id, con
             }, action: { c, _ in
                 c?.dismiss(completion: {
                     let _ = (context.engine.data.get(
-                        TelegramEngine.EngineData.Item.Peer.Peer(id: peerId)
+                        IosappEngine.EngineData.Item.Peer.Peer(id: peerId)
                     )
                     |> deliverOnMainQueue).start(next: { peer in
                         guard let peer = peer, let controller = context.sharedContext.makePeerInfoController(context: context, updatedPresentationData: nil, peer: peer, mode: .generic, avatarInitiallyExpanded: false, fromChat: false, requestsContext: nil) else {
@@ -104,7 +104,7 @@ func contactContextMenuItems(context: AccountContext, peerId: EnginePeer.Id, con
         
         items.append(.action(ContextMenuActionItem(text: strings.ContactList_Context_SendMessage, icon: { theme in generateTintedImage(image: UIImage(bundleImageName: "Chat/Context Menu/Message"), color: theme.contextMenu.primaryColor) }, action: { _, f in
             let _ = (context.engine.data.get(
-                TelegramEngine.EngineData.Item.Peer.Peer(id: peerId)
+                IosappEngine.EngineData.Item.Peer.Peer(id: peerId)
             )
             |> deliverOnMainQueue).start(next: { peer in
                 guard let peer = peer else {
@@ -128,7 +128,7 @@ func contactContextMenuItems(context: AccountContext, peerId: EnginePeer.Id, con
                 |> deliverOnMainQueue).start(next: { [weak contactsController] currentPeerId in
                     if let currentPeerId = currentPeerId {
                         let _ = (context.engine.data.get(
-                            TelegramEngine.EngineData.Item.Peer.Peer(id: currentPeerId)
+                            IosappEngine.EngineData.Item.Peer.Peer(id: currentPeerId)
                         )
                         |> deliverOnMainQueue).start(next: { peer in
                             guard let peer = peer else {
@@ -172,7 +172,7 @@ func contactContextMenuItems(context: AccountContext, peerId: EnginePeer.Id, con
                         createSecretChatDisposable.set((createSignal
                         |> deliverOnMainQueue).start(next: { peerId in
                             let _ = (context.engine.data.get(
-                                TelegramEngine.EngineData.Item.Peer.Peer(id: peerId)
+                                IosappEngine.EngineData.Item.Peer.Peer(id: peerId)
                             )
                             |> deliverOnMainQueue).start(next: { peer in
                                 guard let peer = peer else {

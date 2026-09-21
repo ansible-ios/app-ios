@@ -3,8 +3,8 @@ import UIKit
 import SwiftSignalKit
 import AsyncDisplayKit
 import Display
-import TelegramCore
-import TelegramPresentationData
+import IosappCore
+import IosappPresentationData
 
 private func hasFirstResponder(_ view: UIView) -> Bool {
     if view.isFirstResponder {

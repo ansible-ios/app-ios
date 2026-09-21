@@ -4,9 +4,9 @@ import AsyncDisplayKit
 import Display
 import CheckNode
 import SwiftSignalKit
-import TelegramCore
-import TelegramPresentationData
-import TelegramUIPreferences
+import IosappCore
+import IosappPresentationData
+import IosappUIPreferences
 import AccountContext
 import GalleryUI
 import ComponentFlow
@@ -51,10 +51,10 @@ public enum InstantPageV2ItemKind: Hashable {
 /// `InstantPageV2View()` constructor usable.
 public final class InstantPageV2RenderContext {
     public let context: AccountContext
-    public private(set) var webpage: TelegramMediaWebpage
+    public private(set) var webpage: IosappMediaWebpage
     public let sourceLocation: InstantPageSourceLocation
-    public let imageReference: (TelegramMediaImage) -> ImageMediaReference
-    public let fileReference: (TelegramMediaFile) -> FileMediaReference
+    public let imageReference: (IosappMediaImage) -> ImageMediaReference
+    public let fileReference: (IosappMediaFile) -> FileMediaReference
     public let present: (ViewController, Any?) -> Void
     public let push: (ViewController) -> Void
     public let openUrl: (InstantPageUrlItem) -> Void
@@ -67,26 +67,26 @@ public final class InstantPageV2RenderContext {
     /// Per-media auto-download decision for a photo, computed by the host (chat bubble) from the
     /// message's download settings. Default `{ _ in false }` — V1/web-IV and the send preview keep
     /// their existing behavior (the node's own global-settings gate). See the video/autodownload spec.
-    public let shouldAutoDownloadImage: (TelegramMediaImage) -> Bool
+    public let shouldAutoDownloadImage: (IosappMediaImage) -> Bool
     /// Per-media auto-download decision for a file/video. Default `{ _ in false }`.
-    public let shouldAutoDownloadFile: (TelegramMediaFile) -> Bool
+    public let shouldAutoDownloadFile: (IosappMediaFile) -> Bool
     /// Whether a video file should auto-play inline (energy-usage autoplay setting AND already
     /// downloaded), computed by the host. Default `{ _ in false }` — no inline autoplay.
-    public let shouldAutoplayVideo: (TelegramMediaFile) -> Bool
+    public let shouldAutoplayVideo: (IosappMediaFile) -> Bool
 
     public init(
         context: AccountContext,
-        webpage: TelegramMediaWebpage,
+        webpage: IosappMediaWebpage,
         sourceLocation: InstantPageSourceLocation,
-        imageReference: @escaping (TelegramMediaImage) -> ImageMediaReference,
-        fileReference: @escaping (TelegramMediaFile) -> FileMediaReference,
+        imageReference: @escaping (IosappMediaImage) -> ImageMediaReference,
+        fileReference: @escaping (IosappMediaFile) -> FileMediaReference,
         present: @escaping (ViewController, Any?) -> Void,
         push: @escaping (ViewController) -> Void,
         openUrl: @escaping (InstantPageUrlItem) -> Void,
         baseNavigationController: @escaping () -> NavigationController?,
-        shouldAutoDownloadImage: @escaping (TelegramMediaImage) -> Bool = { _ in false },
-        shouldAutoDownloadFile: @escaping (TelegramMediaFile) -> Bool = { _ in false },
-        shouldAutoplayVideo: @escaping (TelegramMediaFile) -> Bool = { _ in false },
+        shouldAutoDownloadImage: @escaping (IosappMediaImage) -> Bool = { _ in false },
+        shouldAutoDownloadFile: @escaping (IosappMediaFile) -> Bool = { _ in false },
+        shouldAutoplayVideo: @escaping (IosappMediaFile) -> Bool = { _ in false },
         message: MessageReference?
     ) {
         self.context = context
@@ -109,7 +109,7 @@ public final class InstantPageV2RenderContext {
     /// Only `webpage` changes across chunks; the `imageReference`/`fileReference` closures keep
     /// their construction-time `MessageReference` snapshot, which is acceptable because the message
     /// id is stable across chunks (media resolves by id) and streamed AI content carries no media.
-    public func updateContent(webpage: TelegramMediaWebpage) {
+    public func updateContent(webpage: IosappMediaWebpage) {
         self.webpage = webpage
     }
 }

@@ -3,11 +3,11 @@ import UIKit
 import AsyncDisplayKit
 import Display
 import AnimatedStickerNode
-import TelegramCore
+import IosappCore
 import Postbox
-import TelegramPresentationData
+import IosappPresentationData
 import AccountContext
-import TelegramAnimatedStickerNode
+import IosappAnimatedStickerNode
 import ReactionButtonListComponent
 import SwiftSignalKit
 import Lottie
@@ -38,22 +38,22 @@ public final class ReactionItem {
     }
     
     public let reaction: ReactionItem.Reaction
-    public let appearAnimation: TelegramMediaFile.Accessor
-    public let stillAnimation: TelegramMediaFile.Accessor
-    public let listAnimation: TelegramMediaFile.Accessor
-    public let largeListAnimation: TelegramMediaFile.Accessor
-    public let applicationAnimation: TelegramMediaFile.Accessor?
-    public let largeApplicationAnimation: TelegramMediaFile.Accessor?
+    public let appearAnimation: IosappMediaFile.Accessor
+    public let stillAnimation: IosappMediaFile.Accessor
+    public let listAnimation: IosappMediaFile.Accessor
+    public let largeListAnimation: IosappMediaFile.Accessor
+    public let applicationAnimation: IosappMediaFile.Accessor?
+    public let largeApplicationAnimation: IosappMediaFile.Accessor?
     public let isCustom: Bool
     
     public init(
         reaction: ReactionItem.Reaction,
-        appearAnimation: TelegramMediaFile.Accessor,
-        stillAnimation: TelegramMediaFile.Accessor,
-        listAnimation: TelegramMediaFile.Accessor,
-        largeListAnimation: TelegramMediaFile.Accessor,
-        applicationAnimation: TelegramMediaFile.Accessor?,
-        largeApplicationAnimation: TelegramMediaFile.Accessor?,
+        appearAnimation: IosappMediaFile.Accessor,
+        stillAnimation: IosappMediaFile.Accessor,
+        listAnimation: IosappMediaFile.Accessor,
+        largeListAnimation: IosappMediaFile.Accessor,
+        applicationAnimation: IosappMediaFile.Accessor?,
+        largeApplicationAnimation: IosappMediaFile.Accessor?,
         isCustom: Bool
     ) {
         self.reaction = reaction
@@ -191,9 +191,9 @@ private final class TitleLabelView: UIView {
         
         let tintBody = MarkdownAttributeSet(font: Font.regular(13.0), textColor: .black)
         let tintBold = MarkdownAttributeSet(font: Font.semibold(13.0), textColor: .black)
-        let tintLink = MarkdownAttributeSet(font: Font.regular(13.0), textColor: .black, additionalAttributes: [TelegramTextAttributes.URL: true as NSNumber])
+        let tintLink = MarkdownAttributeSet(font: Font.regular(13.0), textColor: .black, additionalAttributes: [IosappTextAttributes.URL: true as NSNumber])
         let tintAttributes = MarkdownAttributes(body: tintBody, bold: tintBold, link: tintLink, linkAttribute: { _ in
-            return (TelegramTextAttributes.URL, "")
+            return (IosappTextAttributes.URL, "")
         })
         
         let contentSize = self.contentView.update(
@@ -379,7 +379,7 @@ public final class ReactionContextNode: ASDisplayNode, ASScrollViewDelegate {
     
     public var emojiSelected: ((String) -> Void)?
     public var reactionSelected: ((UpdateMessageReaction, Bool) -> Void)?
-    public var premiumReactionsSelected: ((TelegramMediaFile?) -> Void)?
+    public var premiumReactionsSelected: ((IosappMediaFile?) -> Void)?
     
     private var hapticFeedback: HapticFeedback?
     private var standaloneReactionAnimation: StandaloneReactionAnimation?
@@ -428,8 +428,8 @@ public final class ReactionContextNode: ASDisplayNode, ASScrollViewDelegate {
     }
     private var emojiSearchContext: EmojiSearchContext?
     
-    private var emptyResultEmojis: [TelegramMediaFile] = []
-    private var stableEmptyResultEmoji: TelegramMediaFile?
+    private var emptyResultEmojis: [IosappMediaFile] = []
+    private var stableEmptyResultEmoji: IosappMediaFile?
     private let stableEmptyResultEmojiDisposable = MetaDisposable()
     
     private var horizontalExpandRecognizer: UIPanGestureRecognizer?
@@ -459,7 +459,7 @@ public final class ReactionContextNode: ASDisplayNode, ASScrollViewDelegate {
     
     public static func randomGenericReactionEffect(context: AccountContext) -> Signal<String?, NoError> {
         return context.engine.stickers.loadedStickerPack(reference: .emojiGenericAnimations, forceActualized: false)
-        |> map { result -> TelegramMediaFile? in
+        |> map { result -> IosappMediaFile? in
             switch result {
             case let .result(_, items, _):
                 return items.randomElement()?.file._parse()
@@ -634,7 +634,7 @@ public final class ReactionContextNode: ASDisplayNode, ASScrollViewDelegate {
         if alwaysAllowPremiumReactions {
             self.hasPremium = true
         } else {
-            self.hasPremiumDisposable = (context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: context.account.peerId))
+            self.hasPremiumDisposable = (context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: context.account.peerId))
                                          |> deliverOnMainQueue).start(next: { [weak self] peer in
                 guard let strongSelf = self else {
                     return
@@ -644,13 +644,13 @@ public final class ReactionContextNode: ASDisplayNode, ASScrollViewDelegate {
         }
         
         if let getEmojiContent = getEmojiContent, !self.reactionsLocked {
-            self.stableEmptyResultEmojiDisposable.set((self.context.engine.data.subscribe(TelegramEngine.EngineData.Item.OrderedLists.ListItems(collectionId: Namespaces.OrderedItemList.CloudFeaturedEmojiPacks))
+            self.stableEmptyResultEmojiDisposable.set((self.context.engine.data.subscribe(IosappEngine.EngineData.Item.OrderedLists.ListItems(collectionId: Namespaces.OrderedItemList.CloudFeaturedEmojiPacks))
             |> take(1)
             |> deliverOnMainQueue).start(next: { [weak self] items in
                 guard let strongSelf = self else {
                     return
                 }
-                var filteredFiles: [TelegramMediaFile] = []
+                var filteredFiles: [IosappMediaFile] = []
                 let filterList: [String] = ["😖", "😫", "🫠", "😨", "❓"]
                 for featuredEmojiPack in items.lazy.map({ $0.contents.get(FeaturedStickerPackItem.self)! }) {
                     for item in featuredEmojiPack.topItems {
@@ -1743,7 +1743,7 @@ public final class ReactionContextNode: ASDisplayNode, ASScrollViewDelegate {
                     return
                 }
                 
-                let _ = (strongSelf.context.engine.data.subscribe(TelegramEngine.EngineData.Item.OrderedLists.ListItems(collectionId: Namespaces.OrderedItemList.CloudFeaturedEmojiPacks))
+                let _ = (strongSelf.context.engine.data.subscribe(IosappEngine.EngineData.Item.OrderedLists.ListItems(collectionId: Namespaces.OrderedItemList.CloudFeaturedEmojiPacks))
                 |> take(1)
                 |> deliverOnMainQueue).start(next: { items in
                     guard let strongSelf = self else {
@@ -1843,7 +1843,7 @@ public final class ReactionContextNode: ASDisplayNode, ASScrollViewDelegate {
                             }
                         }
                     
-                        let hasPremium = context.engine.data.subscribe(TelegramEngine.EngineData.Item.Peer.Peer(id: context.account.peerId))
+                        let hasPremium = context.engine.data.subscribe(IosappEngine.EngineData.Item.Peer.Peer(id: context.account.peerId))
                         |> map { peer -> Bool in
                             guard case let .user(user) = peer else {
                                 return false
@@ -2046,7 +2046,7 @@ public final class ReactionContextNode: ASDisplayNode, ASScrollViewDelegate {
                                         localPacksSignal
                                     )
                                     |> map { rawItems, availableReactions, hasPremium, foundPacks, foundEmoji, foundLocalPacks -> (groups: [EmojiPagerContentComponent.ItemGroup], canLoadMore: Bool, isSearching: Bool, searchContext: EmojiSearchContext?) in
-                                        var result: [(String, TelegramMediaFile.Accessor?, String)] = []
+                                        var result: [(String, IosappMediaFile.Accessor?, String)] = []
                                         
                                         var allEmoticons: [String: String] = [:]
                                         for keyword in keywords {
@@ -2060,9 +2060,9 @@ public final class ReactionContextNode: ASDisplayNode, ASScrollViewDelegate {
                                                 switch attribute {
                                                 case let .CustomEmoji(_, _, alt, _):
                                                     if !alt.isEmpty, let keyword = allEmoticons[alt] {
-                                                        result.append((alt, TelegramMediaFile.Accessor(itemFile), keyword))
+                                                        result.append((alt, IosappMediaFile.Accessor(itemFile), keyword))
                                                     } else if alt == query {
-                                                        result.append((alt, TelegramMediaFile.Accessor(itemFile), alt))
+                                                        result.append((alt, IosappMediaFile.Accessor(itemFile), alt))
                                                     }
                                                 default:
                                                     break
@@ -2213,7 +2213,7 @@ public final class ReactionContextNode: ASDisplayNode, ASScrollViewDelegate {
                     self.emojiSearchContext = nil
                     let resultSignal: Signal<(items: [EmojiPagerContentComponent.ItemGroup], isFinalResult: Bool), NoError>
                     if self.isMessageEffects {
-                        let hasPremium = context.engine.data.subscribe(TelegramEngine.EngineData.Item.Peer.Peer(id: context.account.peerId))
+                        let hasPremium = context.engine.data.subscribe(IosappEngine.EngineData.Item.Peer.Peer(id: context.account.peerId))
                         |> map { peer -> Bool in
                             guard case let .user(user) = peer else {
                                 return false
@@ -2357,11 +2357,11 @@ public final class ReactionContextNode: ASDisplayNode, ASScrollViewDelegate {
                                     continue
                                 }
                                 existingIds.insert(itemFile.fileId)
-                                let animationData = EntityKeyboardAnimationData(file: TelegramMediaFile.Accessor(itemFile))
+                                let animationData = EntityKeyboardAnimationData(file: IosappMediaFile.Accessor(itemFile))
                                 let item = EmojiPagerContentComponent.Item(
                                     animationData: animationData,
                                     content: .animation(animationData),
-                                    itemFile: TelegramMediaFile.Accessor(itemFile),
+                                    itemFile: IosappMediaFile.Accessor(itemFile),
                                     subgroupId: nil,
                                     icon: .none,
                                     tintMode: animationData.isTemplate ? .primary : .none
@@ -2739,7 +2739,7 @@ public final class ReactionContextNode: ASDisplayNode, ASScrollViewDelegate {
         let additionalAnimationNode: DefaultAnimatedStickerNodeImpl?
         var genericAnimationView: AnimationView?
         
-        var additionalAnimation: TelegramMediaFile.Accessor?
+        var additionalAnimation: IosappMediaFile.Accessor?
         if self.didTriggerExpandedReaction {
             additionalAnimation = itemNode.item.largeApplicationAnimation
         } else {
@@ -3904,7 +3904,7 @@ public final class StandaloneReactionAnimation: ASDisplayNode {
         let additionalAnimationNode: DefaultAnimatedStickerNodeImpl?
         var genericAnimationView: AnimationView?
         
-        var additionalAnimation: TelegramMediaFile?
+        var additionalAnimation: IosappMediaFile?
         if didTriggerExpandedReaction {
             additionalAnimation = item.largeApplicationAnimation?._parse()
         } else {

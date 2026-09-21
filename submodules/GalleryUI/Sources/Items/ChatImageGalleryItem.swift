@@ -4,8 +4,8 @@ import Display
 import AsyncDisplayKit
 import SwiftSignalKit
 import Postbox
-import TelegramCore
-import TelegramPresentationData
+import IosappCore
+import IosappPresentationData
 import AccountContext
 import RadialStatusNode
 import PhotoResources
@@ -66,9 +66,9 @@ final class ChatMediaGalleryThumbnailItem: GalleryThumbnailItem {
     init?(account: Account, userLocation: MediaResourceUserLocation, mediaReference: AnyMediaReference) {
         self.account = account
         self.userLocation = userLocation
-        if let imageReference = mediaReference.concrete(TelegramMediaImage.self) {
+        if let imageReference = mediaReference.concrete(IosappMediaImage.self) {
             self.thumbnail = .image(imageReference)
-        } else if let fileReference = mediaReference.concrete(TelegramMediaFile.self) {
+        } else if let fileReference = mediaReference.concrete(IosappMediaFile.self) {
             if fileReference.media.isVideo {
                 self.thumbnail = .video(fileReference)
             } else {
@@ -153,9 +153,9 @@ class ChatImageGalleryItem: GalleryItem {
         
         node.setMessage(self.message, mediaSubject: self.mediaSubject, displayInfo: !self.displayInfoOnTop, translateToLanguage: self.translateToLanguage, peerIsCopyProtected: self.peerIsCopyProtected, isSecret: self.isSecret, location: self.location)
         if let (media, _) = selectedMediaAndMediaImageForMessage(message: self.message, mediaSubject: self.mediaSubject) {
-            if let image = media as? TelegramMediaImage {
+            if let image = media as? IosappMediaImage {
                 node.setImage(userLocation: .peer(self.message.id.peerId), imageReference: .message(message: MessageReference(self.message), media: image))
-            } else if let file = media as? TelegramMediaFile, file.mimeType.hasPrefix("image/") {
+            } else if let file = media as? IosappMediaFile, file.mimeType.hasPrefix("image/") {
                 node.setFile(context: self.context, userLocation: .peer(self.message.id.peerId), fileReference: .message(message: MessageReference(self.message), media: file))
             }
         }
@@ -176,7 +176,7 @@ class ChatImageGalleryItem: GalleryItem {
             if case let .paidMediaIndex(index) = self.mediaSubject {
                 mediaIndex = index
             }
-            if case let .full(fullMedia) = paidContent.extendedMedia[Int(mediaIndex)], let m = fullMedia as? TelegramMediaImage {
+            if case let .full(fullMedia) = paidContent.extendedMedia[Int(mediaIndex)], let m = fullMedia as? IosappMediaImage {
                 mediaReference = .message(message: MessageReference(self.message), media: m)
             }
             if let mediaReference {
@@ -184,9 +184,9 @@ class ChatImageGalleryItem: GalleryItem {
                     return (0, item)
                 }
             }
-        } else if let poll = self.message.media.first(where: { $0 is TelegramMediaPoll }) as? TelegramMediaPoll, case let .pollOption(opaqueIdentifier) = self.mediaSubject {
+        } else if let poll = self.message.media.first(where: { $0 is IosappMediaPoll }) as? IosappMediaPoll, case let .pollOption(opaqueIdentifier) = self.mediaSubject {
             var mediaReference: AnyMediaReference?
-            if let optionMedia = poll.options.first(where: { $0.opaqueIdentifier == opaqueIdentifier })?.media as? TelegramMediaImage {
+            if let optionMedia = poll.options.first(where: { $0.opaqueIdentifier == opaqueIdentifier })?.media as? IosappMediaImage {
                 mediaReference = .message(message: MessageReference(self.message), media: optionMedia)
             }
             if let mediaReference {
@@ -197,9 +197,9 @@ class ChatImageGalleryItem: GalleryItem {
         } else if let id = self.message.groupInfo?.stableId {
             var mediaReference: AnyMediaReference?
             for m in self.message.media {
-                if let m = m as? TelegramMediaImage {
+                if let m = m as? IosappMediaImage {
                     mediaReference = .message(message: MessageReference(self.message), media: m)
-                } else if let m = m as? TelegramMediaFile {
+                } else if let m = m as? IosappMediaFile {
                     mediaReference = .message(message: MessageReference(self.message), media: m)
                 }
             }
@@ -704,7 +704,7 @@ final class ChatImageGalleryItemNode: ZoomableContentGalleryItemNode {
     private func contextMenuMainItems() -> Signal<[ContextMenuItem], NoError> {
         let peer: Signal<EnginePeer?, NoError>
         if let message = self.message {
-            peer = self.context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: message.id.peerId))
+            peer = self.context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: message.id.peerId))
         } else {
             peer = .single(nil)
         }
@@ -1169,7 +1169,7 @@ final class ChatImageGalleryItemNode: ZoomableContentGalleryItemNode {
     override func visibilityUpdated(isVisible: Bool) {
         super.visibilityUpdated(isVisible: isVisible)
         
-        /*if let (_, mediaReference) = self.contextAndMedia, let _ = mediaReference.concrete(TelegramMediaFile.self) {
+        /*if let (_, mediaReference) = self.contextAndMedia, let _ = mediaReference.concrete(IosappMediaFile.self) {
             if isVisible {
             } else {
                 self.fetchDisposable.set(nil)
@@ -1197,10 +1197,10 @@ final class ChatImageGalleryItemNode: ZoomableContentGalleryItemNode {
         if let (_, mediaReference) = self.contextAndMedia, let status = self.status {
             var resource: MediaResourceReference?
             var statsCategory: MediaResourceStatsCategory?
-            if let fileReference = mediaReference.concrete(TelegramMediaFile.self) {
+            if let fileReference = mediaReference.concrete(IosappMediaFile.self) {
                 resource = fileReference.resourceReference(fileReference.media.resource)
                 statsCategory = statsCategoryForFileWithAttributes(fileReference.media.attributes)
-            } else if let imageReference = mediaReference.concrete(TelegramMediaImage.self ) {
+            } else if let imageReference = mediaReference.concrete(IosappMediaImage.self ) {
                 resource = (largestImageRepresentation(imageReference.media.representations)?.resource).flatMap(imageReference.resourceReference)
                 statsCategory = .image
             }
@@ -1229,11 +1229,11 @@ final class ChatImageGalleryItemNode: ZoomableContentGalleryItemNode {
         }
         var canDelete = false
         if let peer = message.peers[message.id.peerId] {
-            if peer is TelegramUser || peer is TelegramSecretChat {
+            if peer is IosappUser || peer is IosappSecretChat {
                 canDelete = true
-            } else if let _ = peer as? TelegramGroup {
+            } else if let _ = peer as? IosappGroup {
                 canDelete = true
-            } else if let channel = peer as? TelegramChannel {
+            } else if let channel = peer as? IosappChannel {
                 if message.flags.contains(.Incoming) {
                     canDelete = channel.hasPermission(.deleteAllMessages)
                 } else {
@@ -1245,7 +1245,7 @@ final class ChatImageGalleryItemNode: ZoomableContentGalleryItemNode {
         } else {
             canDelete = false
         }
-        if let _ = message.media.first(where: { $0 is TelegramMediaPoll }) {
+        if let _ = message.media.first(where: { $0 is IosappMediaPoll }) {
             canDelete = false
         }
         return canDelete

@@ -1,5 +1,5 @@
 import XCTest
-import TelegramCore
+import IosappCore
 import Postbox
 
 final class SynchronizeableChatInputStateTests: XCTestCase {

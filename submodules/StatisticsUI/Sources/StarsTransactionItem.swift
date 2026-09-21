@@ -3,14 +3,14 @@ import UIKit
 import Display
 import AsyncDisplayKit
 import SwiftSignalKit
-import TelegramCore
+import IosappCore
 import AccountContext
-import TelegramPresentationData
+import IosappPresentationData
 import ItemListUI
 import ComponentFlow
 import ListActionItemComponent
 import MultilineTextComponent
-import TelegramStringFormatting
+import IosappStringFormatting
 import StarsAvatarComponent
 
 final class StarsTransactionItem: ListViewItem, ItemListItem {
@@ -299,12 +299,12 @@ final class StarsTransactionItemNode: ListViewItemNode, ItemListItemNode {
                         itemTitle = item.presentationData.strings.Stars_Intro_Transaction_PremiumBotTopUp_Title
                         itemSubtitle = item.presentationData.strings.Stars_Intro_Transaction_PremiumBotTopUp_Subtitle
                     case .ads:
-                        itemTitle = item.presentationData.strings.Stars_Intro_Transaction_TelegramAds_Title
-                        itemSubtitle = item.presentationData.strings.Stars_Intro_Transaction_TelegramAds_Subtitle
+                        itemTitle = item.presentationData.strings.Stars_Intro_Transaction_IosappAds_Title
+                        itemSubtitle = item.presentationData.strings.Stars_Intro_Transaction_IosappAds_Subtitle
                     case .apiLimitExtension:
-                        itemTitle = item.presentationData.strings.Stars_Intro_Transaction_TelegramBotApi_Title
+                        itemTitle = item.presentationData.strings.Stars_Intro_Transaction_IosappBotApi_Title
                         if let floodskipNumber = item.transaction.floodskipNumber {
-                            itemSubtitle = item.presentationData.strings.Stars_Intro_Transaction_TelegramBotApi_Messages(floodskipNumber)
+                            itemSubtitle = item.presentationData.strings.Stars_Intro_Transaction_IosappBotApi_Messages(floodskipNumber)
                         } else {
                             itemSubtitle = nil
                         }

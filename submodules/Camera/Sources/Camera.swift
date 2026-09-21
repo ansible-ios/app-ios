@@ -3,7 +3,7 @@ import UIKit
 import SwiftSignalKit
 import AVFoundation
 import CoreImage
-import TelegramCore
+import IosappCore
 import DeviceModel
 
 final class CameraSession {

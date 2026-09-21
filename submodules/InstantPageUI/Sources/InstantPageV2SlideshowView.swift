@@ -3,8 +3,8 @@ import UIKit
 import AsyncDisplayKit
 import Display
 import AccountContext
-import TelegramCore
-import TelegramPresentationData
+import IosappCore
+import IosappPresentationData
 
 // A paged carousel for an `InstantPageBlock.slideshow`. Ports V1's InstantPageSlideshowNode /
 // InstantPageSlideshowPagerNode (InstantPageSlideshowItemNode.swift), simplified to create all pages

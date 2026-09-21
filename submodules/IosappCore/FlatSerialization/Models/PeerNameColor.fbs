@@ -1,0 +1,7 @@
+namespace IosappCore;
+
+table PeerNameColor {
+    value:int32 (id: 0);
+}
+
+root_type PeerNameColor;

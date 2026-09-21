@@ -3,7 +3,7 @@
 //  RLottie
 //
 //  Created by Peter on 6/25/19.
-//  Copyright © 2019 Telegram LLP. All rights reserved.
+//  Copyright © 2019 Iosapp LLP. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>

@@ -5,9 +5,9 @@ import AsyncDisplayKit
 import Display
 import ComponentFlow
 import LegacyComponents
-import TelegramCore
+import IosappCore
 import SwiftSignalKit
-import TelegramPresentationData
+import IosappPresentationData
 import AccountContext
 import AppBundle
 import PresentationDataUtils
@@ -20,7 +20,7 @@ import MultilineTextComponent
 import ContextUI
 import ChatEntityKeyboardInputNode
 import EntityKeyboard
-import TelegramUIPreferences
+import IosappUIPreferences
 import FastBlur
 import MediaEditor
 import StickerPickerScreen

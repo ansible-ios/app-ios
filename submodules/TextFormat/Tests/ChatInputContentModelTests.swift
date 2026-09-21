@@ -1,5 +1,5 @@
 import XCTest
-import TelegramCore
+import IosappCore
 import Postbox
 @testable import TextFormat
 
@@ -108,7 +108,7 @@ final class ChatInputContentModelTests: XCTestCase {
     /// is the only off-string block that DOES contribute a " " placeholder.)
     func test_flatCoordinates_mediaAndTable_areOffAxis() {
         func p(_ s: String) -> ChatInputBlock { .paragraph(ChatInputParagraph(style: .body, runs: [ChatInputRun(text: s)])) }
-        let image = TelegramMediaImage(imageId: MediaId(namespace: 0, id: 7), representations: [], immediateThumbnailData: nil, reference: nil, partialReference: nil, flags: [])
+        let image = IosappMediaImage(imageId: MediaId(namespace: 0, id: 7), representations: [], immediateThumbnailData: nil, reference: nil, partialReference: nil, flags: [])
         let media = ChatInputMedia(media: image, kind: .image, naturalSize: ChatInputSize(width: 1.0, height: 1.0))
         let table = ChatInputTable(columns: [ChatInputColumnSpec(width: 10.0)], rows: [])
         // [ "ab", media, "xy", table ] — the two non-text blocks sit between/after the paragraphs.
@@ -190,7 +190,7 @@ final class ChatInputContentModelTests: XCTestCase {
 
     /// The full Document-parity block set — a heading, two list paragraphs (bullet then ordered), a table (2
     /// columns, a header row + a body row, inline-text cells, one cell with a background), and a
-    /// media block (a real `TelegramMediaImage` carried as a Postbox object blob) — round-trips losslessly through
+    /// media block (a real `IosappMediaImage` carried as a Postbox object blob) — round-trips losslessly through
     /// the REAL persistence path (`AdaptedPostbox*coder`), NOT JSON. This guards the new raw enums' keyed-rawValue
     /// Codable (no `singleValueContainer`) and the `Media`-blob encode/decode.
     func test_codable_structuralBlocks_roundTripsViaAdaptedPostbox() throws {
@@ -223,7 +223,7 @@ final class ChatInputContentModelTests: XCTestCase {
             ]
         )
 
-        let image = TelegramMediaImage(
+        let image = IosappMediaImage(
             imageId: MediaId(namespace: 0, id: 42),
             representations: [],
             immediateThumbnailData: nil,
@@ -309,7 +309,7 @@ final class ChatInputContentModelTests: XCTestCase {
         let heading = single(.paragraph(ChatInputParagraph(style: .heading2, runs: [ChatInputRun(text: "h")])))
         let list = single(.paragraph(ChatInputParagraph(style: .body, list: ChatInputListMembership(marker: .bullet, level: 0), runs: [ChatInputRun(text: "x")])))
         let table = single(.table(ChatInputTable(columns: [ChatInputColumnSpec(width: 10.0)], rows: [])))
-        let image = TelegramMediaImage(imageId: MediaId(namespace: 0, id: 1), representations: [], immediateThumbnailData: nil, reference: nil, partialReference: nil, flags: [])
+        let image = IosappMediaImage(imageId: MediaId(namespace: 0, id: 1), representations: [], immediateThumbnailData: nil, reference: nil, partialReference: nil, flags: [])
         let media = single(.media(ChatInputMedia(media: image, kind: .image, naturalSize: ChatInputSize(width: 1.0, height: 1.0))))
         XCTAssertFalse(heading.isEntityExpressible())
         XCTAssertFalse(list.isEntityExpressible())
@@ -452,7 +452,7 @@ final class ChatInputContentModelTests: XCTestCase {
 
     func test_isEmptyWhitespaceTrimmed_contentAwareAndWhitespaceTrimmed() {
         func p(_ s: String) -> ChatInputBlock { .paragraph(ChatInputParagraph(style: .body, runs: s.isEmpty ? [] : [ChatInputRun(text: s)])) }
-        let image = TelegramMediaImage(imageId: MediaId(namespace: 0, id: 7), representations: [], immediateThumbnailData: nil, reference: nil, partialReference: nil, flags: [])
+        let image = IosappMediaImage(imageId: MediaId(namespace: 0, id: 7), representations: [], immediateThumbnailData: nil, reference: nil, partialReference: nil, flags: [])
         let media = ChatInputMedia(media: image, kind: .image, naturalSize: ChatInputSize(width: 1.0, height: 1.0))
         let table = ChatInputTable(columns: [ChatInputColumnSpec(width: 10.0)], rows: [])
 
@@ -483,8 +483,8 @@ final class ChatInputContentModelTests: XCTestCase {
     // MARK: - ChatInputMedia container (items array)
 
     func test_chatInputMedia_container_codableViaAdaptedPostbox() throws {
-        let img = TelegramMediaImage(imageId: MediaId(namespace: 0, id: 1), representations: [], immediateThumbnailData: nil, reference: nil, partialReference: nil, flags: [])
-        let file = TelegramMediaFile(fileId: MediaId(namespace: 0, id: 2), partialReference: nil, resource: EmptyMediaResource(), previewRepresentations: [], videoThumbnails: [], immediateThumbnailData: nil, mimeType: "video/mp4", size: nil, attributes: [], alternativeRepresentations: [])
+        let img = IosappMediaImage(imageId: MediaId(namespace: 0, id: 1), representations: [], immediateThumbnailData: nil, reference: nil, partialReference: nil, flags: [])
+        let file = IosappMediaFile(fileId: MediaId(namespace: 0, id: 2), partialReference: nil, resource: EmptyMediaResource(), previewRepresentations: [], videoThumbnails: [], immediateThumbnailData: nil, mimeType: "video/mp4", size: nil, attributes: [], alternativeRepresentations: [])
         let media = ChatInputMedia(items: [
             ChatInputMediaItem(media: img, kind: .image, naturalSize: ChatInputSize(width: 100, height: 50)),
             ChatInputMediaItem(media: file, kind: .video, naturalSize: ChatInputSize(width: 60, height: 90)),
@@ -495,7 +495,7 @@ final class ChatInputContentModelTests: XCTestCase {
     }
 
     func test_chatInputMedia_convenienceInit_isOneItem() {
-        let img = TelegramMediaImage(imageId: MediaId(namespace: 0, id: 1), representations: [], immediateThumbnailData: nil, reference: nil, partialReference: nil, flags: [])
+        let img = IosappMediaImage(imageId: MediaId(namespace: 0, id: 1), representations: [], immediateThumbnailData: nil, reference: nil, partialReference: nil, flags: [])
         let media = ChatInputMedia(media: img, kind: .image, naturalSize: ChatInputSize(width: 1, height: 1))
         XCTAssertEqual(media.items.count, 1)
         XCTAssertTrue(media.media.isEqual(to: img))   // accessor -> first item
@@ -506,7 +506,7 @@ final class ChatInputContentModelTests: XCTestCase {
     /// `else` branch (see ChatInputContentModel.swift), which is unreachable from `ChatInputMedia.encode(to:)`
     /// itself (that always emits `items`).
     private struct LegacyChatInputMediaPayload: Encodable {
-        let media: TelegramMediaImage
+        let media: IosappMediaImage
         let mediaType: Int32
         let kind: ChatInputMediaKind
         let naturalSize: ChatInputSize
@@ -531,7 +531,7 @@ final class ChatInputContentModelTests: XCTestCase {
     /// Back-compat: a legacy (pre-container) single-media payload — no `items` key — decodes into a
     /// one-element `items` array (the `else` branch of `ChatInputMedia.init(from:)`).
     func test_chatInputMedia_legacySingleMediaPayload_decodesIntoOneItem() throws {
-        let img = TelegramMediaImage(imageId: MediaId(namespace: 0, id: 99), representations: [], immediateThumbnailData: nil, reference: nil, partialReference: nil, flags: [])
+        let img = IosappMediaImage(imageId: MediaId(namespace: 0, id: 99), representations: [], immediateThumbnailData: nil, reference: nil, partialReference: nil, flags: [])
         let size = ChatInputSize(width: 42, height: 24)
         let legacy = LegacyChatInputMediaPayload(
             media: img,
@@ -554,7 +554,7 @@ final class ChatInputContentModelTests: XCTestCase {
     // MARK: - ChatInputMediaItem.isSpoiler
 
     func test_chatInputMediaItem_spoiler_roundTripsViaAdaptedPostbox() throws {
-        let image = TelegramMediaImage(imageId: MediaId(namespace: 0, id: 42), representations: [], immediateThumbnailData: nil, reference: nil, partialReference: nil, flags: [])
+        let image = IosappMediaImage(imageId: MediaId(namespace: 0, id: 42), representations: [], immediateThumbnailData: nil, reference: nil, partialReference: nil, flags: [])
         var item = ChatInputMediaItem(media: image, kind: .image, naturalSize: ChatInputSize(width: 4, height: 3))
         item.isSpoiler = true
         let data = try AdaptedPostboxEncoder().encode(item)
@@ -564,7 +564,7 @@ final class ChatInputContentModelTests: XCTestCase {
     }
 
     func test_chatInputMediaItem_defaultsSpoilerFalse() throws {
-        let image = TelegramMediaImage(imageId: MediaId(namespace: 0, id: 7), representations: [], immediateThumbnailData: nil, reference: nil, partialReference: nil, flags: [])
+        let image = IosappMediaImage(imageId: MediaId(namespace: 0, id: 7), representations: [], immediateThumbnailData: nil, reference: nil, partialReference: nil, flags: [])
         let item = ChatInputMediaItem(media: image, kind: .image, naturalSize: ChatInputSize(width: 1, height: 1))
         let data = try AdaptedPostboxEncoder().encode(item)
         XCTAssertFalse(try AdaptedPostboxDecoder().decode(ChatInputMediaItem.self, from: data).isSpoiler)

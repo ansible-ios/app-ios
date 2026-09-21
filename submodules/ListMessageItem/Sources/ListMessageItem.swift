@@ -2,11 +2,11 @@ import Foundation
 import UIKit
 import AsyncDisplayKit
 import Display
-import TelegramCore
+import IosappCore
 import SwiftSignalKit
-import TelegramPresentationData
+import IosappPresentationData
 import AccountContext
-import TelegramUIPreferences
+import IosappUIPreferences
 import ItemListUI
 
 public final class ListMessageItemInteraction {
@@ -146,13 +146,13 @@ public final class ListMessageItem: ListViewItem, ItemListItem {
         if !self.hintIsLink {
             if let message = self.message {
                 for media in message.effectiveMedia {
-                    if let _ = media as? TelegramMediaFile {
+                    if let _ = media as? IosappMediaFile {
                         viewClassName = ListMessageFileItemNode.self
                         break
-                    } else if let _ = media as? TelegramMediaImage {
+                    } else if let _ = media as? IosappMediaImage {
                         viewClassName = ListMessageFileItemNode.self
                         break
-                    } else if let _ = media as? TelegramMediaStory {
+                    } else if let _ = media as? IosappMediaStory {
                         viewClassName = ListMessageFileItemNode.self
                         break
                     }

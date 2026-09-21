@@ -1,0 +1,46 @@
+load("@build_bazel_rules_swift//swift:swift.bzl", "swift_library")
+
+swift_library(
+    name = "ShareScreen",
+    module_name = "ShareScreen",
+    srcs = glob([
+        "Sources/**/*.swift",
+    ]),
+    copts = [
+        "-warnings-as-errors",
+    ],
+    deps = [
+        "//submodules/AsyncDisplayKit",
+        "//submodules/Display",
+        "//submodules/Postbox",
+        "//submodules/IosappCore",
+        "//submodules/SSignalKit/SwiftSignalKit",
+        "//submodules/ComponentFlow",
+        "//submodules/Components/ViewControllerComponent",
+        "//submodules/Components/ComponentDisplayAdapters",
+        "//submodules/Components/MultilineTextComponent",
+        "//submodules/Components/BalancedTextComponent",
+        "//submodules/IosappPresentationData",
+        "//submodules/AccountContext",
+        "//submodules/AppBundle",
+        "//submodules/ItemListUI",
+        "//submodules/IosappStringFormatting",
+        "//submodules/PresentationDataUtils",
+        "//submodules/ShareController",
+        "//submodules/Components/SheetComponent",
+        "//submodules/UndoUI",
+        "//submodules/TextFormat",
+        "//submodules/IosappUI/Components/ButtonComponent",
+        "//submodules/Components/BundleIconComponent",
+        "//submodules/IosappUI/Components/GlassBackgroundComponent",
+        "//submodules/IosappUI/Components/GlassBarButtonComponent",
+        "//submodules/IosappUI/Components/EdgeEffect",
+        "//submodules/IosappUI/Components/PlainButtonComponent",
+        "//submodules/Components/ResizableSheetComponent",
+        "//submodules/IosappUI/Components/MessageInputPanelComponent",
+        "//submodules/IosappUI/Components/Chat/MergedAvatarsNode",
+    ],
+    visibility = [
+        "//visibility:public",
+    ],
+)

@@ -7,11 +7,11 @@ import SolidRoundedButtonNode
 import SwiftSignalKit
 import OverlayStatusController
 import AccountContext
-import TelegramPresentationData
+import IosappPresentationData
 import PresentationDataUtils
-import TelegramCore
+import IosappCore
 import AnimatedStickerNode
-import TelegramAnimatedStickerNode
+import IosappAnimatedStickerNode
 import ActivityIndicator
 
 public enum TwoFactorDataInputMode {
@@ -47,7 +47,7 @@ public enum TwoFactorDataInputMode {
 
 public final class TwoFactorDataInputScreen: ViewController {
     private let sharedContext: SharedAccountContext
-    private let engine: SomeTelegramEngine
+    private let engine: SomeIosappEngine
     private var presentationData: PresentationData
     private let mode: TwoFactorDataInputMode
     private let stateUpdated: (SetupTwoStepVerificationStateUpdate) -> Void
@@ -62,7 +62,7 @@ public final class TwoFactorDataInputScreen: ViewController {
     public var passwordRemembered: (() -> Void)?
     public var twoStepAuthSettingsController: ((TwoStepVerificationConfiguration) -> ViewController)?
     
-    public init(sharedContext: SharedAccountContext, engine: SomeTelegramEngine, mode: TwoFactorDataInputMode, stateUpdated: @escaping (SetupTwoStepVerificationStateUpdate) -> Void, presentation: ViewControllerNavigationPresentation = .modalInLargeLayout) {
+    public init(sharedContext: SharedAccountContext, engine: SomeIosappEngine, mode: TwoFactorDataInputMode, stateUpdated: @escaping (SetupTwoStepVerificationStateUpdate) -> Void, presentation: ViewControllerNavigationPresentation = .modalInLargeLayout) {
         self.sharedContext = sharedContext
         self.engine = engine
         self.mode = mode

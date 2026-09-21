@@ -1,0 +1,63 @@
+include "PeerId.fbs";
+include "IosappPeerAccessHash.fbs";
+include "IosappMediaImageRepresentation.fbs";
+include "PeerAccessRestrictionInfo.fbs";
+include "IosappChatAdminRights.fbs";
+include "IosappChatBannedRights.fbs";
+include "IosappPeerUsername.fbs";
+include "Optional.fbs";
+include "PeerNameColor.fbs";
+include "PeerEmojiStatus.fbs";
+include "StarsAmount.fbs";
+
+namespace IosappCore;
+
+table IosappChannelInfo_Broadcast {
+    flags:int32 (id: 0);
+}
+
+table IosappChannelInfo_Group {
+    flags:int32 (id: 0);
+}
+
+union IosappChannelInfo_Value {
+    IosappChannelInfo_Broadcast,
+    IosappChannelInfo_Group
+}
+
+table IosappChannelInfo {
+    value:IosappChannelInfo_Value (id: 1, required);
+}
+
+table IosappChannel {
+    id:PeerId (id: 0, required);
+    accessHash:IosappPeerAccessHash (id: 1);
+    title:string (id: 2, required);
+    username:string (id: 3);
+    photo:[IosappMediaImageRepresentation] (id: 4);
+    creationDate:int32 (id: 5);
+    version:int32 (id: 6);
+    participationStatus:int32 (id: 7);
+    info:IosappChannelInfo (id: 8, required);
+    flags:int32 (id: 9);
+    restrictionInfo:PeerAccessRestrictionInfo (id: 10);
+    adminRights:IosappChatAdminRights (id: 11);
+    bannedRights:IosappChatBannedRights (id: 12);
+    defaultBannedRights:IosappChatBannedRights (id: 13);
+    usernames:[IosappPeerUsername] (id: 14);
+    storiesHidden:OptionalBool (id: 15);
+    nameColor:PeerNameColor (id: 16);
+    backgroundEmojiId:int64 (id: 17);
+    profileColor:PeerNameColor (id: 18);
+    profileBackgroundEmojiId:int64 (id: 19);
+    emojiStatus:PeerEmojiStatus (id: 20);
+    approximateBoostLevel:int32 (id: 21);
+    subscriptionUntilDate:int32 (id: 22);
+    verificationIconFileId:int64 (id: 23);
+    sendPaidMessageStars:StarsAmount (id: 24);
+    linkedMonoforumId:PeerId (id: 25);
+    linkedBotId:PeerId (id: 26, deprecated);
+    linkedCommunityId:PeerId (id: 27);
+}
+
+root_type IosappChannel;

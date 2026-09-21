@@ -2,11 +2,11 @@ import Foundation
 import UIKit
 import AsyncDisplayKit
 import Display
-import TelegramCore
-import TelegramPresentationData
+import IosappCore
+import IosappPresentationData
 import AppBundle
 import AnimatedStickerNode
-import TelegramAnimatedStickerNode
+import IosappAnimatedStickerNode
 import SwiftSignalKit
 import StickerResources
 import AccountContext
@@ -502,7 +502,7 @@ public final class ReactionNode: ASDisplayNode, ReactionItemNode {
             if self.animationNode == nil {
                 self.didSetupStillAnimation = true
                 
-                let staticFile: TelegramMediaFile
+                let staticFile: IosappMediaFile
                 if !self.hasAppearAnimation {
                     staticFile = self.item.largeListAnimation._parse()
                 } else {

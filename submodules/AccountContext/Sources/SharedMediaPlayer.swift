@@ -1,6 +1,6 @@
 import Foundation
-import TelegramCore
-import TelegramUIPreferences
+import IosappCore
+import IosappUIPreferences
 import SwiftSignalKit
 import UniversalMediaPlayer
 import MusicAlbumArtResources

@@ -2,10 +2,10 @@ import Foundation
 import UIKit
 import AsyncDisplayKit
 import Display
-import TelegramCore
+import IosappCore
 import SwiftSignalKit
 import Photos
-import TelegramPresentationData
+import IosappPresentationData
 import TextFormat
 import AccountContext
 import GalleryUI
@@ -46,19 +46,19 @@ final class InstantPageGalleryFooterContentNode: GalleryFooterContentNode {
         super.init()
         
         self.textNode.highlightAttributeAction = { attributes in
-            if let _ = attributes[NSAttributedString.Key(rawValue: TelegramTextAttributes.URL)] {
-                return NSAttributedString.Key(rawValue: TelegramTextAttributes.URL)
+            if let _ = attributes[NSAttributedString.Key(rawValue: IosappTextAttributes.URL)] {
+                return NSAttributedString.Key(rawValue: IosappTextAttributes.URL)
             } else {
                 return nil
             }
         }
         self.textNode.tapAttributeAction = { [weak self] attributes, _ in
-            if let strongSelf = self, let url = attributes[NSAttributedString.Key(rawValue: TelegramTextAttributes.URL)] as? InstantPageUrlItem {
+            if let strongSelf = self, let url = attributes[NSAttributedString.Key(rawValue: IosappTextAttributes.URL)] as? InstantPageUrlItem {
                 strongSelf.openUrl?(url)
             }
         }
         self.textNode.longTapAttributeAction = { [weak self] attributes, _ in
-            if let strongSelf = self, let url = attributes[NSAttributedString.Key(rawValue: TelegramTextAttributes.URL)] as? InstantPageUrlItem {
+            if let strongSelf = self, let url = attributes[NSAttributedString.Key(rawValue: IosappTextAttributes.URL)] as? InstantPageUrlItem {
                 strongSelf.openUrlOptions?(url)
             }
         }

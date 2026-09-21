@@ -1,6 +1,6 @@
 import XCTest
 import Postbox
-import TelegramCore
+import IosappCore
 
 final class ChatInputContentInstantPageTests: XCTestCase {
     private func assertRoundTrips(_ c: ChatInputContent, _ msg: String, file: StaticString = #filePath, line: UInt = #line) {
@@ -12,8 +12,8 @@ final class ChatInputContentInstantPageTests: XCTestCase {
     }
 
     // Matches the inline representation construction already used in `test_media_recoversNaturalSizeFromMedia`.
-    private func imageRep(_ width: Int32, _ height: Int32) -> TelegramMediaImageRepresentation {
-        return TelegramMediaImageRepresentation(dimensions: PixelDimensions(width: width, height: height),
+    private func imageRep(_ width: Int32, _ height: Int32) -> IosappMediaImageRepresentation {
+        return IosappMediaImageRepresentation(dimensions: PixelDimensions(width: width, height: height),
                                                 resource: EmptyMediaResource(), progressiveSizes: [], immediateThumbnailData: nil)
     }
 
@@ -308,7 +308,7 @@ final class ChatInputContentInstantPageTests: XCTestCase {
     //     none of those, so they canonicalize to natural size .zero, nil display width, .center alignment).
     func test_media() {
         let imageId = MediaId(namespace: 1, id: 1001)
-        let image = TelegramMediaImage(imageId: imageId, representations: [], immediateThumbnailData: nil, reference: nil, partialReference: nil, flags: [])
+        let image = IosappMediaImage(imageId: imageId, representations: [], immediateThumbnailData: nil, reference: nil, partialReference: nil, flags: [])
         var caption = ChatInputInlineAttributes(); caption.italic = true
         let imageMedia = ChatInputMedia(
             media: image,
@@ -321,7 +321,7 @@ final class ChatInputContentInstantPageTests: XCTestCase {
         assertRoundTrips(ChatInputContent(blocks: [.media(imageMedia)]), "image medium with a caption")
 
         let fileId = MediaId(namespace: 1, id: 2002)
-        let file = TelegramMediaFile(
+        let file = IosappMediaFile(
             fileId: fileId,
             partialReference: nil,
             resource: EmptyMediaResource(),
@@ -350,9 +350,9 @@ final class ChatInputContentInstantPageTests: XCTestCase {
     // Document round-trip loses the aspect and the editor falls back to a 16:9 default (the reported "video item
     // size doesn't survive serialization" bug). Audio stays `.zero` (a fixed-height row; naturalSize is ignored).
     func test_media_recoversNaturalSizeFromMedia() {
-        let image = TelegramMediaImage(
+        let image = IosappMediaImage(
             imageId: MediaId(namespace: 1, id: 3003),
-            representations: [TelegramMediaImageRepresentation(
+            representations: [IosappMediaImageRepresentation(
                 dimensions: PixelDimensions(width: 800, height: 600), resource: EmptyMediaResource(),
                 progressiveSizes: [], immediateThumbnailData: nil)],
             immediateThumbnailData: nil, reference: nil, partialReference: nil, flags: [])
@@ -364,7 +364,7 @@ final class ChatInputContentInstantPageTests: XCTestCase {
         XCTAssertEqual(mi.naturalSize, ChatInputSize(width: 800, height: 600),
                        "image natural size recovered from its largest representation")
 
-        let file = TelegramMediaFile(
+        let file = IosappMediaFile(
             fileId: MediaId(namespace: 1, id: 4004), partialReference: nil, resource: EmptyMediaResource(),
             previewRepresentations: [], videoThumbnails: [], immediateThumbnailData: nil, mimeType: "video/mp4",
             size: nil,
@@ -383,8 +383,8 @@ final class ChatInputContentInstantPageTests: XCTestCase {
     // 23. A multi-item (>=2) media container round-trips through a single InstantPage .collage block (Task 9);
     //     a single-item container stays byte-identical to the plain .image/.video block (no .collage wrapper).
     func test_roundTrip_twoImageContainer_viaCollage() {
-        let img1 = TelegramMediaImage(imageId: MediaId(namespace: 0, id: 1), representations: [imageRep(100, 100)], immediateThumbnailData: nil, reference: nil, partialReference: nil, flags: [])
-        let img2 = TelegramMediaImage(imageId: MediaId(namespace: 0, id: 2), representations: [imageRep(60, 90)], immediateThumbnailData: nil, reference: nil, partialReference: nil, flags: [])
+        let img1 = IosappMediaImage(imageId: MediaId(namespace: 0, id: 1), representations: [imageRep(100, 100)], immediateThumbnailData: nil, reference: nil, partialReference: nil, flags: [])
+        let img2 = IosappMediaImage(imageId: MediaId(namespace: 0, id: 2), representations: [imageRep(60, 90)], immediateThumbnailData: nil, reference: nil, partialReference: nil, flags: [])
         let content = ChatInputContent(blocks: [.media(ChatInputMedia(items: [
             ChatInputMediaItem(media: img1, kind: .image, naturalSize: ChatInputSize(width: 100, height: 100)),
             ChatInputMediaItem(media: img2, kind: .video, naturalSize: ChatInputSize(width: 60, height: 90)),
@@ -397,7 +397,7 @@ final class ChatInputContentInstantPageTests: XCTestCase {
     }
 
     func test_singleImageContainer_stillEmitsPlainImageBlock() {
-        let img = TelegramMediaImage(imageId: MediaId(namespace: 0, id: 1), representations: [imageRep(100, 100)], immediateThumbnailData: nil, reference: nil, partialReference: nil, flags: [])
+        let img = IosappMediaImage(imageId: MediaId(namespace: 0, id: 1), representations: [imageRep(100, 100)], immediateThumbnailData: nil, reference: nil, partialReference: nil, flags: [])
         let content = ChatInputContent(blocks: [.media(ChatInputMedia(media: img, kind: .image, naturalSize: ChatInputSize(width: 100, height: 100)))])
         let page = instantPage(from: content)
         // count==1 stays byte-identical: a plain .image block, not .collage.
@@ -459,10 +459,10 @@ final class ChatInputContentInstantPageTests: XCTestCase {
         ]), "checklist with mixed checked state")
     }
 
-    private func makeAudioFile(id: Int64, isVoice: Bool) -> TelegramMediaFile {
-        let audio: TelegramMediaFileAttribute = .Audio(isVoice: isVoice, duration: 5, title: isVoice ? nil : "Song",
+    private func makeAudioFile(id: Int64, isVoice: Bool) -> IosappMediaFile {
+        let audio: IosappMediaFileAttribute = .Audio(isVoice: isVoice, duration: 5, title: isVoice ? nil : "Song",
                                                        performer: isVoice ? nil : "Artist", waveform: nil)
-        return TelegramMediaFile(fileId: MediaId(namespace: Namespaces.Media.CloudFile, id: id), partialReference: nil,
+        return IosappMediaFile(fileId: MediaId(namespace: Namespaces.Media.CloudFile, id: id), partialReference: nil,
                                  resource: EmptyMediaResource(), previewRepresentations: [], videoThumbnails: [],
                                  immediateThumbnailData: nil, mimeType: "audio/mpeg", size: nil,
                                  attributes: [audio], alternativeRepresentations: [])
@@ -493,7 +493,7 @@ final class ChatInputContentInstantPageTests: XCTestCase {
         let content = ChatInputContent(blocks: [.media(ChatInputMedia(media: file, kind: .audio,
             naturalSize: ChatInputSize(width: 0, height: 0), displayWidth: nil, alignment: .center, caption: []))])
         let back = chatInputContent(fromInstantPage: instantPage(from: content))
-        guard case .media(let m)? = back.blocks.first, let f = m.media as? TelegramMediaFile else {
+        guard case .media(let m)? = back.blocks.first, let f = m.media as? IosappMediaFile else {
             return XCTFail("expected .media(file)")
         }
         XCTAssertTrue(f.isVoice)
@@ -501,7 +501,7 @@ final class ChatInputContentInstantPageTests: XCTestCase {
 
     func test_location() {
         // A location media block round-trips through .map, canonicalizing to the editor's media defaults.
-        let map = TelegramMediaMap(latitude: 37.7955, longitude: -122.3937, heading: nil, accuracyRadius: nil, venue: nil)
+        let map = IosappMediaMap(latitude: 37.7955, longitude: -122.3937, heading: nil, accuracyRadius: nil, venue: nil)
         let locationMedia = ChatInputMedia(
             media: map,
             kind: .location,
@@ -684,7 +684,7 @@ final class ChatInputContentInstantPageTests: XCTestCase {
 
     // 25. A single-item media block's `isSpoiler` survives ChatInputContent -> InstantPage -> ChatInputContent.
     func test_chatInputContent_mediaSpoiler_roundTripsThroughInstantPage_single() {
-        let image = TelegramMediaImage(imageId: MediaId(namespace: 1, id: 11), representations: [], immediateThumbnailData: nil, reference: nil, partialReference: nil, flags: [])
+        let image = IosappMediaImage(imageId: MediaId(namespace: 1, id: 11), representations: [], immediateThumbnailData: nil, reference: nil, partialReference: nil, flags: [])
         var item = ChatInputMediaItem(media: image, kind: .image, naturalSize: ChatInputSize(width: 4, height: 3))
         item.isSpoiler = true
         let content = ChatInputContent(blocks: [.media(ChatInputMedia(items: [item]))])
@@ -695,8 +695,8 @@ final class ChatInputContentInstantPageTests: XCTestCase {
 
     // 26. A collage's per-item `isSpoiler` survives the round-trip independently per item.
     func test_chatInputContent_mediaSpoiler_roundTripsThroughInstantPage_album() {
-        let a = TelegramMediaImage(imageId: MediaId(namespace: 1, id: 1), representations: [], immediateThumbnailData: nil, reference: nil, partialReference: nil, flags: [])
-        let b = TelegramMediaImage(imageId: MediaId(namespace: 1, id: 2), representations: [], immediateThumbnailData: nil, reference: nil, partialReference: nil, flags: [])
+        let a = IosappMediaImage(imageId: MediaId(namespace: 1, id: 1), representations: [], immediateThumbnailData: nil, reference: nil, partialReference: nil, flags: [])
+        let b = IosappMediaImage(imageId: MediaId(namespace: 1, id: 2), representations: [], immediateThumbnailData: nil, reference: nil, partialReference: nil, flags: [])
         var i0 = ChatInputMediaItem(media: a, kind: .image, naturalSize: ChatInputSize(width: 1, height: 1))
         let i1 = ChatInputMediaItem(media: b, kind: .image, naturalSize: ChatInputSize(width: 1, height: 1))
         i0.isSpoiler = true
@@ -711,8 +711,8 @@ final class ChatInputContentInstantPageTests: XCTestCase {
     // recovers `displayMode: .mosaic` explicitly (not just the Codable default — see the slideshow test below for
     // the case that actually distinguishes the two).
     func test_displayMode_mosaic_roundTripsViaCollage() {
-        let img1 = TelegramMediaImage(imageId: MediaId(namespace: 0, id: 1), representations: [imageRep(100, 100)], immediateThumbnailData: nil, reference: nil, partialReference: nil, flags: [])
-        let img2 = TelegramMediaImage(imageId: MediaId(namespace: 0, id: 2), representations: [imageRep(60, 90)], immediateThumbnailData: nil, reference: nil, partialReference: nil, flags: [])
+        let img1 = IosappMediaImage(imageId: MediaId(namespace: 0, id: 1), representations: [imageRep(100, 100)], immediateThumbnailData: nil, reference: nil, partialReference: nil, flags: [])
+        let img2 = IosappMediaImage(imageId: MediaId(namespace: 0, id: 2), representations: [imageRep(60, 90)], immediateThumbnailData: nil, reference: nil, partialReference: nil, flags: [])
         let content = ChatInputContent(blocks: [.media(ChatInputMedia(items: [
             ChatInputMediaItem(media: img1, kind: .image, naturalSize: ChatInputSize(width: 100, height: 100)),
             ChatInputMediaItem(media: img2, kind: .image, naturalSize: ChatInputSize(width: 60, height: 90)),
@@ -729,8 +729,8 @@ final class ChatInputContentInstantPageTests: XCTestCase {
     // `.collage`), and the reverse recovers `displayMode: .slideshow` — the round-trip that actually exercises
     // the new `.slideshow` production/consumption added by Task 5.
     func test_displayMode_slideshow_roundTripsViaSlideshowBlock() {
-        let img1 = TelegramMediaImage(imageId: MediaId(namespace: 0, id: 3), representations: [imageRep(100, 100)], immediateThumbnailData: nil, reference: nil, partialReference: nil, flags: [])
-        let img2 = TelegramMediaImage(imageId: MediaId(namespace: 0, id: 4), representations: [imageRep(60, 90)], immediateThumbnailData: nil, reference: nil, partialReference: nil, flags: [])
+        let img1 = IosappMediaImage(imageId: MediaId(namespace: 0, id: 3), representations: [imageRep(100, 100)], immediateThumbnailData: nil, reference: nil, partialReference: nil, flags: [])
+        let img2 = IosappMediaImage(imageId: MediaId(namespace: 0, id: 4), representations: [imageRep(60, 90)], immediateThumbnailData: nil, reference: nil, partialReference: nil, flags: [])
         let content = ChatInputContent(blocks: [.media(ChatInputMedia(items: [
             ChatInputMediaItem(media: img1, kind: .image, naturalSize: ChatInputSize(width: 100, height: 100)),
             ChatInputMediaItem(media: img2, kind: .video, naturalSize: ChatInputSize(width: 60, height: 90)),

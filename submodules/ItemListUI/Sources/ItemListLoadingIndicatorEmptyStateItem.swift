@@ -2,7 +2,7 @@ import Foundation
 import UIKit
 import AsyncDisplayKit
 import Display
-import TelegramPresentationData
+import IosappPresentationData
 import ActivityIndicator
 
 public final class ItemListLoadingIndicatorEmptyStateItem: ItemListControllerEmptyStateItem {

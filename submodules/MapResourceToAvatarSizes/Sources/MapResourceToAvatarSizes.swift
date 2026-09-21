@@ -1,10 +1,10 @@
 import Foundation
 import UIKit
 import SwiftSignalKit
-import TelegramCore
+import IosappCore
 import Display
 
-public func mapResourceToAvatarSizes(engine: TelegramEngine, resource: EngineMediaResource, representations: [TelegramMediaImageRepresentation]) -> Signal<[Int: Data], NoError> {
+public func mapResourceToAvatarSizes(engine: IosappEngine, resource: EngineMediaResource, representations: [IosappMediaImageRepresentation]) -> Signal<[Int: Data], NoError> {
     return engine.resources.data(id: resource.id)
     |> take(1)
     |> map { data -> [Int: Data] in

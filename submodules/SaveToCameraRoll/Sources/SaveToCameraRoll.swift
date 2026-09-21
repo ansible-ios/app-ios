@@ -1,7 +1,7 @@
 import Foundation
 import UIKit
 import SwiftSignalKit
-import TelegramCore
+import IosappCore
 import Photos
 import Display
 import MobileCoreServices
@@ -15,11 +15,11 @@ public enum FetchMediaDataState {
 }
 
 public func fetchMediaData(context: AccountContext, userLocation: MediaResourceUserLocation, customUserContentType: MediaResourceUserContentType? = nil, mediaReference: AnyMediaReference, forceVideo: Bool = false) -> Signal<(FetchMediaDataState, Bool), NoError> {
-    var resource: TelegramMediaResource?
+    var resource: IosappMediaResource?
     var isImage = true
     var fileExtension: String?
     var userContentType: MediaResourceUserContentType = .other
-    if let image = mediaReference.media as? TelegramMediaImage {
+    if let image = mediaReference.media as? IosappMediaImage {
         userContentType = .image
         if let video = image.videoRepresentations.last, forceVideo {
             resource = video.resource
@@ -27,7 +27,7 @@ public func fetchMediaData(context: AccountContext, userLocation: MediaResourceU
         } else if let representation = largestImageRepresentation(image.representations) {
             resource = representation.resource
         }
-    } else if let file = mediaReference.media as? TelegramMediaFile {
+    } else if let file = mediaReference.media as? IosappMediaFile {
         userContentType = MediaResourceUserContentType(file: file)
         resource = file.resource
         if file.isVideo || file.mimeType.hasPrefix("video/") {
@@ -37,7 +37,7 @@ public func fetchMediaData(context: AccountContext, userLocation: MediaResourceU
         if !maybeExtension.isEmpty {
             fileExtension = maybeExtension
         }
-    } else if let webpage = mediaReference.media as? TelegramMediaWebpage, case let .Loaded(content) = webpage.content {
+    } else if let webpage = mediaReference.media as? IosappMediaWebpage, case let .Loaded(content) = webpage.content {
         if let file = content.file {
             resource = file.resource
             if file.isVideo {
@@ -213,7 +213,7 @@ public func copyToPasteboard(context: AccountContext, userLocation: MediaResourc
             return Signal<Void, NoError> { subscriber in
                 let pasteboard = UIPasteboard.general
 
-                if mediaReference.media is TelegramMediaImage {
+                if mediaReference.media is IosappMediaImage {
                     if let fileData = try? Data(contentsOf: URL(fileURLWithPath: data.path), options: .mappedIfSafe) {
                         pasteboard.setData(fileData, forPasteboardType: kUTTypeJPEG as String)
                     }

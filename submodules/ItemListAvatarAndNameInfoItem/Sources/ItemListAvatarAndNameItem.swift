@@ -2,14 +2,14 @@ import Foundation
 import UIKit
 import Display
 import AsyncDisplayKit
-import TelegramCore
+import IosappCore
 import SwiftSignalKit
-import TelegramPresentationData
+import IosappPresentationData
 import ItemListUI
 import PresentationDataUtils
 import ActivityIndicator
 import AvatarNode
-import TelegramStringFormatting
+import IosappStringFormatting
 import PeerPresenceStatusManager
 import AppBundle
 import PhoneNumberFormat
@@ -107,9 +107,9 @@ public struct ItemListAvatarAndNameInfoItemState: Equatable {
 }
 
 public final class ItemListAvatarAndNameInfoItemContext {
-    public var hiddenAvatarRepresentation: TelegramMediaImageRepresentation?
+    public var hiddenAvatarRepresentation: IosappMediaImageRepresentation?
     
-    public init(hiddenAvatarRepresentation: TelegramMediaImageRepresentation? = nil) {
+    public init(hiddenAvatarRepresentation: IosappMediaImageRepresentation? = nil) {
         self.hiddenAvatarRepresentation = hiddenAvatarRepresentation
     }
 }
@@ -120,7 +120,7 @@ public enum ItemListAvatarAndNameInfoItemStyle: Equatable {
 }
 
 public enum ItemListAvatarAndNameInfoItemUpdatingAvatar: Equatable {
-    case image(TelegramMediaImageRepresentation, Bool)
+    case image(IosappMediaImageRepresentation, Bool)
     case none
 }
 

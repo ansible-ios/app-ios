@@ -3,10 +3,10 @@ import UIKit
 import Display
 import ComponentFlow
 import SwiftSignalKit
-import TelegramCore
+import IosappCore
 import Markdown
 import TextFormat
-import TelegramPresentationData
+import IosappPresentationData
 import ViewControllerComponent
 import SheetComponent
 import BundleIconComponent
@@ -68,7 +68,7 @@ private final class SheetContent: CombinedComponent {
         init(context: AccountContext, peerId: EnginePeer.Id) {
             super.init()
             
-            self.disposable = (context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: peerId))
+            self.disposable = (context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: peerId))
             |> deliverOnMainQueue).start(next: { [weak self] peer in
                 guard let self, let peer else {
                     return
@@ -131,7 +131,7 @@ private final class SheetContent: CombinedComponent {
             let secondaryTextColor = theme.actionSheet.secondaryTextColor
             let linkColor = theme.actionSheet.controlAccentColor
             let markdownAttributes = MarkdownAttributes(body: MarkdownAttributeSet(font: textFont, textColor: textColor), bold: MarkdownAttributeSet(font: boldTextFont, textColor: textColor), link: MarkdownAttributeSet(font: textFont, textColor: linkColor), linkAttribute: { contents in
-                return (TelegramTextAttributes.URL, contents)
+                return (IosappTextAttributes.URL, contents)
             })
             
             let iconName: String

@@ -43,8 +43,8 @@ swift_library(
     deps = [
         "//submodules/Display",
         "//submodules/MetalEngine",
-        "//submodules/TelegramPresentationData",
-        "//submodules/TelegramUI/Components/Calls/CallScreen",
+        "//submodules/IosappPresentationData",
+        "//submodules/IosappUI/Components/Calls/CallScreen",
     ],
 )
 
@@ -90,9 +90,9 @@ plist_fragment(
     <key>CFBundleDisplayName</key>
     <string>Test</string>
     <key>CFBundleIdentifier</key>
-    <string>org.telegram.Telegram-iOS</string>
+    <string>org.telegram.Iosapp-iOS</string>
     <key>CFBundleName</key>
-    <string>Telegram</string>
+    <string>Iosapp</string>
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleSignature</key>
@@ -147,10 +147,10 @@ plist_fragment(
 
 ios_application(
     name = "CallUITest",
-    bundle_id = "org.telegram.Telegram-iOS",
+    bundle_id = "org.telegram.Iosapp-iOS",
     families = ["iphone", "ipad"],
     minimum_os_version = "12.0",
-    provisioning_profile = "@build_configuration//provisioning:Telegram.mobileprovision",
+    provisioning_profile = "@build_configuration//provisioning:Iosapp.mobileprovision",
     infoplists = [
         ":AppInfoPlist",
         ":BuildNumberInfoPlist",

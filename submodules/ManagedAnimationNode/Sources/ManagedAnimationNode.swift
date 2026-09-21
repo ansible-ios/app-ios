@@ -2,7 +2,7 @@ import Foundation
 import UIKit
 import Display
 import AsyncDisplayKit
-import TelegramCore
+import IosappCore
 import RLottieBinding
 import AppBundle
 import GZip
@@ -96,7 +96,7 @@ public enum ManagedAnimationSource: Equatable {
     var path: String? {
         switch self {
             case let .local(name):
-                if let tgsPath = getAppBundle().path(forResource: name, ofType: "tgs") {
+                if let tgsPath = getAppBundle().path(forResource: name, ofType: "ass") {
                     return tgsPath
                 }
                 return getAppBundle().path(forResource: name, ofType: "json")

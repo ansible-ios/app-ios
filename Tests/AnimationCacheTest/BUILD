@@ -30,10 +30,10 @@ swift_library(
     deps = [
         "//submodules/SSignalKit/SwiftSignalKit:SwiftSignalKit",
         "//submodules/Display:Display",
-        "//submodules/TelegramUI/Components/AnimationCache:AnimationCache",
-        "//submodules/TelegramUI/Components/DCTAnimationCacheImpl:DCTAnimationCacheImpl",
-        "//submodules/TelegramUI/Components/VideoAnimationCache:VideoAnimationCache",
-        "//submodules/TelegramUI/Components/LottieAnimationCache:LottieAnimationCache",
+        "//submodules/IosappUI/Components/AnimationCache:AnimationCache",
+        "//submodules/IosappUI/Components/DCTAnimationCacheImpl:DCTAnimationCacheImpl",
+        "//submodules/IosappUI/Components/VideoAnimationCache:VideoAnimationCache",
+        "//submodules/IosappUI/Components/LottieAnimationCache:LottieAnimationCache",
         "//submodules/rlottie:RLottieBinding",
     ],
 )
@@ -82,7 +82,7 @@ plist_fragment(
     <key>CFBundleIdentifier</key>
     <string>org.telegram.{module_name}</string>
     <key>CFBundleName</key>
-    <string>Telegram</string>
+    <string>Iosapp</string>
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleSignature</key>

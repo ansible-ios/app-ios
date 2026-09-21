@@ -2,13 +2,13 @@ import Foundation
 import UIKit
 import AsyncDisplayKit
 import Display
-import TelegramCore
+import IosappCore
 import SwiftSignalKit
-import TelegramPresentationData
+import IosappPresentationData
 import AccountContext
 import RadialStatusNode
 import GalleryUI
-import TelegramUniversalVideoContent
+import IosappUniversalVideoContent
 
 private struct FetchControls {
     let fetch: (Bool) -> Void
@@ -38,7 +38,7 @@ final class InstantPagePlayableVideoNode: ASDisplayNode, InstantPageNode, Galler
         return nil
     }
     
-    init(context: AccountContext, userLocation: MediaResourceUserLocation, webPage: TelegramMediaWebpage, theme: InstantPageTheme, media: InstantPageMedia, interactive: Bool, openMedia: @escaping (InstantPageMedia) -> Void) {
+    init(context: AccountContext, userLocation: MediaResourceUserLocation, webPage: IosappMediaWebpage, theme: InstantPageTheme, media: InstantPageMedia, interactive: Bool, openMedia: @escaping (InstantPageMedia) -> Void) {
         self.context = context
         self.userLocation = userLocation
         self.media = media
@@ -47,12 +47,12 @@ final class InstantPagePlayableVideoNode: ASDisplayNode, InstantPageNode, Galler
         
         var imageReference: ImageMediaReference?
         if case let .file(file) = media.media, let presentation = smallestImageRepresentation(file.previewRepresentations) {
-            let image = TelegramMediaImage(imageId: EngineMedia.Id(namespace: 0, id: 0), representations: [presentation], immediateThumbnailData: file.immediateThumbnailData, reference: nil, partialReference: nil, flags: [])
+            let image = IosappMediaImage(imageId: EngineMedia.Id(namespace: 0, id: 0), representations: [presentation], immediateThumbnailData: file.immediateThumbnailData, reference: nil, partialReference: nil, flags: [])
             imageReference = ImageMediaReference.webPage(webPage: WebpageReference(webPage), media: image)
         }
         
         var streamVideo = false
-        var fileValue: TelegramMediaFile?
+        var fileValue: IosappMediaFile?
         if case let .file(file) = media.media {
             streamVideo = isMediaStreamable(media: file)
             fileValue = file

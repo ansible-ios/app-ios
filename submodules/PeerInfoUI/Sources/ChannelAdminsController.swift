@@ -2,9 +2,9 @@ import Foundation
 import UIKit
 import Display
 import SwiftSignalKit
-import TelegramCore
-import TelegramPresentationData
-import TelegramUIPreferences
+import IosappCore
+import IosappPresentationData
+import IosappUIPreferences
 import ItemListUI
 import PresentationDataUtils
 import AccountContext
@@ -698,7 +698,7 @@ public func channelAdminsController(
     let resolveAntiSpamPeerDisposable = MetaDisposable()
     if let antiSpamBotId = antiSpamConfiguration.antiSpamBotId {
         resolveAntiSpamPeerDisposable.set(
-            (context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: antiSpamBotId))
+            (context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: antiSpamBotId))
             |> mapToSignal { peer -> Signal<Never, NoError> in
                 if let _ = peer {
                     return .never()
@@ -728,8 +728,8 @@ public func channelAdminsController(
         |> take(1)
         |> mapToSignal { peerId in
             return context.engine.data.get(
-                TelegramEngine.EngineData.Item.Peer.Peer(id: peerId),
-                TelegramEngine.EngineData.Item.Peer.Peer(id: memberId)
+                IosappEngine.EngineData.Item.Peer.Peer(id: peerId),
+                IosappEngine.EngineData.Item.Peer.Peer(id: memberId)
             )
         }
         |> deliverOnMainQueue).start(next: { peer, user in
@@ -765,8 +765,8 @@ public func channelAdminsController(
     peerView.set(currentPeerId.get()
     |> mapToSignal { peerId in
         return context.engine.data.subscribe(
-            TelegramEngine.EngineData.Item.Peer.Peer(id: peerId),
-            TelegramEngine.EngineData.Item.Peer.ParticipantCount(id: peerId)
+            IosappEngine.EngineData.Item.Peer.Peer(id: peerId),
+            IosappEngine.EngineData.Item.Peer.ParticipantCount(id: peerId)
         )
         |> map { peer, participantCount -> PeerData in
             return PeerData(
@@ -782,7 +782,7 @@ public func channelAdminsController(
         |> take(1)
         |> deliverOnMainQueue).start(next: { peerId in
             let _ = (context.engine.data.get(
-                TelegramEngine.EngineData.Item.Peer.Peer(id: peerId)
+                IosappEngine.EngineData.Item.Peer.Peer(id: peerId)
             )
             |> deliverOnMainQueue).start(next: { peer in
                 guard let peer else {
@@ -839,7 +839,7 @@ public func channelAdminsController(
             let _ = combineLatest(queue: Queue.mainQueue(),
                 peerView.get()
                 |> take(1),
-                context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: context.account.peerId))
+                context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: context.account.peerId))
             )
             .start(next: { peerView, accountPeer in
                 updateState { current in
@@ -959,7 +959,7 @@ public func channelAdminsController(
             let membersDisposable = (currentPeerId.get()
             |> mapToSignal { peerId -> Signal<[RenderedChannelParticipant]?, NoError> in
                 return context.engine.data.subscribe(
-                    TelegramEngine.EngineData.Item.Peer.LegacyGroupParticipants(id: peerId)
+                    IosappEngine.EngineData.Item.Peer.LegacyGroupParticipants(id: peerId)
                 )
                 |> mapToSignal { participants -> Signal<[(EngineLegacyGroupParticipant, EnginePeer?, EnginePeer.Presence?)]?, NoError> in
                     guard case let .known(participants) = participants else {
@@ -967,8 +967,8 @@ public func channelAdminsController(
                     }
                     
                     return context.engine.data.subscribe(
-                        EngineDataMap(participants.map { TelegramEngine.EngineData.Item.Peer.Peer(id: $0.peerId) }),
-                        EngineDataMap(participants.map { TelegramEngine.EngineData.Item.Peer.Presence(id: $0.peerId) })
+                        EngineDataMap(participants.map { IosappEngine.EngineData.Item.Peer.Peer(id: $0.peerId) }),
+                        EngineDataMap(participants.map { IosappEngine.EngineData.Item.Peer.Presence(id: $0.peerId) })
                     )
                     |> map { peers, presences -> [(EngineLegacyGroupParticipant, EnginePeer?, EnginePeer.Presence?)]? in
                         var result: [(EngineLegacyGroupParticipant, EnginePeer?, EnginePeer.Presence?)] = []
@@ -1019,7 +1019,7 @@ public func channelAdminsController(
                                 var peers: [EnginePeer.Id: EnginePeer] = [:]
                                 peers[creator.id] = creator
                                 peers[peer.id] = peer
-                                result.append(RenderedChannelParticipant(participant: .member(id: peer.id, invitedAt: 0, adminInfo: ChannelParticipantAdminInfo(rights: TelegramChatAdminRights(rights: .internal_groupSpecific), promotedBy: creator.id, canBeEditedByAccountPeer: creator.id == context.account.peerId), banInfo: nil, rank: rank, subscriptionUntilDate: nil), peer: peer, peers: peers, presences: presences))
+                                result.append(RenderedChannelParticipant(participant: .member(id: peer.id, invitedAt: 0, adminInfo: ChannelParticipantAdminInfo(rights: IosappChatAdminRights(rights: .internal_groupSpecific), promotedBy: creator.id, canBeEditedByAccountPeer: creator.id == context.account.peerId), banInfo: nil, rank: rank, subscriptionUntilDate: nil), peer: peer, peers: peers, presences: presences))
                             case .member:
                                 break
                             }
@@ -1047,7 +1047,7 @@ public func channelAdminsController(
         adminsPromise.get(),
         currentPeerId.get()
         |> mapToSignal { peerId -> Signal<Bool, NoError> in
-            return context.engine.data.subscribe(TelegramEngine.EngineData.Item.Peer.AntiSpamEnabled(id: peerId))
+            return context.engine.data.subscribe(IosappEngine.EngineData.Item.Peer.AntiSpamEnabled(id: peerId))
         }
     )
     |> deliverOnMainQueue

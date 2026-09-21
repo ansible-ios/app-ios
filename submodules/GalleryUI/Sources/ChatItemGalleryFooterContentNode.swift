@@ -2,13 +2,13 @@ import Foundation
 import UIKit
 import AsyncDisplayKit
 import Display
-import TelegramCore
+import IosappCore
 import SwiftSignalKit
 import Photos
-import TelegramPresentationData
-import TelegramUIPreferences
+import IosappPresentationData
+import IosappUIPreferences
 import TextFormat
-import TelegramStringFormatting
+import IosappStringFormatting
 import AccountContext
 import RadialStatusNode
 import OpenInExternalAppUI
@@ -18,7 +18,7 @@ import TextSelectionNode
 import UrlEscaping
 import UndoUI
 import ManagedAnimationNode
-import TelegramUniversalVideoContent
+import IosappUniversalVideoContent
 import InvisibleInkDustNode
 import TextNodeWithEntities
 import AnimationCache
@@ -27,7 +27,7 @@ import Pasteboard
 import ChatRichTextEditorComposer
 import Speak
 import TranslateUI
-import TelegramNotices
+import IosappNotices
 import SolidRoundedButtonNode
 import UrlHandling
 import GlassControls
@@ -170,7 +170,7 @@ final class ChatItemGalleryFooterContentNode: GalleryFooterContentNode, ASScroll
     private var currentMessageText: NSAttributedString?
     
     private var currentMessage: EngineRawMessage?
-    private var currentWebPageAndMedia: (TelegramMediaWebpage, EngineRawMedia)?
+    private var currentWebPageAndMedia: (IosappMediaWebpage, EngineRawMedia)?
     private var mediaSubject: GalleryMediaSubject?
     private let messageContextDisposable = MetaDisposable()
     
@@ -250,7 +250,7 @@ final class ChatItemGalleryFooterContentNode: GalleryFooterContentNode, ASScroll
                                 var isHLS = false
                                 if let message = self.currentMessage {
                                     for media in message.media {
-                                        if let file = media as? TelegramMediaFile {
+                                        if let file = media as? IosappMediaFile {
                                             isHLS = NativeVideoContent.isHLSVideo(file: file)
                                             break
                                         }
@@ -435,12 +435,12 @@ final class ChatItemGalleryFooterContentNode: GalleryFooterContentNode, ASScroll
         self.addSubnode(self.contentNode)
         
         self.textNode.highlightAttributeAction = { attributes in
-            let highlightedAttributes = [TelegramTextAttributes.URL,
-                                         TelegramTextAttributes.PeerMention,
-                                         TelegramTextAttributes.PeerTextMention,
-                                         TelegramTextAttributes.BotCommand,
-                                         TelegramTextAttributes.Hashtag,
-                                         TelegramTextAttributes.Timecode]
+            let highlightedAttributes = [IosappTextAttributes.URL,
+                                         IosappTextAttributes.PeerMention,
+                                         IosappTextAttributes.PeerTextMention,
+                                         IosappTextAttributes.BotCommand,
+                                         IosappTextAttributes.Hashtag,
+                                         IosappTextAttributes.Timecode]
             
             for attribute in highlightedAttributes {
                 if let _ = attributes[NSAttributedString.Key(rawValue: attribute)] {
@@ -602,19 +602,19 @@ final class ChatItemGalleryFooterContentNode: GalleryFooterContentNode, ASScroll
             if let (index, attributes) = textNode.attributesAtPoint(CGPoint(x: location.x - titleFrame.minX, y: location.y - titleFrame.minY)) {
                 let _ = index
                 
-                if let _ = attributes[NSAttributedString.Key(rawValue: TelegramTextAttributes.Spoiler)] {
+                if let _ = attributes[NSAttributedString.Key(rawValue: IosappTextAttributes.Spoiler)] {
                     return false
-                } else if let _ = attributes[NSAttributedString.Key(rawValue: TelegramTextAttributes.URL)] as? String {
+                } else if let _ = attributes[NSAttributedString.Key(rawValue: IosappTextAttributes.URL)] as? String {
                     return false
-                } else if let _ = attributes[NSAttributedString.Key(rawValue: TelegramTextAttributes.Timecode)] {
+                } else if let _ = attributes[NSAttributedString.Key(rawValue: IosappTextAttributes.Timecode)] {
                     return false
-                } else if let _ = attributes[NSAttributedString.Key(rawValue: TelegramTextAttributes.PeerMention)] as? TelegramPeerMention {
+                } else if let _ = attributes[NSAttributedString.Key(rawValue: IosappTextAttributes.PeerMention)] as? IosappPeerMention {
                     return false
-                } else if let _ = attributes[NSAttributedString.Key(rawValue: TelegramTextAttributes.PeerTextMention)] as? String {
+                } else if let _ = attributes[NSAttributedString.Key(rawValue: IosappTextAttributes.PeerTextMention)] as? String {
                     return false
-                } else if let _ = attributes[NSAttributedString.Key(rawValue: TelegramTextAttributes.Hashtag)] as? TelegramHashtag {
+                } else if let _ = attributes[NSAttributedString.Key(rawValue: IosappTextAttributes.Hashtag)] as? IosappHashtag {
                     return false
-                } else if let _ = attributes[NSAttributedString.Key(rawValue: TelegramTextAttributes.BankCard)] as? String {
+                } else if let _ = attributes[NSAttributedString.Key(rawValue: IosappTextAttributes.BankCard)] as? String {
                     return false
                 } else if let emoji = attributes[NSAttributedString.Key(rawValue: ChatTextInputAttributes.customEmoji.rawValue)] as? ChatTextInputTextCustomEmojiAttribute, let _ = emoji.file {
                     return false
@@ -794,21 +794,21 @@ final class ChatItemGalleryFooterContentNode: GalleryFooterContentNode, ASScroll
     }
     
     private func actionForAttributes(_ attributes: [NSAttributedString.Key: Any], _ index: Int) -> GalleryControllerInteractionTapAction? {
-        if let url = attributes[NSAttributedString.Key(rawValue: TelegramTextAttributes.URL)] as? String {
+        if let url = attributes[NSAttributedString.Key(rawValue: IosappTextAttributes.URL)] as? String {
             var concealed = true
-            if let (attributeText, fullText) = self.textNode.attributeSubstring(name: TelegramTextAttributes.URL, index: index) {
+            if let (attributeText, fullText) = self.textNode.attributeSubstring(name: IosappTextAttributes.URL, index: index) {
                 concealed = !doesUrlMatchText(url: url, text: attributeText, fullText: fullText)
             }
             return .url(url: url, concealed: concealed, forceExternal: false, dismiss: true)
-        } else if let peerMention = attributes[NSAttributedString.Key(rawValue: TelegramTextAttributes.PeerMention)] as? TelegramPeerMention {
+        } else if let peerMention = attributes[NSAttributedString.Key(rawValue: IosappTextAttributes.PeerMention)] as? IosappPeerMention {
             return .peerMention(peerMention.peerId, peerMention.mention)
-        } else if let peerName = attributes[NSAttributedString.Key(rawValue: TelegramTextAttributes.PeerTextMention)] as? String {
+        } else if let peerName = attributes[NSAttributedString.Key(rawValue: IosappTextAttributes.PeerTextMention)] as? String {
             return .textMention(peerName)
-        } else if let botCommand = attributes[NSAttributedString.Key(rawValue: TelegramTextAttributes.BotCommand)] as? String {
+        } else if let botCommand = attributes[NSAttributedString.Key(rawValue: IosappTextAttributes.BotCommand)] as? String {
             return .botCommand(botCommand)
-        } else if let hashtag = attributes[NSAttributedString.Key(rawValue: TelegramTextAttributes.Hashtag)] as? TelegramHashtag {
+        } else if let hashtag = attributes[NSAttributedString.Key(rawValue: IosappTextAttributes.Hashtag)] as? IosappHashtag {
             return .hashtag(hashtag.peerName, hashtag.hashtag)
-        } else if let timecode = attributes[NSAttributedString.Key(rawValue: TelegramTextAttributes.Timecode)] as? TelegramTimecode {
+        } else if let timecode = attributes[NSAttributedString.Key(rawValue: IosappTextAttributes.Timecode)] as? IosappTimecode {
             return .timecode(timecode.time, timecode.text)
         } else {
             return nil
@@ -871,10 +871,10 @@ final class ChatItemGalleryFooterContentNode: GalleryFooterContentNode, ASScroll
         var isImage = false
         var isVideo = false
         for media in message.effectiveMedia {
-            if media is TelegramMediaImage {
+            if media is IosappMediaImage {
                 canEdit = true
                 isImage = true
-            } else if let media = media as? TelegramMediaFile, !media.isAnimated {
+            } else if let media = media as? IosappMediaFile, !media.isAnimated {
                 for attribute in media.attributes {
                     switch attribute {
                     case let .Video(_, dimensions, _, _, _, _):
@@ -893,7 +893,7 @@ final class ChatItemGalleryFooterContentNode: GalleryFooterContentNode, ASScroll
                     canEdit = true
                     isImage = true
                 }
-            } else if let media = media as? TelegramMediaWebpage, case let .Loaded(content) = media.content {
+            } else if let media = media as? IosappMediaWebpage, case let .Loaded(content) = media.content {
                 let type = webEmbedType(content: content)
                 switch type {
                     case .youtube, .vimeo:
@@ -912,11 +912,11 @@ final class ChatItemGalleryFooterContentNode: GalleryFooterContentNode, ASScroll
         
         canEdit = canEdit && !message.containsSecretMedia
         if let peer = message.peers[message.id.peerId] {
-            if peer is TelegramUser || peer is TelegramSecretChat {
+            if peer is IosappUser || peer is IosappSecretChat {
                 canDelete = true
-            } else if let _ = peer as? TelegramGroup {
+            } else if let _ = peer as? IosappGroup {
                 canDelete = true
-            } else if let channel = peer as? TelegramChannel {
+            } else if let channel = peer as? IosappChannel {
                 if message.flags.contains(.Incoming) {
                     canDelete = channel.hasPermission(.deleteAllMessages)
                     if canEdit {
@@ -959,7 +959,7 @@ final class ChatItemGalleryFooterContentNode: GalleryFooterContentNode, ASScroll
             canFullscreen = false
         }
         
-        if message.media.contains(where: { $0 is TelegramMediaPoll }) {
+        if message.media.contains(where: { $0 is IosappMediaPoll }) {
             canDelete = false
         }
         
@@ -976,16 +976,16 @@ final class ChatItemGalleryFooterContentNode: GalleryFooterContentNode, ASScroll
         var hasCaption = false
         var mediaDuration: Double?
         for media in message.media {
-            if media is TelegramMediaPaidContent {
+            if media is IosappMediaPaidContent {
                 hasCaption = true
-            } else if media is TelegramMediaImage {
+            } else if media is IosappMediaImage {
                 hasCaption = true
-            } else if media is TelegramMediaPoll {
+            } else if media is IosappMediaPoll {
                 hasCaption = true
-            } else if let file = media as? TelegramMediaFile {
+            } else if let file = media as? IosappMediaFile {
                 hasCaption = file.mimeType.hasPrefix("image/") || file.mimeType.hasPrefix("video/")
                 mediaDuration = file.duration
-            } else if media is TelegramMediaInvoice {
+            } else if media is IosappMediaInvoice {
                 hasCaption = true
             }
         }
@@ -1083,7 +1083,7 @@ final class ChatItemGalleryFooterContentNode: GalleryFooterContentNode, ASScroll
                     self.contentNode.addSubnode(buttonNode)
                     self.buttonNode = buttonNode
                     
-                    if !isTelegramMeLink(adAttribute.url) {
+                    if !isIosappMeLink(adAttribute.url) {
                         let buttonIconNode = ASImageNode()
                         buttonIconNode.displaysAsynchronously = false
                         buttonIconNode.image = generateTintedImage(image: UIImage(bundleImageName: "Chat/Message/BotLink"), color: .white)
@@ -1150,7 +1150,7 @@ final class ChatItemGalleryFooterContentNode: GalleryFooterContentNode, ASScroll
         }
     }
     
-    func setWebPage(_ webPage: TelegramMediaWebpage, media: EngineRawMedia) {
+    func setWebPage(_ webPage: IosappMediaWebpage, media: EngineRawMedia) {
         self.currentWebPageAndMedia = (webPage, media)
     }
     
@@ -1587,7 +1587,7 @@ final class ChatItemGalleryFooterContentNode: GalleryFooterContentNode, ASScroll
     
     @objc func deleteButtonPressed() {
         if let currentMessage = self.currentMessage {
-            let _ = (self.context.engine.data.get(TelegramEngine.EngineData.Item.Messages.MessageGroup(id: currentMessage.id))
+            let _ = (self.context.engine.data.get(IosappEngine.EngineData.Item.Messages.MessageGroup(id: currentMessage.id))
             |> deliverOnMainQueue).start(next: { [weak self] messages in
                 if let strongSelf = self, !messages.isEmpty {
                     if messages.count == 1 {
@@ -1675,9 +1675,9 @@ final class ChatItemGalleryFooterContentNode: GalleryFooterContentNode, ASScroll
                 var personalPeerName: String?
                 var isChannel = false
                 let peerId: EnginePeer.Id = messages[0].id.peerId
-                if let user = messages[0].peers[messages[0].id.peerId] as? TelegramUser {
+                if let user = messages[0].peers[messages[0].id.peerId] as? IosappUser {
                     personalPeerName = EnginePeer(user).compactDisplayTitle
-                } else if let channel = messages[0].peers[messages[0].id.peerId] as? TelegramChannel, case .broadcast = channel.info {
+                } else if let channel = messages[0].peers[messages[0].id.peerId] as? IosappChannel, case .broadcast = channel.info {
                     isChannel = true
                 }
                 
@@ -1736,7 +1736,7 @@ final class ChatItemGalleryFooterContentNode: GalleryFooterContentNode, ASScroll
         self.interacting?(true)
         
         if let currentMessage = self.currentMessage {
-            let _ = (self.context.engine.data.get(TelegramEngine.EngineData.Item.Messages.MessageGroup(id: currentMessage.id))
+            let _ = (self.context.engine.data.get(IosappEngine.EngineData.Item.Messages.MessageGroup(id: currentMessage.id))
             |> deliverOnMainQueue).start(next: { [weak self] messages in
                 if let strongSelf = self, !messages.isEmpty {
                     var presentationData = strongSelf.context.sharedContext.currentPresentationData.with { $0 }
@@ -1751,7 +1751,7 @@ final class ChatItemGalleryFooterContentNode: GalleryFooterContentNode, ASScroll
                     
                     for message in messages {
                         var currentKind = messageContentKind(contentSettings: strongSelf.context.currentContentSettings.with { $0 }, message: message, strings: presentationData.strings, nameDisplayOrder: presentationData.nameDisplayOrder, dateTimeFormat: presentationData.dateTimeFormat, accountPeerId: strongSelf.context.account.peerId)
-                        if case .poll = currentKind, let poll = message.media.first(where: { $0 is TelegramMediaPoll }) as? TelegramMediaPoll {
+                        if case .poll = currentKind, let poll = message.media.first(where: { $0 is IosappMediaPoll }) as? IosappMediaPoll {
                             var media: EngineRawMedia?
                             switch strongSelf.mediaSubject {
                             case .pollDescription:
@@ -1786,7 +1786,7 @@ final class ChatItemGalleryFooterContentNode: GalleryFooterContentNode, ASScroll
                                 preferredAction = .saveToCameraRoll
                                 actionCompletionText = strongSelf.presentationData.strings.Gallery_ImageSaved
                             case .video:
-                                if let message = messages.first, let channel = message.peers[message.id.peerId] as? TelegramChannel, channel.addressName != nil {
+                                if let message = messages.first, let channel = message.peers[message.id.peerId] as? IosappChannel, channel.addressName != nil {
                                 } else {
                                     preferredAction = .saveToCameraRoll
                                 }
@@ -1805,7 +1805,7 @@ final class ChatItemGalleryFooterContentNode: GalleryFooterContentNode, ASScroll
                         var subject: ShareControllerSubject = ShareControllerSubject.messages(messages.map { $0._asMessage() })
                         
                         var media = messages[0].media.first
-                        if let poll = media as? TelegramMediaPoll {
+                        if let poll = media as? IosappMediaPoll {
                             switch strongSelf.mediaSubject {
                             case .pollDescription:
                                 media = poll.attachedMedia
@@ -1821,9 +1821,9 @@ final class ChatItemGalleryFooterContentNode: GalleryFooterContentNode, ASScroll
                         }
                         
                         if let m = media {
-                            if let image = media as? TelegramMediaImage {
+                            if let image = media as? IosappMediaImage {
                                 subject = .image(image.representations.map({ ImageRepresentationWithReference(representation: $0, reference: .media(media: .message(message: MessageReference(messages[0]._asMessage()), media: m), resource: $0.resource)) }))
-                            } else if let webpage = m as? TelegramMediaWebpage, case let .Loaded(content) = webpage.content {
+                            } else if let webpage = m as? IosappMediaWebpage, case let .Loaded(content) = webpage.content {
                                 if content.embedType == "iframe" {
                                     let item = OpenInItem.url(url: content.url)
                                     if availableOpenInOptions(context: strongSelf.context, item: item).count > 1 {
@@ -1854,7 +1854,7 @@ final class ChatItemGalleryFooterContentNode: GalleryFooterContentNode, ASScroll
                                         actionCompletionText = strongSelf.presentationData.strings.Gallery_ImageSaved
                                     }
                                 }
-                            } else if let file = m as? TelegramMediaFile {
+                            } else if let file = m as? IosappMediaFile {
                                 subject = .media(.message(message: MessageReference(messages[0]._asMessage()), media: file), strongSelf.shareMediaParameters?())
                                 if file.isAnimated {
                                     if messages[0].id.peerId.namespace == Namespaces.Peer.SecretChat {
@@ -1905,10 +1905,10 @@ final class ChatItemGalleryFooterContentNode: GalleryFooterContentNode, ASScroll
                         
                         var hasExternalShare = true
                         for media in currentMessage.media {
-                            if let _ = media as? TelegramMediaPaidContent {
+                            if let _ = media as? IosappMediaPaidContent {
                                 hasExternalShare = false
                                 break
-                            } else if let invoice = media as? TelegramMediaInvoice, let _ = invoice.extendedMedia {
+                            } else if let invoice = media as? IosappMediaInvoice, let _ = invoice.extendedMedia {
                                 hasExternalShare = false
                                 break
                             }
@@ -1925,7 +1925,7 @@ final class ChatItemGalleryFooterContentNode: GalleryFooterContentNode, ASScroll
                             if let strongSelf = self {
                                 let _ = (strongSelf.context.engine.data.get(
                                     EngineDataList(
-                                        peerIds.map(TelegramEngine.EngineData.Item.Peer.Peer.init)
+                                        peerIds.map(IosappEngine.EngineData.Item.Peer.Peer.init)
                                     )
                                 )
                                 |> deliverOnMainQueue).start(next: { [weak self] peerList in
@@ -2015,7 +2015,7 @@ final class ChatItemGalleryFooterContentNode: GalleryFooterContentNode, ASScroll
                                     if let strongSelf = self {
                                         let _ = (strongSelf.context.engine.data.get(
                                             EngineDataList(
-                                                peerIds.map(TelegramEngine.EngineData.Item.Peer.Peer.init)
+                                                peerIds.map(IosappEngine.EngineData.Item.Peer.Peer.init)
                                             )
                                         )
                                         |> deliverOnMainQueue).start(next: { [weak self] peerList in
@@ -2091,7 +2091,7 @@ final class ChatItemGalleryFooterContentNode: GalleryFooterContentNode, ASScroll
             var preferredAction = ShareControllerPreferredAction.default
             var subject = ShareControllerSubject.media(.webPage(webPage: WebpageReference(webPage), media: media), self.shareMediaParameters?())
             
-            if let file = media as? TelegramMediaFile {
+            if let file = media as? IosappMediaFile {
                 if file.isAnimated {
                     preferredAction = .custom(action: ShareControllerAction(title: presentationData.strings.Preview_SaveGif, action: { [weak self] in
                         if let strongSelf = self {
@@ -2126,7 +2126,7 @@ final class ChatItemGalleryFooterContentNode: GalleryFooterContentNode, ASScroll
                 } else if file.mimeType.hasPrefix("image/") || file.mimeType.hasPrefix("video/") {
                     preferredAction = .saveToCameraRoll
                 }
-            } else if let webpage = media as? TelegramMediaWebpage, case let .Loaded(content) = webpage.content {
+            } else if let webpage = media as? IosappMediaWebpage, case let .Loaded(content) = webpage.content {
                 if content.embedType == "iframe" || content.embedType == "video" {
                     subject = .url(content.url)
                     
@@ -2165,7 +2165,7 @@ final class ChatItemGalleryFooterContentNode: GalleryFooterContentNode, ASScroll
                 if let strongSelf = self {
                     let _ = (strongSelf.context.engine.data.get(
                         EngineDataList(
-                            peerIds.map(TelegramEngine.EngineData.Item.Peer.Peer.init)
+                            peerIds.map(IosappEngine.EngineData.Item.Peer.Peer.init)
                         )
                     )
                     |> deliverOnMainQueue).start(next: { [weak self] peerList in

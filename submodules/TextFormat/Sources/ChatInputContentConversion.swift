@@ -1,5 +1,5 @@
 import Foundation
-import TelegramCore
+import IosappCore
 
 /// Chat input content → a SEMANTIC NSAttributedString (text + `ChatTextInputAttributes` only; NO display
 /// decoration — no fonts/colors/spoiler-attachments/emoji views). Display-neutral on purpose; the node owns
@@ -117,7 +117,7 @@ public func attributedString(from content: ChatInputContent) -> NSAttributedStri
 /// rich-only layout so it can be sent on the normal text/entities path.
 public func entityPreservingFallbackAttributedString(
     from content: ChatInputContent,
-    preserveCustomEmoji: (Int64, TelegramMediaFile?) -> Bool
+    preserveCustomEmoji: (Int64, IosappMediaFile?) -> Bool
 ) -> NSAttributedString {
     let result = NSMutableAttributedString()
     let marker = true as NSNumber

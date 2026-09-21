@@ -1,5 +1,5 @@
 import Foundation
-import TelegramCore
+import IosappCore
 import SwiftSignalKit
 
 public enum CachedChannelAdminRank: Codable, Equatable {
@@ -99,6 +99,6 @@ public func cachedChannelAdminRanksEntryId(peerId: EnginePeer.Id) -> EngineItemC
     return EngineItemCacheEntryId(collectionId: 100, key: CachedChannelAdminRanks.cacheKey(peerId: peerId))
 }
 
-func updateCachedChannelAdminRanks(engine: TelegramEngine, peerId: EnginePeer.Id, ranks: Dictionary<EnginePeer.Id, CachedChannelAdminRank>) -> Signal<Never, NoError> {
+func updateCachedChannelAdminRanks(engine: IosappEngine, peerId: EnginePeer.Id, ranks: Dictionary<EnginePeer.Id, CachedChannelAdminRank>) -> Signal<Never, NoError> {
     return engine.itemCache.put(collectionId: 100, id: CachedChannelAdminRanks.cacheKey(peerId: peerId), item: CachedChannelAdminRanks(ranks: ranks))
 }

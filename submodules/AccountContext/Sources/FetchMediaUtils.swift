@@ -1,9 +1,9 @@
 import Foundation
 import UIKit
-import TelegramCore
+import IosappCore
 import Postbox
 import SwiftSignalKit
-import TelegramUIPreferences
+import IosappUIPreferences
 import RangeSet
 
 public func freeMediaFileInteractiveFetched(account: Account, userLocation: MediaResourceUserLocation, fileReference: FileMediaReference) -> Signal<FetchResourceSourceType, FetchResourceError> {
@@ -24,7 +24,7 @@ public func freeMediaFileResourceInteractiveFetched(postbox: Postbox, userLocati
     return fetchedMediaResource(mediaBox: postbox.mediaBox, userLocation: userLocation, userContentType: MediaResourceUserContentType(file: fileReference.media), reference: fileReference.resourceReference(resource), range: range)
 }
 
-private func fetchCategoryForFile(_ file: TelegramMediaFile) -> FetchManagerCategory {
+private func fetchCategoryForFile(_ file: IosappMediaFile) -> FetchManagerCategory {
     if file.isVoice || file.isInstantVideo {
         return .voice
     } else if file.isAnimated {
@@ -34,24 +34,24 @@ private func fetchCategoryForFile(_ file: TelegramMediaFile) -> FetchManagerCate
     }
 }
 
-public func messageMediaFileInteractiveFetched(context: AccountContext, message: Message, file: TelegramMediaFile, userInitiated: Bool, storeToDownloadsPeerId: EnginePeer.Id? = nil) -> Signal<Void, NoError> {
+public func messageMediaFileInteractiveFetched(context: AccountContext, message: Message, file: IosappMediaFile, userInitiated: Bool, storeToDownloadsPeerId: EnginePeer.Id? = nil) -> Signal<Void, NoError> {
     return messageMediaFileInteractiveFetched(fetchManager: context.fetchManager, messageId: message.id, messageReference: MessageReference(message), file: file, userInitiated: userInitiated, priority: .userInitiated, storeToDownloadsPeerId: storeToDownloadsPeerId)
 }
 
-public func messageMediaFileInteractiveFetched(fetchManager: FetchManager, messageId: MessageId, messageReference: MessageReference, file: TelegramMediaFile, ranges: RangeSet<Int64> = RangeSet<Int64>(0 ..< Int64.max), userInitiated: Bool, priority: FetchManagerPriority, storeToDownloadsPeerId: EnginePeer.Id? = nil) -> Signal<Void, NoError> {
+public func messageMediaFileInteractiveFetched(fetchManager: FetchManager, messageId: MessageId, messageReference: MessageReference, file: IosappMediaFile, ranges: RangeSet<Int64> = RangeSet<Int64>(0 ..< Int64.max), userInitiated: Bool, priority: FetchManagerPriority, storeToDownloadsPeerId: EnginePeer.Id? = nil) -> Signal<Void, NoError> {
     let mediaReference = AnyMediaReference.message(message: messageReference, media: file)
     return fetchManager.interactivelyFetched(category: fetchCategoryForFile(file), location: .chat(messageId.peerId), locationKey: .messageId(messageId), mediaReference: mediaReference, resourceReference: mediaReference.resourceReference(file.resource), ranges: ranges, statsCategory: statsCategoryForFileWithAttributes(file.attributes), elevatedPriority: false, userInitiated: userInitiated, priority: priority, storeToDownloadsPeerId: storeToDownloadsPeerId)
 }
 
-public func messageMediaFileCancelInteractiveFetch(context: AccountContext, messageId: MessageId, file: TelegramMediaFile) {
+public func messageMediaFileCancelInteractiveFetch(context: AccountContext, messageId: MessageId, file: IosappMediaFile) {
     context.fetchManager.cancelInteractiveFetches(category: fetchCategoryForFile(file), location: .chat(messageId.peerId), locationKey: .messageId(messageId), resource: file.resource)
 }
 
-public func messageMediaImageInteractiveFetched(context: AccountContext, message: Message, image: TelegramMediaImage, resource: MediaResource, range: Range<Int64>? = nil, userInitiated: Bool = true, storeToDownloadsPeerId: EnginePeer.Id?) -> Signal<Void, NoError> {
+public func messageMediaImageInteractiveFetched(context: AccountContext, message: Message, image: IosappMediaImage, resource: MediaResource, range: Range<Int64>? = nil, userInitiated: Bool = true, storeToDownloadsPeerId: EnginePeer.Id?) -> Signal<Void, NoError> {
     return messageMediaImageInteractiveFetched(fetchManager: context.fetchManager, messageId: message.id, messageReference: MessageReference(message), image: image, resource: resource, range: range, userInitiated: userInitiated, priority: .userInitiated, storeToDownloadsPeerId: storeToDownloadsPeerId)
 }
 
-public func messageMediaImageInteractiveFetched(fetchManager: FetchManager, messageId: MessageId, messageReference: MessageReference, image: TelegramMediaImage, resource: MediaResource, range: Range<Int64>? = nil, userInitiated: Bool, priority: FetchManagerPriority, storeToDownloadsPeerId: EnginePeer.Id?) -> Signal<Void, NoError> {
+public func messageMediaImageInteractiveFetched(fetchManager: FetchManager, messageId: MessageId, messageReference: MessageReference, image: IosappMediaImage, resource: MediaResource, range: Range<Int64>? = nil, userInitiated: Bool, priority: FetchManagerPriority, storeToDownloadsPeerId: EnginePeer.Id?) -> Signal<Void, NoError> {
     let mediaReference = AnyMediaReference.message(message: messageReference, media: image)
     let ranges: RangeSet<Int64>
     if let range = range {
@@ -62,11 +62,11 @@ public func messageMediaImageInteractiveFetched(fetchManager: FetchManager, mess
     return fetchManager.interactivelyFetched(category: .image, location: .chat(messageId.peerId), locationKey: .messageId(messageId), mediaReference: mediaReference, resourceReference: mediaReference.resourceReference(resource), ranges: ranges, statsCategory: .image, elevatedPriority: false, userInitiated: userInitiated, priority: priority, storeToDownloadsPeerId: storeToDownloadsPeerId)
 }
 
-public func messageMediaImageCancelInteractiveFetch(context: AccountContext, messageId: MessageId, image: TelegramMediaImage, resource: MediaResource) {
+public func messageMediaImageCancelInteractiveFetch(context: AccountContext, messageId: MessageId, image: IosappMediaImage, resource: MediaResource) {
     context.fetchManager.cancelInteractiveFetches(category: .image, location: .chat(messageId.peerId), locationKey: .messageId(messageId), resource: resource)
 }
 
-public func messageMediaFileStatus(context: AccountContext, messageId: MessageId, file: TelegramMediaFile, adjustForVideoThumbnail: Bool = false) -> Signal<MediaResourceStatus, NoError> {
+public func messageMediaFileStatus(context: AccountContext, messageId: MessageId, file: IosappMediaFile, adjustForVideoThumbnail: Bool = false) -> Signal<MediaResourceStatus, NoError> {
     let fileStatus = context.fetchManager.fetchStatus(category: fetchCategoryForFile(file), location: .chat(messageId.peerId), locationKey: .messageId(messageId), resource: file.resource)
     if !adjustForVideoThumbnail {
         return fileStatus
@@ -96,7 +96,7 @@ public func messageMediaFileStatus(context: AccountContext, messageId: MessageId
     |> distinctUntilChanged
 }
 
-public func messageMediaImageStatus(context: AccountContext, messageId: MessageId, image: TelegramMediaImage) -> Signal<MediaResourceStatus, NoError> {
+public func messageMediaImageStatus(context: AccountContext, messageId: MessageId, image: IosappMediaImage) -> Signal<MediaResourceStatus, NoError> {
     guard let representation = image.representations.last else {
         return .single(.Remote(progress: 0.0))
     }

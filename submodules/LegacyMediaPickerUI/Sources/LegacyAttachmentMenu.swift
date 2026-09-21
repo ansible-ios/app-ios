@@ -3,8 +3,8 @@ import UIKit
 import LegacyComponents
 import Display
 import SwiftSignalKit
-import TelegramCore
-import TelegramPresentationData
+import IosappCore
+import IosappPresentationData
 import DeviceAccess
 import AccountContext
 import LegacyUI
@@ -527,7 +527,7 @@ public func legacyAttachmentMenu(
     
     if let editCurrentMedia = editCurrentMedia {
         let title: String
-        if editCurrentMedia.media is TelegramMediaImage {
+        if editCurrentMedia.media is IosappMediaImage {
             title = presentationData.strings.Conversation_EditingMessageMediaEditCurrentPhoto
         } else {
             title = presentationData.strings.Conversation_EditingMessageMediaEditCurrentVideo

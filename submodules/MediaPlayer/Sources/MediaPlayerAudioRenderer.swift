@@ -2,8 +2,8 @@ import Foundation
 import SwiftSignalKit
 import CoreMedia
 import AVFoundation
-import TelegramCore
-import TelegramAudio
+import IosappCore
+import IosappAudio
 
 private enum AudioPlayerRendererState {
     case paused

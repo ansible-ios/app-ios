@@ -3,14 +3,14 @@ import UIKit
 import AsyncDisplayKit
 import Display
 import SwiftSignalKit
-import TelegramCore
-import TelegramPresentationData
-import TelegramUIPreferences
+import IosappCore
+import IosappPresentationData
+import IosappUIPreferences
 import ItemListUI
 import PresentationDataUtils
 import AccountContext
 import PresentationDataUtils
-import TelegramStringFormatting
+import IosappStringFormatting
 import UndoUI
 import InviteLinksUI
 import Stripe
@@ -148,7 +148,7 @@ private enum InviteLinksListEntry: ItemListNodeEntry {
 private func paymentMethodListScreenEntries(presentationData: PresentationData, state: PaymentMethodListScreenState) -> [InviteLinksListEntry] {
     var entries: [InviteLinksListEntry] = []
 
-    entries.append(.header("Add your debit or credit card to buy goods and\nservices on Telegram."))
+    entries.append(.header("Add your debit or credit card to buy goods and\nservices on Iosapp."))
     
     entries.append(.methodsHeader("PAYMENT METHOD"))
     entries.append(.addMethod("Add Payment Method"))

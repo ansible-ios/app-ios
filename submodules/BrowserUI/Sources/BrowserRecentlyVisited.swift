@@ -1,7 +1,7 @@
 import Foundation
-import TelegramCore
+import IosappCore
 import SwiftSignalKit
-import TelegramUIPreferences
+import IosappUIPreferences
 
 private struct RecentlyVisitedLinkItemId {
     public let rawValue: EngineMemoryBuffer
@@ -28,16 +28,16 @@ public final class RecentVisitedLinkItem: Codable {
         case webPage
     }
     
-    public let webPage: TelegramMediaWebpage
+    public let webPage: IosappMediaWebpage
     
-    public init(webPage: TelegramMediaWebpage) {
+    public init(webPage: IosappMediaWebpage) {
         self.webPage = webPage
     }
     
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         if let webPageData = try container.decodeIfPresent(Data.self, forKey: .webPage) {
-            self.webPage = EnginePostboxDecoder(buffer: EngineMemoryBuffer(data: webPageData)).decodeRootObject() as! TelegramMediaWebpage
+            self.webPage = EnginePostboxDecoder(buffer: EngineMemoryBuffer(data: webPageData)).decodeRootObject() as! IosappMediaWebpage
         } else {
             fatalError()
         }
@@ -53,7 +53,7 @@ public final class RecentVisitedLinkItem: Codable {
     }
 }
 
-func addRecentlyVisitedLink(engine: TelegramEngine, webPage: TelegramMediaWebpage) -> Signal<Never, NoError> {
+func addRecentlyVisitedLink(engine: IosappEngine, webPage: IosappMediaWebpage) -> Signal<Never, NoError> {
     if let url = webPage.content.url, let itemId = RecentlyVisitedLinkItemId(url) {
         return engine.orderedLists.addOrMoveToFirstPosition(collectionId: ApplicationSpecificOrderedItemListCollectionId.browserRecentlyVisited, id: itemId.rawValue, item: RecentVisitedLinkItem(webPage: webPage), removeTailIfCountExceeds: 10)
     } else {
@@ -61,7 +61,7 @@ func addRecentlyVisitedLink(engine: TelegramEngine, webPage: TelegramMediaWebpag
     }
 }
 
-func removeRecentlyVisitedLink(engine: TelegramEngine, url: String) -> Signal<Never, NoError> {
+func removeRecentlyVisitedLink(engine: IosappEngine, url: String) -> Signal<Never, NoError> {
     if let itemId = RecentlyVisitedLinkItemId(url) {
         return engine.orderedLists.removeItem(collectionId: ApplicationSpecificOrderedItemListCollectionId.browserRecentlyVisited, id: itemId.rawValue)
     } else {
@@ -69,14 +69,14 @@ func removeRecentlyVisitedLink(engine: TelegramEngine, url: String) -> Signal<Ne
     }
 }
 
-func clearRecentlyVisitedLinks(engine: TelegramEngine) -> Signal<Never, NoError> {
+func clearRecentlyVisitedLinks(engine: IosappEngine) -> Signal<Never, NoError> {
     return engine.orderedLists.clear(collectionId: ApplicationSpecificOrderedItemListCollectionId.browserRecentlyVisited)
 }
 
-func recentlyVisitedLinks(engine: TelegramEngine) -> Signal<[TelegramMediaWebpage], NoError> {
-    return engine.data.subscribe(TelegramEngine.EngineData.Item.OrderedLists.ListItems(collectionId: ApplicationSpecificOrderedItemListCollectionId.browserRecentlyVisited))
-    |> map { items -> [TelegramMediaWebpage] in
-        var result: [TelegramMediaWebpage] = []
+func recentlyVisitedLinks(engine: IosappEngine) -> Signal<[IosappMediaWebpage], NoError> {
+    return engine.data.subscribe(IosappEngine.EngineData.Item.OrderedLists.ListItems(collectionId: ApplicationSpecificOrderedItemListCollectionId.browserRecentlyVisited))
+    |> map { items -> [IosappMediaWebpage] in
+        var result: [IosappMediaWebpage] = []
         for item in items {
             if let link = item.contents.get(RecentVisitedLinkItem.self) {
                 result.append(link.webPage)

@@ -1,9 +1,9 @@
 import Foundation
 import UIKit
-import TelegramCore
+import IosappCore
 import AsyncDisplayKit
-import TelegramPresentationData
-import TelegramUIPreferences
+import IosappPresentationData
+import IosappUIPreferences
 import AccountContext
 import ContextUI
 
@@ -23,7 +23,7 @@ public struct InstantPageMapAttribute: InstantPageImageAttribute {
 public final class InstantPageImageItem: InstantPageItem {
     public var frame: CGRect
     
-    let webPage: TelegramMediaWebpage
+    let webPage: IosappMediaWebpage
     
     public let media: InstantPageMedia
     let attributes: [InstantPageImageAttribute]
@@ -39,7 +39,7 @@ public final class InstantPageImageItem: InstantPageItem {
     public let wantsNode: Bool = true
     public let separatesTiles: Bool = false
     
-    init(frame: CGRect, webPage: TelegramMediaWebpage, media: InstantPageMedia, attributes: [InstantPageImageAttribute] = [], interactive: Bool, roundCorners: Bool, fit: Bool) {
+    init(frame: CGRect, webPage: IosappMediaWebpage, media: InstantPageMedia, attributes: [InstantPageImageAttribute] = [], interactive: Bool, roundCorners: Bool, fit: Bool) {
         self.frame = frame
         self.webPage = webPage
         self.media = media

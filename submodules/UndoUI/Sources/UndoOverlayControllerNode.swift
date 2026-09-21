@@ -3,14 +3,14 @@ import UIKit
 import AsyncDisplayKit
 import Display
 import SwiftSignalKit
-import TelegramCore
-import TelegramPresentationData
+import IosappCore
+import IosappPresentationData
 import TextFormat
 import Markdown
 import RadialStatusNode
 import AppBundle
 import AnimatedStickerNode
-import TelegramAnimatedStickerNode
+import IosappAnimatedStickerNode
 import SlotMachineAnimationNode
 import AnimationUI
 import StickerResources
@@ -554,7 +554,7 @@ final class UndoOverlayControllerNode: ViewControllerTracingNode {
                 self.stillStickerNode = stillStickerNode
                 
                 enum StickerPackThumbnailItem {
-                    case still(TelegramMediaImageRepresentation)
+                    case still(IosappMediaImageRepresentation)
                     case animated(EngineMediaResource, PixelDimensions, Bool)
                 }
                 
@@ -573,8 +573,8 @@ final class UndoOverlayControllerNode: ViewControllerTracingNode {
                     if itemFile.isAnimatedSticker || itemFile.isVideoSticker {
                         thumbnailItem = .animated(EngineMediaResource(itemFile.resource), itemFile.dimensions ?? PixelDimensions(width: 512, height: 512), itemFile.isVideoSticker)
                         resourceReference = MediaResourceReference.media(media: .standalone(media: itemFile), resource: itemFile.resource)
-                    } else if let dimensions = itemFile.dimensions, let resource = chatMessageStickerResource(file: itemFile, small: true) as? TelegramMediaResource {
-                        thumbnailItem = .still(TelegramMediaImageRepresentation(dimensions: dimensions, resource: resource, progressiveSizes: [], immediateThumbnailData: nil, hasVideo: false, isPersonal: false))
+                    } else if let dimensions = itemFile.dimensions, let resource = chatMessageStickerResource(file: itemFile, small: true) as? IosappMediaResource {
+                        thumbnailItem = .still(IosappMediaImageRepresentation(dimensions: dimensions, resource: resource, progressiveSizes: [], immediateThumbnailData: nil, hasVideo: false, isPersonal: false))
                         resourceReference = MediaResourceReference.media(media: .standalone(media: itemFile), resource: resource)
                     }
                 }
@@ -881,7 +881,7 @@ final class UndoOverlayControllerNode: ViewControllerTracingNode {
                 self.stillStickerNode = stillStickerNode
                 
                 enum StickerThumbnailItem {
-                    case still(TelegramMediaImageRepresentation)
+                    case still(IosappMediaImageRepresentation)
                     case animated(EngineMediaResource)
                 }
                 
@@ -891,8 +891,8 @@ final class UndoOverlayControllerNode: ViewControllerTracingNode {
                 if file.isAnimatedSticker {
                     thumbnailItem = .animated(EngineMediaResource(file.resource))
                     resourceReference = MediaResourceReference.media(media: .standalone(media: file), resource: file.resource)
-                } else if let dimensions = file.dimensions, let resource = chatMessageStickerResource(file: file, small: true) as? TelegramMediaResource {
-                    thumbnailItem = .still(TelegramMediaImageRepresentation(dimensions: dimensions, resource: resource, progressiveSizes: [], immediateThumbnailData: nil, hasVideo: false, isPersonal: false))
+                } else if let dimensions = file.dimensions, let resource = chatMessageStickerResource(file: file, small: true) as? IosappMediaResource {
+                    thumbnailItem = .still(IosappMediaImageRepresentation(dimensions: dimensions, resource: resource, progressiveSizes: [], immediateThumbnailData: nil, hasVideo: false, isPersonal: false))
                     resourceReference = MediaResourceReference.media(media: .standalone(media: file), resource: resource)
                 }
                 

@@ -13,9 +13,9 @@ swift_library(
     ],
     deps = [
         "//submodules/SSignalKit/SwiftSignalKit",
-    	"//submodules/TelegramCore:TelegramCore",
+    	"//submodules/IosappCore:IosappCore",
         "//submodules/Display:Display",
-        "//submodules/TelegramPresentationData:TelegramPresentationData",
+        "//submodules/IosappPresentationData:IosappPresentationData",
         "//submodules/Markdown:Markdown",
         "//submodules/Emoji:Emoji",
         "//third-party/libprisma",
@@ -33,7 +33,7 @@ swift_library(
     ]),
     deps = [
         ":TextFormat",
-        "//submodules/TelegramCore:TelegramCore",
+        "//submodules/IosappCore:IosappCore",
         "//submodules/Postbox:Postbox",
     ],
 )

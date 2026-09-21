@@ -4,11 +4,11 @@ import Display
 import AsyncDisplayKit
 import SwiftSignalKit
 import ComponentFlow
-import TelegramCore
-import TelegramPresentationData
-import TelegramUIPreferences
+import IosappCore
+import IosappPresentationData
+import IosappUIPreferences
 import AccountContext
-import TelegramStringFormatting
+import IosappStringFormatting
 import UIKitRuntimeUtils
 import MediaResources
 import LegacyMessageInputPanel

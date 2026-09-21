@@ -2,13 +2,13 @@ import Foundation
 import UIKit
 import Display
 import AsyncDisplayKit
-import TelegramCore
+import IosappCore
 import SwiftSignalKit
-import TelegramPresentationData
+import IosappPresentationData
 import AccountContext
 import AuthorizationUtils
 import AnimatedStickerNode
-import TelegramAnimatedStickerNode
+import IosappAnimatedStickerNode
 
 private func generateButtonImage(backgroundColor: UIColor, highlightColor: UIColor?) -> UIImage? {
     return generateImage(CGSize(width: 66.0, height: 52.0), contextGenerator: { size, context in

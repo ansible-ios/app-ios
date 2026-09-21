@@ -2,10 +2,10 @@ import Display
 import UIKit
 import AsyncDisplayKit
 import UIKit
-import TelegramCore
+import IosappCore
 import SwiftSignalKit
-import TelegramPresentationData
-import TelegramUIPreferences
+import IosappPresentationData
+import IosappUIPreferences
 import DeviceAccess
 import AccountContext
 import SearchBarNode

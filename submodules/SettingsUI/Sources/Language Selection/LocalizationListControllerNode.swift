@@ -2,9 +2,9 @@ import Foundation
 import UIKit
 import Display
 import AsyncDisplayKit
-import TelegramCore
+import IosappCore
 import SwiftSignalKit
-import TelegramPresentationData
+import IosappPresentationData
 import MergeLists
 import ItemListUI
 import PresentationDataUtils
@@ -13,7 +13,7 @@ import AccountContext
 import SearchBarNode
 import SearchUI
 import UndoUI
-import TelegramUIPreferences
+import IosappUIPreferences
 import TranslateUI
 import PremiumUI
 
@@ -409,7 +409,7 @@ final class LocalizationListControllerNode: ViewControllerTracingNode {
         let removeItem: (String) -> Void = { id in
             let _ = context.engine.localization.removeSavedLocalization(languageCode: id).start()
             
-            let _ = (context.engine.data.get(TelegramEngine.EngineData.Item.Configuration.LocalizationList())
+            let _ = (context.engine.data.get(IosappEngine.EngineData.Item.Configuration.LocalizationList())
             |> mapToSignal { state -> Signal<LocalizationInfo?, NoError> in
                 return context.sharedContext.accountManager.transaction { transaction -> LocalizationInfo? in
                     if let settings = transaction.getSharedData(SharedDataKeys.localizationSettings)?.get(LocalizationSettings.self) {
@@ -465,8 +465,8 @@ final class LocalizationListControllerNode: ViewControllerTracingNode {
         let previousEntriesHolder = Atomic<([LanguageListEntry], PresentationTheme, PresentationStrings)?>(value: nil)
         self.listDisposable = combineLatest(
             queue: .mainQueue(),
-            context.engine.data.subscribe(TelegramEngine.EngineData.Item.Configuration.LocalizationList()),
-            context.engine.data.subscribe(TelegramEngine.EngineData.Item.Peer.Peer(id: context.account.peerId)),
+            context.engine.data.subscribe(IosappEngine.EngineData.Item.Configuration.LocalizationList()),
+            context.engine.data.subscribe(IosappEngine.EngineData.Item.Peer.Peer(id: context.account.peerId)),
             context.sharedContext.accountManager.sharedData(keys: [SharedDataKeys.localizationSettings, ApplicationSpecificSharedDataKeys.translationSettings]),
             self.presentationDataValue.get(),
             self.applyingCode.get(),
@@ -792,7 +792,7 @@ final class LocalizationListControllerNode: ViewControllerTracingNode {
             guard let strongSelf = self else {
                 return
             }
-            let shareController = strongSelf.context.sharedContext.makeShareController(context: strongSelf.context, params: ShareControllerParams(subject: .url("https://t.me/setlanguage/\(info.languageCode)"), actionCompleted: { [weak self] in
+            let shareController = strongSelf.context.sharedContext.makeShareController(context: strongSelf.context, params: ShareControllerParams(subject: .url("https://asme.su/setlanguage/\(info.languageCode)"), actionCompleted: { [weak self] in
                 if let strongSelf = self {
                     let presentationData = strongSelf.context.sharedContext.currentPresentationData.with { $0 }
                     strongSelf.present(UndoOverlayController(presentationData: presentationData, content: .linkCopied(title: nil, text: presentationData.strings.Conversation_LinkCopied), elevatedLayout: false, animateInAsReplacement: false, action: { _ in return false }), nil)

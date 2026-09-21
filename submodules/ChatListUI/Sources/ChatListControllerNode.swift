@@ -2,9 +2,9 @@ import Foundation
 import UIKit
 import AsyncDisplayKit
 import Display
-import TelegramCore
+import IosappCore
 import SwiftSignalKit
-import TelegramPresentationData
+import IosappPresentationData
 import MergeLists
 import ActivityIndicator
 import AccountContext
@@ -13,14 +13,14 @@ import SearchUI
 import ContextUI
 import AnimationCache
 import MultiAnimationRenderer
-import TelegramUIPreferences
+import IosappUIPreferences
 import ActionPanelComponent
 import ComponentDisplayAdapters
 import ComponentFlow
 import ChatFolderLinkPreviewScreen
 import ChatListHeaderComponent
 import StoryPeerListComponent
-import TelegramNotices
+import IosappNotices
 import HeaderPanelContainerComponent
 import HorizontalTabsComponent
 import PremiumUI
@@ -449,7 +449,7 @@ public final class ChatListContainerNode: ASDisplayNode, ASGestureRecognizerDele
     var openPremiumManagement: (() -> Void)?
     var openStories: ((ChatListNode.OpenStoriesSubject, ASDisplayNode?) -> Void)?
     var openStarsTopup: ((Int64?) -> Void)?
-    var openWebApp: ((TelegramUser) -> Void)?
+    var openWebApp: ((IosappUser) -> Void)?
     var openPhotoSetup: (() -> Void)?
     var openAccountFreezeInfo: (() -> Void)?
     var addedVisibleChatsWithPeerIds: (([EnginePeer.Id]) -> Void)?

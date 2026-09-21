@@ -1,9 +1,9 @@
 import Foundation
 import UIKit
-import TelegramCore
+import IosappCore
 import AsyncDisplayKit
-import TelegramPresentationData
-import TelegramUIPreferences
+import IosappPresentationData
+import IosappUIPreferences
 import AccountContext
 import ContextUI
 
@@ -14,9 +14,9 @@ public final class InstantPageAudioItem: InstantPageItem {
     public let medias: [InstantPageMedia]
     
     let media: InstantPageMedia
-    let webpage: TelegramMediaWebpage
+    let webpage: IosappMediaWebpage
     
-    public init(frame: CGRect, media: InstantPageMedia, webpage: TelegramMediaWebpage) {
+    public init(frame: CGRect, media: InstantPageMedia, webpage: IosappMediaWebpage) {
         self.frame = frame
         self.media = media
         self.webpage = webpage

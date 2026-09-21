@@ -1,15 +1,15 @@
 import Foundation
 import UIKit
-import TelegramCore
+import IosappCore
 import AsyncDisplayKit
-import TelegramPresentationData
-import TelegramUIPreferences
+import IosappPresentationData
+import IosappUIPreferences
 import AccountContext
 import ContextUI
 
 public final class InstantPagePlayableVideoItem: InstantPageItem {
     public var frame: CGRect
-    let webPage: TelegramMediaWebpage
+    let webPage: IosappMediaWebpage
     
     let media: InstantPageMedia
     public var medias: [InstantPageMedia] {
@@ -21,7 +21,7 @@ public final class InstantPagePlayableVideoItem: InstantPageItem {
     public let wantsNode: Bool = true
     public let separatesTiles: Bool = false
     
-    init(frame: CGRect, webPage: TelegramMediaWebpage, media: InstantPageMedia, interactive: Bool) {
+    init(frame: CGRect, webPage: IosappMediaWebpage, media: InstantPageMedia, interactive: Bool) {
         self.frame = frame
         self.webPage = webPage
         self.media = media

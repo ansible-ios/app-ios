@@ -1,6 +1,6 @@
 import Foundation
 import Display
-import TelegramCore
+import IosappCore
 
 public enum ChatHistoryInitialSearchLocation: Equatable {
     case index(EngineMessage.Index)

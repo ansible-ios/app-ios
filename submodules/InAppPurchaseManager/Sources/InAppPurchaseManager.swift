@@ -2,9 +2,9 @@ import Foundation
 import CoreLocation
 import SwiftSignalKit
 import StoreKit
-import TelegramCore
-import TelegramStringFormatting
-import TelegramUIPreferences
+import IosappCore
+import IosappStringFormatting
+import IosappUIPreferences
 import PersistentStringHash
 
 private let productIdentifiers = [
@@ -218,7 +218,7 @@ public final class InAppPurchaseManager: NSObject {
         case deferred
     }
     
-    private let engine: SomeTelegramEngine
+    private let engine: SomeIosappEngine
     
     private var products: [Product] = []
     private var productsPromise = Promise<[Product]>([])
@@ -235,7 +235,7 @@ public final class InAppPurchaseManager: NSObject {
     
     private var lastRequestTimestamp: Double?
 
-    public init(engine: SomeTelegramEngine) {
+    public init(engine: SomeIosappEngine) {
         self.engine = engine
                 
         super.init()
@@ -625,7 +625,7 @@ extension InAppPurchaseManager: SKPaymentTransactionObserver {
         let fileResource = LocalFileMediaResource(fileId: id, size: Int64(receiptData.count), isSecretRelated: false)
         engine.resources.storeResourceData(id: EngineMediaResource.Id(fileResource.id), data: receiptData)
 
-        let file = TelegramMediaFile(fileId: EngineMedia.Id(namespace: Namespaces.Media.LocalFile, id: id), partialReference: nil, resource: fileResource, previewRepresentations: [], videoThumbnails: [], immediateThumbnailData: nil, mimeType: "application/text", size: Int64(receiptData.count), attributes: [.FileName(fileName: "Receipt.dat")], alternativeRepresentations: [])
+        let file = IosappMediaFile(fileId: EngineMedia.Id(namespace: Namespaces.Media.LocalFile, id: id), partialReference: nil, resource: fileResource, previewRepresentations: [], videoThumbnails: [], immediateThumbnailData: nil, mimeType: "application/text", size: Int64(receiptData.count), attributes: [.FileName(fileName: "Receipt.dat")], alternativeRepresentations: [])
         let message: EnqueueMessage = .message(text: "", attributes: [], inlineStickers: [:], mediaReference: .standalone(media: file), threadId: nil, replyToMessageId: nil, replyToStoryId: nil, localGroupingKey: nil, correlationId: nil, bubbleUpEmojiOrStickersets: [])
 
         let _ = enqueueMessages(account: engine.account, peerId: engine.account.peerId, messages: [message]).start()
@@ -891,13 +891,13 @@ private final class PendingInAppPurchaseState: Codable {
     }
 }
 
-private func pendingInAppPurchaseState(engine: SomeTelegramEngine, productId: String) -> Signal<PendingInAppPurchaseState?, NoError> {
+private func pendingInAppPurchaseState(engine: SomeIosappEngine, productId: String) -> Signal<PendingInAppPurchaseState?, NoError> {
     let key = EngineDataBuffer(length: 8)
     key.setInt64(0, value: Int64(bitPattern: productId.persistentHashValue))
     
     switch engine {
     case let .authorized(engine):
-        return engine.data.get(TelegramEngine.EngineData.Item.ItemCache.Item(collectionId: ApplicationSpecificItemCacheCollectionId.pendingInAppPurchaseState, id: key))
+        return engine.data.get(IosappEngine.EngineData.Item.ItemCache.Item(collectionId: ApplicationSpecificItemCacheCollectionId.pendingInAppPurchaseState, id: key))
         |> map { entry -> PendingInAppPurchaseState? in
             return entry?.get(PendingInAppPurchaseState.self)
         }
@@ -909,7 +909,7 @@ private func pendingInAppPurchaseState(engine: SomeTelegramEngine, productId: St
     }
 }
 
-private func updatePendingInAppPurchaseState(engine: SomeTelegramEngine, productId: String, content: PendingInAppPurchaseState?) -> Signal<Never, NoError> {
+private func updatePendingInAppPurchaseState(engine: SomeIosappEngine, productId: String, content: PendingInAppPurchaseState?) -> Signal<Never, NoError> {
     let key = EngineDataBuffer(length: 8)
     key.setInt64(0, value: Int64(bitPattern: productId.persistentHashValue))
     

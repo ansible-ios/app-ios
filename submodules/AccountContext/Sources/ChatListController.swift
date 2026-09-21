@@ -1,7 +1,7 @@
 import Foundation
 import UIKit
 import Display
-import TelegramCore
+import IosappCore
 
 public enum ChatListControllerLocation: Equatable {
     case chatList(groupId: EngineChatList.Group)

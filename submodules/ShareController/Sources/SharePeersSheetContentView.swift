@@ -3,8 +3,8 @@
 //import AsyncDisplayKit
 //import Display
 //import SwiftSignalKit
-//import TelegramCore
-//import TelegramPresentationData
+//import IosappCore
+//import IosappPresentationData
 //import AccountContext
 //
 //private let sharePeersHeaderHeight: CGFloat = 0.0

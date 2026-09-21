@@ -2,14 +2,14 @@ import Foundation
 import UIKit
 import AVFoundation
 import Display
-import TelegramCore
+import IosappCore
 import SwiftSignalKit
 import Photos
 import CoreLocation
 import Contacts
 import UserNotifications
 import CoreTelephony
-import TelegramPresentationData
+import IosappPresentationData
 import AccountContext
 
 public enum DeviceAccessCameraSubject {

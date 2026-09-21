@@ -40,7 +40,7 @@ copy_provisioning_profiles () {
 	esac
 
 	EXPECTED_VARIABLE_NAMES=(\
-		Telegram \
+		Iosapp \
 		Share \
 		Widget \
 		NotificationService \

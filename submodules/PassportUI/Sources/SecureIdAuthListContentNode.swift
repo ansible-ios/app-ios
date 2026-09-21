@@ -2,8 +2,8 @@ import Foundation
 import UIKit
 import AsyncDisplayKit
 import Display
-import TelegramCore
-import TelegramPresentationData
+import IosappCore
+import IosappPresentationData
 
 final class SecureIdAuthListContentNode: ASDisplayNode, SecureIdAuthContentNode, UITextFieldDelegate {
     private let theme: PresentationTheme

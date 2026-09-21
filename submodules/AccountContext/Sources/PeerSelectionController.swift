@@ -1,8 +1,8 @@
 import Foundation
 import Display
 import SwiftSignalKit
-import TelegramCore
-import TelegramPresentationData
+import IosappCore
+import IosappPresentationData
 import AnimationCache
 import MultiAnimationRenderer
 

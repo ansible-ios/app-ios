@@ -2,7 +2,7 @@ import Foundation
 import UIKit
 import Display
 import AsyncDisplayKit
-import TelegramPresentationData
+import IosappPresentationData
 import TextFormat
 import RadialStatusNode
 import AppBundle

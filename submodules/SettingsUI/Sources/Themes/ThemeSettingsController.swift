@@ -3,9 +3,9 @@ import UIKit
 import AsyncDisplayKit
 import Display
 import SwiftSignalKit
-import TelegramCore
-import TelegramPresentationData
-import TelegramUIPreferences
+import IosappCore
+import IosappPresentationData
+import IosappUIPreferences
 import ItemListUI
 import PresentationDataUtils
 import AlertUI
@@ -122,8 +122,8 @@ public enum ThemeSettingsEntryTag: ItemListItemTag {
 
 private enum ThemeSettingsControllerEntry: ItemListNodeEntry {
     case themeListHeader(PresentationTheme, String)
-    case chatPreview(PresentationTheme, TelegramWallpaper, PresentationFontSize, PresentationChatBubbleCorners, PresentationStrings, PresentationDateTimeFormat, PresentationPersonNameOrder, [ChatPreviewMessageItem])
-    case themes(PresentationTheme, PresentationStrings, [PresentationThemeReference], PresentationThemeReference, Bool, [String: [StickerPackItem]], [Int64: PresentationThemeAccentColor], [Int64: TelegramWallpaper])
+    case chatPreview(PresentationTheme, IosappWallpaper, PresentationFontSize, PresentationChatBubbleCorners, PresentationStrings, PresentationDateTimeFormat, PresentationPersonNameOrder, [ChatPreviewMessageItem])
+    case themes(PresentationTheme, PresentationStrings, [PresentationThemeReference], PresentationThemeReference, Bool, [String: [StickerPackItem]], [Int64: PresentationThemeAccentColor], [Int64: IosappWallpaper])
     case chatTheme(PresentationTheme, String)
     case wallpaper(PresentationTheme, String)
     case nameColor(PresentationTheme, String, String, PeerNameColors.Colors?, PeerNameColors.Colors?)
@@ -539,7 +539,7 @@ public func themeSettingsController(context: AccountContext, focusOnItemTag: The
     let currentAppIconName = ValuePromise<String?>()
     currentAppIconName.set(currentAppIcon?.name ?? "Blue")
     
-    let cloudThemes = Promise<[TelegramTheme]>()
+    let cloudThemes = Promise<[IosappTheme]>()
     let updatedCloudThemes = context.engine.themes.themes(accountManager: context.sharedContext.accountManager)
     cloudThemes.set(updatedCloudThemes)
     
@@ -620,7 +620,7 @@ public func themeSettingsController(context: AccountContext, focusOnItemTag: The
             return current.withUpdatedShowNextMediaOnTap(value)
         }).start()
     }, selectAppIcon: { icon in
-        let _ = (context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: context.account.peerId))
+        let _ = (context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: context.account.peerId))
         |> deliverOnMainQueue).start(next: { peer in
             let isPremium = peer?.isPremium ?? false
             if icon.isPremium && !isPremium {
@@ -641,7 +641,7 @@ public func themeSettingsController(context: AccountContext, focusOnItemTag: The
         })
     }, editTheme: { theme in
         let controller = editThemeController(context: context, mode: .edit(theme), navigateToChat: { peerId in
-            let _ = (context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: peerId))
+            let _ = (context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: peerId))
             |> deliverOnMainQueue).start(next: { peer in
                 guard let peer = peer else {
                     return
@@ -653,10 +653,10 @@ public func themeSettingsController(context: AccountContext, focusOnItemTag: The
         })
         pushControllerImpl?(controller)
     }, themeContextAction: { isCurrent, reference, node, gesture in
-        let _ = (context.sharedContext.accountManager.transaction { transaction -> (PresentationThemeAccentColor?, TelegramWallpaper?) in
+        let _ = (context.sharedContext.accountManager.transaction { transaction -> (PresentationThemeAccentColor?, IosappWallpaper?) in
             let settings = transaction.getSharedData(ApplicationSpecificSharedDataKeys.presentationThemeSettings)?.get(PresentationThemeSettings.self) ?? PresentationThemeSettings.defaultSettings
             let accentColor = settings.themeSpecificAccentColors[reference.index]
-            var wallpaper: TelegramWallpaper?
+            var wallpaper: IosappWallpaper?
             if let accentColor = accentColor {
                 wallpaper = settings.themeSpecificChatWallpapers[coloredThemeIndex(reference: reference, accentColor: accentColor)]
             }
@@ -665,8 +665,8 @@ public func themeSettingsController(context: AccountContext, focusOnItemTag: The
             }
             return (accentColor, wallpaper)
         }
-        |> map { accentColor, wallpaper -> (PresentationThemeAccentColor?, TelegramWallpaper) in
-            let effectiveWallpaper: TelegramWallpaper
+        |> map { accentColor, wallpaper -> (PresentationThemeAccentColor?, IosappWallpaper) in
+            let effectiveWallpaper: IosappWallpaper
             if let wallpaper = wallpaper {
                 effectiveWallpaper = wallpaper
             } else {
@@ -675,7 +675,7 @@ public func themeSettingsController(context: AccountContext, focusOnItemTag: The
             }
             return (accentColor, effectiveWallpaper)
         }
-        |> mapToSignal { accentColor, wallpaper -> Signal<(PresentationThemeAccentColor?, TelegramWallpaper), NoError> in
+        |> mapToSignal { accentColor, wallpaper -> Signal<(PresentationThemeAccentColor?, IosappWallpaper), NoError> in
             if case let .file(file) = wallpaper, file.id == 0 {
                 return cachedWallpaper(engine: context.engine, network: context.account.network, slug: file.slug, settings: file.settings)
                 |> map { cachedWallpaper in
@@ -689,7 +689,7 @@ public func themeSettingsController(context: AccountContext, focusOnItemTag: The
                 return .single((accentColor, wallpaper))
             }
         }
-        |> mapToSignal { accentColor, wallpaper -> Signal<(PresentationTheme?, TelegramWallpaper?), NoError> in
+        |> mapToSignal { accentColor, wallpaper -> Signal<(PresentationTheme?, IosappWallpaper?), NoError> in
             return chatServiceBackgroundColor(wallpaper: wallpaper, mediaBox: context.sharedContext.accountManager.mediaBox)
             |> map { serviceBackgroundColor in
                 return (makePresentationTheme(mediaBox: context.sharedContext.accountManager.mediaBox, themeReference: reference, accentColor: accentColor?.color, bubbleColors: accentColor?.customBubbleColors ?? [], serviceBackgroundColor: serviceBackgroundColor), wallpaper)
@@ -708,7 +708,7 @@ public func themeSettingsController(context: AccountContext, focusOnItemTag: The
                 if theme.theme.isCreator {
                     items.append(.action(ContextMenuActionItem(text: presentationData.strings.Appearance_EditTheme, icon: { theme in generateTintedImage(image: UIImage(bundleImageName: "Chat/Context Menu/ApplyTheme"), color: theme.contextMenu.primaryColor) }, action: { c, f in
                         let controller = editThemeController(context: context, mode: .edit(theme), navigateToChat: { peerId in
-                            let _ = (context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: peerId))
+                            let _ = (context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: peerId))
                             |> deliverOnMainQueue).start(next: { peer in
                                 guard let peer = peer else {
                                     return
@@ -729,10 +729,10 @@ public func themeSettingsController(context: AccountContext, focusOnItemTag: The
                             return
                         }
                         
-                        let resolvedWallpaper: Signal<TelegramWallpaper, NoError>
+                        let resolvedWallpaper: Signal<IosappWallpaper, NoError>
                         if case let .file(file) = theme.chat.defaultWallpaper, file.id == 0 {
                             resolvedWallpaper = cachedWallpaper(engine: context.engine, network: context.account.network, slug: file.slug, settings: file.settings)
-                            |> map { cachedWallpaper -> TelegramWallpaper in
+                            |> map { cachedWallpaper -> IosappWallpaper in
                                 return cachedWallpaper?.wallpaper ?? theme.chat.defaultWallpaper
                             }
                         } else {
@@ -744,7 +744,7 @@ public func themeSettingsController(context: AccountContext, focusOnItemTag: The
                             let controller = ThemeAccentColorController(context: context, mode: .edit(settings: nil, theme: theme, wallpaper: wallpaper, generalThemeReference: reference.generalThemeReference, defaultThemeReference: nil, create: true, completion: { result, settings in
                                 let controller = editThemeController(context: context, mode: .create(result, settings
                                 ), navigateToChat: { peerId in
-                                    let _ = (context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: peerId))
+                                    let _ = (context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: peerId))
                                     |> deliverOnMainQueue).start(next: { peer in
                                         guard let peer = peer else {
                                             return
@@ -775,7 +775,7 @@ public func themeSettingsController(context: AccountContext, focusOnItemTag: The
                 }
                 items.append(.action(ContextMenuActionItem(text: presentationData.strings.Appearance_ShareTheme, icon: { theme in generateTintedImage(image: UIImage(bundleImageName: "Chat/Context Menu/Share"), color: theme.contextMenu.primaryColor) }, action: { c, f in
                     c?.dismiss(completion: {
-                        let shareController = context.sharedContext.makeShareController(context: context, params: ShareControllerParams(subject: .url("https://t.me/addtheme/\(theme.theme.slug)"), preferredAction: .default, actionCompleted: {
+                        let shareController = context.sharedContext.makeShareController(context: context, params: ShareControllerParams(subject: .url("https://asme.su/addtheme/\(theme.theme.slug)"), preferredAction: .default, actionCompleted: {
                             let presentationData = context.sharedContext.currentPresentationData.with { $0 }
                             presentControllerImpl?(UndoOverlayController(presentationData: presentationData, content: .linkCopied(title: nil, text: presentationData.strings.Conversation_LinkCopied), elevatedLayout: false, animateInAsReplacement: false, action: { _ in return false }), nil)
                         }))
@@ -842,9 +842,9 @@ public func themeSettingsController(context: AccountContext, focusOnItemTag: The
             presentInGlobalOverlayImpl?(contextController, nil)
         })
     }, colorContextAction: { isCurrent, reference, accentColor, node, gesture in
-        let _ = (context.sharedContext.accountManager.transaction { transaction -> (ThemeSettingsColorOption?, TelegramWallpaper?) in
+        let _ = (context.sharedContext.accountManager.transaction { transaction -> (ThemeSettingsColorOption?, IosappWallpaper?) in
             let settings = transaction.getSharedData(ApplicationSpecificSharedDataKeys.presentationThemeSettings)?.get(PresentationThemeSettings.self) ?? PresentationThemeSettings.defaultSettings
-            var wallpaper: TelegramWallpaper?
+            var wallpaper: IosappWallpaper?
             if let accentColor = accentColor {
                 switch accentColor {
                     case let .accentColor(accentColor):
@@ -859,7 +859,7 @@ public func themeSettingsController(context: AccountContext, focusOnItemTag: The
                 wallpaper = settings.themeSpecificChatWallpapers[reference.index]
             }
             return (accentColor, wallpaper)
-        } |> mapToSignal { accentColor, wallpaper -> Signal<(PresentationTheme?, PresentationThemeReference, Bool, TelegramWallpaper?), NoError> in
+        } |> mapToSignal { accentColor, wallpaper -> Signal<(PresentationTheme?, PresentationThemeReference, Bool, IosappWallpaper?), NoError> in
             let generalThemeReference: PresentationThemeReference
             if let _ = accentColor, case let .cloud(theme) = reference, let settings = theme.theme.settings?.first {
                 generalThemeReference = .builtin(PresentationBuiltinThemeReference(baseTheme: settings.baseTheme))
@@ -867,7 +867,7 @@ public func themeSettingsController(context: AccountContext, focusOnItemTag: The
                 generalThemeReference = reference
             }
             
-            let effectiveWallpaper: TelegramWallpaper
+            let effectiveWallpaper: IosappWallpaper
             let effectiveThemeReference: PresentationThemeReference
             if let accentColor = accentColor, case let .theme(themeReference) = accentColor {
                 effectiveThemeReference = themeReference
@@ -894,7 +894,7 @@ public func themeSettingsController(context: AccountContext, focusOnItemTag: The
                 effectiveWallpaper = theme?.chat.defaultWallpaper ?? .builtin(WallpaperSettings())
             }
             
-            let wallpaperSignal: Signal<TelegramWallpaper, NoError>
+            let wallpaperSignal: Signal<IosappWallpaper, NoError>
             if case let .file(file) = effectiveWallpaper, file.id == 0 {
                 wallpaperSignal = cachedWallpaper(engine: context.engine, network: context.account.network, slug: file.slug, settings: file.settings)
                 |> map { cachedWallpaper in
@@ -911,7 +911,7 @@ public func themeSettingsController(context: AccountContext, focusOnItemTag: The
                     return (wallpaper, serviceBackgroundColor)
                 }
             }
-            |> map { wallpaper, serviceBackgroundColor -> (PresentationTheme?, PresentationThemeReference, TelegramWallpaper) in
+            |> map { wallpaper, serviceBackgroundColor -> (PresentationTheme?, PresentationThemeReference, IosappWallpaper) in
                 if let accentColor = accentColor, case let .theme(themeReference) = accentColor {
                     return (makePresentationTheme(mediaBox: context.sharedContext.accountManager.mediaBox, themeReference: themeReference, serviceBackgroundColor: serviceBackgroundColor), effectiveThemeReference, wallpaper)
                 } else {
@@ -929,7 +929,7 @@ public func themeSettingsController(context: AccountContext, focusOnItemTag: The
                             return false
                         }
                     }
-                    |> map { cloudThemeExists -> (PresentationTheme?, PresentationThemeReference, Bool, TelegramWallpaper) in
+                    |> map { cloudThemeExists -> (PresentationTheme?, PresentationThemeReference, Bool, IosappWallpaper) in
                         return (theme, reference, cloudThemeExists, wallpaper)
                     }
                 } else {
@@ -953,7 +953,7 @@ public func themeSettingsController(context: AccountContext, focusOnItemTag: The
                     if cloudTheme.theme.isCreator && cloudThemeExists {
                         items.append(.action(ContextMenuActionItem(text: presentationData.strings.Appearance_EditTheme, icon: { theme in generateTintedImage(image: UIImage(bundleImageName: "Chat/Context Menu/ApplyTheme"), color: theme.contextMenu.primaryColor) }, action: { c, f in
                             let controller = editThemeController(context: context, mode: .edit(cloudTheme), navigateToChat: { peerId in
-                                let _ = (context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: peerId))
+                                let _ = (context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: peerId))
                                 |> deliverOnMainQueue).start(next: { peer in
                                     guard let peer = peer else {
                                         return
@@ -974,10 +974,10 @@ public func themeSettingsController(context: AccountContext, focusOnItemTag: The
                                 return
                             }
                             
-                            let resolvedWallpaper: Signal<TelegramWallpaper, NoError>
+                            let resolvedWallpaper: Signal<IosappWallpaper, NoError>
                             if case let .file(file) = theme.chat.defaultWallpaper, file.id == 0 {
                                 resolvedWallpaper = cachedWallpaper(engine: context.engine, network: context.account.network, slug: file.slug, settings: file.settings)
-                                |> map { cachedWallpaper -> TelegramWallpaper in
+                                |> map { cachedWallpaper -> IosappWallpaper in
                                     return cachedWallpaper?.wallpaper ?? theme.chat.defaultWallpaper
                                 }
                             } else {
@@ -987,14 +987,14 @@ public func themeSettingsController(context: AccountContext, focusOnItemTag: The
                             let _ = (resolvedWallpaper
                             |> deliverOnMainQueue).start(next: { wallpaper in
                                 var hasSettings = false
-                                var settings: TelegramThemeSettings?
+                                var settings: IosappThemeSettings?
                                 if case let .cloud(cloudTheme) = effectiveThemeReference, let themeSettings = cloudTheme.theme.settings?.first {
                                     hasSettings = true
                                     settings = themeSettings
                                 }
                                 let controller = ThemeAccentColorController(context: context, mode: .edit(settings: settings, theme: theme, wallpaper: wallpaper, generalThemeReference: effectiveThemeReference.generalThemeReference, defaultThemeReference: nil, create: true, completion: { result, settings in
                                     let controller = editThemeController(context: context, mode: .create(hasSettings ? nil : result, hasSettings ? settings : nil), navigateToChat: { peerId in
-                                        let _ = (context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: peerId))
+                                        let _ = (context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: peerId))
                                         |> deliverOnMainQueue).start(next: { peer in
                                             guard let peer = peer else {
                                                 return
@@ -1025,7 +1025,7 @@ public func themeSettingsController(context: AccountContext, focusOnItemTag: The
                     }
                     items.append(.action(ContextMenuActionItem(text: presentationData.strings.Appearance_ShareTheme, icon: { theme in generateTintedImage(image: UIImage(bundleImageName: "Chat/Context Menu/Share"), color: theme.contextMenu.primaryColor) }, action: { c, f in
                         c?.dismiss(completion: {
-                            let shareController = context.sharedContext.makeShareController(context: context, params: ShareControllerParams(subject: .url("https://t.me/addtheme/\(cloudTheme.theme.slug)"), preferredAction: .default, actionCompleted: {
+                            let shareController = context.sharedContext.makeShareController(context: context, params: ShareControllerParams(subject: .url("https://asme.su/addtheme/\(cloudTheme.theme.slug)"), preferredAction: .default, actionCompleted: {
                                 let presentationData = context.sharedContext.currentPresentationData.with { $0 }
                                 presentControllerImpl?(UndoOverlayController(presentationData: presentationData, content: .linkCopied(title: nil, text: presentationData.strings.Conversation_LinkCopied), elevatedLayout: false, animateInAsReplacement: false, action: { _ in return false }), nil)
                             }))
@@ -1106,7 +1106,7 @@ public func themeSettingsController(context: AccountContext, focusOnItemTag: The
         removedThemeIndexesPromise.get(),
         animatedEmojiStickers,
         context.account.postbox.peerView(id: context.account.peerId),
-        context.engine.data.subscribe(TelegramEngine.EngineData.Item.Peer.Peer(id: context.account.peerId))
+        context.engine.data.subscribe(IosappEngine.EngineData.Item.Peer.Peer(id: context.account.peerId))
     )
     |> map { presentationData, sharedData, cloudThemes, availableAppIcons, currentAppIconName, removedThemeIndexes, animatedEmojiStickers, peerView, accountPeer -> (ItemListControllerState, (ItemListNodeState, Any)) in
         let settings = sharedData.entries[ApplicationSpecificSharedDataKeys.presentationThemeSettings]?.get(PresentationThemeSettings.self) ?? PresentationThemeSettings.defaultSettings
@@ -1240,17 +1240,17 @@ public func themeSettingsController(context: AccountContext, focusOnItemTag: The
         
         let autoNightModeTriggered = context.sharedContext.currentPresentationData.with { $0 }.autoNightModeTriggered
         
-        let resolvedWallpaper: Signal<TelegramWallpaper?, NoError>
+        let resolvedWallpaper: Signal<IosappWallpaper?, NoError>
         if case let .file(file) = presentationTheme.chat.defaultWallpaper, file.id == 0 {
             resolvedWallpaper = cachedWallpaper(engine: context.engine, network: context.account.network, slug: file.slug, settings: file.settings)
-            |> map { wallpaper -> TelegramWallpaper? in
+            |> map { wallpaper -> IosappWallpaper? in
                 return wallpaper?.wallpaper
             }
         } else {
             resolvedWallpaper = .single(nil)
         }
         
-        var cloudTheme: TelegramTheme?
+        var cloudTheme: IosappTheme?
         if case let .cloud(theme) = theme {
             cloudTheme = theme.theme
         }
@@ -1317,7 +1317,7 @@ public func themeSettingsController(context: AccountContext, focusOnItemTag: The
         pushControllerImpl?(controller)
     }
     selectAccentColorImpl = { accentColor in
-        var wallpaperSignal: Signal<TelegramWallpaper?, NoError> = .single(nil)
+        var wallpaperSignal: Signal<IosappWallpaper?, NoError> = .single(nil)
         if let colorWallpaper = accentColor?.wallpaper, case let .file(file) = colorWallpaper {
             wallpaperSignal = cachedWallpaper(engine: context.engine, network: context.account.network, slug: file.slug, settings: colorWallpaper.settings)
             |> mapToSignal { cachedWallpaper in

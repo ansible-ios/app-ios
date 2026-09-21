@@ -3,8 +3,8 @@ import UIKit
 import Display
 import AsyncDisplayKit
 import SwiftSignalKit
-import TelegramCore
-import TelegramPresentationData
+import IosappCore
+import IosappPresentationData
 import ProgressNavigationButtonNode
 import AccountContext
 import AlertUI
@@ -153,7 +153,7 @@ final class SecureIdDocumentFormController: FormController<SecureIdDocumentFormS
     }
 
     
-    func addDocuments(type: SecureIdAddFileTarget, resources: [TelegramMediaResource], recognizedData: SecureIdRecognizedDocumentData?, removeDocumentId: SecureIdVerificationDocumentId?) {
+    func addDocuments(type: SecureIdAddFileTarget, resources: [IosappMediaResource], recognizedData: SecureIdRecognizedDocumentData?, removeDocumentId: SecureIdVerificationDocumentId?) {
         self.controllerNode.addDocuments(type: type, resources: resources, recognizedData: recognizedData, removeDocumentId: removeDocumentId)
     }
 }

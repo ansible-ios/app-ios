@@ -5,8 +5,8 @@ import SwiftSignalKit
 import Display
 import UIKitRuntimeUtils
 import AnimatedStickerNode
-import TelegramAnimatedStickerNode
-import TelegramPresentationData
+import IosappAnimatedStickerNode
+import IosappPresentationData
 
 private extension CGRect {
     var center: CGPoint {

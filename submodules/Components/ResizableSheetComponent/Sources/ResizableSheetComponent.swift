@@ -5,7 +5,7 @@ import ComponentFlow
 import ViewControllerComponent
 import SwiftSignalKit
 import DynamicCornerRadiusView
-import TelegramPresentationData
+import IosappPresentationData
 import EdgeEffect
 
 public final class ResizableSheetComponentEnvironment: Equatable {

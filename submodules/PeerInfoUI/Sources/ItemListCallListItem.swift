@@ -3,11 +3,11 @@ import UIKit
 import Display
 import AsyncDisplayKit
 import SwiftSignalKit
-import TelegramCore
-import TelegramPresentationData
+import IosappCore
+import IosappPresentationData
 import ItemListUI
 import PresentationDataUtils
-import TelegramStringFormatting
+import IosappStringFormatting
 import TextFormat
 
 public class ItemListCallListItem: ListViewItem, ItemListItem {
@@ -65,7 +65,7 @@ private func stringForCallType(message: EngineMessage, strings: PresentationStri
     var string = ""
     for media in message.media {
         switch media {
-        case let action as TelegramMediaAction:
+        case let action as IosappMediaAction:
             switch action.action {
             case let .phoneCall(_, discardReason, _, isVideo):
                 let incoming = message.flags.contains(.Incoming)

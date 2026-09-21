@@ -1,7 +1,7 @@
 import Foundation
 import CoreLocation
 import SwiftSignalKit
-import TelegramCore
+import IosappCore
 import AccountContext
 import DeviceLocationManager
 import DeviceAccess

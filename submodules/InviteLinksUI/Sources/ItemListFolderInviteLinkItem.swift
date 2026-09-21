@@ -4,11 +4,11 @@ import Display
 import AsyncDisplayKit
 import SwiftSignalKit
 import AccountContext
-import TelegramPresentationData
+import IosappPresentationData
 import ItemListUI
 import AnimatedAvatarSetNode
 import ShimmerEffect
-import TelegramCore
+import IosappCore
 import ComponentFlow
 import ButtonComponent
 

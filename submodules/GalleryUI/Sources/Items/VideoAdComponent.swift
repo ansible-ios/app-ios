@@ -5,8 +5,8 @@ import SwiftSignalKit
 import ComponentFlow
 import MultilineTextComponent
 import MultilineTextWithEntitiesComponent
-import TelegramCore
-import TelegramPresentationData
+import IosappCore
+import IosappPresentationData
 import ContextUI
 import PlainButtonComponent
 import AvatarNode
@@ -111,16 +111,16 @@ final class VideoAdComponent: Component {
             let titleString = component.message.author?.compactDisplayTitle ?? ""
                
             var media: EngineRawMedia?
-            if let photo = component.message.media.first as? TelegramMediaImage {
+            if let photo = component.message.media.first as? IosappMediaImage {
                 media = photo
-            } else if let file = component.message.media.first as? TelegramMediaFile {
+            } else if let file = component.message.media.first as? IosappMediaFile {
                 media = file
             }
             if isFirstTime {
                 let signal: Signal<(TransformImageArguments) -> DrawingContext?, NoError>
-                if let photo = media as? TelegramMediaImage {
+                if let photo = media as? IosappMediaImage {
                     signal = mediaGridMessagePhoto(account: component.context.account, userLocation: .other, photoReference: .standalone(media: photo))
-                } else if let file = media as? TelegramMediaFile {
+                } else if let file = media as? IosappMediaFile {
                     signal = mediaGridMessageVideo(postbox: component.context.account.postbox, userLocation: .other, videoReference: .standalone(media: file))
                 } else {
                     signal = .complete()

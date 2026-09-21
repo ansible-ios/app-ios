@@ -3,8 +3,8 @@ import UIKit
 import AsyncDisplayKit
 import Display
 import SwiftSignalKit
-import TelegramCore
-import TelegramPresentationData
+import IosappCore
+import IosappPresentationData
 import ItemListUI
 import LocationResources
 import ShimmerEffect
@@ -14,8 +14,8 @@ import BundleIconComponent
 
 public final class LocationInfoListItem: ListViewItem {
     let presentationData: ItemListPresentationData
-    let engine: TelegramEngine
-    let location: TelegramMediaMap
+    let engine: IosappEngine
+    let location: IosappMediaMap
     let address: String?
     let distance: String?
     let drivingTime: ExpectedTravelTime
@@ -27,8 +27,8 @@ public final class LocationInfoListItem: ListViewItem {
     
     public init(
         presentationData: ItemListPresentationData,
-        engine: TelegramEngine,
-        location: TelegramMediaMap,
+        engine: IosappEngine,
+        location: IosappMediaMap,
         address: String?,
         distance: String?,
         drivingTime: ExpectedTravelTime,
@@ -197,7 +197,7 @@ public final class LocationInfoListItemNode: ListViewItemNode {
                     updatedTheme = item.presentationData.theme
                 }
                 
-                var updatedLocation: TelegramMediaMap?
+                var updatedLocation: IosappMediaMap?
                 if currentItem?.location.venue?.id != item.location.venue?.id || updatedTheme != nil {
                     updatedLocation = item.location
                 }

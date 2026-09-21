@@ -1,6 +1,6 @@
 import Foundation
 import UIKit
-import TelegramCore
+import IosappCore
 
 private extension PeerNameColors.Colors {
     init?(colors: EngineAvailableColorOptions.MultiColorPack) {

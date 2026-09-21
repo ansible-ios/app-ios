@@ -3,11 +3,11 @@ import UIKit
 import AsyncDisplayKit
 import Display
 import SwiftSignalKit
-import TelegramPresentationData
+import IosappPresentationData
 import ListSectionHeaderNode
 import AppBundle
 import AnimatedStickerNode
-import TelegramAnimatedStickerNode
+import IosappAnimatedStickerNode
 
 class ChatListEmptyInfoItem: ListViewItem {
     let theme: PresentationTheme

@@ -2,8 +2,8 @@ import Foundation
 import UIKit
 import Display
 import SwiftSignalKit
-import TelegramPresentationData
-import TelegramCore
+import IosappPresentationData
+import IosappCore
 import AttachmentUI
 import MediaPickerUI
 import AccountContext

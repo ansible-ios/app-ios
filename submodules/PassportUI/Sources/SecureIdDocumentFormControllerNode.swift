@@ -2,10 +2,10 @@ import Foundation
 import UIKit
 import AsyncDisplayKit
 import Display
-import TelegramCore
+import IosappCore
 import SwiftSignalKit
-import TelegramPresentationData
-import TelegramStringFormatting
+import IosappPresentationData
+import IosappStringFormatting
 import AccountContext
 import GalleryUI
 import CountrySelectionUI
@@ -2608,7 +2608,7 @@ final class SecureIdDocumentFormControllerNode: FormControllerNode<SecureIdDocum
         })
     }
     
-    func addDocuments(type: SecureIdAddFileTarget, resources: [TelegramMediaResource], recognizedData: SecureIdRecognizedDocumentData?, removeDocumentId: SecureIdVerificationDocumentId?) {
+    func addDocuments(type: SecureIdAddFileTarget, resources: [IosappMediaResource], recognizedData: SecureIdRecognizedDocumentData?, removeDocumentId: SecureIdVerificationDocumentId?) {
         guard var innerState = self.innerState else {
             return
         }

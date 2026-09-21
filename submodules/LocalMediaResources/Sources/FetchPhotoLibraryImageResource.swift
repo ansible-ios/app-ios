@@ -2,7 +2,7 @@ import Foundation
 import UIKit
 import Photos
 import SwiftSignalKit
-import TelegramCore
+import IosappCore
 import ImageCompression
 import Accelerate.vImage
 import CoreImage

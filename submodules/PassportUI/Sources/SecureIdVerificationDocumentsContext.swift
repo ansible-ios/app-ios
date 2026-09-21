@@ -1,5 +1,5 @@
 import Foundation
-import TelegramCore
+import IosappCore
 import SwiftSignalKit
 
 private final class DocumentContext {
@@ -16,12 +16,12 @@ private final class DocumentContext {
 
 final class SecureIdVerificationDocumentsContext {
     private let context: SecureIdAccessContext
-    private let engine: TelegramEngine
+    private let engine: IosappEngine
     private let update: (Int64, SecureIdVerificationLocalDocumentState) -> Void
     private var contexts: [Int64: DocumentContext] = [:]
     private(set) var uploadedFiles: [Data: Data] = [:]
     
-    init(engine: TelegramEngine, context: SecureIdAccessContext, update: @escaping (Int64, SecureIdVerificationLocalDocumentState) -> Void) {
+    init(engine: IosappEngine, context: SecureIdAccessContext, update: @escaping (Int64, SecureIdVerificationLocalDocumentState) -> Void) {
         self.engine = engine
         self.context = context
         self.update = update

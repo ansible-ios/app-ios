@@ -1,0 +1,78 @@
+namespace IosappCore;
+
+table IosappMediaResource_CloudFileMediaResource {
+    datacenterId:int32 (id: 0);
+    volumeId:int64 (id: 1);
+    localId:int32 (id: 2);
+    secret:int64 (id: 3);
+    size:int64 (id: 4);
+    fileReference:[ubyte] (id: 5);
+}
+
+table IosappMediaResource_CloudDocumentSizeMediaResource {
+    datacenterId:int32 (id: 0);
+    documentId:int64 (id: 1);
+    accessHash:int64 (id: 2);
+    sizeSpec:string (id: 3, required);
+    fileReference:[ubyte] (id: 4);
+}
+
+table IosappMediaResource_CloudPhotoSizeMediaResource {
+    datacenterId:int32 (id: 0);
+    photoId:int64 (id: 1);
+    accessHash:int64 (id: 2);
+    sizeSpec:string (id: 3, required);
+    size:int64 (id: 4);
+    fileReference:[ubyte] (id: 5);
+}
+
+enum CloudPeerPhotoSizeSpec:int32 {
+    small = 0,
+    fullSize = 1
+}
+
+table IosappMediaResource_CloudPeerPhotoSizeMediaResource {
+    datacenterId:int32 (id: 0);
+    photoId:int64 (id: 1);
+    sizeSpec:CloudPeerPhotoSizeSpec (id: 2);
+    volumeId:int64 (id: 3);
+    localId:int32 (id: 4);
+}
+
+table IosappMediaResource_CloudStickerPackThumbnailMediaResource {
+    datacenterId:int32 (id: 0);
+    thumbVersion:int32 (id: 1);
+    volumeId:int64 (id: 2);
+    localId:int32 (id: 3);
+}
+
+table IosappMediaResource_CloudDocumentMediaResource {
+    datacenterId:int32 (id: 0);
+    fileId:int64 (id: 1);
+    accessHash:int64 (id: 2);
+    size:int64 (id: 3);
+    fileReference:[ubyte] (id: 4);
+    fileName:string (id: 5);
+}
+
+table IosappMediaResource_LocalFileMediaResource {
+    fileId:int64 (id: 0);
+    size:int64 (id: 1);
+    isSecretRelated:bool (id: 2);
+}
+
+union IosappMediaResource_Value {
+    IosappMediaResource_CloudFileMediaResource,
+    IosappMediaResource_CloudDocumentSizeMediaResource,
+    IosappMediaResource_CloudPhotoSizeMediaResource,
+    IosappMediaResource_CloudPeerPhotoSizeMediaResource,
+    IosappMediaResource_CloudStickerPackThumbnailMediaResource,
+    IosappMediaResource_CloudDocumentMediaResource,
+    IosappMediaResource_LocalFileMediaResource
+}
+
+table IosappMediaResource {
+    value:IosappMediaResource_Value (id: 1, required);
+}
+
+root_type IosappMediaResource;

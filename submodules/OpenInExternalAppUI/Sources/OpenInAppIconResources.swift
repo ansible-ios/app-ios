@@ -1,9 +1,9 @@
 import Foundation
 import UIKit
-import TelegramCore
+import IosappCore
 import SwiftSignalKit
 import Display
-import TelegramPresentationData
+import IosappPresentationData
 
 public struct OpenInAppIconResourceId {
     public let appStoreId: Int64
@@ -31,7 +31,7 @@ public class OpenInAppIconResource {
     }
 }
 
-public func fetchOpenInAppIconResource(engine: TelegramEngine, resource: OpenInAppIconResource) -> Signal<EngineMediaResource.Fetch.Result, EngineMediaResource.Fetch.Error> {
+public func fetchOpenInAppIconResource(engine: IosappEngine, resource: OpenInAppIconResource) -> Signal<EngineMediaResource.Fetch.Result, EngineMediaResource.Fetch.Error> {
     return Signal { subscriber in
         let metaUrl: String
         if let store = resource.store {
@@ -86,7 +86,7 @@ public func fetchOpenInAppIconResource(engine: TelegramEngine, resource: OpenInA
     }
 }
 
-private func openInAppIconData(engine: TelegramEngine, appIcon: OpenInAppIconResource) -> Signal<Data?, NoError> {
+private func openInAppIconData(engine: IosappEngine, appIcon: OpenInAppIconResource) -> Signal<Data?, NoError> {
     let appIconResource = engine.resources.custom(
         id: appIcon.id.stringRepresentation,
         fetch: EngineMediaResource.Fetch {
@@ -132,7 +132,7 @@ private func drawOpenInAppIconBorder(into c: CGContext, arguments: TransformImag
     c.strokePath()
 }
 
-public func openInAppIcon(engine: TelegramEngine, appIcon: OpenInAppIcon, withChrome: Bool = true) -> Signal<(TransformImageArguments) -> DrawingContext?, NoError> {
+public func openInAppIcon(engine: IosappEngine, appIcon: OpenInAppIcon, withChrome: Bool = true) -> Signal<(TransformImageArguments) -> DrawingContext?, NoError> {
     switch appIcon {
         case let .resource(resource):
             return openInAppIconData(engine: engine, appIcon: resource) |> map { data in

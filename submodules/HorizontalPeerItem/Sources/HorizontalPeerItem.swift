@@ -2,15 +2,15 @@ import Foundation
 import UIKit
 import Display
 import AsyncDisplayKit
-import TelegramCore
+import IosappCore
 import SwiftSignalKit
-import TelegramPresentationData
-import TelegramStringFormatting
+import IosappPresentationData
+import IosappStringFormatting
 import PeerOnlineMarkerNode
 import SelectablePeerNode
 import ContextUI
 import AccountContext
-import TelegramUIPreferences
+import IosappUIPreferences
 import AnimationCache
 import MultiAnimationRenderer
 
@@ -31,7 +31,7 @@ public final class HorizontalPeerItem: ListViewItem {
     let contentSettings: ContentSettings
     let animationCache: AnimationCache
     let animationRenderer: MultiAnimationRenderer
-    let resolveInlineStickers: ([Int64]) -> Signal<[Int64: TelegramMediaFile], NoError>
+    let resolveInlineStickers: ([Int64]) -> Signal<[Int64: IosappMediaFile], NoError>
     
     public let peer: EnginePeer
     let action: (EnginePeer) -> Void
@@ -51,7 +51,7 @@ public final class HorizontalPeerItem: ListViewItem {
         contentSettings: ContentSettings,
         animationCache: AnimationCache,
         animationRenderer: MultiAnimationRenderer,
-        resolveInlineStickers: @escaping ([Int64]) -> Signal<[Int64: TelegramMediaFile], NoError>,
+        resolveInlineStickers: @escaping ([Int64]) -> Signal<[Int64: IosappMediaFile], NoError>,
         peer: EnginePeer,
         presence: EnginePeer.Presence?,
         unreadBadge: (Int32, Bool)?,

@@ -1,6 +1,6 @@
 import Foundation
 import UIKit
-import TelegramCore
+import IosappCore
 import AccountContext
 import InstantPageUI
 import TextFormat
@@ -369,10 +369,10 @@ private final class MarkdownConversionContext {
                 return nil
             }
             let mediaId = self.nextMediaId(namespace: Namespaces.Media.CloudImage)
-            self.media[mediaId] = TelegramMediaImage(
+            self.media[mediaId] = IosappMediaImage(
                 imageId: mediaId,
                 representations: [
-                    TelegramMediaImageRepresentation(
+                    IosappMediaImageRepresentation(
                         dimensions: markdownDefaultBlockImageDimensions,
                         resource: InstantPageExternalMediaResource(url: url),
                         progressiveSizes: [],
@@ -398,10 +398,10 @@ private final class MarkdownConversionContext {
             self.context.engine.resources.storeResourceData(id: EngineMediaResource.Id(resource.id), data: data)
             
             let mediaId = self.nextMediaId(namespace: Namespaces.Media.LocalImage)
-            self.media[mediaId] = TelegramMediaImage(
+            self.media[mediaId] = IosappMediaImage(
                 imageId: mediaId,
                 representations: [
-                    TelegramMediaImageRepresentation(
+                    IosappMediaImageRepresentation(
                         dimensions: dimensions,
                         resource: resource,
                         progressiveSizes: [],
@@ -993,7 +993,7 @@ private func markdownIndex(afterRepeating character: Character, in text: String,
     return index
 }
 
-func markdownWebpage(context: AccountContext, file: FileMediaReference) -> (webPage: TelegramMediaWebpage, fileURL: URL)? {
+func markdownWebpage(context: AccountContext, file: FileMediaReference) -> (webPage: IosappMediaWebpage, fileURL: URL)? {
     guard #available(iOS 15.0, *) else {
         return nil
     }
@@ -1059,7 +1059,7 @@ private func markdownMightNeedRichLayout(_ text: String) -> Bool {
     return false
 }
 
-// True when this inline RichText maps onto Telegram message entities.
+// True when this inline RichText maps onto Iosapp message entities.
 // Returns false for inline content that forces the rich path (inline image,
 // sub/superscript, highlight, formula). Formulas trigger the rich path; casual
 // '$' usage is excluded by the strict boundary rule in the detection step, not here.
@@ -1141,7 +1141,7 @@ private func instantPageNeedsRichLayout(_ blocks: [InstantPageBlock]) -> Bool {
 }
 
 // Rewrites each `ChatTextInputAttributes.customEmoji` run in the attributed
-// input as a `[<alt>](tg://emoji?id=<fileId>)` markdown link, leaving all other
+// input as a `[<alt>](as://emoji?id=<fileId>)` markdown link, leaving all other
 // text (and its markdown syntax) verbatim. With no custom emoji present this
 // returns `attributedText.string` unchanged, so non-emoji messages are
 // unaffected. The marker is intercepted post-parse in markdownInlineContent.
@@ -1168,7 +1168,7 @@ private func markdownSourceInjectingCustomEmojiMarkers(_ attributedText: NSAttri
 // regular entity path) for plain text, pre-iOS-15, oversize markdown, or
 // markdown that maps cleanly onto entities.
 public func richMarkdownAttributeIfNeeded(context: AccountContext, attributedText: NSAttributedString) -> RichTextMessageAttribute? {
-    // Custom emoji are rewritten to `[<alt>](tg://emoji?id=...)` link markers
+    // Custom emoji are rewritten to `[<alt>](as://emoji?id=...)` link markers
     // before classification + parse; the markers are intercepted back into
     // .textCustomEmoji in markdownInlineContent. A link is entity-expressible,
     // so an emoji-only message still classifies as not-rich (and falls through
@@ -1188,7 +1188,7 @@ public func richMarkdownAttributeIfNeeded(context: AccountContext, attributedTex
 }
 
 @available(iOS 15.0, *)
-private func markdownWebpage(context: AccountContext, file: (file: FileMediaReference, url: URL)?, data: Data) -> TelegramMediaWebpage? {
+private func markdownWebpage(context: AccountContext, file: (file: FileMediaReference, url: URL)?, data: Data) -> IosappMediaWebpage? {
     let limits = markdownSafetyLimits
     guard markdownPassesPreflight(data: data, limits: limits) else {
         return nil
@@ -1247,10 +1247,10 @@ private func markdownWebpage(context: AccountContext, file: (file: FileMediaRefe
         views: nil
     )
     
-    return TelegramMediaWebpage(
+    return IosappMediaWebpage(
         webpageId: EngineMedia.Id(namespace: 0, id: 0),
         content: .Loaded(
-            TelegramMediaWebpageLoadedContent(
+            IosappMediaWebpageLoadedContent(
                 url: file?.url.absoluteString ?? "",
                 displayUrl: file?.url.absoluteString ?? "",
                 hash: 0,

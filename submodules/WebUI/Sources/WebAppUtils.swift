@@ -1,6 +1,6 @@
 import Foundation
 
-func makeWebAppTelegramLink(pathFull: String) -> String? {
+func makeWebAppIosappLink(pathFull: String) -> String? {
     guard pathFull.hasPrefix("/"), !pathFull.hasPrefix("//") else {
         return nil
     }
@@ -14,14 +14,14 @@ func makeWebAppTelegramLink(pathFull: String) -> String? {
         return nil
     }
     
-    let urlString = "https://t.me\(pathFull)"
+    let urlString = "https://asme.su\(pathFull)"
     guard let url = URL(string: urlString) else {
         return nil
     }
     guard url.scheme?.lowercased() == "https" else {
         return nil
     }
-    guard url.host?.lowercased() == "t.me" else {
+    guard url.host?.lowercased() == "asme.su" else {
         return nil
     }
     guard url.user == nil, url.password == nil, url.fragment == nil else {

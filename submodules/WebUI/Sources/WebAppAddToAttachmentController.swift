@@ -3,9 +3,9 @@ import UIKit
 import SwiftSignalKit
 import AsyncDisplayKit
 import Display
-import TelegramCore
-import TelegramPresentationData
-import TelegramUIPreferences
+import IosappCore
+import IosappPresentationData
+import IosappUIPreferences
 import AccountContext
 import AppBundle
 import PhotoResources
@@ -14,7 +14,7 @@ import AlertComponent
 import AlertCheckComponent
 import BundleIconComponent
 
-public func addWebAppToAttachmentController(context: AccountContext, peerName: String, icons: [AttachMenuBots.Bot.IconName: TelegramMediaFile], requestWriteAccess: Bool, completion: @escaping (Bool) -> Void) -> ViewController {
+public func addWebAppToAttachmentController(context: AccountContext, peerName: String, icons: [AttachMenuBots.Bot.IconName: IosappMediaFile], requestWriteAccess: Bool, completion: @escaping (Bool) -> Void) -> ViewController {
     let presentationData = context.sharedContext.currentPresentationData.with { $0 }
     let strings = presentationData.strings
         
@@ -65,11 +65,11 @@ private final class AlertWebAppAttachmentHeaderComponent: Component {
     public typealias EnvironmentType = AlertComponentEnvironment
     
     let context: AccountContext
-    let icons: [AttachMenuBots.Bot.IconName: TelegramMediaFile]
+    let icons: [AttachMenuBots.Bot.IconName: IosappMediaFile]
     
     public init(
         context: AccountContext,
-        icons: [AttachMenuBots.Bot.IconName: TelegramMediaFile]
+        icons: [AttachMenuBots.Bot.IconName: IosappMediaFile]
     ) {
         self.context = context
         self.icons = icons
@@ -95,7 +95,7 @@ private final class AlertWebAppAttachmentHeaderComponent: Component {
         
         func update(component: AlertWebAppAttachmentHeaderComponent, availableSize: CGSize, state: EmptyComponentState, environment: Environment<AlertComponentEnvironment>, transition: ComponentTransition) -> CGSize {
             if self.component == nil {
-                var peerIcon: TelegramMediaFile?
+                var peerIcon: IosappMediaFile?
                 if let icon = component.icons[.iOSStatic] {
                     peerIcon = icon
                 } else if let icon = component.icons[.default] {

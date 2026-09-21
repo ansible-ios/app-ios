@@ -3,7 +3,7 @@ import UIKit
 import Display
 import LegacyComponents
 import AccountContext
-import TelegramPresentationData
+import IosappPresentationData
 import ComponentFlow
 import GlassBackgroundComponent
 import GlassBarButtonComponent

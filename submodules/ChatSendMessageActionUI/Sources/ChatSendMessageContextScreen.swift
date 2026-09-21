@@ -3,10 +3,10 @@ import UIKit
 import Display
 import AsyncDisplayKit
 import SwiftSignalKit
-import TelegramPresentationData
+import IosappPresentationData
 import AccountContext
 import ContextUI
-import TelegramCore
+import IosappCore
 import TextFormat
 import ReactionSelectionNode
 import ViewControllerComponent
@@ -16,7 +16,7 @@ import WallpaperBackgroundNode
 import ReactionSelectionNode
 import EntityKeyboard
 import LottieMetal
-import TelegramAnimatedStickerNode
+import IosappAnimatedStickerNode
 import AnimatedStickerNode
 import ChatInputTextNode
 import UndoUI
@@ -1015,7 +1015,7 @@ final class ChatSendMessageContextScreenComponent: Component {
                                 })
                             }
                             
-                            var customEffectResource: (FileMediaReference, TelegramMediaResource)?
+                            var customEffectResource: (FileMediaReference, IosappMediaResource)?
                             if let effectAnimation = messageEffect.effectAnimation?._parse() {
                                 customEffectResource = (FileMediaReference.standalone(media: effectAnimation), effectAnimation.resource)
                             } else {

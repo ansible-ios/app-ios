@@ -1,0 +1,48 @@
+load("@build_bazel_rules_swift//swift:swift.bzl", "swift_library")
+
+swift_library(
+    name = "BusinessIntroSetupScreen",
+    module_name = "BusinessIntroSetupScreen",
+    srcs = glob([
+        "Sources/**/*.swift",
+    ]),
+    copts = [
+        "-warnings-as-errors",
+    ],
+    deps = [
+        "//submodules/AsyncDisplayKit",
+        "//submodules/Display",
+        "//submodules/Postbox",
+        "//submodules/IosappCore",
+        "//submodules/SSignalKit/SwiftSignalKit",
+        "//submodules/IosappPresentationData",
+        "//submodules/IosappUIPreferences",
+        "//submodules/AccountContext",
+        "//submodules/PresentationDataUtils",
+        "//submodules/Markdown",
+        "//submodules/ComponentFlow",
+        "//submodules/Components/ComponentDisplayAdapters",
+        "//submodules/Components/ViewControllerComponent",
+        "//submodules/Components/BundleIconComponent",
+        "//submodules/Components/MultilineTextComponent",
+        "//submodules/Components/BalancedTextComponent",
+        "//submodules/IosappUI/Components/ListSectionComponent",
+        "//submodules/IosappUI/Components/ListActionItemComponent",
+        "//submodules/IosappUI/Components/ListMultilineTextFieldItemComponent",
+        "//submodules/IosappUI/Components/LottieComponent",
+        "//submodules/IosappUI/Components/PlainButtonComponent",
+        "//submodules/LocationUI",
+        "//submodules/AppBundle",
+        "//submodules/Geocoding",
+        "//submodules/IosappUI/Components/Chat/ChatEmptyNode",
+        "//submodules/WallpaperBackgroundNode",
+        "//submodules/ChatPresentationInterfaceState",
+        "//submodules/IosappUI/Components/EntityKeyboard",
+        "//submodules/IosappUI/Components/PeerAllowedReactionsScreen",
+        "//submodules/IosappUI/Components/EmojiActionIconComponent",
+        "//submodules/IosappUI/Components/TextFieldComponent",
+    ],
+    visibility = [
+        "//visibility:public",
+    ],
+)

@@ -2,13 +2,13 @@ import Foundation
 import UIKit
 import AsyncDisplayKit
 import Display
-import TelegramPresentationData
+import IosappPresentationData
 import AnimatedStickerNode
-import TelegramAnimatedStickerNode
+import IosappAnimatedStickerNode
 import AppBundle
 import ActivityIndicator
 import AccountContext
-import TelegramCore
+import IosappCore
 import ComponentFlow
 import ArchiveInfoScreen
 import ComponentDisplayAdapters
@@ -135,7 +135,7 @@ final class ChatListEmptyNode: ASDisplayNode {
             let _ = self.context.engine.privacy.updateGlobalPrivacySettings().startStandalone()
             
             self.archiveSettingsDisposable = (context.engine.data.subscribe(
-                TelegramEngine.EngineData.Item.Configuration.GlobalPrivacy()
+                IosappEngine.EngineData.Item.Configuration.GlobalPrivacy()
             )
             |> deliverOnMainQueue).startStrict(next: { [weak self] settings in
                 guard let self else {

@@ -3,7 +3,7 @@ import UIKit
 import AsyncDisplayKit
 import SwiftSignalKit
 import Display
-import TelegramPresentationData
+import IosappPresentationData
 
 public final class TabBarItemInfo: NSObject {
     public let previewing: Bool

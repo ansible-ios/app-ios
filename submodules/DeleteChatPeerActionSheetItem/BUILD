@@ -12,10 +12,10 @@ swift_library(
     deps = [
         "//submodules/AsyncDisplayKit:AsyncDisplayKit",
         "//submodules/Display:Display",
-        "//submodules/TelegramCore:TelegramCore",
+        "//submodules/IosappCore:IosappCore",
         "//submodules/AccountContext:AccountContext",
         "//submodules/AvatarNode:AvatarNode",
-        "//submodules/TelegramPresentationData:TelegramPresentationData",
+        "//submodules/IosappPresentationData:IosappPresentationData",
         "//submodules/ComponentFlow",
         "//submodules/Components/MultilineTextComponent",
         "//submodules/Components/BalancedTextComponent",

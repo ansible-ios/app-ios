@@ -3,8 +3,8 @@ import UIKit
 import Display
 import ComponentFlow
 import SwiftSignalKit
-import TelegramCore
-import TelegramPresentationData
+import IosappCore
+import IosappPresentationData
 import ViewControllerComponent
 import SheetComponent
 import BalancedTextComponent
@@ -290,7 +290,7 @@ private final class SheetContent: CombinedComponent {
             let textColor = theme.actionSheet.primaryTextColor
             let linkColor = theme.actionSheet.controlAccentColor
             let markdownAttributes = MarkdownAttributes(body: MarkdownAttributeSet(font: textFont, textColor: textColor), bold: MarkdownAttributeSet(font: boldTextFont, textColor: textColor), link: MarkdownAttributeSet(font: textFont, textColor: linkColor), linkAttribute: { contents in
-                return (TelegramTextAttributes.URL, contents)
+                return (IosappTextAttributes.URL, contents)
             })
                         
             let text = text.update(
@@ -483,14 +483,14 @@ public final class QrCodeScreen: ViewControllerComponentContainer {
         var link: String {
             switch self {
             case let .peer(peer):
-                return "https://t.me/\(peer.addressName ?? "")"
+                return "https://asme.su/\(peer.addressName ?? "")"
             case let .invite(invite, _):
                 return invite.link ?? ""
             case let .chatFolder(slug):
                 if slug.hasPrefix("https://") {
                     return slug
                 } else {
-                    return "https://t.me/addlist/\(slug)"
+                    return "https://asme.su/addlist/\(slug)"
                 }
             case let .proxy(server, externalLink):
                 var link: String
@@ -498,10 +498,10 @@ public final class QrCodeScreen: ViewControllerComponentContainer {
                 switch server.connection {
                 case let .mtp(secret):
                     let secret = MTProxySecret.parseData(secret)?.serializeToString() ?? ""
-                    link = "\(externalLink ? "https://t.me/proxy" : "tg://proxy")?server=\(serverHost)&port=\(server.port)"
+                    link = "\(externalLink ? "https://asme.su/proxy" : "as://proxy")?server=\(serverHost)&port=\(server.port)"
                     link += "&secret=\(secret.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryValueAllowed) ?? "")"
                 case let .socks5(username, password):
-                    link = "\(externalLink ? "https://t.me/socks" : "tg://socks")?server=\(serverHost)&port=\(server.port)"
+                    link = "\(externalLink ? "https://asme.su/socks" : "as://socks")?server=\(serverHost)&port=\(server.port)"
                     if let username, !username.isEmpty {
                         link += "&user=\(username.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryValueAllowed) ?? "")"
                     }

@@ -2,8 +2,8 @@ import Foundation
 import UIKit
 import Display
 import AsyncDisplayKit
-import TelegramCore
-import TelegramPresentationData
+import IosappCore
+import IosappPresentationData
 import TextFormat
 import AccountContext
 import EncryptionKeyVisualization
@@ -128,7 +128,7 @@ final class SecretChatKeyControllerNode: ViewControllerTracingNode {
         
         let linkRange = (infoString.string as NSString).range(of: "telegram.org")
         if linkRange.location != NSNotFound {
-            infoText.addAttributes([.foregroundColor: self.presentationData.theme.list.itemAccentColor, NSAttributedString.Key(rawValue: TelegramTextAttributes.URL): "https://telegram.org/faq#secret-chats"], range: linkRange)
+            infoText.addAttributes([.foregroundColor: self.presentationData.theme.list.itemAccentColor, NSAttributedString.Key(rawValue: IosappTextAttributes.URL): "https://telegram.org/faq#secret-chats"], range: linkRange)
         }
         
         let (infoLayout, infoApply) = makeInfoLayout(TextNodeLayoutArguments(attributedString: infoText, backgroundColor: nil, maximumNumberOfLines: 0, truncationType: .end, constrainedSize: CGSize(width: layout.size.width - sideInset * 2.0, height: CGFloat.greatestFiniteMagnitude), alignment: .center, lineSpacing: 0.0, cutout: nil, insets: UIEdgeInsets()))
@@ -158,7 +158,7 @@ final class SecretChatKeyControllerNode: ViewControllerTracingNode {
         if case .ended = recognizer.state {
             let point = recognizer.location(in: recognizer.view)
             if let attributes = self.infoNode.attributesAtPoint(point)?.1 {
-                if let url = attributes[NSAttributedString.Key(rawValue: TelegramTextAttributes.URL)] as? String {
+                if let url = attributes[NSAttributedString.Key(rawValue: IosappTextAttributes.URL)] as? String {
                     self.context.sharedContext.openExternalUrl(context: self.context, urlContext: .generic, url: url, forceExternal: false, presentationData: self.presentationData, navigationController: self.getNavigationController(), dismissInput: { [weak self] in
                         self?.view.endEditing(true)
                     })

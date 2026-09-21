@@ -2,10 +2,10 @@ import Foundation
 import UIKit
 import Display
 import AsyncDisplayKit
-import TelegramCore
+import IosappCore
 import SwiftSignalKit
 import AccountContext
-import TelegramPresentationData
+import IosappPresentationData
 import PresentationDataUtils
 import ComponentFlow
 import ViewControllerComponent
@@ -16,7 +16,7 @@ import Markdown
 import TextFormat
 import ButtonComponent
 import PeerListItemComponent
-import TelegramStringFormatting
+import IosappStringFormatting
 import AvatarNode
 
 private final class ReplaceBoostScreenComponent: CombinedComponent {
@@ -75,7 +75,7 @@ private final class ReplaceBoostScreenComponent: CombinedComponent {
                 self.selectedSlots.append(initiallySelectedSlot)
             }
             
-            self.disposable.set((context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: peerId))
+            self.disposable.set((context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: peerId))
             |> deliverOnMainQueue).startStrict(next: { [weak self] peer in
                 guard let self else {
                     return
@@ -163,7 +163,7 @@ private final class ReplaceBoostScreenComponent: CombinedComponent {
             let textColor = theme.actionSheet.primaryTextColor
             let linkColor = theme.actionSheet.controlAccentColor
             let markdownAttributes = MarkdownAttributes(body: MarkdownAttributeSet(font: textFont, textColor: textColor), bold: MarkdownAttributeSet(font: boldTextFont, textColor: textColor), link: MarkdownAttributeSet(font: textFont, textColor: linkColor), linkAttribute: { contents in
-                return (TelegramTextAttributes.URL, contents)
+                return (IosappTextAttributes.URL, contents)
             })
             
             let premiumConfiguration = PremiumConfiguration.with(appConfiguration: context.component.context.currentAppConfiguration.with({ $0 }))
@@ -183,8 +183,8 @@ private final class ReplaceBoostScreenComponent: CombinedComponent {
                     lineSpacing: 0.1,
                     highlightColor: environment.theme.list.itemAccentColor.withAlphaComponent(0.2),
                     highlightAction: { attributes in
-                        if let _ = attributes[NSAttributedString.Key(rawValue: TelegramTextAttributes.URL)] {
-                            return NSAttributedString.Key(rawValue: TelegramTextAttributes.URL)
+                        if let _ = attributes[NSAttributedString.Key(rawValue: IosappTextAttributes.URL)] {
+                            return NSAttributedString.Key(rawValue: IosappTextAttributes.URL)
                         } else {
                             return nil
                         }

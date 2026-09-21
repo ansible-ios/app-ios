@@ -2,10 +2,10 @@ import Foundation
 import UIKit
 import AsyncDisplayKit
 import Display
-import TelegramCore
+import IosappCore
 import SwiftSignalKit
-import TelegramPresentationData
-import TelegramUIPreferences
+import IosappPresentationData
+import IosappUIPreferences
 import MergeLists
 import AccountContext
 import TemporaryCachedPeerDataManager
@@ -38,7 +38,7 @@ private enum ChannelMembersSearchEntryId: Hashable {
 private enum ChannelMembersSearchEntry: Comparable, Identifiable {
     case copyInviteLink
     case peer(Int, RenderedChannelParticipant, ContactsPeerItemEditing, String?, Bool, Bool, Bool)
-    case contact(Int, EnginePeer, TelegramUserPresence?)
+    case contact(Int, EnginePeer, IosappUserPresence?)
     
     var stableId: ChannelMembersSearchEntryId {
         switch self {
@@ -131,7 +131,7 @@ private enum ChannelMembersSearchEntry: Comparable, Identifiable {
             if let label = label {
                 status = .custom(string: NSAttributedString(string: label), multiline: false, isActive: false, icon: nil)
             } else if participant.peer.id != context.account.peerId {
-                let presence = participant.presences[participant.peer.id] ?? TelegramUserPresence(status: .none, lastActivity: 0)
+                let presence = participant.presences[participant.peer.id] ?? IosappUserPresence(status: .none, lastActivity: 0)
                 status = .presence(EnginePeer.Presence(presence), presentationData.dateTimeFormat)
             } else {
                 status = .none
@@ -252,7 +252,7 @@ class ChannelMembersSearchControllerNode: ASDisplayNode {
             let disposable = combineLatest(queue: Queue.mainQueue(),
                 context.account.postbox.peerView(id: peerId),
                 context.engine.data.subscribe(
-                    TelegramEngine.EngineData.Item.Contacts.List(includePresences: true)
+                    IosappEngine.EngineData.Item.Contacts.List(includePresences: true)
                 )
             ).start(next: { [weak self] peerView, contactsView in
                 guard let strongSelf = self else {
@@ -283,11 +283,11 @@ class ChannelMembersSearchControllerNode: ASDisplayNode {
                 var canInviteByLink = false
                 if !(mainPeer.addressName?.isEmpty ?? true) {
                     canInviteByLink = true
-                } else if let peer = mainPeer as? TelegramChannel {
+                } else if let peer = mainPeer as? IosappChannel {
                     if peer.flags.contains(.isCreator) || (peer.adminRights?.rights.contains(.canInviteUsers) == true) {
                         canInviteByLink = true
                     }
-                } else if let peer = mainPeer as? TelegramGroup {
+                } else if let peer = mainPeer as? IosappGroup {
                     if case .creator = peer.role {
                         canInviteByLink = true
                     } else if case let .admin(rights, _) = peer.role, rights.rights.contains(.canInviteUsers) {
@@ -334,7 +334,7 @@ class ChannelMembersSearchControllerNode: ASDisplayNode {
                                     case .excludeNonMembers:
                                         break
                                     case .excludeBots:
-                                        if let user = peer as? TelegramUser, user.botInfo != nil {
+                                        if let user = peer as? IosappUser, user.botInfo != nil {
                                             continue
                                         }
                                 }
@@ -356,7 +356,7 @@ class ChannelMembersSearchControllerNode: ASDisplayNode {
                                     case .excludeNonMembers:
                                         break
                                     case .excludeBots:
-                                        if let user = peer as? TelegramUser, user.botInfo != nil {
+                                        if let user = peer as? IosappUser, user.botInfo != nil {
                                             continue
                                         }
                                 }
@@ -369,7 +369,7 @@ class ChannelMembersSearchControllerNode: ASDisplayNode {
                             if peer.id == context.account.peerId {
                                 continue
                             }
-                            if let user = peer as? TelegramUser, user.botInfo != nil || user.flags.contains(.isSupport) {
+                            if let user = peer as? IosappUser, user.botInfo != nil || user.flags.contains(.isSupport) {
                                 continue
                             }
                             for filter in filters {
@@ -385,7 +385,7 @@ class ChannelMembersSearchControllerNode: ASDisplayNode {
                                     case .excludeNonMembers:
                                         break
                                     case .excludeBots:
-                                        if let user = peer as? TelegramUser, user.botInfo != nil {
+                                        if let user = peer as? IosappUser, user.botInfo != nil {
                                             continue
                                         }
                                 }
@@ -394,7 +394,7 @@ class ChannelMembersSearchControllerNode: ASDisplayNode {
                             if peer.id == context.account.peerId {
                                 continue
                             }
-                            if let user = peer as? TelegramUser, user.botInfo != nil || user.flags.contains(.isSupport) {
+                            if let user = peer as? IosappUser, user.botInfo != nil || user.flags.contains(.isSupport) {
                                 continue
                             }
                     }
@@ -406,7 +406,7 @@ class ChannelMembersSearchControllerNode: ASDisplayNode {
                             var peers: [EnginePeer.Id: EnginePeer] = [:]
                             peers[creator.id] = creator
                             peers[peer.id] = EnginePeer(peer)
-                        renderedParticipant = RenderedChannelParticipant(participant: .member(id: peer.id, invitedAt: 0, adminInfo: ChannelParticipantAdminInfo(rights: TelegramChatAdminRights(rights: TelegramChatAdminRightsFlags.peerSpecific(peer: EnginePeer(mainPeer))), promotedBy: creator.id, canBeEditedByAccountPeer: creator.id == context.account.peerId), banInfo: nil, rank: nil, subscriptionUntilDate: nil), peer: EnginePeer(peer), peers: peers, presences: peerView.peerPresences)
+                        renderedParticipant = RenderedChannelParticipant(participant: .member(id: peer.id, invitedAt: 0, adminInfo: ChannelParticipantAdminInfo(rights: IosappChatAdminRights(rights: IosappChatAdminRightsFlags.peerSpecific(peer: EnginePeer(mainPeer))), promotedBy: creator.id, canBeEditedByAccountPeer: creator.id == context.account.peerId), banInfo: nil, rank: nil, subscriptionUntilDate: nil), peer: EnginePeer(peer), peers: peers, presences: peerView.peerPresences)
                         case .member:
                             var peers: [EnginePeer.Id: EnginePeer] = [:]
                             peers[peer.id] = EnginePeer(peer)
@@ -453,7 +453,7 @@ class ChannelMembersSearchControllerNode: ASDisplayNode {
                contactsState.get(),
                context.account.postbox.peerView(id: peerId),
                context.engine.data.subscribe(
-                   TelegramEngine.EngineData.Item.Contacts.List(includePresences: true)
+                   IosappEngine.EngineData.Item.Contacts.List(includePresences: true)
                )
             ).start(next: { [weak self] state, contactsState, peerView, contactsView in
                 guard let strongSelf = self else {
@@ -464,16 +464,16 @@ class ChannelMembersSearchControllerNode: ASDisplayNode {
                 var canInviteByLink = false
                 var isChannel = false
                 if let peer = peerViewMainPeer(peerView) {
-                    if let peer = peer as? TelegramChannel, case .broadcast = peer.info {
+                    if let peer = peer as? IosappChannel, case .broadcast = peer.info {
                         isChannel = true
                     }
                     if !(peer.addressName?.isEmpty ?? true) {
                         canInviteByLink = true
-                    } else if let peer = peer as? TelegramChannel {
+                    } else if let peer = peer as? IosappChannel {
                         if peer.flags.contains(.isCreator) || (peer.adminRights?.rights.contains(.canInviteUsers) == true) {
                             canInviteByLink = true
                         }
-                    } else if let peer = peer as? TelegramGroup {
+                    } else if let peer = peer as? IosappGroup {
                         if case .creator = peer.role {
                             canInviteByLink = true
                         } else if case let .admin(rights, _) = peer.role, rights.rights.contains(.canInviteUsers) {

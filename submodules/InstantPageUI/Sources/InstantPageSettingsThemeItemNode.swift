@@ -2,7 +2,7 @@ import Foundation
 import UIKit
 import AsyncDisplayKit
 import Display
-import TelegramUIPreferences
+import IosappUIPreferences
 
 private final class InstantPageSettingsThemeSelectorNode: ASDisplayNode {
     private let selectionNode: ASImageNode

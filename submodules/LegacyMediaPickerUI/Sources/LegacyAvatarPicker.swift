@@ -2,9 +2,9 @@ import Foundation
 import UIKit
 import Display
 import SwiftSignalKit
-import TelegramCore
+import IosappCore
 import LegacyComponents
-import TelegramPresentationData
+import IosappPresentationData
 import LegacyUI
 import AccountContext
 import SaveToCameraRoll
@@ -52,7 +52,7 @@ public func presentLegacyAvatarPicker(holder: Atomic<NSObject?>, signup: Bool, t
 }
 
 public func legacyAvatarEditor(context: AccountContext, media: AnyMediaReference, transitionView: UIView?, senderName: String? = nil, present: @escaping (ViewController, Any?) -> Void, imageCompletion: @escaping (UIImage) -> Void, videoCompletion: @escaping (UIImage, URL, TGVideoEditAdjustments) -> Void) {
-    let isVideo = !((media.media as? TelegramMediaImage)?.videoRepresentations.isEmpty ?? true)
+    let isVideo = !((media.media as? IosappMediaImage)?.videoRepresentations.isEmpty ?? true)
     
     let imageSignal = fetchMediaData(context: context, userLocation: .other, mediaReference: media, forceVideo: false)
     |> map { (value, _) -> (UIImage?, Bool) in

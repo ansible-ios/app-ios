@@ -4,9 +4,9 @@ import SwiftSignalKit
 import AsyncDisplayKit
 import Display
 import ComponentFlow
-import TelegramCore
-import TelegramPresentationData
-import TelegramUIPreferences
+import IosappCore
+import IosappPresentationData
+import IosappUIPreferences
 import AccountContext
 import AppBundle
 import AvatarNode
@@ -21,7 +21,7 @@ func webAppEmojiStatusAlertController(
     context: AccountContext,
     accountPeer: EnginePeer,
     botName: String,
-    icons: [TelegramMediaFile.Accessor],
+    icons: [IosappMediaFile.Accessor],
     completion: @escaping (Bool, Bool) -> Void
 ) -> ViewController {
     let strings = context.sharedContext.currentPresentationData.with { $0 }.strings
@@ -65,12 +65,12 @@ private final class AlertEmojiStatusComponent: Component {
     
     let context: AccountContext
     let peer: EnginePeer
-    let files: [TelegramMediaFile.Accessor]
+    let files: [IosappMediaFile.Accessor]
     
     public init(
         context: AccountContext,
         peer: EnginePeer,
-        files: [TelegramMediaFile.Accessor]
+        files: [IosappMediaFile.Accessor]
     ) {
         self.context = context
         self.peer = peer

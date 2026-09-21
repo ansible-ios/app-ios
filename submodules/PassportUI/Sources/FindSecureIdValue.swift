@@ -1,5 +1,5 @@
 import Foundation
-import TelegramCore
+import IosappCore
 
 func findValue(_ values: [SecureIdValueWithContext], key: SecureIdValueKey) -> (Int, SecureIdValueWithContext)? {
     for i in 0 ..< values.count {

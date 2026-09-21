@@ -3,9 +3,9 @@ import UIKit
 import Display
 import SwiftSignalKit
 import AsyncDisplayKit
-import TelegramCore
-import TelegramPresentationData
-import TelegramUIPreferences
+import IosappCore
+import IosappPresentationData
+import IosappUIPreferences
 import AccountContext
 import CounterControllerTitleView
 import WallpaperResources
@@ -13,13 +13,13 @@ import OverlayStatusController
 import AppBundle
 import PresentationDataUtils
 import UndoUI
-import TelegramNotices
+import IosappNotices
 
 public enum ThemePreviewSource {
-    case settings(PresentationThemeReference, TelegramWallpaper?, Bool)
-    case theme(TelegramTheme)
-    case slug(String, TelegramMediaFile)
-    case themeSettings(String, TelegramThemeSettings)
+    case settings(PresentationThemeReference, IosappWallpaper?, Bool)
+    case theme(IosappTheme)
+    case slug(String, IosappMediaFile)
+    case themeSettings(String, IosappThemeSettings)
     case media(AnyMediaReference)
 }
 
@@ -27,7 +27,7 @@ public final class ThemePreviewController: ViewController {
     private let context: AccountContext
     private let previewTheme: PresentationTheme
     private let source: ThemePreviewSource
-    private let theme = Promise<TelegramTheme?>()
+    private let theme = Promise<IosappTheme?>()
     private let presentationTheme = Promise<PresentationTheme>()
     
     private var controllerNode: ThemePreviewControllerNode {
@@ -76,7 +76,7 @@ public final class ThemePreviewController: ViewController {
                 |> then(
                     getTheme(account: context.account, slug: theme.slug)
                     |> map(Optional.init)
-                    |> `catch` { _ -> Signal<TelegramTheme?, NoError> in
+                    |> `catch` { _ -> Signal<IosappTheme?, NoError> in
                         return .single(nil)
                     }
                     |> filter { $0 != nil }
@@ -85,7 +85,7 @@ public final class ThemePreviewController: ViewController {
             case let .slug(slug, _), let .themeSettings(slug, _):
                 self.theme.set(getTheme(account: context.account, slug: slug)
                 |> map(Optional.init)
-                |> `catch` { _ -> Signal<TelegramTheme?, NoError> in
+                |> `catch` { _ -> Signal<IosappTheme?, NoError> in
                     return .single(nil)
                 })
                 themeName = previewTheme.name.string
@@ -112,7 +112,7 @@ public final class ThemePreviewController: ViewController {
                 if case let .cloud(theme) = themeReference {
                     self.theme.set(getTheme(account: context.account, slug: theme.theme.slug)
                     |> map(Optional.init)
-                    |> `catch` { _ -> Signal<TelegramTheme?, NoError> in
+                    |> `catch` { _ -> Signal<IosappTheme?, NoError> in
                         return .single(nil)
                     })
                     if let emoticon = theme.theme.emoticon{
@@ -199,7 +199,7 @@ public final class ThemePreviewController: ViewController {
         
         var isPreview = false
         var forceReady = false
-        var initialWallpaper: TelegramWallpaper?
+        var initialWallpaper: IosappWallpaper?
         if case let .settings(_, currentWallpaper, preview) = self.source {
             isPreview = preview
             forceReady = true
@@ -276,7 +276,7 @@ public final class ThemePreviewController: ViewController {
                 }
         }
         
-        var resolvedWallpaper: TelegramWallpaper?
+        var resolvedWallpaper: IosappWallpaper?
         
         let setup = theme
         |> mapToSignal { theme -> Signal<(PresentationThemeReference, Bool), NoError> in
@@ -515,10 +515,10 @@ public final class ThemePreviewController: ViewController {
             case .settings:
                 return
             case let .theme(theme):
-                subject = .url("https://t.me/addtheme/\(theme.slug)")
+                subject = .url("https://asme.su/addtheme/\(theme.slug)")
                 preferredAction = .default
             case let .slug(slug, _), let .themeSettings(slug, _):
-                subject = .url("https://t.me/addtheme/\(slug)")
+                subject = .url("https://asme.su/addtheme/\(slug)")
                 preferredAction = .default
             case let .media(media):
                 subject = .media(media, nil)

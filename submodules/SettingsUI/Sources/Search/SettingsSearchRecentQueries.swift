@@ -1,8 +1,8 @@
 import Foundation
 import UIKit
-import TelegramCore
+import IosappCore
 import SwiftSignalKit
-import TelegramUIPreferences
+import IosappUIPreferences
 
 private struct SettingsSearchRecentQueryItemId {
     public let rawValue: EngineMemoryBuffer
@@ -37,7 +37,7 @@ public final class RecentSettingsSearchQueryItem: Codable {
     }
 }
 
-func addRecentSettingsSearchItem(engine: TelegramEngine, item: AnyHashable) {
+func addRecentSettingsSearchItem(engine: IosappEngine, item: AnyHashable) {
     guard let id = item.base as? String, let data = id.data(using: .ascii) else {
         return
     }
@@ -45,7 +45,7 @@ func addRecentSettingsSearchItem(engine: TelegramEngine, item: AnyHashable) {
     let _ = engine.orderedLists.addOrMoveToFirstPosition(collectionId: ApplicationSpecificOrderedItemListCollectionId.settingsSearchRecentItems, id: itemId, item: RecentSettingsSearchQueryItem(), removeTailIfCountExceeds: 100).start()
 }
 
-func removeRecentSettingsSearchItem(engine: TelegramEngine, item: AnyHashable) {
+func removeRecentSettingsSearchItem(engine: IosappEngine, item: AnyHashable) {
     guard let id = item.base as? String, let data = id.data(using: .ascii) else {
         return
     }
@@ -53,12 +53,12 @@ func removeRecentSettingsSearchItem(engine: TelegramEngine, item: AnyHashable) {
     let _ = engine.orderedLists.removeItem(collectionId: ApplicationSpecificOrderedItemListCollectionId.settingsSearchRecentItems, id: itemId).start()
 }
 
-func clearRecentSettingsSearchItems(engine: TelegramEngine) {
+func clearRecentSettingsSearchItems(engine: IosappEngine) {
     let _ = engine.orderedLists.clear(collectionId: ApplicationSpecificOrderedItemListCollectionId.settingsSearchRecentItems).start()
 }
 
-func settingsSearchRecentItems(engine: TelegramEngine) -> Signal<[AnyHashable], NoError> {
-    return engine.data.subscribe(TelegramEngine.EngineData.Item.OrderedLists.ListItems(collectionId: ApplicationSpecificOrderedItemListCollectionId.settingsSearchRecentItems))
+func settingsSearchRecentItems(engine: IosappEngine) -> Signal<[AnyHashable], NoError> {
+    return engine.data.subscribe(IosappEngine.EngineData.Item.OrderedLists.ListItems(collectionId: ApplicationSpecificOrderedItemListCollectionId.settingsSearchRecentItems))
     |> map { items -> [AnyHashable] in
         var result: [AnyHashable] = []
         for item in items {

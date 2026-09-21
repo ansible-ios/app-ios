@@ -1,7 +1,7 @@
 import Foundation
 import UIKit
 import SolidRoundedButtonNode
-import TelegramPresentationData
+import IosappPresentationData
 
 public extension SolidRoundedButtonTheme {
     convenience init(theme: PresentationTheme) {

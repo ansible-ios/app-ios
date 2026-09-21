@@ -2,18 +2,18 @@ import Foundation
 import UIKit
 import Display
 import SwiftSignalKit
-import TelegramCore
+import IosappCore
 import LegacyComponents
 import LocalAuthentication
-import TelegramPresentationData
-import TelegramUIPreferences
+import IosappPresentationData
+import IosappUIPreferences
 import ItemListUI
 import PresentationDataUtils
 import AccountContext
 import LocalAuth
 import PasscodeUI
-import TelegramStringFormatting
-import TelegramIntents
+import IosappStringFormatting
+import IosappIntents
 import ContextUI
 
 private final class PasscodeOptionsControllerArguments {
@@ -521,8 +521,8 @@ public func passcodeEntryController(
 }
     
 public func passcodeEntryController(
-    accountManager: AccountManager<TelegramAccountManagerTypes>,
-    applicationBindings: TelegramApplicationBindings,
+    accountManager: AccountManager<IosappAccountManagerTypes>,
+    applicationBindings: IosappApplicationBindings,
     presentationData: PresentationData,
     updatedPresentationData: Signal<PresentationData, NoError>,
     statusBarHost: StatusBarHost?,

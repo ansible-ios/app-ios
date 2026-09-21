@@ -2,12 +2,12 @@ import Foundation
 import UIKit
 import Display
 import SwiftSignalKit
-import TelegramCore
-import TelegramPresentationData
+import IosappCore
+import IosappPresentationData
 import PresentationDataUtils
 import ItemListUI
 import AccountContext
-import TelegramUIPreferences
+import IosappUIPreferences
 import ItemListPeerItem
 import ItemListPeerActionItem
 import AvatarNode
@@ -1509,13 +1509,13 @@ public func chatListFilterPresetController(context: AccountContext, currentPrese
         if missingPeers {
             return context.engine.data.get(
                 EngineDataMap(
-                    state.additionallyIncludePeers.map { peerId -> TelegramEngine.EngineData.Item.Peer.RenderedPeer in
-                        return TelegramEngine.EngineData.Item.Peer.RenderedPeer(id: peerId)
+                    state.additionallyIncludePeers.map { peerId -> IosappEngine.EngineData.Item.Peer.RenderedPeer in
+                        return IosappEngine.EngineData.Item.Peer.RenderedPeer(id: peerId)
                     }
                 ),
                 EngineDataMap(
-                    state.additionallyExcludePeers.map { peerId -> TelegramEngine.EngineData.Item.Peer.RenderedPeer in
-                        return TelegramEngine.EngineData.Item.Peer.RenderedPeer(id: peerId)
+                    state.additionallyExcludePeers.map { peerId -> IosappEngine.EngineData.Item.Peer.RenderedPeer in
+                        return IosappEngine.EngineData.Item.Peer.RenderedPeer(id: peerId)
                     }
                 )
             )
@@ -1588,9 +1588,9 @@ public func chatListFilterPresetController(context: AccountContext, currentPrese
             let _ = combineLatest(
                 queue: Queue.mainQueue(),
                 context.engine.data.get(
-                    TelegramEngine.EngineData.Item.Peer.Peer(id: context.account.peerId),
-                    TelegramEngine.EngineData.Item.Configuration.UserLimits(isPremium: false),
-                    TelegramEngine.EngineData.Item.Configuration.UserLimits(isPremium: true)
+                    IosappEngine.EngineData.Item.Peer.Peer(id: context.account.peerId),
+                    IosappEngine.EngineData.Item.Configuration.UserLimits(isPremium: false),
+                    IosappEngine.EngineData.Item.Configuration.UserLimits(isPremium: true)
                 ),
                 stateWithPeers |> take(1),
                 updatedCurrentPreset |> take(1)
@@ -2064,7 +2064,7 @@ public func chatListFilterPresetController(context: AccountContext, currentPrese
         stateWithPeers,
         context.account.postbox.peerView(id: context.account.peerId),
         context.engine.data.get(
-            TelegramEngine.EngineData.Item.Configuration.UserLimits(isPremium: true)
+            IosappEngine.EngineData.Item.Configuration.UserLimits(isPremium: true)
         ),
         sharedLinks.get(),
         updatedCurrentPreset
@@ -2247,7 +2247,7 @@ func openCreateChatListFolderLink(context: AccountContext, folderId: Int32, chec
         existingLink = combineLatest(
             context.engine.peers.getExportedChatFolderLinks(id: folderId),
             context.engine.data.get(
-                EngineDataList(peerIds.map(TelegramEngine.EngineData.Item.Peer.Peer.init(id:)))
+                EngineDataList(peerIds.map(IosappEngine.EngineData.Item.Peer.Peer.init(id:)))
             )
         )
         |> map { result, peers -> ExportedChatFolderLink? in
@@ -2289,7 +2289,7 @@ func openCreateChatListFolderLink(context: AccountContext, folderId: Int32, chec
         }
         
         let _ = (context.engine.data.get(
-            EngineDataList(peerIds.map(TelegramEngine.EngineData.Item.Peer.Peer.init(id:)))
+            EngineDataList(peerIds.map(IosappEngine.EngineData.Item.Peer.Peer.init(id:)))
         )
         |> deliverOnMainQueue).start(next: { peers in
             let peers = peers.compactMap({ peer -> EnginePeer? in

@@ -3,9 +3,9 @@ import UIKit
 import AsyncDisplayKit
 import Display
 import SwiftSignalKit
-import TelegramCore
-import TelegramPresentationData
-import TelegramUIPreferences
+import IosappCore
+import IosappPresentationData
+import IosappUIPreferences
 import MergeLists
 import AccountContext
 import SearchUI
@@ -15,7 +15,7 @@ import ContextUI
 import PhoneNumberFormat
 import ItemListUI
 import AnimatedStickerNode
-import TelegramAnimatedStickerNode
+import IosappAnimatedStickerNode
 import ComponentFlow
 import SearchInputPanelComponent
 
@@ -421,7 +421,7 @@ public final class ContactsSearchContainerNode: SearchDisplayControllerContentNo
                     |> mapToSignal { peerIds -> Signal<[EnginePeer.Id: Bool], NoError> in
                         return context.engine.data.subscribe(
                             EngineDataMap(
-                                peerIds.map(TelegramEngine.EngineData.Item.Peer.IsPremiumRequiredForMessaging.init(id:))
+                                peerIds.map(IosappEngine.EngineData.Item.Peer.IsPremiumRequiredForMessaging.init(id:))
                             )
                         )
                     }

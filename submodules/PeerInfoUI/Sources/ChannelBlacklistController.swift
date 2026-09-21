@@ -2,9 +2,9 @@ import Foundation
 import UIKit
 import Display
 import SwiftSignalKit
-import TelegramCore
-import TelegramPresentationData
-import TelegramUIPreferences
+import IosappCore
+import IosappPresentationData
+import IosappUIPreferences
 import ItemListUI
 import PresentationDataUtils
 import OverlayStatusController
@@ -328,7 +328,7 @@ public func channelBlacklistController(context: AccountContext, updatedPresentat
                         }
                 }
             }
-            let _ = (context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: peerId))
+            let _ = (context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: peerId))
             |> mapToSignal { peer -> Signal<EnginePeer, NoError> in
                 if let peer {
                     return .single(peer)
@@ -344,7 +344,7 @@ public func channelBlacklistController(context: AccountContext, updatedPresentat
                 let presentationData = context.sharedContext.currentPresentationData.with { $0 }
                 let progress = OverlayStatusController(theme: presentationData.theme, type: .loading(cancelled: nil))
                 presentControllerImpl?(progress, nil)
-                removePeerDisposable.set((context.peerChannelMemberCategoriesContextsManager.updateMemberBannedRights(engine: context.engine, peerId: peerId, memberId: peer.id, bannedRights: TelegramChatBannedRights(flags: [.banReadMessages], untilDate: Int32.max))
+                removePeerDisposable.set((context.peerChannelMemberCategoriesContextsManager.updateMemberBannedRights(engine: context.engine, peerId: peerId, memberId: peer.id, bannedRights: IosappChatBannedRights(flags: [.banReadMessages], untilDate: Int32.max))
                     |> deliverOnMainQueue).start(error: { _ in
                     }, completed: { [weak progress] in 
                         progress?.dismiss()
@@ -369,7 +369,7 @@ public func channelBlacklistController(context: AccountContext, updatedPresentat
         }))
     }, openPeer: { participant in
         let _ = (context.engine.data.get(
-            TelegramEngine.EngineData.Item.Peer.Peer(id: peerId)
+            IosappEngine.EngineData.Item.Peer.Peer(id: peerId)
         )
         |> deliverOnMainQueue).start(next: { peer in
             guard case let .channel(channel) = peer else {
@@ -458,7 +458,7 @@ public func channelBlacklistController(context: AccountContext, updatedPresentat
     let previousParticipantsValue = Atomic<[RenderedChannelParticipant]?>(value: nil)
     
     let peer = context.engine.data.get(
-        TelegramEngine.EngineData.Item.Peer.Peer(id: peerId)
+        IosappEngine.EngineData.Item.Peer.Peer(id: peerId)
     )
     
     let presentationData = updatedPresentationData?.signal ?? context.sharedContext.presentationData

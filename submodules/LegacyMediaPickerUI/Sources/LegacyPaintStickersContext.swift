@@ -3,16 +3,16 @@ import UIKit
 import Display
 import Postbox
 import SwiftSignalKit
-import TelegramCore
+import IosappCore
 import AccountContext
 import AnimatedStickerNode
-import TelegramAnimatedStickerNode
+import IosappAnimatedStickerNode
 import YuvConversion
 import StickerResources
 import SolidRoundedButtonNode
 import MediaEditor
 import DrawingUI
-import TelegramPresentationData
+import IosappPresentationData
 import ContextUI
 import AnimatedCountLabelNode
 import CoreMedia
@@ -84,7 +84,7 @@ private class LegacyPaintStickerEntity: LegacyPaintEntity {
     }
     
     let postbox: Postbox
-    let file: TelegramMediaFile?
+    let file: IosappMediaFile?
     let entity: DrawingStickerEntity
     let animated: Bool
     let durationPromise = Promise<Double>()

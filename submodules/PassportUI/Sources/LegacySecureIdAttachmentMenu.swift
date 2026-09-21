@@ -5,7 +5,7 @@ import Display
 import SSignalKit
 import SwiftSignalKit
 import Postbox
-import TelegramCore
+import IosappCore
 import OverlayStatusController
 import AccountContext
 import LegacyUI
@@ -32,7 +32,7 @@ struct SecureIdRecognizedDocumentData {
     let expiryDate: Date?
 }
 
-func presentLegacySecureIdAttachmentMenu(context: AccountContext, present: @escaping (ViewController) -> Void, validLayout: ContainerViewLayout, type: SecureIdAttachmentMenuType, recognizeDocumentData: Bool, completion: @escaping ([TelegramMediaResource], SecureIdRecognizedDocumentData?) -> Void) {
+func presentLegacySecureIdAttachmentMenu(context: AccountContext, present: @escaping (ViewController) -> Void, validLayout: ContainerViewLayout, type: SecureIdAttachmentMenuType, recognizeDocumentData: Bool, completion: @escaping ([IosappMediaResource], SecureIdRecognizedDocumentData?) -> Void) {
     let presentationData = context.sharedContext.currentPresentationData.with { $0 }
     let legacyController = LegacyController(presentation: .custom, theme: presentationData.theme, initialLayout: validLayout)
     legacyController.statusBar.statusBarStyle = .Ignore
@@ -77,12 +77,12 @@ func presentLegacySecureIdAttachmentMenu(context: AccountContext, present: @esca
             |> delay(0.1, queue: .mainQueue())).start()
             
             let _ = (processedLegacySecureIdAttachmentItems(signal: signal)
-            |> mapToSignal { resources -> Signal<([TelegramMediaResource], SecureIdRecognizedDocumentData?), NoError> in
+            |> mapToSignal { resources -> Signal<([IosappMediaResource], SecureIdRecognizedDocumentData?), NoError> in
                 switch type {
                     case .generic, .idCard:
                         if recognizeDocumentData {
                             return recognizedResources(postbox: context.account.postbox, resources: resources, shouldBeDriversLicense: false)
-                                |> map { data -> ([TelegramMediaResource], SecureIdRecognizedDocumentData?) in
+                                |> map { data -> ([IosappMediaResource], SecureIdRecognizedDocumentData?) in
                                     return (resources, data)
                             }
                         }
@@ -116,7 +116,7 @@ private enum AttachmentItem {
     case iCloud(URL)
 }
 
-private func processedLegacySecureIdAttachmentItems(signal: SSignal) -> Signal<[TelegramMediaResource], NoError> {
+private func processedLegacySecureIdAttachmentItems(signal: SSignal) -> Signal<[IosappMediaResource], NoError> {
     let nativeSignal = Signal<AttachmentItem?, NoError> { subscriber in
         let disposable = signal.start(next: { next in
             if let dict = next as? [String: Any], let image = dict["image"] as? UIImage {
@@ -154,7 +154,7 @@ private func processedLegacySecureIdAttachmentItems(signal: SSignal) -> Signal<[
                 }
         }
     }
-    |> map { image -> [TelegramMediaResource] in
+    |> map { image -> [IosappMediaResource] in
         guard let image = image else {
             return []
         }
@@ -174,8 +174,8 @@ private func processedLegacySecureIdAttachmentItems(signal: SSignal) -> Signal<[
         }
     }
 
-    let collectedItems: Signal<[TelegramMediaResource], NoError> = collectedSignal
-    |> reduceLeft(value: [] as [TelegramMediaResource], f: { (list: [TelegramMediaResource], rest: [TelegramMediaResource]) -> [TelegramMediaResource] in
+    let collectedItems: Signal<[IosappMediaResource], NoError> = collectedSignal
+    |> reduceLeft(value: [] as [IosappMediaResource], f: { (list: [IosappMediaResource], rest: [IosappMediaResource]) -> [IosappMediaResource] in
         var list = list
         list.append(contentsOf: rest)
         return list
@@ -183,7 +183,7 @@ private func processedLegacySecureIdAttachmentItems(signal: SSignal) -> Signal<[
     return collectedItems
 }
 
-private func recognizedResources(postbox: Postbox, resources: [TelegramMediaResource], shouldBeDriversLicense: Bool) -> Signal<SecureIdRecognizedDocumentData?, NoError> {
+private func recognizedResources(postbox: Postbox, resources: [IosappMediaResource], shouldBeDriversLicense: Bool) -> Signal<SecureIdRecognizedDocumentData?, NoError> {
     var signals: [Signal<SecureIdRecognizedDocumentData?, NoError>] = []
     for resource in resources {
         let image = Signal<UIImage?, NoError> { subscriber in

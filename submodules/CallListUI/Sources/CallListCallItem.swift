@@ -3,12 +3,12 @@ import UIKit
 import AsyncDisplayKit
 import Display
 import SwiftSignalKit
-import TelegramCore
-import TelegramPresentationData
+import IosappCore
+import IosappPresentationData
 import ItemListUI
 import PresentationDataUtils
 import AvatarNode
-import TelegramStringFormatting
+import IosappStringFormatting
 import AccountContext
 import ChatListSearchItemHeader
 import AnimatedAvatarSetNode
@@ -394,7 +394,7 @@ class CallListCallItemNode: ItemListRevealOptionsItemNode {
             
             for message in item.messages {
                 inner: for media in message.media {
-                    if let action = media as? TelegramMediaAction {
+                    if let action = media as? IosappMediaAction {
                         if case let .phoneCall(_, discardReason, duration, video) = action.action {
                             isVideo = video
                             if message.flags.contains(.Incoming) {
@@ -472,7 +472,7 @@ class CallListCallItemNode: ItemListRevealOptionsItemNode {
                         }
                     }
                     titleAttributedString = NSAttributedString(string: peersString, font: titleFont, textColor: titleColor)
-                } else if let user = peer as? TelegramUser {
+                } else if let user = peer as? IosappUser {
                     if let firstName = user.firstName, let lastName = user.lastName, !firstName.isEmpty, !lastName.isEmpty {
                         let string = NSMutableAttributedString()
                         string.append(NSAttributedString(string: firstName, font: titleFont, textColor: titleColor))
@@ -489,9 +489,9 @@ class CallListCallItemNode: ItemListRevealOptionsItemNode {
                     } else {
                         titleAttributedString = NSAttributedString(string: item.presentationData.strings.User_DeletedAccount, font: titleFont, textColor: titleColor)
                     }
-                } else if let group = peer as? TelegramGroup {
+                } else if let group = peer as? IosappGroup {
                     titleAttributedString = NSAttributedString(string: group.title, font: titleFont, textColor: titleColor)
-                } else if let channel = peer as? TelegramChannel {
+                } else if let channel = peer as? IosappChannel {
                     titleAttributedString = NSAttributedString(string: channel.title, font: titleFont, textColor: titleColor)
                 }
                 

@@ -2,19 +2,19 @@ import Foundation
 import UIKit
 import Display
 import AsyncDisplayKit
-import TelegramCore
+import IosappCore
 import SafariServices
-import TelegramPresentationData
+import IosappPresentationData
 import AccountContext
 import OpenInExternalAppUI
-import TelegramUIPreferences
+import IosappUIPreferences
 
 class InstantPageReferenceControllerNode: ViewControllerTracingNode, ASScrollViewDelegate {
     private let context: AccountContext
     private let sourceLocation: InstantPageSourceLocation
     private let theme: InstantPageTheme
     private var presentationData: PresentationData
-    private let webPage: (webPage: TelegramMediaWebpage, instantPage: InstantPage?)
+    private let webPage: (webPage: IosappMediaWebpage, instantPage: InstantPage?)
     private let anchorText: NSAttributedString
 
     private let dimNode: ASDisplayNode
@@ -37,7 +37,7 @@ class InstantPageReferenceControllerNode: ViewControllerTracingNode, ASScrollVie
     var dismiss: (() -> Void)?
     var close: (() -> Void)?
     
-    init(context: AccountContext, sourceLocation: InstantPageSourceLocation, theme: InstantPageTheme, webPage: TelegramMediaWebpage, instantPage: InstantPage?, anchorText: NSAttributedString, openUrl: @escaping (InstantPageUrlItem) -> Void, openUrlIn: @escaping (InstantPageUrlItem) -> Void, present: @escaping (ViewController, Any?) -> Void) {
+    init(context: AccountContext, sourceLocation: InstantPageSourceLocation, theme: InstantPageTheme, webPage: IosappMediaWebpage, instantPage: InstantPage?, anchorText: NSAttributedString, openUrl: @escaping (InstantPageUrlItem) -> Void, openUrlIn: @escaping (InstantPageUrlItem) -> Void, present: @escaping (ViewController, Any?) -> Void) {
         self.context = context
         self.sourceLocation = sourceLocation
         self.presentationData = context.sharedContext.currentPresentationData.with { $0 }

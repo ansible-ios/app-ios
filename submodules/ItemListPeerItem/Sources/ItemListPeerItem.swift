@@ -3,13 +3,13 @@ import UIKit
 import Display
 import AsyncDisplayKit
 import SwiftSignalKit
-import TelegramCore
-import TelegramPresentationData
-import TelegramUIPreferences
+import IosappCore
+import IosappPresentationData
+import IosappUIPreferences
 import ItemListUI
 import PresentationDataUtils
 import AvatarNode
-import TelegramStringFormatting
+import IosappStringFormatting
 import PeerPresenceStatusManager
 import ContextUI
 import AccountContext
@@ -325,19 +325,19 @@ public final class ItemListPeerItem: ListViewItem, ItemListItem, ItemListRevealO
     public enum Context {
         public final class Custom {
             public let accountPeerId: EnginePeer.Id
-            public let engine: TelegramEngine
+            public let engine: IosappEngine
             public let animationCache: AnimationCache
             public let animationRenderer: MultiAnimationRenderer
             public let isPremiumDisabled: Bool
-            public let resolveInlineStickers: ([Int64]) -> Signal<[Int64: TelegramMediaFile], NoError>
+            public let resolveInlineStickers: ([Int64]) -> Signal<[Int64: IosappMediaFile], NoError>
 
             public init(
                 accountPeerId: EnginePeer.Id,
-                engine: TelegramEngine,
+                engine: IosappEngine,
                 animationCache: AnimationCache,
                 animationRenderer: MultiAnimationRenderer,
                 isPremiumDisabled: Bool,
-                resolveInlineStickers: @escaping ([Int64]) -> Signal<[Int64: TelegramMediaFile], NoError>
+                resolveInlineStickers: @escaping ([Int64]) -> Signal<[Int64: IosappMediaFile], NoError>
             ) {
                 self.accountPeerId = accountPeerId
                 self.engine = engine
@@ -360,7 +360,7 @@ public final class ItemListPeerItem: ListViewItem, ItemListItem, ItemListRevealO
             }
         }
         
-        public var engine: TelegramEngine {
+        public var engine: IosappEngine {
             switch self {
             case let .account(context):
                 return context.engine
@@ -396,7 +396,7 @@ public final class ItemListPeerItem: ListViewItem, ItemListItem, ItemListRevealO
             }
         }
         
-        public var resolveInlineStickers: ([Int64]) -> Signal<[Int64: TelegramMediaFile], NoError> {
+        public var resolveInlineStickers: ([Int64]) -> Signal<[Int64: IosappMediaFile], NoError> {
             switch self {
             case let .account(context):
                 return { fileIds in

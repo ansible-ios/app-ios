@@ -2,9 +2,9 @@ import Foundation
 import UIKit
 import Display
 import SwiftSignalKit
-import TelegramCore
+import IosappCore
 import LegacyComponents
-import TelegramPresentationData
+import IosappPresentationData
 import ItemListUI
 import PresentationDataUtils
 import OverlayStatusController
@@ -183,7 +183,7 @@ public func deleteAccountOptionsController(context: AccountContext, navigationCo
     let arguments = DeleteAccountOptionsArguments(changePhoneNumber: {
         context.engine.accountData.addAppLogEvent(type: "deactivate.options_phone_change_tap")
         
-        let _ = (context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: context.engine.account.peerId))
+        let _ = (context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: context.engine.account.peerId))
         |> deliverOnMainQueue).start(next: { accountPeer in
             guard let accountPeer = accountPeer, case let .user(user) = accountPeer else {
                 return
@@ -379,7 +379,7 @@ public func deleteAccountOptionsController(context: AccountContext, navigationCo
                         guard let peerId else {
                             return
                         }
-                        let _ = (context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: peerId))
+                        let _ = (context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: peerId))
                         |> deliverOnMainQueue).start(next: { peer in
                             guard let peer else {
                                 return

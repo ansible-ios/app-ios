@@ -3,8 +3,8 @@ import UIKit
 import SwiftSignalKit
 import AsyncDisplayKit
 import Display
-import TelegramCore
-import TelegramPresentationData
+import IosappCore
+import IosappPresentationData
 import ActivityIndicator
 import AppBundle
 import AvatarNode
@@ -60,12 +60,12 @@ public struct SearchBarToken {
     public let peer: (EnginePeer, AccountContext, PresentationTheme)?
     public let isTag: Bool
     public let reaction: MessageReaction.Reaction?
-    public let emojiFile: TelegramMediaFile?
+    public let emojiFile: IosappMediaFile?
     public let title: String
     public let style: Style?
     public let permanent: Bool
     
-    public init(id: AnyHashable, context: AccountContext? = nil, icon: UIImage?, iconOffset: CGFloat? = 0.0, peer: (EnginePeer, AccountContext, PresentationTheme)? = nil, isTag: Bool = false, reaction: MessageReaction.Reaction? = nil, emojiFile: TelegramMediaFile? = nil, title: String, style: Style? = nil, permanent: Bool) {
+    public init(id: AnyHashable, context: AccountContext? = nil, icon: UIImage?, iconOffset: CGFloat? = 0.0, peer: (EnginePeer, AccountContext, PresentationTheme)? = nil, isTag: Bool = false, reaction: MessageReaction.Reaction? = nil, emojiFile: IosappMediaFile? = nil, title: String, style: Style? = nil, permanent: Bool) {
         self.id = id
         self.context = context
         self.icon = icon

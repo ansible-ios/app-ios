@@ -2,7 +2,7 @@ import Foundation
 import UIKit
 import AsyncDisplayKit
 import Display
-import TelegramCore
+import IosappCore
 import TextFormat
 
 public final class InstantPageMultiTextAdapter: ASDisplayNode, TextNodeProtocol {
@@ -274,7 +274,7 @@ private func escapeSelectionTableCell(_ string: String) -> String {
 
 /// Converts a styled slice of an InstantPage text item into inline markdown,
 /// reading the same attributes the renderer wrote (font-based bold/italic/mono,
-/// strikethrough style, the TelegramTextAttributes.URL link item, custom emoji).
+/// strikethrough style, the IosappTextAttributes.URL link item, custom emoji).
 private func inlineMarkdown(from slice: NSAttributedString) -> String {
     let fullRange = NSRange(location: 0, length: slice.length)
     var result = ""
@@ -335,7 +335,7 @@ private func inlineMarkdown(from slice: NSAttributedString) -> String {
             }
         }
 
-        if let urlItem = attributes[NSAttributedString.Key(rawValue: TelegramTextAttributes.URL)] as? InstantPageUrlItem {
+        if let urlItem = attributes[NSAttributedString.Key(rawValue: IosappTextAttributes.URL)] as? InstantPageUrlItem {
             let url = urlItem.url
             let needsBrackets = url.contains("(") || url.contains(")") || url.contains(" ")
             let destination = needsBrackets ? "<\(url)>" : url

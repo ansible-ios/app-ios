@@ -1,11 +1,11 @@
 import Foundation
 import UIKit
 import AsyncDisplayKit
-import TelegramCore
+import IosappCore
 import SwiftSignalKit
 import Display
-import TelegramPresentationData
-import TelegramUIPreferences
+import IosappPresentationData
+import IosappUIPreferences
 import MergeLists
 import AvatarNode
 import AccountContext
@@ -153,7 +153,7 @@ private class CancelButtonNode: ASDisplayNode {
 }
 
 final class ShareTopicsContainerNode: ASDisplayNode, ShareContentContainerNode {
-    func setEnsurePeerVisibleOnLayout(_ peerId: TelegramCore.EnginePeer.Id?) {
+    func setEnsurePeerVisibleOnLayout(_ peerId: IosappCore.EnginePeer.Id?) {
         
     }
     

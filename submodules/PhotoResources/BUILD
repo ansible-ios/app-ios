@@ -10,7 +10,7 @@ swift_library(
         "-warnings-as-errors",
     ],
     deps = [
-        "//submodules/TelegramCore:TelegramCore",
+        "//submodules/IosappCore:IosappCore",
         "//submodules/Postbox:Postbox",
         "//submodules/SSignalKit/SwiftSignalKit:SwiftSignalKit",
         "//submodules/Display:Display",
@@ -20,7 +20,7 @@ swift_library(
         "//submodules/Tuples:Tuples",
         "//submodules/AccountContext:AccountContext",
         "//submodules/MediaResources:MediaResources",
-        "//submodules/TelegramUIPreferences:TelegramUIPreferences",
+        "//submodules/IosappUIPreferences:IosappUIPreferences",
         "//submodules/WebPBinding:WebPBinding",
         "//submodules/AppBundle:AppBundle",
         "//submodules/MusicAlbumArtResources:MusicAlbumArtResources",

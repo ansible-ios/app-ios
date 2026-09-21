@@ -1,9 +1,9 @@
 import Foundation
 import Postbox
-import TelegramCore
+import IosappCore
 import SwiftSignalKit
 import Display
-import TelegramUIPreferences
+import IosappUIPreferences
 import AccountContext
 
 public enum ChatListNodeLocation: Equatable {
@@ -146,20 +146,20 @@ public func chatListFilterPredicate(filter: ChatListFilterData, accountPeerId: E
             }
         }
         if !filter.categories.contains(.contacts) && isContact {
-            if let user = peer as? TelegramUser {
+            if let user = peer as? IosappUser {
                 if user.botInfo == nil && !user.flags.contains(.isSupport) {
                     return false
                 }
-            } else if let _ = peer as? TelegramSecretChat {
+            } else if let _ = peer as? IosappSecretChat {
                 return false
             }
         }
         if !filter.categories.contains(.nonContacts) && (!isContact && peer.id != accountPeerId) {
-            if let user = peer as? TelegramUser {
+            if let user = peer as? IosappUser {
                 if user.botInfo == nil {
                     return false
                 }
-            } else if let _ = peer as? TelegramSecretChat {
+            } else if let _ = peer as? IosappSecretChat {
                 return false
             }
         }
@@ -167,25 +167,25 @@ public func chatListFilterPredicate(filter: ChatListFilterData, accountPeerId: E
             return false
         }
         if !filter.categories.contains(.bots) {
-            if let user = peer as? TelegramUser {
+            if let user = peer as? IosappUser {
                 if user.botInfo != nil || user.flags.contains(.isSupport) {
                     return false
                 }
             }
         }
         if !filter.categories.contains(.groups) {
-            if let _ = peer as? TelegramGroup {
+            if let _ = peer as? IosappGroup {
                 return false
-            } else if let channel = peer as? TelegramChannel {
+            } else if let channel = peer as? IosappChannel {
                 if case .group = channel.info {
                     return false
                 }
-            } else if let _ = peer as? TelegramCommunity {
+            } else if let _ = peer as? IosappCommunity {
                 return false
             }
         }
         if !filter.categories.contains(.channels) {
-            if let channel = peer as? TelegramChannel {
+            if let channel = peer as? IosappChannel {
                 if case .broadcast = channel.info {
                     return false
                 }
@@ -319,7 +319,7 @@ public func chatListViewForLocation(chatListLocation: ChatListControllerLocation
                     continue
                 }
                 
-                let defaultPeerNotificationSettings: TelegramPeerNotificationSettings = (view.peerNotificationSettings as? TelegramPeerNotificationSettings) ?? .defaultSettings
+                let defaultPeerNotificationSettings: IosappPeerNotificationSettings = (view.peerNotificationSettings as? IosappPeerNotificationSettings) ?? .defaultSettings
                 
                 var hasUnseenMentions = false
                 

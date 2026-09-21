@@ -12,10 +12,10 @@ swift_library(
     deps = [
         "//submodules/SSignalKit/SwiftSignalKit:SwiftSignalKit",
         "//submodules/Display:Display",
-        "//submodules/TelegramCore:TelegramCore",
+        "//submodules/IosappCore:IosappCore",
         "//submodules/MtProtoKit:MtProtoKit",
-        "//submodules/TelegramPresentationData:TelegramPresentationData",
-        "//submodules/TelegramUIPreferences:TelegramUIPreferences",
+        "//submodules/IosappPresentationData:IosappPresentationData",
+        "//submodules/IosappUIPreferences:IosappUIPreferences",
         "//submodules/ItemListUI:ItemListUI",
         "//submodules/PresentationDataUtils:PresentationDataUtils",
         "//submodules/OverlayStatusController:OverlayStatusController",
@@ -24,7 +24,7 @@ swift_library(
         "//submodules/GZip:GZip",
         "//third-party/ZipArchive:ZipArchive",
         "//submodules/InAppPurchaseManager:InAppPurchaseManager",
-        "//submodules/TelegramVoip",
+        "//submodules/IosappVoip",
     ],
     visibility = [
         "//visibility:public",

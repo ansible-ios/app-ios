@@ -2,9 +2,9 @@ import Foundation
 import UIKit
 import AsyncDisplayKit
 import Display
-import TelegramCore
+import IosappCore
 import SwiftSignalKit
-import TelegramPresentationData
+import IosappPresentationData
 import AccountContext
 import PhotoResources
 import MediaResources
@@ -27,7 +27,7 @@ final class InstantPageV2InlineImageView: UIView {
     private let fetchedDisposable = MetaDisposable()
 
     init(media: EngineMedia,
-         webpage: TelegramMediaWebpage?,
+         webpage: IosappMediaWebpage?,
          frame: CGRect,
          context: AccountContext,
          userLocation: MediaResourceUserLocation,
@@ -52,7 +52,7 @@ final class InstantPageV2InlineImageView: UIView {
         self.fetchedDisposable.dispose()
     }
 
-    private func bindSignal(webpage: TelegramMediaWebpage?,
+    private func bindSignal(webpage: IosappMediaWebpage?,
                             context: AccountContext,
                             userLocation: MediaResourceUserLocation) {
         // Without a webpage we can't form a `WebpageReference` for the standard

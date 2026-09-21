@@ -2,10 +2,10 @@ import Foundation
 import UIKit
 import Display
 import AsyncDisplayKit
-import TelegramCore
+import IosappCore
 import SwiftSignalKit
 import AccountContext
-import TelegramPresentationData
+import IosappPresentationData
 import ComponentFlow
 import ViewControllerComponent
 import ResizableSheetComponent
@@ -20,13 +20,13 @@ import LottieAnimationComponent
 import ListSectionComponent
 import ListActionItemComponent
 import AvatarComponent
-import TelegramStringFormatting
+import IosappStringFormatting
 import Markdown
 import AppBundle
 import TextFormat
 import ChatbotSetupScreen
 
-private func botRecipientsCategoryCount(_ categories: TelegramBusinessRecipients.Categories) -> Int {
+private func botRecipientsCategoryCount(_ categories: IosappBusinessRecipients.Categories) -> Int {
     var count = 0
     if categories.contains(.existingChats) {
         count += 1
@@ -82,7 +82,7 @@ private final class RecentSessionSheetContent: CombinedComponent {
     
     final class State: ComponentState {
         fileprivate struct ConnectedBotRecipientsState {
-            var categories: TelegramBusinessRecipients.Categories
+            var categories: IosappBusinessRecipients.Categories
             var peers: [BusinessRecipientListScreen.ResolvedPeer]
             var excludePeers: [BusinessRecipientListScreen.ResolvedPeer]
             var excludeByDefault: Bool
@@ -123,9 +123,9 @@ private final class RecentSessionSheetContent: CombinedComponent {
                 
                 self.botPeerDisposable.set((
                     context.engine.data.get(
-                        TelegramEngine.EngineData.Item.Peer.Peer(id: connectedBot.id),
-                        EngineDataMap(additionalPeerIds.map(TelegramEngine.EngineData.Item.Peer.Peer.init(id:))),
-                        EngineDataMap(additionalPeerIds.map(TelegramEngine.EngineData.Item.Peer.IsContact.init(id:)))
+                        IosappEngine.EngineData.Item.Peer.Peer(id: connectedBot.id),
+                        EngineDataMap(additionalPeerIds.map(IosappEngine.EngineData.Item.Peer.Peer.init(id:))),
+                        EngineDataMap(additionalPeerIds.map(IosappEngine.EngineData.Item.Peer.IsContact.init(id:)))
                     )
                     |> deliverOnMainQueue
                 ).start(next: { [weak self] peer, peers, isContacts in
@@ -212,13 +212,13 @@ private final class RecentSessionSheetContent: CombinedComponent {
                 return
             }
             
-            let recipients = TelegramBusinessRecipients(
+            let recipients = IosappBusinessRecipients(
                 categories: connectedBotRecipients.categories,
                 additionalPeers: Set(connectedBotRecipients.peers.map(\.peer.id)),
                 excludePeers: Set(connectedBotRecipients.excludePeers.map(\.peer.id)),
                 exclude: connectedBotRecipients.excludeByDefault
             )
-            let _ = self.context.engine.accountData.setAccountConnectedBot(bot: TelegramAccountConnectedBot(
+            let _ = self.context.engine.accountData.setAccountConnectedBot(bot: IosappAccountConnectedBot(
                 id: connectedBot.id,
                 recipients: recipients,
                 rights: connectedBot.rights,
@@ -411,7 +411,7 @@ private final class RecentSessionSheetContent: CombinedComponent {
             let buttonString: String?
             let clientSectionHeader: String?
             let clientSectionFooter: String?
-            let connectedBot: TelegramAccountConnectedBot?
+            let connectedBot: IosappAccountConnectedBot?
             
             let openBotProfile: () -> Void = {
                 guard let botPeer = state.botPeer, let navigationController = environment.controller()?.navigationController as? NavigationController, let peerInfoController = component.context.sharedContext.makePeerInfoController(context: component.context, updatedPresentationData: nil, peer: botPeer, mode: .generic, avatarInitiallyExpanded: false, fromChat: false, requestsContext: nil) else {
@@ -492,19 +492,19 @@ private final class RecentSessionSheetContent: CombinedComponent {
                             bold: MarkdownAttributeSet(font: Font.regular(15.0), textColor: theme.actionSheet.secondaryTextColor),
                             link: MarkdownAttributeSet(font: Font.regular(15.0), textColor: theme.actionSheet.controlAccentColor),
                             linkAttribute: { _ in
-                                return (TelegramTextAttributes.URL, "peer")
+                                return (IosappTextAttributes.URL, "peer")
                             }
                         )
                     )
                     subtitleHighlightAction = { attributes in
-                        if let _ = attributes[NSAttributedString.Key(rawValue: TelegramTextAttributes.URL)] {
-                            return NSAttributedString.Key(rawValue: TelegramTextAttributes.URL)
+                        if let _ = attributes[NSAttributedString.Key(rawValue: IosappTextAttributes.URL)] {
+                            return NSAttributedString.Key(rawValue: IosappTextAttributes.URL)
                         } else {
                             return nil
                         }
                     }
                     subtitleTapAction = { attributes, _ in
-                        if let _ = attributes[NSAttributedString.Key(rawValue: TelegramTextAttributes.URL)] as? String {
+                        if let _ = attributes[NSAttributedString.Key(rawValue: IosappTextAttributes.URL)] as? String {
                             openBotProfile()
                         }
                     }
@@ -1179,7 +1179,7 @@ public class RecentSessionScreen: ViewControllerComponentContainer {
     public enum Subject {
         case session(RecentAccountSession)
         case website(WebAuthorization, EnginePeer?)
-        case connectedBot(TelegramAccountConnectedBot)
+        case connectedBot(IosappAccountConnectedBot)
     }
     
     private let context: AccountContext

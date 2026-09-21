@@ -1,6 +1,6 @@
 import Foundation
 import AppBundle
-import TelegramStringFormatting
+import IosappStringFormatting
 
 public func emojiFlagForISOCountryCode(_ countryCode: String) -> String {
     if countryCode.count != 2 {

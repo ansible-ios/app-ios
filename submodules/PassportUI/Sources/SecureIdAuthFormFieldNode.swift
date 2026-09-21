@@ -3,9 +3,9 @@ import UIKit
 import SwiftSignalKit
 import AsyncDisplayKit
 import Display
-import TelegramCore
-import TelegramPresentationData
-import TelegramStringFormatting
+import IosappCore
+import IosappPresentationData
+import IosappStringFormatting
 import CountrySelectionUI
 import PhoneNumberFormat
 

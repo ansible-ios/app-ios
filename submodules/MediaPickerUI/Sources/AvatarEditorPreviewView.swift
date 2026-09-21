@@ -2,7 +2,7 @@ import Foundation
 import UIKit
 import Display
 import SwiftSignalKit
-import TelegramCore
+import IosappCore
 import AvatarBackground
 import AccountContext
 import EmojiTextAttachmentView
@@ -13,7 +13,7 @@ import MultilineTextComponent
 final class AvatarEditorPreviewView: UIView {
     private let context: AccountContext
     private var disposable: Disposable?
-    private var files: [TelegramMediaFile] = []
+    private var files: [IosappMediaFile] = []
     private var currentIndex = 0
     private var currentBackgroundIndex = 0
     private var switchingToNext = false
@@ -36,13 +36,13 @@ final class AvatarEditorPreviewView: UIView {
         
         self.addSubview(self.backgroundView)
         
-        self.disposable = (context.engine.data.subscribe(TelegramEngine.EngineData.Item.OrderedLists.ListItems(collectionId: Namespaces.OrderedItemList.CloudFeaturedProfilePhotoEmoji))
+        self.disposable = (context.engine.data.subscribe(IosappEngine.EngineData.Item.OrderedLists.ListItems(collectionId: Namespaces.OrderedItemList.CloudFeaturedProfilePhotoEmoji))
         |> runOn(Queue.concurrentDefaultQueue())
         |> deliverOnMainQueue).start(next: { [weak self] items in
             guard let self else {
                 return
             }
-            var files: [TelegramMediaFile] = []
+            var files: [IosappMediaFile] = []
             for item in items.prefix(8) {
                 if let mediaItem = item.contents.get(RecentMediaItem.self) {
                     let file = mediaItem.media._parse()

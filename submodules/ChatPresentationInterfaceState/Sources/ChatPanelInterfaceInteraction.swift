@@ -2,7 +2,7 @@ import Foundation
 import UIKit
 import AsyncDisplayKit
 import SwiftSignalKit
-import TelegramCore
+import IosappCore
 import Display
 import AccountContext
 import ContextUI
@@ -122,7 +122,7 @@ public final class ChatPanelInterfaceInteraction {
     public let switchMediaRecordingMode: () -> Void
     public let setupMessageAutoremoveTimeout: () -> Void
     public let sendSticker: (FileMediaReference, Bool, UIView?, CGRect?, CALayer?, [EngineItemCollectionId]) -> Bool
-    public let editSticker: (TelegramMediaFile) -> Void
+    public let editSticker: (IosappMediaFile) -> Void
     public let unblockPeer: () -> Void
     public let pinMessage: (EngineMessage.Id, ContextControllerProtocol?) -> Void
     public let unpinMessage: (EngineMessage.Id, Bool, ContextControllerProtocol?) -> Void
@@ -255,7 +255,7 @@ public final class ChatPanelInterfaceInteraction {
         switchMediaRecordingMode: @escaping () -> Void,
         setupMessageAutoremoveTimeout: @escaping () -> Void,
         sendSticker: @escaping (FileMediaReference, Bool, UIView?, CGRect?, CALayer?, [EngineItemCollectionId]) -> Bool,
-        editSticker: @escaping (TelegramMediaFile) -> Void,
+        editSticker: @escaping (IosappMediaFile) -> Void,
         unblockPeer: @escaping () -> Void,
         pinMessage: @escaping (EngineMessage.Id, ContextControllerProtocol?) -> Void,
         unpinMessage: @escaping (EngineMessage.Id, Bool, ContextControllerProtocol?) -> Void,
