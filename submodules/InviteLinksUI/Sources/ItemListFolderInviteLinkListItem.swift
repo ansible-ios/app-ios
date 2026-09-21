@@ -3,10 +3,10 @@ import UIKit
 import Display
 import AsyncDisplayKit
 import SwiftSignalKit
-import IosappPresentationData
+import TelegramPresentationData
 import ItemListUI
 import ShimmerEffect
-import IosappCore
+import TelegramCore
 
 private enum ItemBackgroundColor: Equatable {
     case blue
@@ -521,7 +521,7 @@ public class ItemListFolderInviteLinkListItemNode: ItemListRevealOptionsItemNode
                     strongSelf.updateLayout(size: layout.contentSize, leftInset: params.leftInset, rightInset: params.rightInset)
                     
                     if item.removeAction != nil {
-                        strongSelf.setRevealOptions((left: [], right: [ItemListRevealOption(key: 0, title: item.presentationData.strings.ChatListFilter_LinkActionDelete, icon: .none, color: item.presentationData.theme.list.itemDisclosureActions.destructive.fillColor, textColor: item.presentationData.theme.list.itemDisclosureActions.destructive.foregroundColor)]))
+                        strongSelf.setRevealOptions((left: [], right: [ItemListRevealOption(key: 0, title: item.presentationData.strings.ChatListFilter_LinkActionDelete, icon: .none, color: item.presentationData.theme.list.itemDisclosureActions.destructive.fillColor, iconColor: item.presentationData.theme.list.itemDisclosureActions.destructive.foregroundColor, textColor: item.presentationData.theme.list.itemSecondaryTextColor)]))
                     } else {
                         strongSelf.setRevealOptions((left: [], right: []))
                     }

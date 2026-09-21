@@ -1,11 +1,11 @@
 import Foundation
 import UIKit
-import IosappCore
+import TelegramCore
 import AsyncDisplayKit
 import Display
-import IosappPresentationData
+import TelegramPresentationData
 import AccountContext
-import IosappUIPreferences
+import TelegramUIPreferences
 import ContextUI
 
 private final class InstantPageSlideshowItemNode: ASDisplayNode {
@@ -61,13 +61,19 @@ private final class InstantPageSlideshowItemNode: ASDisplayNode {
         }
         return nil
     }
+    
+    func updateExternalMediaDimensions(_ update: ((EngineMedia.Id, PixelDimensions) -> Void)?) {
+        if let node = self.contentNode as? InstantPageImageNode {
+            node.updateExternalMediaDimensions = update
+        }
+    }
 }
 
 private final class InstantPageSlideshowPagerNode: ASDisplayNode, ASScrollViewDelegate {
     private let context: AccountContext
     private let sourceLocation: InstantPageSourceLocation
     private let theme: InstantPageTheme
-    private let webPage: IosappMediaWebpage
+    private let webPage: TelegramMediaWebpage
     private let openMedia: (InstantPageMedia) -> Void
     private let longPressMedia: (InstantPageMedia) -> Void
     private let activatePinchPreview: ((PinchSourceContainerNode) -> Void)?
@@ -88,6 +94,13 @@ private final class InstantPageSlideshowPagerNode: ASDisplayNode, ASScrollViewDe
     }
     
     private var containerLayout: ContainerViewLayout?
+    var updateExternalMediaDimensions: ((EngineMedia.Id, PixelDimensions) -> Void)? {
+        didSet {
+            for node in self.itemNodes {
+                node.updateExternalMediaDimensions(self.updateExternalMediaDimensions)
+            }
+        }
+    }
     
     var centralItemIndexUpdated: (Int?) -> Void = { _ in }
     
@@ -101,7 +114,7 @@ private final class InstantPageSlideshowPagerNode: ASDisplayNode, ASScrollViewDe
         }
     }
     
-    init(context: AccountContext, sourceLocation: InstantPageSourceLocation, theme: InstantPageTheme, webPage: IosappMediaWebpage, openMedia: @escaping (InstantPageMedia) -> Void, longPressMedia: @escaping (InstantPageMedia) -> Void, activatePinchPreview: ((PinchSourceContainerNode) -> Void)?, pinchPreviewFinished: ((InstantPageNode) -> Void)?, pageGap: CGFloat = 0.0) {
+    init(context: AccountContext, sourceLocation: InstantPageSourceLocation, theme: InstantPageTheme, webPage: TelegramMediaWebpage, openMedia: @escaping (InstantPageMedia) -> Void, longPressMedia: @escaping (InstantPageMedia) -> Void, activatePinchPreview: ((PinchSourceContainerNode) -> Void)?, pinchPreviewFinished: ((InstantPageNode) -> Void)?, pageGap: CGFloat = 0.0) {
         self.context = context
         self.sourceLocation = sourceLocation
         self.theme = theme
@@ -195,6 +208,7 @@ private final class InstantPageSlideshowPagerNode: ASDisplayNode, ASScrollViewDe
         }
         
         let node = InstantPageSlideshowItemNode(contentNode: contentNode)
+        node.updateExternalMediaDimensions(self.updateExternalMediaDimensions)
         
         node.index = index
         return node
@@ -380,13 +394,18 @@ private final class InstantPageSlideshowPagerNode: ASDisplayNode, ASScrollViewDe
     }
 }
 
-final class InstantPageSlideshowNode: ASDisplayNode, InstantPageNode {
+final class InstantPageSlideshowNode: ASDisplayNode, InstantPageNode, InstantPageExternalMediaDimensionsNode {
     var medias: [InstantPageMedia] = []
+    var updateExternalMediaDimensions: ((EngineMedia.Id, PixelDimensions) -> Void)? {
+        didSet {
+            self.pagerNode.updateExternalMediaDimensions = self.updateExternalMediaDimensions
+        }
+    }
     
     private let pagerNode: InstantPageSlideshowPagerNode
     private let pageControlNode: PageControlNode
     
-    init(context: AccountContext, sourceLocation: InstantPageSourceLocation, theme: InstantPageTheme, webPage: IosappMediaWebpage, medias: [InstantPageMedia], openMedia: @escaping (InstantPageMedia) -> Void, longPressMedia: @escaping (InstantPageMedia) -> Void, activatePinchPreview: ((PinchSourceContainerNode) -> Void)?, pinchPreviewFinished: ((InstantPageNode) -> Void)?) {
+    init(context: AccountContext, sourceLocation: InstantPageSourceLocation, theme: InstantPageTheme, webPage: TelegramMediaWebpage, medias: [InstantPageMedia], openMedia: @escaping (InstantPageMedia) -> Void, longPressMedia: @escaping (InstantPageMedia) -> Void, activatePinchPreview: ((PinchSourceContainerNode) -> Void)?, pinchPreviewFinished: ((InstantPageNode) -> Void)?) {
         self.medias = medias
         
         self.pagerNode = InstantPageSlideshowPagerNode(context: context, sourceLocation: sourceLocation, theme: theme, webPage: webPage, openMedia: openMedia, longPressMedia: longPressMedia, activatePinchPreview: activatePinchPreview, pinchPreviewFinished: pinchPreviewFinished)

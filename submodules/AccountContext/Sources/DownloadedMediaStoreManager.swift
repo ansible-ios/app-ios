@@ -1,6 +1,6 @@
 import Foundation
-import IosappCore
-import IosappUIPreferences
+import TelegramCore
+import TelegramUIPreferences
 import SwiftSignalKit
 
 public protocol DownloadedMediaStoreManager: AnyObject {

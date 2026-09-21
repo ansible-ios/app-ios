@@ -2,10 +2,9 @@ import Foundation
 import UIKit
 import Display
 import AsyncDisplayKit
-import IosappCore
+import TelegramCore
 import SwiftSignalKit
-import Postbox
-import IosappPresentationData
+import TelegramPresentationData
 import ListSectionHeaderNode
 import AccountContext
 import StickerResources

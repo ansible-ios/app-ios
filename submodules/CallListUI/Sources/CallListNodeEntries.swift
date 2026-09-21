@@ -1,7 +1,7 @@
 import Foundation
 import UIKit
-import IosappCore
-import IosappPresentationData
+import TelegramCore
+import TelegramPresentationData
 import MergeLists
 
 enum CallListNodeEntryId: Hashable {

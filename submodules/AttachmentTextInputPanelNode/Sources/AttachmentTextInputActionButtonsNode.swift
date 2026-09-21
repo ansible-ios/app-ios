@@ -2,8 +2,8 @@ import Foundation
 import UIKit
 import AsyncDisplayKit
 import Display
-import IosappCore
-import IosappPresentationData
+import TelegramCore
+import TelegramPresentationData
 import ContextUI
 import ChatPresentationInterfaceState
 import ComponentFlow
@@ -114,7 +114,7 @@ final class AttachmentTextInputActionButtonsNode: ASDisplayNode, ChatSendMessage
         self.iconNode.image = image
     }
     
-    func updateTheme(theme: PresentationTheme, wallpaper: IosappWallpaper) {
+    func updateTheme(theme: PresentationTheme, wallpaper: TelegramWallpaper) {
         self.backgroundNode.backgroundColor = theme.chat.inputPanel.actionControlFillColor
     }
     

@@ -1,5 +1,5 @@
 import Foundation
-import IosappCore
+import TelegramCore
 
 private let dateFormatter: DateFormatter = {
     let formatter = DateFormatter()

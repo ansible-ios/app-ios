@@ -1,11 +1,11 @@
 import Foundation
 import UIKit
-import IosappCore
+import TelegramCore
 import SwiftSignalKit
 import UniversalMediaPlayer
 import AccountContext
 
-private func internalMessageFileMediaPlaybackStatus(context: AccountContext, file: IosappMediaFile, message: EngineMessage, isRecentActions: Bool, isGlobalSearch: Bool, isDownloadList: Bool, isSavedMusic: Bool, isAttachMusic: Bool) -> Signal<MediaPlayerStatus?, NoError> {
+private func internalMessageFileMediaPlaybackStatus(context: AccountContext, file: TelegramMediaFile, message: EngineMessage, isRecentActions: Bool, isGlobalSearch: Bool, isDownloadList: Bool, isSavedMusic: Bool, isAttachMusic: Bool) -> Signal<MediaPlayerStatus?, NoError> {
     guard let playerType = peerMessageMediaPlayerType(message) else {
         return .single(nil)
     }
@@ -20,7 +20,7 @@ private func internalMessageFileMediaPlaybackStatus(context: AccountContext, fil
     }
 }
 
-public func messageFileMediaPlaybackStatus(context: AccountContext, file: IosappMediaFile, message: EngineMessage, isRecentActions: Bool, isGlobalSearch: Bool, isDownloadList: Bool, isSavedMusic: Bool) -> Signal<MediaPlayerStatus, NoError> {
+public func messageFileMediaPlaybackStatus(context: AccountContext, file: TelegramMediaFile, message: EngineMessage, isRecentActions: Bool, isGlobalSearch: Bool, isDownloadList: Bool, isSavedMusic: Bool) -> Signal<MediaPlayerStatus, NoError> {
     var duration = 0.0
     if let value = file.duration {
         duration = Double(value)
@@ -32,7 +32,7 @@ public func messageFileMediaPlaybackStatus(context: AccountContext, file: Iosapp
     }
 }
 
-public func messageFileMediaPlaybackAudioLevelEvents(context: AccountContext, file: IosappMediaFile, message: EngineMessage, isRecentActions: Bool, isGlobalSearch: Bool, isDownloadList: Bool, isSavedMusic: Bool) -> Signal<Float, NoError> {
+public func messageFileMediaPlaybackAudioLevelEvents(context: AccountContext, file: TelegramMediaFile, message: EngineMessage, isRecentActions: Bool, isGlobalSearch: Bool, isDownloadList: Bool, isSavedMusic: Bool) -> Signal<Float, NoError> {
     guard let playerType = peerMessageMediaPlayerType(message) else {
         return .never()
     }
@@ -46,7 +46,7 @@ public func messageFileMediaPlaybackAudioLevelEvents(context: AccountContext, fi
 
 public func messageFileMediaResourceStatus(
     context: AccountContext,
-    file: IosappMediaFile,
+    file: TelegramMediaFile,
     message: EngineMessage,
     isRecentActions: Bool,
     isSharedMedia: Bool = false,
@@ -108,7 +108,7 @@ public func messageFileMediaResourceStatus(
     }
 }
 
-public func messageImageMediaResourceStatus(context: AccountContext, image: IosappMediaImage, message: EngineMessage, isRecentActions: Bool, isSharedMedia: Bool = false, isGlobalSearch: Bool = false) -> Signal<FileMediaResourceStatus, NoError> {
+public func messageImageMediaResourceStatus(context: AccountContext, image: TelegramMediaImage, message: EngineMessage, isRecentActions: Bool, isSharedMedia: Bool = false, isGlobalSearch: Bool = false) -> Signal<FileMediaResourceStatus, NoError> {
     if message.flags.isSending {
         return combineLatest(messageMediaImageStatus(context: context, messageId: message.id, image: image), context.account.pendingMessageManager.pendingMessageStatus(message.id) |> map { $0.0 })
         |> map { resourceStatus, pendingStatus -> FileMediaResourceStatus in

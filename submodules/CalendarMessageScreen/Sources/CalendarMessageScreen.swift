@@ -3,13 +3,13 @@ import UIKit
 import Display
 import AsyncDisplayKit
 import SwiftSignalKit
-import IosappCore
+import TelegramCore
 import AccountContext
-import IosappPresentationData
+import TelegramPresentationData
 import ComponentFlow
 import PhotoResources
 import DirectMediaImageCache
-import IosappStringFormatting
+import TelegramStringFormatting
 import TooltipUI
 
 private enum SelectionTransition {
@@ -1436,7 +1436,7 @@ public final class CalendarMessageScreen: ViewController {
                 return
             }
             
-            let _ = (self.context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: peerId))
+            let _ = (self.context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: peerId))
             |> map { chatPeer -> ClearInfo? in
                 guard let chatPeer = chatPeer else {
                     return nil
@@ -1804,7 +1804,7 @@ public final class CalendarMessageScreen: ViewController {
                         if message.timestamp >= dayTimestamp && message.timestamp < nextDayTimestamp {
                             mediaLoop: for media in message.media {
                                 switch media {
-                                case _ as IosappMediaImage, _ as IosappMediaFile:
+                                case _ as TelegramMediaImage, _ as TelegramMediaFile:
                                     updatedMedia[i]![day] = DayMedia(message: message, media: EngineMedia(media))
                                     break mediaLoop
                                 default:
@@ -1868,7 +1868,7 @@ public final class CalendarMessageScreen: ViewController {
         self._hasGlassStyle = true
         self.navigationPresentation = .modal
 
-        self.navigationItem.setLeftBarButton(UIBarButtonItem(title: self.presentationData.strings.Common_Cancel, style: .plain, target: self, action: #selector(dismissPressed)), animated: false)
+        self.navigationItem.setLeftBarButton(UIBarButtonItem(title: "___close", style: .plain, target: self, action: #selector(dismissPressed)), animated: false)
         self.navigationItem.setTitle(self.presentationData.strings.MessageCalendar_Title, animated: false)
 
         if self.enableMessageRangeDeletion {
@@ -1894,7 +1894,7 @@ public final class CalendarMessageScreen: ViewController {
         self.node.toggleSelectionMode()
 
         if self.node.selectionState != nil {
-            self.navigationItem.setRightBarButton(UIBarButtonItem(title: self.presentationData.strings.Common_Done, style: .done, target: self, action: #selector(self.toggleSelectPressed)), animated: true)
+            self.navigationItem.setRightBarButton(UIBarButtonItem(title: "___done", style: .done, target: self, action: #selector(self.toggleSelectPressed)), animated: true)
         } else {
             self.navigationItem.setRightBarButton(UIBarButtonItem(title: self.presentationData.strings.Common_Select, style: .plain, target: self, action: #selector(self.toggleSelectPressed)), animated: true)
         }
@@ -1904,7 +1904,7 @@ public final class CalendarMessageScreen: ViewController {
         self.node.selectDay(timestamp: timestamp)
 
         if self.node.selectionState != nil {
-            self.navigationItem.setRightBarButton(UIBarButtonItem(title: self.presentationData.strings.Common_Done, style: .done, target: self, action: #selector(self.toggleSelectPressed)), animated: true)
+            self.navigationItem.setRightBarButton(UIBarButtonItem(title: "___done", style: .done, target: self, action: #selector(self.toggleSelectPressed)), animated: true)
         }
     }
 

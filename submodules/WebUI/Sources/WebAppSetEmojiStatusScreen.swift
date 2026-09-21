@@ -3,10 +3,10 @@ import UIKit
 import Display
 import ComponentFlow
 import SwiftSignalKit
-import IosappCore
+import TelegramCore
 import Markdown
 import TextFormat
-import IosappPresentationData
+import TelegramPresentationData
 import ViewControllerComponent
 import SheetComponent
 import BalancedTextComponent
@@ -25,7 +25,7 @@ private final class SheetContent: CombinedComponent {
     let context: AccountContext
     let botName: String
     let accountPeer: EnginePeer
-    let file: IosappMediaFile
+    let file: TelegramMediaFile
     let duration: Int32?
     let dismiss: () -> Void
     
@@ -33,7 +33,7 @@ private final class SheetContent: CombinedComponent {
         context: AccountContext,
         botName: String,
         accountPeer: EnginePeer,
-        file: IosappMediaFile,
+        file: TelegramMediaFile,
         duration: Int32?,
         dismiss: @escaping () -> Void
     ) {
@@ -150,7 +150,7 @@ private final class SheetContent: CombinedComponent {
             let textColor = theme.actionSheet.primaryTextColor
             let linkColor = theme.actionSheet.controlAccentColor
             let markdownAttributes = MarkdownAttributes(body: MarkdownAttributeSet(font: textFont, textColor: textColor), bold: MarkdownAttributeSet(font: boldTextFont, textColor: textColor), link: MarkdownAttributeSet(font: textFont, textColor: linkColor), linkAttribute: { contents in
-                return (IosappTextAttributes.URL, contents)
+                return (TelegramTextAttributes.URL, contents)
             })
             
             var textString: String
@@ -222,8 +222,6 @@ private final class SheetContent: CombinedComponent {
                 transition: .immediate
             )
             context.add(button
-                .clipsToBounds(true)
-                .cornerRadius(10.0)
                 .position(CGPoint(x: context.availableSize.width / 2.0, y: contentSize.height + button.size.height / 2.0))
             )
             contentSize.height += button.size.height
@@ -240,14 +238,14 @@ private final class WebAppSetEmojiStatusSheetComponent: CombinedComponent {
     private let context: AccountContext
     private let botName: String
     private let accountPeer: EnginePeer
-    private let file: IosappMediaFile
+    private let file: TelegramMediaFile
     private let duration: Int32?
     
     init(
         context: AccountContext,
         botName: String,
         accountPeer: EnginePeer,
-        file: IosappMediaFile,
+        file: TelegramMediaFile,
         duration: Int32?
     ) {
         self.context = context
@@ -352,7 +350,7 @@ public final class WebAppSetEmojiStatusScreen: ViewControllerComponentContainer 
         context: AccountContext,
         botName: String,
         accountPeer: EnginePeer,
-        file: IosappMediaFile,
+        file: TelegramMediaFile,
         duration: Int32?,
         completion: @escaping (Bool) -> Void
     ) {

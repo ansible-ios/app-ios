@@ -4,7 +4,7 @@ import Display
 import ComponentFlow
 import SwiftSignalKit
 import WebKit
-import IosappPresentationData
+import TelegramPresentationData
 
 final class BrowserContentState: Equatable {
     enum ContentType: Equatable {

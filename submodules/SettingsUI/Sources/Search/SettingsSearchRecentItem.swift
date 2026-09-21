@@ -1,11 +1,10 @@
 import Foundation
 import UIKit
 import AsyncDisplayKit
-import Postbox
 import Display
 import SwiftSignalKit
-import IosappCore
-import IosappPresentationData
+import TelegramCore
+import TelegramPresentationData
 import ItemListUI
 import PresentationDataUtils
 
@@ -232,7 +231,7 @@ class SettingsSearchRecentItemNode: ItemListRevealOptionsItemNode {
                         var revealOptions: [ItemListRevealOption] = []
                         if item.isFaq {
                         } else {
-                            revealOptions.append(ItemListRevealOption(key: RevealOptionKey.delete.rawValue, title: item.strings.Common_Delete, icon: .none, color: item.theme.list.itemDisclosureActions.destructive.fillColor, textColor: item.theme.list.itemDisclosureActions.destructive.foregroundColor))
+                            revealOptions.append(ItemListRevealOption(key: RevealOptionKey.delete.rawValue, title: item.strings.Common_Delete, icon: .none, color: item.theme.list.itemDisclosureActions.destructive.fillColor, iconColor: item.theme.list.itemDisclosureActions.destructive.foregroundColor, textColor: item.theme.list.itemSecondaryTextColor))
                         }
                         strongSelf.setRevealOptions((left: [], right: revealOptions))
                     }

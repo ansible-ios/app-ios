@@ -1,6 +1,6 @@
 import Foundation
 import UIKit
-import IosappPresentationData
+import TelegramPresentationData
 
 public final class TextInputMenu {
     public enum State {

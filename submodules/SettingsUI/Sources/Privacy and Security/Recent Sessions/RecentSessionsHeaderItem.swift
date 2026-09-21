@@ -3,11 +3,11 @@ import UIKit
 import Display
 import AsyncDisplayKit
 import SwiftSignalKit
-import IosappPresentationData
+import TelegramPresentationData
 import ItemListUI
 import PresentationDataUtils
 import AnimatedStickerNode
-import IosappAnimatedStickerNode
+import TelegramAnimatedStickerNode
 import AccountContext
 import Markdown
 import TextFormat
@@ -72,7 +72,7 @@ class RecentSessionsHeaderItem: ListViewItem, ItemListItem {
     }
 }
 
-private let titleFont = Font.regular(13.0)
+private let titleFont = Font.regular(14.0)
 
 class RecentSessionsHeaderItemNode: ListViewItemNode {
     private let titleNode: TextNode
@@ -129,11 +129,11 @@ class RecentSessionsHeaderItemNode: ListViewItemNode {
                 updatedTheme = item.theme
             }
             
-            let attributedText = parseMarkdownIntoAttributedString(item.text, attributes: MarkdownAttributes(body: MarkdownAttributeSet(font: titleFont, textColor: item.theme.list.freeTextColor), bold: MarkdownAttributeSet(font: titleFont, textColor: item.theme.list.freeTextColor), link: MarkdownAttributeSet(font: titleFont, textColor: item.theme.list.itemAccentColor), linkAttribute: { contents in
-                return (IosappTextAttributes.URL, contents)
+            let attributedText = parseMarkdownIntoAttributedString(item.text, attributes: MarkdownAttributes(body: MarkdownAttributeSet(font: titleFont, textColor: item.theme.list.itemPrimaryTextColor), bold: MarkdownAttributeSet(font: titleFont, textColor: item.theme.list.itemPrimaryTextColor), link: MarkdownAttributeSet(font: titleFont, textColor: item.theme.list.itemAccentColor), linkAttribute: { contents in
+                return (TelegramTextAttributes.URL, contents)
             }))
                 
-            let (titleLayout, titleApply) = makeTitleLayout(TextNodeLayoutArguments(attributedString: attributedText, backgroundColor: nil, maximumNumberOfLines: 0, truncationType: .end, constrainedSize: CGSize(width: params.width - params.rightInset - leftInset * 2.0, height: CGFloat.greatestFiniteMagnitude), alignment: .center, cutout: nil, insets: UIEdgeInsets()))
+            let (titleLayout, titleApply) = makeTitleLayout(TextNodeLayoutArguments(attributedString: attributedText, backgroundColor: nil, maximumNumberOfLines: 0, truncationType: .end, constrainedSize: CGSize(width: params.width - params.rightInset - leftInset * 2.0, height: CGFloat.greatestFiniteMagnitude), alignment: .center, lineSpacing: 0.2, cutout: nil, insets: UIEdgeInsets()))
             
             let contentSize = CGSize(width: params.width, height: topInset + titleLayout.size.height + 69.0)
             let insets = itemListNeighborsGroupedInsets(neighbors, params)
@@ -158,7 +158,7 @@ class RecentSessionsHeaderItemNode: ListViewItemNode {
                         strongSelf.buttonNode.updateTheme(SolidRoundedButtonTheme(theme: item.theme))
                     }
                     
-                    let buttonSideInset: CGFloat = 36.0
+                    let buttonSideInset: CGFloat = 16.0
                     let buttonWidth = min(375, contentSize.width - buttonSideInset * 2.0)
                     let buttonHeight = 52.0
                     let buttonFrame = CGRect(x: floorToScreenPixels((params.width - buttonWidth) / 2.0), y: contentSize.height - buttonHeight + 4.0, width: buttonWidth, height: buttonHeight)
@@ -227,7 +227,7 @@ class RecentSessionsHeaderItemNode: ListViewItemNode {
                         case .tap:
                             if let item = self.item {
                                 if let (_, attributes) = self.titleNode.attributesAtPoint(location) {
-                                    if let url = attributes[NSAttributedString.Key(rawValue: IosappTextAttributes.URL)] as? String {
+                                    if let url = attributes[NSAttributedString.Key(rawValue: TelegramTextAttributes.URL)] as? String {
                                         item.linkAction?(.tap(url))
                                     }
                                 }

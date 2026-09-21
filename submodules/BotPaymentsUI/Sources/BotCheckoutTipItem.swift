@@ -3,10 +3,10 @@ import UIKit
 import Display
 import AsyncDisplayKit
 import SwiftSignalKit
-import IosappPresentationData
+import TelegramPresentationData
 import ItemListUI
 import PresentationDataUtils
-import IosappStringFormatting
+import TelegramStringFormatting
 
 class BotCheckoutTipItem: ListViewItem, ItemListItem {
     let theme: PresentationTheme

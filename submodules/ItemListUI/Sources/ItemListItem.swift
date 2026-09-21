@@ -1,8 +1,8 @@
 import Foundation
 import UIKit
 import Display
-import IosappUIPreferences
-import IosappPresentationData
+import TelegramUIPreferences
+import TelegramPresentationData
 
 public protocol ItemListItemTag {
     func isEqual(to other: ItemListItemTag) -> Bool
@@ -13,6 +13,10 @@ public protocol ItemListItem {
     var tag: ItemListItemTag? { get }
     var isAlwaysPlain: Bool { get }
     var requestsNoInset: Bool { get }
+}
+
+public protocol ItemListRevealOptionsStatefulItem: ItemListItem {
+    var hasActiveRevealOptions: Bool { get }
 }
 
 public extension ItemListItem {
@@ -62,10 +66,14 @@ public enum ItemListNeighbor {
 public struct ItemListNeighbors {
     public var top: ItemListNeighbor
     public var bottom: ItemListNeighbor
+    public var topHasActiveRevealOptions: Bool
+    public var bottomHasActiveRevealOptions: Bool
     
-    public init(top: ItemListNeighbor, bottom: ItemListNeighbor) {
+    public init(top: ItemListNeighbor, bottom: ItemListNeighbor, topHasActiveRevealOptions: Bool = false, bottomHasActiveRevealOptions: Bool = false) {
         self.top = top
         self.bottom = bottom
+        self.topHasActiveRevealOptions = topHasActiveRevealOptions
+        self.bottomHasActiveRevealOptions = bottomHasActiveRevealOptions
     }
 }
 
@@ -108,7 +116,12 @@ public func itemListNeighbors(item: ItemListItem, topItem: ItemListItem?, bottom
         bottomNeighbor = .none
     }
     
-    return ItemListNeighbors(top: topNeighbor, bottom: bottomNeighbor)
+    return ItemListNeighbors(
+        top: topNeighbor,
+        bottom: bottomNeighbor,
+        topHasActiveRevealOptions: (topItem as? ItemListRevealOptionsStatefulItem)?.hasActiveRevealOptions ?? false,
+        bottomHasActiveRevealOptions: (bottomItem as? ItemListRevealOptionsStatefulItem)?.hasActiveRevealOptions ?? false
+    )
 }
 
 public func itemListNeighborsPlainInsets(_ neighbors: ItemListNeighbors) -> UIEdgeInsets {
@@ -164,7 +177,7 @@ public func itemListNeighborsGroupedInsets(_ neighbors: ItemListNeighbors, _ par
 }
 
 public func itemListHasRoundedBlockLayout(_ params: ListViewItemLayoutParams) -> Bool {
-    return params.width >= 350.0
+    return params.width >= 320.0
 }
 
 public final class ItemListPresentationData: Equatable {

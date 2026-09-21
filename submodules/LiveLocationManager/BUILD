@@ -11,7 +11,7 @@ swift_library(
     ],
     deps = [
         "//submodules/SSignalKit/SwiftSignalKit:SwiftSignalKit",
-        "//submodules/IosappCore:IosappCore",
+        "//submodules/TelegramCore:TelegramCore",
         "//submodules/DeviceLocationManager:DeviceLocationManager",
         "//submodules/AccountContext:AccountContext",
     ],

@@ -2,8 +2,8 @@ import Foundation
 import UIKit
 import Display
 import SwiftSignalKit
-import IosappCore
-import IosappPresentationData
+import TelegramCore
+import TelegramPresentationData
 
 public struct ChatListNodeAdditionalCategory {
     public enum Appearance: Equatable {
@@ -81,7 +81,7 @@ public enum ContactMultiselectionControllerMode {
     case peerSelection(searchChatList: Bool, searchGroups: Bool, searchChannels: Bool)
     case channelCreation
     case chatSelection(ChatSelection)
-    case premiumGifting(birthdays: [EnginePeer.Id: IosappBirthday]?, selectToday: Bool, hasActions: Bool)
+    case premiumGifting(birthdays: [EnginePeer.Id: TelegramBirthday]?, selectToday: Bool, hasActions: Bool)
     case requestedUsersSelection(isBot: Bool?, isPremium: Bool?)
 }
 

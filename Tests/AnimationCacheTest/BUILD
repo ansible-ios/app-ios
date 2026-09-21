@@ -30,10 +30,10 @@ swift_library(
     deps = [
         "//submodules/SSignalKit/SwiftSignalKit:SwiftSignalKit",
         "//submodules/Display:Display",
-        "//submodules/IosappUI/Components/AnimationCache:AnimationCache",
-        "//submodules/IosappUI/Components/DCTAnimationCacheImpl:DCTAnimationCacheImpl",
-        "//submodules/IosappUI/Components/VideoAnimationCache:VideoAnimationCache",
-        "//submodules/IosappUI/Components/LottieAnimationCache:LottieAnimationCache",
+        "//submodules/TelegramUI/Components/AnimationCache:AnimationCache",
+        "//submodules/TelegramUI/Components/DCTAnimationCacheImpl:DCTAnimationCacheImpl",
+        "//submodules/TelegramUI/Components/VideoAnimationCache:VideoAnimationCache",
+        "//submodules/TelegramUI/Components/LottieAnimationCache:LottieAnimationCache",
         "//submodules/rlottie:RLottieBinding",
     ],
 )

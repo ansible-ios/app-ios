@@ -4,18 +4,17 @@ import Display
 import AsyncDisplayKit
 import ComponentFlow
 import SwiftSignalKit
-import Postbox
-import IosappCore
+import TelegramCore
 import PhotoResources
 import AvatarStoryIndicatorComponent
 import AccountContext
-import IosappPresentationData
+import TelegramPresentationData
 
 final class StoryIconNode: ASDisplayNode {
     private let imageNode = TransformImageNode()
     private let storyIndicator = ComponentView<Empty>()
     
-    init(context: AccountContext, theme: PresentationTheme, peer: Peer, storyItem: EngineStoryItem) {
+    init(context: AccountContext, theme: PresentationTheme, peer: EngineRawPeer, storyItem: EngineStoryItem) {
         self.imageNode.displaysAsynchronously = false
         
         super.init()
@@ -29,7 +28,7 @@ final class StoryIconNode: ASDisplayNode {
         self.imageNode.frame = bounds.insetBy(dx: 3.0, dy: 3.0)
         self.frame = bounds
         
-        let media: Media?
+        let media: EngineRawMedia?
         switch storyItem.media {
         case let .image(image):
             media = image
@@ -42,10 +41,10 @@ final class StoryIconNode: ASDisplayNode {
         var updateImageSignal: Signal<(TransformImageArguments) -> DrawingContext?, NoError>?
         var dimensions: CGSize?
         if let peerReference = PeerReference(peer), let media {
-            if let image = media as? IosappMediaImage {
+            if let image = media as? TelegramMediaImage {
                 updateImageSignal = mediaGridMessagePhoto(account: context.account, userLocation: .peer(peer.id), photoReference: .story(peer: peerReference, id: storyItem.id, media: image))
                 dimensions = largestRepresentationForPhoto(image)?.dimensions.cgSize
-            } else if let file = media as? IosappMediaFile {
+            } else if let file = media as? TelegramMediaFile {
                 updateImageSignal = mediaGridMessageVideo(postbox: context.account.postbox, userLocation: .peer(peer.id), videoReference: .story(peer: peerReference, id: storyItem.id, media: file), autoFetchFullSizeThumbnail: true)
                 dimensions = file.dimensions?.cgSize
             }

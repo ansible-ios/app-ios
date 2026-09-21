@@ -3,10 +3,10 @@ import UIKit
 import Display
 import ComponentFlow
 import SwiftSignalKit
-import IosappCore
+import TelegramCore
 import Markdown
 import TextFormat
-import IosappPresentationData
+import TelegramPresentationData
 import ViewControllerComponent
 import SheetComponent
 import BundleIconComponent
@@ -14,7 +14,7 @@ import BalancedTextComponent
 import MultilineTextComponent
 import ButtonComponent
 import AccountContext
-import IosappStringFormatting
+import TelegramStringFormatting
 import PremiumPeerShortcutComponent
 import GlassBarButtonComponent
 

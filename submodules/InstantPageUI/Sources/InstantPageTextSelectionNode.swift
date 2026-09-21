@@ -3,7 +3,7 @@ import UIKit
 import UIKit.UIGestureRecognizerSubclass
 import AsyncDisplayKit
 import Display
-import IosappPresentationData
+import TelegramPresentationData
 
 private func findScrollView(view: UIView?) -> UIScrollView? {
     if let view = view {

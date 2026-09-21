@@ -12,7 +12,7 @@ swift_library(
     deps = [
         "//submodules/AsyncDisplayKit:AsyncDisplayKit",
         "//submodules/Display:Display",
-        "//submodules/IosappStringFormatting:IosappStringFormatting",
+        "//submodules/TelegramStringFormatting:TelegramStringFormatting",
         "//submodules/PhoneNumberFormat:PhoneNumberFormat",
     ],
     visibility = [

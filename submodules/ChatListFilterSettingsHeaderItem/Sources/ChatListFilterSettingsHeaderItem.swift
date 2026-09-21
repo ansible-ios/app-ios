@@ -3,12 +3,12 @@ import UIKit
 import Display
 import AsyncDisplayKit
 import SwiftSignalKit
-import IosappCore
-import IosappPresentationData
+import TelegramCore
+import TelegramPresentationData
 import ItemListUI
 import PresentationDataUtils
 import AnimatedStickerNode
-import IosappAnimatedStickerNode
+import TelegramAnimatedStickerNode
 import AccountContext
 
 public enum ChatListFilterSettingsHeaderAnimation {

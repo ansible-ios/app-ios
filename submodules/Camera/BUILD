@@ -57,7 +57,7 @@ swift_library(
         "//submodules/AsyncDisplayKit:AsyncDisplayKit",
         "//submodules/Display:Display",
         "//submodules/ImageBlur:ImageBlur",
-        "//submodules/IosappCore:IosappCore",
+        "//submodules/TelegramCore:TelegramCore",
         "//submodules/Utils/DeviceModel",
         "//submodules/rlottie:RLottieBinding",
         "//submodules/AppBundle",

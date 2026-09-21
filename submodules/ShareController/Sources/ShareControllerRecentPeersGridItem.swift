@@ -1,10 +1,10 @@
 import Foundation
 import UIKit
 import Display
-import IosappCore
+import TelegramCore
 import SwiftSignalKit
 import AsyncDisplayKit
-import IosappPresentationData
+import TelegramPresentationData
 import ChatListSearchRecentPeersNode
 import AccountContext
 
@@ -63,8 +63,7 @@ final class ShareControllerRecentPeersGridItemNode: GridItemNode {
             } else {
                 peersNode = ChatListSearchRecentPeersNode(
                     accountPeerId: context.accountPeerId,
-                    postbox: context.stateManager.postbox,
-                    network: context.stateManager.network,
+                    stateManager: context.stateManager,
                     energyUsageSettings: environment.energyUsageSettings,
                     contentSettings: context.contentSettings,
                     animationCache: context.animationCache,

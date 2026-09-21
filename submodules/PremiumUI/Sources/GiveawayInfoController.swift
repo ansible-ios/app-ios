@@ -3,11 +3,11 @@ import UIKit
 import AsyncDisplayKit
 import Display
 import SwiftSignalKit
-import IosappCore
+import TelegramCore
 import AccountContext
-import IosappStringFormatting
+import TelegramStringFormatting
 import TextFormat
-import IosappPresentationData
+import TelegramPresentationData
 import ComponentFlow
 import AlertComponent
 
@@ -27,16 +27,16 @@ public func presentGiveawayInfoController(
     let presentationData = context.sharedContext.currentPresentationData.with { $0 }
     
     let _ = (context.engine.data.get(
-        IosappEngine.EngineData.Item.Messages.Message(id: messageId),
-        EngineDataMap(peerIds.map(IosappEngine.EngineData.Item.Peer.Peer.init))
+        TelegramEngine.EngineData.Item.Messages.Message(id: messageId),
+        EngineDataMap(peerIds.map(TelegramEngine.EngineData.Item.Peer.Peer.init))
     )
     |> deliverOnMainQueue).startStandalone(next: { message, peerMap in
         guard let message else {
             return
         }
         
-        let giveaway = message.media.first(where: { $0 is IosappMediaGiveaway }) as? IosappMediaGiveaway
-        let giveawayResults = message.media.first(where: { $0 is IosappMediaGiveawayResults }) as? IosappMediaGiveawayResults
+        let giveaway = message.media.first(where: { $0 is TelegramMediaGiveaway }) as? TelegramMediaGiveaway
+        let giveawayResults = message.media.first(where: { $0 is TelegramMediaGiveawayResults }) as? TelegramMediaGiveawayResults
         
         var quantity: Int32 = 0
         if let giveaway {
@@ -85,14 +85,14 @@ public func presentGiveawayInfoController(
         }
         
         var author = message.forwardInfo?.author ?? message.author?._asPeer()
-        if author is IosappChannel {
+        if author is TelegramChannel {
         } else {
             if let peer = message.forwardInfo?.source ?? message.peers[message.id.peerId] {
                 author = peer
             }
         }
         var isGroup = false
-        if let channel = author as? IosappChannel, case .group = channel.info {
+        if let channel = author as? TelegramChannel, case .group = channel.info {
             isGroup = true
         }
         var peerName = ""
@@ -108,7 +108,7 @@ public func presentGiveawayInfoController(
             var channelCount = 0
             var groupCount = 0
             for peerId in giveaway.channelPeerIds {
-                if let peer = message.peers[peerId] as? IosappChannel {
+                if let peer = message.peers[peerId] as? TelegramChannel {
                     switch peer.info {
                     case .broadcast:
                         channelCount += 1

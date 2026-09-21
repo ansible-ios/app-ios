@@ -3,11 +3,11 @@ import UIKit
 import Display
 import AsyncDisplayKit
 import SwiftSignalKit
-import IosappPresentationData
+import TelegramPresentationData
 import ItemListUI
 import PresentationDataUtils
 import AnimatedStickerNode
-import IosappAnimatedStickerNode
+import TelegramAnimatedStickerNode
 import AccountContext
 import Markdown
 import TextFormat
@@ -213,7 +213,7 @@ class InviteLinkHeaderItemNode: ListViewItemNode {
                         let textFrame = self.textNode.textNode.frame
                             if let item = self.item, textFrame.contains(location) {
                                 if let (_, attributes) = self.textNode.textNode.attributesAtPoint(CGPoint(x: location.x - textFrame.minX, y: location.y - textFrame.minY)) {
-                                    if let url = attributes[NSAttributedString.Key(rawValue: IosappTextAttributes.URL)] as? String {
+                                    if let url = attributes[NSAttributedString.Key(rawValue: TelegramTextAttributes.URL)] as? String {
                                         item.linkAction?(.tap(url))
                                     }
                                 }

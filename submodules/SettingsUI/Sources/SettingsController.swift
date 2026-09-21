@@ -3,8 +3,7 @@ import UIKit
 import AsyncDisplayKit
 import Display
 import SwiftSignalKit
-import Postbox
-import IosappCore
+import TelegramCore
 import AccountContext
 import PasswordSetupUI
 

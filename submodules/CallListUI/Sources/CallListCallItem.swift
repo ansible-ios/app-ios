@@ -3,12 +3,12 @@ import UIKit
 import AsyncDisplayKit
 import Display
 import SwiftSignalKit
-import IosappCore
-import IosappPresentationData
+import TelegramCore
+import TelegramPresentationData
 import ItemListUI
 import PresentationDataUtils
 import AvatarNode
-import IosappStringFormatting
+import TelegramStringFormatting
 import AccountContext
 import ChatListSearchItemHeader
 import AnimatedAvatarSetNode
@@ -394,7 +394,7 @@ class CallListCallItemNode: ItemListRevealOptionsItemNode {
             
             for message in item.messages {
                 inner: for media in message.media {
-                    if let action = media as? IosappMediaAction {
+                    if let action = media as? TelegramMediaAction {
                         if case let .phoneCall(_, discardReason, duration, video) = action.action {
                             isVideo = video
                             if message.flags.contains(.Incoming) {
@@ -472,7 +472,7 @@ class CallListCallItemNode: ItemListRevealOptionsItemNode {
                         }
                     }
                     titleAttributedString = NSAttributedString(string: peersString, font: titleFont, textColor: titleColor)
-                } else if let user = peer as? IosappUser {
+                } else if let user = peer as? TelegramUser {
                     if let firstName = user.firstName, let lastName = user.lastName, !firstName.isEmpty, !lastName.isEmpty {
                         let string = NSMutableAttributedString()
                         string.append(NSAttributedString(string: firstName, font: titleFont, textColor: titleColor))
@@ -489,9 +489,9 @@ class CallListCallItemNode: ItemListRevealOptionsItemNode {
                     } else {
                         titleAttributedString = NSAttributedString(string: item.presentationData.strings.User_DeletedAccount, font: titleFont, textColor: titleColor)
                     }
-                } else if let group = peer as? IosappGroup {
+                } else if let group = peer as? TelegramGroup {
                     titleAttributedString = NSAttributedString(string: group.title, font: titleFont, textColor: titleColor)
-                } else if let channel = peer as? IosappChannel {
+                } else if let channel = peer as? TelegramChannel {
                     titleAttributedString = NSAttributedString(string: channel.title, font: titleFont, textColor: titleColor)
                 }
                 
@@ -557,7 +557,7 @@ class CallListCallItemNode: ItemListRevealOptionsItemNode {
             let verticalInset: CGFloat
             switch item.systemStyle {
             case .glass:
-                verticalInset = 10.0
+                verticalInset = 8.0
             case .legacy:
                 verticalInset = 6.0
             }
@@ -647,7 +647,7 @@ class CallListCallItemNode: ItemListRevealOptionsItemNode {
                                     if strongSelf.maskNode.supernode != nil {
                                         strongSelf.maskNode.removeFromSupernode()
                                     }
-                                    transition.updateFrameAdditive(node: strongSelf.bottomStripeNode, frame: CGRect(origin: CGPoint(x: leftInset, y: contentSize.height - separatorHeight), size: CGSize(width: params.width - leftInset, height: separatorHeight)))
+                                    transition.updateFrameAdditive(node: strongSelf.bottomStripeNode, frame: CGRect(origin: CGPoint(x: leftInset, y: contentSize.height - separatorHeight), size: CGSize(width: params.width - leftInset - separatorRightInset, height: separatorHeight)))
                                 case .blocks:
                                     if strongSelf.backgroundNode.supernode == nil {
                                         strongSelf.insertSubnode(strongSelf.backgroundNode, at: 0)
@@ -785,7 +785,7 @@ class CallListCallItemNode: ItemListRevealOptionsItemNode {
                             
                             strongSelf.view.accessibilityCustomActions = [UIAccessibilityCustomAction(name: item.presentationData.strings.Common_Delete, target: strongSelf, selector: #selector(strongSelf.performLocalAccessibilityCustomAction(_:)))]
                             
-                            strongSelf.setRevealOptions((left: [], right: [ItemListRevealOption(key: 0, title: item.presentationData.strings.Common_Delete, icon: .none, color: item.presentationData.theme.list.itemDisclosureActions.destructive.fillColor, textColor: item.presentationData.theme.list.itemDisclosureActions.destructive.foregroundColor)]))
+                            strongSelf.setRevealOptions((left: [], right: [ItemListRevealOption(key: 0, title: item.presentationData.strings.Common_Delete, icon: .none, color: item.presentationData.theme.list.itemDisclosureActions.destructive.fillColor, iconColor: item.presentationData.theme.list.itemDisclosureActions.destructive.foregroundColor, textColor: item.presentationData.theme.list.itemSecondaryTextColor)]))
                             strongSelf.setRevealOptionsOpened(item.revealed, animated: animated)
                         }
                     })

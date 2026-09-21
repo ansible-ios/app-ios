@@ -2,9 +2,9 @@ import Foundation
 import UIKit
 import AsyncDisplayKit
 import Display
-import IosappCore
+import TelegramCore
 import SwiftSignalKit
-import IosappPresentationData
+import TelegramPresentationData
 
 final class GameControllerTitleView: UIView {
     private var theme: PresentationTheme

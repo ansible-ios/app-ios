@@ -3,16 +3,14 @@ import UIKit
 import Display
 import ComponentFlow
 import SwiftSignalKit
-import IosappCore
-import Postbox
-import IosappPresentationData
+import TelegramCore
+import TelegramPresentationData
 import PresentationDataUtils
 import ViewControllerComponent
 import AccountContext
-import SolidRoundedButtonComponent
 import MultilineTextComponent
 import BundleIconComponent
-import SolidRoundedButtonComponent
+import ButtonComponent
 import BlurredBackgroundComponent
 import Markdown
 import InAppPurchaseManager
@@ -117,8 +115,8 @@ private final class PremiumGiftScreenContentComponent: CombinedComponent {
             super.init()
             
             self.disposable = (context.engine.data.subscribe(
-                IosappEngine.EngineData.Item.Configuration.App(),
-                IosappEngine.EngineData.Item.Configuration.PremiumPromo()
+                TelegramEngine.EngineData.Item.Configuration.App(),
+                TelegramEngine.EngineData.Item.Configuration.PremiumPromo()
             )
             |> deliverOnMainQueue).start(next: { [weak self] appConfiguration, promoConfiguration in
                 if let strongSelf = self {
@@ -142,7 +140,7 @@ private final class PremiumGiftScreenContentComponent: CombinedComponent {
                         jsonString += "]}}"
 
                         if let data = jsonString.data(using: .utf8), let json = JSON(data: data) {
-                            addAppLogEvent(postbox: strongSelf.context.account.postbox, type: "premium_gift.promo_screen_show", data: json)
+                            strongSelf.context.engine.accountData.addAppLogEvent(type: "premium_gift.promo_screen_show", data: json)
                         }
                     }
                     
@@ -154,13 +152,13 @@ private final class PremiumGiftScreenContentComponent: CombinedComponent {
             
             let _ = updatePremiumPromoConfigurationOnce(account: context.account).start()
             
-            let stickersKey: PostboxViewKey = .orderedItemList(id: Namespaces.OrderedItemList.CloudPremiumStickers)
+            let stickersKey: EngineRawPostboxViewKey = .orderedItemList(id: Namespaces.OrderedItemList.CloudPremiumStickers)
             self.stickersDisposable = (self.context.account.postbox.combinedView(keys: [stickersKey])
             |> deliverOnMainQueue).start(next: { [weak self] views in
                 guard let strongSelf = self else {
                     return
                 }
-                if let view = views.views[stickersKey] as? OrderedItemListView {
+                if let view = views.views[stickersKey] as? EngineRawOrderedItemListView {
                     for item in view.items {
                         if let mediaItem = item.contents.get(RecentMediaItem.self) {
                             let file = mediaItem.media._parse()
@@ -439,6 +437,7 @@ private final class PremiumGiftScreenContentComponent: CombinedComponent {
                 UIColor(rgb: 0xa34cd7),
                 UIColor(rgb: 0x9b4fed),
                 UIColor(rgb: 0x8958ff),
+                UIColor(rgb: 0x8958ff),
                 UIColor(rgb: 0x676bff),
                 UIColor(rgb: 0x676bff),
                 UIColor(rgb: 0x6172ff),
@@ -568,7 +567,7 @@ private final class PremiumGiftScreenContentComponent: CombinedComponent {
                             controller?.dismiss(animated: true, completion: nil)
                         }
                         
-                        addAppLogEvent(postbox: accountContext.account.postbox, type: "premium_gift.promo_screen_tap", data: ["item": perk.identifier])
+                        accountContext.engine.accountData.addAppLogEvent(type: "premium_gift.promo_screen_tap", data: ["item": perk.identifier])
                     }
                 ))
                 i += 1
@@ -597,7 +596,7 @@ private final class PremiumGiftScreenContentComponent: CombinedComponent {
             let termsFont = Font.regular(13.0)
             let termsTextColor = environment.theme.list.freeTextColor
             let termsMarkdownAttributes = MarkdownAttributes(body: MarkdownAttributeSet(font: termsFont, textColor: termsTextColor), bold: MarkdownAttributeSet(font: termsFont, textColor: termsTextColor), link: MarkdownAttributeSet(font: termsFont, textColor: environment.theme.list.itemAccentColor), linkAttribute: { contents in
-                return (IosappTextAttributes.URL, contents)
+                return (TelegramTextAttributes.URL, contents)
             })
                        
             let termsString: MultilineTextComponent.TextContent = .markdown(
@@ -607,12 +606,12 @@ private final class PremiumGiftScreenContentComponent: CombinedComponent {
             
             let controller = environment.controller
             let termsTapActionImpl: ([NSAttributedString.Key: Any]) -> Void = { attributes in
-                if let url = attributes[NSAttributedString.Key(rawValue: IosappTextAttributes.URL)] as? String,
+                if let url = attributes[NSAttributedString.Key(rawValue: TelegramTextAttributes.URL)] as? String,
                     let controller = controller() as? PremiumGiftScreen, let navigationController = controller.navigationController as? NavigationController {
                     if url.hasPrefix("https://apps.apple.com/account/subscriptions") {
                         controller.context.sharedContext.applicationBindings.openSubscriptions()
-                    } else if url.hasPrefix("https://") || url.hasPrefix("as://") {
-                        controller.context.sharedContext.openExternalUrl(context: controller.context, urlContext: .generic, url: url, forceExternal: !url.hasPrefix("as://") && !url.contains("?start="), presentationData: controller.context.sharedContext.currentPresentationData.with({$0}), navigationController: nil, dismissInput: {})
+                    } else if url.hasPrefix("https://") || url.hasPrefix("tg://") {
+                        controller.context.sharedContext.openExternalUrl(context: controller.context, urlContext: .generic, url: url, forceExternal: !url.hasPrefix("tg://") && !url.contains("?start="), presentationData: controller.context.sharedContext.currentPresentationData.with({$0}), navigationController: nil, dismissInput: {})
                     } else {
                         let context = controller.context
                         let signal: Signal<ResolvedUrl, NoError>?
@@ -645,8 +644,8 @@ private final class PremiumGiftScreenContentComponent: CombinedComponent {
                     lineSpacing: 0.0,
                     highlightColor: environment.theme.list.itemAccentColor.withAlphaComponent(0.2),
                     highlightAction: { attributes in
-                        if let _ = attributes[NSAttributedString.Key(rawValue: IosappTextAttributes.URL)] {
-                            return NSAttributedString.Key(rawValue: IosappTextAttributes.URL)
+                        if let _ = attributes[NSAttributedString.Key(rawValue: TelegramTextAttributes.URL)] {
+                            return NSAttributedString.Key(rawValue: TelegramTextAttributes.URL)
                         } else {
                             return nil
                         }
@@ -822,7 +821,7 @@ private final class PremiumGiftScreenComponent: CombinedComponent {
                 queue: Queue.mainQueue(),
                 availableProducts,
                 context.engine.data.get(
-                    EngineDataMap(peerIds.map(IosappEngine.EngineData.Item.Peer.Peer.init(id:)))
+                    EngineDataMap(peerIds.map(TelegramEngine.EngineData.Item.Peer.Peer.init(id:)))
                 )
             ).start(next: { [weak self] products, peers in
                 if let strongSelf = self {
@@ -900,7 +899,7 @@ private final class PremiumGiftScreenComponent: CombinedComponent {
             let (currency, amount) = product.storeProduct.priceCurrencyAndAmount
             let duration = product.months
                         
-            addAppLogEvent(postbox: self.context.account.postbox, type: "premium_gift.promo_screen_accept")
+            self.context.engine.accountData.addAppLogEvent(type: "premium_gift.promo_screen_accept")
 
             self.inProgress = true
             self.updateInProgress(true)
@@ -968,7 +967,7 @@ private final class PremiumGiftScreenComponent: CombinedComponent {
                                 }
                                 
                                 if let errorText = errorText {
-                                    addAppLogEvent(postbox: strongSelf.context.account.postbox, type: "premium_gift.promo_screen_fail")
+                                    strongSelf.context.engine.accountData.addAppLogEvent(type: "premium_gift.promo_screen_fail")
                                     
                                     let alertController = textAlertController(context: strongSelf.context, title: nil, text: errorText, actions: [TextAlertAction(type: .defaultAction, title: presentationData.strings.Common_OK, action: {})])
                                     strongSelf.present(alertController)
@@ -1016,7 +1015,7 @@ private final class PremiumGiftScreenComponent: CombinedComponent {
         let secondaryTitle = Child(MultilineTextComponent.self)
         let bottomPanel = Child(BlurredBackgroundComponent.self)
         let bottomSeparator = Child(Rectangle.self)
-        let button = Child(SolidRoundedButtonComponent.self)
+        let button = Child(ButtonComponent.self)
         
         return { context in
             let environment = context.environment[EnvironmentType.self].value
@@ -1234,28 +1233,38 @@ private final class PremiumGiftScreenComponent: CombinedComponent {
                     buttonText = environment.strings.Premium_Gift_GiftSubscription(price ?? "—").string
                 }
                 
+                let buttonGradientColors = [
+                    UIColor(rgb: 0x0077ff),
+                    UIColor(rgb: 0x6b93ff),
+                    UIColor(rgb: 0x8878ff),
+                    UIColor(rgb: 0xe46ace)
+                ]
                 let button = button.update(
-                    component: SolidRoundedButtonComponent(
-                        title: buttonText,
-                        theme: SolidRoundedButtonComponent.Theme(
-                            backgroundColor: UIColor(rgb: 0x8878ff),
-                            backgroundColors: [
-                                UIColor(rgb: 0x0077ff),
-                                UIColor(rgb: 0x6b93ff),
-                                UIColor(rgb: 0x8878ff),
-                                UIColor(rgb: 0xe46ace)
-                            ],
-                            foregroundColor: .white
+                    component: ButtonComponent(
+                        background: ButtonComponent.Background(
+                            style: .glass,
+                            color: buttonGradientColors[0],
+                            foreground: .white,
+                            pressedColor: buttonGradientColors[0],
+                            isShimmering: gloss,
+                            gradient: ButtonComponent.Background.Gradient(colors: buttonGradientColors)
                         ),
-                        height: 50.0,
-                        cornerRadius: 11.0,
-                        gloss: gloss,
-                        isLoading: state.inProgress,
+                        content: AnyComponentWithIdentity(
+                            id: AnyHashable(buttonText),
+                            component: AnyComponent(ButtonTextContentComponent(
+                                text: buttonText,
+                                badge: 0,
+                                textColor: .white,
+                                badgeBackground: .white,
+                                badgeForeground: buttonGradientColors[0]
+                            ))
+                        ),
+                        displaysProgress: state.inProgress,
                         action: {
                             state.buy()
                         }
                     ),
-                    availableSize: CGSize(width: context.availableSize.width - sideInset * 2.0 - environment.safeInsets.left - environment.safeInsets.right, height: 50.0),
+                    availableSize: CGSize(width: context.availableSize.width - sideInset * 2.0 - environment.safeInsets.left - environment.safeInsets.right, height: 52.0),
                     transition: context.transition)
                              
                 let bottomPanel = bottomPanel.update(

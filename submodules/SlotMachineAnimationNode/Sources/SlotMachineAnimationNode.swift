@@ -2,12 +2,12 @@ import Foundation
 import UIKit
 import Display
 import AsyncDisplayKit
-import IosappCore
+import TelegramCore
 import SwiftSignalKit
 import StickerResources
 import ManagedAnimationNode
 import AnimatedStickerNode
-import IosappAnimatedStickerNode
+import TelegramAnimatedStickerNode
 import AppBundle
 
 private struct SlotMachineValue {

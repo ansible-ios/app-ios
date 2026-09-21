@@ -2,9 +2,9 @@ import Foundation
 import UIKit
 import AsyncDisplayKit
 import Display
-import IosappCore
-import IosappPresentationData
-import IosappStringFormatting
+import TelegramCore
+import TelegramPresentationData
+import TelegramStringFormatting
 import AppBundle
 import ComponentFlow
 import EdgeEffect

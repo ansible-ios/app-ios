@@ -2,8 +2,7 @@ import Foundation
 import UIKit
 import Display
 import AsyncDisplayKit
-import Postbox
-import IosappCore
+import TelegramCore
 import SwiftSignalKit
 import AccountContext
 

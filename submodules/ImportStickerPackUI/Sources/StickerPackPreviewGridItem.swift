@@ -1,14 +1,14 @@
 import Foundation
 import UIKit
 import Display
-import IosappCore
+import TelegramCore
 import SwiftSignalKit
 import AsyncDisplayKit
 import StickerResources
 import AccountContext
 import AnimatedStickerNode
-import IosappAnimatedStickerNode
-import IosappPresentationData
+import TelegramAnimatedStickerNode
+import TelegramPresentationData
 import ShimmerEffect
 
 final class StickerPackPreviewInteraction {

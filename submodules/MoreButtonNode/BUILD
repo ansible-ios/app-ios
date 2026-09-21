@@ -12,7 +12,7 @@ swift_library(
     deps = [
         "//submodules/Display:Display",
         "//submodules/AsyncDisplayKit:AsyncDisplayKit",
-        "//submodules/IosappPresentationData:IosappPresentationData",
+        "//submodules/TelegramPresentationData:TelegramPresentationData",
         "//submodules/ManagedAnimationNode:ManagedAnimationNode",
         "//submodules/ContextUI:ContextUI",
     ],

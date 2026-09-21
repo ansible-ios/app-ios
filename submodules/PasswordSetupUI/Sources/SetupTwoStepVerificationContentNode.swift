@@ -2,7 +2,7 @@ import Foundation
 import UIKit
 import Display
 import AsyncDisplayKit
-import IosappPresentationData
+import TelegramPresentationData
 
 enum SetupTwoStepVerificationInputType {
     case password

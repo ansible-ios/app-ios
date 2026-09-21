@@ -1,23 +1,22 @@
 import Foundation
-import Postbox
-import IosappCore
+import TelegramCore
 import SwiftSignalKit
-import IosappUIPreferences
+import TelegramUIPreferences
 
 private struct HashtagSearchRecentQueryItemId {
-    public let rawValue: MemoryBuffer
+    public let rawValue: EngineMemoryBuffer
     
     var value: String {
         return String(data: self.rawValue.makeData(), encoding: .utf8) ?? ""
     }
     
-    init(_ rawValue: MemoryBuffer) {
+    init(_ rawValue: EngineMemoryBuffer) {
         self.rawValue = rawValue
     }
     
     init?(_ value: String) {
         if let data = value.data(using: .utf8) {
-            self.rawValue = MemoryBuffer(data: data)
+            self.rawValue = EngineMemoryBuffer(data: data)
         } else {
             return nil
         }
@@ -35,7 +34,7 @@ public final class RecentHashtagSearchQueryItem: Codable {
     }
 }
 
-func addRecentHashtagSearchQuery(engine: IosappEngine, string: String) -> Signal<Never, NoError> {
+func addRecentHashtagSearchQuery(engine: TelegramEngine, string: String) -> Signal<Never, NoError> {
     if let itemId = HashtagSearchRecentQueryItemId(string) {
         return engine.orderedLists.addOrMoveToFirstPosition(collectionId: ApplicationSpecificOrderedItemListCollectionId.hashtagSearchRecentQueries, id: itemId.rawValue, item: RecentHashtagSearchQueryItem(), removeTailIfCountExceeds: 100)
     } else {
@@ -43,7 +42,7 @@ func addRecentHashtagSearchQuery(engine: IosappEngine, string: String) -> Signal
     }
 }
 
-func removeRecentHashtagSearchQuery(engine: IosappEngine, string: String) -> Signal<Never, NoError> {
+func removeRecentHashtagSearchQuery(engine: TelegramEngine, string: String) -> Signal<Never, NoError> {
     if let itemId = HashtagSearchRecentQueryItemId(string) {
         return engine.orderedLists.removeItem(collectionId: ApplicationSpecificOrderedItemListCollectionId.hashtagSearchRecentQueries, id: itemId.rawValue)
     } else {
@@ -51,12 +50,12 @@ func removeRecentHashtagSearchQuery(engine: IosappEngine, string: String) -> Sig
     }
 }
 
-func clearRecentHashtagSearchQueries(engine: IosappEngine) -> Signal<Never, NoError> {
+func clearRecentHashtagSearchQueries(engine: TelegramEngine) -> Signal<Never, NoError> {
     return engine.orderedLists.clear(collectionId: ApplicationSpecificOrderedItemListCollectionId.hashtagSearchRecentQueries)
 }
 
-func hashtagSearchRecentQueries(engine: IosappEngine) -> Signal<[String], NoError> {
-    return engine.data.subscribe(IosappEngine.EngineData.Item.OrderedLists.ListItems(collectionId: ApplicationSpecificOrderedItemListCollectionId.hashtagSearchRecentQueries))
+func hashtagSearchRecentQueries(engine: TelegramEngine) -> Signal<[String], NoError> {
+    return engine.data.subscribe(TelegramEngine.EngineData.Item.OrderedLists.ListItems(collectionId: ApplicationSpecificOrderedItemListCollectionId.hashtagSearchRecentQueries))
     |> map { items -> [String] in
         var result: [String] = []
         for item in items {

@@ -1,23 +1,44 @@
 import Foundation
 import UIKit
 import SwiftSignalKit
-import Postbox
-import IosappCore
+import TelegramCore
 import MtProtoKit
-import IosappPresentationData
-import IosappUIPreferences
-import IosappNotices
+import TelegramPresentationData
+import TelegramUIPreferences
+import TelegramNotices
 import AccountContext
 
-private let baseIosappMePaths = ["www.asme.su", "asme.su"]
+private let baseTelegramMePaths = [
+    "telegram.me",
+    "t.me", "telegram.dog"
+]
+private let telegramWebShortLinkHosts = [
+    "a.t.me", 
+    "k.t.me",
+    "z.t.me"
+]
 private let baseTelegraPhPaths = [
     "telegra.ph/",
     "te.legra.ph/",
     "graph.org/",
-    "asme.su/iv?",
+    "t.me/iv?",
     "telegram.org/blog/",
     "telegram.org/tour/"
 ]
+
+public func isTelegramWebShortLink(_ url: String) -> Bool {
+    var urlWithScheme = url
+    if !urlWithScheme.contains("://") {
+        urlWithScheme = "https://\(urlWithScheme)"
+    }
+    guard let parsedUrl = URL(string: urlWithScheme), let host = parsedUrl.host?.lowercased() else {
+        return false
+    }
+    if let scheme = parsedUrl.scheme?.lowercased(), scheme != "http" && scheme != "https" {
+        return false
+    }
+    return telegramWebShortLinkHosts.contains(host)
+}
 
 extension ResolvedBotAdminRights {
     init?(_ string: String) {
@@ -53,6 +74,9 @@ extension ResolvedBotAdminRights {
         }
         if components.contains("manage_chat") {
             rawValue |= ResolvedBotAdminRights.manageChat.rawValue
+        }
+        if components.contains("manage_topics") {
+            rawValue |= ResolvedBotAdminRights.manageTopics.rawValue
         }
         if components.contains("anonymous") {
             rawValue |= ResolvedBotAdminRights.canBeAnonymous.rawValue
@@ -94,7 +118,7 @@ public enum ParsedInternalPeerUrlParameter {
 public enum ParsedInternalUrl {
     public enum UrlPeerReference {
         case name(String)
-        case id(PeerId)
+        case id(EnginePeer.Id)
     }
     
     public enum UrlMessageSubject {
@@ -104,8 +128,8 @@ public enum ParsedInternalUrl {
     }
     
     case peer(UrlPeerReference, ParsedInternalPeerUrlParameter?)
-    case peerId(PeerId)
-    case privateMessage(messageId: MessageId, threadId: Int32?, subject: UrlMessageSubject?)
+    case peerId(EnginePeer.Id)
+    case privateMessage(messageId: EngineMessage.Id, threadId: Int32?, subject: UrlMessageSubject?)
     case stickerPack(name: String, type: StickerPackUrlType)
     case invoice(String)
     case join(String)
@@ -128,6 +152,7 @@ public enum ParsedInternalUrl {
     case auction(slug: String)
     case oauth(url: String)
     case createBot(parentBot: String, username: String?, title: String?)
+    case textStyle(slug: String)
     case externalUrl(url: String)
 }
 
@@ -226,7 +251,7 @@ public func parseInternalUrl(sharedContext: SharedAccountContext, context: Accou
                             }
                         }
                         if let _ = url {
-                            return .internalInstantView(url: "https://asme.su/\(query)")
+                            return .internalInstantView(url: "https://t.me/\(query)")
                         }
                     } else if peerName == "contact" {
                         var code: String?
@@ -274,7 +299,7 @@ public func parseInternalUrl(sharedContext: SharedAccountContext, context: Accou
                     } else if peerName == "boost" {
                         for queryItem in queryItems {
                             if queryItem.name == "c", let value = queryItem.value, let channelId = Int64(value), channelId > 0 {
-                                let peerId = PeerId(namespace: Namespaces.Peer.CloudChannel, id: PeerId.Id._internalFromInt64Value(channelId))
+                                let peerId = EnginePeer.Id(namespace: Namespaces.Peer.CloudChannel, id: EnginePeer.Id.Id._internalFromInt64Value(channelId))
                                 return .peer(.id(peerId), .boost)
                             }
                         }
@@ -288,7 +313,7 @@ public func parseInternalUrl(sharedContext: SharedAccountContext, context: Accou
                             }
                         }
                         if let _ = token {
-                            return .oauth(url: "https://asme.su/\(query)")
+                            return .oauth(url: "https://t.me/\(query)")
                         }
                     } else {
                         for queryItem in queryItems {
@@ -442,7 +467,7 @@ public func parseInternalUrl(sharedContext: SharedAccountContext, context: Accou
                         }
                     }
                 } else if pathComponents[0].hasPrefix(phonebookUsernamePathPrefix), let idValue = Int64(String(pathComponents[0][pathComponents[0].index(pathComponents[0].startIndex, offsetBy: phonebookUsernamePathPrefix.count)...])) {
-                    return .peerId(PeerId(namespace: Namespaces.Peer.CloudUser, id: PeerId.Id._internalFromInt64Value(idValue)))
+                    return .peerId(EnginePeer.Id(namespace: Namespaces.Peer.CloudUser, id: EnginePeer.Id.Id._internalFromInt64Value(idValue)))
                 } else if pathComponents[0].hasPrefix("$") || pathComponents[0].hasPrefix("%24") {
                     var component = pathComponents[0].replacingOccurrences(of: "%24", with: "$")
                     if component.hasPrefix("$") {
@@ -615,6 +640,8 @@ public func parseInternalUrl(sharedContext: SharedAccountContext, context: Accou
                         }
                     }
                     return .createBot(parentBot: parentBot, username: username, title: title)
+                } else if pathComponents.count >= 2 && pathComponents[0] == "addstyle" {
+                    return .textStyle(slug: pathComponents[1])
                 } else if pathComponents[0] == "m" {
                     return .messageLink(slug: pathComponents[1])
                 } else if pathComponents.count == 3 && pathComponents[0] == "c" {
@@ -643,7 +670,7 @@ public func parseInternalUrl(sharedContext: SharedAccountContext, context: Accou
                                 }
                             }
                         }
-                        return .privateMessage(messageId: MessageId(peerId: PeerId(namespace: Namespaces.Peer.CloudChannel, id: PeerId.Id._internalFromInt64Value(channelId)), namespace: Namespaces.Message.Cloud, id: messageId), threadId: threadId, subject: subject)
+                        return .privateMessage(messageId: EngineMessage.Id(peerId: EnginePeer.Id(namespace: Namespaces.Peer.CloudChannel, id: EnginePeer.Id.Id._internalFromInt64Value(channelId)), namespace: Namespaces.Message.Cloud, id: messageId), threadId: threadId, subject: subject)
                     } else {
                         return nil
                     }
@@ -682,7 +709,7 @@ public func parseInternalUrl(sharedContext: SharedAccountContext, context: Accou
                                 }
                             }
                         }
-                        return .privateMessage(messageId: MessageId(peerId: PeerId(namespace: Namespaces.Peer.CloudChannel, id: PeerId.Id._internalFromInt64Value(channelId)), namespace: Namespaces.Message.Cloud, id: messageId), threadId: threadId, subject: subject)
+                        return .privateMessage(messageId: EngineMessage.Id(peerId: EnginePeer.Id(namespace: Namespaces.Peer.CloudChannel, id: EnginePeer.Id.Id._internalFromInt64Value(channelId)), namespace: Namespaces.Message.Cloud, id: messageId), threadId: threadId, subject: subject)
                     } else {
                         return nil
                     }
@@ -706,7 +733,7 @@ public func parseInternalUrl(sharedContext: SharedAccountContext, context: Accou
                             }
                         }
                         
-                        let peerId = PeerId(namespace: Namespaces.Peer.CloudChannel, id: PeerId.Id._internalFromInt64Value(channelId))
+                        let peerId = EnginePeer.Id(namespace: Namespaces.Peer.CloudChannel, id: EnginePeer.Id.Id._internalFromInt64Value(channelId))
                         if boost {
                             return .peer(.id(peerId), .boost)
                         } else if let threadId = threadId {
@@ -847,7 +874,7 @@ private func resolveInternalUrl(context: AccountContext, url: ParsedInternalUrl)
                 }
             case let .id(id):
                 if id.namespace == Namespaces.Peer.CloudChannel {
-                    resolvedPeer = context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: id))
+                    resolvedPeer = context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: id))
                     |> mapToSignal { peer -> Signal<ResolvePeerResult, NoError> in
                         let foundPeer: Signal<ResolvePeerResult, NoError>
                         if let peer = peer {
@@ -878,7 +905,7 @@ private func resolveInternalUrl(context: AccountContext, url: ParsedInternalUrl)
                                 return .single(.result(.peer(peer._asPeer(), .info(nil))))
                             case .direct:
                                 if case let .channel(channel) = peer, let monoforumId = channel.linkedMonoforumId {
-                                    return context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: monoforumId))
+                                    return context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: monoforumId))
                                     |> mapToSignal { peer -> Signal<EnginePeer?, NoError> in
                                         if let peer {
                                             return .single(peer)
@@ -886,7 +913,7 @@ private func resolveInternalUrl(context: AccountContext, url: ParsedInternalUrl)
                                             return context.engine.peers.fetchAndUpdateCachedPeerData(peerId: channel.id)
                                             |> mapToSignal { result -> Signal<EnginePeer?, NoError> in
                                                 if result {
-                                                    return context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: monoforumId))
+                                                    return context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: monoforumId))
                                                 } else {
                                                     return .single(nil)
                                                 }
@@ -954,7 +981,7 @@ private func resolveInternalUrl(context: AccountContext, url: ParsedInternalUrl)
                                 }
                             case let .channelMessage(id, timecode):
                                 if case let .channel(channel) = peer, channel.isForumOrMonoForum {
-                                    let messageId = MessageId(peerId: channel.id, namespace: Namespaces.Message.Cloud, id: id)
+                                    let messageId = EngineMessage.Id(peerId: channel.id, namespace: Namespaces.Message.Cloud, id: id)
                                     return context.engine.messages.getMessagesLoadIfNecessary([messageId], strategy: .cloud(skipLocal: false))
                                     |> `catch` { _ in
                                         return .single(.result([]))
@@ -984,10 +1011,10 @@ private func resolveInternalUrl(context: AccountContext, url: ParsedInternalUrl)
                                         }
                                     }
                                 } else {
-                                    return .single(.result(.channelMessage(peer: peer._asPeer(), messageId: MessageId(peerId: peer.id, namespace: Namespaces.Message.Cloud, id: id), timecode: timecode)))
+                                    return .single(.result(.channelMessage(peer: peer._asPeer(), messageId: EngineMessage.Id(peerId: peer.id, namespace: Namespaces.Message.Cloud, id: id), timecode: timecode)))
                                 }
                             case let .replyThread(id, replyId):
-                                let replyThreadMessageId = MessageId(peerId: peer.id, namespace: Namespaces.Message.Cloud, id: id)
+                                let replyThreadMessageId = EngineMessage.Id(peerId: peer.id, namespace: Namespaces.Message.Cloud, id: id)
                             
                                 if case let .channel(channel) = peer, channel.isForumOrMonoForum {
                                     return context.engine.peers.fetchForumChannelTopic(id: channel.id, threadId: Int64(replyThreadMessageId.id))
@@ -997,7 +1024,7 @@ private func resolveInternalUrl(context: AccountContext, url: ParsedInternalUrl)
                                             return .progress
                                         case let .result(info):
                                             if let _ = info {
-                                                return .result(.replyThreadMessage(replyThreadMessage: ChatReplyThreadMessage(peerId: channel.id, threadId: Int64(replyThreadMessageId.id), channelMessageId: nil, isChannelPost: false, isForumPost: true, isMonoforumPost: false, maxMessage: nil, maxReadIncomingMessageId: nil, maxReadOutgoingMessageId: nil, unreadCount: 0, initialFilledHoles: IndexSet(), initialAnchor: .automatic, isNotAvailable: false), messageId: MessageId(peerId: channel.id, namespace: Namespaces.Message.Cloud, id: replyId)))
+                                                return .result(.replyThreadMessage(replyThreadMessage: ChatReplyThreadMessage(peerId: channel.id, threadId: Int64(replyThreadMessageId.id), channelMessageId: nil, isChannelPost: false, isForumPost: true, isMonoforumPost: false, maxMessage: nil, maxReadIncomingMessageId: nil, maxReadOutgoingMessageId: nil, unreadCount: 0, initialFilledHoles: IndexSet(), initialAnchor: .automatic, isNotAvailable: false), messageId: EngineMessage.Id(peerId: channel.id, namespace: Namespaces.Message.Cloud, id: replyId)))
                                             } else {
                                                 return .result(.peer(peer._asPeer(), .chat(textInputState: nil, subject: nil, peekData: nil)))
                                             }
@@ -1013,7 +1040,7 @@ private func resolveInternalUrl(context: AccountContext, url: ParsedInternalUrl)
                                         guard let result = result else {
                                             return .result(.channelMessage(peer: peer._asPeer(), messageId: replyThreadMessageId, timecode: nil))
                                         }
-                                        return .result(.replyThreadMessage(replyThreadMessage: result, messageId: MessageId(peerId: result.peerId, namespace: Namespaces.Message.Cloud, id: replyId)))
+                                        return .result(.replyThreadMessage(replyThreadMessage: result, messageId: EngineMessage.Id(peerId: result.peerId, namespace: Namespaces.Message.Cloud, id: replyId)))
                                     })
                                 }
                             case let .voiceChat(invite):
@@ -1067,7 +1094,7 @@ private func resolveInternalUrl(context: AccountContext, url: ParsedInternalUrl)
                 }
             }
         case let .peerId(peerId):
-            return context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: peerId))
+            return context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: peerId))
             |> mapToSignal { peer -> Signal<ResolveInternalUrlResult, NoError> in
                 if let peer = peer {
                     return .single(.result(.peer(peer._asPeer(), .chat(textInputState: nil, subject: nil, peekData: nil))))
@@ -1085,7 +1112,7 @@ private func resolveInternalUrl(context: AccountContext, url: ParsedInternalUrl)
                 }
             })
         case let .privateMessage(messageId, threadId, subject):
-            return context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: messageId.peerId))
+            return context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: messageId.peerId))
             |> mapToSignal { peer -> Signal<ResolveInternalUrlResult, NoError> in
                 let foundPeer: Signal<EnginePeer?, NoError>
                 if let peer = peer {
@@ -1154,7 +1181,7 @@ private func resolveInternalUrl(context: AccountContext, url: ParsedInternalUrl)
                                 }
                             }
                         } else if let threadId = threadId {
-                            let replyThreadMessageId = MessageId(peerId: foundPeer.id, namespace: Namespaces.Message.Cloud, id: threadId)
+                            let replyThreadMessageId = EngineMessage.Id(peerId: foundPeer.id, namespace: Namespaces.Message.Cloud, id: threadId)
                             return .single(.progress) |> then(context.engine.messages.fetchChannelReplyThreadMessage(messageId: replyThreadMessageId, atMessageId: nil)
                             |> map(Optional.init)
                             |> `catch` { _ -> Signal<ChatReplyThreadMessage?, NoError> in
@@ -1208,7 +1235,7 @@ private func resolveInternalUrl(context: AccountContext, url: ParsedInternalUrl)
         case let .invoice(slug):
             return .single(.progress) |> then(context.engine.payments.fetchBotPaymentInvoice(source: .slug(slug))
             |> map(Optional.init)
-            |> `catch` { _ -> Signal<IosappMediaInvoice?, NoError> in
+            |> `catch` { _ -> Signal<TelegramMediaInvoice?, NoError> in
                 return .single(nil)
             }
             |> map { invoice -> ResolveInternalUrlResult in
@@ -1338,12 +1365,25 @@ private func resolveInternalUrl(context: AccountContext, url: ParsedInternalUrl)
                     }
                 }
             }
+        case let .textStyle(slug):
+            let signal: Signal<ResolveInternalUrlResult, NoError> = context.engine.messages.requestAIMessageStyle(slug: slug)
+            |> map { result -> ResolveInternalUrlResult in
+                guard let result else {
+                    return .result(nil)
+                }
+                guard case let .custom(style) = result.style.content else {
+                    return .result(nil)
+                }
+                return .result(.textStyle(style: style, initialPreview: result.initialPreview))
+            }
+            return .single(.progress)
+            |> then(signal)
     }
 }
 
-public func isIosappMeLink(_ url: String) -> Bool {
+public func isTelegramMeLink(_ url: String) -> Bool {
     let schemes = ["http://", "https://", ""]
-    for basePath in baseIosappMePaths {
+    for basePath in baseTelegramMePaths {
         for scheme in schemes {
             let basePrefix = scheme + basePath + "/"
             if url.lowercased().hasPrefix(basePrefix) {
@@ -1369,7 +1409,7 @@ public func isTelegraPhLink(_ url: String) -> Bool {
 
 public func parseProxyUrl(sharedContext: SharedAccountContext, url: String) -> (host: String, port: Int32, username: String?, password: String?, secret: Data?)? {
     let schemes = ["http://", "https://", ""]
-    for basePath in baseIosappMePaths {
+    for basePath in baseTelegramMePaths {
         for scheme in schemes {
             let basePrefix = scheme + basePath + "/"
             if url.lowercased().hasPrefix(basePrefix) {
@@ -1379,7 +1419,7 @@ public func parseProxyUrl(sharedContext: SharedAccountContext, url: String) -> (
             }
         }
     }
-    if let parsedUrl = URL(string: url), parsedUrl.scheme == "as", let host = parsedUrl.host, let query = parsedUrl.query {
+    if let parsedUrl = URL(string: url), parsedUrl.scheme == "tg", let host = parsedUrl.host, let query = parsedUrl.query {
         if let internalUrl = parseInternalUrl(sharedContext: sharedContext, context: nil, query: host + "?" + query), case let .proxy(host, port, username, password, secret) = internalUrl {
             return (host, port, username, password, secret)
         }
@@ -1390,7 +1430,7 @@ public func parseProxyUrl(sharedContext: SharedAccountContext, url: String) -> (
 
 public func parseStickerPackUrl(sharedContext: SharedAccountContext, url: String) -> String? {
     let schemes = ["http://", "https://", ""]
-    for basePath in baseIosappMePaths {
+    for basePath in baseTelegramMePaths {
         for scheme in schemes {
             let basePrefix = scheme + basePath + "/"
             if url.lowercased().hasPrefix(basePrefix) {
@@ -1400,7 +1440,7 @@ public func parseStickerPackUrl(sharedContext: SharedAccountContext, url: String
             }
         }
     }
-    if let parsedUrl = URL(string: url), parsedUrl.scheme == "as", let host = parsedUrl.host, let query = parsedUrl.query {
+    if let parsedUrl = URL(string: url), parsedUrl.scheme == "tg", let host = parsedUrl.host, let query = parsedUrl.query {
         if let internalUrl = parseInternalUrl(sharedContext: sharedContext, context: nil, query: host + "?" + query), case let .stickerPack(name, _) = internalUrl {
             return name
         }
@@ -1411,7 +1451,7 @@ public func parseStickerPackUrl(sharedContext: SharedAccountContext, url: String
 
 public func parseWallpaperUrl(sharedContext: SharedAccountContext, url: String) -> WallpaperUrlParameter? {
     let schemes = ["http://", "https://", ""]
-    for basePath in baseIosappMePaths {
+    for basePath in baseTelegramMePaths {
         for scheme in schemes {
             let basePrefix = scheme + basePath + "/"
             if url.lowercased().hasPrefix(basePrefix) {
@@ -1421,7 +1461,7 @@ public func parseWallpaperUrl(sharedContext: SharedAccountContext, url: String) 
             }
         }
     }
-    if let parsedUrl = URL(string: url), parsedUrl.scheme == "as", let host = parsedUrl.host, let query = parsedUrl.query {
+    if let parsedUrl = URL(string: url), parsedUrl.scheme == "tg", let host = parsedUrl.host, let query = parsedUrl.query {
         if let internalUrl = parseInternalUrl(sharedContext: sharedContext, context: nil, query: host + "?" + query), case let .wallpaper(wallpaper) = internalUrl {
             return wallpaper
         }
@@ -1432,7 +1472,7 @@ public func parseWallpaperUrl(sharedContext: SharedAccountContext, url: String) 
 
 public func parseAdUrl(sharedContext: SharedAccountContext, context: AccountContext, url: String) -> ParsedInternalUrl? {
     let schemes = ["http://", "https://", ""]
-    for basePath in baseIosappMePaths {
+    for basePath in baseTelegramMePaths {
         for scheme in schemes {
             let basePrefix = scheme + basePath + "/"
             if url.lowercased().hasPrefix(basePrefix) {
@@ -1442,7 +1482,7 @@ public func parseAdUrl(sharedContext: SharedAccountContext, context: AccountCont
             }
         }
     }
-    if let parsedUrl = URL(string: url), parsedUrl.scheme == "as", let host = parsedUrl.host, let query = parsedUrl.query {
+    if let parsedUrl = URL(string: url), parsedUrl.scheme == "tg", let host = parsedUrl.host, let query = parsedUrl.query {
         if let internalUrl = parseInternalUrl(sharedContext: sharedContext, context: context, query: host + "?" + query), case .peer = internalUrl {
             return internalUrl
         }
@@ -1453,7 +1493,7 @@ public func parseAdUrl(sharedContext: SharedAccountContext, context: AccountCont
 
 public func parseFullInternalUrl(sharedContext: SharedAccountContext, context: AccountContext, url: String) -> ParsedInternalUrl? {
     let schemes = ["http://", "https://", ""]
-    for basePath in baseIosappMePaths {
+    for basePath in baseTelegramMePaths {
         for scheme in schemes {
             let basePrefix = scheme + basePath + "/"
             if url.lowercased().hasPrefix(basePrefix) {
@@ -1490,12 +1530,12 @@ private struct UrlHandlingConfiguration {
     }
 }
 
-public func resolveUrlImpl(context: AccountContext, peerId: PeerId?, url: String, skipUrlAuth: Bool) -> Signal<ResolveUrlResult, NoError> {
+public func resolveUrlImpl(context: AccountContext, peerId: EnginePeer.Id?, url: String, skipUrlAuth: Bool) -> Signal<ResolveUrlResult, NoError> {
     let schemes = ["http://", "https://", ""]
     
     return ApplicationSpecificNotice.getSecretChatLinkPreviews(accountManager: context.sharedContext.accountManager)
     |> mapToSignal { linkPreviews -> Signal<ResolveUrlResult, NoError> in
-        return context.engine.data.get(IosappEngine.EngineData.Item.Configuration.App(), IosappEngine.EngineData.Item.Configuration.Links())
+        return context.engine.data.get(TelegramEngine.EngineData.Item.Configuration.App(), TelegramEngine.EngineData.Item.Configuration.Links())
         |> mapToSignal { appConfiguration, linksConfiguration -> Signal<ResolveUrlResult, NoError> in
             let urlHandlingConfiguration = UrlHandlingConfiguration.with(appConfiguration: appConfiguration)
             
@@ -1530,7 +1570,11 @@ public func resolveUrlImpl(context: AccountContext, peerId: PeerId?, url: String
                 }
             }
             
-            for basePath in baseIosappMePaths {
+            if isTelegramWebShortLink(url) {
+                return .single(.result(.externalUrl(url)))
+            }
+
+            for basePath in baseTelegramMePaths {
                 for scheme in schemes {
                     let basePrefix = scheme + basePath + "/"
                     var url = url

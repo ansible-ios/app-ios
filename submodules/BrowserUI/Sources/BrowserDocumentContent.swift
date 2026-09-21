@@ -2,11 +2,10 @@ import Foundation
 import UIKit
 import Display
 import ComponentFlow
-import IosappCore
-import Postbox
+import TelegramCore
 import SwiftSignalKit
-import IosappPresentationData
-import IosappUIPreferences
+import TelegramPresentationData
+import TelegramUIPreferences
 import PresentationDataUtils
 import AccountContext
 @preconcurrency import WebKit
@@ -44,7 +43,7 @@ final class BrowserDocumentContent: UIView, BrowserContent, WKNavigationDelegate
     var presentInGlobalOverlay: (ViewController) -> Void = { _ in }
     var getNavigationController: () -> NavigationController? = { return nil }
     
-    private var tempFile: TempBoxFile?
+    private var tempFile: EngineTempBoxFile?
     
     init(context: AccountContext, presentationData: PresentationData, file: FileMediaReference) {
         self.context = context
@@ -62,10 +61,10 @@ final class BrowserDocumentContent: UIView, BrowserContent, WKNavigationDelegate
         
         var title: String = "file"
         var url = ""
-        if let path = self.context.account.postbox.mediaBox.completedResourcePath(file.media.resource) {
+        if let path = self.context.engine.resources.completedResourcePath(id: EngineMediaResource.Id(file.media.resource.id)) {
             var updatedPath = path
             if let fileName = file.media.fileName {
-                let tempFile = TempBox.shared.file(path: path, fileName: fileName)
+                let tempFile = EngineTempBox.shared.file(path: path, fileName: fileName)
                 updatedPath = tempFile.path
                 self.tempFile = tempFile
                 title = fileName
@@ -133,7 +132,7 @@ final class BrowserDocumentContent: UIView, BrowserContent, WKNavigationDelegate
         
         let fontFamily = state.isSerif ? "'Georgia, serif'" : "null"
         let textSizeAdjust = state.size != 100 ? "'\(state.size)%'" : "null"
-        let js = "\(setupFontFunctions) setIosappFontOverrides(\(fontFamily), \(textSizeAdjust))";
+        let js = "\(setupFontFunctions) setTelegramFontOverrides(\(fontFamily), \(textSizeAdjust))";
         self.webView.evaluateJavaScript(js) { _, _ in }
     }
     

@@ -2,10 +2,9 @@ import Foundation
 import UIKit
 import Display
 import SwiftSignalKit
-import Postbox
-import IosappCore
+import TelegramCore
 import LegacyComponents
-import IosappUIPreferences
+import TelegramUIPreferences
 import MediaResources
 import AccountContext
 import LegacyUI

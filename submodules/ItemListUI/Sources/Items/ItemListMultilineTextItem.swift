@@ -3,7 +3,7 @@ import UIKit
 import Display
 import AsyncDisplayKit
 import SwiftSignalKit
-import IosappPresentationData
+import TelegramPresentationData
 import TextFormat
 import AccountContext
 
@@ -370,11 +370,11 @@ public class ItemListMultilineTextItemNode: ListViewItemNode {
     private func linkItemAtPoint(_ point: CGPoint) -> TextLinkItem? {
         let textNodeFrame = self.textNode.frame
         if let (_, attributes) = self.textNode.attributesAtPoint(CGPoint(x: point.x - textNodeFrame.minX, y: point.y - textNodeFrame.minY)) {
-            if let url = attributes[NSAttributedString.Key(rawValue: IosappTextAttributes.URL)] as? String {
+            if let url = attributes[NSAttributedString.Key(rawValue: TelegramTextAttributes.URL)] as? String {
                 return .url(url: url, concealed: false)
-            } else if let peerName = attributes[NSAttributedString.Key(rawValue: IosappTextAttributes.PeerTextMention)] as? String {
+            } else if let peerName = attributes[NSAttributedString.Key(rawValue: TelegramTextAttributes.PeerTextMention)] as? String {
                 return .mention(peerName)
-            } else if let hashtag = attributes[NSAttributedString.Key(rawValue: IosappTextAttributes.Hashtag)] as? IosappHashtag {
+            } else if let hashtag = attributes[NSAttributedString.Key(rawValue: TelegramTextAttributes.Hashtag)] as? TelegramHashtag {
                 return .hashtag(hashtag.peerName, hashtag.hashtag)
             } else {
                 return nil
@@ -394,11 +394,11 @@ public class ItemListMultilineTextItemNode: ListViewItemNode {
                 let textNodeFrame = self.textNode.frame
                 if let (index, attributes) = self.textNode.attributesAtPoint(CGPoint(x: point.x - textNodeFrame.minX, y: point.y - textNodeFrame.minY)) {
                     let possibleNames: [String] = [
-                        IosappTextAttributes.URL,
-                        IosappTextAttributes.PeerMention,
-                        IosappTextAttributes.PeerTextMention,
-                        IosappTextAttributes.BotCommand,
-                        IosappTextAttributes.Hashtag
+                        TelegramTextAttributes.URL,
+                        TelegramTextAttributes.PeerMention,
+                        TelegramTextAttributes.PeerTextMention,
+                        TelegramTextAttributes.BotCommand,
+                        TelegramTextAttributes.Hashtag
                     ]
                     for name in possibleNames {
                         if let _ = attributes[NSAttributedString.Key(rawValue: name)] {

@@ -1,24 +1,29 @@
 import Foundation
 import UIKit
-import IosappCore
+import TelegramCore
 import AsyncDisplayKit
-import IosappPresentationData
-import IosappUIPreferences
+import TelegramPresentationData
+import TelegramUIPreferences
 import AccountContext
 import ContextUI
 
-protocol InstantPageImageAttribute {
+public protocol InstantPageImageAttribute {
 }
 
-struct InstantPageMapAttribute: InstantPageImageAttribute {
-    let zoom: Int32
-    let dimensions: CGSize
+public struct InstantPageMapAttribute: InstantPageImageAttribute {
+    public let zoom: Int32
+    public let dimensions: CGSize
+
+    public init(zoom: Int32, dimensions: CGSize) {
+        self.zoom = zoom
+        self.dimensions = dimensions
+    }
 }
 
 public final class InstantPageImageItem: InstantPageItem {
     public var frame: CGRect
     
-    let webPage: IosappMediaWebpage
+    let webPage: TelegramMediaWebpage
     
     public let media: InstantPageMedia
     let attributes: [InstantPageImageAttribute]
@@ -34,7 +39,7 @@ public final class InstantPageImageItem: InstantPageItem {
     public let wantsNode: Bool = true
     public let separatesTiles: Bool = false
     
-    init(frame: CGRect, webPage: IosappMediaWebpage, media: InstantPageMedia, attributes: [InstantPageImageAttribute] = [], interactive: Bool, roundCorners: Bool, fit: Bool) {
+    init(frame: CGRect, webPage: TelegramMediaWebpage, media: InstantPageMedia, attributes: [InstantPageImageAttribute] = [], interactive: Bool, roundCorners: Bool, fit: Bool) {
         self.frame = frame
         self.webPage = webPage
         self.media = media
@@ -54,7 +59,7 @@ public final class InstantPageImageItem: InstantPageItem {
     
     public func matchesNode(_ node: InstantPageNode) -> Bool {
         if let node = node as? InstantPageImageNode {
-            return node.media == self.media
+            return instantPageMediaMatchesNodeIdentity(node.media, self.media)
         } else {
             return false
         }

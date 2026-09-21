@@ -3,15 +3,20 @@ import UIKit
 import SwiftSignalKit
 import AsyncDisplayKit
 import Display
-import IosappCore
-import IosappPresentationData
+import TelegramCore
+import TelegramPresentationData
 import AccountContext
 import UrlEscaping
 import ComponentFlow
 import AlertComponent
 import AlertInputFieldComponent
 
-public func webBrowserDomainController(context: AccountContext, updatedPresentationData: (initial: PresentationData, signal: Signal<PresentationData, NoError>)? = nil, apply: @escaping (String?) -> Void) -> ViewController {
+public func webBrowserDomainController(
+    context: AccountContext,
+    external: Bool,
+    updatedPresentationData: (initial: PresentationData, signal: Signal<PresentationData, NoError>)? = nil,
+    apply: @escaping (String?) -> Void
+) -> ViewController {
     let presentationData = context.sharedContext.currentPresentationData.with { $0 }
     let strings = presentationData.strings
     
@@ -34,7 +39,7 @@ public func webBrowserDomainController(context: AccountContext, updatedPresentat
     content.append(AnyComponentWithIdentity(
         id: "text",
         component: AnyComponent(
-            AlertTextComponent(content: .plain(strings.WebBrowser_Exceptions_Create_Text))
+            AlertTextComponent(content: .plain(!external ? strings.WebBrowser_Exceptions_Create_ExternalText : strings.WebBrowser_Exceptions_Create_Text))
         )
     ))
         

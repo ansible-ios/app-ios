@@ -3,7 +3,7 @@ import UIKit
 import Display
 import AsyncDisplayKit
 import SwiftSignalKit
-import IosappPresentationData
+import TelegramPresentationData
 import ActivityIndicator
 import TextFormat
 import Markdown
@@ -128,7 +128,7 @@ public class ItemListActivityTextItemNode: ListViewItemNode {
             }
             
             let attributedString = parseMarkdownIntoAttributedString(item.text, attributes: MarkdownAttributes(body: MarkdownAttributeSet(font: titleFont, textColor: textColor), bold: MarkdownAttributeSet(font: titleFont, textColor: item.presentationData.theme.list.freeTextErrorColor), link: MarkdownAttributeSet(font: titleFont, textColor: item.presentationData.theme.list.itemAccentColor), linkAttribute: { contents in
-                return (IosappTextAttributes.URL, contents)
+                return (TelegramTextAttributes.URL, contents)
             }))
             
             let (titleLayout, titleApply) = makeTitleLayout(TextNodeLayoutArguments(attributedString: attributedString, backgroundColor: nil, maximumNumberOfLines: 0, truncationType: .end, constrainedSize: CGSize(width: params.width - params.rightInset - 20.0 - 22.0, height: CGFloat.greatestFiniteMagnitude), alignment: .natural, cutout: TextNodeCutout(topLeft: CGSize(width: activityWidth, height: 22.0)), insets: UIEdgeInsets()))
@@ -179,7 +179,7 @@ public class ItemListActivityTextItemNode: ListViewItemNode {
                             let titleFrame = self.titleNode.frame
                             if let item = self.item, titleFrame.contains(location) {
                                 if let (_, attributes) = self.titleNode.attributesAtPoint(CGPoint(x: location.x - titleFrame.minX, y: location.y - titleFrame.minY)) {
-                                    if let url = attributes[NSAttributedString.Key(rawValue: IosappTextAttributes.URL)] as? String {
+                                    if let url = attributes[NSAttributedString.Key(rawValue: TelegramTextAttributes.URL)] as? String {
                                         item.linkAction?(.tap(url))
                                     }
                                 }

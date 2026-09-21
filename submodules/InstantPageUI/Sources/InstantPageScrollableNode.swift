@@ -1,9 +1,9 @@
 import Foundation
 import UIKit
 import AsyncDisplayKit
-import IosappCore
+import TelegramCore
 import Display
-import IosappPresentationData
+import TelegramPresentationData
 
 public protocol InstantPageScrollableItem: AnyObject, InstantPageItem {
     var contentSize: CGSize { get }

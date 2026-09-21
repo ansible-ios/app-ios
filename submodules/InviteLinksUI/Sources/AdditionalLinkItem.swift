@@ -3,15 +3,15 @@ import UIKit
 import Display
 import AsyncDisplayKit
 import SwiftSignalKit
-import IosappPresentationData
+import TelegramPresentationData
 import ItemListUI
 import ShimmerEffect
-import IosappCore
+import TelegramCore
 
 public class AdditionalLinkItem: ListViewItem, ItemListItem {
     let presentationData: ItemListPresentationData
     let systemStyle: ItemListSystemStyle
-    let username: IosappPeerUsername?
+    let username: TelegramPeerUsername?
     public let sectionId: ItemListSectionId
     let style: ItemListStyle
     let tapAction: (() -> Void)?
@@ -20,7 +20,7 @@ public class AdditionalLinkItem: ListViewItem, ItemListItem {
     public init(
         presentationData: ItemListPresentationData,
         systemStyle: ItemListSystemStyle = .legacy,
-        username: IosappPeerUsername?,
+        username: TelegramPeerUsername?,
         sectionId: ItemListSectionId,
         style: ItemListStyle,
         tapAction: (() -> Void)?,

@@ -3,8 +3,8 @@ import UIKit
 import SwiftSignalKit
 import AsyncDisplayKit
 import Display
-import IosappCore
-import IosappPresentationData
+import TelegramCore
+import TelegramPresentationData
 
 public class FormController<InnerState, InitParams, Node: FormControllerNode<InitParams, InnerState>>: ViewController {
     public var controllerNode: Node {

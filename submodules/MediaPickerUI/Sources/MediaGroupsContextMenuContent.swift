@@ -4,7 +4,7 @@ import AsyncDisplayKit
 import Display
 import ContextUI
 import AccountContext
-import IosappPresentationData
+import TelegramPresentationData
 import Photos
 import MediaAssetsContext
 
@@ -167,6 +167,7 @@ final class MediaGroupsContextMenuContent: ContextControllerItemsContent {
                 self.scrollNode.view.contentInsetAdjustmentBehavior = .never
             }
             self.scrollNode.clipsToBounds = false
+            self.scrollNode.view.scrollsToTop = false
 
             super.init()
 

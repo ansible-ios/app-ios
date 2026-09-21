@@ -3,7 +3,7 @@ import UIKit
 import Display
 import AsyncDisplayKit
 import SwiftSignalKit
-import IosappPresentationData
+import TelegramPresentationData
 import TextFormat
 import Markdown
 import TextNodeWithEntities
@@ -183,7 +183,7 @@ public class ItemListTextItemNode: ListViewItemNode, ItemListItemNode {
                 attributedText = NSAttributedString(string: text, font: titleFont, textColor: item.presentationData.theme.list.freeTextColor)
             case let .markdown(text):
                 let mutableAttributedText = parseMarkdownIntoAttributedString(text, attributes: MarkdownAttributes(body: MarkdownAttributeSet(font: titleFont, textColor: textColor), bold: MarkdownAttributeSet(font: titleBoldFont, textColor: textColor), link: MarkdownAttributeSet(font: titleFont, textColor: item.presentationData.theme.list.itemAccentColor), linkAttribute: { contents in
-                    return (IosappTextAttributes.URL, contents)
+                    return (TelegramTextAttributes.URL, contents)
                 }), textAlignment: item.textAlignment.textAlignment).mutableCopy() as! NSMutableAttributedString
                 if let _ = text.range(of: ">]"), let range = mutableAttributedText.string.range(of: ">") {
                     if themeUpdated || currentChevronImage == nil {
@@ -268,7 +268,7 @@ public class ItemListTextItemNode: ListViewItemNode, ItemListItemNode {
                             let titleFrame = self.textNode.textNode.frame
                             if let item = self.item, titleFrame.contains(location) {
                                 if let (_, attributes) = self.textNode.textNode.attributesAtPoint(CGPoint(x: location.x - titleFrame.minX, y: location.y - titleFrame.minY)) {
-                                    if let url = attributes[NSAttributedString.Key(rawValue: IosappTextAttributes.URL)] as? String {
+                                    if let url = attributes[NSAttributedString.Key(rawValue: TelegramTextAttributes.URL)] as? String {
                                         item.linkAction?(.tap(url))
                                     }
                                 }
@@ -289,11 +289,11 @@ public class ItemListTextItemNode: ListViewItemNode, ItemListItemNode {
                 let textNodeFrame = self.textNode.textNode.frame
                 if let (index, attributes) = self.textNode.textNode.attributesAtPoint(CGPoint(x: point.x - textNodeFrame.minX, y: point.y - textNodeFrame.minY)) {
                     let possibleNames: [String] = [
-                        IosappTextAttributes.URL,
-                        IosappTextAttributes.PeerMention,
-                        IosappTextAttributes.PeerTextMention,
-                        IosappTextAttributes.BotCommand,
-                        IosappTextAttributes.Hashtag
+                        TelegramTextAttributes.URL,
+                        TelegramTextAttributes.PeerMention,
+                        TelegramTextAttributes.PeerTextMention,
+                        TelegramTextAttributes.BotCommand,
+                        TelegramTextAttributes.Hashtag
                     ]
                     for name in possibleNames {
                         if let _ = attributes[NSAttributedString.Key(rawValue: name)] {

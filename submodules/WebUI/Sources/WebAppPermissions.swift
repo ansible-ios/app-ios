@@ -1,9 +1,9 @@
 import Foundation
 import NaturalLanguage
 import SwiftSignalKit
-import IosappCore
+import TelegramCore
 import AccountContext
-import IosappUIPreferences
+import TelegramUIPreferences
 
 public struct WebAppPermissionsState: Codable {
     enum CodingKeys: String, CodingKey {
@@ -99,7 +99,7 @@ public func webAppPermissionsState(context: AccountContext, peerId: EnginePeer.I
     let key = EngineDataBuffer(length: 8)
     key.setInt64(0, value: peerId.id._internalGetInt64Value())
     
-    return context.engine.data.subscribe(IosappEngine.EngineData.Item.ItemCache.Item(collectionId: ApplicationSpecificItemCacheCollectionId.webAppPermissionsState, id: key))
+    return context.engine.data.subscribe(TelegramEngine.EngineData.Item.ItemCache.Item(collectionId: ApplicationSpecificItemCacheCollectionId.webAppPermissionsState, id: key))
     |> map { entry -> WebAppPermissionsState? in
         return entry?.get(WebAppPermissionsState.self)
     }
@@ -120,7 +120,7 @@ public func updateWebAppPermissionsStateInteractively(context: AccountContext, p
     let key = EngineDataBuffer(length: 8)
     key.setInt64(0, value: peerId.id._internalGetInt64Value())
     
-    return context.engine.data.get(IosappEngine.EngineData.Item.ItemCache.Item(collectionId: ApplicationSpecificItemCacheCollectionId.webAppPermissionsState, id: key))
+    return context.engine.data.get(TelegramEngine.EngineData.Item.ItemCache.Item(collectionId: ApplicationSpecificItemCacheCollectionId.webAppPermissionsState, id: key))
     |> map { entry -> WebAppPermissionsState? in
         return entry?.get(WebAppPermissionsState.self)
     }

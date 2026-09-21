@@ -2,10 +2,9 @@ import Foundation
 import UIKit
 import Display
 import SwiftSignalKit
-import Postbox
-import IosappCore
-import IosappPresentationData
-import IosappUIPreferences
+import TelegramCore
+import TelegramPresentationData
+import TelegramUIPreferences
 import ItemListUI
 import PresentationDataUtils
 import AccountContext
@@ -313,6 +312,8 @@ private func saveIncomingMediaControllerEntries(presentationData: PresentationDa
                 } else {
                     peerTypeValue = .groups
                 }
+            case .community:
+                continue
             }
             
             if peerTypeValue == peerType {
@@ -515,13 +516,9 @@ public func saveIncomingMediaController(context: AccountContext, scope: SaveInco
             controller.peerSelected = { [weak controller] peer, _ in
                 let peerId = peer.id
                 
-                let preferencesKey: PostboxViewKey = .preferences(keys: Set([ApplicationSpecificPreferencesKeys.mediaAutoSaveSettings]))
-                let preferences = context.account.postbox.combinedView(keys: [preferencesKey])
-                |> map { views -> MediaAutoSaveSettings in
-                    guard let view = views.views[preferencesKey] as? PreferencesView else {
-                        return .default
-                    }
-                    return view.values[ApplicationSpecificPreferencesKeys.mediaAutoSaveSettings]?.get(MediaAutoSaveSettings.self) ?? MediaAutoSaveSettings.default
+                let preferences = context.engine.data.subscribe(TelegramEngine.EngineData.Item.Configuration.ApplicationSpecificPreference(key: ApplicationSpecificPreferencesKeys.mediaAutoSaveSettings))
+                |> map { entry -> MediaAutoSaveSettings in
+                    return entry?.get(MediaAutoSaveSettings.self) ?? MediaAutoSaveSettings.default
                 }
                 
                 let _ = (preferences
@@ -622,26 +619,22 @@ public func saveIncomingMediaController(context: AccountContext, scope: SaveInco
         }
     )
     
-    let preferencesKey: PostboxViewKey = .preferences(keys: Set([ApplicationSpecificPreferencesKeys.mediaAutoSaveSettings]))
-    let preferences = context.account.postbox.combinedView(keys: [preferencesKey])
-    |> map { views -> MediaAutoSaveSettings in
-        guard let view = views.views[preferencesKey] as? PreferencesView else {
-            return .default
-        }
-        return view.values[ApplicationSpecificPreferencesKeys.mediaAutoSaveSettings]?.get(MediaAutoSaveSettings.self) ?? MediaAutoSaveSettings.default
+    let preferences = context.engine.data.subscribe(TelegramEngine.EngineData.Item.Configuration.ApplicationSpecificPreference(key: ApplicationSpecificPreferencesKeys.mediaAutoSaveSettings))
+    |> map { entry -> MediaAutoSaveSettings in
+        return entry?.get(MediaAutoSaveSettings.self) ?? MediaAutoSaveSettings.default
     }
     
     let peer: Signal<(EnginePeer?, EnginePeer.Presence?), NoError>
     switch scope {
     case let .peer(id):
         peer = context.engine.data.subscribe(
-            IosappEngine.EngineData.Item.Peer.Peer(id: id),
-            IosappEngine.EngineData.Item.Peer.Presence(id: id)
+            TelegramEngine.EngineData.Item.Peer.Peer(id: id),
+            TelegramEngine.EngineData.Item.Peer.Presence(id: id)
         )
     case let .addPeer(id, _):
         peer = context.engine.data.subscribe(
-            IosappEngine.EngineData.Item.Peer.Peer(id: id),
-            IosappEngine.EngineData.Item.Peer.Presence(id: id)
+            TelegramEngine.EngineData.Item.Peer.Peer(id: id),
+            TelegramEngine.EngineData.Item.Peer.Presence(id: id)
         )
     default:
         peer = .single((nil, nil))
@@ -651,7 +644,7 @@ public func saveIncomingMediaController(context: AccountContext, scope: SaveInco
     |> mapToSignal { mediaAutoSaveSettings -> Signal<[EnginePeer.Id: EnginePeer?], NoError> in
         let peerIds = mediaAutoSaveSettings.exceptions.map(\.id)
         return context.engine.data.get(EngineDataMap(
-            peerIds.map(IosappEngine.EngineData.Item.Peer.Peer.init(id:))
+            peerIds.map(TelegramEngine.EngineData.Item.Peer.Peer.init(id:))
         ))
     }
     
@@ -669,7 +662,7 @@ public func saveIncomingMediaController(context: AccountContext, scope: SaveInco
         
         switch scope {
         case .peer, .addPeer:
-            rightButton = ItemListNavigationButton(content: .text(presentationData.strings.Common_Done), style: .bold, enabled: true, action: {
+            rightButton = ItemListNavigationButton(content: .icon(.done), style: .bold, enabled: true, action: {
                 switch scope {
                 case let .addPeer(_, completion):
                     let configuration = stateValue.with({ $0 }).pendingConfiguration

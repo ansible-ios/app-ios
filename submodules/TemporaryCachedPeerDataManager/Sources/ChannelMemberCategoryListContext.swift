@@ -1,5 +1,5 @@
 import Foundation
-import IosappCore
+import TelegramCore
 import Postbox
 import SwiftSignalKit
 
@@ -65,12 +65,12 @@ enum ChannelMemberListCategory {
 }
 
 private protocol ChannelMemberCategoryListContext {
-    //var listStateValue: ChannelMemberListState { get }
     var listState: Signal<ChannelMemberListState, NoError> { get }
     func loadMore()
     func reset(_ force: Bool)
     func replayUpdates(_ updates: [(ChannelParticipant?, RenderedChannelParticipant?, Bool?)])
     func forceUpdateHead()
+    func remove(memberId: EnginePeer.Id)
 }
 
 private func isParticipantMember(_ participant: ChannelParticipant, infoIsMember: Bool?) -> Bool {
@@ -99,7 +99,7 @@ private extension CachedChannelAdminRank {
 }
 
 private final class ChannelMemberSingleCategoryListContext: ChannelMemberCategoryListContext {
-    private let engine: IosappEngine
+    private let engine: TelegramEngine
     private let postbox: Postbox
     private let network: Network
     private let accountPeerId: PeerId
@@ -150,7 +150,7 @@ private final class ChannelMemberSingleCategoryListContext: ChannelMemberCategor
     
     private var headUpdateTimer: SwiftSignalKit.Timer?
     
-    init(engine: IosappEngine, postbox: Postbox, network: Network, accountPeerId: PeerId, peerId: PeerId, batchCount: Int32?, category: ChannelMemberListCategory) {
+    init(engine: TelegramEngine, postbox: Postbox, network: Network, accountPeerId: PeerId, peerId: PeerId, batchCount: Int32?, category: ChannelMemberListCategory) {
         self.engine = engine
         self.postbox = postbox
         self.network = network
@@ -556,6 +556,26 @@ private final class ChannelMemberSingleCategoryListContext: ChannelMemberCategor
             self.listStateValue = listState
         }
     }
+    
+    func remove(memberId: EnginePeer.Id) {
+        guard case .banned = self.category else {
+            return
+        }
+        var list = self.listStateValue.list
+        var updatedList = false
+        loop: for i in 0 ..< list.count {
+            if list[i].peer.id == memberId {
+                list.remove(at: i)
+                updatedList = true
+                break loop
+            }
+        }
+        if updatedList {
+            var listState = self.listStateValue
+            listState.list = list
+            self.listStateValue = listState
+        }
+    }
 }
 
 private final class ChannelMemberMultiCategoryListContext: ChannelMemberCategoryListContext {
@@ -614,7 +634,7 @@ private final class ChannelMemberMultiCategoryListContext: ChannelMemberCategory
         }
     }
     
-    init(engine: IosappEngine, postbox: Postbox, network: Network, accountPeerId: PeerId, peerId: PeerId, categories: [ChannelMemberListCategory]) {
+    init(engine: TelegramEngine, postbox: Postbox, network: Network, accountPeerId: PeerId, peerId: PeerId, categories: [ChannelMemberListCategory]) {
         self.contexts = categories.map { category in
             return ChannelMemberSingleCategoryListContext(engine: engine, postbox: postbox, network: network, accountPeerId: accountPeerId, peerId: peerId, batchCount: nil, category: category)
         }
@@ -648,6 +668,12 @@ private final class ChannelMemberMultiCategoryListContext: ChannelMemberCategory
     func replayUpdates(_ updates: [(ChannelParticipant?, RenderedChannelParticipant?, Bool?)]) {
         for context in self.contexts {
             context.replayUpdates(updates)
+        }
+    }
+    
+    func remove(memberId: EnginePeer.Id) {
+        for context in self.contexts {
+            context.remove(memberId: memberId)
         }
     }
 }
@@ -726,7 +752,7 @@ private final class PeerChannelMemberContextWithSubscribers {
 }
 
 final class PeerChannelMemberCategoriesContext {
-    private let engine: IosappEngine
+    private let engine: TelegramEngine
     private let postbox: Postbox
     private let network: Network
     private let accountPeerId: PeerId
@@ -736,7 +762,7 @@ final class PeerChannelMemberCategoriesContext {
     
     private var contexts: [PeerChannelMemberContextKey: PeerChannelMemberContextWithSubscribers] = [:]
     
-    init(engine: IosappEngine, postbox: Postbox, network: Network, accountPeerId: PeerId, peerId: PeerId, batchCount: Int32?, becameEmpty: @escaping (Bool) -> Void) {
+    init(engine: TelegramEngine, postbox: Postbox, network: Network, accountPeerId: PeerId, peerId: PeerId, batchCount: Int32?, becameEmpty: @escaping (Bool) -> Void) {
         self.engine = engine
         self.postbox = postbox
         self.network = network
@@ -815,6 +841,12 @@ final class PeerChannelMemberCategoriesContext {
     func replayUpdates(_ updates: [(ChannelParticipant?, RenderedChannelParticipant?, Bool?)]) {
         for (_, context) in self.contexts {
             context.context.replayUpdates(updates)
+        }
+    }
+    
+    func remove(memberId: EnginePeer.Id) {
+        for (_, context) in self.contexts {
+            context.context.remove(memberId: memberId)
         }
     }
 }

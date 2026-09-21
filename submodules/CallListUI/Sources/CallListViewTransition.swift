@@ -1,6 +1,6 @@
 import Foundation
 import UIKit
-import IosappCore
+import TelegramCore
 import SwiftSignalKit
 import Display
 import MergeLists

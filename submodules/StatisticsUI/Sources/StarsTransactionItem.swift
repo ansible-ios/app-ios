@@ -3,14 +3,14 @@ import UIKit
 import Display
 import AsyncDisplayKit
 import SwiftSignalKit
-import IosappCore
+import TelegramCore
 import AccountContext
-import IosappPresentationData
+import TelegramPresentationData
 import ItemListUI
 import ComponentFlow
 import ListActionItemComponent
 import MultilineTextComponent
-import IosappStringFormatting
+import TelegramStringFormatting
 import StarsAvatarComponent
 
 final class StarsTransactionItem: ListViewItem, ItemListItem {
@@ -234,6 +234,42 @@ final class StarsTransactionItemNode: ListViewItemNode, ItemListItemNode {
                         if item.transaction.flags.contains(.isPaidMessage) {
                             itemTitle = peer.displayTitle(strings: item.presentationData.strings, displayOrder: .firstLast)
                             itemSubtitle = item.presentationData.strings.Stars_Intro_Transaction_PaidMessage(item.transaction.paidMessageCount ?? 1)
+                        } else if let starGift = item.transaction.starGift {
+                            if item.transaction.flags.contains(.isStarGiftAuctionBid), case let .generic(gift) = starGift {
+                                itemTitle = gift.title ?? "Gift"
+                                itemSubtitle = item.presentationData.strings.Stars_Intro_Transaction_GiftAuctionBid
+                            } else if item.transaction.flags.contains(.isStarGiftPrepaidUpgrade) {
+                                itemTitle = peer.displayTitle(strings: item.presentationData.strings, displayOrder: .firstLast)
+                                itemSubtitle = item.presentationData.strings.Stars_Intro_Transaction_PrepaidGiftUpgrade
+                            } else if item.transaction.flags.contains(.isStarGiftDropOriginalDetails), case let .unique(gift) = starGift {
+                                itemTitle = "\(gift.title) #\(formatCollectibleNumber(gift.number, dateTimeFormat: item.presentationData.dateTimeFormat))"
+                                itemSubtitle = item.presentationData.strings.Stars_Intro_Transaction_GiftDropOriginalDetails
+                            } else if item.transaction.flags.contains(.isStarGiftUpgrade), case let .unique(gift) = starGift {
+                                itemTitle = "\(gift.title) #\(formatCollectibleNumber(gift.number, dateTimeFormat: item.presentationData.dateTimeFormat))"
+                                itemSubtitle = item.presentationData.strings.Stars_Intro_Transaction_GiftUpgrade
+                            } else {
+                                itemTitle = peer.displayTitle(strings: item.presentationData.strings, displayOrder: .firstLast)
+                                switch starGift {
+                                case .generic:
+                                    if item.transaction.flags.contains(.isStarGiftOffer) {
+                                        itemSubtitle = item.presentationData.strings.Gift_Offer_Title
+                                    } else {
+                                        itemSubtitle = item.transaction.count.amount > StarsAmount.zero ? item.presentationData.strings.Stars_Intro_Transaction_ConvertedGift : item.presentationData.strings.Stars_Intro_Transaction_Gift
+                                    }
+                                case .unique:
+                                    if item.transaction.flags.contains(.isStarGiftOffer) {
+                                        itemSubtitle = item.presentationData.strings.Gift_Offer_Title
+                                    } else if item.transaction.count.amount > StarsAmount.zero {
+                                        itemSubtitle = item.presentationData.strings.Stars_Intro_Transaction_GiftSale
+                                    } else {
+                                        if item.transaction.flags.contains(.isStarGiftResale) {
+                                            itemSubtitle = item.presentationData.strings.Stars_Intro_Transaction_GiftPurchase
+                                        } else {
+                                            itemSubtitle = item.presentationData.strings.Stars_Intro_Transaction_GiftTransfer
+                                        }
+                                    }
+                                }
+                            }
                         } else if !item.transaction.media.isEmpty {
                             itemTitle = item.presentationData.strings.Stars_Intro_Transaction_MediaPurchase
                             itemSubtitle = peer.displayTitle(strings: item.presentationData.strings, displayOrder: .firstLast)
@@ -263,12 +299,12 @@ final class StarsTransactionItemNode: ListViewItemNode, ItemListItemNode {
                         itemTitle = item.presentationData.strings.Stars_Intro_Transaction_PremiumBotTopUp_Title
                         itemSubtitle = item.presentationData.strings.Stars_Intro_Transaction_PremiumBotTopUp_Subtitle
                     case .ads:
-                        itemTitle = item.presentationData.strings.Stars_Intro_Transaction_IosappAds_Title
-                        itemSubtitle = item.presentationData.strings.Stars_Intro_Transaction_IosappAds_Subtitle
+                        itemTitle = item.presentationData.strings.Stars_Intro_Transaction_TelegramAds_Title
+                        itemSubtitle = item.presentationData.strings.Stars_Intro_Transaction_TelegramAds_Subtitle
                     case .apiLimitExtension:
-                        itemTitle = item.presentationData.strings.Stars_Intro_Transaction_IosappBotApi_Title
+                        itemTitle = item.presentationData.strings.Stars_Intro_Transaction_TelegramBotApi_Title
                         if let floodskipNumber = item.transaction.floodskipNumber {
-                            itemSubtitle = item.presentationData.strings.Stars_Intro_Transaction_IosappBotApi_Messages(floodskipNumber)
+                            itemSubtitle = item.presentationData.strings.Stars_Intro_Transaction_TelegramBotApi_Messages(floodskipNumber)
                         } else {
                             itemSubtitle = nil
                         }

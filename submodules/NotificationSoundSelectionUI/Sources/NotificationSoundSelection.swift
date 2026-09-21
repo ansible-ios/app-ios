@@ -2,13 +2,13 @@ import Foundation
 import UIKit
 import Display
 import SwiftSignalKit
-import IosappCore
+import TelegramCore
 import AVFoundation
-import IosappPresentationData
+import TelegramPresentationData
 import ItemListUI
 import PresentationDataUtils
 import AccountContext
-import IosappStringFormatting
+import TelegramStringFormatting
 import AppBundle
 import LegacyMediaPickerUI
 import AVFoundation
@@ -215,7 +215,7 @@ private func notificationsAndSoundsEntries(presentationData: PresentationData, d
     
     var entries: [NotificationSoundSelectionEntry] = []
     
-    entries.append(.cloudHeader(presentationData.strings.Notifications_IosappTones))
+    entries.append(.cloudHeader(presentationData.strings.Notifications_TelegramTones))
     if let notificationSoundList = notificationSoundList {
         let cloudSounds = notificationSoundList.sounds.filter({ CloudSoundBuiltinCategory(id: $0.file.fileId.id) == nil })
         let modernSounds = notificationSoundList.sounds.filter({ CloudSoundBuiltinCategory(id: $0.file.fileId.id) == .modern })
@@ -405,11 +405,11 @@ public func notificationSoundSelectionController(context: AccountContext, update
     let presentationData = updatedPresentationData?.signal ?? context.sharedContext.presentationData
     let signal = combineLatest(presentationData, statePromise.get(), context.engine.peers.notificationSoundList())
     |> map { presentationData, state, notificationSoundList -> (ItemListControllerState, (ItemListNodeState, Any)) in
-        let leftNavigationButton = ItemListNavigationButton(content: .text(presentationData.strings.Common_Cancel), style: .regular, enabled: true, action: {
+        let leftNavigationButton = ItemListNavigationButton(content: .icon(.close), style: .regular, enabled: true, action: {
             arguments.cancel()
         })
         
-        let rightNavigationButton = ItemListNavigationButton(content: .text(presentationData.strings.Common_Done), style: .bold, enabled: true, action: {
+        let rightNavigationButton = ItemListNavigationButton(content: .icon(.done), style: .bold, enabled: true, action: {
             arguments.complete()
         })
         
@@ -476,7 +476,7 @@ public func notificationSoundSelectionController(context: AccountContext, update
                     break
                 }
             }),
-            TextAlertAction(type: .defaultAction, title: presentationData.strings.Common_Cancel, action: {
+            TextAlertAction(type: .genericAction, title: presentationData.strings.Common_Cancel, action: {
             })
         ], parseMarkdown: true), in: .window(.root))
     }

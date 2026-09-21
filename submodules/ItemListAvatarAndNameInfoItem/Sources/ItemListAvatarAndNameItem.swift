@@ -2,15 +2,14 @@ import Foundation
 import UIKit
 import Display
 import AsyncDisplayKit
-import Postbox
-import IosappCore
+import TelegramCore
 import SwiftSignalKit
-import IosappPresentationData
+import TelegramPresentationData
 import ItemListUI
 import PresentationDataUtils
 import ActivityIndicator
 import AvatarNode
-import IosappStringFormatting
+import TelegramStringFormatting
 import PeerPresenceStatusManager
 import AppBundle
 import PhoneNumberFormat
@@ -108,9 +107,9 @@ public struct ItemListAvatarAndNameInfoItemState: Equatable {
 }
 
 public final class ItemListAvatarAndNameInfoItemContext {
-    public var hiddenAvatarRepresentation: IosappMediaImageRepresentation?
+    public var hiddenAvatarRepresentation: TelegramMediaImageRepresentation?
     
-    public init(hiddenAvatarRepresentation: IosappMediaImageRepresentation? = nil) {
+    public init(hiddenAvatarRepresentation: TelegramMediaImageRepresentation? = nil) {
         self.hiddenAvatarRepresentation = hiddenAvatarRepresentation
     }
 }
@@ -121,7 +120,7 @@ public enum ItemListAvatarAndNameInfoItemStyle: Equatable {
 }
 
 public enum ItemListAvatarAndNameInfoItemUpdatingAvatar: Equatable {
-    case image(IosappMediaImageRepresentation, Bool)
+    case image(TelegramMediaImageRepresentation, Bool)
     case none
 }
 
@@ -135,7 +134,7 @@ public enum ItemListAvatarAndNameInfoItemMode {
 public class ItemListAvatarAndNameInfoItem: ListViewItem, ItemListItem, ListItemComponentAdaptor.ItemGenerator {
     public enum ItemContext {
         case accountContext(AccountContext)
-        case other(accountPeerId: EnginePeer.Id, postbox: Postbox, network: Network)
+        case other(accountPeerId: EnginePeer.Id, stateManager: AccountStateManager)
         
         var accountContext: AccountContext? {
             if case let .accountContext(accountContext) = self {
@@ -758,8 +757,8 @@ public class ItemListAvatarAndNameInfoItemNode: ListViewItemNode, ItemListItemNo
                         switch item.itemContext {
                         case let .accountContext(context):
                             strongSelf.avatarNode.setPeer(context: context, theme: item.presentationData.theme, peer: peer, overrideImage: overrideImage, emptyColor: ignoreEmpty ? nil : item.presentationData.theme.list.mediaPlaceholderColor, synchronousLoad: synchronousLoads)
-                        case let .other(accountPeerId, postbox, network):
-                            strongSelf.avatarNode.setPeer(accountPeerId: accountPeerId, postbox: postbox, network: network, contentSettings: .default, theme: item.presentationData.theme, peer: peer, authorOfMessage: nil, overrideImage: overrideImage, emptyColor: ignoreEmpty ? nil : item.presentationData.theme.list.mediaPlaceholderColor, synchronousLoad: synchronousLoads)
+                        case let .other(accountPeerId, stateManager):
+                            strongSelf.avatarNode.setPeer(accountPeerId: accountPeerId, postbox: stateManager.postbox, network: stateManager.network, contentSettings: .default, theme: item.presentationData.theme, peer: peer, authorOfMessage: nil, overrideImage: overrideImage, emptyColor: ignoreEmpty ? nil : item.presentationData.theme.list.mediaPlaceholderColor, synchronousLoad: synchronousLoads)
                         }
                         
                     }
@@ -939,8 +938,13 @@ public class ItemListAvatarAndNameInfoItemNode: ListViewItemNode, ItemListItemNo
                                     strongSelf.addSubnode(strongSelf.inputFirstClearButton!)
                                 }
                                 
-                                strongSelf.inputSeparator?.frame = CGRect(origin: CGPoint(x: params.leftInset + 100.0, y: 64.0), size: CGSize(width: params.width - params.leftInset - 100.0 - separatorRightInset, height: separatorHeight))
-                                strongSelf.inputFirstField?.frame = CGRect(origin: CGPoint(x: params.leftInset + 111.0, y: 28.0), size: CGSize(width: params.width - params.leftInset - params.rightInset - 111.0 - 36.0, height: 35.0))
+                                let inputFieldHeight: CGFloat = 35.0
+                                let inputFieldFrame = CGRect(
+                                    origin: CGPoint(x: params.leftInset + 111.0, y: floorToScreenPixels((contentSize.height - inputFieldHeight) * 0.5)),
+                                    size: CGSize(width: params.width - params.leftInset - params.rightInset - 111.0 - 36.0, height: inputFieldHeight)
+                                )
+                                strongSelf.inputSeparator?.frame = CGRect(origin: CGPoint(x: params.leftInset + 100.0, y: floor(inputFieldFrame.maxY + 1.0)), size: CGSize(width: params.width - params.leftInset - 100.0 - separatorRightInset, height: separatorHeight))
+                                strongSelf.inputFirstField?.frame = inputFieldFrame
                                 
                                 if let image = strongSelf.inputFirstClearButton?.image(for: []), let inputFieldFrame = strongSelf.inputFirstField?.frame {
                                     strongSelf.inputFirstClearButton?.frame = CGRect(origin: CGPoint(x: inputFieldFrame.maxX, y: inputFieldFrame.minY + floor((inputFieldFrame.size.height - image.size.height) / 2.0) - 1.0 + UIScreenPixel), size: image.size)

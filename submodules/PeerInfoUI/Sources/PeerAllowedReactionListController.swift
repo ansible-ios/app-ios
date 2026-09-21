@@ -3,10 +3,9 @@ import UIKit
 import Display
 import AsyncDisplayKit
 import SwiftSignalKit
-import Postbox
-import IosappCore
-import IosappPresentationData
-import IosappUIPreferences
+import TelegramCore
+import TelegramPresentationData
+import TelegramUIPreferences
 import ItemListUI
 import PresentationDataUtils
 import AccountContext
@@ -274,14 +273,14 @@ private struct PeerAllowedReactionListControllerState: Equatable {
 private func peerAllowedReactionListControllerEntries(
     presentationData: PresentationData,
     availableReactions: AvailableReactions?,
-    peer: Peer?,
-    cachedData: CachedPeerData?,
+    peer: EnginePeer?,
+    cachedData: EngineCachedPeerData?,
     state: PeerAllowedReactionListControllerState
 ) -> [PeerAllowedReactionListControllerEntry] {
     var entries: [PeerAllowedReactionListControllerEntry] = []
-    
+
     if let peer = peer, let availableReactions = availableReactions, let allowedReactions = state.updatedAllowedReactions, let mode = state.updatedMode {
-        if let channel = peer as? IosappChannel, case .broadcast = channel.info {
+        if case let .channel(channel) = peer, case .broadcast = channel.info {
             entries.append(.allowSwitch(text: presentationData.strings.PeerInfo_AllowedReactions_AllowAllText, value: mode != .empty))
             
             entries.append(.itemsHeader(presentationData.strings.PeerInfo_AllowedReactions_ReactionListHeader))
@@ -301,7 +300,7 @@ private func peerAllowedReactionListControllerEntries(
             entries.append(.allowNone(text: presentationData.strings.PeerInfo_AllowedReactions_OptionNoReactions, isEnabled: mode == .empty))
             
             let allInfoText: String
-            if let peer = peer as? IosappChannel, case .broadcast = peer.info {
+            if case let .channel(peer) = peer, case .broadcast = peer.info {
                 switch mode {
                 case .all:
                     allInfoText = presentationData.strings.PeerInfo_AllowedReactions_GroupOptionAllInfo
@@ -343,7 +342,7 @@ private func peerAllowedReactionListControllerEntries(
 public func peerAllowedReactionListController(
     context: AccountContext,
     updatedPresentationData: (initial: PresentationData, signal: Signal<PresentationData, NoError>)? = nil,
-    peerId: PeerId
+    peerId: EnginePeer.Id
 ) -> ViewController {
     let statePromise = ValuePromise(PeerAllowedReactionListControllerState(), ignoreRepeated: true)
     let stateValue = Atomic(value: PeerAllowedReactionListControllerState())
@@ -355,7 +354,7 @@ public func peerAllowedReactionListController(
     let _ = dismissImpl
     
     let actionsDisposable = DisposableSet()
-    actionsDisposable.add((combineLatest(context.engine.data.get(IosappEngine.EngineData.Item.Peer.AllowedReactions(id: peerId)), context.engine.stickers.availableReactions() |> take(1))
+    actionsDisposable.add((combineLatest(context.engine.data.get(TelegramEngine.EngineData.Item.Peer.AllowedReactions(id: peerId)), context.engine.stickers.availableReactions() |> take(1))
     |> deliverOnMainQueue).start(next: { allowedReactions, availableReactions in
         updateState { state in
             var state = state
@@ -476,7 +475,7 @@ public func peerAllowedReactionListController(
         let entries = peerAllowedReactionListControllerEntries(
             presentationData: presentationData,
             availableReactions: availableReactions,
-            peer: peerView.peers[peerId],
+            peer: peerView.peers[peerId].flatMap(EnginePeer.init),
             cachedData: peerView.cachedData,
             state: state
         )
@@ -506,8 +505,8 @@ public func peerAllowedReactionListController(
     controller.willDisappear = { _ in
         let _ = (combineLatest(
             context.engine.data.get(
-                IosappEngine.EngineData.Item.Peer.Peer(id: peerId),
-                IosappEngine.EngineData.Item.Peer.AllowedReactions(id: peerId)
+                TelegramEngine.EngineData.Item.Peer.Peer(id: peerId),
+                TelegramEngine.EngineData.Item.Peer.AllowedReactions(id: peerId)
             ),
             context.engine.stickers.availableReactions() |> take(1)
         )

@@ -2,10 +2,10 @@ import Display
 import UIKit
 import AsyncDisplayKit
 import UIKit
-import IosappCore
+import TelegramCore
 import SwiftSignalKit
-import IosappPresentationData
-import IosappUIPreferences
+import TelegramPresentationData
+import TelegramUIPreferences
 import DeviceAccess
 import AccountContext
 import SearchBarNode
@@ -64,7 +64,6 @@ final class ContactsControllerNode: ASDisplayNode, ASGestureRecognizerDelegate {
     var requestOpenPeerFromSearch: ((ContactListPeer) -> Void)?
     var requestOpenDisabledPeerFromSearch: ((EnginePeer, ChatListDisabledPeerReason) -> Void)?
     var requestAddContact: ((String) -> Void)?
-    var openPeopleNearby: (() -> Void)?
     var openInvite: (() -> Void)?
     var openQrScan: (() -> Void)?
     var openStories: ((EnginePeer, ASDisplayNode) -> Void)?

@@ -1,5 +1,5 @@
 import Foundation
-import IosappCore
+import TelegramCore
 import SwiftSignalKit
 
 public protocol LiveLocationSummaryManager {

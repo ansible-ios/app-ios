@@ -7,7 +7,7 @@ import BundleIconComponent
 import MultilineTextComponent
 import MoreButtonNode
 import AccountContext
-import IosappPresentationData
+import TelegramPresentationData
 import LottieAnimationComponent
 
 final class FullscreenControlsComponent: Component {

@@ -1,9 +1,9 @@
 import Foundation
 import UIKit
-import IosappCore
+import TelegramCore
 import AsyncDisplayKit
-import IosappPresentationData
-import IosappUIPreferences
+import TelegramPresentationData
+import TelegramUIPreferences
 import AccountContext
 import ContextUI
 
@@ -13,9 +13,9 @@ public final class InstantPageFeedbackItem: InstantPageItem {
     public let separatesTiles: Bool = false
     public let medias: [InstantPageMedia] = []
     
-    let webPage: IosappMediaWebpage
+    let webPage: TelegramMediaWebpage
     
-    init(frame: CGRect, webPage: IosappMediaWebpage) {
+    init(frame: CGRect, webPage: TelegramMediaWebpage) {
         self.frame = frame
         self.webPage = webPage
     }

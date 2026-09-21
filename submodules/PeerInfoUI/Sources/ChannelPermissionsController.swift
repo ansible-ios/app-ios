@@ -2,10 +2,10 @@ import Foundation
 import UIKit
 import Display
 import SwiftSignalKit
-import IosappCore
-import IosappPresentationData
-import IosappUIPreferences
-import IosappStringFormatting
+import TelegramCore
+import TelegramPresentationData
+import TelegramUIPreferences
+import TelegramStringFormatting
 import ItemListUI
 import PresentationDataUtils
 import OverlayStatusController
@@ -14,34 +14,33 @@ import TemporaryCachedPeerDataManager
 import AlertUI
 import PresentationDataUtils
 import ItemListPeerItem
-import IosappPermissionsUI
+import TelegramPermissionsUI
 import ItemListPeerActionItem
 import Markdown
 import UndoUI
-import Postbox
 import OldChannelsController
 import MessagePriceItem
 
 private final class ChannelPermissionsControllerArguments {
     let context: AccountContext
     
-    let updatePermission: (IosappChatBannedRightsFlags, Bool) -> Void
+    let updatePermission: (TelegramChatBannedRightsFlags, Bool) -> Void
     let setPeerIdWithRevealedOptions: (EnginePeer.Id?, EnginePeer.Id?) -> Void
     let addPeer: () -> Void
     let removePeer: (EnginePeer.Id) -> Void
     let openPeer: (ChannelParticipant) -> Void
     let openPeerInfo: (EnginePeer) -> Void
     let openKicked: () -> Void
-    let presentRestrictedPermissionAlert: (IosappChatBannedRightsFlags) -> Void
+    let presentRestrictedPermissionAlert: (TelegramChatBannedRightsFlags) -> Void
     let presentConversionToBroadcastGroup: () -> Void
     let openChannelExample: () -> Void
     let updateSlowmode: (Int32) -> Void
     let updateUnrestrictBoosters: (Int32) -> Void
     let updateStarsAmount: (StarsAmount?, Bool) -> Void
     let openSetCustomStarsAmount: () -> Void
-    let toggleIsOptionExpanded: (IosappChatBannedRightsFlags) -> Void
+    let toggleIsOptionExpanded: (TelegramChatBannedRightsFlags) -> Void
     
-    init(context: AccountContext, updatePermission: @escaping (IosappChatBannedRightsFlags, Bool) -> Void, setPeerIdWithRevealedOptions: @escaping (EnginePeer.Id?, EnginePeer.Id?) -> Void, addPeer: @escaping  () -> Void, removePeer: @escaping (EnginePeer.Id) -> Void, openPeer: @escaping (ChannelParticipant) -> Void, openPeerInfo: @escaping (EnginePeer) -> Void, openKicked: @escaping () -> Void, presentRestrictedPermissionAlert: @escaping (IosappChatBannedRightsFlags) -> Void, presentConversionToBroadcastGroup: @escaping () -> Void, openChannelExample: @escaping () -> Void, updateSlowmode: @escaping (Int32) -> Void, updateUnrestrictBoosters: @escaping (Int32) -> Void, updateStarsAmount: @escaping (StarsAmount?, Bool) -> Void, openSetCustomStarsAmount: @escaping () -> Void, toggleIsOptionExpanded: @escaping (IosappChatBannedRightsFlags) -> Void) {
+    init(context: AccountContext, updatePermission: @escaping (TelegramChatBannedRightsFlags, Bool) -> Void, setPeerIdWithRevealedOptions: @escaping (EnginePeer.Id?, EnginePeer.Id?) -> Void, addPeer: @escaping  () -> Void, removePeer: @escaping (EnginePeer.Id) -> Void, openPeer: @escaping (ChannelParticipant) -> Void, openPeerInfo: @escaping (EnginePeer) -> Void, openKicked: @escaping () -> Void, presentRestrictedPermissionAlert: @escaping (TelegramChatBannedRightsFlags) -> Void, presentConversionToBroadcastGroup: @escaping () -> Void, openChannelExample: @escaping () -> Void, updateSlowmode: @escaping (Int32) -> Void, updateUnrestrictBoosters: @escaping (Int32) -> Void, updateStarsAmount: @escaping (StarsAmount?, Bool) -> Void, openSetCustomStarsAmount: @escaping () -> Void, toggleIsOptionExpanded: @escaping (TelegramChatBannedRightsFlags) -> Void) {
         self.context = context
         self.updatePermission = updatePermission
         self.addPeer = addPeer
@@ -79,14 +78,14 @@ private enum ChannelPermissionsEntryStableId: Hashable {
 
 struct SubPermission: Equatable {
     var title: String
-    var flags: IosappChatBannedRightsFlags
+    var flags: TelegramChatBannedRightsFlags
     var isSelected: Bool
     var isEnabled: Bool
 }
 
 private enum ChannelPermissionsEntry: ItemListNodeEntry {
     case permissionsHeader(PresentationTheme, String)
-    case permission(PresentationTheme, Int, String, Bool, IosappChatBannedRightsFlags, Bool?, [SubPermission], Bool)
+    case permission(PresentationTheme, Int, String, Bool, TelegramChatBannedRightsFlags, Bool?, [SubPermission], Bool)
     case slowmodeHeader(PresentationTheme, String)
     case slowmode(PresentationTheme, PresentationStrings, Int32)
     case slowmodeInfo(PresentationTheme, String)
@@ -107,7 +106,7 @@ private enum ChannelPermissionsEntry: ItemListNodeEntry {
     case kicked(PresentationTheme, String, String)
     case exceptionsHeader(PresentationTheme, String)
     case add(PresentationTheme, String)
-    case peerItem(PresentationTheme, PresentationStrings, PresentationDateTimeFormat, PresentationPersonNameOrder, Int32, RenderedChannelParticipant, ItemListPeerItemEditing, Bool, Bool, IosappChatBannedRightsFlags)
+    case peerItem(PresentationTheme, PresentationStrings, PresentationDateTimeFormat, PresentationPersonNameOrder, Int32, RenderedChannelParticipant, ItemListPeerItemEditing, Bool, Bool, TelegramChatBannedRightsFlags)
     
     var section: ItemListSectionId {
         switch self {
@@ -381,7 +380,7 @@ private enum ChannelPermissionsEntry: ItemListNodeEntry {
                         guard let value = item.id.base as? Int32 else {
                             return
                         }
-                        let subRights = IosappChatBannedRightsFlags(rawValue: value)
+                        let subRights = TelegramChatBannedRightsFlags(rawValue: value)
                         
                         if let _ = enabled {
                             arguments.updatePermission(subRights, !item.isSelected)
@@ -477,10 +476,10 @@ private enum ChannelPermissionsEntry: ItemListNodeEntry {
                     default:
                         break
                 }
-                return ItemListPeerItem(presentationData: presentationData, systemStyle: .glass, dateTimeFormat: dateTimeFormat, nameDisplayOrder: nameDisplayOrder, context: arguments.context, peer: EnginePeer(participant.peer), presence: nil, text: text, label: .none, editing: editing, switchValue: nil, enabled: enabled, selectable: true, sectionId: self.section, action: canOpen ? {
+                return ItemListPeerItem(presentationData: presentationData, systemStyle: .glass, dateTimeFormat: dateTimeFormat, nameDisplayOrder: nameDisplayOrder, context: arguments.context, peer: participant.peer, presence: nil, text: text, label: .none, editing: editing, switchValue: nil, enabled: enabled, selectable: true, sectionId: self.section, action: canOpen ? {
                     arguments.openPeer(participant.participant)
                 } : {
-                    arguments.openPeerInfo(EnginePeer(participant.peer))
+                    arguments.openPeerInfo(participant.peer)
                 }, setPeerIdWithRevealedOptions: { previousId, id in
                     arguments.setPeerIdWithRevealedOptions(previousId, id)
                 }, removePeer: { peerId in
@@ -494,14 +493,14 @@ private struct ChannelPermissionsControllerState: Equatable {
     var peerIdWithRevealedOptions: EnginePeer.Id?
     var removingPeerId: EnginePeer.Id?
     var searchingMembers: Bool = false
-    var modifiedRightsFlags: IosappChatBannedRightsFlags?
+    var modifiedRightsFlags: TelegramChatBannedRightsFlags?
     var modifiedSlowmodeTimeout: Int32?
     var modifiedUnrestrictBoosters: Int32?
     var modifiedStarsAmount: StarsAmount?
-    var expandedPermissions = Set<IosappChatBannedRightsFlags>()
+    var expandedPermissions = Set<TelegramChatBannedRightsFlags>()
 }
 
-func stringForGroupPermission(strings: PresentationStrings, right: IosappChatBannedRightsFlags, isForum: Bool, defaultPermissions: Bool = false) -> String {
+func stringForGroupPermission(strings: PresentationStrings, right: TelegramChatBannedRightsFlags, isForum: Bool, defaultPermissions: Bool = false) -> String {
     if right.contains(.banSendText) {
         return strings.Channel_BanUser_PermissionSendMessages
     } else if right.contains(.banSendMedia) {
@@ -534,6 +533,8 @@ func stringForGroupPermission(strings: PresentationStrings, right: IosappChatBan
         return strings.Channel_BanUser_PermissionSendVoiceMessage
     } else if right.contains(.banSendInstantVideos) {
         return strings.Channel_BanUser_PermissionSendVideoMessage
+    } else if right.contains(.banSendReactions) {
+        return strings.Channel_BanUser_PermissionSendReactions
     } else if right.contains(.banEditRank) {
         if defaultPermissions {
             return strings.Channel_BanUser_PermissionEditOwnRank
@@ -545,7 +546,7 @@ func stringForGroupPermission(strings: PresentationStrings, right: IosappChatBan
     }
 }
 
-func compactStringForGroupPermission(strings: PresentationStrings, right: IosappChatBannedRightsFlags) -> String {
+func compactStringForGroupPermission(strings: PresentationStrings, right: TelegramChatBannedRightsFlags) -> String {
     if right.contains(.banSendText) {
         return strings.GroupPermission_NoSendMessages
     } else if right.contains(.banSendMedia) {
@@ -568,6 +569,8 @@ func compactStringForGroupPermission(strings: PresentationStrings, right: Iosapp
         return strings.GroupPermission_NoSendLinks
     } else if right.contains(.banSendPolls) {
         return strings.GroupPermission_NoSendPolls
+    } else if right.contains(.banSendReactions) {
+        return strings.GroupPermission_NoSendReactions
     } else if right.contains(.banChangeInfo) {
         return strings.GroupPermission_NoChangeInfo
     } else if right.contains(.banAddMembers) {
@@ -583,7 +586,7 @@ func compactStringForGroupPermission(strings: PresentationStrings, right: Iosapp
     }
 }
 
-private let internal_allPossibleGroupPermissionList: [(IosappChatBannedRightsFlags, IosappChannelPermission)] = [
+private let internal_allPossibleGroupPermissionList: [(TelegramChatBannedRightsFlags, TelegramChannelPermission)] = [
     (.banSendText, .banMembers),
     (.banSendMedia, .banMembers),
     (.banSendPhotos, .banMembers),
@@ -595,6 +598,7 @@ private let internal_allPossibleGroupPermissionList: [(IosappChatBannedRightsFla
     (.banSendInstantVideos, .banMembers),
     (.banEmbedLinks, .banMembers),
     (.banSendPolls, .banMembers),
+    (.banSendReactions, .banMembers),
     (.banAddMembers, .banMembers),
     (.banPinMessages, .pinMessages),
     (.banManageTopics, .manageTopics),
@@ -602,8 +606,8 @@ private let internal_allPossibleGroupPermissionList: [(IosappChatBannedRightsFla
     (.banEditRank, .editRank)
 ]
 
-public func allGroupPermissionList(peer: EnginePeer, expandMedia: Bool) -> [(IosappChatBannedRightsFlags, IosappChannelPermission)] {
-    var result: [(IosappChatBannedRightsFlags, IosappChannelPermission)]
+public func allGroupPermissionList(peer: EnginePeer, expandMedia: Bool) -> [(TelegramChatBannedRightsFlags, TelegramChannelPermission)] {
+    var result: [(TelegramChatBannedRightsFlags, TelegramChannelPermission)]
     if case let .channel(channel) = peer, channel.isForum {
         result = [
             (.banSendText, .banMembers),
@@ -636,7 +640,7 @@ public func allGroupPermissionList(peer: EnginePeer, expandMedia: Bool) -> [(Ios
     return result
 }
     
-public func banSendMediaSubList() -> [(IosappChatBannedRightsFlags, IosappChannelPermission)] {
+public func banSendMediaSubList() -> [(TelegramChatBannedRightsFlags, TelegramChannelPermission)] {
     return [
         (.banSendPhotos, .banMembers),
         (.banSendVideos, .banMembers),
@@ -647,15 +651,16 @@ public func banSendMediaSubList() -> [(IosappChatBannedRightsFlags, IosappChanne
         (.banSendInstantVideos, .banMembers),
         (.banEmbedLinks, .banMembers),
         (.banSendPolls, .banMembers),
+        (.banSendReactions, .banMembers)
     ]
 }
 
-let publicGroupRestrictedPermissions: IosappChatBannedRightsFlags = [
+let publicGroupRestrictedPermissions: TelegramChatBannedRightsFlags = [
     .banPinMessages,
     .banChangeInfo
 ]
 
-func groupPermissionDependencies(_ right: IosappChatBannedRightsFlags) -> IosappChatBannedRightsFlags {
+func groupPermissionDependencies(_ right: TelegramChatBannedRightsFlags) -> TelegramChatBannedRightsFlags {
     if right.contains(.banEmbedLinks) {
         return [.banSendText]
     } else if right.contains(.banSendMedia) || banSendMediaSubList().contains(where: { $0.0 == right }) {
@@ -677,16 +682,16 @@ func groupPermissionDependencies(_ right: IosappChatBannedRightsFlags) -> Iosapp
     }
 }
 
-private func channelPermissionsControllerEntries(context: AccountContext, presentationData: PresentationData, view: PeerView, state: ChannelPermissionsControllerState, participants: [RenderedChannelParticipant]?, configuration: StarsSubscriptionConfiguration) -> [ChannelPermissionsEntry] {
+private func channelPermissionsControllerEntries(context: AccountContext, presentationData: PresentationData, view: EngineRawPeerView, state: ChannelPermissionsControllerState, participants: [RenderedChannelParticipant]?, configuration: StarsSubscriptionConfiguration) -> [ChannelPermissionsEntry] {
     var entries: [ChannelPermissionsEntry] = []
     
-    if let channel = view.peers[view.peerId] as? IosappChannel, let participants = participants, let cachedData = view.cachedData as? CachedChannelData, let defaultBannedRights = channel.defaultBannedRights {
+    if let channel = view.peers[view.peerId] as? TelegramChannel, let participants = participants, let cachedData = view.cachedData as? CachedChannelData, let defaultBannedRights = channel.defaultBannedRights {
         var isDiscussion = false
         if case .group = channel.info, case let .known(peerId) = cachedData.linkedDiscussionPeerId, peerId != nil {
             isDiscussion = true
         }
         
-        let effectiveRightsFlags: IosappChatBannedRightsFlags
+        let effectiveRightsFlags: TelegramChatBannedRightsFlags
         if let modifiedRightsFlags = state.modifiedRightsFlags {
             effectiveRightsFlags = modifiedRightsFlags
         } else {
@@ -780,10 +785,10 @@ private func channelPermissionsControllerEntries(context: AccountContext, presen
             entries.append(.peerItem(presentationData.theme, presentationData.strings, presentationData.dateTimeFormat, presentationData.nameDisplayOrder, index, participant, ItemListPeerItemEditing(editable: true, editing: false, revealed: participant.peer.id == state.peerIdWithRevealedOptions), state.removingPeerId != participant.peer.id, true, effectiveRightsFlags))
             index += 1
         }
-    } else if let group = view.peers[view.peerId] as? IosappGroup, let _ = view.cachedData as? CachedGroupData {
-        let defaultBannedRights = group.defaultBannedRights ?? IosappChatBannedRights(flags: [], untilDate: 0)
+    } else if let group = view.peers[view.peerId] as? TelegramGroup, let _ = view.cachedData as? CachedGroupData {
+        let defaultBannedRights = group.defaultBannedRights ?? TelegramChatBannedRights(flags: [], untilDate: 0)
         
-        let effectiveRightsFlags: IosappChatBannedRightsFlags
+        let effectiveRightsFlags: TelegramChatBannedRightsFlags
         if let modifiedRightsFlags = state.modifiedRightsFlags {
             effectiveRightsFlags = modifiedRightsFlags
         } else {
@@ -864,7 +869,7 @@ public func channelPermissionsController(context: AccountContext, updatedPresent
             peersPromise.set(.single((peerId, nil)))
         } else {
             var loadCompletedCalled = false
-            let disposableAndLoadMoreControl = context.peerChannelMemberCategoriesContextsManager.restricted(engine: context.engine, postbox: context.account.postbox, network: context.account.network, accountPeerId: context.account.peerId, peerId: peerId, updated: { state in
+            let disposableAndLoadMoreControl = context.peerChannelMemberCategoriesContextsManager.restricted(engine: context.engine, accountPeerId: context.account.peerId, peerId: peerId, updated: { state in
                 if case .loading(true) = state.loadingState, !updated {
                     peersPromise.set(.single((peerId, nil)))
                 } else {
@@ -891,7 +896,7 @@ public func channelPermissionsController(context: AccountContext, updatedPresent
     let updateSendPaidMessageStarsDisposable = MetaDisposable()
     actionsDisposable.add(updateSendPaidMessageStarsDisposable)
     
-    let peerView = Promise<PeerView>()
+    let peerView = Promise<EngineRawPeerView>()
     peerView.set(sourcePeerId.get()
     |> mapToSignal(context.account.viewTracker.peerView))
     
@@ -901,16 +906,16 @@ public func channelPermissionsController(context: AccountContext, updatedPresent
         let _ = (peerView.get()
         |> take(1)
         |> deliverOnMainQueue).start(next: { view in
-            if let channel = view.peers[view.peerId] as? IosappChannel, let _ = view.cachedData as? CachedChannelData {
+            if let channel = view.peers[view.peerId] as? TelegramChannel, let _ = view.cachedData as? CachedChannelData {
                 updateState { state in
                     var state = state
-                    var effectiveRightsFlags: IosappChatBannedRightsFlags
+                    var effectiveRightsFlags: TelegramChatBannedRightsFlags
                     if let modifiedRightsFlags = state.modifiedRightsFlags {
                         effectiveRightsFlags = modifiedRightsFlags
                     } else if let defaultBannedRightsFlags = channel.defaultBannedRights?.flags {
                         effectiveRightsFlags = defaultBannedRightsFlags
                     } else {
-                        effectiveRightsFlags = IosappChatBannedRightsFlags()
+                        effectiveRightsFlags = TelegramChatBannedRightsFlags()
                     }
                     
                     if rights == .banSendMedia {
@@ -964,19 +969,19 @@ public func channelPermissionsController(context: AccountContext, updatedPresent
                 }
                 let state = stateValue.with { $0 }
                 if let modifiedRightsFlags = state.modifiedRightsFlags {
-                    updateDefaultRightsDisposable.set((context.engine.peers.updateDefaultChannelMemberBannedRights(peerId: view.peerId, rights: IosappChatBannedRights(flags: completeRights(modifiedRightsFlags), untilDate: Int32.max))
+                    updateDefaultRightsDisposable.set((context.engine.peers.updateDefaultChannelMemberBannedRights(peerId: view.peerId, rights: TelegramChatBannedRights(flags: completeRights(modifiedRightsFlags), untilDate: Int32.max))
                     |> deliverOnMainQueue).start())
                 }
-            } else if let group = view.peers[view.peerId] as? IosappGroup, let _ = view.cachedData as? CachedGroupData {
+            } else if let group = view.peers[view.peerId] as? TelegramGroup, let _ = view.cachedData as? CachedGroupData {
                 updateState { state in
                     var state = state
-                    var effectiveRightsFlags: IosappChatBannedRightsFlags
+                    var effectiveRightsFlags: TelegramChatBannedRightsFlags
                     if let modifiedRightsFlags = state.modifiedRightsFlags {
                         effectiveRightsFlags = modifiedRightsFlags
                     } else if let defaultBannedRightsFlags = group.defaultBannedRights?.flags {
                         effectiveRightsFlags = defaultBannedRightsFlags
                     } else {
-                        effectiveRightsFlags = IosappChatBannedRightsFlags()
+                        effectiveRightsFlags = TelegramChatBannedRightsFlags()
                     }
                     
                     if rights == .banSendMedia {
@@ -1020,7 +1025,7 @@ public func channelPermissionsController(context: AccountContext, updatedPresent
                 }
                 let state = stateValue.with { $0 }
                 if let modifiedRightsFlags = state.modifiedRightsFlags {
-                    updateDefaultRightsDisposable.set((context.engine.peers.updateDefaultChannelMemberBannedRights(peerId: view.peerId, rights: IosappChatBannedRights(flags: completeRights(modifiedRightsFlags), untilDate: Int32.max))
+                    updateDefaultRightsDisposable.set((context.engine.peers.updateDefaultChannelMemberBannedRights(peerId: view.peerId, rights: TelegramChatBannedRights(flags: completeRights(modifiedRightsFlags), untilDate: Int32.max))
                         |> deliverOnMainQueue).start())
                 }
             }
@@ -1051,7 +1056,14 @@ public func channelPermissionsController(context: AccountContext, updatedPresent
                             }
                     }
                 }
-                let _ = (context.account.postbox.loadedPeerWithId(peerId)
+                let _ = (context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: peerId))
+                |> mapToSignal { peer -> Signal<EnginePeer, NoError> in
+                    if let peer {
+                        return .single(peer)
+                    } else {
+                        return .never()
+                    }
+                }
                 |> deliverOnMainQueue).start(next: { channel in
                     dismissController?()
                         presentControllerImpl?(channelBannedMemberController(context: context, peerId: peerId, memberId: peer.id, initialParticipant: participant?.participant, updated: { _ in
@@ -1095,7 +1107,7 @@ public func channelPermissionsController(context: AccountContext, updatedPresent
             }), ViewControllerPresentationArguments(presentationAnimation: .modalSheet))
         })
     }, openPeerInfo: { peer in
-        if let controller = context.sharedContext.makePeerInfoController(context: context, updatedPresentationData: nil, peer: peer._asPeer(), mode: .generic, avatarInitiallyExpanded: false, fromChat: false, requestsContext: nil) {
+        if let controller = context.sharedContext.makePeerInfoController(context: context, updatedPresentationData: nil, peer: peer, mode: .generic, avatarInitiallyExpanded: false, fromChat: false, requestsContext: nil) {
             pushControllerImpl?(controller)
         }
     }, openKicked: {
@@ -1108,7 +1120,7 @@ public func channelPermissionsController(context: AccountContext, updatedPresent
         let _ = (peerView.get()
         |> take(1)
         |> deliverOnMainQueue).start(next: { view in
-            guard let channel = view.peers[view.peerId] as? IosappChannel else {
+            guard let channel = view.peers[view.peerId] as? TelegramChannel else {
                 return
             }
             for (listRight, permission) in allGroupPermissionList(peer: .channel(channel), expandMedia: false) {
@@ -1183,7 +1195,7 @@ public func channelPermissionsController(context: AccountContext, updatedPresent
         let _ = (peerView.get()
         |> take(1)
         |> deliverOnMainQueue).start(next: { view in
-            if let _ = view.peers[view.peerId] as? IosappChannel, let _ = view.cachedData as? CachedChannelData {
+            if let _ = view.peers[view.peerId] as? TelegramChannel, let _ = view.cachedData as? CachedChannelData {
                 updateState { state in
                     var state = state
                     state.modifiedSlowmodeTimeout = value
@@ -1193,7 +1205,7 @@ public func channelPermissionsController(context: AccountContext, updatedPresent
                 if let modifiedSlowmodeTimeout = state.modifiedSlowmodeTimeout {
                     updateDefaultRightsDisposable.set(context.engine.peers.updateChannelSlowModeInteractively(peerId: view.peerId, timeout: modifiedSlowmodeTimeout == 0 ? nil : value).start())
                 }
-            } else if let _ = view.peers[view.peerId] as? IosappGroup, let _ = view.cachedData as? CachedGroupData {
+            } else if let _ = view.peers[view.peerId] as? TelegramGroup, let _ = view.cachedData as? CachedGroupData {
                 updateState { state in
                     var state = state
                     state.modifiedSlowmodeTimeout = value
@@ -1300,7 +1312,7 @@ public func channelPermissionsController(context: AccountContext, updatedPresent
     let previousParticipants = Atomic<[RenderedChannelParticipant]?>(value: nil)
     
     let viewAndParticipants = combineLatest(queue: .mainQueue(), sourcePeerId.get(), peerView.get(), peersPromise.get())
-    |> mapToSignal { peerIdAndChanged, view, peers -> Signal<(PeerView, [RenderedChannelParticipant]?), NoError> in
+    |> mapToSignal { peerIdAndChanged, view, peers -> Signal<(EngineRawPeerView, [RenderedChannelParticipant]?), NoError> in
         let (peerId, changed) = peerIdAndChanged
         if view.peerId != peerId {
             return .complete()
@@ -1316,7 +1328,7 @@ public func channelPermissionsController(context: AccountContext, updatedPresent
         return .single((view, peers.1))
     }
     
-    let previousExpandedPermissionsValue = Atomic<Set<IosappChatBannedRightsFlags>?>(value: nil)
+    let previousExpandedPermissionsValue = Atomic<Set<TelegramChatBannedRightsFlags>?>(value: nil)
     
     let presentationData = updatedPresentationData?.signal ?? context.sharedContext.presentationData
     let signal = combineLatest(queue: .mainQueue(), presentationData, statePromise.get(), viewAndParticipants)
@@ -1352,7 +1364,7 @@ public func channelPermissionsController(context: AccountContext, updatedPresent
                     return state
                 }
             }, openPeer: { _, rendered in
-                if let participant = rendered?.participant, case .member = participant, let _ = peerViewMainPeer(view) as? IosappChannel {
+                if let participant = rendered?.participant, case .member = participant, let _ = peerViewMainPeer(view) as? TelegramChannel {
                     updateState { state in
                         var state = state
                         state.searchingMembers = false
@@ -1398,7 +1410,7 @@ public func channelPermissionsController(context: AccountContext, updatedPresent
         }
     }
     navigateToChatControllerImpl = { [weak controller] peerId in
-        let _ = (context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: peerId))
+        let _ = (context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: peerId))
         |> deliverOnMainQueue).start(next: { peer in
             guard let peer = peer else {
                 return

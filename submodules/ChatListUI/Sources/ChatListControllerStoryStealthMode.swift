@@ -1,8 +1,8 @@
 import Foundation
 import Display
 import SwiftSignalKit
-import IosappCore
-import IosappPresentationData
+import TelegramCore
+import TelegramPresentationData
 import AccountContext
 import StoryContainerScreen
 import StoryStealthModeSheetScreen
@@ -13,8 +13,8 @@ extension ChatListControllerImpl {
         let context = self.context
         
         let _ = (context.engine.data.get(
-            IosappEngine.EngineData.Item.Configuration.StoryConfigurationState(),
-            IosappEngine.EngineData.Item.Configuration.App()
+            TelegramEngine.EngineData.Item.Configuration.StoryConfigurationState(),
+            TelegramEngine.EngineData.Item.Configuration.App()
         )
         |> deliverOnMainQueue).start(next: { [weak self] config, appConfig in
             guard let self else {
@@ -110,8 +110,8 @@ extension ChatListControllerImpl {
     func presentStealthModeUpgrade(action: @escaping () -> Void) {
         let context = self.context
         let _ = (context.engine.data.get(
-            IosappEngine.EngineData.Item.Configuration.StoryConfigurationState(),
-            IosappEngine.EngineData.Item.Configuration.App()
+            TelegramEngine.EngineData.Item.Configuration.StoryConfigurationState(),
+            TelegramEngine.EngineData.Item.Configuration.App()
         )
         |> deliverOnMainQueue).start(next: { [weak self] config, appConfig in
             guard let self else {

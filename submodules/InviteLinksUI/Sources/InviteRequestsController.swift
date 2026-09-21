@@ -3,9 +3,9 @@ import UIKit
 import AsyncDisplayKit
 import Display
 import SwiftSignalKit
-import IosappCore
-import IosappPresentationData
-import IosappUIPreferences
+import TelegramCore
+import TelegramPresentationData
+import TelegramUIPreferences
 import ItemListUI
 import PresentationDataUtils
 import OverlayStatusController
@@ -14,7 +14,7 @@ import AlertUI
 import PresentationDataUtils
 import AppBundle
 import ContextUI
-import IosappStringFormatting
+import TelegramStringFormatting
 import ItemListPeerActionItem
 import ItemListPeerItem
 import UndoUI
@@ -184,7 +184,7 @@ public func inviteRequestsController(context: AccountContext, updatedPresentatio
         importersContext.update(peer.id, action: .approve)
                 
         let _ = (context.engine.data.get(
-            IosappEngine.EngineData.Item.Peer.Peer(id: peerId)
+            TelegramEngine.EngineData.Item.Peer.Peer(id: peerId)
         )
         |> deliverOnMainQueue).start(next: { chatPeer in
             guard let chatPeer = chatPeer else {
@@ -220,7 +220,7 @@ public func inviteRequestsController(context: AccountContext, updatedPresentatio
         }
         
         let _ = (context.engine.data.get(
-            IosappEngine.EngineData.Item.Peer.Peer(id: peerId)
+            TelegramEngine.EngineData.Item.Peer.Peer(id: peerId)
         )
         |> deliverOnMainQueue).start(next: { chatPeer in
             guard let chatPeer = chatPeer else {
@@ -278,7 +278,7 @@ public func inviteRequestsController(context: AccountContext, updatedPresentatio
     let signal = combineLatest(queue: .mainQueue(),
         presentationData,
         context.engine.data.subscribe(
-            IosappEngine.EngineData.Item.Peer.Peer(id: peerId)
+            TelegramEngine.EngineData.Item.Peer.Peer(id: peerId)
         ),
         importersContext.state,
         statePromise.get()
@@ -376,7 +376,7 @@ public func inviteRequestsController(context: AccountContext, updatedPresentatio
         }
     }
     navigateToProfileImpl = { [weak controller] peer in
-        if let navigationController = controller?.navigationController as? NavigationController, let controller = context.sharedContext.makePeerInfoController(context: context, updatedPresentationData: nil, peer: peer._asPeer(), mode: .generic, avatarInitiallyExpanded: peer.largeProfileImage != nil, fromChat: false, requestsContext: nil) {
+        if let navigationController = controller?.navigationController as? NavigationController, let controller = context.sharedContext.makePeerInfoController(context: context, updatedPresentationData: nil, peer: peer, mode: .generic, avatarInitiallyExpanded: peer.largeProfileImage != nil, fromChat: false, requestsContext: nil) {
             navigationController.pushViewController(controller)
         }
     }

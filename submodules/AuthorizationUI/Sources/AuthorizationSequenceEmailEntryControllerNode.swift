@@ -2,11 +2,11 @@ import Foundation
 import UIKit
 import AsyncDisplayKit
 import Display
-import IosappPresentationData
+import TelegramPresentationData
 import AuthorizationUtils
 import AuthenticationServices
 import AnimatedStickerNode
-import IosappAnimatedStickerNode
+import TelegramAnimatedStickerNode
 import SolidRoundedButtonNode
 
 final class AuthorizationDividerNode: ASDisplayNode {

@@ -1,8 +1,8 @@
 import Foundation
 import Display
 import SwiftSignalKit
-import IosappCore
-import IosappPresentationData
+import TelegramCore
+import TelegramPresentationData
 import AccountContext
 import ComponentFlow
 import AlertComponent
@@ -14,7 +14,7 @@ import OwnershipTransferController
 extension ChatListControllerImpl {
     func presentLeaveChatConfirmation(peer: EnginePeer, nextCreator: EnginePeer, completion: @escaping (Bool) -> Void) {
         Task { @MainActor in
-            let accountPeer = await (self.context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: self.context.account.peerId))).get()
+            let accountPeer = await (self.context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: self.context.account.peerId))).get()
             
             guard let accountPeer else {
                 completion(false)
@@ -131,7 +131,7 @@ extension ChatListControllerImpl {
                             return
                         case let .member(_, _, adminInfo, _, _, _):
                             if adminInfo == nil {
-                                let _ = self.context.engine.peers.updateChannelAdminRights(peerId: chatPeer.id, adminId: peer.id, rights: IosappChatAdminRights(rights: .all), rank: nil).start()
+                                let _ = self.context.engine.peers.updateChannelAdminRights(peerId: chatPeer.id, adminId: peer.id, rights: TelegramChatAdminRights(rights: .all), rank: nil).start()
                             }
                             
                             let _ = (self.context.engine.peers.checkOwnershipTranfserAvailability(memberId: peer.id) |> deliverOnMainQueue).start(error: { [weak self] error in

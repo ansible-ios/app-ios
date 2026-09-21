@@ -2,13 +2,13 @@ import Foundation
 import UIKit
 import AsyncDisplayKit
 import Display
-import IosappCore
+import TelegramCore
 import SwiftSignalKit
-import IosappPresentationData
+import TelegramPresentationData
 import AccountContext
 import RadialStatusNode
 import GalleryUI
-import IosappUniversalVideoContent
+import TelegramUniversalVideoContent
 
 private struct FetchControls {
     let fetch: (Bool) -> Void
@@ -38,7 +38,7 @@ final class InstantPagePlayableVideoNode: ASDisplayNode, InstantPageNode, Galler
         return nil
     }
     
-    init(context: AccountContext, userLocation: MediaResourceUserLocation, webPage: IosappMediaWebpage, theme: InstantPageTheme, media: InstantPageMedia, interactive: Bool, openMedia: @escaping (InstantPageMedia) -> Void) {
+    init(context: AccountContext, userLocation: MediaResourceUserLocation, webPage: TelegramMediaWebpage, theme: InstantPageTheme, media: InstantPageMedia, interactive: Bool, openMedia: @escaping (InstantPageMedia) -> Void) {
         self.context = context
         self.userLocation = userLocation
         self.media = media
@@ -47,12 +47,12 @@ final class InstantPagePlayableVideoNode: ASDisplayNode, InstantPageNode, Galler
         
         var imageReference: ImageMediaReference?
         if case let .file(file) = media.media, let presentation = smallestImageRepresentation(file.previewRepresentations) {
-            let image = IosappMediaImage(imageId: EngineMedia.Id(namespace: 0, id: 0), representations: [presentation], immediateThumbnailData: file.immediateThumbnailData, reference: nil, partialReference: nil, flags: [])
+            let image = TelegramMediaImage(imageId: EngineMedia.Id(namespace: 0, id: 0), representations: [presentation], immediateThumbnailData: file.immediateThumbnailData, reference: nil, partialReference: nil, flags: [])
             imageReference = ImageMediaReference.webPage(webPage: WebpageReference(webPage), media: image)
         }
         
         var streamVideo = false
-        var fileValue: IosappMediaFile?
+        var fileValue: TelegramMediaFile?
         if case let .file(file) = media.media {
             streamVideo = isMediaStreamable(media: file)
             fileValue = file
@@ -68,12 +68,12 @@ final class InstantPagePlayableVideoNode: ASDisplayNode, InstantPageNode, Galler
         self.addSubnode(self.videoNode)
         
         if case let .file(file) = media.media {
-            self.fetchedDisposable.set(fetchedMediaResource(mediaBox: context.account.postbox.mediaBox, userLocation: userLocation, userContentType: .video, reference: AnyMediaReference.webPage(webPage: WebpageReference(webPage), media: file).resourceReference(file.resource)).start())
+            self.fetchedDisposable.set(context.engine.resources.fetch(reference: AnyMediaReference.webPage(webPage: WebpageReference(webPage), media: file).resourceReference(file.resource), userLocation: userLocation, userContentType: .video).start())
             
-            self.statusDisposable.set((context.account.postbox.mediaBox.resourceStatus(file.resource) |> deliverOnMainQueue).start(next: { [weak self] status in
+            self.statusDisposable.set((context.engine.resources.status(resource: EngineMediaResource(file.resource)) |> deliverOnMainQueue).start(next: { [weak self] status in
                 displayLinkDispatcher.dispatch {
                     if let strongSelf = self {
-                        strongSelf.fetchStatus = EngineMediaResource.FetchStatus(status)
+                        strongSelf.fetchStatus = status
                         strongSelf.updateFetchStatus()
                     }
                 }

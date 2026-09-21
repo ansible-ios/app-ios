@@ -3,12 +3,12 @@ import UIKit
 import AsyncDisplayKit
 import Display
 import SwiftSignalKit
-import IosappCore
-import IosappPresentationData
+import TelegramCore
+import TelegramPresentationData
 import ItemListUI
 import PresentationDataUtils
 import AvatarNode
-import IosappStringFormatting
+import TelegramStringFormatting
 import AccountContext
 import ChatListSearchItemHeader
 import PeerOnlineMarkerNode

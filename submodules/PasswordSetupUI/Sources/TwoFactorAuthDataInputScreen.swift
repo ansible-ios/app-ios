@@ -7,11 +7,11 @@ import SolidRoundedButtonNode
 import SwiftSignalKit
 import OverlayStatusController
 import AccountContext
-import IosappPresentationData
+import TelegramPresentationData
 import PresentationDataUtils
-import IosappCore
+import TelegramCore
 import AnimatedStickerNode
-import IosappAnimatedStickerNode
+import TelegramAnimatedStickerNode
 import ActivityIndicator
 
 public enum TwoFactorDataInputMode {
@@ -47,7 +47,7 @@ public enum TwoFactorDataInputMode {
 
 public final class TwoFactorDataInputScreen: ViewController {
     private let sharedContext: SharedAccountContext
-    private let engine: SomeIosappEngine
+    private let engine: SomeTelegramEngine
     private var presentationData: PresentationData
     private let mode: TwoFactorDataInputMode
     private let stateUpdated: (SetupTwoStepVerificationStateUpdate) -> Void
@@ -62,7 +62,7 @@ public final class TwoFactorDataInputScreen: ViewController {
     public var passwordRemembered: (() -> Void)?
     public var twoStepAuthSettingsController: ((TwoStepVerificationConfiguration) -> ViewController)?
     
-    public init(sharedContext: SharedAccountContext, engine: SomeIosappEngine, mode: TwoFactorDataInputMode, stateUpdated: @escaping (SetupTwoStepVerificationStateUpdate) -> Void, presentation: ViewControllerNavigationPresentation = .modalInLargeLayout) {
+    public init(sharedContext: SharedAccountContext, engine: SomeTelegramEngine, mode: TwoFactorDataInputMode, stateUpdated: @escaping (SetupTwoStepVerificationStateUpdate) -> Void, presentation: ViewControllerNavigationPresentation = .modalInLargeLayout) {
         self.sharedContext = sharedContext
         self.engine = engine
         self.mode = mode
@@ -71,7 +71,7 @@ public final class TwoFactorDataInputScreen: ViewController {
         self.presentationData = self.sharedContext.currentPresentationData.with { $0 }
         
         let defaultTheme = NavigationBarTheme(rootControllerTheme: self.presentationData.theme)
-        let navigationBarTheme = NavigationBarTheme(overallDarkAppearance: defaultTheme.overallDarkAppearance, buttonColor: defaultTheme.buttonColor, disabledButtonColor: defaultTheme.disabledButtonColor, primaryTextColor: defaultTheme.primaryTextColor, backgroundColor: .clear, enableBackgroundBlur: false, separatorColor: .clear, badgeBackgroundColor: defaultTheme.badgeBackgroundColor, badgeStrokeColor: defaultTheme.badgeStrokeColor, badgeTextColor: defaultTheme.badgeTextColor, accentButtonColor: defaultTheme.accentButtonColor, accentForegroundColor: defaultTheme.accentForegroundColor)
+        let navigationBarTheme = NavigationBarTheme(overallDarkAppearance: defaultTheme.overallDarkAppearance, buttonColor: defaultTheme.buttonColor, disabledButtonColor: defaultTheme.disabledButtonColor, primaryTextColor: defaultTheme.primaryTextColor, backgroundColor: .clear, enableBackgroundBlur: false, separatorColor: .clear, badgeBackgroundColor: defaultTheme.badgeBackgroundColor, badgeStrokeColor: defaultTheme.badgeStrokeColor, badgeTextColor: defaultTheme.badgeTextColor, accentButtonColor: defaultTheme.accentButtonColor, accentDisabledButtonColor: defaultTheme.accentDisabledButtonColor, accentForegroundColor: defaultTheme.accentForegroundColor)
         
         super.init(navigationBarPresentationData: NavigationBarPresentationData(theme: navigationBarTheme, strings: NavigationBarStrings(back: self.presentationData.strings.Common_Back, close: self.presentationData.strings.Common_Close)))
         
@@ -534,7 +534,7 @@ public final class TwoFactorDataInputScreen: ViewController {
                             strongSelf.present(textAlertController(sharedContext: strongSelf.sharedContext, title: nil, text: alertText, actions: [TextAlertAction(type: .defaultAction, title: presentationData.strings.Common_OK, action: {})]), in: .window(.root))
                         })
                     }),
-                    TextAlertAction(type: .defaultAction, title: strongSelf.presentationData.strings.Common_Cancel, action: {})
+                    TextAlertAction(type: .genericAction, title: strongSelf.presentationData.strings.Common_Cancel, action: {})
                 ]), in: .window(.root))
             case let .passwordHint(recovery, password, doneText):
                 if let recovery = recovery {
@@ -550,7 +550,7 @@ public final class TwoFactorDataInputScreen: ViewController {
                         }
                         strongSelf.performRecovery(recovery: recovery, password: "", hint: "")
                     }),
-                    TextAlertAction(type: .defaultAction, title: strongSelf.presentationData.strings.Common_Cancel, action: {})
+                    TextAlertAction(type: .genericAction, title: strongSelf.presentationData.strings.Common_Cancel, action: {})
                 ]), in: .window(.root))
             case let .rememberPassword(doneText):
                 guard case let .authorized(engine) = strongSelf.engine else {
@@ -1819,6 +1819,7 @@ private final class TwoFactorDataInputScreenNode: ViewControllerTracingNode, ASS
             self.scrollNode.view.contentInsetAdjustmentBehavior = .never
         }
         self.scrollNode.view.delegate = self.wrappedScrollViewDelegate
+        self.scrollNode.view.scrollsToTop = false
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {

@@ -3,9 +3,9 @@ import AsyncDisplayKit
 import Display
 import ComponentFlow
 import SwiftSignalKit
-import IosappCore
+import TelegramCore
 import AccountContext
-import IosappPresentationData
+import TelegramPresentationData
 import UIKit
 import AnimatedAvatarSetNode
 import ReactionImageComponent
@@ -39,7 +39,7 @@ private final class StarsButtonEffectLayer: SimpleLayer {
     }
     
     private func setup() {
-        let color = UIColor(rgb: 0x2a9ef1)
+        let color = UIColor(rgb: 0xffbe27)
         
         let emitter = CAEmitterCell()
         emitter.name = "emitter"
@@ -85,7 +85,7 @@ public final class ReactionIconView: PortalSourceView {
     
     private var context: AccountContext?
     private var fileId: Int64?
-    private var file: IosappMediaFile?
+    private var file: TelegramMediaFile?
     private var animationCache: AnimationCache?
     private var animationRenderer: MultiAnimationRenderer?
     private var contentTintColor: UIColor?
@@ -121,7 +121,7 @@ public final class ReactionIconView: PortalSourceView {
     public func update(
         size: CGSize,
         context: AccountContext,
-        file: IosappMediaFile?,
+        file: TelegramMediaFile?,
         fileId: Int64,
         animationCache: AnimationCache,
         animationRenderer: MultiAnimationRenderer,
@@ -1334,11 +1334,11 @@ public final class ReactionButtonAsyncNode: ContextControllerSourceView {
 public final class ReactionButtonComponent: Equatable {
     public struct Reaction: Equatable {
         public var value: MessageReaction.Reaction
-        public var centerAnimation: IosappMediaFile?
+        public var centerAnimation: TelegramMediaFile?
         public var animationFileId: Int64?
         public var title: String?
         
-        public init(value: MessageReaction.Reaction, centerAnimation: IosappMediaFile?, animationFileId: Int64?, title: String?) {
+        public init(value: MessageReaction.Reaction, centerAnimation: TelegramMediaFile?, animationFileId: Int64?, title: String?) {
             self.value = value
             self.centerAnimation = centerAnimation
             self.animationFileId = animationFileId

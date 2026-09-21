@@ -14,7 +14,7 @@ swift_library(
         "//submodules/ComponentFlow:ComponentFlow",
         "//submodules/Components/ViewControllerComponent:ViewControllerComponent",
         "//submodules/SSignalKit/SwiftSignalKit:SwiftSignalKit",
-        "//submodules/IosappUI/Components/DynamicCornerRadiusView",
+        "//submodules/TelegramUI/Components/DynamicCornerRadiusView",
     ],
     visibility = [
         "//visibility:public",

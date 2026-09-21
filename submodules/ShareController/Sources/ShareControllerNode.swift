@@ -4,14 +4,14 @@ import Display
 import AsyncDisplayKit
 import SwiftSignalKit
 import Postbox
-import IosappCore
-import IosappPresentationData
+import TelegramCore
+import TelegramPresentationData
 import AccountContext
-import IosappIntents
+import TelegramIntents
 import ContextUI
 import ComponentFlow
 import MultilineTextComponent
-import IosappStringFormatting
+import TelegramStringFormatting
 import BundleIconComponent
 import LottieComponent
 import CheckNode
@@ -33,10 +33,10 @@ private final class ShareContentInfoView: UIView {
         var environment: ShareControllerEnvironment
         var theme: PresentationTheme
         var strings: PresentationStrings
-        var collectibleItemInfo: IosappCollectibleItemInfo
+        var collectibleItemInfo: TelegramCollectibleItemInfo
         var availableSize: CGSize
         
-        init(environment: ShareControllerEnvironment, theme: PresentationTheme, strings: PresentationStrings, collectibleItemInfo: IosappCollectibleItemInfo, availableSize: CGSize) {
+        init(environment: ShareControllerEnvironment, theme: PresentationTheme, strings: PresentationStrings, collectibleItemInfo: TelegramCollectibleItemInfo, availableSize: CGSize) {
             self.environment = environment
             self.theme = theme
             self.strings = strings
@@ -94,7 +94,7 @@ private final class ShareContentInfoView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func update(environment: ShareControllerEnvironment, presentationData: PresentationData, collectibleItemInfo: IosappCollectibleItemInfo, availableSize: CGSize) -> CGSize {
+    func update(environment: ShareControllerEnvironment, presentationData: PresentationData, collectibleItemInfo: TelegramCollectibleItemInfo, availableSize: CGSize) -> CGSize {
         let params = Params(
             environment: environment,
             theme: presentationData.theme,
@@ -326,7 +326,7 @@ final class ShareControllerNode: ViewControllerTracingNode, ASScrollViewDelegate
     private let fromForeignApp: Bool
     private let fromPublicChannel: Bool
     private let segmentedValues: [ShareControllerSegmentedValue]?
-    private let collectibleItemInfo: IosappCollectibleItemInfo?
+    private let collectibleItemInfo: TelegramCollectibleItemInfo?
     private let mediaParameters: ShareControllerSubject.MediaParameters?
     private let messageCount: Int
     var canSendInHighQuality = false
@@ -407,7 +407,7 @@ final class ShareControllerNode: ViewControllerTracingNode, ASScrollViewDelegate
         fromPublicChannel: Bool,
         segmentedValues: [ShareControllerSegmentedValue]?,
         shareStory: (() -> Void)?,
-        collectibleItemInfo: IosappCollectibleItemInfo?,
+        collectibleItemInfo: TelegramCollectibleItemInfo?,
         messageCount: Int
     ) {
         self.controller = controller
@@ -456,6 +456,7 @@ final class ShareControllerNode: ViewControllerTracingNode, ASScrollViewDelegate
         self.wrappingScrollNode.view.alwaysBounceVertical = true
         self.wrappingScrollNode.view.delaysContentTouches = false
         self.wrappingScrollNode.view.canCancelContentTouches = true
+        self.wrappingScrollNode.view.scrollsToTop = false
         
         self.dimNode = ASDisplayNode()
         if self.fromForeignApp {
@@ -1323,15 +1324,15 @@ final class ShareControllerNode: ViewControllerTracingNode, ASScrollViewDelegate
                 for peerId in peerIds {
                     if let view = views.views[PostboxViewKey.basicPeer(peerId)] as? PeerView, let peer = peerViewMainPeer(view) {
                         var peers: [EnginePeer.Id: EnginePeer] = [peer.id: EnginePeer(peer)]
-                        if let channel = peer as? IosappChannel, channel.isMonoForum, let linkedMonoforumId = channel.linkedMonoforumId, let mainChannel = view.peers[linkedMonoforumId] {
+                        if let channel = peer as? TelegramChannel, channel.isMonoForum, let linkedMonoforumId = channel.linkedMonoforumId, let mainChannel = view.peers[linkedMonoforumId] {
                             peers[mainChannel.id] = EnginePeer(mainChannel)
                         }
                         result[peerId] = EngineRenderedPeer(peerId: peer.id, peers: peers, associatedMedia: [:])
-                        if peer is IosappUser, let cachedPeerDataView = views.views[PostboxViewKey.cachedPeerData(peerId: peerId)] as? CachedPeerDataView {
+                        if peer is TelegramUser, let cachedPeerDataView = views.views[PostboxViewKey.cachedPeerData(peerId: peerId)] as? CachedPeerDataView {
                             if let cachedData = cachedPeerDataView.cachedPeerData as? CachedUserData {
                                 requiresStars[peerId] = cachedData.sendPaidMessageStars?.value
                             }
-                        } else if let channel = peer as? IosappChannel {
+                        } else if let channel = peer as? TelegramChannel {
                             requiresStars[peerId] = channel.sendPaidMessageStars?.value
                         }
                     }
@@ -1497,7 +1498,7 @@ final class ShareControllerNode: ViewControllerTracingNode, ASScrollViewDelegate
                 if fromForeignApp, case let .preparing(long) = status, !transitioned {
                     transitioned = true
                     if long {
-                        strongSelf.transitionToContentNode(ShareProlongedLoadingContainerNode(theme: strongSelf.presentationData.theme, strings: strongSelf.presentationData.strings, forceNativeAppearance: true, postbox: strongSelf.context?.stateManager.postbox, environment: strongSelf.environment), fastOut: true)
+                        strongSelf.transitionToContentNode(ShareProlongedLoadingContainerNode(theme: strongSelf.presentationData.theme, strings: strongSelf.presentationData.strings, forceNativeAppearance: true, environment: strongSelf.environment), fastOut: true)
                     } else {
                         strongSelf.transitionToContentNode(ShareLoadingContainerNode(theme: strongSelf.presentationData.theme, forceNativeAppearance: true), fastOut: true)
                     }
@@ -1634,7 +1635,7 @@ final class ShareControllerNode: ViewControllerTracingNode, ASScrollViewDelegate
                 }
                 peers[peer.id] = EnginePeer(peer)
 
-                if let secretChat = peer as? IosappSecretChat {
+                if let secretChat = peer as? TelegramSecretChat {
                     guard let mainPeer = view.peers[secretChat.regularPeerId] else {
                         return nil
                     }
@@ -1663,7 +1664,7 @@ final class ShareControllerNode: ViewControllerTracingNode, ASScrollViewDelegate
             |> mapToSignal { peers -> Signal<([RecentlySearchedPeer], [EnginePeer.Id: Bool]), NoError> in
                 var possiblePremiumRequiredPeers = Set<EnginePeer.Id>()
                 for peer in peers {
-                    if let user = peer.peer.peer as? IosappUser, user.flags.contains(.requirePremium) {
+                    if let user = peer.peer.peer as? TelegramUser, user.flags.contains(.requirePremium) {
                         possiblePremiumRequiredPeers.insert(user.id)
                     }
                 }
@@ -1674,7 +1675,7 @@ final class ShareControllerNode: ViewControllerTracingNode, ASScrollViewDelegate
                 
                 return context.engineData.subscribe(
                     EngineDataMap(
-                        possiblePremiumRequiredPeers.map(IosappEngine.EngineData.Item.Peer.IsPremiumRequiredForMessaging.init(id:))
+                        possiblePremiumRequiredPeers.map(TelegramEngine.EngineData.Item.Peer.IsPremiumRequiredForMessaging.init(id:))
                     )
                 )
                 |> map { peerRequiresPremiumForMessaging -> ([RecentlySearchedPeer], [EnginePeer.Id: Bool]) in
@@ -1880,7 +1881,7 @@ final class ShareControllerNode: ViewControllerTracingNode, ASScrollViewDelegate
             transition.updateAlpha(node: startAtTimestampNode, alpha: 0.0)
         }
         
-        self.transitionToContentNode(ShareProlongedLoadingContainerNode(theme: self.presentationData.theme, strings: self.presentationData.strings, forceNativeAppearance: true, postbox: self.context?.stateManager.postbox, environment: self.environment), fastOut: true)
+        self.transitionToContentNode(ShareProlongedLoadingContainerNode(theme: self.presentationData.theme, strings: self.presentationData.strings, forceNativeAppearance: true, environment: self.environment), fastOut: true)
         let timestamp = CACurrentMediaTime()
         self.shareDisposable.set(signal.start(completed: { [weak self] in
             let minDelay = 0.6

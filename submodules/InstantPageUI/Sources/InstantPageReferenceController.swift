@@ -2,10 +2,10 @@ import Foundation
 import UIKit
 import Display
 import AsyncDisplayKit
-import IosappCore
+import TelegramCore
 import SwiftSignalKit
 import AccountContext
-import IosappUIPreferences
+import TelegramUIPreferences
 
 public final class InstantPageReferenceController: ViewController {
     private var controllerNode: InstantPageReferenceControllerNode {
@@ -17,13 +17,13 @@ public final class InstantPageReferenceController: ViewController {
     private let context: AccountContext
     private let sourceLocation: InstantPageSourceLocation
     private let theme: InstantPageTheme
-    private let webPage: (webPage: IosappMediaWebpage, instantPage: InstantPage?)
+    private let webPage: (webPage: TelegramMediaWebpage, instantPage: InstantPage?)
     private let anchorText: NSAttributedString
     private let openUrl: (InstantPageUrlItem) -> Void
     private let openUrlIn: (InstantPageUrlItem) -> Void
     private let present: (ViewController, Any?) -> Void
     
-    public init(context: AccountContext, sourceLocation: InstantPageSourceLocation, theme: InstantPageTheme, webPage: IosappMediaWebpage, instantPage: InstantPage?, anchorText: NSAttributedString, openUrl: @escaping (InstantPageUrlItem) -> Void, openUrlIn: @escaping (InstantPageUrlItem) -> Void, present: @escaping (ViewController, Any?) -> Void) {
+    public init(context: AccountContext, sourceLocation: InstantPageSourceLocation, theme: InstantPageTheme, webPage: TelegramMediaWebpage, instantPage: InstantPage?, anchorText: NSAttributedString, openUrl: @escaping (InstantPageUrlItem) -> Void, openUrlIn: @escaping (InstantPageUrlItem) -> Void, present: @escaping (ViewController, Any?) -> Void) {
         self.context = context
         self.sourceLocation = sourceLocation
         self.theme = theme

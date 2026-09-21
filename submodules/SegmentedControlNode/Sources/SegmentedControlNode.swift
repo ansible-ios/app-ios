@@ -2,7 +2,7 @@ import Foundation
 import Display
 import UIKit
 import AsyncDisplayKit
-import IosappPresentationData
+import TelegramPresentationData
 
 private let textFont = Font.regular(14.0)
 private let selectedTextFont = Font.semibold(14.0)

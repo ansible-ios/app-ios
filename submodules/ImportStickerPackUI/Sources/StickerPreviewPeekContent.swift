@@ -2,11 +2,11 @@ import Foundation
 import UIKit
 import Display
 import AsyncDisplayKit
-import IosappCore
+import TelegramCore
 import SwiftSignalKit
 import StickerResources
 import AnimatedStickerNode
-import IosappAnimatedStickerNode
+import TelegramAnimatedStickerNode
 import ContextUI
 import AccountContext
 

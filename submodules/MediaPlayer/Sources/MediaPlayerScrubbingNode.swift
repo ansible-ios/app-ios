@@ -33,10 +33,10 @@ public struct MediaPlayerScrubbingChapter: Equatable {
 
 public func parseMediaPlayerChapters(_ string: NSAttributedString) -> [MediaPlayerScrubbingChapter] {
     var existingTimecodes = Set<Double>()
-    var timecodeRanges: [(NSRange, IosappTimecode)] = []
+    var timecodeRanges: [(NSRange, TelegramTimecode)] = []
     var lineRanges: [NSRange] = []
     string.enumerateAttributes(in: NSMakeRange(0, string.length), options: [], using: { attributes, range, _ in
-        if let timecode = attributes[NSAttributedString.Key(IosappTextAttributes.Timecode)] as? IosappTimecode {
+        if let timecode = attributes[NSAttributedString.Key(TelegramTextAttributes.Timecode)] as? TelegramTimecode {
             if !existingTimecodes.contains(timecode.time) {
                 timecodeRanges.append((range, timecode))
                 existingTimecodes.insert(timecode.time)

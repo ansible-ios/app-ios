@@ -2,10 +2,9 @@ import Foundation
 import UIKit
 import Display
 import AsyncDisplayKit
-import Postbox
 import SwiftSignalKit
-import IosappCore
-import IosappPresentationData
+import TelegramCore
+import TelegramPresentationData
 import AccountContext
 import AppBundle
 import PhoneNumberFormat

@@ -2,11 +2,10 @@ import Foundation
 import UIKit
 import Display
 import ComponentFlow
-import IosappCore
-import Postbox
+import TelegramCore
 import SwiftSignalKit
-import IosappPresentationData
-import IosappUIPreferences
+import TelegramPresentationData
+import TelegramUIPreferences
 import PresentationDataUtils
 import AccountContext
 @preconcurrency import WebKit
@@ -236,7 +235,7 @@ final class BrowserWebContent: UIView, BrowserContent, WKNavigationDelegate, WKU
     var getNavigationController: () -> NavigationController? = { return nil }
     var cancelInteractiveTransitionGestures: () -> Void = {}
     
-    private var tempFile: TempBoxFile?
+    private var tempFile: EngineTempBoxFile?
     private var disposeTrustedDomain: (() -> Void)?
     
     init(context: AccountContext, presentationData: PresentationData, url: String, preferredConfiguration: WKWebViewConfiguration? = nil) {
@@ -321,7 +320,7 @@ final class BrowserWebContent: UIView, BrowserContent, WKNavigationDelegate, WKU
         var request: URLRequest?
         if url.hasPrefix("file://") {
             var updatedPath = url
-            let tempFile = TempBox.shared.file(path: url.replacingOccurrences(of: "file://", with: ""), fileName: "file.xlsx")
+            let tempFile = EngineTempBox.shared.file(path: url.replacingOccurrences(of: "file://", with: ""), fileName: "file.xlsx")
             updatedPath = tempFile.path
             self.tempFile = tempFile
             
@@ -423,16 +422,8 @@ final class BrowserWebContent: UIView, BrowserContent, WKNavigationDelegate, WKU
         case "oauth_request":
             let url = json?["url"] as? String
             if let url {
-                let securityOrigin = message.frameInfo.securityOrigin
-                var origin = ""
-                origin.append(securityOrigin.protocol)
-                origin.append("://")
-                origin.append(securityOrigin.host)
-                if securityOrigin.port != 0 {
-                    origin.append(":")
-                    origin.append("\(securityOrigin.port)")
-                }
-                                
+                let origin = message.frameInfo.securityOriginString
+                
                 let presentationData = self.context.sharedContext.currentPresentationData.with { $0 }
                 let subject: MessageActionUrlSubject = .url(url: url, inAppOrigin: origin)
                 let _ = (self.context.engine.messages.requestMessageActionUrlAuth(subject: subject)
@@ -544,7 +535,7 @@ final class BrowserWebContent: UIView, BrowserContent, WKNavigationDelegate, WKU
             fileName = "default"
         }
         
-        let tempFile = TempBox.shared.file(path: path, fileName: fileName)
+        let tempFile = EngineTempBox.shared.file(path: path, fileName: fileName)
         let fileUrl = URL(fileURLWithPath: tempFile.path)
         
         let controller = legacyICloudFilePicker(theme: self.presentationData.theme, mode: .export, url: fileUrl, documentTypes: [], forceDarkTheme: false, dismissed: {}, completion: { _ in
@@ -573,7 +564,7 @@ final class BrowserWebContent: UIView, BrowserContent, WKNavigationDelegate, WKU
         
         let fontFamily = state.isSerif ? "'Georgia, serif'" : "null"
         let textSizeAdjust = state.size != 100 ? "'\(state.size)%'" : "null"
-        let js = "\(setupFontFunctions) setIosappFontOverrides(\(fontFamily), \(textSizeAdjust))";
+        let js = "\(setupFontFunctions) setTelegramFontOverrides(\(fontFamily), \(textSizeAdjust))";
         self.webView.evaluateJavaScript(js) { _, _ in }
     }
     
@@ -946,7 +937,7 @@ final class BrowserWebContent: UIView, BrowserContent, WKNavigationDelegate, WKU
             }
         } else {
             if let url = navigationAction.request.url?.absoluteString {
-                if (navigationAction.targetFrame == nil || navigationAction.targetFrame?.isMainFrame == true) && (isIosappMeLink(url) || url.hasPrefix("as://")) && !url.contains("/auth/push?") && !self._state.url.contains("/auth/push?") {
+                if (navigationAction.targetFrame == nil || navigationAction.targetFrame?.isMainFrame == true) && (isTelegramMeLink(url) || url.hasPrefix("tg://")) && !url.contains("/auth/push?") && !self._state.url.contains("/auth/push?") {
                     decisionHandler(.cancel, preferences)
                     if !url.contains("domain=oauth") {
                         self.minimize()
@@ -996,7 +987,7 @@ final class BrowserWebContent: UIView, BrowserContent, WKNavigationDelegate, WKU
     
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         if let url = navigationAction.request.url?.absoluteString {
-            if (navigationAction.targetFrame == nil || navigationAction.targetFrame?.isMainFrame == true) && (isIosappMeLink(url) || isTelegraPhLink(url) || url.hasPrefix("as://")) {
+            if (navigationAction.targetFrame == nil || navigationAction.targetFrame?.isMainFrame == true) && (isTelegramMeLink(url) || isTelegraPhLink(url) || url.hasPrefix("tg://")) {
                 decisionHandler(.cancel)
                 self.minimize()
                 self.openAppUrl(url)
@@ -1050,7 +1041,7 @@ final class BrowserWebContent: UIView, BrowserContent, WKNavigationDelegate, WKU
         }
         
         if let (path, fileName) = self.downloadArguments {
-            let tempFile = TempBox.shared.file(path: path, fileName: fileName)
+            let tempFile = EngineTempBox.shared.file(path: path, fileName: fileName)
             let url = URL(fileURLWithPath: tempFile.path)
             
             if fileName.hasSuffix(".pkpass") {
@@ -1124,7 +1115,7 @@ final class BrowserWebContent: UIView, BrowserContent, WKNavigationDelegate, WKU
     
     private let isLoaded = ValuePromise<Bool>(false)
     private var instantPageDisposable = MetaDisposable()
-    private var instantPage: IosappMediaWebpage?
+    private var instantPage: TelegramMediaWebpage?
     private var instantPageResources: [Any]?
     
     func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
@@ -1188,7 +1179,7 @@ final class BrowserWebContent: UIView, BrowserContent, WKNavigationDelegate, WKU
                                 }
                                 self.instantPage = webPage
                                 self.instantPageResources = resources
-                                let _ = (updatedRemoteWebpage(postbox: self.context.account.postbox, network: self.context.account.network, accountPeerId: self.context.account.peerId, webPage: WebpageReference(IosappMediaWebpage(webpageId: MediaId(namespace: 0, id: 0), content: .Loaded(IosappMediaWebpageLoadedContent(url: self._state.url, displayUrl: "", hash: 0, type: nil, websiteName: nil, title: nil, text: nil, embedUrl: nil, embedType: nil, embedSize: nil, duration: nil, author: nil, isMediaLargeByDefault: nil, imageIsVideoCover: false, image: nil, file: nil, story: nil, attributes: [], instantPage: nil)))))
+                                let _ = (updatedRemoteWebpage(postbox: self.context.account.postbox, network: self.context.account.network, accountPeerId: self.context.account.peerId, webPage: WebpageReference(TelegramMediaWebpage(webpageId: EngineMedia.Id(namespace: 0, id: 0), content: .Loaded(TelegramMediaWebpageLoadedContent(url: self._state.url, displayUrl: "", hash: 0, type: nil, websiteName: nil, title: nil, text: nil, embedUrl: nil, embedType: nil, embedSize: nil, duration: nil, author: nil, isMediaLargeByDefault: nil, imageIsVideoCover: false, image: nil, file: nil, story: nil, attributes: [], instantPage: nil)))))
                                 |> deliverOnMainQueue).start(next: { [weak self] webPage in
                                     guard let self, let webPage, case let .Loaded(result) = webPage.content, let _ = result.instantPage else {
                                         return
@@ -1223,7 +1214,7 @@ final class BrowserWebContent: UIView, BrowserContent, WKNavigationDelegate, WKU
                     let path = NSTemporaryDirectory() + NSUUID().uuidString
                     let _ = try? data.write(to: URL(fileURLWithPath: path), options: .atomic)
                     
-                    let tempFile = TempBox.shared.file(path: path, fileName: "\(self._state.title).webarchive")
+                    let tempFile = EngineTempBox.shared.file(path: path, fileName: "\(self._state.title).webarchive")
                     let url = URL(fileURLWithPath: tempFile.path)
                     
                     let controller = legacyICloudFilePicker(theme: self.presentationData.theme, mode: .export, url: url, documentTypes: [], forceDarkTheme: false, dismissed: {}, completion: { _ in
@@ -1362,7 +1353,7 @@ final class BrowserWebContent: UIView, BrowserContent, WKNavigationDelegate, WKU
             fileName = "default"
         }
         
-        let tempFile = TempBox.shared.file(path: path, fileName: fileName)
+        let tempFile = EngineTempBox.shared.file(path: path, fileName: fileName)
         let fileUrl = URL(fileURLWithPath: tempFile.path)
         
         let controller = legacyICloudFilePicker(theme: self.presentationData.theme, mode: .export, url: fileUrl, documentTypes: [], forceDarkTheme: false, dismissed: {}, completion: { _ in
@@ -1389,7 +1380,7 @@ final class BrowserWebContent: UIView, BrowserContent, WKNavigationDelegate, WKU
     func webView(_ webView: WKWebView, createWebViewWith configuration: WKWebViewConfiguration, for navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
         if navigationAction.targetFrame == nil {
             if let url = navigationAction.request.url?.absoluteString {
-                if isIosappMeLink(url) || isTelegraPhLink(url) || url.hasPrefix("as://") {
+                if isTelegramMeLink(url) || isTelegraPhLink(url) || url.hasPrefix("tg://") {
                     self.minimize()
                     self.openAppUrl(url)
                 } else {
@@ -1677,15 +1668,15 @@ final class BrowserWebContent: UIView, BrowserContent, WKNavigationDelegate, WKU
                     self.updateState { $0.withUpdatedFavicon(favicon) }
                     
                     if addToRecentsWhenReady {
-                        var image: IosappMediaImage?
+                        var image: TelegramMediaImage?
                         
                         if let favicon, let imageData = favicon.pngData() {
                             let resource = LocalFileMediaResource(fileId: Int64.random(in: Int64.min ... Int64.max))
-                            self.context.account.postbox.mediaBox.storeResourceData(resource.id, data: imageData)
-                            image = IosappMediaImage(
-                                imageId: MediaId(namespace: Namespaces.Media.LocalImage, id: Int64.random(in: Int64.min ... Int64.max)),
+                            self.context.engine.resources.storeResourceData(id: EngineMediaResource.Id(resource.id), data: imageData)
+                            image = TelegramMediaImage(
+                                imageId: EngineMedia.Id(namespace: Namespaces.Media.LocalImage, id: Int64.random(in: Int64.min ... Int64.max)),
                                 representations: [
-                                    IosappMediaImageRepresentation(
+                                    TelegramMediaImageRepresentation(
                                         dimensions: PixelDimensions(width: Int32(favicon.size.width), height: Int32(favicon.size.height)),
                                         resource: resource,
                                         progressiveSizes: [],
@@ -1701,7 +1692,7 @@ final class BrowserWebContent: UIView, BrowserContent, WKNavigationDelegate, WKU
                             )
                         }
                         
-                        let webPage = IosappMediaWebpage(webpageId: MediaId(namespace: 0, id: 0), content: .Loaded(IosappMediaWebpageLoadedContent(
+                        let webPage = TelegramMediaWebpage(webpageId: EngineMedia.Id(namespace: 0, id: 0), content: .Loaded(TelegramMediaWebpageLoadedContent(
                             url: self._state.url,
                             displayUrl: self._state.url,
                             hash: 0,
@@ -1870,7 +1861,7 @@ let setupFontFunctions = """
 (function() {
   const styleId = 'telegram-font-overrides';
 
-  function setIosappFontOverrides(font, textSizeAdjust) {
+  function setTelegramFontOverrides(font, textSizeAdjust) {
     let style = document.getElementById(styleId);
 
     if (!style) {
@@ -1898,7 +1889,7 @@ let setupFontFunctions = """
       style.parentNode.removeChild(style);
     }
   }
-  window.setIosappFontOverrides = setIosappFontOverrides;
+  window.setTelegramFontOverrides = setTelegramFontOverrides;
 })();
 """
 
@@ -2033,5 +2024,20 @@ private func findScrollView(view: UIView?) -> UIScrollView? {
         return findScrollView(view: view.superview)
     } else {
         return nil
+    }
+}
+
+private extension WKFrameInfo {
+    var securityOriginString: String {
+        let securityOrigin = self.securityOrigin
+        var origin = ""
+        origin.append(securityOrigin.protocol)
+        origin.append("://")
+        origin.append(securityOrigin.host)
+        if securityOrigin.port != 0 {
+            origin.append(":")
+            origin.append("\(securityOrigin.port)")
+        }
+        return origin
     }
 }

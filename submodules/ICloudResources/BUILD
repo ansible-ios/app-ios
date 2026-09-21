@@ -10,8 +10,7 @@ swift_library(
         "-warnings-as-errors",
     ],
     deps = [
-        "//submodules/IosappCore",
-        "//submodules/Postbox",
+        "//submodules/TelegramCore",
         "//submodules/SSignalKit/SwiftSignalKit",
         "//submodules/Display",
         "//submodules/Pdf",

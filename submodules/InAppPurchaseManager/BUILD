@@ -11,10 +11,9 @@ swift_library(
     ],
     deps = [
         "//submodules/SSignalKit/SwiftSignalKit:SwiftSignalKit",
-        "//submodules/Postbox:Postbox",
-        "//submodules/IosappCore:IosappCore",
-        "//submodules/IosappStringFormatting:IosappStringFormatting",
-        "//submodules/IosappUIPreferences:IosappUIPreferences",
+        "//submodules/TelegramCore:TelegramCore",
+        "//submodules/TelegramStringFormatting:TelegramStringFormatting",
+        "//submodules/TelegramUIPreferences:TelegramUIPreferences",
         "//submodules/PersistentStringHash:PersistentStringHash",
     ],
     visibility = [

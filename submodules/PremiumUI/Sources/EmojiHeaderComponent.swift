@@ -8,7 +8,7 @@ import AppBundle
 import LegacyComponents
 import AvatarNode
 import AccountContext
-import IosappCore
+import TelegramCore
 import AnimationCache
 import MultiAnimationRenderer
 import EmojiStatusComponent
@@ -20,7 +20,7 @@ class EmojiHeaderComponent: Component {
     let placeholderColor: UIColor
     let accentColor: UIColor
     let fileId: Int64
-    let file: IosappMediaFile?
+    let file: TelegramMediaFile?
     let isVisible: Bool
     let hasIdleAnimations: Bool
         
@@ -31,7 +31,7 @@ class EmojiHeaderComponent: Component {
         placeholderColor: UIColor,
         accentColor: UIColor,
         fileId: Int64,
-        file: IosappMediaFile? = nil,
+        file: TelegramMediaFile? = nil,
         isVisible: Bool,
         hasIdleAnimations: Bool
     ) {

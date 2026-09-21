@@ -2,9 +2,9 @@ import Foundation
 import UIKit
 import Display
 import SwiftSignalKit
-import IosappCore
+import TelegramCore
 import LegacyComponents
-import IosappPresentationData
+import TelegramPresentationData
 import ItemListUI
 import PresentationDataUtils
 import OverlayStatusController
@@ -241,7 +241,7 @@ public func logoutOptionsController(context: AccountContext, navigationControlle
                     guard let peerId = peerId else {
                         return
                     }
-                    let _ = (context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: peerId))
+                    let _ = (context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: peerId))
                     |> deliverOnMainQueue).start(next: { peer in
                         guard let peer = peer else {
                             return
@@ -292,7 +292,7 @@ public func logoutOptionsController(context: AccountContext, navigationControlle
         navigationController?.pushViewController(value, animated: false)
     }
     presentControllerImpl = { [weak controller] value, arguments in
-        controller?.present(value, in: .window(.root), with: arguments ?? ViewControllerPresentationArguments(presentationAnimation: .modalSheet))
+        controller?.present(value, in: .window(.root), with: arguments)
     }
     replaceTopControllerImpl = { [weak navigationController] c in
         navigationController?.replaceTopController(c, animated: true)

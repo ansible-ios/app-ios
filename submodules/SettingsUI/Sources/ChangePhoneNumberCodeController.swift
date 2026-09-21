@@ -2,9 +2,8 @@ import Foundation
 import UIKit
 import Display
 import SwiftSignalKit
-import Postbox
-import IosappCore
-import IosappPresentationData
+import TelegramCore
+import TelegramPresentationData
 import ItemListUI
 import PresentationDataUtils
 import OverlayStatusController

@@ -1,7 +1,7 @@
 import Foundation
 import SwiftSignalKit
 import TextFormat
-import IosappCore
+import TelegramCore
 import AccountContext
 
 public struct PossibleContextQueryTypes: OptionSet {

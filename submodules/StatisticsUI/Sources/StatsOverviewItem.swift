@@ -3,14 +3,14 @@ import UIKit
 import Display
 import AsyncDisplayKit
 import SwiftSignalKit
-import IosappCore
-import IosappPresentationData
+import TelegramCore
+import TelegramPresentationData
 import ItemListUI
 import PresentationDataUtils
 import EmojiTextAttachmentView
 import TextFormat
 import AccountContext
-import IosappStringFormatting
+import TelegramStringFormatting
 
 protocol Stats {
     
@@ -260,7 +260,7 @@ private final class ValueItemNode: ASDisplayNode {
                     
                     if themeUpdated || iconNameUpdated {
                         if iconTinted {
-                            iconNode.image = generateTintedImage(image: UIImage(bundleImageName: iconName), color: presentationData.theme.list.itemAccentColor)
+                            iconNode.image = generateTintedImage(image: UIImage(bundleImageName: iconName), color: UIColor(rgb: 0x30A1F5))
                         } else {
                             iconNode.image = UIImage(bundleImageName: iconName)
                         }

@@ -1,17 +1,17 @@
 import Foundation
 import UIKit
 import Display
-import IosappCore
+import TelegramCore
 import SwiftSignalKit
-import IosappPresentationData
-import IosappBaseController
+import TelegramPresentationData
+import TelegramBaseController
 import AccountContext
 import ChatListUI
 import ListMessageItem
 import AnimationCache
 import MultiAnimationRenderer
 
-public final class HashtagSearchController: IosappBaseController {
+public final class HashtagSearchController: TelegramBaseController {
     public enum Mode: Equatable {
         case generic
         case noChat

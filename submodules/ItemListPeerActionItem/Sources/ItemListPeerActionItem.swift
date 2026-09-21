@@ -3,7 +3,7 @@ import UIKit
 import Display
 import AsyncDisplayKit
 import SwiftSignalKit
-import IosappPresentationData
+import TelegramPresentationData
 import ItemListUI
 import PresentationDataUtils
 
@@ -333,7 +333,7 @@ public final class ItemListPeerActionItemNode: ListViewItemNode, ItemListItemNod
                         if strongSelf.maskNode.supernode != nil {
                             strongSelf.maskNode.removeFromSupernode()
                         }
-                        strongSelf.bottomStripeNode.frame = CGRect(origin: CGPoint(x: leftInset, y: contentSize.height - separatorHeight), size: CGSize(width: params.width - leftInset, height: separatorHeight))
+                        strongSelf.bottomStripeNode.frame = CGRect(origin: CGPoint(x: leftInset, y: contentSize.height - separatorHeight), size: CGSize(width: params.width - leftInset - separatorRightInset, height: separatorHeight))
                     case .blocks:
                         if strongSelf.backgroundNode.supernode == nil {
                             strongSelf.insertSubnode(strongSelf.backgroundNode, at: 0)

@@ -2,8 +2,8 @@ import Foundation
 import UIKit
 import AsyncDisplayKit
 import Display
-import IosappCore
-import IosappStringFormatting
+import TelegramCore
+import TelegramStringFormatting
 import PhoneNumberFormat
 
 private func removeDuplicatedPlus(_ text: String?) -> String {

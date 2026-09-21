@@ -4,12 +4,12 @@ import Display
 import ComponentFlow
 import SwiftSignalKit
 import AccountContext
-import IosappCore
+import TelegramCore
 import AnimatedStickerNode
-import IosappAnimatedStickerNode
+import TelegramAnimatedStickerNode
 import StickerResources
 import MediaEditor
-import IosappStringFormatting
+import TelegramStringFormatting
 import LottieComponent
 import LottieComponentResourceContent
 

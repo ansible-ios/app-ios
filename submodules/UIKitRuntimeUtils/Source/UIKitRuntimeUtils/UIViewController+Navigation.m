@@ -174,7 +174,7 @@ static NSMutableArray<CALayerSpringParametersOverride *> *currentSpringParameter
     return array;
 }
 
-@implementation CALayer (IosappAddAnimation)
+@implementation CALayer (TelegramAddAnimation)
 
 + (void)pushSpringParametersOverride:(CALayerSpringParametersOverride * _Nonnull)springParametersOverride {
     if (springParametersOverride) {

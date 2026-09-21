@@ -3,8 +3,8 @@ import UIKit
 import AsyncDisplayKit
 import Display
 import GradientBackground
-import IosappPresentationData
-import IosappCore
+import TelegramPresentationData
+import TelegramCore
 import AccountContext
 import SwiftSignalKit
 import WallpaperResources
@@ -14,7 +14,7 @@ import Svg
 import GZip
 import AppBundle
 import AnimatedStickerNode
-import IosappAnimatedStickerNode
+import TelegramAnimatedStickerNode
 import HierarchyTrackingLayer
 import EdgeEffect
 
@@ -258,8 +258,8 @@ public protocol WallpaperBackgroundNode: ASDisplayNode {
     var contentStats: WallpaperContentStats? { get }
     var contentStatsUpdated: (() -> Void)? { get set }
 
-    func update(wallpaper: IosappWallpaper, animated: Bool)
-    func update(wallpaper: IosappWallpaper, starGift: StarGift?, animated: Bool)
+    func update(wallpaper: TelegramWallpaper, animated: Bool)
+    func update(wallpaper: TelegramWallpaper, starGift: StarGift?, animated: Bool)
     func _internalUpdateIsSettingUpWallpaper()
     func updateLayout(size: CGSize, displayMode: WallpaperDisplayMode, transition: ContainedViewLayoutTransition)
     func updateIsLooping(_ isLooping: Bool)
@@ -997,7 +997,7 @@ public final class WallpaperBackgroundNodeImpl: ASDisplayNode, WallpaperBackgrou
     private var isGeneratingPatternImage: Bool = false
 
     private var validLayout: (CGSize, WallpaperDisplayMode)?
-    private var wallpaper: IosappWallpaper?
+    private var wallpaper: TelegramWallpaper?
     private var starGift: StarGift?
     private var modelRectIndex: Int32?
     
@@ -1018,7 +1018,7 @@ public final class WallpaperBackgroundNodeImpl: ASDisplayNode, WallpaperBackgrou
     private static var cachedValidPatternImage: CachedValidPatternImage?
 
     private struct ValidPatternImage {
-        let wallpaper: IosappWallpaper
+        let wallpaper: TelegramWallpaper
         let invertPattern: Bool
         let rects: [WallpaperGiftPatternRect]
         let starGift: StarGift?
@@ -1029,7 +1029,7 @@ public final class WallpaperBackgroundNodeImpl: ASDisplayNode, WallpaperBackgrou
     private var validPatternImage: ValidPatternImage?
 
     private struct ValidPatternGeneratedImage: Equatable {
-        let wallpaper: IosappWallpaper
+        let wallpaper: TelegramWallpaper
         let size: CGSize
         let patternColor: UInt32
         let backgroundColor: UInt32
@@ -1220,11 +1220,11 @@ public final class WallpaperBackgroundNodeImpl: ASDisplayNode, WallpaperBackgrou
         self.dimLayer.opacity = dimAlpha
     }
 
-    public func update(wallpaper: IosappWallpaper, animated: Bool) {
+    public func update(wallpaper: TelegramWallpaper, animated: Bool) {
         self.update(wallpaper: wallpaper, starGift: nil, animated: animated)
     }
     
-    public func update(wallpaper: IosappWallpaper, starGift: StarGift?, animated: Bool) {
+    public func update(wallpaper: TelegramWallpaper, starGift: StarGift?, animated: Bool) {
         if self.wallpaper == wallpaper && self.starGift == starGift {
             return
         }
@@ -1658,7 +1658,7 @@ public final class WallpaperBackgroundNodeImpl: ASDisplayNode, WallpaperBackgrou
             }
         }
         
-        var modelFile: IosappMediaFile?
+        var modelFile: TelegramMediaFile?
         if let validPatternImage = self.validPatternImage, !validPatternImage.rects.isEmpty, let starGift = validPatternImage.starGift {
             if case let .unique(uniqueGift) = starGift {
                 for attribute in uniqueGift.attributes {
@@ -1869,7 +1869,7 @@ public final class WallpaperBackgroundNodeImpl: ASDisplayNode, WallpaperBackgrou
         }
 
         var hasPlainWallpaper = false
-        let graphicsWallpaper: IosappWallpaper
+        let graphicsWallpaper: TelegramWallpaper
         if let wallpaper = self.wallpaper {
             switch wallpaper {
             case .color:

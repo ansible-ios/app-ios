@@ -1,5 +1,5 @@
 import Foundation
-import IosappCore
+import TelegramCore
 
 public enum PremiumIntroSource {
     case settings
@@ -19,7 +19,7 @@ public enum PremiumIntroSource {
     case about
     case deeplink(String?)
     case profile(EnginePeer.Id)
-    case emojiStatus(EnginePeer.Id, Int64, IosappMediaFile?, LoadedStickerPack?)
+    case emojiStatus(EnginePeer.Id, Int64, TelegramMediaFile?, LoadedStickerPack?)
     case voiceToText
     case fasterDownload
     case translation
@@ -45,17 +45,18 @@ public enum PremiumIntroSource {
     case todo
     case copyProtection
     case aiTools
-    case auth(String)
-    case premiumGift(IosappMediaFile)
+    case richText
+    case auth(String, Int32)
+    case premiumGift(TelegramMediaFile)
 }
 
 public enum PremiumGiftSource: Equatable {
     case profile
     case attachMenu
-    case settings([EnginePeer.Id: IosappBirthday]?)
-    case chatList([EnginePeer.Id: IosappBirthday]?)
-    case stars([EnginePeer.Id: IosappBirthday]?)
-    case starGiftTransfer([EnginePeer.Id: IosappBirthday]?, StarGiftReference, StarGift.UniqueGift, Int64, Int32?, Bool)
+    case settings([EnginePeer.Id: TelegramBirthday]?)
+    case chatList([EnginePeer.Id: TelegramBirthday]?)
+    case stars([EnginePeer.Id: TelegramBirthday]?)
+    case starGiftTransfer([EnginePeer.Id: TelegramBirthday]?, StarGiftReference, StarGift.UniqueGift, Int64, Int32?, Bool)
     case channelBoost
     case deeplink(String?)
 }
@@ -87,6 +88,7 @@ public enum PremiumDemoSubject {
     case todo
     case copyProtection
     case aiTools
+    case richText
     
     case businessLocation
     case businessHours

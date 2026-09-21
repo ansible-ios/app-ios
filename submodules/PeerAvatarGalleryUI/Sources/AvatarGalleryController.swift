@@ -4,15 +4,17 @@ import Display
 import QuickLook
 import SwiftSignalKit
 import AsyncDisplayKit
-import IosappCore
-import IosappPresentationData
+import TelegramCore
+import TelegramPresentationData
 import AccountContext
 import GalleryUI
+import ContextUI
 import LegacyComponents
 import LegacyMediaPickerUI
 import SaveToCameraRoll
 import OverlayStatusController
 import PresentationDataUtils
+import AppBundle
 
 public enum AvatarGalleryEntryId: Hashable {
     case topImage
@@ -20,8 +22,44 @@ public enum AvatarGalleryEntryId: Hashable {
     case resource(String)
 }
 
+private final class AvatarGalleryContextReferenceContentSource: ContextReferenceContentSource {
+    private let sourceView: UIView
+    private let actionsOnTop: Bool
+    
+    init(sourceView: UIView, actionsOnTop: Bool = false) {
+        self.sourceView = sourceView
+        self.actionsOnTop = actionsOnTop
+    }
+
+    func transitionInfo() -> ContextControllerReferenceViewInfo? {
+        return ContextControllerReferenceViewInfo(referenceView: self.sourceView, contentAreaInScreenSpace: UIScreen.main.bounds, actionsPosition: self.actionsOnTop ? .top : .bottom)
+    }
+}
+
+private func avatarGalleryEntryMatchesImage(_ entry: AvatarGalleryEntry, _ image: TelegramMediaImage) -> Bool {
+    guard
+        let entryRepresentation = largestImageRepresentation(entry.representations.map({ $0.representation })),
+        let imageRepresentation = largestImageRepresentation(image.representations)
+    else {
+        return false
+    }
+    guard let entryResource = entryRepresentation.resource as? CloudPeerPhotoSizeMediaResource, let imageResource = imageRepresentation.resource as? CloudPhotoSizeMediaResource else {
+        return false
+    }
+    return entryResource.photoId == imageResource.photoId
+}
+
+private func avatarGalleryEntryWithVideoRepresentations(_ entry: AvatarGalleryEntry, videoRepresentations: [VideoRepresentationWithReference], immediateThumbnailData: Data?) -> AvatarGalleryEntry {
+    switch entry {
+    case let .topImage(representations, _, peer, indexData, _, category):
+        return .topImage(representations, videoRepresentations, peer, indexData, immediateThumbnailData, category)
+    default:
+        return entry
+    }
+}
+
 public func peerInfoProfilePhotos(context: AccountContext, peerId: EnginePeer.Id) -> Signal<Any, NoError> {
-    return context.engine.data.subscribe(IosappEngine.EngineData.Item.Peer.Peer(id: peerId))
+    return context.engine.data.subscribe(TelegramEngine.EngineData.Item.Peer.Peer(id: peerId))
     |> mapToSignal { peer -> Signal<[AvatarGalleryEntry]?, NoError> in
         guard let peer = peer else {
             return .single(nil)
@@ -35,8 +73,8 @@ public func peerInfoProfilePhotos(context: AccountContext, peerId: EnginePeer.Id
                 return context.account.postbox.peerView(id: peerId)
                 |> mapToSignal { peerView -> Signal<(Bool, [AvatarGalleryEntry])?, NoError>in
                     if let peer = peerViewMainPeer(peerView) {
-                        var secondEntry: IosappMediaImage?
-                        var lastEntry: IosappMediaImage?
+                        var secondEntry: TelegramMediaImage?
+                        var lastEntry: TelegramMediaImage?
                         if let cachedData = peerView.cachedData as? CachedUserData {
                             if let firstRepresentation = firstEntry.representations.first, firstRepresentation.representation.isPersonal {
                                 if firstRepresentation.representation.hasVideo, case let .known(photo) = cachedData.personalPhoto, let peerReference = PeerReference(peer) {
@@ -48,6 +86,12 @@ public func peerInfoProfilePhotos(context: AccountContext, peerId: EnginePeer.Id
                             }
                             if case let .known(photo) = cachedData.fallbackPhoto {
                                 lastEntry = photo
+                                if let photo, firstEntry.videoRepresentations.isEmpty, !photo.videoRepresentations.isEmpty, avatarGalleryEntryMatchesImage(firstEntry, photo), let peerReference = PeerReference(peer) {
+                                    let videoRepresentations = photo.videoRepresentations.map {
+                                        VideoRepresentationWithReference(representation: $0, reference: MediaResourceReference.avatar(peer: peerReference, resource: $0.resource))
+                                    }
+                                    firstEntry = avatarGalleryEntryWithVideoRepresentations(firstEntry, videoRepresentations: videoRepresentations, immediateThumbnailData: firstEntry.immediateThumbnailData ?? photo.immediateThumbnailData)
+                                }
                             }
                         }
                         return fetchedAvatarGalleryEntries(engine: context.engine, account: context.account, peer: EnginePeer(peer), firstEntry: firstEntry, secondEntry: secondEntry, lastEntry: lastEntry)
@@ -84,9 +128,9 @@ public func peerInfoProfilePhotosWithCache(context: AccountContext, peerId: Engi
 
 public enum AvatarGalleryEntry: Equatable {
     case topImage([ImageRepresentationWithReference], [VideoRepresentationWithReference], EnginePeer?, GalleryItemIndexData?, Data?, String?)
-    case image(EngineMedia.Id, IosappMediaImageReference?, [ImageRepresentationWithReference], [VideoRepresentationWithReference], EnginePeer?, Int32?, GalleryItemIndexData?, EngineMessage.Id?, Data?, String?, Bool, IosappMediaImage.EmojiMarkup?)
+    case image(EngineMedia.Id, TelegramMediaImageReference?, [ImageRepresentationWithReference], [VideoRepresentationWithReference], EnginePeer?, Int32?, GalleryItemIndexData?, EngineMessage.Id?, Data?, String?, Bool, TelegramMediaImage.EmojiMarkup?)
     
-    public init(representation: IosappMediaImageRepresentation, peer: EnginePeer) {
+    public init(representation: TelegramMediaImageRepresentation, peer: EnginePeer) {
         self = .topImage([ImageRepresentationWithReference(representation: representation, reference: MediaResourceReference.standalone(resource: representation.resource))], [], peer, nil, nil, nil)
     }
     
@@ -141,7 +185,7 @@ public enum AvatarGalleryEntry: Equatable {
         }
     }
     
-    public var emojiMarkup: IosappMediaImage.EmojiMarkup? {
+    public var emojiMarkup: TelegramMediaImage.EmojiMarkup? {
         switch self {
             case .topImage:
                 return nil
@@ -203,13 +247,13 @@ public func normalizeEntries(_ entries: [AvatarGalleryEntry]) -> [AvatarGalleryE
    return updatedEntries
 }
 
-public func initialAvatarGalleryEntries(account: Account, engine: IosappEngine, peer: EnginePeer) -> Signal<[AvatarGalleryEntry]?, NoError> {
+public func initialAvatarGalleryEntries(account: Account, engine: TelegramEngine, peer: EnginePeer) -> Signal<[AvatarGalleryEntry]?, NoError> {
     var initialEntries: [AvatarGalleryEntry] = []
-    if !peer.profileImageRepresentations.isEmpty, let peerReference = PeerReference(peer._asPeer()) {
+    if !peer.profileImageRepresentations.isEmpty, let peerReference = PeerReference(peer) {
         initialEntries.append(.topImage(peer.profileImageRepresentations.map({ ImageRepresentationWithReference(representation: $0, reference: MediaResourceReference.avatar(peer: peerReference, resource: $0.resource)) }), [], peer, nil, nil, nil))
     }
     
-    guard let peerReference = PeerReference(peer._asPeer()) else {
+    guard let peerReference = PeerReference(peer) else {
         return .single(initialEntries)
     }
     switch peer {
@@ -219,9 +263,9 @@ public func initialAvatarGalleryEntries(account: Account, engine: IosappEngine, 
         return .single(initialEntries)
     }
     
-    return engine.data.get(IosappEngine.EngineData.Item.Peer.Photo(id: peer.id))
+    return engine.data.get(TelegramEngine.EngineData.Item.Peer.Photo(id: peer.id))
     |> map { peerPhoto in
-        var initialPhoto: IosappMediaImage?
+        var initialPhoto: TelegramMediaImage?
         if case let .known(value) = peerPhoto {
             initialPhoto = value
         }
@@ -242,7 +286,7 @@ public func initialAvatarGalleryEntries(account: Account, engine: IosappEngine, 
     }
 }
 
-public func fetchedAvatarGalleryEntries(engine: IosappEngine, account: Account, peer: EnginePeer) -> Signal<[AvatarGalleryEntry], NoError> {
+public func fetchedAvatarGalleryEntries(engine: TelegramEngine, account: Account, peer: EnginePeer) -> Signal<[AvatarGalleryEntry], NoError> {
     return initialAvatarGalleryEntries(account: account, engine: engine, peer: peer)
     |> map { entries -> [AvatarGalleryEntry] in
         return entries ?? []
@@ -255,7 +299,7 @@ public func fetchedAvatarGalleryEntries(engine: IosappEngine, account: Account, 
                 var result: [AvatarGalleryEntry] = []
                 if photos.isEmpty {
                     result = initialEntries
-                } else if let peerReference = PeerReference(peer._asPeer()) {
+                } else if let peerReference = PeerReference(peer) {
                     var index: Int32 = 0
                     if [Namespaces.Peer.CloudGroup, Namespaces.Peer.CloudChannel].contains(peer.id.namespace) {
                         var initialMediaIds = Set<EngineMedia.Id>()
@@ -301,7 +345,7 @@ public func fetchedAvatarGalleryEntries(engine: IosappEngine, account: Account, 
     }
 }
 
-public func fetchedAvatarGalleryEntries(engine: IosappEngine, account: Account, peer: EnginePeer, firstEntry: AvatarGalleryEntry, secondEntry: IosappMediaImage?, lastEntry: IosappMediaImage?) -> Signal<(Bool, [AvatarGalleryEntry]), NoError> {
+public func fetchedAvatarGalleryEntries(engine: TelegramEngine, account: Account, peer: EnginePeer, firstEntry: AvatarGalleryEntry, secondEntry: TelegramMediaImage?, lastEntry: TelegramMediaImage?) -> Signal<(Bool, [AvatarGalleryEntry]), NoError> {
     let initialEntries = [firstEntry]
     return Signal<(Bool, [AvatarGalleryEntry]), NoError>.single((false, initialEntries))
     |> then(
@@ -311,7 +355,13 @@ public func fetchedAvatarGalleryEntries(engine: IosappEngine, account: Account, 
             let initialEntries = [firstEntry]
             if photos.isEmpty {
                 result = initialEntries
-            } else if let peerReference = PeerReference(peer._asPeer()) {
+                if let lastEntry, let firstEntry = result.first, firstEntry.videoRepresentations.isEmpty, !lastEntry.videoRepresentations.isEmpty, avatarGalleryEntryMatchesImage(firstEntry, lastEntry), let peerReference = PeerReference(peer) {
+                    let videoRepresentations = lastEntry.videoRepresentations.map {
+                        VideoRepresentationWithReference(representation: $0, reference: MediaResourceReference.avatar(peer: peerReference, resource: $0.resource))
+                    }
+                    result[0] = avatarGalleryEntryWithVideoRepresentations(firstEntry, videoRepresentations: videoRepresentations, immediateThumbnailData: firstEntry.immediateThumbnailData ?? lastEntry.immediateThumbnailData)
+                }
+            } else if let peerReference = PeerReference(peer) {
                 var index: Int32 = 0
                 
                 if [Namespaces.Peer.CloudGroup, Namespaces.Peer.CloudChannel].contains(peer.id.namespace) {
@@ -348,16 +398,16 @@ public func fetchedAvatarGalleryEntries(engine: IosappEngine, account: Account, 
                 } else {
                     var photos = photos
                     if let secondEntry {
-                        photos.insert(IosappPeerPhoto(image: secondEntry, reference: secondEntry.reference, date: photos.first?.date ?? 0, index: 1, totalCount: 0, messageId: nil), at: 1)
+                        photos.insert(TelegramPeerPhoto(image: secondEntry, reference: secondEntry.reference, date: photos.first?.date ?? 0, index: 1, totalCount: 0, messageId: nil), at: 1)
                     }
                     if let lastEntry {
-                        photos.append(IosappPeerPhoto(image: lastEntry, reference: lastEntry.reference, date: 0, index: photos.count, totalCount: 0, messageId: nil))
+                        photos.append(TelegramPeerPhoto(image: lastEntry, reference: lastEntry.reference, date: 0, index: photos.count, totalCount: 0, messageId: nil))
                     }
                     for photo in photos {
                         let indexData = GalleryItemIndexData(position: index, totalCount: Int32(photos.count))
                         if result.isEmpty, let first = initialEntries.first {
                             var videoRepresentations: [VideoRepresentationWithReference] = first.videoRepresentations
-                            var emojiMarkup: IosappMediaImage.EmojiMarkup? = first.emojiMarkup
+                            var emojiMarkup: TelegramMediaImage.EmojiMarkup? = first.emojiMarkup
                             let isPersonal = first.representations.first?.representation.isPersonal == true
                             if videoRepresentations.isEmpty, !isPersonal {
                                 videoRepresentations = photo.image.videoRepresentations.map({ VideoRepresentationWithReference(representation: $0, reference: MediaResourceReference.avatarList(peer: peerReference, resource: $0.resource)) })
@@ -501,12 +551,12 @@ public class AvatarGalleryController: ViewController, StandalonePresentableContr
                     }
                     
                     if strongSelf.isViewLoaded {
-                        strongSelf.galleryNode.pager.replaceItems(strongSelf.entries.map({ entry in PeerAvatarImageGalleryItem(context: context, peer: peer, presentationData: presentationData, entry: entry, sourceCorners: sourceCorners, delete: strongSelf.canDelete ? {
-                            self?.deleteEntry(entry)
+                        strongSelf.galleryNode.pager.replaceItems(strongSelf.entries.map({ entry in PeerAvatarImageGalleryItem(context: context, peer: peer, presentationData: presentationData, entry: entry, sourceCorners: sourceCorners, delete: strongSelf.canDelete ? { [weak self] sourceView in
+                            self?.presentDeleteEntryConfirmation(entry, sourceView: sourceView, gesture: nil)
                             } : nil, setMain: { [weak self] in
                                 self?.setMainEntry(entry)
-                            }, edit: { [weak self] in
-                                self?.editEntry(entry)
+                            }, edit: { [weak self] sourceView, gesture in
+                                self?.editEntry(entry, sourceView: sourceView, gesture: gesture)
                         })
                         }), centralItemIndex: strongSelf.centralEntryIndex, synchronous: !isFirstTime)
                         
@@ -670,12 +720,12 @@ public class AvatarGalleryController: ViewController, StandalonePresentableContr
         }
         
         let presentationData = self.presentationData
-        self.galleryNode.pager.replaceItems(self.entries.map({ entry in PeerAvatarImageGalleryItem(context: self.context, peer: peer, presentationData: presentationData, entry: entry, sourceCorners: self.sourceCorners, delete: self.canDelete ? { [weak self] in
-            self?.deleteEntry(entry)
+        self.galleryNode.pager.replaceItems(self.entries.map({ entry in PeerAvatarImageGalleryItem(context: self.context, peer: peer, presentationData: presentationData, entry: entry, sourceCorners: self.sourceCorners, delete: self.canDelete ? { [weak self] sourceView in
+            self?.presentDeleteEntryConfirmation(entry, sourceView: sourceView, gesture: nil)
         } : nil, setMain: { [weak self] in
             self?.setMainEntry(entry)
-        }, edit: { [weak self] in
-            self?.editEntry(entry)
+        }, edit: { [weak self] sourceView, gesture in
+            self?.editEntry(entry, sourceView: sourceView, gesture: gesture)
         }) }), centralItemIndex: self.centralEntryIndex)
         
         self.galleryNode.pager.centralItemIndexUpdated = { [weak self] index in
@@ -789,12 +839,12 @@ public class AvatarGalleryController: ViewController, StandalonePresentableContr
     
     private func replaceEntries(_ entries: [AvatarGalleryEntry]) {
         self.galleryNode.currentThumbnailContainerNode?.updateSynchronously = true
-        self.galleryNode.pager.replaceItems(entries.map({ entry in PeerAvatarImageGalleryItem(context: self.context, peer: self.peer, presentationData: presentationData, entry: entry, sourceCorners: self.sourceCorners, delete: self.canDelete ? { [weak self] in
-            self?.deleteEntry(entry)
+        self.galleryNode.pager.replaceItems(entries.map({ entry in PeerAvatarImageGalleryItem(context: self.context, peer: self.peer, presentationData: presentationData, entry: entry, sourceCorners: self.sourceCorners, delete: self.canDelete ? { [weak self] sourceView in
+            self?.presentDeleteEntryConfirmation(entry, sourceView: sourceView, gesture: nil)
         } : nil, setMain: { [weak self] in
             self?.setMainEntry(entry)
-        }, edit: { [weak self] in
-            self?.editEntry(entry)
+        }, edit: { [weak self] sourceView, gesture in
+            self?.editEntry(entry, sourceView: sourceView, gesture: gesture)
         }) }), centralItemIndex: 0, synchronous: true)
         self.entries = entries
         self.galleryNode.currentThumbnailContainerNode?.updateSynchronously = false
@@ -812,7 +862,7 @@ public class AvatarGalleryController: ViewController, StandalonePresentableContr
                 } else {
                 }
             case let .image(_, reference, _, _, _, _, _, _, _, _, _, _):
-            if self.peer.id == self.context.account.peerId, let peerReference = PeerReference(self.peer._asPeer()) {
+            if self.peer.id == self.context.account.peerId, let peerReference = PeerReference(self.peer) {
                     if let reference = reference {
                         let _ = (self.context.engine.accountData.updatePeerPhotoExisting(reference: reference)
                         |> deliverOnMainQueue).start(next: { [weak self] photo in
@@ -821,12 +871,12 @@ public class AvatarGalleryController: ViewController, StandalonePresentableContr
                                 
                                 for (lhs, rhs) in zip(firstEntry.representations, updatedEntry.representations) {
                                     if lhs.representation.dimensions == rhs.representation.dimensions {
-                                        strongSelf.context.account.postbox.mediaBox.copyResourceData(from: lhs.representation.resource.id, to: rhs.representation.resource.id, synchronous: true)
+                                        strongSelf.context.engine.resources.copyResourceData(from: EngineMediaResource.Id(lhs.representation.resource.id), to: EngineMediaResource.Id(rhs.representation.resource.id), synchronous: true)
                                     }
                                 }
                                 for (lhs, rhs) in zip(firstEntry.videoRepresentations, updatedEntry.videoRepresentations) {
                                     if lhs.representation.dimensions == rhs.representation.dimensions {
-                                        strongSelf.context.account.postbox.mediaBox.copyResourceData(from: lhs.representation.resource.id, to: rhs.representation.resource.id, synchronous: true)
+                                        strongSelf.context.engine.resources.copyResourceData(from: EngineMediaResource.Id(lhs.representation.resource.id), to: EngineMediaResource.Id(rhs.representation.resource.id), synchronous: true)
                                     }
                                 }
                                 
@@ -861,158 +911,189 @@ public class AvatarGalleryController: ViewController, StandalonePresentableContr
         }
     }
     
-    private func editEntry(_ rawEntry: AvatarGalleryEntry) {
-        let actionSheet = ActionSheetController(presentationData: self.presentationData)
-        let dismissAction: () -> Void = { [weak actionSheet] in
-            actionSheet?.dismissAnimated()
-        }
-        
-        var items: [ActionSheetItem] = []
-        items.append(ActionSheetButtonItem(title: self.presentationData.strings.Settings_SetNewProfilePhotoOrVideo, color: .accent, action: { [weak self] in
-            dismissAction()
-            self?.openAvatarSetup?({ [weak self] in
-                self?.dismissImmediately()
+    private func editEntry(_ rawEntry: AvatarGalleryEntry, sourceView rawSourceView: UIView, gesture: ContextGesture?) {
+        let presentationData = self.presentationData
+        var items: [ContextMenuItem] = []
+        items.append(.action(ContextMenuActionItem(text: presentationData.strings.Settings_SetNewProfilePhotoOrVideo, icon: { theme in
+            return generateTintedImage(image: UIImage(bundleImageName: "Chat/Context Menu/Replace"), color: theme.contextMenu.primaryColor)
+        }, action: { [weak self] c, _ in
+            c?.dismiss(completion: { [weak self] in
+                self?.openAvatarSetup?({ [weak self] in
+                    self?.dismissImmediately()
+                })
             })
-        }))
-                
+        })))
+
         var isFallback = false
         if case let .image(_, _, _, _, _, _, _, _, _, _, isFallbackValue, _) = rawEntry {
             isFallback = isFallbackValue
         }
-        
+
         if self.peer.id == self.context.account.peerId, let position = rawEntry.indexData?.position, position > 0 || isFallback {
             let title: String
             if let _ = rawEntry.videoRepresentations.last {
-                title = self.presentationData.strings.ProfilePhoto_SetMainVideo
+                title = presentationData.strings.ProfilePhoto_SetMainVideo
             } else {
-                title = self.presentationData.strings.ProfilePhoto_SetMainPhoto
+                title = presentationData.strings.ProfilePhoto_SetMainPhoto
             }
-            items.append(ActionSheetButtonItem(title: title, color: .accent, action: { [weak self] in
-                dismissAction()
-                self?.setMainEntry(rawEntry)
-            }))
+            items.append(.action(ContextMenuActionItem(text: title, icon: { theme in
+                return generateTintedImage(image: UIImage(bundleImageName: "Chat/Context Menu/Select"), color: theme.contextMenu.primaryColor)
+            }, action: { [weak self] c, _ in
+                c?.dismiss(completion: { [weak self] in
+                    self?.setMainEntry(rawEntry)
+                })
+            })))
         }
         
         let deleteTitle: String
         if let _ = rawEntry.videoRepresentations.last {
-            deleteTitle = self.presentationData.strings.Settings_RemoveVideo
+            deleteTitle = presentationData.strings.Settings_RemoveVideo
         } else {
-            deleteTitle = self.presentationData.strings.GroupInfo_SetGroupPhotoDelete
+            deleteTitle = presentationData.strings.GroupInfo_SetGroupPhotoDelete
         }
-        items.append(ActionSheetButtonItem(title: deleteTitle, color: .destructive, action: { [weak self] in
-            dismissAction()
-            self?.deleteEntry(rawEntry)
-        }))
-        actionSheet.setItemGroups([
-            ActionSheetItemGroup(items: items),
-            ActionSheetItemGroup(items: [ActionSheetButtonItem(title: presentationData.strings.Common_Cancel, action: { dismissAction() })])
-        ])
-        self.view.endEditing(true)
-        self.present(actionSheet, in: .window(.root))
-    }
-    
-    private func deleteEntry(_ rawEntry: AvatarGalleryEntry) {
-        let presentationData = self.context.sharedContext.currentPresentationData.with { $0 }
-        let proceed = {
-            var entry = rawEntry
-            if case .topImage = entry, !self.entries.isEmpty {
-                entry = self.entries[0]
+        items.append(.action(ContextMenuActionItem(text: deleteTitle, textColor: .destructive, icon: { theme in
+            return generateTintedImage(image: UIImage(bundleImageName: "Chat/Context Menu/Delete"), color: theme.contextMenu.destructiveColor)
+        }, action: { [weak self] c, _ in
+            guard let self, let c else {
+                return
             }
-            
-            self.removedEntry?(rawEntry)
-            
-            var focusOnItem: Int?
-            var updatedEntries = self.entries
-            var replaceItems = false
-            var dismiss = false
-            
-            switch entry {
-                case .topImage:
-                    if self.peer.id == self.context.account.peerId {
+            let items: [ContextMenuItem] = [
+                .action(ContextMenuActionItem(text: presentationData.strings.Settings_RemoveConfirmation, textColor: .destructive, icon: { _ in
+                    return nil
+                }, action: { [weak self] c, _ in
+                    if let c {
+                        c.dismiss(completion: { [weak self] in
+                            self?.performDeleteEntry(rawEntry)
+                        })
                     } else {
-                        if entry == self.entries.first {
-                            let _ = self.context.engine.peers.updatePeerPhoto(peerId: self.peer.id, photo: nil, mapResourceToAvatarSizes: { _, _ in .single([:]) }).start()
-                            dismiss = true
-                        } else {
-                            if let index = self.entries.firstIndex(of: entry) {
-                                self.entries.remove(at: index)
-                                self.galleryNode.pager.transaction(GalleryPagerTransaction(deleteItems: [index], insertItems: [], updateItems: [], focusOnItem: index - 1, synchronous: false))
-                            }
-                        }
-                }
-                case let .image(_, reference, _, _, _, _, _, messageId, _, _, isFallback, _):
-                    if self.peer.id == self.context.account.peerId {
-                        if isFallback {
-                            let _ = self.context.engine.accountData.updateFallbackPhoto(resource: nil, videoResource: nil, videoStartTimestamp: nil, markup: nil, mapResourceToAvatarSizes: { _, _ in .single([:]) }).start()
-                        } else if let reference = reference {
-                            let _ = self.context.engine.accountData.removeAccountPhoto(reference: reference).start()
-                        }
-                        
-                        if entry == self.entries.first {
-                            dismiss = true
-                        } else {
-                            if let index = self.entries.firstIndex(of: entry) {
-                                replaceItems = true
-                                updatedEntries.remove(at: index)
-                                focusOnItem = index - 1
-                            }
-                        }
-                    } else {
-                        if let messageId = messageId {
-                            let _ = self.context.engine.messages.deleteMessagesInteractively(messageIds: [messageId], type: .forEveryone).start()
-                        }
-                        
-                        if entry == self.entries.first {
-                            let _ = self.context.engine.peers.updatePeerPhoto(peerId: self.peer.id, photo: nil, mapResourceToAvatarSizes: { _, _ in .single([:]) }).start()
-                            dismiss = true
-                        } else {
-                            if let index = self.entries.firstIndex(of: entry) {
-                                replaceItems = true
-                                updatedEntries.remove(at: index)
-                                focusOnItem = index - 1
-                            }
-                        }
+                        self?.performDeleteEntry(rawEntry)
                     }
-            }
-            
-            if replaceItems {
-                updatedEntries = normalizeEntries(updatedEntries)
-                self.galleryNode.pager.replaceItems(updatedEntries.map({ entry in PeerAvatarImageGalleryItem(context: self.context, peer: self.peer, presentationData: presentationData, entry: entry, sourceCorners: self.sourceCorners, delete: self.canDelete ? { [weak self] in
-                    self?.deleteEntry(entry)
-                } : nil, setMain: { [weak self] in
-                    self?.setMainEntry(entry)
-                }, edit: { [weak self] in
-                    self?.editEntry(entry)
-                }) }), centralItemIndex: focusOnItem, synchronous: true)
-                self.entries = updatedEntries
-            }
-            if dismiss {
-                self._hiddenMedia.set(.single(nil))
-                Queue.mainQueue().after(0.2) {
-                    self.dismiss(forceAway: true)
+                }))
+            ]
+            c.pushItems(items: .single(ContextController.Items(content: .list(items))))
+        })))
+
+        self.view.endEditing(true)
+
+        let sourceView = self.navigationBar?.navigationButtonContextContainer(sourceView: rawSourceView) ?? rawSourceView
+        let contextController = makeContextController(
+            presentationData: presentationData.withUpdated(theme: defaultDarkColorPresentationTheme),
+            source: .reference(AvatarGalleryContextReferenceContentSource(sourceView: sourceView)),
+            items: .single(ContextController.Items(content: .list(items))),
+            gesture: gesture
+        )
+        self.presentInGlobalOverlay(contextController)
+    }
+
+    private func presentDeleteEntryConfirmation(_ rawEntry: AvatarGalleryEntry, sourceView: UIView, gesture: ContextGesture?) {
+        self.view.endEditing(true)
+        
+        let items: [ContextMenuItem] = [
+            .action(ContextMenuActionItem(text: self.presentationData.strings.Settings_RemoveConfirmation, textColor: .destructive, icon: { _ in
+                return nil
+            }, action: { [weak self] c, _ in
+                if let c {
+                    c.dismiss(completion: { [weak self] in
+                        self?.performDeleteEntry(rawEntry)
+                    })
+                } else {
+                    self?.performDeleteEntry(rawEntry)
                 }
-            } else {
-                if let firstEntry = self.entries.first {
-                    self._hiddenMedia.set(.single(firstEntry))
-                }
-            }
-        }
-        let actionSheet = ActionSheetController(presentationData: presentationData)
-        let items: [ActionSheetItem] = [
-            ActionSheetButtonItem(title: presentationData.strings.Settings_RemoveConfirmation, color: .destructive, action: { [weak actionSheet] in
-                actionSheet?.dismissAnimated()
-                proceed()
-            })
+            }))
         ]
         
-        actionSheet.setItemGroups([
-            ActionSheetItemGroup(items: items),
-            ActionSheetItemGroup(items: [
-                ActionSheetButtonItem(title: presentationData.strings.Common_Cancel, color: .accent, font: .bold, action: { [weak actionSheet] in
-                    actionSheet?.dismissAnimated()
-                })
-            ])
-        ])
-        self.present(actionSheet, in: .window(.root))
+        let contextController = makeContextController(
+            presentationData: self.presentationData.withUpdated(theme: defaultDarkColorPresentationTheme),
+            source: .reference(AvatarGalleryContextReferenceContentSource(sourceView: sourceView, actionsOnTop: true)),
+            items: .single(ContextController.Items(content: .list(items))),
+            gesture: gesture
+        )
+        self.presentInGlobalOverlay(contextController)
+    }
+
+    private func performDeleteEntry(_ rawEntry: AvatarGalleryEntry) {
+        let presentationData = self.context.sharedContext.currentPresentationData.with { $0 }
+        var entry = rawEntry
+        if case .topImage = entry, !self.entries.isEmpty {
+            entry = self.entries[0]
+        }
+
+        self.removedEntry?(rawEntry)
+
+        var focusOnItem: Int?
+        var updatedEntries = self.entries
+        var replaceItems = false
+        var dismiss = false
+
+        switch entry {
+            case .topImage:
+                if self.peer.id == self.context.account.peerId {
+                } else {
+                    if entry == self.entries.first {
+                        let _ = self.context.engine.peers.updatePeerPhoto(peerId: self.peer.id, photo: nil, mapResourceToAvatarSizes: { _, _ in .single([:]) }).start()
+                        dismiss = true
+                    } else {
+                        if let index = self.entries.firstIndex(of: entry) {
+                            self.entries.remove(at: index)
+                            self.galleryNode.pager.transaction(GalleryPagerTransaction(deleteItems: [index], insertItems: [], updateItems: [], focusOnItem: index - 1, synchronous: false))
+                        }
+                    }
+                }
+            case let .image(_, reference, _, _, _, _, _, messageId, _, _, isFallback, _):
+                if self.peer.id == self.context.account.peerId {
+                    if isFallback {
+                        let _ = self.context.engine.accountData.updateFallbackPhoto(resource: nil, videoResource: nil, videoStartTimestamp: nil, markup: nil, mapResourceToAvatarSizes: { _, _ in .single([:]) }).start()
+                    } else if let reference = reference {
+                        let _ = self.context.engine.accountData.removeAccountPhoto(reference: reference).start()
+                    }
+
+                    if entry == self.entries.first {
+                        dismiss = true
+                    } else {
+                        if let index = self.entries.firstIndex(of: entry) {
+                            replaceItems = true
+                            updatedEntries.remove(at: index)
+                            focusOnItem = index - 1
+                        }
+                    }
+                } else {
+                    if let messageId = messageId {
+                        let _ = self.context.engine.messages.deleteMessagesInteractively(messageIds: [messageId], type: .forEveryone).start()
+                    }
+
+                    if entry == self.entries.first {
+                        let _ = self.context.engine.peers.updatePeerPhoto(peerId: self.peer.id, photo: nil, mapResourceToAvatarSizes: { _, _ in .single([:]) }).start()
+                        dismiss = true
+                    } else {
+                        if let index = self.entries.firstIndex(of: entry) {
+                            replaceItems = true
+                            updatedEntries.remove(at: index)
+                            focusOnItem = index - 1
+                        }
+                    }
+                }
+        }
+        
+        if replaceItems {
+            updatedEntries = normalizeEntries(updatedEntries)
+            self.galleryNode.pager.replaceItems(updatedEntries.map({ entry in PeerAvatarImageGalleryItem(context: self.context, peer: self.peer, presentationData: presentationData, entry: entry, sourceCorners: self.sourceCorners, delete: self.canDelete ? { [weak self] sourceView in
+                self?.presentDeleteEntryConfirmation(entry, sourceView: sourceView, gesture: nil)
+            } : nil, setMain: { [weak self] in
+                self?.setMainEntry(entry)
+            }, edit: { [weak self] sourceView, gesture in
+                self?.editEntry(entry, sourceView: sourceView, gesture: gesture)
+            }) }), centralItemIndex: focusOnItem, synchronous: true)
+            self.entries = updatedEntries
+        }
+        if dismiss {
+            self._hiddenMedia.set(.single(nil))
+            Queue.mainQueue().after(0.2) {
+                self.dismiss(forceAway: true)
+            }
+        } else {
+            if let firstEntry = self.entries.first {
+                self._hiddenMedia.set(.single(firstEntry))
+            }
+        }
     }
 }

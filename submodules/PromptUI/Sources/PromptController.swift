@@ -3,11 +3,10 @@ import UIKit
 import SwiftSignalKit
 import AsyncDisplayKit
 import Display
-import Postbox
-import IosappCore
-import IosappPresentationData
+import TelegramCore
+import TelegramPresentationData
 import AccountContext
-import IosappStringFormatting
+import TelegramStringFormatting
 import ComponentFlow
 import AlertComponent
 import AlertMultilineInputFieldComponent

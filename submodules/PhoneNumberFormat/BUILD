@@ -12,7 +12,7 @@ swift_library(
     deps = [
         "//submodules/libphonenumber:libphonenumber",
         "//submodules/AccountContext:AccountContext",
-        "//submodules/IosappCore:IosappCore",
+        "//submodules/TelegramCore:TelegramCore",
     ],
     visibility = [
         "//visibility:public",

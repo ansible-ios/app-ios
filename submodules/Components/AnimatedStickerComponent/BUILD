@@ -12,9 +12,9 @@ swift_library(
     deps = [
         "//submodules/ComponentFlow:ComponentFlow",
         "//submodules/AnimatedStickerNode:AnimatedStickerNode",
-        "//submodules/IosappAnimatedStickerNode:IosappAnimatedStickerNode",
+        "//submodules/TelegramAnimatedStickerNode:TelegramAnimatedStickerNode",
         "//submodules/Components/HierarchyTrackingLayer:HierarchyTrackingLayer",
-        "//submodules/IosappCore:IosappCore",
+        "//submodules/TelegramCore:TelegramCore",
     ],
     visibility = [
         "//visibility:public",

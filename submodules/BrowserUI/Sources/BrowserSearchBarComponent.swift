@@ -4,7 +4,7 @@ import AsyncDisplayKit
 import Display
 import SwiftSignalKit
 import ComponentFlow
-import IosappPresentationData
+import TelegramPresentationData
 import AccountContext
 import BundleIconComponent
 import SearchInputPanelComponent

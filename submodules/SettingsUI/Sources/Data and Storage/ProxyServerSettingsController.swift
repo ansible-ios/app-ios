@@ -2,28 +2,15 @@ import Foundation
 import UIKit
 import Display
 import SwiftSignalKit
-import IosappCore
+import TelegramCore
 import MtProtoKit
-import IosappPresentationData
+import TelegramPresentationData
 import ItemListUI
 import PresentationDataUtils
 import AccountContext
 import UrlEscaping
 import UrlHandling
-
-private func shareLink(for server: ProxyServerSettings) -> String {
-    var link: String
-    switch server.connection {
-    case let .mtp(secret):
-        let secret = MTProxySecret.parseData(secret)?.serializeToString() ?? ""
-        link = "as://proxy?server=\(server.host)&port=\(server.port)"
-        link += "&secret=\(secret.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryValueAllowed) ?? "")"
-    case let .socks5(username, password):
-        link = "https://asme.su/socks?server=\(server.host)&port=\(server.port)"
-        link += "&user=\(username?.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryValueAllowed) ?? "")&pass=\(password?.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryValueAllowed) ?? "")"
-    }
-    return link
-}
+import QrCodeUI
 
 private final class ProxyServerSettingsControllerArguments {
     let updateState: ((ProxyServerSettingsControllerState) -> ProxyServerSettingsControllerState) -> Void
@@ -267,7 +254,7 @@ public func proxyServerSettingsController(context: AccountContext, currentSettin
     return proxyServerSettingsController(sharedContext: context.sharedContext, context: context, presentationData: presentationData, updatedPresentationData: context.sharedContext.presentationData, accountManager: context.sharedContext.accountManager, network: context.account.network, currentSettings: currentSettings)
 }
 
-func proxyServerSettingsController(sharedContext: SharedAccountContext, context: AccountContext? = nil, presentationData: PresentationData, updatedPresentationData: Signal<PresentationData, NoError>, accountManager: AccountManager<IosappAccountManagerTypes>, network: Network, currentSettings: ProxyServerSettings?) -> ViewController {
+func proxyServerSettingsController(sharedContext: SharedAccountContext, context: AccountContext? = nil, presentationData: PresentationData, updatedPresentationData: Signal<PresentationData, NoError>, accountManager: AccountManager<TelegramAccountManagerTypes>, network: Network, currentSettings: ProxyServerSettings?) -> ViewController {
     var currentMode: ProxyServerSettingsControllerMode = .socks5
     var currentUsername: String?
     var currentPassword: String?
@@ -300,7 +287,7 @@ func proxyServerSettingsController(sharedContext: SharedAccountContext, context:
         statePromise.set(stateValue.modify { f($0) })
     }
     
-    var presentControllerImpl: ((ViewController, Any?) -> Void)?
+    var pushControllerImpl: ((ViewController) -> Void)?
     var dismissImpl: (() -> Void)?
     
     var shareImpl: (() -> Void)?
@@ -332,10 +319,14 @@ func proxyServerSettingsController(sharedContext: SharedAccountContext, context:
     let signal = combineLatest(updatedPresentationData, statePromise.get())
     |> deliverOnMainQueue
     |> map { presentationData, state -> (ItemListControllerState, (ItemListNodeState, Any)) in
-        let leftNavigationButton = ItemListNavigationButton(content: .text("___close"), style: .regular, enabled: true, action: {
+        var presentationData = presentationData
+        let updatedTheme = presentationData.theme.withModalBlocksBackground()
+        presentationData = presentationData.withUpdated(theme: updatedTheme)
+        
+        let leftNavigationButton = ItemListNavigationButton(content: .icon(.close), style: .regular, enabled: true, action: {
             dismissImpl?()
         })
-        let rightNavigationButton = ItemListNavigationButton(content: .text("___done"), style: .bold, enabled: state.isComplete, action: {
+        let rightNavigationButton = ItemListNavigationButton(content: .icon(.done), style: .bold, enabled: state.isComplete, action: {
             if let proxyServerSettings = proxyServerSettings(with: state) {
                 let _ = (updateProxySettingsInteractively(accountManager: accountManager, { settings in
                     var settings = settings
@@ -347,8 +338,11 @@ func proxyServerSettingsController(sharedContext: SharedAccountContext, context:
                             }
                         }
                     } else {
-                        settings.servers.append(proxyServerSettings)
-                        if settings.servers.count == 1 {
+                        let wasEmpty = settings.servers.isEmpty
+                        if !settings.servers.contains(proxyServerSettings) {
+                            settings.servers.append(proxyServerSettings)
+                        }
+                        if wasEmpty && settings.servers.count == 1 {
                             settings.activeServer = proxyServerSettings
                         }
                     }
@@ -367,8 +361,8 @@ func proxyServerSettingsController(sharedContext: SharedAccountContext, context:
     
     let controller = ItemListController(presentationData: ItemListPresentationData(presentationData), updatedPresentationData: updatedPresentationData |> map(ItemListPresentationData.init(_:)), state: signal, tabBarItem: nil)
     controller.navigationPresentation = .modal
-    presentControllerImpl = { [weak controller] c, d in
-        controller?.present(c, in: .window(.root), with: d)
+    pushControllerImpl = { [weak controller] c in
+        controller?.push(c)
     }
     dismissImpl = { [weak controller] in
         let _ = controller?.dismiss()
@@ -378,14 +372,15 @@ func proxyServerSettingsController(sharedContext: SharedAccountContext, context:
         guard let server = proxyServerSettings(with: state) else {
             return
         }
-        
-        let link = shareLink(for: server)
         controller?.view.endEditing(true)
         
-        let controller = ShareProxyServerActionSheetController(presentationData: presentationData, updatedPresentationData: updatedPresentationData, link: link)
-        presentControllerImpl?(controller, nil)
+        let controller = QrCodeScreen(
+            sharedContext: sharedContext,
+            updatedPresentationData: (presentationData, updatedPresentationData),
+            subject: .proxy(server: server, externalLink: false)
+        )
+        pushControllerImpl?(controller)
     }
     
     return controller
 }
-

@@ -3,12 +3,12 @@ import UIKit
 import Display
 import ComponentFlow
 import SwiftSignalKit
-import IosappCore
+import TelegramCore
 import AccountContext
 import MultilineTextComponent
 import BlurredBackgroundComponent
 import Markdown
-import IosappPresentationData
+import TelegramPresentationData
 import BundleIconComponent
 import AvatarNode
 import AvatarStoryIndicatorComponent
@@ -283,9 +283,9 @@ private final class StoriesListComponent: CombinedComponent {
             super.init()
             
             self.disposable = (context.engine.data.get(
-                IosappEngine.EngineData.Item.Configuration.UserLimits(isPremium: false),
-                IosappEngine.EngineData.Item.Configuration.UserLimits(isPremium: true),
-                IosappEngine.EngineData.Item.Peer.Peer(id: context.account.peerId)
+                TelegramEngine.EngineData.Item.Configuration.UserLimits(isPremium: false),
+                TelegramEngine.EngineData.Item.Configuration.UserLimits(isPremium: true),
+                TelegramEngine.EngineData.Item.Peer.Peer(id: context.account.peerId)
             )
             |> deliverOnMainQueue).start(next: { [weak self] limits, premiumLimits, accountPeer in
                 if let strongSelf = self {

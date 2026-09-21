@@ -1,9 +1,9 @@
 import Foundation
 import NaturalLanguage
 import SwiftSignalKit
-import IosappCore
+import TelegramCore
 import AccountContext
-import IosappUIPreferences
+import TelegramUIPreferences
 
 public struct ChatTranslationState: Codable {
     enum CodingKeys: String, CodingKey {
@@ -75,7 +75,7 @@ public struct ChatTranslationState: Codable {
     }
 }
 
-private func cachedChatTranslationState(engine: IosappEngine, peerId: EnginePeer.Id, threadId: Int64?) -> Signal<ChatTranslationState?, NoError> {
+private func cachedChatTranslationState(engine: TelegramEngine, peerId: EnginePeer.Id, threadId: Int64?) -> Signal<ChatTranslationState?, NoError> {
     let key: EngineDataBuffer
     if let threadId {
         key = EngineDataBuffer(length: 16)
@@ -86,13 +86,13 @@ private func cachedChatTranslationState(engine: IosappEngine, peerId: EnginePeer
         key.setInt64(0, value: peerId.id._internalGetInt64Value())
     }
     
-    return engine.data.subscribe(IosappEngine.EngineData.Item.ItemCache.Item(collectionId: ApplicationSpecificItemCacheCollectionId.translationState, id: key))
+    return engine.data.subscribe(TelegramEngine.EngineData.Item.ItemCache.Item(collectionId: ApplicationSpecificItemCacheCollectionId.translationState, id: key))
     |> map { entry -> ChatTranslationState? in
         return entry?.get(ChatTranslationState.self)
     }
 }
 
-private func updateChatTranslationState(engine: IosappEngine, peerId: EnginePeer.Id, threadId: Int64?, state: ChatTranslationState?) -> Signal<Never, NoError> {
+private func updateChatTranslationState(engine: TelegramEngine, peerId: EnginePeer.Id, threadId: Int64?, state: ChatTranslationState?) -> Signal<Never, NoError> {
     let key: EngineDataBuffer
     if let threadId {
         key = EngineDataBuffer(length: 16)
@@ -110,7 +110,7 @@ private func updateChatTranslationState(engine: IosappEngine, peerId: EnginePeer
     }
 }
 
-public func updateChatTranslationStateInteractively(engine: IosappEngine, peerId: EnginePeer.Id, threadId: Int64?, _ f: @escaping (ChatTranslationState?) -> ChatTranslationState?) -> Signal<Never, NoError> {
+public func updateChatTranslationStateInteractively(engine: TelegramEngine, peerId: EnginePeer.Id, threadId: Int64?, _ f: @escaping (ChatTranslationState?) -> ChatTranslationState?) -> Signal<Never, NoError> {
     let key: EngineDataBuffer
     if let threadId {
         key = EngineDataBuffer(length: 16)
@@ -121,7 +121,7 @@ public func updateChatTranslationStateInteractively(engine: IosappEngine, peerId
         key.setInt64(0, value: peerId.id._internalGetInt64Value())
     }
     
-    return engine.data.get(IosappEngine.EngineData.Item.ItemCache.Item(collectionId: ApplicationSpecificItemCacheCollectionId.translationState, id: key))
+    return engine.data.get(TelegramEngine.EngineData.Item.ItemCache.Item(collectionId: ApplicationSpecificItemCacheCollectionId.translationState, id: key))
     |> map { entry -> ChatTranslationState? in
         return entry?.get(ChatTranslationState.self)
     }
@@ -167,7 +167,12 @@ public func translateMessageIds(context: AccountContext, messageIds: [EngineMess
                         messageIdsToTranslate.append(messageId)
                         messageIdsSet.insert(messageId)
                     }
-                } else if let _ = message.media.first(where: { $0 is IosappMediaPoll }) {
+                } else if let _ = message.richText {
+                    if !messageIdsSet.contains(messageId) {
+                        messageIdsToTranslate.append(messageId)
+                        messageIdsSet.insert(messageId)
+                    }
+                } else if let _ = message.media.first(where: { $0 is TelegramMediaPoll }) {
                     if !messageIdsSet.contains(messageId) {
                         messageIdsToTranslate.append(messageId)
                         messageIdsSet.insert(messageId)
@@ -226,7 +231,7 @@ public func chatTranslationState(context: AccountContext, peerId: EnginePeer.Id,
             |> map { sharedData -> TranslationSettings in
                 return sharedData.entries[ApplicationSpecificSharedDataKeys.translationSettings]?.get(TranslationSettings.self) ?? TranslationSettings.defaultSettings
             },
-            context.engine.data.subscribe(IosappEngine.EngineData.Item.Peer.AutoTranslateEnabled(id: peerId))
+            context.engine.data.subscribe(TelegramEngine.EngineData.Item.Peer.AutoTranslateEnabled(id: peerId))
         )
         |> mapToSignal { settings, autoTranslateEnabled in
             if !settings.translateChats && !autoTranslateEnabled {

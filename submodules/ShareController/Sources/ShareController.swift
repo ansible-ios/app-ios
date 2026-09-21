@@ -3,10 +3,10 @@ import UIKit
 import Display
 import AsyncDisplayKit
 import Postbox
-import IosappCore
+import TelegramCore
 import SwiftSignalKit
-import IosappPresentationData
-import IosappUIPreferences
+import TelegramPresentationData
+import TelegramUIPreferences
 import TextFormat
 import AccountContext
 import ActionSheetPeerItem
@@ -14,9 +14,9 @@ import LocalizedPeerData
 import UrlEscaping
 import StickerResources
 import SaveToCameraRoll
-import IosappStringFormatting
+import TelegramStringFormatting
 import WallpaperBackgroundNode
-import IosappIntents
+import TelegramIntents
 import AnimationCache
 import MultiAnimationRenderer
 import ObjectiveC
@@ -73,13 +73,13 @@ private struct CollectableExternalShareItem {
     let mediaReference: AnyMediaReference?
 }
 
-private func collectExternalShareItems(strings: PresentationStrings, dateTimeFormat: PresentationDateTimeFormat, nameOrder: PresentationPersonNameOrder, engine: IosappEngine, postbox: Postbox, collectableItems: [CollectableExternalShareItem], takeOne: Bool = true) -> Signal<ExternalShareItemsState, NoError> {
+private func collectExternalShareItems(strings: PresentationStrings, dateTimeFormat: PresentationDateTimeFormat, nameOrder: PresentationPersonNameOrder, engine: TelegramEngine, postbox: Postbox, collectableItems: [CollectableExternalShareItem], takeOne: Bool = true) -> Signal<ExternalShareItemsState, NoError> {
     var signals: [Signal<ExternalShareItemStatus, NoError>] = []
     let authorsPeerIds = collectableItems.compactMap { $0.author }
     let authorsPromise = Promise<[PeerId: String]>()
     
     let peerTitles = engine.data.get(EngineDataMap(
-        authorsPeerIds.map(IosappEngine.EngineData.Item.Peer.Peer.init)
+        authorsPeerIds.map(TelegramEngine.EngineData.Item.Peer.Peer.init)
     ))
     |> map { peerMap -> [EnginePeer.Id: String] in
         return peerMap.compactMapValues { peer -> String? in
@@ -89,7 +89,7 @@ private func collectExternalShareItems(strings: PresentationStrings, dateTimeFor
     
     authorsPromise.set(peerTitles)
     for item in collectableItems {
-        if let mediaReference = item.mediaReference, let file = mediaReference.media as? IosappMediaFile {
+        if let mediaReference = item.mediaReference, let file = mediaReference.media as? TelegramMediaFile {
             signals.append(collectExternalShareResource(postbox: postbox, resourceReference: mediaReference.resourceReference(file.resource), statsCategory: statsCategoryForFileWithAttributes(file.attributes))
                 |> mapToSignal { next -> Signal<ExternalShareItemStatus, NoError> in
                     switch next {
@@ -130,7 +130,7 @@ private func collectExternalShareItems(strings: PresentationStrings, dateTimeFor
                             }
                     }
             })
-        } else if let mediaReference = item.mediaReference, let image = mediaReference.media as? IosappMediaImage, let largest = largestImageRepresentation(image.representations) {
+        } else if let mediaReference = item.mediaReference, let image = mediaReference.media as? TelegramMediaImage, let largest = largestImageRepresentation(image.representations) {
             signals.append(collectExternalShareResource(postbox: postbox, resourceReference: mediaReference.resourceReference(largest.resource), statsCategory: .image)
             |> map { next -> ExternalShareItemStatus in
                 switch next {
@@ -152,7 +152,7 @@ private func collectExternalShareItems(strings: PresentationStrings, dateTimeFor
                         }
                 }
             })
-        } else if let mediaReference = item.mediaReference, let poll = mediaReference.media as? IosappMediaPoll {
+        } else if let mediaReference = item.mediaReference, let poll = mediaReference.media as? TelegramMediaPoll {
             var text = "📊 \(poll.text)"
             text.append("\n\(strings.MessagePoll_LabelAnonymous)")
             for option in poll.options {
@@ -174,14 +174,14 @@ private func collectExternalShareItems(strings: PresentationStrings, dateTimeFor
                 }
             }
             signals.append(.single(.done(.text(text))))
-        } else if let mediaReference = item.mediaReference, let todo = mediaReference.media as? IosappMediaTodo {
+        } else if let mediaReference = item.mediaReference, let todo = mediaReference.media as? TelegramMediaTodo {
             var text = "☑️ \(todo.text)"
             for item in todo.items {
                 let completed = todo.completions.contains(where: { $0.id == item.id })
                 text.append("\n\(completed ? "+" : "-") \(item.text)")
             }
             signals.append(.single(.done(.text(text))))
-        } else if let mediaReference = item.mediaReference, let contact = mediaReference.media as? IosappMediaContact {
+        } else if let mediaReference = item.mediaReference, let contact = mediaReference.media as? TelegramMediaContact {
             let contactData: DeviceContactExtendedData
             if let vCard = contact.vCardData, let vCardData = vCard.data(using: .utf8), let parsed = DeviceContactExtendedData(vcard: vCardData) {
                 contactData = parsed
@@ -290,7 +290,7 @@ public final class ShareControllerAppEnvironment: ShareControllerEnvironment {
     
     public func donateSendMessageIntent(account: ShareControllerAccountContext, peerIds: [EnginePeer.Id]) {
         if let account = account as? ShareControllerAppAccountContext {
-            IosappIntents.donateSendMessageIntent(account: account.context.account, sharedContext: self.sharedContext, intentContext: .share, peerIds: peerIds)
+            TelegramIntents.donateSendMessageIntent(account: account.context.account, sharedContext: self.sharedContext, intentContext: .share, peerIds: peerIds)
         } else {
             assertionFailure()
         }
@@ -299,18 +299,18 @@ public final class ShareControllerAppEnvironment: ShareControllerEnvironment {
 
 public final class ShareControllerSwitchableAccount: Equatable {
     public let account: ShareControllerAccountContext
-    public let peer: Peer
-    
-    public init(account: ShareControllerAccountContext, peer: Peer) {
+    public let peer: EnginePeer
+
+    public init(account: ShareControllerAccountContext, peer: EnginePeer) {
         self.account = account
         self.peer = peer
     }
-    
+
     public static func ==(lhs: ShareControllerSwitchableAccount, rhs: ShareControllerSwitchableAccount) -> Bool {
         if lhs.account !== rhs.account {
             return false
         }
-        if !arePeersEqual(lhs.peer, rhs.peer) {
+        if lhs.peer != rhs.peer {
             return false
         }
         return true
@@ -344,7 +344,7 @@ public final class ShareController: ViewController {
     private let immediatePeerId: PeerId?
     private let segmentedValues: [ShareControllerSegmentedValue]?
     private let fromForeignApp: Bool
-    private let collectibleItemInfo: IosappCollectibleItemInfo?
+    private let collectibleItemInfo: TelegramCollectibleItemInfo?
     
     private let peers = Promise<([(peer: EngineRenderedPeer, presence: EnginePeer.Presence?, requiresPremiumForMessaging: Bool, requiresStars: Int64?)], EnginePeer)>()
     private let peersDisposable = MetaDisposable()
@@ -386,7 +386,7 @@ public final class ShareController: ViewController {
     
     public var parentNavigationController: NavigationController?
     
-    public convenience init(context: AccountContext, subject: ShareControllerSubject, presetText: String? = nil, preferredAction: ShareControllerPreferredAction = .default, showInChat: ((Message) -> Void)? = nil, fromForeignApp: Bool = false, segmentedValues: [ShareControllerSegmentedValue]? = nil, externalShare: Bool = true, immediateExternalShare: Bool = false, switchableAccounts: [AccountWithInfo] = [], immediatePeerId: PeerId? = nil, updatedPresentationData: (initial: PresentationData, signal: Signal<PresentationData, NoError>)? = nil, forceTheme: PresentationTheme? = nil, forcedActionTitle: String? = nil, shareAsLink: Bool = false, collectibleItemInfo: IosappCollectibleItemInfo? = nil) {
+    public convenience init(context: AccountContext, subject: ShareControllerSubject, presetText: String? = nil, preferredAction: ShareControllerPreferredAction = .default, showInChat: ((Message) -> Void)? = nil, fromForeignApp: Bool = false, segmentedValues: [ShareControllerSegmentedValue]? = nil, externalShare: Bool = true, immediateExternalShare: Bool = false, switchableAccounts: [AccountWithInfo] = [], immediatePeerId: PeerId? = nil, updatedPresentationData: (initial: PresentationData, signal: Signal<PresentationData, NoError>)? = nil, forceTheme: PresentationTheme? = nil, forcedActionTitle: String? = nil, shareAsLink: Bool = false, collectibleItemInfo: TelegramCollectibleItemInfo? = nil) {
         self.init(
             environment: ShareControllerAppEnvironment(sharedContext: context.sharedContext),
             currentContext: ShareControllerAppAccountContext(context: context),
@@ -410,7 +410,7 @@ public final class ShareController: ViewController {
         )
     }
     
-    public init(environment: ShareControllerEnvironment, currentContext: ShareControllerAccountContext, subject: ShareControllerSubject, presetText: String? = nil, preferredAction: ShareControllerPreferredAction = .default, showInChat: ((Message) -> Void)? = nil, fromForeignApp: Bool = false, segmentedValues: [ShareControllerSegmentedValue]? = nil, externalShare: Bool = true, immediateExternalShare: Bool = false, switchableAccounts: [ShareControllerSwitchableAccount] = [], immediatePeerId: PeerId? = nil, updatedPresentationData: (initial: PresentationData, signal: Signal<PresentationData, NoError>)? = nil, forceTheme: PresentationTheme? = nil, forcedActionTitle: String? = nil, shareAsLink: Bool = false, collectibleItemInfo: IosappCollectibleItemInfo? = nil) {
+    public init(environment: ShareControllerEnvironment, currentContext: ShareControllerAccountContext, subject: ShareControllerSubject, presetText: String? = nil, preferredAction: ShareControllerPreferredAction = .default, showInChat: ((Message) -> Void)? = nil, fromForeignApp: Bool = false, segmentedValues: [ShareControllerSegmentedValue]? = nil, externalShare: Bool = true, immediateExternalShare: Bool = false, switchableAccounts: [ShareControllerSwitchableAccount] = [], immediatePeerId: PeerId? = nil, updatedPresentationData: (initial: PresentationData, signal: Signal<PresentationData, NoError>)? = nil, forceTheme: PresentationTheme? = nil, forcedActionTitle: String? = nil, shareAsLink: Bool = false, collectibleItemInfo: TelegramCollectibleItemInfo? = nil) {
         self.environment = environment
         self.currentContext = currentContext
         self.subject = subject
@@ -475,9 +475,9 @@ public final class ShareController: ViewController {
             case let .media(mediaReference, _):
                 var canSave = false
                 var isVideo = false
-                if mediaReference.media is IosappMediaImage {
+                if mediaReference.media is TelegramMediaImage {
                     canSave = true
-                } else if let file = mediaReference.media as? IosappMediaFile {
+                } else if let file = mediaReference.media as? TelegramMediaFile {
                     canSave = true
                     isVideo = file.isVideo
                 }
@@ -485,7 +485,7 @@ public final class ShareController: ViewController {
                     self.actionIsMediaSaving = true
                     self.defaultAction = ShareControllerAction(title: isVideo ? self.presentationData.strings.Gallery_SaveVideo : self.presentationData.strings.Gallery_SaveImage, action: { [weak self] in
                         if let strongSelf = self {
-                            if case let .message(message, media) = mediaReference, let messageId = message.id, let file = media as? IosappMediaFile {
+                            if case let .message(message, media) = mediaReference, let messageId = message.id, let file = media as? TelegramMediaFile {
                                 let _ = (messageMediaFileStatus(context: currentContext.context, messageId: messageId, file: file)
                                 |> take(1)
                                 |> deliverOnMainQueue).start(next: { [weak self] fetchStatus in
@@ -543,7 +543,7 @@ public final class ShareController: ViewController {
                             showInChat(message)
                             self?.actionCompleted?()
                         })
-                    } else if let chatPeer = message.peers[message.id.peerId] as? IosappChannel, messages.count == 1 || sameGroupingKey {
+                    } else if let chatPeer = message.peers[message.id.peerId] as? TelegramChannel, messages.count == 1 || sameGroupingKey {
                         if message.id.namespace == Namespaces.Message.Cloud {
                             self.defaultAction = ShareControllerAction(title: self.presentationData.strings.ShareMenu_CopyShareLink, action: { [weak self] in
                                 guard let strongSelf = self else {
@@ -611,9 +611,9 @@ public final class ShareController: ViewController {
     override public func loadDisplayNode() {
         var fromPublicChannel = false
         var messageCount: Int = 1
-        if case let .messages(messages) = self.subject, let message = messages.first, let peer = message.peers[message.id.peerId] as? IosappChannel, case .broadcast = peer.info {
+        if case let .messages(messages) = self.subject, let message = messages.first, let peer = message.peers[message.id.peerId] as? TelegramChannel, case .broadcast = peer.info {
             fromPublicChannel = true
-        } else if case let .url(link) = self.subject, link.contains("asme.su/nft/") {
+        } else if case let .url(link) = self.subject, link.contains("t.me/nft/") {
             fromPublicChannel = true
         }
         
@@ -761,19 +761,19 @@ public final class ShareController: ViewController {
                 }
             case let .media(mediaReference, _):
                 var sendTextAsCaption = false
-                if mediaReference.media is IosappMediaImage || mediaReference.media is IosappMediaFile {
+                if mediaReference.media is TelegramMediaImage || mediaReference.media is TelegramMediaFile {
                     sendTextAsCaption = true
                 }
                 
                 for peer in peers {
                     var banSendType = false
-                    if mediaReference.media is IosappMediaImage {
+                    if mediaReference.media is TelegramMediaImage {
                         if case let .channel(channel) = peer, channel.hasBannedPermission(.banSendPhotos) != nil {
                             banSendType = true
                         } else if case let .legacyGroup(group) = peer, group.hasBannedPermission(.banSendPhotos) {
                             banSendType = true
                         }
-                    } else if let file = mediaReference.media as? IosappMediaFile {
+                    } else if let file = mediaReference.media as? TelegramMediaFile {
                         if file.isSticker || file.isAnimated {
                             if case let .channel(channel) = peer, channel.hasBannedPermission(.banSendStickers) != nil {
                                 banSendType = true
@@ -868,13 +868,13 @@ public final class ShareController: ViewController {
                     for message in messages {
                         for media in message.media {
                             var banSendType = false
-                            if media is IosappMediaImage {
+                            if media is TelegramMediaImage {
                                 if case let .channel(channel) = peer, channel.hasBannedPermission(.banSendPhotos) != nil {
                                     banSendType = true
                                 } else if case let .legacyGroup(group) = peer, group.hasBannedPermission(.banSendPhotos) {
                                     banSendType = true
                                 }
-                            } else if let file = media as? IosappMediaFile {
+                            } else if let file = media as? TelegramMediaFile {
                                 if file.isSticker || file.isAnimated {
                                     if case let .channel(channel) = peer, channel.hasBannedPermission(.banSendStickers) != nil {
                                         banSendType = true
@@ -912,7 +912,7 @@ public final class ShareController: ViewController {
                                         banSendType = true
                                     }
                                 }
-                            } else if media is IosappMediaContact || media is IosappMediaMap {
+                            } else if media is TelegramMediaContact || media is TelegramMediaMap {
                                 if case let .channel(channel) = peer, channel.hasBannedPermission(.banSendText) != nil {
                                     banSendType = true
                                 } else if case let .legacyGroup(group) = peer, group.hasBannedPermission(.banSendText) {
@@ -973,7 +973,7 @@ public final class ShareController: ViewController {
                     case let .quote(text, url):
                         collectableItems.append(CollectableExternalShareItem(url: "", text: "\"\(text)\"\n\n\(url)", author: nil, timestamp: nil, mediaReference: nil))
                     case let .image(representations):
-                        let media = IosappMediaImage(imageId: MediaId(namespace: Namespaces.Media.LocalImage, id: Int64.random(in: Int64.min ... Int64.max)), representations: representations.map({ $0.representation }), immediateThumbnailData: nil, reference: nil, partialReference: nil, flags: [])
+                        let media = TelegramMediaImage(imageId: MediaId(namespace: Namespaces.Media.LocalImage, id: Int64.random(in: Int64.min ... Int64.max)), representations: representations.map({ $0.representation }), immediateThumbnailData: nil, reference: nil, partialReference: nil, flags: [])
                         collectableItems.append(CollectableExternalShareItem(url: "", text: "", author: nil, timestamp: nil, mediaReference: .standalone(media: media)))
                     case let .media(mediaReference, _):
                         collectableItems.append(CollectableExternalShareItem(url: "", text: "", author: nil, timestamp: nil, mediaReference: mediaReference))
@@ -986,10 +986,10 @@ public final class ShareController: ViewController {
                             var selectedMedia: Media?
                             loop: for media in message.media {
                                 switch media {
-                                    case _ as IosappMediaImage, _ as IosappMediaFile:
+                                    case _ as TelegramMediaImage, _ as TelegramMediaFile:
                                         selectedMedia = media
                                         break loop
-                                    case let webpage as IosappMediaWebpage:
+                                    case let webpage as TelegramMediaWebpage:
                                         if case let .Loaded(content) = webpage.content, ["photo", "document", "video", "gif"].contains(content.type) {
                                             if let file = content.file {
                                                 selectedMedia = file
@@ -997,16 +997,16 @@ public final class ShareController: ViewController {
                                                 selectedMedia = image
                                             }
                                         }
-                                    case _ as IosappMediaPoll:
+                                    case _ as TelegramMediaPoll:
                                         selectedMedia = media
                                         break loop
                                     default:
                                         break
                                 }
                             }
-                            if let chatPeer = message.peers[message.id.peerId] as? IosappChannel {
+                            if let chatPeer = message.peers[message.id.peerId] as? TelegramChannel {
                                 if message.id.namespace == Namespaces.Message.Cloud, let addressName = chatPeer.addressName, !addressName.isEmpty {
-                                    url = "https://asme.su/\(addressName)/\(message.id.id)"
+                                    url = "https://t.me/\(addressName)/\(message.id.id)"
                                     if messageUrl == nil {
                                         messageUrl = url
                                     }
@@ -1095,7 +1095,7 @@ public final class ShareController: ViewController {
                                         
                                         if case let .messages(messages) = subject {
                                             watchDisposable.set((currentContext.context.engine.data.subscribe(
-                                                EngineDataMap(messages.map { IosappEngine.EngineData.Item.Messages.Message(id: $0.id) })
+                                                EngineDataMap(messages.map { TelegramEngine.EngineData.Item.Messages.Message(id: $0.id) })
                                             )
                                             |> deliverOnMainQueue).start(next: { [weak activityController] currentMessages in
                                                 guard let activityController else {
@@ -1145,11 +1145,10 @@ public final class ShareController: ViewController {
             for info in strongSelf.switchableAccounts {
                 items.append(ActionSheetPeerItem(
                     accountPeerId: info.account.accountPeerId,
-                    postbox: info.account.stateManager.postbox,
-                    network: info.account.stateManager.network,
+                    stateManager: info.account.stateManager,
                     contentSettings: info.account.contentSettings,
-                    peer: EnginePeer(info.peer),
-                    title: EnginePeer(info.peer).displayTitle(strings: presentationData.strings, displayOrder: presentationData.nameDisplayOrder),
+                    peer: info.peer,
+                    title: info.peer.displayTitle(strings: presentationData.strings, displayOrder: presentationData.nameDisplayOrder),
                     isSelected: info.account.accountId == strongSelf.currentContext.accountId,
                     strings: presentationData.strings,
                     theme: presentationData.theme,
@@ -1238,11 +1237,11 @@ public final class ShareController: ViewController {
             for peerId in peerIds {
                 if let view = views.views[PostboxViewKey.peer(peerId: peerId, components: [])] as? PeerView, let peer = peerViewMainPeer(view) {
                     result[peerId] = EnginePeer(peer)
-                    if peer is IosappUser, let cachedPeerDataView = views.views[PostboxViewKey.cachedPeerData(peerId: peerId)] as? CachedPeerDataView {
+                    if peer is TelegramUser, let cachedPeerDataView = views.views[PostboxViewKey.cachedPeerData(peerId: peerId)] as? CachedPeerDataView {
                         if let cachedData = cachedPeerDataView.cachedPeerData as? CachedUserData {
                             requiresStars[peerId] = cachedData.sendPaidMessageStars
                         }
-                    } else if let channel = peer as? IosappChannel {
+                    } else if let channel = peer as? TelegramChannel {
                         requiresStars[peerId] = channel.sendPaidMessageStars
                     }
                 }
@@ -1531,7 +1530,7 @@ public final class ShareController: ViewController {
                 }
             case let .media(mediaReference, _):
                 var sendTextAsCaption = false
-                if mediaReference.media is IosappMediaImage || mediaReference.media is IosappMediaFile {
+                if mediaReference.media is TelegramMediaImage || mediaReference.media is TelegramMediaFile {
                     sendTextAsCaption = true
                 }
                 
@@ -1541,13 +1540,13 @@ public final class ShareController: ViewController {
                     }
                     
                     var banSendType = false
-                    if mediaReference.media is IosappMediaImage {
+                    if mediaReference.media is TelegramMediaImage {
                         if case let .channel(channel) = peer, channel.hasBannedPermission(.banSendPhotos) != nil {
                             banSendType = true
                         } else if case let .legacyGroup(group) = peer, group.hasBannedPermission(.banSendPhotos) {
                             banSendType = true
                         }
-                    } else if let file = mediaReference.media as? IosappMediaFile {
+                    } else if let file = mediaReference.media as? TelegramMediaFile {
                         if file.isSticker || file.isAnimated {
                             if case let .channel(channel) = peer, channel.hasBannedPermission(.banSendStickers) != nil {
                                 banSendType = true
@@ -1737,13 +1736,13 @@ public final class ShareController: ViewController {
                     for message in messages {
                         for media in message.media {
                             var banSendType = false
-                            if media is IosappMediaImage {
+                            if media is TelegramMediaImage {
                                 if case let .channel(channel) = peer, channel.hasBannedPermission(.banSendPhotos) != nil {
                                     banSendType = true
                                 } else if case let .legacyGroup(group) = peer, group.hasBannedPermission(.banSendPhotos) {
                                     banSendType = true
                                 }
-                            } else if let file = media as? IosappMediaFile {
+                            } else if let file = media as? TelegramMediaFile {
                                 if file.isSticker || file.isAnimated {
                                     if case let .channel(channel) = peer, channel.hasBannedPermission(.banSendStickers) != nil {
                                         banSendType = true
@@ -1892,11 +1891,11 @@ public final class ShareController: ViewController {
             for peerId in peerIds {
                 if let view = views.views[PostboxViewKey.peer(peerId: peerId, components: [])] as? PeerView, let peer = peerViewMainPeer(view) {
                     result[peerId] = EnginePeer(peer)
-                    if peer is IosappUser, let cachedPeerDataView = views.views[PostboxViewKey.cachedPeerData(peerId: peerId)] as? CachedPeerDataView {
+                    if peer is TelegramUser, let cachedPeerDataView = views.views[PostboxViewKey.cachedPeerData(peerId: peerId)] as? CachedPeerDataView {
                         if let cachedData = cachedPeerDataView.cachedPeerData as? CachedUserData {
                             requiresStars[peerId] = cachedData.sendPaidMessageStars
                         }
-                    } else if let channel = peer as? IosappChannel {
+                    } else if let channel = peer as? TelegramChannel {
                         requiresStars[peerId] = channel.sendPaidMessageStars
                     }
                 }
@@ -2073,7 +2072,7 @@ public final class ShareController: ViewController {
                     }
                     
                     var messages: [EnqueueMessage] = []
-                    messages.append(.message(text: text, attributes: [], inlineStickers: [:], mediaReference: .standalone(media: IosappMediaImage(imageId: MediaId(namespace: Namespaces.Media.LocalImage, id: Int64.random(in: Int64.min ... Int64.max)), representations: representations.map({ $0.representation }), immediateThumbnailData: nil, reference: nil, partialReference: nil, flags: [])), threadId: threadId, replyToMessageId: replyToMessageId.flatMap { EngineMessageReplySubject(messageId: $0, quote: nil, innerSubject: nil) }, replyToStoryId: nil, localGroupingKey: nil, correlationId: nil, bubbleUpEmojiOrStickersets: []))
+                    messages.append(.message(text: text, attributes: [], inlineStickers: [:], mediaReference: .standalone(media: TelegramMediaImage(imageId: MediaId(namespace: Namespaces.Media.LocalImage, id: Int64.random(in: Int64.min ... Int64.max)), representations: representations.map({ $0.representation }), immediateThumbnailData: nil, reference: nil, partialReference: nil, flags: [])), threadId: threadId, replyToMessageId: replyToMessageId.flatMap { EngineMessageReplySubject(messageId: $0, quote: nil, innerSubject: nil) }, replyToStoryId: nil, localGroupingKey: nil, correlationId: nil, bubbleUpEmojiOrStickersets: []))
                     messages = transformMessages(messages, showNames: showNames, silently: silently, sendPaidMessageStars: requiresStars[peerId])
                     shareSignals.append(enqueueMessages(account: currentContext.context.account, peerId: peerId, messages: messages))
                 }
@@ -2085,7 +2084,7 @@ public final class ShareController: ViewController {
                 
                 var sendTextAsCaption = false
                 if forwardSourceMessageId == nil {
-                    if mediaReference.media is IosappMediaImage || mediaReference.media is IosappMediaFile {
+                    if mediaReference.media is TelegramMediaImage || mediaReference.media is TelegramMediaFile {
                         sendTextAsCaption = true
                     }
                 }
@@ -2096,13 +2095,13 @@ public final class ShareController: ViewController {
                     }
                     
                     var banSendType = false
-                    if mediaReference.media is IosappMediaImage {
+                    if mediaReference.media is TelegramMediaImage {
                         if case let .channel(channel) = peer, channel.hasBannedPermission(.banSendPhotos) != nil {
                             banSendType = true
                         } else if case let .legacyGroup(group) = peer, group.hasBannedPermission(.banSendPhotos) {
                             banSendType = true
                         }
-                    } else if let file = mediaReference.media as? IosappMediaFile {
+                    } else if let file = mediaReference.media as? TelegramMediaFile {
                         if file.isSticker || file.isAnimated {
                             if case let .channel(channel) = peer, channel.hasBannedPermission(.banSendStickers) != nil {
                                 banSendType = true
@@ -2240,13 +2239,13 @@ public final class ShareController: ViewController {
                     for message in messages {
                         for media in message.media {
                             var banSendType = false
-                            if media is IosappMediaImage {
+                            if media is TelegramMediaImage {
                                 if case let .channel(channel) = peer, channel.hasBannedPermission(.banSendPhotos) != nil {
                                     banSendType = true
                                 } else if case let .legacyGroup(group) = peer, group.hasBannedPermission(.banSendPhotos) {
                                     banSendType = true
                                 }
-                            } else if let file = media as? IosappMediaFile {
+                            } else if let file = media as? TelegramMediaFile {
                                 if file.isSticker || file.isAnimated {
                                     if case let .channel(channel) = peer, channel.hasBannedPermission(.banSendStickers) != nil {
                                         banSendType = true
@@ -2335,8 +2334,8 @@ public final class ShareController: ViewController {
                     for (id, status, error) in statuses {
                         if let error = error {
                             Queue.mainQueue().async {
-                                let _ = IosappEngine(account: account).messages.deleteMessagesInteractively(messageIds: [id], type: .forEveryone).start()
-                                let _ = (IosappEngine(account: account).data.get(IosappEngine.EngineData.Item.Peer.Peer(id: id.peerId))
+                                let _ = TelegramEngine(account: account).messages.deleteMessagesInteractively(messageIds: [id], type: .forEveryone).start()
+                                let _ = (TelegramEngine(account: account).data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: id.peerId))
                                          |> deliverOnMainQueue).start(next: { peer in
                                     guard let strongSelf = self, let peer = peer else {
                                         return
@@ -2400,10 +2399,9 @@ public final class ShareController: ViewController {
         }
         let context = accountContext.context
         
-        let postbox = self.currentContext.stateManager.postbox
         let signals: [Signal<Float, NoError>] = messages.compactMap { message -> Signal<Float, NoError>? in
-            if let media = message.media.first {
-                return SaveToCameraRoll.saveToCameraRoll(context: context, postbox: postbox, userLocation: .peer(message.id.peerId), mediaReference: .message(message: MessageReference(message), media: media))
+            if let media = message.effectiveMedia.first {
+                return SaveToCameraRoll.saveToCameraRoll(context: context, userLocation: .peer(message.id.peerId), mediaReference: .message(message: MessageReference(message), media: media))
             } else {
                 return nil
             }
@@ -2428,8 +2426,8 @@ public final class ShareController: ViewController {
         }
         let context = accountContext.context
         
-        let media = IosappMediaImage(imageId: MediaId(namespace: 0, id: 0), representations: representations.map({ $0.representation }), immediateThumbnailData: nil, reference: nil, partialReference: nil, flags: [])
-        self.controllerNode.transitionToProgressWithValue(signal: SaveToCameraRoll.saveToCameraRoll(context: context, postbox: context.account.postbox, userLocation: .other, mediaReference: .standalone(media: media)) |> map(Optional.init), dismissImmediately: true, completion: {})
+        let media = TelegramMediaImage(imageId: MediaId(namespace: 0, id: 0), representations: representations.map({ $0.representation }), immediateThumbnailData: nil, reference: nil, partialReference: nil, flags: [])
+        self.controllerNode.transitionToProgressWithValue(signal: SaveToCameraRoll.saveToCameraRoll(context: context, userLocation: .other, mediaReference: .standalone(media: media)) |> map(Optional.init), dismissImmediately: true, completion: {})
     }
     
     private func saveToCameraRoll(mediaReference: AnyMediaReference, completion: (() -> Void)?) {
@@ -2438,7 +2436,7 @@ public final class ShareController: ViewController {
         }
         let context = accountContext.context
         
-        self.controllerNode.transitionToProgressWithValue(signal: SaveToCameraRoll.saveToCameraRoll(context: context, postbox: context.account.postbox, userLocation: .other, mediaReference: mediaReference) |> map(Optional.init), dismissImmediately: completion == nil, completion: completion ?? {})
+        self.controllerNode.transitionToProgressWithValue(signal: SaveToCameraRoll.saveToCameraRoll(context: context, userLocation: .other, mediaReference: mediaReference) |> map(Optional.init), dismissImmediately: completion == nil, completion: completion ?? {})
     }
     
     private func switchToAccount(account: ShareControllerAccountContext, animateIn: Bool) {
@@ -2496,11 +2494,11 @@ public final class ShareController: ViewController {
             for entry in view.0.entries.reversed() {
                 switch entry {
                 case let .MessageEntry(entryData):
-                    if let peer = entryData.renderedPeer.peers[entryData.renderedPeer.peerId], peer.id != accountPeer.id, canSendMessagesToPeer(peer) {
+                    if let peer = entryData.renderedPeer.peers[entryData.renderedPeer.peerId], peer.id != accountPeer.id, canSendMessagesToPeer(EnginePeer(peer)) {
                         peers.append(EngineRenderedPeer(entryData.renderedPeer))
-                        if let user = peer as? IosappUser, user.flags.contains(.requirePremium) || user.flags.contains(.requireStars) {
+                        if let user = peer as? TelegramUser, user.flags.contains(.requirePremium) || user.flags.contains(.requireStars) {
                             possiblePremiumRequiredPeers.insert(user.id)
-                        } else if let channel = peer as? IosappChannel, let _ = channel.sendPaidMessageStars {
+                        } else if let channel = peer as? TelegramChannel, let _ = channel.sendPaidMessageStars {
                             possiblePremiumRequiredPeers.insert(channel.id)
                         }
                     }
@@ -2533,7 +2531,7 @@ public final class ShareController: ViewController {
                     if let view = views.views[.cachedPeerData(peerId: id)] as? CachedPeerDataView, let data = view.cachedPeerData as? CachedUserData {
                         requiresPremiumForMessaging[id] = data.flags.contains(.premiumRequired)
                         requiresStars[id] = data.sendPaidMessageStars?.value
-                    } else if let view = views.views[.peer(peerId: id, components: [])] as? PeerView, let channel = peerViewMainPeer(view) as? IosappChannel {
+                    } else if let view = views.views[.peer(peerId: id, components: [])] as? PeerView, let channel = peerViewMainPeer(view) as? TelegramChannel {
                         requiresStars[id] = channel.sendPaidMessageStars?.value
                     } else {
                         requiresPremiumForMessaging[id] = false
@@ -2638,7 +2636,7 @@ public func presentExternalShare(context: AccountContext, text: String, parentCo
 private func restrictedSendingContentsText(peer: EnginePeer, presentationData: PresentationData) -> String {
     var itemList: [String] = []
     
-    let order: [IosappChatBannedRightsFlags] = [
+    let order: [TelegramChatBannedRightsFlags] = [
         .banSendText,
         .banSendPhotos,
         .banSendVideos,

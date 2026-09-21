@@ -3,11 +3,10 @@ import UIKit
 @preconcurrency import WebKit
 import Display
 import AsyncDisplayKit
-import Postbox
-import IosappCore
+import TelegramCore
 import SwiftSignalKit
 import ComponentFlow
-import IosappPresentationData
+import TelegramPresentationData
 import AccountContext
 import AttachmentUI
 import ContextUI
@@ -30,7 +29,7 @@ import OpenInExternalAppUI
 import UndoUI
 import AvatarNode
 import OverlayStatusController
-import IosappUIPreferences
+import TelegramUIPreferences
 import CoreMotion
 import DeviceAccess
 import DeviceLocationManager
@@ -66,8 +65,8 @@ public struct WebAppParameters {
     }
     
     let source: Source
-    let peerId: PeerId
-    let botId: PeerId
+    let peerId: EnginePeer.Id
+    let botId: EnginePeer.Id
     let botName: String
     let botVerified: Bool
     let botAddress: String
@@ -80,12 +79,13 @@ public struct WebAppParameters {
     let forceHasSettings: Bool
     let fullSize: Bool
     let isFullscreen: Bool
+    let sameOrigin: Bool
     let appSettings: BotAppSettings?
     
     public init(
         source: Source,
-        peerId: PeerId,
-        botId: PeerId,
+        peerId: EnginePeer.Id,
+        botId: EnginePeer.Id,
         botName: String,
         botVerified: Bool,
         botAddress: String,
@@ -98,6 +98,7 @@ public struct WebAppParameters {
         forceHasSettings: Bool,
         fullSize: Bool,
         isFullscreen: Bool = false,
+        sameOrigin: Bool = false,
         appSettings: BotAppSettings? = nil
     ) {
         self.source = source
@@ -115,6 +116,7 @@ public struct WebAppParameters {
         self.forceHasSettings = forceHasSettings
         self.fullSize = fullSize || isFullscreen
         self.isFullscreen = isFullscreen
+        self.sameOrigin = sameOrigin
         self.appSettings = appSettings
     }
 }
@@ -344,8 +346,8 @@ public final class WebAppController: ViewController, AttachmentContainable {
                     return .single(nil)
                 }
                 |> mapToSignal { bot -> Signal<(FileMediaReference, Bool)?, NoError> in
-                    if let bot = bot, let peerReference = PeerReference(bot.peer._asPeer()) {
-                        var imageFile: IosappMediaFile?
+                    if let bot = bot, let peerReference = PeerReference(bot.peer) {
+                        var imageFile: TelegramMediaFile?
                         var isPlaceholder = false
                         if let file = bot.icons[.placeholder] {
                             imageFile = file
@@ -435,7 +437,7 @@ public final class WebAppController: ViewController, AttachmentContainable {
                 }))
             }
             
-            self.iconDisposable = (context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: controller.botId))
+            self.iconDisposable = (context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: controller.botId))
             |> mapToSignal { peer -> Signal<UIImage?, NoError> in
                 guard let peer else {
                     return .complete()
@@ -470,6 +472,10 @@ public final class WebAppController: ViewController, AttachmentContainable {
             super.didLoad()
             
             self.setupWebView()
+            if let pendingExternalUrl = self.controller?.pendingExternalUrl {
+                self.controller?.pendingExternalUrl = nil
+                self.loadExternal(url: pendingExternalUrl)
+            }
             
             guard let webView = self.webView else {
                 return
@@ -516,9 +522,22 @@ public final class WebAppController: ViewController, AttachmentContainable {
                 return
             }
             #endif*/
+
+            if self.controller?.sameOrigin == true {
+                self.webView?.bindTrustedOrigin(from: url)
+            } else {
+                self.webView?.setupEventProxySource()
+            }
             self.webView?.load(URLRequest(url: url))
         }
         
+        fileprivate func loadExternal(url: String) {
+            guard let parsedUrl = URL(string: url) else {
+                return
+            }
+            self.load(url: parsedUrl)
+        }
+
         func setupWebView() {
             guard let controller = self.controller else {
                 return
@@ -550,11 +569,12 @@ public final class WebAppController: ViewController, AttachmentContainable {
                         }
                         if let parsedUrl = URL(string: result.url) {
                             strongSelf.queryId = result.queryId
+                            strongSelf.controller?.sameOrigin = result.flags.contains(.sameOrigin)
                             strongSelf.load(url: parsedUrl)
                         }
                     })
                 } else {
-                    if let url = controller.url, isIosappMeLink(url), let internalUrl = parseFullInternalUrl(sharedContext: self.context.sharedContext, context: self.context, url: url), case .peer(_, .appStart) = internalUrl {
+                    if let url = controller.url, isTelegramMeLink(url), let internalUrl = parseFullInternalUrl(sharedContext: self.context.sharedContext, context: self.context, url: url), case .peer(_, .appStart) = internalUrl {
                         let _ = (self.context.sharedContext.resolveUrl(context: self.context, peerId: controller.peerId, url: url, skipUrlAuth: false)
                         |> deliverOnMainQueue).startStandalone(next: { [weak self] result in
                             guard let self, let controller = self.controller else {
@@ -570,6 +590,7 @@ public final class WebAppController: ViewController, AttachmentContainable {
                                     return
                                 }
                                 self.controller?.titleView?.title = WebAppTitle(title: botApp.title, counter: self.presentationData.strings.WebApp_Miniapp, isVerified: controller.botVerified)
+                                self.controller?.sameOrigin = result.flags.contains(.sameOrigin)
                                 self.load(url: parsedUrl)
                             })
                         })
@@ -580,6 +601,7 @@ public final class WebAppController: ViewController, AttachmentContainable {
                                 return
                             }
                             strongSelf.queryId = result.queryId
+                            strongSelf.controller?.sameOrigin = result.flags.contains(.sameOrigin)
                             strongSelf.load(url: parsedUrl)
                                                         
                             if let keepAliveSignal = result.keepAliveSignal {
@@ -678,7 +700,7 @@ public final class WebAppController: ViewController, AttachmentContainable {
         @available(iOS 14.5, *)
         func downloadDidFinish(_ download: WKDownload) {
             if let (path, fileName) = self.downloadArguments {
-                let tempFile = TempBox.shared.file(path: path, fileName: fileName)
+                let tempFile = EngineTempBox.shared.file(path: path, fileName: fileName)
                 let url = URL(fileURLWithPath: tempFile.path)
                 
                 if fileName.hasSuffix(".pkpass") {
@@ -710,7 +732,7 @@ public final class WebAppController: ViewController, AttachmentContainable {
         
         func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
             if let url = navigationAction.request.url?.absoluteString {
-                if isIosappMeLink(url) || isTelegraPhLink(url) {
+                if isTelegramMeLink(url) || isTelegraPhLink(url) {
                     decisionHandler(.cancel)
                     self.controller?.openUrl(url, true, false, {})
                 } else {
@@ -1092,7 +1114,7 @@ public final class WebAppController: ViewController, AttachmentContainable {
             guard let controller = self.controller else {
                 return
             }
-            guard message.frameInfo.isMainFrame else {
+            guard self.webView?.isTrustedMainFrameMessage(message) == true else {
                 return
             }
             guard let body = message.body as? [String: Any] else {
@@ -1240,14 +1262,15 @@ public final class WebAppController: ViewController, AttachmentContainable {
             case "web_app_open_tg_link":
                 if let json = json, let path = json["path_full"] as? String {
                     let forceRequest = json["force_request"] as? Bool ?? false
-                    controller.openUrl("https://asme.su\(path)", false, forceRequest, {
-                    })
+                    if let url = makeWebAppTelegramLink(pathFull: path) {
+                        controller.openUrl(url, false, forceRequest, {})
+                    }
                 }
             case "web_app_open_invoice":
                 if let json = json, let slug = json["slug"] as? String {
                     self.paymentDisposable = (self.context.engine.payments.fetchBotPaymentInvoice(source: .slug(slug))
                     |> map(Optional.init)
-                    |> `catch` { _ -> Signal<IosappMediaInvoice?, NoError> in
+                    |> `catch` { _ -> Signal<TelegramMediaInvoice?, NoError> in
                         return .single(nil)
                     }
                     |> deliverOnMainQueue).start(next: { [weak self] invoice in
@@ -1600,7 +1623,7 @@ public final class WebAppController: ViewController, AttachmentContainable {
                     self.controller?._isPanGestureEnabled = isPanGestureEnabled
                 }
             case "web_app_share_to_story":
-                if let json, let mediaUrl = json["media_url"] as? String {
+                if let json, let mediaUrl = json["media_url"] as? String, isAllowedBotMediaUrl(mediaUrl) {
                     let text = json["text"] as? String
                     let link = json["widget_link"] as? [String: Any]
                     
@@ -1650,7 +1673,7 @@ public final class WebAppController: ViewController, AttachmentContainable {
                             if let image = UIImage(data: data) {
                                 source = image
                             } else {
-                                let tempFile = TempBox.shared.tempFile(fileName: "image.mp4")
+                                let tempFile = EngineTempBox.shared.tempFile(fileName: "image.mp4")
                                 if let _ = try? data.write(to: URL(fileURLWithPath: tempFile.path), options: .atomic) {
                                     source = tempFile.path
                                 }
@@ -1660,7 +1683,7 @@ public final class WebAppController: ViewController, AttachmentContainable {
                                     let target: Stories.PendingTarget = results.first!.target
                                     externalState.storyTarget = target
                                     
-                                    if let rootController = self.context.sharedContext.mainWindow?.viewController as? IosappRootControllerInterface {
+                                    if let rootController = self.context.sharedContext.mainWindow?.viewController as? TelegramRootControllerInterface {
                                         rootController.proceedWithStoryUpload(target: target, results: results, existingMedia: nil, forwardInfo: nil, externalState: externalState, commit: commit)
                                     }
                                 })
@@ -1778,7 +1801,7 @@ public final class WebAppController: ViewController, AttachmentContainable {
             case "web_app_device_storage_get_key":
                 if let json, let requestId = json["req_id"] as? String {
                     if let key = json["key"] as? String {
-                        let _ = (self.context.engine.data.get(IosappEngine.EngineData.Item.Peer.BotStorageValue(id: controller.botId, key: key))
+                        let _ = (self.context.engine.data.get(TelegramEngine.EngineData.Item.Peer.BotStorageValue(id: controller.botId, key: key))
                         |> deliverOnMainQueue).start(next: { [weak self] value in
                             let data: JSON = [
                                 "req_id": requestId,
@@ -2224,8 +2247,8 @@ public final class WebAppController: ViewController, AttachmentContainable {
             }
             
             let _ = (self.context.engine.data.get(
-                IosappEngine.EngineData.Item.Peer.Peer(id: self.context.account.peerId),
-                IosappEngine.EngineData.Item.Peer.IsBlocked(id: botId)
+                TelegramEngine.EngineData.Item.Peer.Peer(id: self.context.account.peerId),
+                TelegramEngine.EngineData.Item.Peer.IsBlocked(id: botId)
             )
             |> deliverOnMainQueue).start(next: { [weak self, weak controller] accountPeer, isBlocked in
                 guard let self, let controller, let accountPeer else {
@@ -2257,7 +2280,7 @@ public final class WebAppController: ViewController, AttachmentContainable {
                             }
                             
                             let sendMessageSignal = enqueueMessages(account: self.context.account, peerId: botId, messages: [
-                                .message(text: "", attributes: [], inlineStickers: [:], mediaReference: .standalone(media: IosappMediaContact(firstName: user.firstName ?? "", lastName: user.lastName ?? "", phoneNumber: phone, peerId: user.id, vCardData: nil)), threadId: nil, replyToMessageId: nil, replyToStoryId: nil, localGroupingKey: nil, correlationId: nil, bubbleUpEmojiOrStickersets: [])
+                                .message(text: "", attributes: [], inlineStickers: [:], mediaReference: .standalone(media: TelegramMediaContact(firstName: user.firstName ?? "", lastName: user.lastName ?? "", phoneNumber: phone, peerId: user.id, vCardData: nil)), threadId: nil, replyToMessageId: nil, replyToStoryId: nil, localGroupingKey: nil, correlationId: nil, bubbleUpEmojiOrStickersets: [])
                             ])
                             |> mapToSignal { messageIds in
                                 if let maybeMessageId = messageIds.first, let messageId = maybeMessageId {
@@ -2397,11 +2420,11 @@ public final class WebAppController: ViewController, AttachmentContainable {
             }
             
             self.context.engine.peers.updateBotBiometricsState(peerId: controller.botId, update: { state in
-                let state = state ?? IosappBotBiometricsState.create()
+                let state = state ?? TelegramBotBiometricsState.create()
                 return state
             })
             let _ = (self.context.engine.data.get(
-                IosappEngine.EngineData.Item.Peer.BotBiometricsState(id: controller.botId)
+                TelegramEngine.EngineData.Item.Peer.BotBiometricsState(id: controller.botId)
             )
             |> deliverOnMainQueue).start(next: { [weak self] state in
                 guard let self else {
@@ -2443,8 +2466,8 @@ public final class WebAppController: ViewController, AttachmentContainable {
                 return
             }
             let _ = (self.context.engine.data.get(
-                IosappEngine.EngineData.Item.Peer.Peer(id: controller.botId),
-                IosappEngine.EngineData.Item.Peer.BotBiometricsState(id: controller.botId)
+                TelegramEngine.EngineData.Item.Peer.Peer(id: controller.botId),
+                TelegramEngine.EngineData.Item.Peer.BotBiometricsState(id: controller.botId)
             )
             |> deliverOnMainQueue).start(next: { [weak self] botPeer, currentState in
                 guard let self, let botPeer, let controller = self.controller else {
@@ -2462,7 +2485,7 @@ public final class WebAppController: ViewController, AttachmentContainable {
                     }
                     
                     self.context.engine.peers.updateBotBiometricsState(peerId: botPeer.id, update: { state in
-                        var state = state ?? IosappBotBiometricsState.create()
+                        var state = state ?? TelegramBotBiometricsState.create()
                         
                         state.accessRequested = true
                         state.accessGranted = granted
@@ -2511,8 +2534,8 @@ public final class WebAppController: ViewController, AttachmentContainable {
                 return
             }
             let _ = (self.context.engine.data.get(
-                IosappEngine.EngineData.Item.Peer.Peer(id: controller.botId),
-                IosappEngine.EngineData.Item.Peer.BotBiometricsState(id: controller.botId)
+                TelegramEngine.EngineData.Item.Peer.Peer(id: controller.botId),
+                TelegramEngine.EngineData.Item.Peer.BotBiometricsState(id: controller.botId)
             )
             |> deliverOnMainQueue).start(next: { [weak self] botPeer, state in
                 guard let self else {
@@ -2610,10 +2633,10 @@ public final class WebAppController: ViewController, AttachmentContainable {
                 Thread { [weak self] in
                     let key = LocalAuth.getOrCreatePrivateKey(baseAppBundleId: appBundleId, keyId: keyId)
                     
-                    var encryptedData: IosappBotBiometricsState.OpaqueToken?
+                    var encryptedData: TelegramBotBiometricsState.OpaqueToken?
                     if let key {
                         if let result = key.encrypt(data: tokenData) {
-                            encryptedData = IosappBotBiometricsState.OpaqueToken(
+                            encryptedData = TelegramBotBiometricsState.OpaqueToken(
                                 publicKey: key.publicKeyRepresentation,
                                 data: result
                             )
@@ -2627,7 +2650,7 @@ public final class WebAppController: ViewController, AttachmentContainable {
                         
                         if let encryptedData {
                             self.context.engine.peers.updateBotBiometricsState(peerId: controller.botId, update: { state in
-                                var state = state ?? IosappBotBiometricsState.create()
+                                var state = state ?? TelegramBotBiometricsState.create()
                                 state.opaqueToken = encryptedData
                                 return state
                             })
@@ -2645,7 +2668,7 @@ public final class WebAppController: ViewController, AttachmentContainable {
                 }.start()
             } else {
                 self.context.engine.peers.updateBotBiometricsState(peerId: controller.botId, update: { state in
-                    var state = state ?? IosappBotBiometricsState.create()
+                    var state = state ?? TelegramBotBiometricsState.create()
                     state.opaqueToken = nil
                     return state
                 })
@@ -3047,7 +3070,7 @@ public final class WebAppController: ViewController, AttachmentContainable {
                                 tooltip.dismissWithCommitAction()
                             }
                             
-                            let tempFile = TempBox.shared.file(path: resultUrl.absoluteString, fileName: fileName)
+                            let tempFile = EngineTempBox.shared.file(path: resultUrl.absoluteString, fileName: fileName)
                             let url = URL(fileURLWithPath: tempFile.path)
                             try? FileManager.default.copyItem(at: resultUrl, to: url)
                             
@@ -3114,10 +3137,10 @@ public final class WebAppController: ViewController, AttachmentContainable {
             }
             let _ = combineLatest(
                 queue: Queue.mainQueue(),
-                self.context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: self.context.account.peerId)),
-                self.context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: controller.botId)),
+                self.context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: self.context.account.peerId)),
+                self.context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: controller.botId)),
                 self.context.engine.stickers.loadedStickerPack(reference: .iconStatusEmoji, forceActualized: false)
-                |> map { result -> [IosappMediaFile.Accessor] in
+                |> map { result -> [TelegramMediaFile.Accessor] in
                     switch result {
                     case let .result(_, items, _):
                         return items.map(\.file)
@@ -3208,8 +3231,8 @@ public final class WebAppController: ViewController, AttachmentContainable {
             let _ = combineLatest(
                 queue: Queue.mainQueue(),
                 self.context.engine.stickers.resolveInlineStickers(fileIds: [fileId]),
-                self.context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: self.context.account.peerId)),
-                self.context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: controller.botId))
+                self.context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: self.context.account.peerId)),
+                self.context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: controller.botId))
             ).start(next: { [weak self] files, accountPeer, botPeer in
                 guard let self, let accountPeer, let controller = self.controller else {
                     return
@@ -3295,7 +3318,7 @@ public final class WebAppController: ViewController, AttachmentContainable {
                 return
             }
             
-            let _ = (self.context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: controller.botId))
+            let _ = (self.context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: controller.botId))
             |> deliverOnMainQueue
             ).start(next: { [weak controller] peer in
                 guard let controller, let peer, let addressName = peer.addressName else {
@@ -3311,7 +3334,7 @@ public final class WebAppController: ViewController, AttachmentContainable {
                 } else {
                     scheme = "https"
                 }
-                let url = URL(string: "\(scheme)://asme.su/\(addressName)\(appName)?startapp&addToHomeScreen")!
+                let url = URL(string: "\(scheme)://t.me/\(addressName)\(appName)?startapp&addToHomeScreen")!
                 UIApplication.shared.open(url)
             })
         }
@@ -3321,7 +3344,7 @@ public final class WebAppController: ViewController, AttachmentContainable {
                 return
             }
             
-            let _ = (self.context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: controller.botId))
+            let _ = (self.context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: controller.botId))
             |> deliverOnMainQueue).start(next: { [weak self] botPeer in
                 guard let self, let botPeer, let controller = self.controller else {
                     return
@@ -3367,12 +3390,12 @@ public final class WebAppController: ViewController, AttachmentContainable {
             guard let controller = self.controller else {
                 return
             }
-            let _ = (self.context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: controller.botId))
+            let _ = (self.context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: controller.botId))
             |> deliverOnMainQueue).start(next: { [weak self] peer in
                 guard let self, let controller = self.controller, let peer else {
                     return
                 }
-                if let infoController = self.context.sharedContext.makePeerInfoController(context: self.context, updatedPresentationData: nil, peer: peer._asPeer(), mode: .generic, avatarInitiallyExpanded: false, fromChat: false, requestsContext: nil) {
+                if let infoController = self.context.sharedContext.makePeerInfoController(context: self.context, updatedPresentationData: nil, peer: peer, mode: .generic, avatarInitiallyExpanded: false, fromChat: false, requestsContext: nil) {
                     controller.parentController()?.push(infoController)
                 }
             })
@@ -3468,8 +3491,8 @@ public final class WebAppController: ViewController, AttachmentContainable {
                     
                     if shouldRequest {
                         let _ = (context.engine.data.get(
-                            IosappEngine.EngineData.Item.Peer.Peer(id: context.account.peerId),
-                            IosappEngine.EngineData.Item.Peer.Peer(id: botId)
+                            TelegramEngine.EngineData.Item.Peer.Peer(id: context.account.peerId),
+                            TelegramEngine.EngineData.Item.Peer.Peer(id: botId)
                         )
                         |> deliverOnMainQueue).start(next: { [weak self, weak controller] accountPeer, botPeer in
                             guard let accountPeer, let botPeer, let controller else {
@@ -3531,8 +3554,8 @@ public final class WebAppController: ViewController, AttachmentContainable {
     
     private let context: AccountContext
     public let source: WebAppParameters.Source
-    private let peerId: PeerId
-    public let botId: PeerId
+    private let peerId: EnginePeer.Id
+    public let botId: EnginePeer.Id
     fileprivate let botName: String
     fileprivate let botVerified: Bool
     fileprivate let botAppSettings: BotAppSettings?
@@ -3544,9 +3567,11 @@ public final class WebAppController: ViewController, AttachmentContainable {
     private let buttonText: String?
     private let forceHasSettings: Bool
     private let keepAliveSignal: Signal<Never, KeepWebViewError>?
-    private let replyToMessageId: MessageId?
+    private let replyToMessageId: EngineMessage.Id?
     private let threadId: Int64?
     public var isFullscreen: Bool
+    private var sameOrigin: Bool
+    private var pendingExternalUrl: String?
     
     private var presentationData: PresentationData
     fileprivate let updatedPresentationData: (initial: PresentationData, signal: Signal<PresentationData, NoError>)?
@@ -3561,7 +3586,7 @@ public final class WebAppController: ViewController, AttachmentContainable {
     
     public var verifyAgeCompletion: ((Int) -> Void)?
     
-    public init(context: AccountContext, updatedPresentationData: (initial: PresentationData, signal: Signal<PresentationData, NoError>)? = nil, params: WebAppParameters, replyToMessageId: MessageId?, threadId: Int64?) {
+    public init(context: AccountContext, updatedPresentationData: (initial: PresentationData, signal: Signal<PresentationData, NoError>)? = nil, params: WebAppParameters, replyToMessageId: EngineMessage.Id?, threadId: Int64?) {
         self.context = context
         self.source = params.source
         self.peerId = params.peerId
@@ -3580,6 +3605,7 @@ public final class WebAppController: ViewController, AttachmentContainable {
         self.replyToMessageId = replyToMessageId
         self.threadId = threadId
         self.isFullscreen = params.isFullscreen
+        self.sameOrigin = params.sameOrigin
         
         self.updatedPresentationData = updatedPresentationData
         
@@ -3600,6 +3626,8 @@ public final class WebAppController: ViewController, AttachmentContainable {
         self.automaticallyControlPresentationContextLayout = false
         
         if case .attachMenu = self.source {
+            
+        } else if self.isVerifyAgeBot {
             
         } else {
             self.navigationItem.leftBarButtonItem = UIBarButtonItem(customDisplayNode: self.cancelButtonNode)
@@ -3678,15 +3706,21 @@ public final class WebAppController: ViewController, AttachmentContainable {
     }
     
     private func updateNavigationButtons() {
+        var showGlassButtons = false
         if case .attachMenu = self.source {
+            showGlassButtons = true
+        } else if self.isVerifyAgeBot {
+            showGlassButtons = true
+        }
+        if showGlassButtons {
             let barButtonSize = CGSize(width: 44.0, height: 44.0)
             let closeComponent: AnyComponentWithIdentity<Empty> = AnyComponentWithIdentity(
                 id: "close",
                 component: AnyComponent(GlassBarButtonComponent(
                     size: barButtonSize,
-                    backgroundColor: self.presentationData.theme.rootController.navigationBar.glassBarButtonBackgroundColor,
+                    backgroundColor: nil,
                     isDark: self.presentationData.theme.overallDarkAppearance,
-                    state: .generic,
+                    state: .glass,
                     component: AnyComponentWithIdentity(id: self.controllerNode.hasBackButton ? "back" : "close", component: AnyComponent(
                         BundleIconComponent(
                             name: self.controllerNode.hasBackButton ? "Navigation/Back" : "Navigation/Close",
@@ -3703,9 +3737,9 @@ public final class WebAppController: ViewController, AttachmentContainable {
                 id: "more",
                 component: AnyComponent(GlassBarButtonComponent(
                     size: barButtonSize,
-                    backgroundColor: self.presentationData.theme.rootController.navigationBar.glassBarButtonBackgroundColor,
+                    backgroundColor: nil,
                     isDark: self.presentationData.theme.overallDarkAppearance,
-                    state: .generic,
+                    state: .glass,
                     component: AnyComponentWithIdentity(id: "more", component: AnyComponent(
                         LottieComponent(
                             content: LottieComponent.AppBundleContent(
@@ -3733,14 +3767,16 @@ public final class WebAppController: ViewController, AttachmentContainable {
                 self.navigationItem.leftBarButtonItem = UIBarButtonItem(customDisplayNode: cancelButtonNode)
             }
             
-            let moreButtonNode: BarComponentHostNode
-            if let current = self.moreBarButtonNode {
-                moreButtonNode = current
-                moreButtonNode.component = moreComponent
-            } else {
-                moreButtonNode = BarComponentHostNode(component: moreComponent, size: barButtonSize)
-                self.moreBarButtonNode = moreButtonNode
-                self.navigationItem.rightBarButtonItem = UIBarButtonItem(customDisplayNode: moreButtonNode)
+            if !self.isVerifyAgeBot {
+                let moreButtonNode: BarComponentHostNode
+                if let current = self.moreBarButtonNode {
+                    moreButtonNode = current
+                    moreButtonNode.component = moreComponent
+                } else {
+                    moreButtonNode = BarComponentHostNode(component: moreComponent, size: barButtonSize)
+                    self.moreBarButtonNode = moreButtonNode
+                    self.navigationItem.rightBarButtonItem = UIBarButtonItem(customDisplayNode: moreButtonNode)
+                }
             }
         }
             
@@ -3749,7 +3785,9 @@ public final class WebAppController: ViewController, AttachmentContainable {
     
     private var isVerifyAgeBot: Bool {
         if let ageBotUsername = self.context.currentAppConfiguration.with({ $0 }).data?["verify_age_bot_username"] as? String {
-            return self.botAddress == ageBotUsername
+            if self.botAddress == ageBotUsername {
+                return true
+            }
         }
         return false
     }
@@ -3772,7 +3810,7 @@ public final class WebAppController: ViewController, AttachmentContainable {
             completion()
         case .button, .inline, .attachMenu, .menu, .simple:
             let _ = (self.context.engine.data.get(
-                IosappEngine.EngineData.Item.Peer.Peer(id: self.peerId)
+                TelegramEngine.EngineData.Item.Peer.Peer(id: self.peerId)
             )
             |> deliverOnMainQueue).start(next: { [weak self] chatPeer in
                 guard let self, let chatPeer else {
@@ -3801,6 +3839,7 @@ public final class WebAppController: ViewController, AttachmentContainable {
                     badgeStrokeColor: .clear,
                     badgeTextColor: .clear,
                     accentButtonColor: self.presentationData.theme.list.itemCheckColors.fillColor,
+                    accentDisabledButtonColor: self.presentationData.theme.chat.inputPanel.panelControlDisabledColor,
                     accentForegroundColor: self.presentationData.theme.list.itemCheckColors.foregroundColor
                 ),
                 strings: NavigationBarStrings(back: "", close: "")
@@ -3858,9 +3897,9 @@ public final class WebAppController: ViewController, AttachmentContainable {
         
         let items = combineLatest(queue: Queue.mainQueue(),
             context.engine.messages.attachMenuBots() |> take(1),
-            context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: self.botId)),
-            context.engine.data.get(IosappEngine.EngineData.Item.Peer.BotCommands(id: self.botId)),
-            context.engine.data.get(IosappEngine.EngineData.Item.Peer.BotPrivacyPolicyUrl(id: self.botId)),
+            context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: self.botId)),
+            context.engine.data.get(TelegramEngine.EngineData.Item.Peer.BotCommands(id: self.botId)),
+            context.engine.data.get(TelegramEngine.EngineData.Item.Peer.BotPrivacyPolicyUrl(id: self.botId)),
             activeDownloadProgress
         )
         |> map { [weak self] attachMenuBots, botPeer, botCommands, privacyPolicyUrl, activeDownloadProgress -> ContextController.Items in
@@ -3916,7 +3955,7 @@ public final class WebAppController: ViewController, AttachmentContainable {
                     }
                     
                     let _ = (context.engine.data.get(
-                        IosappEngine.EngineData.Item.Peer.Peer(id: strongSelf.botId)
+                        TelegramEngine.EngineData.Item.Peer.Peer(id: strongSelf.botId)
                     )
                     |> deliverOnMainQueue).start(next: { botPeer in
                         guard let botPeer = botPeer else {
@@ -3939,7 +3978,7 @@ public final class WebAppController: ViewController, AttachmentContainable {
                     guard let self else {
                         return
                     }
-                    let shareController = context.sharedContext.makeShareController(context: context, params: ShareControllerParams(subject: .url("https://asme.su/\(addressName)?profile"), actionCompleted: { [weak self] in
+                    let shareController = context.sharedContext.makeShareController(context: context, params: ShareControllerParams(subject: .url("https://t.me/\(addressName)?profile"), actionCompleted: { [weak self] in
                         let presentationData = context.sharedContext.currentPresentationData.with { $0 }
                         self?.present(UndoOverlayController(presentationData: presentationData, content: .linkCopied(title: nil, text: presentationData.strings.Conversation_LinkCopied), elevatedLayout: false, animateInAsReplacement: false, action: { _ in return false }), in: .window(.root))
                     }))
@@ -4053,6 +4092,14 @@ public final class WebAppController: ViewController, AttachmentContainable {
         self.updateTabBarAlpha(1.0, .immediate)
     }
     
+    public func loadExternal(url: String) {
+        if self.isNodeLoaded {
+            self.controllerNode.loadExternal(url: url)
+        } else {
+            self.pendingExternalUrl = url
+        }
+    }
+
     public func isContainerPanningUpdated(_ isPanning: Bool) {
         self.controllerNode.isContainerPanningUpdated(isPanning)
     }
@@ -4096,23 +4143,18 @@ public final class WebAppController: ViewController, AttachmentContainable {
     
     public func requestDismiss(completion: @escaping () -> Void) {
         if self.controllerNode.needDismissConfirmation {
-            let actionSheet = ActionSheetController(presentationData: self.presentationData)
-            actionSheet.setItemGroups([
-                ActionSheetItemGroup(items: [
-                    ActionSheetTextItem(title: self.presentationData.strings.WebApp_CloseConfirmation),
-                    ActionSheetButtonItem(title: self.presentationData.strings.WebApp_CloseAnyway, color: .destructive, action: { [weak actionSheet] in
-                        actionSheet?.dismissAnimated()
-                        
+            let alertController = textAlertController(
+                context: self.context,
+                title: nil,
+                text: self.presentationData.strings.WebApp_CloseConfirmation,
+                actions: [
+                    TextAlertAction(type: .genericAction, title: self.presentationData.strings.Common_Cancel, action: {}),
+                    TextAlertAction(type: .destructiveAction, title: self.presentationData.strings.WebApp_CloseAnyway, action: {
                         completion()
                     })
-                ]),
-                ActionSheetItemGroup(items: [
-                    ActionSheetButtonItem(title: self.presentationData.strings.Common_Cancel, color: .accent, font: .bold, action: { [weak actionSheet] in
-                        actionSheet?.dismissAnimated()
-                    })
-                ])
-            ])
-            self.present(actionSheet, in: .window(.root))
+                ]
+            )
+            self.present(alertController, in: .window(.root))
         } else {
             completion()
         }
@@ -4247,7 +4289,8 @@ public func standaloneWebAppController(
     didDismiss: @escaping () -> Void = {},
     getNavigationController: @escaping () -> NavigationController? = { return nil },
     getSourceRect: (() -> CGRect?)? = nil,
-    verifyAgeCompletion: ((Int) -> Void)? = nil
+    verifyAgeCompletion: ((Int) -> Void)? = nil,
+    onControllerCreated: @escaping (WebAppController) -> Void = { _ in }
 ) -> ViewController {
     let controller = AttachmentController(
         context: context,
@@ -4268,6 +4311,7 @@ public func standaloneWebAppController(
         webAppController.getNavigationController = getNavigationController
         webAppController.requestSwitchInline = requestSwitchInline
         webAppController.verifyAgeCompletion = verifyAgeCompletion
+        onControllerCreated(webAppController)
         present(webAppController, webAppController.mediaPickerContext)
         return true
     }

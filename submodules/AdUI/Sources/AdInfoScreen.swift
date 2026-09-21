@@ -3,9 +3,9 @@ import UIKit
 import Display
 import AsyncDisplayKit
 import SwiftSignalKit
-import IosappCore
-import IosappPresentationData
-import IosappUIPreferences
+import TelegramCore
+import TelegramPresentationData
+import TelegramUIPreferences
 import AccountContext
 import Markdown
 
@@ -78,7 +78,7 @@ public final class AdInfoScreen: ViewController {
             self.scrollNode = ASScrollNode()
             self.scrollNode.view.showsVerticalScrollIndicator = true
             self.scrollNode.view.showsHorizontalScrollIndicator = false
-            self.scrollNode.view.scrollsToTop = true
+            self.scrollNode.view.scrollsToTop = false
             self.scrollNode.view.delaysContentTouches = false
             self.scrollNode.view.canCancelContentTouches = true
             if #available(iOS 11.0, *) {

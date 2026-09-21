@@ -7,7 +7,7 @@
 
 import Foundation
 
-import IosappStringFormatting
+import TelegramStringFormatting
 
 // MARK: - Currency protocols
 

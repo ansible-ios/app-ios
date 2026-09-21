@@ -26,6 +26,6 @@ setup_sourcekit_bsp(
     ],
     index_build_batch_size = 10,
     targets = [
-        "//iosapp:iosapp",
+        "//Telegram:Telegram",
     ],
 )

@@ -3,9 +3,8 @@ import UIKit
 import Display
 import AsyncDisplayKit
 import SwiftSignalKit
-import Postbox
-import IosappCore
-import IosappPresentationData
+import TelegramCore
+import TelegramPresentationData
 import AccountContext
 import PhotoResources
 import GalleryUI
@@ -21,12 +20,12 @@ class SecureIdDocumentGalleryItem: GalleryItem {
     let theme: PresentationTheme
     let strings: PresentationStrings
     let secureIdContext: SecureIdAccessContext
-    let resource: IosappMediaResource
+    let resource: TelegramMediaResource
     let caption: String
     let location: SecureIdDocumentGalleryEntryLocation
     let delete: () -> Void
     
-    init(context: AccountContext, theme: PresentationTheme, strings: PresentationStrings, secureIdContext: SecureIdAccessContext, itemId: AnyHashable, resource: IosappMediaResource, caption: String, location: SecureIdDocumentGalleryEntryLocation, delete: @escaping () -> Void) {
+    init(context: AccountContext, theme: PresentationTheme, strings: PresentationStrings, secureIdContext: SecureIdAccessContext, itemId: AnyHashable, resource: TelegramMediaResource, caption: String, location: SecureIdDocumentGalleryEntryLocation, delete: @escaping () -> Void) {
         self.itemId = itemId
         self.context = context
         self.theme = theme
@@ -73,7 +72,7 @@ final class SecureIdDocumentGalleryItemNode: ZoomableContentGalleryItemNode {
     fileprivate let _title = Promise<String>()
     private let footerContentNode: SecureIdDocumentGalleryFooterContentNode
     
-    private var contextAndMedia: (AccountContext, SecureIdAccessContext, IosappMediaResource)?
+    private var contextAndMedia: (AccountContext, SecureIdAccessContext, TelegramMediaResource)?
     
     private var fetchDisposable = MetaDisposable()
     
@@ -115,7 +114,7 @@ final class SecureIdDocumentGalleryItemNode: ZoomableContentGalleryItemNode {
         self.footerContentNode.setup(caption: caption)
     }
     
-    fileprivate func setResource(secureIdContext: SecureIdAccessContext, resource: IosappMediaResource) {
+    fileprivate func setResource(secureIdContext: SecureIdAccessContext, resource: TelegramMediaResource) {
         if self.contextAndMedia == nil || !self.contextAndMedia!.2.isEqual(to: resource) {
             let displaySize = CGSize(width: 1280.0, height: 1280.0)
             //self.imageNode.asyncLayout()(TransformImageArguments(corners: ImageCorners(), imageSize: displaySize, boundingSize: displaySize, intrinsicInsets: UIEdgeInsets()))()

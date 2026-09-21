@@ -1,7 +1,7 @@
 import Foundation
 import UIKit
 import Display
-import IosappPresentationData
+import TelegramPresentationData
 import ComponentFlow
 import GlassBackgroundComponent
 import HorizontalTabsComponent

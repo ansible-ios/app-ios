@@ -2,8 +2,8 @@ import Foundation
 import UIKit
 import AsyncDisplayKit
 import Display
-import IosappCore
-import IosappPresentationData
+import TelegramCore
+import TelegramPresentationData
 import PhoneNumberFormat
 
 private let titleFont = Font.regular(17.0)

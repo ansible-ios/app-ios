@@ -1,9 +1,9 @@
 import Foundation
 import UIKit
 import AsyncDisplayKit
-import IosappCore
+import TelegramCore
 import SwiftSignalKit
-import IosappAudio
+import TelegramAudio
 import Display
 
 public enum CallAlreadyInProgressType {
@@ -306,22 +306,6 @@ public struct PresentationGroupCallSummaryState: Equatable {
         self.callState = callState
         self.topParticipants = topParticipants
         self.activeSpeakers = activeSpeakers
-    }
-}
-
-public struct PresentationGroupCallMemberState: Equatable {
-    public var ssrc: UInt32
-    public var muteState: GroupCallParticipantsContext.Participant.MuteState?
-    public var speaking: Bool
-    
-    public init(
-        ssrc: UInt32,
-        muteState: GroupCallParticipantsContext.Participant.MuteState?,
-        speaking: Bool
-    ) {
-        self.ssrc = ssrc
-        self.muteState = muteState
-        self.speaking = speaking
     }
 }
 

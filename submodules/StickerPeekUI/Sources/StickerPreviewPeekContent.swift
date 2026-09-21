@@ -2,15 +2,14 @@ import Foundation
 import UIKit
 import Display
 import AsyncDisplayKit
-import Postbox
-import IosappCore
+import TelegramCore
 import SwiftSignalKit
 import StickerResources
 import AnimatedStickerNode
-import IosappAnimatedStickerNode
+import TelegramAnimatedStickerNode
 import ContextUI
 import SolidRoundedButtonNode
-import IosappPresentationData
+import TelegramPresentationData
 import AccountContext
 import AppBundle
 import ReactionSelectionNode
@@ -40,11 +39,11 @@ public enum StickerPreviewPeekItem: Equatable {
         }
     }
     
-    case pack(IosappMediaFile)
+    case pack(TelegramMediaFile)
     case found(FoundStickerItem)
     case portal(PortalView)
     
-    public var file: IosappMediaFile? {
+    public var file: TelegramMediaFile? {
         switch self {
         case let .pack(file):
             return file

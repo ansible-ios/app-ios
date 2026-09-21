@@ -12,7 +12,7 @@ swift_library(
     deps = [
         "//submodules/SSignalKit/SwiftSignalKit:SwiftSignalKit",
         "//submodules/Postbox:Postbox",
-        "//submodules/IosappCore:IosappCore",
+        "//submodules/TelegramCore:TelegramCore",
         "//submodules/TinyThumbnail:TinyThumbnail",
         "//submodules/Display:Display",
         "//submodules/FastBlur:FastBlur",

@@ -3,9 +3,9 @@ import UIKit
 import Display
 import AsyncDisplayKit
 import SwiftSignalKit
-import IosappPresentationData
+import TelegramPresentationData
 import SwitchNode
-import IosappCore
+import TelegramCore
 import ItemListUI
 import ReactionImageComponent
 import AccountContext
@@ -383,7 +383,7 @@ public class ItemListReactionItemNode: ListViewItemNode, ItemListItemNode {
                         imageNode.update(size: imageFitSize)
                     }
                     
-                    strongSelf.titleNode.frame = CGRect(origin: CGPoint(x: leftInset, y: floorToScreenPixels((contentSize.height - titleLayout.size.height) / 2.0)), size: titleLayout.size)
+                    strongSelf.titleNode.frame = CGRect(origin: CGPoint(x: leftInset, y: floorToScreenPixels((contentSize.height - titleLayout.size.height) / 2.0) + 1.0), size: titleLayout.size)
                     if let switchView = strongSelf.switchNode.view as? UISwitch {
                         if strongSelf.switchNode.bounds.size.width.isZero {
                             switchView.sizeToFit()

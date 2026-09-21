@@ -13,7 +13,7 @@ swift_library(
         "//submodules/SSignalKit/SwiftSignalKit:SwiftSignalKit",
         "//submodules/AsyncDisplayKit:AsyncDisplayKit",
         "//submodules/Display:Display",
-        "//submodules/IosappUI/Components/TextNodeWithEntities:TextNodeWithEntities",
+        "//submodules/TelegramUI/Components/TextNodeWithEntities:TextNodeWithEntities",
     ],
     visibility = [
         "//visibility:public",

@@ -3,9 +3,9 @@ import UIKit
 import Display
 import SSignalKit
 import SwiftSignalKit
-import IosappCore
+import TelegramCore
 import LegacyComponents
-import IosappPresentationData
+import TelegramPresentationData
 import DeviceAccess
 import AccountContext
 import LocalMediaResources
@@ -61,8 +61,8 @@ public class LegacyWallpaperItem: NSObject, TGMediaEditableItem, TGMediaSelectab
     
     let asset: PHAsset
     let screenImage: UIImage
-    private(set) var thumbnailResource: IosappMediaResource?
-    private(set) var imageResource: IosappMediaResource?
+    private(set) var thumbnailResource: TelegramMediaResource?
+    private(set) var imageResource: TelegramMediaResource?
     let dimensions: CGSize
 
     public init(asset: PHAsset, screenImage: UIImage, dimensions: CGSize) {

@@ -2,13 +2,12 @@ import Foundation
 import UIKit
 import Display
 import SwiftSignalKit
-import Postbox
-import IosappCore
-import IosappPresentationData
-import IosappUIPreferences
+import TelegramCore
+import TelegramPresentationData
+import TelegramUIPreferences
 import ItemListUI
 import PresentationDataUtils
-import IosappStringFormatting
+import TelegramStringFormatting
 import TextFormat
 import AccountContext
 import DeviceLocationManager
@@ -16,6 +15,7 @@ import Geocoding
 import WallpaperResources
 import Sunrise
 import ThemeSettingsThemeItem
+import ChatTimerScreen
 
 private enum TriggerMode {
     case system
@@ -70,7 +70,7 @@ private enum ThemeAutoNightSettingsControllerEntry: ItemListNodeEntry {
     case settingInfo(PresentationTheme, String)
     
     case themeHeader(PresentationTheme, String)
-    case themeItem(PresentationTheme, PresentationStrings, [PresentationThemeReference], [PresentationThemeReference], PresentationThemeReference, [Int64: PresentationThemeAccentColor], [Int64: IosappWallpaper])
+    case themeItem(PresentationTheme, PresentationStrings, [PresentationThemeReference], [PresentationThemeReference], PresentationThemeReference, [Int64: PresentationThemeAccentColor], [Int64: TelegramWallpaper])
     
     var section: ItemListSectionId {
         switch self {
@@ -488,32 +488,44 @@ public func themeAutoNightSettingsController(context: AccountContext) -> ViewCon
                     break
             }
             
-            presentControllerImpl?(ThemeAutoNightTimeSelectionActionSheet(context: context, currentValue: currentValue, applyValue: { value in
-                guard let value = value else {
-                    return
-                }
-                updateSettings { settings in
-                    var settings = settings
-                    switch settings.trigger {
-                        case let .timeBased(setting):
-                            switch setting {
-                            case var .manual(fromSeconds, toSeconds):
-                                switch field {
-                                case .from:
-                                    fromSeconds = value
-                                case .to:
-                                    toSeconds = value
+            let controller = ChatTimerScreen(
+                context: context,
+                configuration: ChatTimerScreen.Configuration(
+                    style: .default,
+                    picker: .timeOfDay,
+                    currentValue: currentValue,
+                    pickerValueMapping: .secondsFromMidnightGMT,
+                    primaryActionTitle: { strings, _, _ in
+                        strings.Wallpaper_Set
+                    }
+                ),
+                completion: { value in
+                    guard let value = value else {
+                        return
+                    }
+                    updateSettings { settings in
+                        var settings = settings
+                        switch settings.trigger {
+                            case let .timeBased(setting):
+                                switch setting {
+                                case var .manual(fromSeconds, toSeconds):
+                                    switch field {
+                                    case .from:
+                                        fromSeconds = value
+                                    case .to:
+                                        toSeconds = value
+                                    }
+                                    settings.trigger = .timeBased(setting: .manual(fromSeconds: fromSeconds, toSeconds: toSeconds))
+                                default:
+                                    break
                                 }
-                                settings.trigger = .timeBased(setting: .manual(fromSeconds: fromSeconds, toSeconds: toSeconds))
                             default:
                                 break
-                            }
-                        default:
-                            break
+                        }
+                        return settings
                     }
-                    return settings
-                }
-            }))
+                })
+            presentControllerImpl?(controller)
             
             return settings
         }
@@ -538,10 +550,10 @@ public func themeAutoNightSettingsController(context: AccountContext) -> ViewCon
             return
         }
         
-        let resolvedWallpaper: Signal<IosappWallpaper?, NoError>
+        let resolvedWallpaper: Signal<TelegramWallpaper?, NoError>
         if case let .file(file) = presentationTheme.chat.defaultWallpaper, file.id == 0 {
-            resolvedWallpaper = cachedWallpaper(account: context.account, slug: file.slug, settings: file.settings)
-            |> map { wallpaper -> IosappWallpaper? in
+            resolvedWallpaper = cachedWallpaper(engine: context.engine, network: context.account.network, slug: file.slug, settings: file.settings)
+            |> map { wallpaper -> TelegramWallpaper? in
                 return wallpaper?.wallpaper
             }
         } else {
@@ -565,8 +577,8 @@ public func themeAutoNightSettingsController(context: AccountContext) -> ViewCon
         }).start()
     })
     
-    let cloudThemes = Promise<[IosappTheme]>()
-    let updatedCloudThemes = telegramThemes(postbox: context.account.postbox, network: context.account.network, accountManager: context.sharedContext.accountManager)
+    let cloudThemes = Promise<[TelegramTheme]>()
+    let updatedCloudThemes = context.engine.themes.themes(accountManager: context.sharedContext.accountManager)
     cloudThemes.set(updatedCloudThemes)
     
     let signal = combineLatest(context.sharedContext.presentationData |> deliverOnMainQueue, sharedData |> deliverOnMainQueue, cloudThemes.get() |> deliverOnMainQueue, stagingSettingsPromise.get() |> deliverOnMainQueue)

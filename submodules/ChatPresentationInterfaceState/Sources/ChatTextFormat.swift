@@ -1,6 +1,6 @@
 import Foundation
 import TextFormat
-import IosappCore
+import TelegramCore
 import AccountContext
 
 public func chatTextInputAddFormattingAttribute(_ state: ChatTextInputState, attribute: NSAttributedString.Key, value: Any?) -> ChatTextInputState {

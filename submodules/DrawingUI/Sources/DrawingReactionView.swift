@@ -4,13 +4,13 @@ import AsyncDisplayKit
 import AVFoundation
 import Display
 import SwiftSignalKit
-import IosappCore
+import TelegramCore
 import AnimatedStickerNode
-import IosappAnimatedStickerNode
+import TelegramAnimatedStickerNode
 import StickerResources
 import AccountContext
 import MediaEditor
-import IosappPresentationData
+import TelegramPresentationData
 import ReactionSelectionNode
 import UndoUI
 import EntityKeyboard
@@ -183,7 +183,7 @@ public class DrawingReactionEntityView: DrawingStickerEntityView {
                 return
             }
             
-            let continueWithAnimationFile: (IosappMediaFile) -> Void = { [weak self] animation in
+            let continueWithAnimationFile: (TelegramMediaFile) -> Void = { [weak self] animation in
                 guard let self else {
                     return
                 }
@@ -242,7 +242,7 @@ public class DrawingReactionEntityView: DrawingStickerEntityView {
                     guard let availableReactions else {
                         return
                     }
-                    var animation: IosappMediaFile?
+                    var animation: TelegramMediaFile?
                     for reaction in availableReactions.reactions {
                         if reaction.value == updateReaction.reaction {
                             animation = reaction.selectAnimation._parse()
@@ -271,7 +271,7 @@ public class DrawingReactionEntityView: DrawingStickerEntityView {
                     guard let availableReactions else {
                         return
                     }
-                    var animation: IosappMediaFile?
+                    var animation: TelegramMediaFile?
                     for reaction in availableReactions.reactions {
                         if reaction.value == updateReaction.reaction {
                             animation = reaction.selectAnimation._parse()

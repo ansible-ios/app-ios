@@ -1,16 +1,15 @@
 import Foundation
 import UIKit
-import IosappCore
-import Postbox
+import TelegramCore
 import SwiftSignalKit
 import Display
-import IosappPresentationData
-import IosappUIPreferences
+import TelegramPresentationData
+import TelegramUIPreferences
 import AccountContext
 
-public func instantPageAndAnchor(message: Message) -> (IosappMediaWebpage, String?)? {
+public func instantPageAndAnchor(message: EngineMessage) -> (TelegramMediaWebpage, String?)? {
     for media in message.media {
-        if let webpage = media as? IosappMediaWebpage, case let .Loaded(content) = webpage.content {
+        if let webpage = media as? TelegramMediaWebpage, case let .Loaded(content) = webpage.content {
             if let _ = content.instantPage {
                 var textUrl: String?
                 if let pageUrl = URL(string: content.url) {
@@ -60,7 +59,7 @@ public func instantPageAndAnchor(message: Message) -> (IosappMediaWebpage, Strin
 
 public final class InstantPageController: ViewController {
     private let context: AccountContext
-    private var webPage: IosappMediaWebpage
+    private var webPage: TelegramMediaWebpage
     private let sourceLocation: InstantPageSourceLocation
     private let anchor: String?
     
@@ -82,7 +81,7 @@ public final class InstantPageController: ViewController {
     private var settingsDisposable: Disposable?
     private var themeSettings: PresentationThemeSettings?
     
-    public init(context: AccountContext, webPage: IosappMediaWebpage, sourceLocation: InstantPageSourceLocation, anchor: String? = nil) {
+    public init(context: AccountContext, webPage: TelegramMediaWebpage, sourceLocation: InstantPageSourceLocation, anchor: String? = nil) {
         self.context = context
         self.presentationData = context.sharedContext.currentPresentationData.with { $0 }
         

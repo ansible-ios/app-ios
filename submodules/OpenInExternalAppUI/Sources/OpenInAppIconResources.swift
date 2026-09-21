@@ -1,8 +1,9 @@
 import Foundation
 import UIKit
-import IosappCore
+import TelegramCore
 import SwiftSignalKit
 import Display
+import TelegramPresentationData
 
 public struct OpenInAppIconResourceId {
     public let appStoreId: Int64
@@ -30,7 +31,7 @@ public class OpenInAppIconResource {
     }
 }
 
-public func fetchOpenInAppIconResource(engine: IosappEngine, resource: OpenInAppIconResource) -> Signal<EngineMediaResource.Fetch.Result, EngineMediaResource.Fetch.Error> {
+public func fetchOpenInAppIconResource(engine: TelegramEngine, resource: OpenInAppIconResource) -> Signal<EngineMediaResource.Fetch.Result, EngineMediaResource.Fetch.Error> {
     return Signal { subscriber in
         let metaUrl: String
         if let store = resource.store {
@@ -85,7 +86,7 @@ public func fetchOpenInAppIconResource(engine: IosappEngine, resource: OpenInApp
     }
 }
 
-private func openInAppIconData(engine: IosappEngine, appIcon: OpenInAppIconResource) -> Signal<Data?, NoError> {
+private func openInAppIconData(engine: TelegramEngine, appIcon: OpenInAppIconResource) -> Signal<Data?, NoError> {
     let appIconResource = engine.resources.custom(
         id: appIcon.id.stringRepresentation,
         fetch: EngineMediaResource.Fetch {
@@ -131,7 +132,7 @@ private func drawOpenInAppIconBorder(into c: CGContext, arguments: TransformImag
     c.strokePath()
 }
 
-public func openInAppIcon(engine: IosappEngine, appIcon: OpenInAppIcon) -> Signal<(TransformImageArguments) -> DrawingContext?, NoError> {
+public func openInAppIcon(engine: TelegramEngine, appIcon: OpenInAppIcon, withChrome: Bool = true) -> Signal<(TransformImageArguments) -> DrawingContext?, NoError> {
     switch appIcon {
         case let .resource(resource):
             return openInAppIconData(engine: engine, appIcon: resource) |> map { data in
@@ -166,14 +167,17 @@ public func openInAppIcon(engine: IosappEngine, appIcon: OpenInAppIcon) -> Signa
                 guard let context = DrawingContext(size: arguments.drawingSize, clear: true) else {
                     return nil
                 }
-
+                
                 context.withFlippedContext { c in
                     c.draw(image.cgImage!, in: CGRect(origin: CGPoint(x: 0.0, y: 0.0), size: arguments.drawingSize))
-                    drawOpenInAppIconBorder(into: c, arguments: arguments)
+                    if withChrome {
+                        drawOpenInAppIconBorder(into: c, arguments: arguments)
+                    }
                 }
 
-                addCorners(context, arguments: arguments)
-
+                if withChrome {
+                    addCorners(context, arguments: arguments)
+                }
                 return context
             })
     }

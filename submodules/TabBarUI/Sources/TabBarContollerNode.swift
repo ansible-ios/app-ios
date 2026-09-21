@@ -2,7 +2,7 @@ import Foundation
 import UIKit
 import AsyncDisplayKit
 import Display
-import IosappPresentationData
+import TelegramPresentationData
 import ComponentFlow
 import ComponentDisplayAdapters
 import TabBarComponent

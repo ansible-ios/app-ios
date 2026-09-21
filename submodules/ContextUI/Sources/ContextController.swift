@@ -2,10 +2,10 @@ import Foundation
 import UIKit
 import AsyncDisplayKit
 import Display
-import IosappPresentationData
+import TelegramPresentationData
 import TextSelectionNode
 import ReactionSelectionNode
-import IosappCore
+import TelegramCore
 import SwiftSignalKit
 import AccountContext
 import TextNodeWithEntities
@@ -124,7 +124,7 @@ public final class ContextMenuActionItem {
     public let id: AnyHashable?
     public let text: String
     public let entities: [MessageTextEntity]
-    public let entityFiles: [Int64: IosappMediaFile]
+    public let entityFiles: [Int64: TelegramMediaFile]
     public let enableEntityAnimations: Bool
     public let textColor: ContextMenuActionItemTextColor
     public let textFont: ContextMenuActionItemFont
@@ -147,7 +147,7 @@ public final class ContextMenuActionItem {
         id: AnyHashable? = nil,
         text: String,
         entities: [MessageTextEntity] = [],
-        entityFiles: [Int64: IosappMediaFile] = [:],
+        entityFiles: [Int64: TelegramMediaFile] = [:],
         enableEntityAnimations: Bool = true,
         textColor: ContextMenuActionItemTextColor = .primary,
         textLayout: ContextMenuActionItemTextLayout = .twoLinesMax,
@@ -203,7 +203,7 @@ public final class ContextMenuActionItem {
         id: AnyHashable? = nil,
         text: String,
         entities: [MessageTextEntity] = [],
-        entityFiles: [Int64: IosappMediaFile] = [:],
+        entityFiles: [Int64: TelegramMediaFile] = [:],
         enableEntityAnimations: Bool = true,
         textColor: ContextMenuActionItemTextColor = .primary,
         textLayout: ContextMenuActionItemTextLayout = .twoLinesMax,
@@ -349,25 +349,29 @@ public final class ContextControllerTakeViewInfo {
         case node(ContextExtractedContentContainingNode)
         case view(ContextExtractedContentContainingView)
     }
-    
+
     public let containingItem: ContainingItem
     public let contentAreaInScreenSpace: CGRect
     public let maskView: UIView?
-    
-    public init(containingItem: ContainingItem, contentAreaInScreenSpace: CGRect, maskView: UIView? = nil) {
+    public let sourceTransitionSurface: UIView?
+
+    public init(containingItem: ContainingItem, contentAreaInScreenSpace: CGRect, maskView: UIView? = nil, sourceTransitionSurface: UIView? = nil) {
         self.containingItem = containingItem
         self.contentAreaInScreenSpace = contentAreaInScreenSpace
         self.maskView = maskView
+        self.sourceTransitionSurface = sourceTransitionSurface
     }
 }
 
 public final class ContextControllerPutBackViewInfo {
     public let contentAreaInScreenSpace: CGRect
     public let maskView: UIView?
-    
-    public init(contentAreaInScreenSpace: CGRect, maskView: UIView? = nil) {
+    public let sourceTransitionSurface: UIView?
+
+    public init(contentAreaInScreenSpace: CGRect, maskView: UIView? = nil, sourceTransitionSurface: UIView? = nil) {
         self.contentAreaInScreenSpace = contentAreaInScreenSpace
         self.maskView = maskView
+        self.sourceTransitionSurface = sourceTransitionSurface
     }
 }
 
@@ -527,7 +531,7 @@ public struct ContextControllerItems {
     public var allPresetReactionsAreAvailable: Bool
     public var getEmojiContent: ((AnimationCache, MultiAnimationRenderer) -> Signal<EmojiPagerContentComponent, NoError>)?
     public var disablePositionLock: Bool
-    public var previewReaction: IosappMediaFile?
+    public var previewReaction: TelegramMediaFile?
     public var tip: ContextControllerTip?
     public var tipSignal: Signal<ContextControllerTip?, NoError>?
     public var dismissed: (() -> Void)?
@@ -545,7 +549,7 @@ public struct ContextControllerItems {
         allPresetReactionsAreAvailable: Bool = false,
         getEmojiContent: ((AnimationCache, MultiAnimationRenderer) -> Signal<EmojiPagerContentComponent, NoError>)? = nil,
         disablePositionLock: Bool = false,
-        previewReaction: IosappMediaFile? = nil,
+        previewReaction: TelegramMediaFile? = nil,
         tip: ContextControllerTip? = nil,
         tipSignal: Signal<ContextControllerTip?, NoError>? = nil,
         dismissed: (() -> Void)? = nil
@@ -597,16 +601,23 @@ public enum ContextControllerTip: Equatable {
     case quoteSelection
     case messageViewsPrivacy
     case messageCopyProtection(text: String)
-    case animatedEmoji(text: String?, arguments: TextNodeWithEntities.Arguments?, file: IosappMediaFile?, action: (() -> Void)?)
+    case animatedEmoji(text: String?, arguments: TextNodeWithEntities.Arguments?, file: TelegramMediaFile?, action: (() -> Void)?)
     case notificationTopicExceptions(text: String, action: (() -> Void)?)
     case starsReactions(topCount: Int)
     case videoProcessing
     case collageReordering
+    case deleteReaction
     
     public static func ==(lhs: ContextControllerTip, rhs: ContextControllerTip) -> Bool {
         switch lhs {
         case .textSelection:
             if case .textSelection = rhs {
+                return true
+            } else {
+                return false
+            }
+        case .deleteReaction:
+            if case .deleteReaction = rhs {
                 return true
             } else {
                 return false
@@ -859,9 +870,9 @@ public struct ContextControllerReactionItems {
 
 public final class ContextControllerPreviewReaction {
     public let context: AccountContext
-    public let file: IosappMediaFile
+    public let file: TelegramMediaFile
     
-    public init(context: AccountContext, file: IosappMediaFile) {
+    public init(context: AccountContext, file: TelegramMediaFile) {
         self.context = context
         self.file = file
     }

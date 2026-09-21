@@ -1,5 +1,5 @@
 import Foundation
-import IosappCore
+import TelegramCore
 import WidgetItems
 
 public extension WidgetDataPeer.Message {
@@ -7,9 +7,9 @@ public extension WidgetDataPeer.Message {
         var content: WidgetDataPeer.Message.Content = .text
         for media in message.media {
             switch media {
-            case _ as IosappMediaImage:
+            case _ as TelegramMediaImage:
                 content = .image(WidgetDataPeer.Message.Content.Image())
-            case let file as IosappMediaFile:
+            case let file as TelegramMediaFile:
                 var fileName = "file"
                 for attribute in file.attributes {
                     if case let .FileName(value) = attribute {
@@ -38,14 +38,14 @@ public extension WidgetDataPeer.Message {
                         break
                     }
                 }
-            case let action as IosappMediaAction:
+            case let action as TelegramMediaAction:
                 switch action.action {
                 case let .phoneCall(_, _, _, isVideo):
                     content = .call(WidgetDataPeer.Message.Content.Call(isVideo: isVideo))
                 default:
                     break
                 }
-            case _ as IosappMediaMap:
+            case _ as TelegramMediaMap:
                 content = .mapLocation(WidgetDataPeer.Message.Content.MapLocation())
             default:
                 break
@@ -53,11 +53,11 @@ public extension WidgetDataPeer.Message {
         }
         
         var author: Author?
-        if let _ = message.peers[message.id.peerId] as? IosappGroup {
+        if let _ = message.peers[message.id.peerId] as? TelegramGroup {
             if let authorPeer = message.author {
                 author = Author(isMe: authorPeer.id == accountPeerId, title: authorPeer.debugDisplayTitle)
             }
-        } else if let channel = message.peers[message.id.peerId] as? IosappChannel, case .group = channel.info {
+        } else if let channel = message.peers[message.id.peerId] as? TelegramChannel, case .group = channel.info {
             if let authorPeer = message.author {
                 author = Author(isMe: authorPeer.id == accountPeerId, title: authorPeer.debugDisplayTitle)
             }

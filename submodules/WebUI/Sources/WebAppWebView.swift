@@ -3,7 +3,7 @@ import UIKit
 import Display
 import WebKit
 import SwiftSignalKit
-import IosappCore
+import TelegramCore
 
 private let findActiveElementY = """
 function getOffset(el) {
@@ -36,13 +36,41 @@ private class WebViewTouchGestureRecognizer: UITapGestureRecognizer {
     }
 }
 
-private let eventProxySource = "var TelegramWebviewProxyProto = function() {}; " +
-    "TelegramWebviewProxyProto.prototype.postEvent = function(eventName, eventData) { " +
-    "window.webkit.messageHandlers.performAction.postMessage({'eventName': eventName, 'eventData': eventData}); " +
-    "}; " +
-"var TelegramWebviewProxy = new TelegramWebviewProxyProto();"
+private func jsStringLiteral(_ value: String) -> String {
+    if let data = try? JSONSerialization.data(withJSONObject: [value], options: []), let string = String(data: data, encoding: .utf8), string.hasPrefix("["), string.hasSuffix("]") {
+        return String(string.dropFirst().dropLast())
+    }
+    return "\"\""
+}
 
-private let selectionSource = "var css = '*{-webkit-touch-callout:none;} :not(input):not(textarea):not([\"contenteditable\"=\"true\"]){-webkit-user-select:none;}';"
+private func eventProxySource() -> String {
+    return """
+    (function() {
+        var TelegramWebviewProxyProto = function() {};
+        TelegramWebviewProxyProto.prototype.postEvent = function(eventName, eventData) {
+            window.webkit.messageHandlers.performAction.postMessage({'eventName': eventName, 'eventData': eventData});
+        };
+        window.TelegramWebviewProxy = new TelegramWebviewProxyProto();
+    })();
+    """
+}
+
+private func securedEventProxySource(trustedOrigin: String) -> String {
+    return """
+    (function() {
+        if (window.location.origin !== \(jsStringLiteral(trustedOrigin))) {
+            return;
+        }
+        var TelegramWebviewProxyProto = function() {};
+        TelegramWebviewProxyProto.prototype.postEvent = function(eventName, eventData) {
+            window.webkit.messageHandlers.performAction.postMessage({'eventName': eventName, 'eventData': eventData});
+        };
+        window.TelegramWebviewProxy = new TelegramWebviewProxyProto();
+    })();
+    """
+}
+
+private let selectionSource = "var css = '*{-webkit-touch-callout:none;} :not(input):not(textarea):not([contenteditable=\"true\"]){-webkit-user-select:none;}';"
         + " var head = document.head || document.getElementsByTagName('head')[0];"
         + " var style = document.createElement('style'); style.type = 'text/css';" +
         " style.appendChild(document.createTextNode(css)); head.appendChild(style);"
@@ -91,6 +119,7 @@ function tgBrowserDisconnectObserver() {
 
 final class WebAppWebView: WKWebView {
     var handleScriptMessage: (WKScriptMessage) -> Void = { _ in }
+    private(set) var trustedOrigin: String?
 
     var customInsets: UIEdgeInsets = .zero {
         didSet {
@@ -109,20 +138,20 @@ final class WebAppWebView: WKWebView {
                 
         if #available(iOS 17.0, *) {
             var uuid: UUID?
-            if let current = UserDefaults.standard.object(forKey: "IosappWebStoreUUID_\(account.id.int64)") as? String {
+            if let current = UserDefaults.standard.object(forKey: "TelegramWebStoreUUID_\(account.id.int64)") as? String {
                 uuid = UUID(uuidString: current)!
             } else {
                 let mainAccountId: Int64
-                if let current = UserDefaults.standard.object(forKey: "IosappWebStoreMainAccountId") as? Int64 {
+                if let current = UserDefaults.standard.object(forKey: "TelegramWebStoreMainAccountId") as? Int64 {
                     mainAccountId = current
                 } else {
                     mainAccountId = account.id.int64
-                    UserDefaults.standard.set(mainAccountId, forKey: "IosappWebStoreMainAccountId")
+                    UserDefaults.standard.set(mainAccountId, forKey: "TelegramWebStoreMainAccountId")
                 }
                 
                 if account.id.int64 != mainAccountId {
                     uuid = UUID()
-                    UserDefaults.standard.set(uuid!.uuidString, forKey: "IosappWebStoreUUID_\(account.id.int64)")
+                    UserDefaults.standard.set(uuid!.uuidString, forKey: "TelegramWebStoreUUID_\(account.id.int64)")
                 }
             }
             
@@ -134,8 +163,6 @@ final class WebAppWebView: WKWebView {
         let contentController = WKUserContentController()
                            
         var handleScriptMessageImpl: ((WKScriptMessage) -> Void)?
-        let eventProxyScript = WKUserScript(source: eventProxySource, injectionTime: .atDocumentStart, forMainFrameOnly: true)
-        contentController.addUserScript(eventProxyScript)
         contentController.add(WeakGameScriptMessageHandler { message in
             handleScriptMessageImpl?(message)
         }, name: "performAction")
@@ -187,6 +214,47 @@ final class WebAppWebView: WKWebView {
         print()
     }
     
+    var useSecuredEventProxy = true
+    func bindTrustedOrigin(from url: URL) {
+        guard self.trustedOrigin == nil else {
+            return
+        }
+        guard let origin = normalizedOrigin(url: url) else {
+            return
+        }
+
+        self.trustedOrigin = origin
+
+        let eventProxyScript = WKUserScript(source: securedEventProxySource(trustedOrigin: origin), injectionTime: .atDocumentStart, forMainFrameOnly: true)
+        self.configuration.userContentController.addUserScript(eventProxyScript)
+    }
+    
+    func setupEventProxySource() {
+        self.useSecuredEventProxy = false
+        
+        let eventProxyScript = WKUserScript(source: eventProxySource(), injectionTime: .atDocumentStart, forMainFrameOnly: true)
+        self.configuration.userContentController.addUserScript(eventProxyScript)
+    }
+
+    func isTrustedMainFrameMessage(_ message: WKScriptMessage) -> Bool {
+        guard message.frameInfo.isMainFrame else {
+            return false
+        }
+        if !self.useSecuredEventProxy {
+            return true
+        }
+        guard let trustedOrigin = self.trustedOrigin else {
+            return false
+        }
+        guard message.frameInfo.securityOriginString == trustedOrigin else {
+            return false
+        }
+        if let currentOrigin = self.origin, currentOrigin != trustedOrigin {
+            return false
+        }
+        return true
+    }
+
     override func didMoveToSuperview() {
         super.didMoveToSuperview()
         
@@ -223,6 +291,11 @@ final class WebAppWebView: WKWebView {
     }
     
     func sendEvent(name: String, data: String?) {
+        if self.useSecuredEventProxy {
+            guard let trustedOrigin = self.trustedOrigin, self.origin == trustedOrigin else {
+                return
+            }
+        }
         let script = "window.TelegramGameProxy && window.TelegramGameProxy.receiveEvent && window.TelegramGameProxy.receiveEvent(\"\(name)\", \(data ?? "null"))"
         self.evaluateJavaScript(script, completionHandler: { _, _ in
         })
@@ -276,5 +349,42 @@ final class WebAppWebView: WKWebView {
     
     override var inputAccessoryView: UIView? {
         return nil
+    }
+    
+    var origin: String? {
+        guard let url = self.url else {
+            return nil
+        }
+        return normalizedOrigin(url: url)
+    }
+}
+
+extension WKFrameInfo {
+    var securityOriginString: String {
+        let securityOrigin = self.securityOrigin
+        return normalizedOrigin(scheme: securityOrigin.protocol, host: securityOrigin.host, port: securityOrigin.port == 0 ? nil : securityOrigin.port) ?? ""
+    }
+}
+
+private func normalizedOrigin(url: URL) -> String? {
+    return normalizedOrigin(scheme: url.scheme, host: url.host, port: url.port)
+}
+
+private func normalizedOrigin(scheme: String?, host: String?, port: Int?) -> String? {
+    guard let scheme = scheme?.lowercased(), !scheme.isEmpty, let host = host?.lowercased(), !host.isEmpty else {
+        return nil
+    }
+
+    let includePort: Bool
+    if let port {
+        includePort = !(scheme == "http" && port == 80) && !(scheme == "https" && port == 443)
+    } else {
+        includePort = false
+    }
+
+    if includePort, let port {
+        return "\(scheme)://\(host):\(port)"
+    } else {
+        return "\(scheme)://\(host)"
     }
 }

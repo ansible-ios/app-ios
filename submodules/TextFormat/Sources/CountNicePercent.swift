@@ -1,5 +1,5 @@
 import Foundation
-import IosappCore
+import TelegramCore
 
 private struct PercentCounterItem: Comparable  {
     var index: Int = 0

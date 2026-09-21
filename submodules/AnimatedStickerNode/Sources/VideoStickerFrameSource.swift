@@ -6,7 +6,7 @@ import UniversalMediaPlayer
 import CoreMedia
 import ManagedFile
 import Accelerate
-import IosappCore
+import TelegramCore
 import WebPBinding
 import UIKit
 

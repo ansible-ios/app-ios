@@ -1,8 +1,8 @@
 import Foundation
 import Postbox
-import IosappCore
+import TelegramCore
 import SwiftSignalKit
-import IosappUIPreferences
+import TelegramUIPreferences
 import AccountContext
 import UniversalMediaPlayer
 import RangeSet
@@ -662,7 +662,7 @@ private func filterDownloadStatsEntry(entry: FetchManagerLocationEntry) -> Bool 
     switch mediaReference {
     case let .message(_, media):
         switch media {
-        case let file as IosappMediaFile:
+        case let file as TelegramMediaFile:
             if file.isVideo {
                 if file.isAnimated {
                     return false

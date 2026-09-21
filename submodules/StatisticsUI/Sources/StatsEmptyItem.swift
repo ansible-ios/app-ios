@@ -2,11 +2,11 @@ import Foundation
 import UIKit
 import AsyncDisplayKit
 import Display
-import IosappPresentationData
+import TelegramPresentationData
 import ItemListUI
 import PresentationDataUtils
 import AnimatedStickerNode
-import IosappAnimatedStickerNode
+import TelegramAnimatedStickerNode
 import AccountContext
 
 final class StatsEmptyStateItem: ItemListControllerEmptyStateItem {

@@ -1,7 +1,7 @@
 import Foundation
 import AVFoundation
-import IosappCore
-import IosappAudio
+import TelegramCore
+import TelegramAudio
 import SwiftSignalKit
 import Postbox
 import VideoToolbox

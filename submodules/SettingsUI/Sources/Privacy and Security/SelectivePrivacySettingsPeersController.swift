@@ -2,9 +2,9 @@ import Foundation
 import UIKit
 import Display
 import SwiftSignalKit
-import IosappCore
-import IosappPresentationData
-import IosappUIPreferences
+import TelegramCore
+import TelegramPresentationData
+import TelegramUIPreferences
 import ItemListUI
 import PresentationDataUtils
 import AccountContext
@@ -215,7 +215,7 @@ private enum SelectivePrivacyPeersEntry: ItemListNodeEntry {
         let arguments = arguments as! SelectivePrivacyPeersControllerArguments
         switch self {
         case let .premiumUsersItem(editing, enabled):
-            let peer: EnginePeer = .user(IosappUser(
+            let peer: EnginePeer = .user(TelegramUser(
                 id: EnginePeer.Id(namespace: Namespaces.Peer.CloudUser, id: EnginePeer.Id.Id._internalFromInt64Value(1)), accessHash: nil, firstName: presentationData.strings.PrivacySettings_CategoryPremiumUsers, lastName: nil, username: nil, phone: nil, photo: [], botInfo: nil, restrictionInfo: nil, flags: [], emojiStatus: nil, usernames: [], storiesHidden: nil, nameColor: nil, backgroundEmojiId: nil, profileColor: nil, profileBackgroundEmojiId: nil, subscriberCount: nil, verificationIconFileId: nil))
             return ItemListPeerItem(presentationData: presentationData, systemStyle: .glass, dateTimeFormat: PresentationDateTimeFormat(), nameDisplayOrder: .firstLast, context: arguments.context, peer: peer, customAvatarIcon: premiumAvatarIcon, presence: nil, text: .none, label: .none, editing: editing, switchValue: nil, enabled: enabled, selectable: true, sectionId: self.section, action: {
             }, setPeerIdWithRevealedOptions: { previousId, id in
@@ -224,7 +224,7 @@ private enum SelectivePrivacyPeersEntry: ItemListNodeEntry {
                 arguments.removePremiumUsers()
             })
         case let .botsItem(editing, enabled):
-            let peer: EnginePeer = .user(IosappUser(
+            let peer: EnginePeer = .user(TelegramUser(
                 id: EnginePeer.Id(namespace: Namespaces.Peer.CloudUser, id: EnginePeer.Id.Id._internalFromInt64Value(2)), accessHash: nil, firstName: presentationData.strings.PrivacySettings_CategoryBots, lastName: nil, username: nil, phone: nil, photo: [], botInfo: nil, restrictionInfo: nil, flags: [], emojiStatus: nil, usernames: [], storiesHidden: nil, nameColor: nil, backgroundEmojiId: nil, profileColor: nil, profileBackgroundEmojiId: nil, subscriberCount: nil, verificationIconFileId: nil))
             return ItemListPeerItem(presentationData: presentationData, systemStyle: .glass, dateTimeFormat: PresentationDateTimeFormat(), nameDisplayOrder: .firstLast, context: arguments.context, peer: peer, customAvatarIcon: botsIcon, presence: nil, text: .none, label: .none, editing: editing, switchValue: nil, enabled: enabled, selectable: true, sectionId: self.section, action: {
             }, setPeerIdWithRevealedOptions: { previousId, id in
@@ -234,9 +234,9 @@ private enum SelectivePrivacyPeersEntry: ItemListNodeEntry {
             })
         case let .peerItem(_, dateTimeFormat, nameDisplayOrder, peer, editing, enabled):
             var text: ItemListPeerItemText = .none
-            if let group = peer.peer as? IosappGroup {
+            if let group = peer.peer as? TelegramGroup {
                 text = .text(presentationData.strings.Conversation_StatusMembers(Int32(group.participantCount)), .secondary)
-            } else if let channel = peer.peer as? IosappChannel {
+            } else if let channel = peer.peer as? TelegramChannel {
                 if let participantCount = peer.participantCount {
                     text = .text(presentationData.strings.Conversation_StatusMembers(Int32(participantCount)), .secondary)
                 } else {
@@ -456,8 +456,8 @@ public func selectivePrivacyPeersController(context: AccountContext, title: Stri
                     }
                 }
                 return context.engine.data.get(
-                    EngineDataMap(filteredPeerIds.map(IosappEngine.EngineData.Item.Peer.Peer.init)),
-                    EngineDataMap(filteredPeerIds.map(IosappEngine.EngineData.Item.Peer.ParticipantCount.init))
+                    EngineDataMap(filteredPeerIds.map(TelegramEngine.EngineData.Item.Peer.Peer.init)),
+                    EngineDataMap(filteredPeerIds.map(TelegramEngine.EngineData.Item.Peer.ParticipantCount.init))
                 )
                 |> map { peerMap, participantCountMap -> [SelectivePrivacyPeer] in
                     var updatedPeers = peers
@@ -475,7 +475,7 @@ public func selectivePrivacyPeersController(context: AccountContext, title: Stri
                                 }
                             }
                             
-                            updatedPeers.append(SelectivePrivacyPeer(peer: peer._asPeer(), participantCount: participantCount))
+                            updatedPeers.append(SelectivePrivacyPeer(peer: peer, participantCount: participantCount))
                         }
                     }
                     return updatedPeers
@@ -506,7 +506,7 @@ public func selectivePrivacyPeersController(context: AccountContext, title: Stri
         }))
         presentControllerImpl?(controller, ViewControllerPresentationArguments(presentationAnimation: .modalSheet))
     }, openPeer: { peer in
-        guard let controller = context.sharedContext.makePeerInfoController(context: context, updatedPresentationData: nil, peer: peer._asPeer(), mode: .generic, avatarInitiallyExpanded: false, fromChat: false, requestsContext: nil) else {
+        guard let controller = context.sharedContext.makePeerInfoController(context: context, updatedPresentationData: nil, peer: peer, mode: .generic, avatarInitiallyExpanded: false, fromChat: false, requestsContext: nil) else {
             return
         }
         pushControllerImpl?(controller)
@@ -608,7 +608,7 @@ public func selectivePrivacyPeersController(context: AccountContext, title: Stri
         var rightNavigationButton: ItemListNavigationButton?
         if !peers.isEmpty {
             if state.editing {
-                rightNavigationButton = ItemListNavigationButton(content: .text(presentationData.strings.Common_Done), style: .bold, enabled: true, action: {
+                rightNavigationButton = ItemListNavigationButton(content: .icon(.done), style: .bold, enabled: true, action: {
                     updateState { state in
                         var state = state
                         state.editing = false

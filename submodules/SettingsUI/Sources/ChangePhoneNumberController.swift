@@ -2,9 +2,9 @@ import Foundation
 import UIKit
 import Display
 import AsyncDisplayKit
-import IosappCore
+import TelegramCore
 import SwiftSignalKit
-import IosappPresentationData
+import TelegramPresentationData
 import ProgressNavigationButtonNode
 import AccountContext
 import AlertUI
@@ -180,7 +180,7 @@ public func ChangePhoneNumberController(context: AccountContext) -> ViewControll
     }
     
     Queue.mainQueue().justDispatch {
-        let _ = (context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: context.account.peerId))
+        let _ = (context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: context.account.peerId))
         |> deliverOnMainQueue).start(next: { accountPeer in
             guard let accountPeer, case let .user(user) = accountPeer else {
                 return

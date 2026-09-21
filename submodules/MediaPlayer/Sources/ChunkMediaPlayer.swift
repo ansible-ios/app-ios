@@ -3,7 +3,7 @@ import Foundation
 import SwiftSignalKit
 import Postbox
 import CoreMedia
-import IosappCore
+import TelegramCore
 
 
 public final class ChunkMediaPlayerPart {
@@ -123,7 +123,7 @@ public final class ChunkMediaPlayerPartsState {
 #if os(iOS)
 
 import UIKit
-import IosappAudio
+import TelegramAudio
 
 public protocol ChunkMediaPlayer: AnyObject {
     var status: Signal<MediaPlayerStatus, NoError> { get }

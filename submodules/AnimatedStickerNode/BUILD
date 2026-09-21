@@ -33,7 +33,7 @@ swift_library(
         "//submodules/MediaResources:MediaResources",
         "//submodules/MediaPlayer:UniversalMediaPlayer",
         "//submodules/ManagedFile:ManagedFile",
-        "//submodules/IosappCore:IosappCore",
+        "//submodules/TelegramCore:TelegramCore",
         "//submodules/AnimationCompression:AnimationCompression",
         "//submodules/Components/MetalImageView:MetalImageView",
         "//submodules/WebPBinding:WebPBinding",

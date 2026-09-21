@@ -4,7 +4,7 @@ import Display
 import AsyncDisplayKit
 import ComponentFlow
 import SwiftSignalKit
-import IosappPresentationData
+import TelegramPresentationData
 
 public final class SparseDiscreteScrollingArea: ASDisplayNode {
     private final class DragGesture: UIGestureRecognizer {
@@ -351,6 +351,8 @@ public final class SparseDiscreteScrollingArea: ASDisplayNode {
         let indicatorSize = self.dateIndicator.update(
             transition: .immediate,
             component: AnyComponent(SparseItemGridScrollingIndicatorComponent(
+                isDark: theme.overallDarkAppearance,
+                isVisible: true,
                 backgroundColor: theme.list.itemBlocksBackgroundColor,
                 shadowColor: .black,
                 foregroundColor: theme.list.itemPrimaryTextColor,

@@ -3,8 +3,8 @@ import UIKit
 import Display
 import AsyncDisplayKit
 import SwiftSignalKit
-import IosappCore
-import IosappPresentationData
+import TelegramCore
+import TelegramPresentationData
 import ItemListUI
 import LocationResources
 import ShimmerEffect
@@ -17,8 +17,8 @@ public final class ItemListVenueItem: ListViewItem, ItemListItem {
     
     let presentationData: ItemListPresentationData
     let systemStyle: ItemListSystemStyle
-    let engine: IosappEngine
-    let venue: IosappMediaMap?
+    let engine: TelegramEngine
+    let venue: TelegramMediaMap?
     let title: String?
     let subtitle: String?
     let icon: InfoIcon
@@ -29,7 +29,7 @@ public final class ItemListVenueItem: ListViewItem, ItemListItem {
     public let sectionId: ItemListSectionId
     let header: ListViewItemHeader?
     
-    public init(presentationData: ItemListPresentationData, systemStyle: ItemListSystemStyle = .legacy, engine: IosappEngine, venue: IosappMediaMap?, title: String? = nil, subtitle: String? = nil, icon: ItemListVenueItem.InfoIcon = .info, sectionId: ItemListSectionId = 0, style: ItemListStyle, action: (() -> Void)?, infoAction: (() -> Void)? = nil, header: ListViewItemHeader? = nil) {
+    public init(presentationData: ItemListPresentationData, systemStyle: ItemListSystemStyle = .legacy, engine: TelegramEngine, venue: TelegramMediaMap?, title: String? = nil, subtitle: String? = nil, icon: ItemListVenueItem.InfoIcon = .info, sectionId: ItemListSectionId = 0, style: ItemListStyle, action: (() -> Void)?, infoAction: (() -> Void)? = nil, header: ListViewItemHeader? = nil) {
         self.presentationData = presentationData
         self.systemStyle = systemStyle
         self.engine = engine

@@ -3,10 +3,9 @@ import UIKit
 import Display
 import AsyncDisplayKit
 import SwiftSignalKit
-import Postbox
-import IosappCore
-import IosappPresentationData
-import IosappUIPreferences
+import TelegramCore
+import TelegramPresentationData
+import TelegramUIPreferences
 import ItemListUI
 import PresentationDataUtils
 import OverlayStatusController
@@ -14,7 +13,7 @@ import AccountContext
 import ShareController
 import AlertUI
 import PresentationDataUtils
-import IosappNotices
+import TelegramNotices
 import ItemListPeerItem
 import ItemListPeerActionItem
 import AccountContext
@@ -42,11 +41,12 @@ private final class ChannelVisibilityControllerArguments {
     let toggleForwarding: (Bool) -> Void
     let updateJoinToSend: (CurrentChannelJoinToSend) -> Void
     let toggleApproveMembers: (Bool) -> Void
+    let openGuardBot: (EnginePeer.Id) -> Void
     let activateLink: (String) -> Void
     let deactivateLink: (String) -> Void
     let openAuction: (String) -> Void
     
-    init(context: AccountContext, updateCurrentType: @escaping (CurrentChannelType) -> Void, updatePublicLinkText: @escaping (String?, String) -> Void, scrollToPublicLinkText: @escaping () -> Void, setPeerIdWithRevealedOptions: @escaping (EnginePeer.Id?, EnginePeer.Id?) -> Void, revokePeerId: @escaping (EnginePeer.Id) -> Void, copyLink: @escaping (ExportedInvitation) -> Void, shareLink: @escaping (ExportedInvitation) -> Void, linkContextAction: @escaping (ASDisplayNode, ContextGesture?) -> Void, manageInviteLinks: @escaping () -> Void, openLink: @escaping (ExportedInvitation) -> Void, toggleForwarding: @escaping (Bool) -> Void, updateJoinToSend: @escaping (CurrentChannelJoinToSend) -> Void, toggleApproveMembers: @escaping (Bool) -> Void, activateLink: @escaping (String) -> Void, deactivateLink: @escaping (String) -> Void, openAuction: @escaping (String) -> Void) {
+    init(context: AccountContext, updateCurrentType: @escaping (CurrentChannelType) -> Void, updatePublicLinkText: @escaping (String?, String) -> Void, scrollToPublicLinkText: @escaping () -> Void, setPeerIdWithRevealedOptions: @escaping (EnginePeer.Id?, EnginePeer.Id?) -> Void, revokePeerId: @escaping (EnginePeer.Id) -> Void, copyLink: @escaping (ExportedInvitation) -> Void, shareLink: @escaping (ExportedInvitation) -> Void, linkContextAction: @escaping (ASDisplayNode, ContextGesture?) -> Void, manageInviteLinks: @escaping () -> Void, openLink: @escaping (ExportedInvitation) -> Void, toggleForwarding: @escaping (Bool) -> Void, updateJoinToSend: @escaping (CurrentChannelJoinToSend) -> Void, toggleApproveMembers: @escaping (Bool) -> Void, openGuardBot: @escaping (EnginePeer.Id) -> Void, activateLink: @escaping (String) -> Void, deactivateLink: @escaping (String) -> Void, openAuction: @escaping (String) -> Void) {
         self.context = context
         self.updateCurrentType = updateCurrentType
         self.updatePublicLinkText = updatePublicLinkText
@@ -61,6 +61,7 @@ private final class ChannelVisibilityControllerArguments {
         self.toggleForwarding = toggleForwarding
         self.updateJoinToSend = updateJoinToSend
         self.toggleApproveMembers = toggleApproveMembers
+        self.openGuardBot = openGuardBot
         self.activateLink = activateLink
         self.deactivateLink = deactivateLink
         self.openAuction = openAuction
@@ -119,7 +120,7 @@ private enum ChannelVisibilityEntry: ItemListNodeEntry {
     case existingLinkPeerItem(Int32, PresentationTheme, PresentationStrings, PresentationDateTimeFormat, PresentationPersonNameOrder, EnginePeer, ItemListPeerItemEditing, Bool)
     
     case additionalLinkHeader(PresentationTheme, String)
-    case additionalLink(PresentationTheme, IosappPeerUsername, Int32)
+    case additionalLink(PresentationTheme, TelegramPeerUsername, Int32)
     case additionalLinkInfo(PresentationTheme, String)
     
     case joinToSendHeader(PresentationTheme, String)
@@ -127,7 +128,7 @@ private enum ChannelVisibilityEntry: ItemListNodeEntry {
     case joinToSendMembers(PresentationTheme, String, Bool)
     
     case approveMembers(PresentationTheme, String, Bool)
-    case approveMembersInfo(PresentationTheme, String)
+    case approveMembersInfo(PresentationTheme, String, EnginePeer.Id?)
     
     case forwardingHeader(PresentationTheme, String)
     case forwardingDisabled(PresentationTheme, String, Bool)
@@ -387,8 +388,8 @@ private enum ChannelVisibilityEntry: ItemListNodeEntry {
                 } else {
                     return false
                 }
-            case let .approveMembersInfo(lhsTheme, lhsText):
-                if case let .approveMembersInfo(rhsTheme, rhsText) = rhs, lhsTheme === rhsTheme, lhsText == rhsText {
+            case let .approveMembersInfo(lhsTheme, lhsText, lhsGuardBotId):
+                if case let .approveMembersInfo(rhsTheme, rhsText, rhsGuardBotId) = rhs, lhsTheme === rhsTheme, lhsText == rhsText, lhsGuardBotId == rhsGuardBotId {
                     return true
                 } else {
                     return false
@@ -658,7 +659,7 @@ private enum ChannelVisibilityEntry: ItemListNodeEntry {
                 }, openCallAction: {
                 })
             case let .editablePublicLink(theme, _, placeholder, currentText):
-                return ItemListSingleLineInputItem(presentationData: presentationData, systemStyle: .glass, title: NSAttributedString(string: "asme.su/", textColor: theme.list.itemPrimaryTextColor), text: currentText, placeholder: placeholder, type: .regular(capitalization: false, autocorrection: false), clearType: .always, tag: ChannelVisibilityEntryTag.publicLink, sectionId: self.section, textUpdated: { updatedText in
+                return ItemListSingleLineInputItem(presentationData: presentationData, systemStyle: .glass, title: NSAttributedString(string: "t.me/", textColor: theme.list.itemPrimaryTextColor), text: currentText, placeholder: placeholder, type: .regular(capitalization: false, autocorrection: false), clearType: .always, tag: ChannelVisibilityEntryTag.publicLink, sectionId: self.section, textUpdated: { updatedText in
                     arguments.updatePublicLinkText(currentText, updatedText)
                 }, updatedFocus: { focus in
                     if focus {
@@ -705,7 +706,7 @@ private enum ChannelVisibilityEntry: ItemListNodeEntry {
             case let .existingLinkPeerItem(_, _, _, dateTimeFormat, nameDisplayOrder, peer, editing, enabled):
                 var label = ""
                 if let addressName = peer.addressName {
-                    label = "asme.su/" + addressName
+                    label = "t.me/" + addressName
                 }
                 return ItemListPeerItem(presentationData: presentationData, systemStyle: .glass, dateTimeFormat: dateTimeFormat, nameDisplayOrder: nameDisplayOrder, context: arguments.context, peer: peer, presence: nil, text: .text(label, .secondary), label: .none, editing: editing, switchValue: nil, enabled: enabled, selectable: true, sectionId: self.section, action: nil, setPeerIdWithRevealedOptions: { previousId, id in
                     arguments.setPeerIdWithRevealedOptions(previousId, id)
@@ -741,8 +742,12 @@ private enum ChannelVisibilityEntry: ItemListNodeEntry {
                 return ItemListSwitchItem(presentationData: presentationData, systemStyle: .glass, title: text, value: selected, sectionId: self.section, style: .blocks, updated: { value in
                     arguments.toggleApproveMembers(value)
                 })
-            case let .approveMembersInfo(_, text):
-                return ItemListTextItem(presentationData: presentationData, text: .plain(text), sectionId: self.section)
+            case let .approveMembersInfo(_, text, guardBotId):
+                return ItemListTextItem(presentationData: presentationData, text: guardBotId == nil ? .plain(text) : .markdown(text), sectionId: self.section, linkAction: { _ in
+                    if let guardBotId {
+                        arguments.openGuardBot(guardBotId)
+                    }
+                })
             case let .forwardingHeader(_, title):
                 return ItemListSectionHeaderItem(presentationData: presentationData, text: title, sectionId: self.section)
             case let .forwardingDisabled(_, text, selected):
@@ -781,6 +786,7 @@ private struct ChannelVisibilityControllerState: Equatable {
     let forwardingEnabled: Bool?
     let joinToSend: CurrentChannelJoinToSend?
     let approveMembers: Bool?
+    let approveMembersApplyToInvites: Bool?
     
     init() {
         self.selectedType = nil
@@ -793,9 +799,10 @@ private struct ChannelVisibilityControllerState: Equatable {
         self.forwardingEnabled = nil
         self.joinToSend = nil
         self.approveMembers = nil
+        self.approveMembersApplyToInvites = nil
     }
     
-    init(selectedType: CurrentChannelType?, editingPublicLinkText: String?, addressNameValidationStatus: AddressNameValidationStatus?, updatingAddressName: Bool, revealedRevokePeerId: PeerId?, revokingPeerId: PeerId?, revokingPrivateLink: Bool, forwardingEnabled: Bool?, joinToSend: CurrentChannelJoinToSend?, approveMembers: Bool?) {
+    init(selectedType: CurrentChannelType?, editingPublicLinkText: String?, addressNameValidationStatus: AddressNameValidationStatus?, updatingAddressName: Bool, revealedRevokePeerId: EnginePeer.Id?, revokingPeerId: EnginePeer.Id?, revokingPrivateLink: Bool, forwardingEnabled: Bool?, joinToSend: CurrentChannelJoinToSend?, approveMembers: Bool?, approveMembersApplyToInvites: Bool?) {
         self.selectedType = selectedType
         self.editingPublicLinkText = editingPublicLinkText
         self.addressNameValidationStatus = addressNameValidationStatus
@@ -806,6 +813,7 @@ private struct ChannelVisibilityControllerState: Equatable {
         self.forwardingEnabled = forwardingEnabled
         self.joinToSend = joinToSend
         self.approveMembers = approveMembers
+        self.approveMembersApplyToInvites = approveMembersApplyToInvites
     }
     
     static func ==(lhs: ChannelVisibilityControllerState, rhs: ChannelVisibilityControllerState) -> Bool {
@@ -839,51 +847,58 @@ private struct ChannelVisibilityControllerState: Equatable {
         if lhs.approveMembers != rhs.approveMembers {
             return false
         }
+        if lhs.approveMembersApplyToInvites != rhs.approveMembersApplyToInvites {
+            return false
+        }
         return true
     }
     
     func withUpdatedSelectedType(_ selectedType: CurrentChannelType?) -> ChannelVisibilityControllerState {
-        return ChannelVisibilityControllerState(selectedType: selectedType, editingPublicLinkText: self.editingPublicLinkText, addressNameValidationStatus: self.addressNameValidationStatus, updatingAddressName: self.updatingAddressName, revealedRevokePeerId: self.revealedRevokePeerId, revokingPeerId: self.revokingPeerId, revokingPrivateLink: self.revokingPrivateLink, forwardingEnabled: self.forwardingEnabled, joinToSend: self.joinToSend, approveMembers: self.approveMembers)
+        return ChannelVisibilityControllerState(selectedType: selectedType, editingPublicLinkText: self.editingPublicLinkText, addressNameValidationStatus: self.addressNameValidationStatus, updatingAddressName: self.updatingAddressName, revealedRevokePeerId: self.revealedRevokePeerId, revokingPeerId: self.revokingPeerId, revokingPrivateLink: self.revokingPrivateLink, forwardingEnabled: self.forwardingEnabled, joinToSend: self.joinToSend, approveMembers: self.approveMembers, approveMembersApplyToInvites: self.approveMembersApplyToInvites)
     }
     
     func withUpdatedEditingPublicLinkText(_ editingPublicLinkText: String?) -> ChannelVisibilityControllerState {
-        return ChannelVisibilityControllerState(selectedType: self.selectedType, editingPublicLinkText: editingPublicLinkText, addressNameValidationStatus: self.addressNameValidationStatus, updatingAddressName: self.updatingAddressName, revealedRevokePeerId: self.revealedRevokePeerId, revokingPeerId: self.revokingPeerId, revokingPrivateLink: self.revokingPrivateLink, forwardingEnabled: self.forwardingEnabled, joinToSend: self.joinToSend, approveMembers: self.approveMembers)
+        return ChannelVisibilityControllerState(selectedType: self.selectedType, editingPublicLinkText: editingPublicLinkText, addressNameValidationStatus: self.addressNameValidationStatus, updatingAddressName: self.updatingAddressName, revealedRevokePeerId: self.revealedRevokePeerId, revokingPeerId: self.revokingPeerId, revokingPrivateLink: self.revokingPrivateLink, forwardingEnabled: self.forwardingEnabled, joinToSend: self.joinToSend, approveMembers: self.approveMembers, approveMembersApplyToInvites: self.approveMembersApplyToInvites)
     }
     
     func withUpdatedAddressNameValidationStatus(_ addressNameValidationStatus: AddressNameValidationStatus?) -> ChannelVisibilityControllerState {
-        return ChannelVisibilityControllerState(selectedType: self.selectedType, editingPublicLinkText: self.editingPublicLinkText, addressNameValidationStatus: addressNameValidationStatus, updatingAddressName: self.updatingAddressName, revealedRevokePeerId: self.revealedRevokePeerId, revokingPeerId: self.revokingPeerId, revokingPrivateLink: self.revokingPrivateLink, forwardingEnabled: self.forwardingEnabled, joinToSend: self.joinToSend, approveMembers: self.approveMembers)
+        return ChannelVisibilityControllerState(selectedType: self.selectedType, editingPublicLinkText: self.editingPublicLinkText, addressNameValidationStatus: addressNameValidationStatus, updatingAddressName: self.updatingAddressName, revealedRevokePeerId: self.revealedRevokePeerId, revokingPeerId: self.revokingPeerId, revokingPrivateLink: self.revokingPrivateLink, forwardingEnabled: self.forwardingEnabled, joinToSend: self.joinToSend, approveMembers: self.approveMembers, approveMembersApplyToInvites: self.approveMembersApplyToInvites)
     }
     
     func withUpdatedUpdatingAddressName(_ updatingAddressName: Bool) -> ChannelVisibilityControllerState {
-        return ChannelVisibilityControllerState(selectedType: self.selectedType, editingPublicLinkText: self.editingPublicLinkText, addressNameValidationStatus: self.addressNameValidationStatus, updatingAddressName: updatingAddressName, revealedRevokePeerId: self.revealedRevokePeerId, revokingPeerId: self.revokingPeerId, revokingPrivateLink: self.revokingPrivateLink, forwardingEnabled: self.forwardingEnabled, joinToSend: self.joinToSend, approveMembers: self.approveMembers)
+        return ChannelVisibilityControllerState(selectedType: self.selectedType, editingPublicLinkText: self.editingPublicLinkText, addressNameValidationStatus: self.addressNameValidationStatus, updatingAddressName: updatingAddressName, revealedRevokePeerId: self.revealedRevokePeerId, revokingPeerId: self.revokingPeerId, revokingPrivateLink: self.revokingPrivateLink, forwardingEnabled: self.forwardingEnabled, joinToSend: self.joinToSend, approveMembers: self.approveMembers, approveMembersApplyToInvites: self.approveMembersApplyToInvites)
     }
     
     func withUpdatedRevealedRevokePeerId(_ revealedRevokePeerId: EnginePeer.Id?) -> ChannelVisibilityControllerState {
-        return ChannelVisibilityControllerState(selectedType: self.selectedType, editingPublicLinkText: self.editingPublicLinkText, addressNameValidationStatus: self.addressNameValidationStatus, updatingAddressName: updatingAddressName, revealedRevokePeerId: revealedRevokePeerId, revokingPeerId: self.revokingPeerId, revokingPrivateLink: self.revokingPrivateLink, forwardingEnabled: self.forwardingEnabled, joinToSend: self.joinToSend, approveMembers: self.approveMembers)
+        return ChannelVisibilityControllerState(selectedType: self.selectedType, editingPublicLinkText: self.editingPublicLinkText, addressNameValidationStatus: self.addressNameValidationStatus, updatingAddressName: updatingAddressName, revealedRevokePeerId: revealedRevokePeerId, revokingPeerId: self.revokingPeerId, revokingPrivateLink: self.revokingPrivateLink, forwardingEnabled: self.forwardingEnabled, joinToSend: self.joinToSend, approveMembers: self.approveMembers, approveMembersApplyToInvites: self.approveMembersApplyToInvites)
     }
     
     func withUpdatedRevokingPeerId(_ revokingPeerId: EnginePeer.Id?) -> ChannelVisibilityControllerState {
-        return ChannelVisibilityControllerState(selectedType: self.selectedType, editingPublicLinkText: self.editingPublicLinkText, addressNameValidationStatus: self.addressNameValidationStatus, updatingAddressName: updatingAddressName, revealedRevokePeerId: self.revealedRevokePeerId, revokingPeerId: revokingPeerId, revokingPrivateLink: self.revokingPrivateLink, forwardingEnabled: self.forwardingEnabled, joinToSend: self.joinToSend, approveMembers: self.approveMembers)
+        return ChannelVisibilityControllerState(selectedType: self.selectedType, editingPublicLinkText: self.editingPublicLinkText, addressNameValidationStatus: self.addressNameValidationStatus, updatingAddressName: updatingAddressName, revealedRevokePeerId: self.revealedRevokePeerId, revokingPeerId: revokingPeerId, revokingPrivateLink: self.revokingPrivateLink, forwardingEnabled: self.forwardingEnabled, joinToSend: self.joinToSend, approveMembers: self.approveMembers, approveMembersApplyToInvites: self.approveMembersApplyToInvites)
     }
     
     func withUpdatedRevokingPrivateLink(_ revokingPrivateLink: Bool) -> ChannelVisibilityControllerState {
-        return ChannelVisibilityControllerState(selectedType: self.selectedType, editingPublicLinkText: self.editingPublicLinkText, addressNameValidationStatus: self.addressNameValidationStatus, updatingAddressName: updatingAddressName, revealedRevokePeerId: self.revealedRevokePeerId, revokingPeerId: self.revokingPeerId, revokingPrivateLink: revokingPrivateLink, forwardingEnabled: self.forwardingEnabled, joinToSend: self.joinToSend, approveMembers: self.approveMembers)
+        return ChannelVisibilityControllerState(selectedType: self.selectedType, editingPublicLinkText: self.editingPublicLinkText, addressNameValidationStatus: self.addressNameValidationStatus, updatingAddressName: updatingAddressName, revealedRevokePeerId: self.revealedRevokePeerId, revokingPeerId: self.revokingPeerId, revokingPrivateLink: revokingPrivateLink, forwardingEnabled: self.forwardingEnabled, joinToSend: self.joinToSend, approveMembers: self.approveMembers, approveMembersApplyToInvites: self.approveMembersApplyToInvites)
     }
     
     func withUpdatedForwardingEnabled(_ forwardingEnabled: Bool) -> ChannelVisibilityControllerState {
-        return ChannelVisibilityControllerState(selectedType: self.selectedType, editingPublicLinkText: self.editingPublicLinkText, addressNameValidationStatus: self.addressNameValidationStatus, updatingAddressName: updatingAddressName, revealedRevokePeerId: self.revealedRevokePeerId, revokingPeerId: self.revokingPeerId, revokingPrivateLink: self.revokingPrivateLink, forwardingEnabled: forwardingEnabled, joinToSend: self.joinToSend, approveMembers: self.approveMembers)
+        return ChannelVisibilityControllerState(selectedType: self.selectedType, editingPublicLinkText: self.editingPublicLinkText, addressNameValidationStatus: self.addressNameValidationStatus, updatingAddressName: updatingAddressName, revealedRevokePeerId: self.revealedRevokePeerId, revokingPeerId: self.revokingPeerId, revokingPrivateLink: self.revokingPrivateLink, forwardingEnabled: forwardingEnabled, joinToSend: self.joinToSend, approveMembers: self.approveMembers, approveMembersApplyToInvites: self.approveMembersApplyToInvites)
     }
     
     func withUpdatedJoinToSend(_ joinToSend: CurrentChannelJoinToSend?) -> ChannelVisibilityControllerState {
-        return ChannelVisibilityControllerState(selectedType: self.selectedType, editingPublicLinkText: self.editingPublicLinkText, addressNameValidationStatus: self.addressNameValidationStatus, updatingAddressName: updatingAddressName, revealedRevokePeerId: self.revealedRevokePeerId, revokingPeerId: self.revokingPeerId, revokingPrivateLink: self.revokingPrivateLink, forwardingEnabled: self.forwardingEnabled, joinToSend: joinToSend, approveMembers: self.approveMembers)
+        return ChannelVisibilityControllerState(selectedType: self.selectedType, editingPublicLinkText: self.editingPublicLinkText, addressNameValidationStatus: self.addressNameValidationStatus, updatingAddressName: updatingAddressName, revealedRevokePeerId: self.revealedRevokePeerId, revokingPeerId: self.revokingPeerId, revokingPrivateLink: self.revokingPrivateLink, forwardingEnabled: self.forwardingEnabled, joinToSend: joinToSend, approveMembers: self.approveMembers, approveMembersApplyToInvites: self.approveMembersApplyToInvites)
     }
     
     func withUpdatedApproveMembers(_ approveMembers: Bool) -> ChannelVisibilityControllerState {
-        return ChannelVisibilityControllerState(selectedType: self.selectedType, editingPublicLinkText: self.editingPublicLinkText, addressNameValidationStatus: self.addressNameValidationStatus, updatingAddressName: updatingAddressName, revealedRevokePeerId: self.revealedRevokePeerId, revokingPeerId: self.revokingPeerId, revokingPrivateLink: self.revokingPrivateLink, forwardingEnabled: self.forwardingEnabled, joinToSend: self.joinToSend, approveMembers: approveMembers)
+        return ChannelVisibilityControllerState(selectedType: self.selectedType, editingPublicLinkText: self.editingPublicLinkText, addressNameValidationStatus: self.addressNameValidationStatus, updatingAddressName: updatingAddressName, revealedRevokePeerId: self.revealedRevokePeerId, revokingPeerId: self.revokingPeerId, revokingPrivateLink: self.revokingPrivateLink, forwardingEnabled: self.forwardingEnabled, joinToSend: self.joinToSend, approveMembers: approveMembers, approveMembersApplyToInvites: nil)
+    }
+
+    func withUpdatedApproveMembersApplyToInvites(_ approveMembersApplyToInvites: Bool) -> ChannelVisibilityControllerState {
+        return ChannelVisibilityControllerState(selectedType: self.selectedType, editingPublicLinkText: self.editingPublicLinkText, addressNameValidationStatus: self.addressNameValidationStatus, updatingAddressName: updatingAddressName, revealedRevokePeerId: self.revealedRevokePeerId, revokingPeerId: self.revokingPeerId, revokingPrivateLink: self.revokingPrivateLink, forwardingEnabled: self.forwardingEnabled, joinToSend: self.joinToSend, approveMembers: self.approveMembers, approveMembersApplyToInvites: approveMembersApplyToInvites)
     }
 }
 
-private func channelVisibilityControllerEntries(presentationData: PresentationData, mode: ChannelVisibilityControllerMode, view: PeerView, publicChannelsToRevoke: [EnginePeer]?, importers: PeerInvitationImportersState?, state: ChannelVisibilityControllerState, limits: EngineConfiguration.UserLimits, premiumLimits: EngineConfiguration.UserLimits, isPremium: Bool, isPremiumDisabled: Bool, temporaryOrder: [String]?) -> [ChannelVisibilityEntry] {
+private func channelVisibilityControllerEntries(presentationData: PresentationData, mode: ChannelVisibilityControllerMode, view: EngineRawPeerView, publicChannelsToRevoke: [EnginePeer]?, importers: PeerInvitationImportersState?, state: ChannelVisibilityControllerState, limits: EngineConfiguration.UserLimits, premiumLimits: EngineConfiguration.UserLimits, isPremium: Bool, isPremiumDisabled: Bool, temporaryOrder: [String]?) -> [ChannelVisibilityEntry] {
     var entries: [ChannelVisibilityEntry] = []
     
     let isInitialSetup: Bool
@@ -893,7 +908,7 @@ private func channelVisibilityControllerEntries(presentationData: PresentationDa
         isInitialSetup = false
     }
     
-    if let peer = view.peers[view.peerId] as? IosappChannel {
+    if let peer = view.peers[view.peerId] as? TelegramChannel {
         var isGroup = false
         if case .group = peer.info {
             isGroup = true
@@ -1098,11 +1113,11 @@ private func channelVisibilityControllerEntries(presentationData: PresentationDa
                         
                         var usernames = peer.usernames
                         if let temporaryOrder = temporaryOrder {
-                            var usernamesMap: [String: IosappPeerUsername] = [:]
+                            var usernamesMap: [String: TelegramPeerUsername] = [:]
                             for username in usernames {
                                 usernamesMap[username.username] = username
                             }
-                            var sortedUsernames: [IosappPeerUsername] = []
+                            var sortedUsernames: [TelegramPeerUsername] = []
                             for username in temporaryOrder {
                                 if let username = usernamesMap[username] {
                                     sortedUsernames.append(username)
@@ -1155,18 +1170,27 @@ private func channelVisibilityControllerEntries(presentationData: PresentationDa
                     entries.append(.joinToSendEveryone(presentationData.theme, presentationData.strings.Group_Setup_WhoCanSendMessages_Everyone, joinToSend == .everyone))
                     entries.append(.joinToSendMembers(presentationData.theme, presentationData.strings.Group_Setup_WhoCanSendMessages_OnlyMembers, joinToSend == .members))
                 }
-                    
-                if !isDiscussion || joinToSend == .members {
-                    entries.append(.approveMembers(presentationData.theme, presentationData.strings.Group_Setup_ApproveNewMembers, approveMembers))
-                    entries.append(.approveMembersInfo(presentationData.theme, presentationData.strings.Group_Setup_ApproveNewMembersInfo))
-                }
+            }
+
+            let approveMembersTitle = isGroup ? presentationData.strings.Group_Setup_ApproveNewMembers : presentationData.strings.Channel_Setup_ApproveNewSubscribers
+            var approveMembersInfo = isGroup ? presentationData.strings.Group_Setup_ApproveNewMembersInfo : presentationData.strings.Channel_Setup_ApproveNewSubscribersInfo
+            var guardBotId: EnginePeer.Id?
+            if let cachedChannelData = view.cachedData as? CachedChannelData, let currentGuardBotId = cachedChannelData.guardBotId, let guardBotPeer = view.peers[currentGuardBotId].flatMap(EnginePeer.init), let guardBotUsername = guardBotPeer.addressName, !guardBotUsername.isEmpty {
+                guardBotId = currentGuardBotId
+                approveMembersInfo += " " + presentationData.strings.Group_Setup_ApproveNewMembersManagedBy("[@\(guardBotUsername)](guardbot)").string
+            }
+            
+            if !isGroup && selectedType == .publicChannel {
+            } else {
+                entries.append(.approveMembers(presentationData.theme, approveMembersTitle, approveMembers))
+                entries.append(.approveMembersInfo(presentationData.theme, approveMembersInfo, guardBotId))
             }
             
             entries.append(.forwardingHeader(presentationData.theme, isGroup ? presentationData.strings.Group_Setup_ForwardingGroupTitle.uppercased() : presentationData.strings.Group_Setup_ForwardingChannelTitle.uppercased()))
             entries.append(.forwardingDisabled(presentationData.theme, presentationData.strings.Group_Setup_ForwardingDisabled, !forwardingEnabled))
             entries.append(.forwardingInfo(presentationData.theme, forwardingEnabled ? (isGroup ? presentationData.strings.Group_Setup_ForwardingGroupInfo : presentationData.strings.Group_Setup_ForwardingChannelInfo) : (isGroup ? presentationData.strings.Group_Setup_ForwardingGroupInfoDisabled : presentationData.strings.Group_Setup_ForwardingChannelInfoDisabled)))
         }
-    } else if let peer = view.peers[view.peerId] as? IosappGroup {
+    } else if let peer = view.peers[view.peerId] as? TelegramGroup {
         if case .revokeNames = mode {
             let count = Int32(publicChannelsToRevoke?.count ?? 0)
             
@@ -1321,7 +1345,7 @@ private func channelVisibilityControllerEntries(presentationData: PresentationDa
     return entries
 }
 
-private func effectiveChannelType(mode: ChannelVisibilityControllerMode, state: ChannelVisibilityControllerState, peer: IosappChannel, cachedData: CachedPeerData?) -> CurrentChannelType {
+private func effectiveChannelType(mode: ChannelVisibilityControllerMode, state: ChannelVisibilityControllerState, peer: TelegramChannel, cachedData: EngineCachedPeerData?) -> CurrentChannelType {
     let selectedType: CurrentChannelType
     if let current = state.selectedType {
         selectedType = current
@@ -1339,7 +1363,7 @@ private func effectiveChannelType(mode: ChannelVisibilityControllerMode, state: 
     return selectedType
 }
 
-private func updatedAddressName(mode: ChannelVisibilityControllerMode, state: ChannelVisibilityControllerState, peer: EnginePeer, cachedData: CachedPeerData?) -> String? {
+private func updatedAddressName(mode: ChannelVisibilityControllerMode, state: ChannelVisibilityControllerState, peer: EnginePeer, cachedData: EngineCachedPeerData?) -> String? {
     if case let .channel(peer) = peer {
         let selectedType = effectiveChannelType(mode: mode, state: state, peer: peer, cachedData: cachedData)
         
@@ -1459,23 +1483,30 @@ public func channelVisibilityController(context: AccountContext, updatedPresenta
     actionsDisposable.add(toggleRequestToJoinDisposable)
     
     let temporaryOrder = Promise<[String]?>(nil)
+    let activeInviteLinksCount = Atomic<Int32>(value: 0)
+    let currentPeerIsGroup = Atomic<Bool>(value: true)
+    let activeInviteLinksContext = context.engine.peers.peerExportedInvitations(peerId: peerId, adminId: nil, revoked: false, forceUpdate: false)
+    actionsDisposable.add((activeInviteLinksContext.state
+    |> deliverOnMainQueue).start(next: { state in
+        let _ = activeInviteLinksCount.swap(state.hasLoadedOnce ? state.count : 0)
+    }))
     
     let arguments = ChannelVisibilityControllerArguments(context: context, updateCurrentType: { type in
         if type == .publicChannel {
             let _ = combineLatest(
                 queue: Queue.mainQueue(),
                 adminedPublicChannels.get() |> filter { $0 != nil } |> take(1),
-                context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: context.account.peerId)),
-                context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: peerId)),
+                context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: context.account.peerId)),
+                context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: peerId)),
                 context.engine.data.get(
-                    IosappEngine.EngineData.Item.Configuration.UserLimits(isPremium: false),
-                    IosappEngine.EngineData.Item.Configuration.UserLimits(isPremium: true)
+                    TelegramEngine.EngineData.Item.Configuration.UserLimits(isPremium: false),
+                    TelegramEngine.EngineData.Item.Configuration.UserLimits(isPremium: true)
                 )
             ).start(next: { peers, accountPeer, peer, data in
                 let (limits, premiumLimits) = data
                 let isPremium = accountPeer?.isPremium ?? false
                 
-                let hasAdditionalUsernames = (peer?._asPeer().usernames.firstIndex(where: { !$0.flags.contains(.isEditable) }) ?? nil) != nil
+                let hasAdditionalUsernames = (peer?.usernames.firstIndex(where: { !$0.flags.contains(.isEditable) }) ?? nil) != nil
                 
                 if let peers = peers {
                     let count = Int32(peers.count)
@@ -1579,7 +1610,7 @@ public func channelVisibilityController(context: AccountContext, updatedPresenta
         }, action: { _, f in
             f(.dismissWithoutContent)
             
-            let _ = (context.engine.data.get(IosappEngine.EngineData.Item.Peer.ExportedInvitation(id: peerId))
+            let _ = (context.engine.data.get(TelegramEngine.EngineData.Item.Peer.ExportedInvitation(id: peerId))
             |> deliverOnMainQueue).start(next: { exportedInvitation in
                 if let link = exportedInvitation?.link {
                     UIPasteboard.general.string = link
@@ -1597,13 +1628,20 @@ public func channelVisibilityController(context: AccountContext, updatedPresenta
         }, action: { _, f in
             f(.dismissWithoutContent)
             
-            let _ = (context.engine.data.get(IosappEngine.EngineData.Item.Peer.ExportedInvitation(id: peerId))
+            let _ = (context.engine.data.get(TelegramEngine.EngineData.Item.Peer.ExportedInvitation(id: peerId))
             |> deliverOnMainQueue).start(next: { invite in
                 if let invite = invite {
-                    let _ = (context.account.postbox.loadedPeerWithId(peerId)
+                    let _ = (context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: peerId))
+                    |> mapToSignal { peer -> Signal<EnginePeer, NoError> in
+                        if let peer {
+                            return .single(peer)
+                        } else {
+                            return .never()
+                        }
+                    }
                     |> deliverOnMainQueue).start(next: { peer in
                         let isGroup: Bool
-                        if let peer = peer as? IosappChannel, case .broadcast = peer.info {
+                        if case let .channel(channel) = peer, case .broadcast = channel.info {
                             isGroup = false
                         } else {
                             isGroup = true
@@ -1619,10 +1657,17 @@ public func channelVisibilityController(context: AccountContext, updatedPresenta
         }, action: { _, f in
             f(.dismissWithoutContent)
         
-            let _ = (context.account.postbox.loadedPeerWithId(peerId)
+            let _ = (context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: peerId))
+            |> mapToSignal { peer -> Signal<EnginePeer, NoError> in
+                if let peer {
+                    return .single(peer)
+                } else {
+                    return .never()
+                }
+            }
             |> deliverOnMainQueue).start(next: { peer in
                 let isGroup: Bool
-                if let peer = peer as? IosappChannel, case .broadcast = peer.info {
+                if case let .channel(channel) = peer, case .broadcast = channel.info {
                     isGroup = false
                 } else {
                     isGroup = true
@@ -1638,7 +1683,7 @@ public func channelVisibilityController(context: AccountContext, updatedPresenta
                         ActionSheetButtonItem(title: presentationData.strings.GroupInfo_InviteLink_RevokeLink, color: .destructive, action: {
                             dismissAction()
                             
-                            let _ = (context.engine.data.get(IosappEngine.EngineData.Item.Peer.ExportedInvitation(id: peerId))
+                            let _ = (context.engine.data.get(TelegramEngine.EngineData.Item.Peer.ExportedInvitation(id: peerId))
                             |> deliverOnMainQueue).start(next: { exportedInvitation in
                                 if let link = exportedInvitation?.link {
                                     var revoke = false
@@ -1684,12 +1729,40 @@ public func channelVisibilityController(context: AccountContext, updatedPresenta
             return state.withUpdatedJoinToSend(value)
         }
     }, toggleApproveMembers: { value in
-        updateState { state in
-            return state.withUpdatedApproveMembers(value)
+        let updateApproveMembers: (Bool) -> Void = { applyToInvites in
+            updateState { state in
+                return state.withUpdatedApproveMembers(value).withUpdatedApproveMembersApplyToInvites(applyToInvites)
+            }
         }
+
+        let inviteLinksCount = activeInviteLinksCount.with { $0 }
+        if inviteLinksCount > 0 {
+            let presentationData = context.sharedContext.currentPresentationData.with { $0 }
+            let isGroup = currentPeerIsGroup.with { $0 }
+            let linksText = presentationData.strings.Group_Setup_ApproveNewMembersApplyToExistingInviteLinksText_Links(inviteLinksCount)
+            let text: String
+            if isGroup {
+                text = value ? presentationData.strings.Group_Setup_ApproveNewMembersApplyToExistingInviteLinksText_EnableGroup(linksText).string : presentationData.strings.Group_Setup_ApproveNewMembersApplyToExistingInviteLinksText_DisableGroup(linksText).string
+            } else {
+                text = value ? presentationData.strings.Group_Setup_ApproveNewMembersApplyToExistingInviteLinksText_EnableChannel(linksText).string : presentationData.strings.Group_Setup_ApproveNewMembersApplyToExistingInviteLinksText_DisableChannel(linksText).string
+            }
+            presentControllerImpl?(textAlertController(context: context, updatedPresentationData: updatedPresentationData, title: presentationData.strings.Group_Setup_ApproveNewMembersApplyToExistingInviteLinksTitle, text: text, actions: [
+                TextAlertAction(type: .genericAction, title: presentationData.strings.Common_No, action: {
+                    updateApproveMembers(false)
+                }),
+                TextAlertAction(type: .defaultAction, title: presentationData.strings.Common_Yes, action: {
+                    updateApproveMembers(true)
+                })
+            ], parseMarkdown: true), nil)
+        } else {
+            updateApproveMembers(false)
+        }
+    }, openGuardBot: { guardBotId in
+        let controller = channelAdminController(context: context, updatedPresentationData: updatedPresentationData, peerId: peerId, adminId: guardBotId, initialParticipant: nil, updated: { _ in }, upgradedToSupergroup: upgradedToSupergroup, transferedOwnership: { _ in })
+        pushControllerImpl?(controller)
     }, activateLink: { name in
         dismissInputImpl?()
-        let _ = (context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: peerId))
+        let _ = (context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: peerId))
         |> deliverOnMainQueue).start(next: { peer in
             let isGroup: Bool
             if case let .channel(channel) = peer, case .broadcast = channel.info {
@@ -1731,7 +1804,7 @@ public func channelVisibilityController(context: AccountContext, updatedPresenta
         })
     }, deactivateLink: { name in
         dismissInputImpl?()
-        let _ = (context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: peerId))
+        let _ = (context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: peerId))
         |> deliverOnMainQueue).start(next: { peer in
             let isGroup: Bool
             if case let .channel(channel) = peer, case .broadcast = channel.info {
@@ -1772,7 +1845,7 @@ public func channelVisibilityController(context: AccountContext, updatedPresenta
     let previousUsernames = Atomic<[String]?>(value: nil)
     
     let mainLink = context.engine.data.subscribe(
-        IosappEngine.EngineData.Item.Peer.ExportedInvitation(id: peerId)
+        TelegramEngine.EngineData.Item.Peer.ExportedInvitation(id: peerId)
     )
     
     let importersState = Promise<PeerInvitationImportersState?>(nil)
@@ -1800,9 +1873,9 @@ public func channelVisibilityController(context: AccountContext, updatedPresenta
         importersContext,
         importersState.get(),
         context.engine.data.get(
-            IosappEngine.EngineData.Item.Configuration.UserLimits(isPremium: false),
-            IosappEngine.EngineData.Item.Configuration.UserLimits(isPremium: true),
-            IosappEngine.EngineData.Item.Peer.Peer(id: context.account.peerId)
+            TelegramEngine.EngineData.Item.Configuration.UserLimits(isPremium: false),
+            TelegramEngine.EngineData.Item.Configuration.UserLimits(isPremium: true),
+            TelegramEngine.EngineData.Item.Peer.Peer(id: context.account.peerId)
         ),
         temporaryOrder.get()
     )
@@ -1816,13 +1889,14 @@ public func channelVisibilityController(context: AccountContext, updatedPresenta
         var footerItem: ItemListControllerFooterItem?
         
         var isGroup = false
-        if let peer = peer as? IosappChannel {
+        if let peer = peer as? TelegramChannel {
             if case .group = peer.info {
                 isGroup = true
             }
-        } else if let _ = peer as? IosappGroup {
+        } else if let _ = peer as? TelegramGroup {
             isGroup = true
         }
+        let _ = currentPeerIsGroup.swap(isGroup)
         
         var rightNavigationButton: ItemListNavigationButton?
         if case .revokeNames = mode {
@@ -1834,7 +1908,7 @@ public func channelVisibilityController(context: AccountContext, updatedPresenta
                 })
             }
         } else {
-            if let peer = peer as? IosappChannel {
+            if let peer = peer as? TelegramChannel {
                 var doneEnabled = true
                 if let selectedType = state.selectedType {
                     switch selectedType {
@@ -1866,7 +1940,7 @@ public func channelVisibilityController(context: AccountContext, updatedPresenta
                     isInitialSetup = false
                 }
                 
-                rightNavigationButton = ItemListNavigationButton(content: .text(isInitialSetup ? presentationData.strings.Common_Next : presentationData.strings.Common_Done), style: state.updatingAddressName ? .activity : .bold, enabled: doneEnabled, action: {
+                rightNavigationButton = ItemListNavigationButton(content: isInitialSetup ? .text(presentationData.strings.Common_Next) : .icon(.done), style: state.updatingAddressName ? .activity : .bold, enabled: doneEnabled, action: {
                     var updatedAddressNameValue: String?
                     updateState { state in
                         updatedAddressNameValue = updatedAddressName(mode: mode, state: state, peer: .channel(peer), cachedData: view.cachedData)
@@ -1886,7 +1960,7 @@ public func channelVisibilityController(context: AccountContext, updatedPresenta
                     }
                     
                     if let updatedApproveMembers = state.approveMembers {
-                        toggleRequestToJoinDisposable.set(context.engine.peers.toggleChannelJoinRequest(peerId: peerId, enabled: updatedApproveMembers).start())
+                        toggleRequestToJoinDisposable.set(context.engine.peers.toggleChannelJoinRequest(peerId: peerId, enabled: updatedApproveMembers, guardBotId: nil, applyToInvites: state.approveMembersApplyToInvites ?? false).start())
                     }
                     
                     if let updatedAddressNameValue = updatedAddressNameValue {
@@ -1942,7 +2016,7 @@ public func channelVisibilityController(context: AccountContext, updatedPresenta
                         }
                     }
                 })
-            } else if let peer = peer as? IosappGroup {
+            } else if let peer = peer as? TelegramGroup {
                 var doneEnabled = true
                 if let selectedType = state.selectedType {
                     switch selectedType {
@@ -1962,7 +2036,7 @@ public func channelVisibilityController(context: AccountContext, updatedPresenta
                     }
                 }
                 
-                rightNavigationButton = ItemListNavigationButton(content: .text(presentationData.strings.Common_Done), style: state.updatingAddressName ? .activity : .bold, enabled: doneEnabled, action: {
+                rightNavigationButton = ItemListNavigationButton(content: .icon(.done), style: state.updatingAddressName ? .activity : .bold, enabled: doneEnabled, action: {
                     var updatedAddressNameValue: String?
                     updateState { state in
                         updatedAddressNameValue = updatedAddressName(mode: mode, state: state, peer: .legacyGroup(peer), cachedData: nil)
@@ -1981,12 +2055,12 @@ public func channelVisibilityController(context: AccountContext, updatedPresenta
                             _ = ApplicationSpecificNotice.markAsSeenSetPublicChannelLink(accountManager: context.sharedContext.accountManager).start()
                             
                             let signal = context.engine.peers.convertGroupToSupergroup(peerId: peerId)
-                            |> mapToSignal { upgradedPeerId -> Signal<PeerId?, ConvertGroupToSupergroupError> in
+                            |> mapToSignal { upgradedPeerId -> Signal<EnginePeer.Id?, ConvertGroupToSupergroupError> in
                                 return context.engine.peers.updateAddressName(domain: .peer(upgradedPeerId), name: updatedAddressNameValue.isEmpty ? nil : updatedAddressNameValue)
                                 |> `catch` { _ -> Signal<Void, NoError> in
                                     return .complete()
                                 }
-                                |> mapToSignal { _ -> Signal<PeerId?, NoError> in
+                                |> mapToSignal { _ -> Signal<EnginePeer.Id?, NoError> in
                                     return .complete()
                                 }
                                 |> then(.single(upgradedPeerId))
@@ -2050,7 +2124,7 @@ public func channelVisibilityController(context: AccountContext, updatedPresenta
             case .initialSetup:
                 leftNavigationButton = nil
             case .generic, .privateLink, .revokeNames:
-                leftNavigationButton = ItemListNavigationButton(content: .text(presentationData.strings.Common_Cancel), style: .regular, enabled: true, action: {
+                leftNavigationButton = ItemListNavigationButton(content: .icon(.close), style: .regular, enabled: true, action: {
                     dismissImpl?()
                 })
         }
@@ -2069,7 +2143,7 @@ public func channelVisibilityController(context: AccountContext, updatedPresenta
         let hasNamesToRevoke = publicChannelsToRevoke != nil && !publicChannelsToRevoke!.isEmpty
         let hadNamesToRevoke = previousHadNamesToRevoke.swap(hasNamesToRevoke)
         
-        if let peer = view.peers[view.peerId] as? IosappChannel {
+        if let peer = view.peers[view.peerId] as? TelegramChannel {
             let currentUsernames = peer.usernames.map { $0.username }
             let previousUsernames = previousUsernames.swap(currentUsernames)
             
@@ -2238,7 +2312,7 @@ public func channelVisibilityController(context: AccountContext, updatedPresenta
     })
     
     controller.setReorderCompleted({ (entries: [ChannelVisibilityEntry]) -> Void in
-        var currentUsernames: [IosappPeerUsername] = []
+        var currentUsernames: [TelegramPeerUsername] = []
         for entry in entries {
             switch entry {
             case let .additionalLink(_, username, _):
@@ -2291,7 +2365,7 @@ public func channelVisibilityController(context: AccountContext, updatedPresenta
                         peerIds = peerIdsValue
                     }
                     
-                    let filteredPeerIds = peerIds.compactMap({ peerId -> PeerId? in
+                    let filteredPeerIds = peerIds.compactMap({ peerId -> EnginePeer.Id? in
                         if case let .peer(id) = peerId {
                             return id
                         } else {
@@ -2299,7 +2373,7 @@ public func channelVisibilityController(context: AccountContext, updatedPresenta
                         }
                     })
                     if filteredPeerIds.isEmpty {
-                        let _ = (context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: peerId))
+                        let _ = (context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: peerId))
                         |> deliverOnMainQueue).start(next: { peer in
                             guard let peer = peer else {
                                 return
@@ -2310,7 +2384,7 @@ public func channelVisibilityController(context: AccountContext, updatedPresenta
                         selectionController.displayProgress = true
                         let _ = (context.engine.peers.addChannelMembers(peerId: peerId, memberIds: filteredPeerIds)
                         |> deliverOnMainQueue).start(error: { [weak selectionController] _ in
-                            let _ = (context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: peerId))
+                            let _ = (context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: peerId))
                             |> deliverOnMainQueue).start(next: { peer in
                                 guard let peer = peer else {
                                     return
@@ -2322,7 +2396,7 @@ public func channelVisibilityController(context: AccountContext, updatedPresenta
                                 context.sharedContext.navigateToChatController(NavigateToChatControllerParams(navigationController: navigationController, chatController: nil, context: context, chatLocation: .peer(peer), keepStack: .never, animated: true))
                             })
                         }, completed: { [weak selectionController] in
-                            let _ = (context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: peerId))
+                            let _ = (context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: peerId))
                             |> deliverOnMainQueue).start(next: { peer in
                                 guard let peer = peer else {
                                     return

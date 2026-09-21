@@ -3,11 +3,11 @@ import UIKit
 import AsyncDisplayKit
 import Display
 import AnimatedStickerNode
-import IosappCore
+import TelegramCore
 import Postbox
-import IosappPresentationData
+import TelegramPresentationData
 import AccountContext
-import IosappAnimatedStickerNode
+import TelegramAnimatedStickerNode
 import ReactionButtonListComponent
 import SwiftSignalKit
 import Lottie
@@ -38,22 +38,22 @@ public final class ReactionItem {
     }
     
     public let reaction: ReactionItem.Reaction
-    public let appearAnimation: IosappMediaFile.Accessor
-    public let stillAnimation: IosappMediaFile.Accessor
-    public let listAnimation: IosappMediaFile.Accessor
-    public let largeListAnimation: IosappMediaFile.Accessor
-    public let applicationAnimation: IosappMediaFile.Accessor?
-    public let largeApplicationAnimation: IosappMediaFile.Accessor?
+    public let appearAnimation: TelegramMediaFile.Accessor
+    public let stillAnimation: TelegramMediaFile.Accessor
+    public let listAnimation: TelegramMediaFile.Accessor
+    public let largeListAnimation: TelegramMediaFile.Accessor
+    public let applicationAnimation: TelegramMediaFile.Accessor?
+    public let largeApplicationAnimation: TelegramMediaFile.Accessor?
     public let isCustom: Bool
     
     public init(
         reaction: ReactionItem.Reaction,
-        appearAnimation: IosappMediaFile.Accessor,
-        stillAnimation: IosappMediaFile.Accessor,
-        listAnimation: IosappMediaFile.Accessor,
-        largeListAnimation: IosappMediaFile.Accessor,
-        applicationAnimation: IosappMediaFile.Accessor?,
-        largeApplicationAnimation: IosappMediaFile.Accessor?,
+        appearAnimation: TelegramMediaFile.Accessor,
+        stillAnimation: TelegramMediaFile.Accessor,
+        listAnimation: TelegramMediaFile.Accessor,
+        largeListAnimation: TelegramMediaFile.Accessor,
+        applicationAnimation: TelegramMediaFile.Accessor?,
+        largeApplicationAnimation: TelegramMediaFile.Accessor?,
         isCustom: Bool
     ) {
         self.reaction = reaction
@@ -191,9 +191,9 @@ private final class TitleLabelView: UIView {
         
         let tintBody = MarkdownAttributeSet(font: Font.regular(13.0), textColor: .black)
         let tintBold = MarkdownAttributeSet(font: Font.semibold(13.0), textColor: .black)
-        let tintLink = MarkdownAttributeSet(font: Font.regular(13.0), textColor: .black, additionalAttributes: [IosappTextAttributes.URL: true as NSNumber])
+        let tintLink = MarkdownAttributeSet(font: Font.regular(13.0), textColor: .black, additionalAttributes: [TelegramTextAttributes.URL: true as NSNumber])
         let tintAttributes = MarkdownAttributes(body: tintBody, bold: tintBold, link: tintLink, linkAttribute: { _ in
-            return (IosappTextAttributes.URL, "")
+            return (TelegramTextAttributes.URL, "")
         })
         
         let contentSize = self.contentView.update(
@@ -295,6 +295,7 @@ public final class ReactionContextNode: ASDisplayNode, ASScrollViewDelegate {
         var id: AnyHashable
         var version: Int
         var isPreset: Bool
+        var canLoadMore: Bool
     }
     
     private struct EmojiSearchState {
@@ -378,7 +379,7 @@ public final class ReactionContextNode: ASDisplayNode, ASScrollViewDelegate {
     
     public var emojiSelected: ((String) -> Void)?
     public var reactionSelected: ((UpdateMessageReaction, Bool) -> Void)?
-    public var premiumReactionsSelected: ((IosappMediaFile?) -> Void)?
+    public var premiumReactionsSelected: ((TelegramMediaFile?) -> Void)?
     
     private var hapticFeedback: HapticFeedback?
     private var standaloneReactionAnimation: StandaloneReactionAnimation?
@@ -425,9 +426,10 @@ public final class ReactionContextNode: ASDisplayNode, ASScrollViewDelegate {
             self.emojiSearchState.set(.single(self.emojiSearchStateValue))
         }
     }
+    private var emojiSearchContext: EmojiSearchContext?
     
-    private var emptyResultEmojis: [IosappMediaFile] = []
-    private var stableEmptyResultEmoji: IosappMediaFile?
+    private var emptyResultEmojis: [TelegramMediaFile] = []
+    private var stableEmptyResultEmoji: TelegramMediaFile?
     private let stableEmptyResultEmojiDisposable = MetaDisposable()
     
     private var horizontalExpandRecognizer: UIPanGestureRecognizer?
@@ -457,7 +459,7 @@ public final class ReactionContextNode: ASDisplayNode, ASScrollViewDelegate {
     
     public static func randomGenericReactionEffect(context: AccountContext) -> Signal<String?, NoError> {
         return context.engine.stickers.loadedStickerPack(reference: .emojiGenericAnimations, forceActualized: false)
-        |> map { result -> IosappMediaFile? in
+        |> map { result -> TelegramMediaFile? in
             switch result {
             case let .result(_, items, _):
                 return items.randomElement()?.file._parse()
@@ -473,8 +475,8 @@ public final class ReactionContextNode: ASDisplayNode, ASScrollViewDelegate {
             }
             return Signal { subscriber in
                 let fetchDisposable = freeMediaFileInteractiveFetched(account: context.account, userLocation: .other, fileReference: .standalone(media: file)).start()
-                let dataDisposable = (context.account.postbox.mediaBox.resourceData(file.resource)
-                |> filter(\.complete)
+                let dataDisposable = (context.engine.resources.data(resource: EngineMediaResource(file.resource))
+                |> filter(\.isComplete)
                 |> take(1)).start(next: { data in
                     subscriber.putNext(data.path)
                     subscriber.putCompletion()
@@ -531,6 +533,7 @@ public final class ReactionContextNode: ASDisplayNode, ASScrollViewDelegate {
         self.scrollNode.view.scrollsToTop = false
         self.scrollNode.view.delaysContentTouches = false
         self.scrollNode.view.canCancelContentTouches = true
+        self.scrollNode.view.scrollsToTop = false
         self.scrollNode.clipsToBounds = false
         if #available(iOS 11.0, *) {
             self.scrollNode.view.contentInsetAdjustmentBehavior = .never
@@ -631,7 +634,7 @@ public final class ReactionContextNode: ASDisplayNode, ASScrollViewDelegate {
         if alwaysAllowPremiumReactions {
             self.hasPremium = true
         } else {
-            self.hasPremiumDisposable = (context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: context.account.peerId))
+            self.hasPremiumDisposable = (context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: context.account.peerId))
                                          |> deliverOnMainQueue).start(next: { [weak self] peer in
                 guard let strongSelf = self else {
                     return
@@ -641,16 +644,15 @@ public final class ReactionContextNode: ASDisplayNode, ASScrollViewDelegate {
         }
         
         if let getEmojiContent = getEmojiContent, !self.reactionsLocked {
-            let viewKey = PostboxViewKey.orderedItemList(id: Namespaces.OrderedItemList.CloudFeaturedEmojiPacks)
-            self.stableEmptyResultEmojiDisposable.set((self.context.account.postbox.combinedView(keys: [viewKey])
+            self.stableEmptyResultEmojiDisposable.set((self.context.engine.data.subscribe(TelegramEngine.EngineData.Item.OrderedLists.ListItems(collectionId: Namespaces.OrderedItemList.CloudFeaturedEmojiPacks))
             |> take(1)
-            |> deliverOnMainQueue).start(next: { [weak self] views in
-                guard let strongSelf = self, let view = views.views[viewKey] as? OrderedItemListView else {
+            |> deliverOnMainQueue).start(next: { [weak self] items in
+                guard let strongSelf = self else {
                     return
                 }
-                var filteredFiles: [IosappMediaFile] = []
+                var filteredFiles: [TelegramMediaFile] = []
                 let filterList: [String] = ["😖", "😫", "🫠", "😨", "❓"]
-                for featuredEmojiPack in view.items.lazy.map({ $0.contents.get(FeaturedStickerPackItem.self)! }) {
+                for featuredEmojiPack in items.lazy.map({ $0.contents.get(FeaturedStickerPackItem.self)! }) {
                     for item in featuredEmojiPack.topItems {
                         if let alt = item.file.customEmojiAlt {
                             if filterList.contains(alt) {
@@ -689,7 +691,7 @@ public final class ReactionContextNode: ASDisplayNode, ASScrollViewDelegate {
                     } else {
                         strongSelf.stableEmptyResultEmoji = nil
                     }
-                    emojiContent = emojiContent.withUpdatedItemGroups(panelItemGroups: emojiContent.panelItemGroups, contentItemGroups: emojiSearchResult.groups, itemContentUniqueId: EmojiPagerContentComponent.ContentId(id: emojiSearchResult.id, version: emojiSearchResult.version), emptySearchResults: emptySearchResults, searchState: emojiSearchState.isSearching ? .searching : .active)
+                    emojiContent = emojiContent.withUpdatedItemGroups(panelItemGroups: emojiContent.panelItemGroups, contentItemGroups: emojiSearchResult.groups, itemContentUniqueId: EmojiPagerContentComponent.ContentId(id: emojiSearchResult.id, version: emojiSearchResult.version), emptySearchResults: emptySearchResults, searchState: emojiSearchState.isSearching ? .searching : .active, canLoadMore: emojiSearchResult.canLoadMore)
                 } else {
                     strongSelf.stableEmptyResultEmoji = nil
                     
@@ -1741,20 +1743,19 @@ public final class ReactionContextNode: ASDisplayNode, ASScrollViewDelegate {
                     return
                 }
                 
-                let viewKey = PostboxViewKey.orderedItemList(id: Namespaces.OrderedItemList.CloudFeaturedEmojiPacks)
-                let _ = (strongSelf.context.account.postbox.combinedView(keys: [viewKey])
+                let _ = (strongSelf.context.engine.data.subscribe(TelegramEngine.EngineData.Item.OrderedLists.ListItems(collectionId: Namespaces.OrderedItemList.CloudFeaturedEmojiPacks))
                 |> take(1)
-                |> deliverOnMainQueue).start(next: { views in
-                    guard let strongSelf = self, let view = views.views[viewKey] as? OrderedItemListView else {
+                |> deliverOnMainQueue).start(next: { items in
+                    guard let strongSelf = self else {
                         return
                     }
-                    for featuredEmojiPack in view.items.lazy.map({ $0.contents.get(FeaturedStickerPackItem.self)! }) {
+                    for featuredEmojiPack in items.lazy.map({ $0.contents.get(FeaturedStickerPackItem.self)! }) {
                         if featuredEmojiPack.info.id == collectionId {
                             if let strongSelf = self {
                                 strongSelf.scheduledEmojiContentAnimationHint = EmojiPagerContentComponent.ContentAnimation(type: .groupInstalled(id: collectionId, scrollToGroup: true))
                             }
                             let _ = strongSelf.context.engine.stickers.addStickerPackInteractively(info: featuredEmojiPack.info._parse(), items: featuredEmojiPack.topItems).start()
-                            
+
                             break
                         }
                     }
@@ -1813,17 +1814,20 @@ public final class ReactionContextNode: ASDisplayNode, ASScrollViewDelegate {
                 
                 switch query {
                 case .none:
+                    self.emojiSearchContext = nil
                     self.emojiSearchDisposable.set(nil)
-                    self.emojiSearchState.set(.single(EmojiSearchState(result: nil, isSearching: false)))
+                    self.emojiSearchStateValue = EmojiSearchState(result: nil, isSearching: false)
                 case let .text(rawQuery, languageCode):
                     let query = rawQuery.trimmingCharacters(in: .whitespacesAndNewlines)
                     
                     if query.isEmpty {
+                        self.emojiSearchContext = nil
                         self.emojiSearchDisposable.set(nil)
-                        self.emojiSearchState.set(.single(EmojiSearchState(result: nil, isSearching: false)))
+                        self.emojiSearchStateValue = EmojiSearchState(result: nil, isSearching: false)
                     } else {
                         let context = self.context
                         let isEmojiOnly = self.isEmojiOnly
+                        self.emojiSearchContext = nil
                         
                         var signal = context.engine.stickers.searchEmojiKeywords(inputLanguageCode: languageCode, query: query, completeMatch: false)
                         if !languageCode.lowercased().hasPrefix("en") {
@@ -1839,7 +1843,7 @@ public final class ReactionContextNode: ASDisplayNode, ASScrollViewDelegate {
                             }
                         }
                     
-                        let hasPremium = context.engine.data.subscribe(IosappEngine.EngineData.Item.Peer.Peer(id: context.account.peerId))
+                        let hasPremium = context.engine.data.subscribe(TelegramEngine.EngineData.Item.Peer.Peer(id: context.account.peerId))
                         |> map { peer -> Bool in
                             guard case let .user(user) = peer else {
                                 return false
@@ -1848,10 +1852,10 @@ public final class ReactionContextNode: ASDisplayNode, ASScrollViewDelegate {
                         }
                         |> distinctUntilChanged
                         
-                        let resultSignal: Signal<[EmojiPagerContentComponent.ItemGroup], NoError>
+                        let resultSignal: Signal<(groups: [EmojiPagerContentComponent.ItemGroup], canLoadMore: Bool, isSearching: Bool, searchContext: EmojiSearchContext?), NoError>
                         if self.isMessageEffects {
                             resultSignal = signal
-                            |> mapToSignal { keywords -> Signal<[EmojiPagerContentComponent.ItemGroup], NoError> in
+                            |> mapToSignal { keywords -> Signal<(groups: [EmojiPagerContentComponent.ItemGroup], canLoadMore: Bool, isSearching: Bool, searchContext: EmojiSearchContext?), NoError> in
                                 var allEmoticons: [String: String] = [:]
                                 for keyword in keywords {
                                     for emoticon in keyword.emoticons {
@@ -1863,9 +1867,9 @@ public final class ReactionContextNode: ASDisplayNode, ASScrollViewDelegate {
                                     context.availableMessageEffects |> take(1),
                                     hasPremium |> take(1)
                                 )
-                                |> mapToSignal { availableMessageEffects, hasPremium -> Signal<[EmojiPagerContentComponent.ItemGroup], NoError> in
+                                |> mapToSignal { availableMessageEffects, hasPremium -> Signal<(groups: [EmojiPagerContentComponent.ItemGroup], canLoadMore: Bool, isSearching: Bool, searchContext: EmojiSearchContext?), NoError> in
                                     guard let availableMessageEffects else {
-                                        return .single([])
+                                        return .single(([], false, false, nil))
                                     }
                                     
                                     var filteredEffects: [AvailableMessageEffects.MessageEffect] = []
@@ -1972,7 +1976,7 @@ public final class ReactionContextNode: ASDisplayNode, ASScrollViewDelegate {
                                         )
                                     }
                                     
-                                    return .single(allItemGroups)
+                                    return .single((allItemGroups, false, false, nil))
                                 }
                             }
                         } else {
@@ -1985,7 +1989,7 @@ public final class ReactionContextNode: ASDisplayNode, ASScrollViewDelegate {
                             let localPacksSignal: Signal<FoundStickerSets, NoError> = context.engine.stickers.searchEmojiSets(query: query)
                             
                             resultSignal = signal
-                            |> mapToSignal { keywords -> Signal<[EmojiPagerContentComponent.ItemGroup], NoError> in
+                            |> mapToSignal { keywords -> Signal<(groups: [EmojiPagerContentComponent.ItemGroup], canLoadMore: Bool, isSearching: Bool, searchContext: EmojiSearchContext?), NoError> in
                                 var allEmoticons: [String: String] = [:]
                                 for keyword in keywords {
                                     for emoticon in keyword.emoticons {
@@ -2028,20 +2032,21 @@ public final class ReactionContextNode: ASDisplayNode, ASScrollViewDelegate {
                                         fillWithLoadingPlaceholders: false,
                                         items: items
                                     ))
-                                    return .single(resultGroups)
+                                    return .single((resultGroups, false, false, nil))
                                 } else {
-                                    let remoteSignal = context.engine.stickers.searchEmoji(query: query, emoticon: Array(allEmoticons.keys), inputLanguageCode: languageCode)
+                                    let emojiSearchContext = context.engine.stickers.emojiSearchContext(query: query, emoticon: Array(allEmoticons.keys), inputLanguageCode: languageCode)
+                                    let remoteSignal = emojiSearchContext.state
                                     
                                     return combineLatest(
-                                        context.account.postbox.itemCollectionsView(orderedItemListCollectionIds: [], namespaces: [Namespaces.ItemCollection.CloudEmojiPacks], aroundIndex: nil, count: 10000000) |> take(1),
+                                        context.engine.itemCollections.allItems(namespace: Namespaces.ItemCollection.CloudEmojiPacks) |> take(1),
                                         context.engine.stickers.availableReactions() |> take(1),
                                         hasPremium |> take(1),
                                         remotePacksSignal,
                                         remoteSignal,
                                         localPacksSignal
                                     )
-                                    |> map { view, availableReactions, hasPremium, foundPacks, foundEmoji, foundLocalPacks -> [EmojiPagerContentComponent.ItemGroup] in
-                                        var result: [(String, IosappMediaFile.Accessor?, String)] = []
+                                    |> map { rawItems, availableReactions, hasPremium, foundPacks, foundEmoji, foundLocalPacks -> (groups: [EmojiPagerContentComponent.ItemGroup], canLoadMore: Bool, isSearching: Bool, searchContext: EmojiSearchContext?) in
+                                        var result: [(String, TelegramMediaFile.Accessor?, String)] = []
                                         
                                         var allEmoticons: [String: String] = [:]
                                         for keyword in keywords {
@@ -2055,9 +2060,9 @@ public final class ReactionContextNode: ASDisplayNode, ASScrollViewDelegate {
                                                 switch attribute {
                                                 case let .CustomEmoji(_, _, alt, _):
                                                     if !alt.isEmpty, let keyword = allEmoticons[alt] {
-                                                        result.append((alt, IosappMediaFile.Accessor(itemFile), keyword))
+                                                        result.append((alt, TelegramMediaFile.Accessor(itemFile), keyword))
                                                     } else if alt == query {
-                                                        result.append((alt, IosappMediaFile.Accessor(itemFile), alt))
+                                                        result.append((alt, TelegramMediaFile.Accessor(itemFile), alt))
                                                     }
                                                 default:
                                                     break
@@ -2065,8 +2070,8 @@ public final class ReactionContextNode: ASDisplayNode, ASScrollViewDelegate {
                                             }
                                         }
                                         
-                                        for entry in view.entries {
-                                            guard let item = entry.item as? StickerPackItem else {
+                                        for rawItem in rawItems {
+                                            guard let item = rawItem as? StickerPackItem else {
                                                 continue
                                             }
                                             if !item.file.isPremiumEmoji {
@@ -2183,7 +2188,7 @@ public final class ReactionContextNode: ASDisplayNode, ASScrollViewDelegate {
                                                 ))
                                             }
                                         }
-                                        return resultGroups
+                                        return (resultGroups, foundEmoji.canLoadMore, foundEmoji.items.isEmpty && foundEmoji.isLoadingMore, emojiSearchContext)
                                     }
                                 }
                             }
@@ -2198,15 +2203,17 @@ public final class ReactionContextNode: ASDisplayNode, ASScrollViewDelegate {
                                 return
                             }
                             
-                            self.emojiSearchStateValue = EmojiSearchState(result: EmojiSearchResult(groups: result, id: AnyHashable(query), version: version, isPreset: false), isSearching: false)
+                            self.emojiSearchContext = result.searchContext
+                            self.emojiSearchStateValue = EmojiSearchState(result: EmojiSearchResult(groups: result.groups, id: AnyHashable(query), version: version, isPreset: false, canLoadMore: result.canLoadMore), isSearching: result.isSearching)
                             version += 1
                         }))
                     }
                 case let .category(value):
                     let context = self.context
+                    self.emojiSearchContext = nil
                     let resultSignal: Signal<(items: [EmojiPagerContentComponent.ItemGroup], isFinalResult: Bool), NoError>
                     if self.isMessageEffects {
-                        let hasPremium = context.engine.data.subscribe(IosappEngine.EngineData.Item.Peer.Peer(id: context.account.peerId))
+                        let hasPremium = context.engine.data.subscribe(TelegramEngine.EngineData.Item.Peer.Peer(id: context.account.peerId))
                         |> map { peer -> Bool in
                             guard case let .user(user) = peer else {
                                 return false
@@ -2350,11 +2357,11 @@ public final class ReactionContextNode: ASDisplayNode, ASScrollViewDelegate {
                                     continue
                                 }
                                 existingIds.insert(itemFile.fileId)
-                                let animationData = EntityKeyboardAnimationData(file: IosappMediaFile.Accessor(itemFile))
+                                let animationData = EntityKeyboardAnimationData(file: TelegramMediaFile.Accessor(itemFile))
                                 let item = EmojiPagerContentComponent.Item(
                                     animationData: animationData,
                                     content: .animation(animationData),
-                                    itemFile: IosappMediaFile.Accessor(itemFile),
+                                    itemFile: TelegramMediaFile.Accessor(itemFile),
                                     subgroupId: nil,
                                     icon: .none,
                                     tintMode: animationData.isTemplate ? .primary : .none
@@ -2414,11 +2421,11 @@ public final class ReactionContextNode: ASDisplayNode, ASScrollViewDelegate {
                                     fillWithLoadingPlaceholders: true,
                                     items: []
                                 )
-                            ], id: AnyHashable(value.id), version: version, isPreset: true), isSearching: false)
+                            ], id: AnyHashable(value.id), version: version, isPreset: true, canLoadMore: false), isSearching: false)
                             return
                         }
                         
-                        self.emojiSearchStateValue = EmojiSearchState(result: EmojiSearchResult(groups: result.items, id: AnyHashable(value.id), version: version, isPreset: true), isSearching: false)
+                        self.emojiSearchStateValue = EmojiSearchState(result: EmojiSearchResult(groups: result.items, id: AnyHashable(value.id), version: version, isPreset: true, canLoadMore: false), isSearching: false)
                         version += 1
                     }))
                 }
@@ -2426,6 +2433,9 @@ public final class ReactionContextNode: ASDisplayNode, ASScrollViewDelegate {
             updateScrollingToItemGroup: {
             },
             onScroll: {},
+            loadMore: { [weak self] in
+                self?.emojiSearchContext?.loadMore()
+            },
             chatPeerId: nil,
             peekBehavior: nil,
             customLayout: emojiContentLayout,
@@ -2729,7 +2739,7 @@ public final class ReactionContextNode: ASDisplayNode, ASScrollViewDelegate {
         let additionalAnimationNode: DefaultAnimatedStickerNodeImpl?
         var genericAnimationView: AnimationView?
         
-        var additionalAnimation: IosappMediaFile.Accessor?
+        var additionalAnimation: TelegramMediaFile.Accessor?
         if self.didTriggerExpandedReaction {
             additionalAnimation = itemNode.item.largeApplicationAnimation
         } else {
@@ -2758,7 +2768,7 @@ public final class ReactionContextNode: ASDisplayNode, ASScrollViewDelegate {
             }
             
             let additionalAnimationFile = additionalAnimation._parse()
-            additionalAnimationNodeValue.setup(source: AnimatedStickerResourceSource(account: itemNode.context.account, resource: additionalAnimationFile.resource), width: Int(effectFrame.width * 2.0), height: Int(effectFrame.height * 2.0), playbackMode: .once, mode: .direct(cachePathPrefix: self.context.account.postbox.mediaBox.shortLivedResourceCachePathPrefix(additionalAnimationFile.resource.id)))
+            additionalAnimationNodeValue.setup(source: AnimatedStickerResourceSource(account: itemNode.context.account, resource: additionalAnimationFile.resource), width: Int(effectFrame.width * 2.0), height: Int(effectFrame.height * 2.0), playbackMode: .once, mode: .direct(cachePathPrefix: self.context.engine.resources.shortLivedResourceCachePathPrefix(id: EngineMediaResource.Id(additionalAnimationFile.resource.id))))
             additionalAnimationNodeValue.frame = effectFrame
             additionalAnimationNodeValue.updateLayout(size: effectFrame.size)
             self.addSubnode(additionalAnimationNodeValue)
@@ -3818,10 +3828,10 @@ public final class StandaloneReactionAnimation: ASDisplayNode {
             component: AnyComponent(StandalonePremiumStarComponent(
                 theme: theme,
                 colors: [
-                    UIColor(rgb: 0x1a86d9),
-                    UIColor(rgb: 0x2a9ef1),
-                    UIColor(rgb: 0x53c7f5),
-                    UIColor(rgb: 0x86ddff)
+                    UIColor(rgb: 0xe57d02),
+                    UIColor(rgb: 0xf09903),
+                    UIColor(rgb: 0xf9b004),
+                    UIColor(rgb: 0xfdd219)
                 ]
             )),
             environment: {},
@@ -3894,7 +3904,7 @@ public final class StandaloneReactionAnimation: ASDisplayNode {
         let additionalAnimationNode: DefaultAnimatedStickerNodeImpl?
         var genericAnimationView: AnimationView?
         
-        var additionalAnimation: IosappMediaFile?
+        var additionalAnimation: TelegramMediaFile?
         if didTriggerExpandedReaction {
             additionalAnimation = item.largeApplicationAnimation?._parse()
         } else {
@@ -3910,7 +3920,7 @@ public final class StandaloneReactionAnimation: ASDisplayNode {
                 }
             }
             
-            additionalAnimationNodeValue.setup(source: AnimatedStickerResourceSource(account: context.account, resource: additionalAnimation.resource), width: Int(effectFrame.width * 2.0), height: Int(effectFrame.height * 2.0), playbackMode: .once, mode: .direct(cachePathPrefix: context.account.postbox.mediaBox.shortLivedResourceCachePathPrefix(additionalAnimation.resource.id)))
+            additionalAnimationNodeValue.setup(source: AnimatedStickerResourceSource(account: context.account, resource: additionalAnimation.resource), width: Int(effectFrame.width * 2.0), height: Int(effectFrame.height * 2.0), playbackMode: .once, mode: .direct(cachePathPrefix: context.engine.resources.shortLivedResourceCachePathPrefix(id: EngineMediaResource.Id(additionalAnimation.resource.id))))
             additionalAnimationNodeValue.frame = effectFrame
             additionalAnimationNodeValue.updateLayout(size: effectFrame.size)
             self.addSubnode(additionalAnimationNodeValue)

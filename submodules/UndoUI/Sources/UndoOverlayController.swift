@@ -1,8 +1,8 @@
 import Foundation
 import UIKit
 import Display
-import IosappPresentationData
-import IosappCore
+import TelegramPresentationData
+import TelegramCore
 import AccountContext
 import ComponentFlow
 import AnimatedTextComponent
@@ -18,7 +18,7 @@ public enum UndoOverlayContent {
     case swipeToReply(title: String, text: String)
     case actionSucceeded(title: String?, text: String, cancel: String?, destructive: Bool)
     case stickersModified(title: String, text: String, undo: Bool, info: StickerPackCollectionInfo, topItem: StickerPackItem?, context: AccountContext)
-    case dice(dice: IosappMediaDice, context: AccountContext, text: String, action: String?, changeAction: String?)
+    case dice(dice: TelegramMediaDice, context: AccountContext, text: String, action: String?, changeAction: String?)
     case chatAddedToFolder(context: AccountContext, chatTitle: String, folderTitle: NSAttributedString)
     case chatRemovedFromFolder(context: AccountContext, chatTitle: String, folderTitle: NSAttributedString)
     case messagesUnpinned(title: String, text: String, undo: Bool, isHidden: Bool)
@@ -35,8 +35,8 @@ public enum UndoOverlayContent {
     case voiceChatRecording(text: String)
     case voiceChatFlag(text: String)
     case voiceChatCanSpeak(text: String)
-    case sticker(context: AccountContext, file: IosappMediaFile, loop: Bool, title: String?, text: String, undoText: String?, customAction: (() -> Void)?)
-    case customEmoji(context: AccountContext, file: IosappMediaFile, loop: Bool, title: String?, text: String, undoText: String?, customAction: (() -> Void)?)
+    case sticker(context: AccountContext, file: TelegramMediaFile, loop: Bool, title: String?, text: String, undoText: String?, customAction: (() -> Void)?)
+    case customEmoji(context: AccountContext, file: TelegramMediaFile, loop: Bool, title: String?, text: String, undoText: String?, customAction: (() -> Void)?)
     case copy(text: String)
     case mediaSaved(text: String)
     case paymentSent(currencyValue: String, itemTitle: String)
@@ -49,7 +49,7 @@ public enum UndoOverlayContent {
     case universalImage(image: UIImage, size: CGSize?, title: String?, text: String, customUndoText: String?, timeout: Double?)
     case premiumPaywall(title: String?, text: String, customUndoText: String?, timeout: Double?, linkAction: ((String) -> Void)?)
     case peers(context: AccountContext, peers: [EnginePeer], title: String?, text: String, customUndoText: String?)
-    case messageTagged(context: AccountContext, isSingleMessage: Bool, customEmoji: IosappMediaFile, isBuiltinReaction: Bool, customUndoText: String?)
+    case messageTagged(context: AccountContext, isSingleMessage: Bool, customEmoji: TelegramMediaFile, isBuiltinReaction: Bool, customUndoText: String?)
     case media(context: AccountContext, file: FileMediaReference, title: String?, text: String, undoText: String?, customAction: (() -> Void)?)
     case progress(progress: CGFloat, title: String, text: String, undoText: String?)
 }

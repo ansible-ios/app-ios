@@ -12,7 +12,7 @@ swift_library(
     deps = [
         "//submodules/AsyncDisplayKit",
         "//submodules/Display",
-        "//submodules/IosappPresentationData",
+        "//submodules/TelegramPresentationData",
         "//submodules/ImageBlur",
     ],
     visibility = [

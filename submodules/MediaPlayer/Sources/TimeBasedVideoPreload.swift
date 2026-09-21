@@ -6,7 +6,7 @@ import AppKit
 #endif
 import SwiftSignalKit
 import Postbox
-import IosappCore
+import TelegramCore
 import FFMpegBinding
 
 public func preloadVideoResource(postbox: Postbox, userLocation: MediaResourceUserLocation, userContentType: MediaResourceUserContentType, resourceReference: MediaResourceReference, duration: Double) -> Signal<Never, NoError> {

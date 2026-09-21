@@ -3,9 +3,9 @@ import UIKit
 import Display
 import AsyncDisplayKit
 import SwiftSignalKit
-import IosappCore
-import IosappPresentationData
-import IosappUIPreferences
+import TelegramCore
+import TelegramPresentationData
+import TelegramUIPreferences
 import ItemListUI
 import PresentationDataUtils
 import HorizontalPeerItem
@@ -48,8 +48,7 @@ private struct PeersEntry: Comparable, Identifiable {
             strings: self.strings,
             mode: .list(compact: true),
             accountPeerId: context.account.peerId,
-            postbox: context.account.postbox,
-            network: context.account.network,
+            stateManager: context.account.stateManager,
             energyUsageSettings: context.sharedContext.energyUsageSettings,
             contentSettings: context.currentContentSettings.with { $0 },
             animationCache: context.animationCache,

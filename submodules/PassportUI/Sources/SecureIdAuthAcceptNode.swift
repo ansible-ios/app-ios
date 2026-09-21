@@ -2,10 +2,9 @@ import Foundation
 import UIKit
 import AsyncDisplayKit
 import Display
-import Postbox
-import IosappCore
+import TelegramCore
 import SwiftSignalKit
-import IosappPresentationData
+import TelegramPresentationData
 import AppBundle
 
 private let textFont: UIFont = Font.regular(16.0)

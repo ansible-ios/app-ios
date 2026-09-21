@@ -4,12 +4,12 @@ import SceneKit
 import Display
 import AsyncDisplayKit
 import SwiftSignalKit
-import IosappCore
+import TelegramCore
 import ComponentFlow
 import AccountContext
 import RadialStatusNode
 import UniversalMediaPlayer
-import IosappUniversalVideoContent
+import TelegramUniversalVideoContent
 import AppBundle
 import ShimmerEffect
 
@@ -210,7 +210,7 @@ private final class PhoneView: UIView {
     
     private var position: PhoneDemoComponent.Position = .top
     
-    func setup(context: AccountContext, videoFile: IosappMediaFile?, position: PhoneDemoComponent.Position) {
+    func setup(context: AccountContext, videoFile: TelegramMediaFile?, position: PhoneDemoComponent.Position) {
         self.position = position
         
         guard self.videoNode == nil, let file = videoFile else {
@@ -383,14 +383,14 @@ public final class PhoneDemoComponent: Component {
     let context: AccountContext
     let position: Position
     let model: Model
-    let videoFile: IosappMediaFile?
+    let videoFile: TelegramMediaFile?
     let decoration: BackgroundDecoration
     
     public init(
         context: AccountContext,
         position: PhoneDemoComponent.Position,
         model: Model = .notch,
-        videoFile: IosappMediaFile?,
+        videoFile: TelegramMediaFile?,
         decoration: BackgroundDecoration = .none
     ) {
         self.context = context

@@ -2,11 +2,11 @@ import Foundation
 import UIKit
 import AsyncDisplayKit
 import Display
-import IosappCore
-import IosappPresentationData
+import TelegramCore
+import TelegramPresentationData
 import ItemListUI
 import PresentationDataUtils
-import IosappStringFormatting
+import TelegramStringFormatting
 import RadialStatusNode
 import PhotoResources
 
@@ -127,7 +127,7 @@ final class SecureIdValueFormFileItemNode: FormEditableBlockItemNode<SecureIdVal
             self.imageNode.isHidden = false
             self.placeholderNode.isHidden = true
             
-            self.setRevealOptions((left: [], right: [ItemListRevealOption(key: RevealOptionKey.delete.rawValue, title: strings.Common_Delete, icon: .none, color: theme.list.itemDisclosureActions.destructive.fillColor, textColor: theme.list.itemDisclosureActions.destructive.foregroundColor)]))
+            self.setRevealOptions((left: [], right: [ItemListRevealOption(key: RevealOptionKey.delete.rawValue, title: strings.Common_Delete, icon: .none, color: theme.list.itemDisclosureActions.destructive.fillColor, iconColor: theme.list.itemDisclosureActions.destructive.foregroundColor, textColor: theme.list.itemSecondaryTextColor)]))
         } else {
             self.imageNode.isHidden = true
             self.placeholderNode.isHidden = false

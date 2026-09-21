@@ -2,7 +2,7 @@ import Foundation
 import UIKit
 import AsyncDisplayKit
 import Display
-import IosappPresentationData
+import TelegramPresentationData
 
 public protocol PinchController: ViewController {
     func addRelativeContentOffset(_ offset: CGPoint, transition: ContainedViewLayoutTransition)

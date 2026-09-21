@@ -1,6 +1,6 @@
 import Foundation
 import UIKit
-import IosappCore
+import TelegramCore
 
 public struct MessageMediaEditingOptions: OptionSet {
     public var rawValue: Int32

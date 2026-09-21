@@ -2,12 +2,12 @@ import Foundation
 import UIKit
 import Display
 import SwiftSignalKit
-import IosappCore
-import IosappPresentationData
+import TelegramCore
+import TelegramPresentationData
 import PresentationDataUtils
 import ItemListUI
 import AccountContext
-import IosappUIPreferences
+import TelegramUIPreferences
 import ItemListPeerItem
 import ItemListPeerActionItem
 import AvatarNode
@@ -1281,7 +1281,6 @@ private final class ChatListFilterPresetController: ItemListController {
                 mode: .standard(.default),
                 chatLocation: .peer(id: context.account.peerId),
                 subject: nil,
-                peerNearbyData: nil,
                 greetingData: nil,
                 pendingUnpinnedAllMessages: false,
                 activeGroupCallInfo: nil,
@@ -1510,13 +1509,13 @@ public func chatListFilterPresetController(context: AccountContext, currentPrese
         if missingPeers {
             return context.engine.data.get(
                 EngineDataMap(
-                    state.additionallyIncludePeers.map { peerId -> IosappEngine.EngineData.Item.Peer.RenderedPeer in
-                        return IosappEngine.EngineData.Item.Peer.RenderedPeer(id: peerId)
+                    state.additionallyIncludePeers.map { peerId -> TelegramEngine.EngineData.Item.Peer.RenderedPeer in
+                        return TelegramEngine.EngineData.Item.Peer.RenderedPeer(id: peerId)
                     }
                 ),
                 EngineDataMap(
-                    state.additionallyExcludePeers.map { peerId -> IosappEngine.EngineData.Item.Peer.RenderedPeer in
-                        return IosappEngine.EngineData.Item.Peer.RenderedPeer(id: peerId)
+                    state.additionallyExcludePeers.map { peerId -> TelegramEngine.EngineData.Item.Peer.RenderedPeer in
+                        return TelegramEngine.EngineData.Item.Peer.RenderedPeer(id: peerId)
                     }
                 )
             )
@@ -1589,9 +1588,9 @@ public func chatListFilterPresetController(context: AccountContext, currentPrese
             let _ = combineLatest(
                 queue: Queue.mainQueue(),
                 context.engine.data.get(
-                    IosappEngine.EngineData.Item.Peer.Peer(id: context.account.peerId),
-                    IosappEngine.EngineData.Item.Configuration.UserLimits(isPremium: false),
-                    IosappEngine.EngineData.Item.Configuration.UserLimits(isPremium: true)
+                    TelegramEngine.EngineData.Item.Peer.Peer(id: context.account.peerId),
+                    TelegramEngine.EngineData.Item.Configuration.UserLimits(isPremium: false),
+                    TelegramEngine.EngineData.Item.Configuration.UserLimits(isPremium: true)
                 ),
                 stateWithPeers |> take(1),
                 updatedCurrentPreset |> take(1)
@@ -2065,18 +2064,23 @@ public func chatListFilterPresetController(context: AccountContext, currentPrese
         stateWithPeers,
         context.account.postbox.peerView(id: context.account.peerId),
         context.engine.data.get(
-            IosappEngine.EngineData.Item.Configuration.UserLimits(isPremium: true)
+            TelegramEngine.EngineData.Item.Configuration.UserLimits(isPremium: true)
         ),
         sharedLinks.get(),
         updatedCurrentPreset
     )
     |> deliverOnMainQueue
     |> map { presentationData, stateWithPeers, peerView, premiumLimits, sharedLinks, currentPreset -> (ItemListControllerState, (ItemListNodeState, Any)) in
+        var presentationData = presentationData
+
+        let updatedTheme = presentationData.theme.withModalBlocksBackground()
+        presentationData = presentationData.withUpdated(theme: updatedTheme)
+        
         let (state, includePeers, excludePeers) = stateWithPeers
         
         let isPremium = peerView.peers[peerView.peerId]?.isPremium ?? false
         
-        let leftNavigationButton = ItemListNavigationButton(content: .text(presentationData.strings.Common_Cancel), style: .regular, enabled: true, action: {
+        let leftNavigationButton = ItemListNavigationButton(content: .icon(.close), style: .regular, enabled: true, action: {
             if let attemptNavigationImpl {
                 attemptNavigationImpl({ value in
                     if value {
@@ -2087,7 +2091,7 @@ public func chatListFilterPresetController(context: AccountContext, currentPrese
                 dismissImpl?()
             }
         })
-        let rightNavigationButton = ItemListNavigationButton(content: .text(currentPreset == nil ? presentationData.strings.Common_Create : presentationData.strings.Common_Done), style: .bold, enabled: state.isComplete, action: {
+        let rightNavigationButton = ItemListNavigationButton(content: .icon(.done), style: .bold, enabled: state.isComplete, action: {
             applyImpl?(false, {
                 dismissImpl?()
             })
@@ -2243,7 +2247,7 @@ func openCreateChatListFolderLink(context: AccountContext, folderId: Int32, chec
         existingLink = combineLatest(
             context.engine.peers.getExportedChatFolderLinks(id: folderId),
             context.engine.data.get(
-                EngineDataList(peerIds.map(IosappEngine.EngineData.Item.Peer.Peer.init(id:)))
+                EngineDataList(peerIds.map(TelegramEngine.EngineData.Item.Peer.Peer.init(id:)))
             )
         )
         |> map { result, peers -> ExportedChatFolderLink? in
@@ -2285,7 +2289,7 @@ func openCreateChatListFolderLink(context: AccountContext, folderId: Int32, chec
         }
         
         let _ = (context.engine.data.get(
-            EngineDataList(peerIds.map(IosappEngine.EngineData.Item.Peer.Peer.init(id:)))
+            EngineDataList(peerIds.map(TelegramEngine.EngineData.Item.Peer.Peer.init(id:)))
         )
         |> deliverOnMainQueue).start(next: { peers in
             let peers = peers.compactMap({ peer -> EnginePeer? in

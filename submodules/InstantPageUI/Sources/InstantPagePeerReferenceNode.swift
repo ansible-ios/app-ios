@@ -1,11 +1,11 @@
 import Foundation
 import UIKit
-import IosappCore
+import TelegramCore
 import SwiftSignalKit
 import AsyncDisplayKit
 import Display
-import IosappPresentationData
-import IosappUIPreferences
+import TelegramPresentationData
+import TelegramUIPreferences
 import ActivityIndicator
 import AccountContext
 import AppBundle
@@ -148,7 +148,7 @@ public final class InstantPagePeerReferenceNode: ASDisplayNode, InstantPageNode 
         let engine = context.engine
         let signal: Signal<EnginePeer, NoError> = actualizedPeer(accountPeerId: account.peerId, postbox: account.postbox, network: account.network, peer: initialPeer._asPeer())
         |> mapToSignal({ peer -> Signal<EnginePeer, NoError> in
-            if let peer = peer as? IosappChannel, let username = peer.addressName, peer.accessHash == nil {
+            if let peer = peer as? TelegramChannel, let username = peer.addressName, peer.accessHash == nil {
                 return .single(.channel(peer)) |> then(engine.peers.resolvePeerByName(name: username, referrer: nil)
                 |> mapToSignal({ result -> Signal<EnginePeer, NoError> in
                     guard case let .result(updatedPeer) = result else {
@@ -309,7 +309,21 @@ public final class InstantPagePeerReferenceNode: ASDisplayNode, InstantPageNode 
     @objc func joinPressed() {
         if let peer = self.peer, case .notJoined = self.joinState {
             self.updateJoinState(.inProgress)
-            self.joinDisposable.set((self.context.engine.peers.joinChannel(peerId: peer.id, hash: nil) |> deliverOnMainQueue).start(error: { [weak self] _ in
+            self.joinDisposable.set((self.context.engine.peers.joinChannel(peerId: peer.id, hash: nil) |> deliverOnMainQueue).start(next: { [weak self] result in
+                guard let strongSelf = self else {
+                    return
+                }
+                switch result {
+                case .joined:
+                    break
+                case let .webView(webView):
+                    if let navigationController = strongSelf.context.sharedContext.mainWindow?.viewController as? NavigationController, let controller = navigationController.viewControllers.last as? ViewController {
+                        strongSelf.context.sharedContext.openJoinChatWebView(context: strongSelf.context, parentController: controller, updatedPresentationData: nil, webView: webView, chatTitle: peer.compactDisplayTitle)
+                    } else if case .inProgress = strongSelf.joinState {
+                        strongSelf.updateJoinState(.notJoined)
+                    }
+                }
+            }, error: { [weak self] _ in
                 if let strongSelf = self {
                     if case .inProgress = strongSelf.joinState {
                         strongSelf.updateJoinState(.notJoined)

@@ -3,7 +3,7 @@ import UIKit
 import AsyncDisplayKit
 import Display
 import SwiftSignalKit
-import IosappPresentationData
+import TelegramPresentationData
 import ListSectionHeaderNode
 import AppBundle
 
@@ -185,6 +185,7 @@ class ChatListArchiveInfoItemNode: ListViewItemNode, ASScrollViewDelegate {
         
         self.view.disablesInteractiveTransitionGestureRecognizer = true
         
+        self.scrollNode.view.scrollsToTop = false
         self.scrollNode.view.showsHorizontalScrollIndicator = false
         self.scrollNode.view.isPagingEnabled = true
         self.scrollNode.view.delegate = self.wrappedScrollViewDelegate

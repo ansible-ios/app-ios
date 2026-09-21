@@ -3,15 +3,14 @@ import UIKit
 import AsyncDisplayKit
 import SwiftSignalKit
 import Display
-import IosappPresentationData
+import TelegramPresentationData
 import ActivityIndicator
 import RadialStatusNode
 import AnimatedStickerNode
-import IosappAnimatedStickerNode
+import TelegramAnimatedStickerNode
 import AppBundle
-import IosappUniversalVideoContent
-import IosappCore
-import Postbox
+import TelegramUniversalVideoContent
+import TelegramCore
 import AccountContext
 
 private func fileSize(_ path: String, useTotalFileAllocatedSize: Bool = false) -> Int64? {
@@ -235,7 +234,7 @@ public final class ShareProlongedLoadingContainerNode: ASDisplayNode, ShareConte
         return self.elapsedTime + 3.0 + 0.15
     }
         
-    public init(theme: PresentationTheme, strings: PresentationStrings, forceNativeAppearance: Bool, postbox: Postbox?, environment: ShareControllerEnvironment) {
+    public init(theme: PresentationTheme, strings: PresentationStrings, forceNativeAppearance: Bool, environment: ShareControllerEnvironment) {
         self.theme = theme
         self.strings = strings
         
@@ -276,14 +275,13 @@ public final class ShareProlongedLoadingContainerNode: ASDisplayNode, ShareConte
             }
         }))
         
-        if let postbox, let mediaManager = environment.mediaManager, let path = getAppBundle().path(forResource: "BlankVideo", ofType: "m4v"), let size = fileSize(path) {
-            let _ = postbox
+        if let mediaManager = environment.mediaManager, let path = getAppBundle().path(forResource: "BlankVideo", ofType: "m4v"), let size = fileSize(path) {
             let _ = mediaManager
             
             let decoration = ChatBubbleVideoDecoration(corners: ImageCorners(), nativeSize: CGSize(width: 100.0, height: 100.0), contentMode: .aspectFit, backgroundColor: .black)
             let _ = decoration
             
-            let dummyFile = IosappMediaFile(fileId: EngineMedia.Id(namespace: 0, id: 1), partialReference: nil, resource: LocalFileReferenceMediaResource(localFilePath: path, randomId: 12345), previewRepresentations: [], videoThumbnails: [], immediateThumbnailData: nil, mimeType: "video/mp4", size: size, attributes: [.Video(duration: 1, size: PixelDimensions(width: 100, height: 100), flags: [], preloadSize: nil, coverTime: nil, videoCodec: nil)], alternativeRepresentations: [])
+            let dummyFile = TelegramMediaFile(fileId: EngineMedia.Id(namespace: 0, id: 1), partialReference: nil, resource: LocalFileReferenceMediaResource(localFilePath: path, randomId: 12345), previewRepresentations: [], videoThumbnails: [], immediateThumbnailData: nil, mimeType: "video/mp4", size: size, attributes: [.Video(duration: 1, size: PixelDimensions(width: 100, height: 100), flags: [], preloadSize: nil, coverTime: nil, videoCodec: nil)], alternativeRepresentations: [])
             
             let videoContent = NativeVideoContent(id: .message(1, EngineMedia.Id(namespace: 0, id: 1)), userLocation: .other, fileReference: .standalone(media: dummyFile), streamVideo: .none, loopVideo: true, enableSound: false, fetchAutomatically: true, onlyFullSizeThumbnail: false, continuePlayingWithoutSoundOnLostAudioSession: false, placeholderColor: .black, storeAfterDownload: nil)
             let _ = videoContent

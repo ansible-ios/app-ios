@@ -1,7 +1,7 @@
 import Foundation
 import libphonenumber
 import AccountContext
-import IosappCore
+import TelegramCore
 
 private let phoneNumberUtil = NBPhoneNumberUtil()
 

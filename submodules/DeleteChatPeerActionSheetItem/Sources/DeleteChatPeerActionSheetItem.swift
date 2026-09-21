@@ -1,9 +1,9 @@
 import Foundation
 import UIKit
 import Display
-import IosappCore
-import IosappPresentationData
-import IosappUIPreferences
+import TelegramCore
+import TelegramPresentationData
+import TelegramUIPreferences
 import AvatarNode
 import AccountContext
 import ComponentFlow

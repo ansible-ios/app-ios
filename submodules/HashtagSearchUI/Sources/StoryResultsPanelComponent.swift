@@ -1,8 +1,8 @@
 import Foundation
 import Display
 import ComponentFlow
-import IosappCore
-import IosappPresentationData
+import TelegramCore
+import TelegramPresentationData
 import MultilineTextComponent
 import BundleIconComponent
 import StorySetIndicatorComponent

@@ -1,10 +1,10 @@
 import Foundation
 import UIKit
 import AsyncDisplayKit
-import IosappCore
+import TelegramCore
 import Display
 import SwiftSignalKit
-import IosappPresentationData
+import TelegramPresentationData
 import ChatTitleActivityNode
 import LocalizedPeerData
 

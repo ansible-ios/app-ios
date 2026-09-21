@@ -1,8 +1,8 @@
 import Foundation
 import UIKit
 import Display
-import IosappPresentationData
-import IosappUIPreferences
+import TelegramPresentationData
+import TelegramUIPreferences
 
 final class InstantPageSettingsItemTheme: Equatable {
     let listBackgroundColor: UIColor

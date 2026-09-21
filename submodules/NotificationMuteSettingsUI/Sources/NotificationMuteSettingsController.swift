@@ -1,9 +1,9 @@
 import Foundation
 import UIKit
 import Display
-import IosappCore
-import IosappPresentationData
-import IosappStringFormatting
+import TelegramCore
+import TelegramPresentationData
+import TelegramStringFormatting
 
 private enum NotificationMuteOption {
     case `default`

@@ -3,7 +3,7 @@ import UIKit
 import ComponentFlow
 import Display
 import SwiftSignalKit
-import IosappPresentationData
+import TelegramPresentationData
 import AccountContext
 import ComponentDisplayAdapters
 

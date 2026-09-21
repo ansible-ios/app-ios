@@ -12,8 +12,8 @@ swift_library(
     deps = [
         "//submodules/AsyncDisplayKit:AsyncDisplayKit",
         "//submodules/Display:Display",
-        "//submodules/IosappCore:IosappCore",
-        "//submodules/IosappPresentationData:IosappPresentationData",
+        "//submodules/TelegramCore:TelegramCore",
+        "//submodules/TelegramPresentationData:TelegramPresentationData",
         "//submodules/AvatarNode:AvatarNode",
         "//submodules/AppBundle:AppBundle",
         "//submodules/LocationResources:LocationResources",

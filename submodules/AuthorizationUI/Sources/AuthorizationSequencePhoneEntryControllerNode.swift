@@ -2,16 +2,15 @@ import Foundation
 import UIKit
 import AsyncDisplayKit
 import Display
-import IosappCore
-import IosappPresentationData
+import TelegramCore
+import TelegramPresentationData
 import PhoneInputNode
 import CountrySelectionUI
 import QrCode
 import SwiftSignalKit
-import Postbox
 import AccountContext
 import AnimatedStickerNode
-import IosappAnimatedStickerNode
+import TelegramAnimatedStickerNode
 import SolidRoundedButtonNode
 import AuthorizationUtils
 import ManagedAnimationNode
@@ -728,7 +727,7 @@ final class AuthorizationSequencePhoneEntryControllerNode: ASDisplayNode {
             let allProductionUserIds = activeProductionUserIds
             let allTestingUserIds = activeTestingUserIds
             
-            return IosappEngineUnauthorized(account: account).auth.exportAuthTransferToken(accountManager: sharedContext.accountManager, otherAccountUserIds: account.testingEnvironment ? allTestingUserIds : allProductionUserIds, syncContacts: true)
+            return TelegramEngineUnauthorized(account: account).auth.exportAuthTransferToken(accountManager: sharedContext.accountManager, otherAccountUserIds: account.testingEnvironment ? allTestingUserIds : allProductionUserIds, syncContacts: true)
         }
         
         self.exportTokenDisposable.set((tokenSignal
@@ -742,7 +741,7 @@ final class AuthorizationSequencePhoneEntryControllerNode: ASDisplayNode {
                 //print("export token \(tokenString)")
                 tokenString = tokenString.replacingOccurrences(of: "+", with: "-")
                 tokenString = tokenString.replacingOccurrences(of: "/", with: "_")
-                let urlString = "as://login?token=\(tokenString)"
+                let urlString = "tg://login?token=\(tokenString)"
                 let _ = (qrCode(string: urlString, color: .black, backgroundColor: .white, icon: .none)
                 |> deliverOnMainQueue).startStandalone(next: { _, generate in
                     guard let strongSelf = self else {

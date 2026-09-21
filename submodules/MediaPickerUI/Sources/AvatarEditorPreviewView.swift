@@ -2,8 +2,7 @@ import Foundation
 import UIKit
 import Display
 import SwiftSignalKit
-import IosappCore
-import Postbox
+import TelegramCore
 import AvatarBackground
 import AccountContext
 import EmojiTextAttachmentView
@@ -14,7 +13,7 @@ import MultilineTextComponent
 final class AvatarEditorPreviewView: UIView {
     private let context: AccountContext
     private var disposable: Disposable?
-    private var files: [IosappMediaFile] = []
+    private var files: [TelegramMediaFile] = []
     private var currentIndex = 0
     private var currentBackgroundIndex = 0
     private var switchingToNext = false
@@ -37,27 +36,24 @@ final class AvatarEditorPreviewView: UIView {
         
         self.addSubview(self.backgroundView)
         
-        let stickersKey: PostboxViewKey = .orderedItemList(id: Namespaces.OrderedItemList.CloudFeaturedProfilePhotoEmoji)
-        self.disposable = (context.account.postbox.combinedView(keys: [stickersKey])
+        self.disposable = (context.engine.data.subscribe(TelegramEngine.EngineData.Item.OrderedLists.ListItems(collectionId: Namespaces.OrderedItemList.CloudFeaturedProfilePhotoEmoji))
         |> runOn(Queue.concurrentDefaultQueue())
-        |> deliverOnMainQueue).start(next: { [weak self] views in
+        |> deliverOnMainQueue).start(next: { [weak self] items in
             guard let self else {
                 return
             }
-            if let view = views.views[stickersKey] as? OrderedItemListView {
-                var files: [IosappMediaFile] = []
-                for item in view.items.prefix(8) {
-                    if let mediaItem = item.contents.get(RecentMediaItem.self) {
-                        let file = mediaItem.media._parse()
-                        files.append(file)
-                        
-                        self.preloadDisposableSet.add(freeMediaFileResourceInteractiveFetched(account: context.account, userLocation: .other, fileReference: .standalone(media: file), resource: file.resource).start())
-                    }
+            var files: [TelegramMediaFile] = []
+            for item in items.prefix(8) {
+                if let mediaItem = item.contents.get(RecentMediaItem.self) {
+                    let file = mediaItem.media._parse()
+                    files.append(file)
+
+                    self.preloadDisposableSet.add(freeMediaFileResourceInteractiveFetched(account: context.account, userLocation: .other, fileReference: .standalone(media: file), resource: file.resource).start())
                 }
-                self.files = files
-                if let size = self.currentSize {
-                    self.updateLayout(size: size)
-                }
+            }
+            self.files = files
+            if let size = self.currentSize {
+                self.updateLayout(size: size)
             }
         })
         

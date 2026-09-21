@@ -3,10 +3,10 @@ import UIKit
 import AsyncDisplayKit
 import Display
 import SwiftSignalKit
-import IosappCore
-import IosappPresentationData
-import IosappStringFormatting
-import IosappUIPreferences
+import TelegramCore
+import TelegramPresentationData
+import TelegramStringFormatting
+import TelegramUIPreferences
 import MergeLists
 import AccountContext
 import ItemListVenueItem
@@ -18,7 +18,7 @@ import ChatListSearchItemHeader
 private struct LocationSearchEntry: Identifiable, Comparable {
     let index: Int
     let theme: PresentationTheme
-    let location: IosappMediaMap
+    let location: TelegramMediaMap
     let queryId: Int64?
     let resultId: String?
     let title: String?
@@ -61,7 +61,7 @@ private struct LocationSearchEntry: Identifiable, Comparable {
         return lhs.index < rhs.index
     }
     
-    func item(engine: IosappEngine, presentationData: PresentationData, sendVenue: @escaping (IosappMediaMap, Int64?, String?) -> Void, goToVenue: @escaping (IosappMediaMap) -> Void) -> ListViewItem {
+    func item(engine: TelegramEngine, presentationData: PresentationData, sendVenue: @escaping (TelegramMediaMap, Int64?, String?) -> Void, goToVenue: @escaping (TelegramMediaMap) -> Void) -> ListViewItem {
         let venue = self.location
         let queryId = self.queryId
         let resultId = self.resultId
@@ -92,7 +92,7 @@ struct LocationSearchContainerTransition {
     let isEmpty: Bool
 }
 
-private func locationSearchContainerPreparedTransition(from fromEntries: [LocationSearchEntry], to toEntries: [LocationSearchEntry], query: String, isSearching: Bool, isEmpty: Bool, engine: IosappEngine, presentationData: PresentationData, sendVenue: @escaping (IosappMediaMap, Int64?, String?) -> Void, goToVenue: @escaping (IosappMediaMap) -> Void) -> LocationSearchContainerTransition {
+private func locationSearchContainerPreparedTransition(from fromEntries: [LocationSearchEntry], to toEntries: [LocationSearchEntry], query: String, isSearching: Bool, isEmpty: Bool, engine: TelegramEngine, presentationData: PresentationData, sendVenue: @escaping (TelegramMediaMap, Int64?, String?) -> Void, goToVenue: @escaping (TelegramMediaMap) -> Void) -> LocationSearchContainerTransition {
     let (deleteIndices, indicesAndItems, updateIndices) = mergeListsStableWithUpdates(leftList: fromEntries, rightList: toEntries)
     
     let deletions = deleteIndices.map { ListViewDeleteItem(index: $0, directionHint: nil) }
@@ -206,7 +206,7 @@ final class LocationSearchContainerNode: ASDisplayNode {
                             if let countryCode = placemark.isoCountryCode, placemark.thoroughfare == nil {
                                 address = MapGeoAddress(country: countryCode, state: placemark.administrativeArea, city: placemark.locality, street: nil)
                             }
-                            let location = IosappMediaMap(latitude: placemarkLocation.coordinate.latitude, longitude: placemarkLocation.coordinate.longitude, heading: nil, accuracyRadius: nil, venue: nil, address: address, liveBroadcastingTimeout: nil, liveProximityNotificationRadius: nil)
+                            let location = TelegramMediaMap(latitude: placemarkLocation.coordinate.latitude, longitude: placemarkLocation.coordinate.longitude, heading: nil, accuracyRadius: nil, venue: nil, address: address, liveBroadcastingTimeout: nil, liveProximityNotificationRadius: nil)
                             
                             entries.append(LocationSearchEntry(index: index, theme: themeAndStrings.0, location: location, queryId: nil, resultId: nil, title: placemark.name ?? "Name", distance: placemarkLocation.distance(from: currentLocation), story: story))
                             

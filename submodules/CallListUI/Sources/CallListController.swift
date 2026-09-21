@@ -2,9 +2,9 @@ import Foundation
 import UIKit
 import Display
 import AsyncDisplayKit
-import IosappCore
+import TelegramCore
 import SwiftSignalKit
-import IosappPresentationData
+import TelegramPresentationData
 import ItemListUI
 import PresentationDataUtils
 import AccountContext
@@ -12,11 +12,11 @@ import AlertUI
 import AppBundle
 import LocalizedPeerData
 import ContextUI
-import IosappBaseController
+import TelegramBaseController
 import InviteLinksUI
 import UndoUI
-import IosappCallsUI
-import IosappUIPreferences
+import TelegramCallsUI
+import TelegramUIPreferences
 
 public enum CallListControllerMode {
     case tab
@@ -85,7 +85,7 @@ private final class DeleteAllButtonNode: ASDisplayNode {
 
 
 
-public final class CallListController: IosappBaseController {
+public final class CallListController: TelegramBaseController {
     private var controllerNode: CallListControllerNode {
         return self.displayNode as! CallListControllerNode
     }
@@ -213,7 +213,7 @@ public final class CallListController: IosappBaseController {
                 if let isEmpty = self.isEmpty, isEmpty {
                 } else {
                     if self.editingMode {
-                        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: self.presentationData.strings.Common_Done, style: .done, target: self, action: #selector(self.donePressed))
+                        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "___done", style: .done, target: self, action: #selector(self.donePressed))
                     } else {
                         self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: self.presentationData.strings.Common_Edit, style: .plain, target: self, action: #selector(self.editPressed))
                     }
@@ -222,7 +222,7 @@ public final class CallListController: IosappBaseController {
                 //self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: PresentationResourcesRootController.navigationCallIcon(self.presentationData.theme), style: .plain, target: self, action: #selector(self.callPressed))
             case .navigation:
                 if self.editingMode {
-                    self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: self.presentationData.strings.Common_Done, style: .done, target: self, action: #selector(self.donePressed))
+                    self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "___done", style: .done, target: self, action: #selector(self.donePressed))
                 } else {
                     self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: self.presentationData.strings.Common_Edit, style: .plain, target: self, action: #selector(self.editPressed))
                 }
@@ -351,7 +351,7 @@ public final class CallListController: IosappBaseController {
             }
             
             for media in message.media {
-                if let action = media as? IosappMediaAction {
+                if let action = media as? TelegramMediaAction {
                     if case let .phoneCall(_, _, _, isVideo) = action.action {
                         self.call(message.id.peerId, isVideo: isVideo)
                     } else if case .conferenceCall = action.action {
@@ -369,10 +369,10 @@ public final class CallListController: IosappBaseController {
         }, openInfo: { [weak self] peerId, messages in
             if let strongSelf = self {
                 let _ = (strongSelf.context.engine.data.get(
-                    IosappEngine.EngineData.Item.Peer.Peer(id: peerId)
+                    TelegramEngine.EngineData.Item.Peer.Peer(id: peerId)
                 )
                 |> deliverOnMainQueue).startStandalone(next: { peer in
-                    if let strongSelf = self, let peer = peer, let controller = strongSelf.context.sharedContext.makePeerInfoController(context: strongSelf.context, updatedPresentationData: nil, peer: peer._asPeer(), mode: .calls(messages: messages.map({ $0._asMessage() })), avatarInitiallyExpanded: false, fromChat: false, requestsContext: nil) {
+                    if let strongSelf = self, let peer = peer, let controller = strongSelf.context.sharedContext.makePeerInfoController(context: strongSelf.context, updatedPresentationData: nil, peer: peer, mode: .calls(messages: messages), avatarInitiallyExpanded: false, fromChat: false, requestsContext: nil) {
                         (strongSelf.navigationController as? NavigationController)?.pushViewController(controller)
                     }
                 })
@@ -679,7 +679,7 @@ public final class CallListController: IosappBaseController {
         
         switch self.mode {
             case .tab:
-                self.navigationItem.setLeftBarButton(UIBarButtonItem(title: self.presentationData.strings.Common_Done, style: .done, target: self, action: #selector(self.donePressed)), animated: true)
+                self.navigationItem.setLeftBarButton(UIBarButtonItem(title: "___done", style: .done, target: self, action: #selector(self.donePressed)), animated: true)
                
                 self.navigationItem.setRightBarButton(UIBarButtonItem(customDisplayNode: buttonNode), animated: true)
                 self.navigationItem.rightBarButtonItem?.setCustomAction({
@@ -691,7 +691,7 @@ public final class CallListController: IosappBaseController {
                     pressedImpl?()
                 })
             
-                self.navigationItem.setRightBarButton(UIBarButtonItem(title: self.presentationData.strings.Common_Done, style: .done, target: self, action: #selector(self.donePressed)), animated: true)
+                self.navigationItem.setRightBarButton(UIBarButtonItem(title: "___done", style: .done, target: self, action: #selector(self.donePressed)), animated: true)
         }
         
         self.controllerNode.updateState { state in
@@ -729,7 +729,7 @@ public final class CallListController: IosappBaseController {
                 }
                 
                 if let cachedUserData = view.cachedData as? CachedUserData, cachedUserData.callsPrivate {
-                    strongSelf.push(strongSelf.context.sharedContext.makeSendInviteLinkScreen(context: strongSelf.context, subject: .groupCall(.create), peers: [IosappForbiddenInvitePeer(
+                    strongSelf.push(strongSelf.context.sharedContext.makeSendInviteLinkScreen(context: strongSelf.context, subject: .groupCall(.create), peers: [TelegramForbiddenInvitePeer(
                         peer: EnginePeer(peer),
                         canInviteWithPremium: false,
                         premiumRequiredToContact: false
@@ -745,9 +745,9 @@ public final class CallListController: IosappBaseController {
     }
     
     private func openGroupCall(message: EngineMessage) {
-        var action: IosappMediaAction?
+        var action: TelegramMediaAction?
         for media in message.media {
-            if let media = media as? IosappMediaAction {
+            if let media = media as? TelegramMediaAction {
                 action = media
                 break
             }

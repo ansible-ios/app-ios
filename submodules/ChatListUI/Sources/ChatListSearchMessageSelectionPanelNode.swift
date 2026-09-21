@@ -3,10 +3,9 @@ import UIKit
 import Display
 import AsyncDisplayKit
 import Display
-import Postbox
-import IosappCore
+import TelegramCore
 import SwiftSignalKit
-import IosappPresentationData
+import TelegramPresentationData
 import AccountContext
 import AppBundle
 
@@ -31,8 +30,8 @@ final class ChatListSearchMessageSelectionPanelNode: ASDisplayNode {
     
     private var validLayout: ContainerViewLayout?
     
-    var chatAvailableMessageActions: ((Set<MessageId>) -> Signal<ChatAvailableMessageActions, NoError>)?
-    var selectedMessages = Set<MessageId>() {
+    var chatAvailableMessageActions: ((Set<EngineMessage.Id>) -> Signal<ChatAvailableMessageActions, NoError>)?
+    var selectedMessages = Set<EngineMessage.Id>() {
         didSet {
             if oldValue != self.selectedMessages {
                 self.forwardButton.isEnabled = self.selectedMessages.count != 0

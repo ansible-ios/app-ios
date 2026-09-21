@@ -3,15 +3,14 @@ import UIKit
 import AsyncDisplayKit
 import Display
 import SwiftSignalKit
-import IosappCore
-import Postbox
-import IosappPresentationData
+import TelegramCore
+import TelegramPresentationData
 import MergeLists
 import HorizontalPeerItem
 import ListSectionHeaderNode
 import ContextUI
 import AccountContext
-import IosappUIPreferences
+import TelegramUIPreferences
 import AnimationCache
 import MultiAnimationRenderer
 
@@ -79,13 +78,12 @@ private struct ChatListSearchRecentPeersEntry: Comparable, Identifiable {
     
     func item(
         accountPeerId: EnginePeer.Id,
-        postbox: Postbox,
-        network: Network,
+        stateManager: AccountStateManager,
         energyUsageSettings: EnergyUsageSettings,
         contentSettings: ContentSettings,
         animationCache: AnimationCache,
         animationRenderer: MultiAnimationRenderer,
-        resolveInlineStickers: @escaping ([Int64]) -> Signal<[Int64: IosappMediaFile], NoError>,
+        resolveInlineStickers: @escaping ([Int64]) -> Signal<[Int64: TelegramMediaFile], NoError>,
         mode: HorizontalPeerItemMode,
         peerSelected: @escaping (EnginePeer) -> Void,
         peerContextAction: @escaping (EnginePeer, ASDisplayNode, ContextGesture?, CGPoint?) -> Void,
@@ -96,8 +94,7 @@ private struct ChatListSearchRecentPeersEntry: Comparable, Identifiable {
             strings: self.strings,
             mode: mode,
             accountPeerId: accountPeerId,
-            postbox: postbox,
-            network: network,
+            stateManager: stateManager,
             energyUsageSettings: energyUsageSettings,
             contentSettings: contentSettings,
             animationCache: animationCache,
@@ -126,13 +123,12 @@ private struct ChatListSearchRecentNodeTransition {
 
 private func preparedRecentPeersTransition(
     accountPeerId: EnginePeer.Id,
-    postbox: Postbox,
-    network: Network,
+    stateManager: AccountStateManager,
     energyUsageSettings: EnergyUsageSettings,
     contentSettings: ContentSettings,
     animationCache: AnimationCache,
     animationRenderer: MultiAnimationRenderer,
-    resolveInlineStickers: @escaping ([Int64]) -> Signal<[Int64: IosappMediaFile], NoError>,
+    resolveInlineStickers: @escaping ([Int64]) -> Signal<[Int64: TelegramMediaFile], NoError>,
     mode: HorizontalPeerItemMode,
     peerSelected: @escaping (EnginePeer) -> Void,
     peerContextAction: @escaping (EnginePeer, ASDisplayNode, ContextGesture?, CGPoint?) -> Void,
@@ -148,8 +144,7 @@ private func preparedRecentPeersTransition(
     let deletions = deleteIndices.map { ListViewDeleteItem(index: $0, directionHint: nil) }
     let insertions = indicesAndItems.map { ListViewInsertItem(index: $0.0, previousIndex: $0.2, item: $0.1.item(
         accountPeerId: accountPeerId,
-        postbox: postbox,
-        network: network,
+        stateManager: stateManager,
         energyUsageSettings: energyUsageSettings,
         contentSettings: contentSettings,
         animationCache: animationCache,
@@ -162,8 +157,7 @@ private func preparedRecentPeersTransition(
     ), directionHint: .Down) }
     let updates = updateIndices.map { ListViewUpdateItem(index: $0.0, previousIndex: $0.2, item: $0.1.item(
         accountPeerId: accountPeerId,
-        postbox: postbox,
-        network: network,
+        stateManager: stateManager,
         energyUsageSettings: energyUsageSettings,
         contentSettings: contentSettings,
         animationCache: animationCache,
@@ -204,13 +198,12 @@ public final class ChatListSearchRecentPeersNode: ASDisplayNode {
     
     public init(
         accountPeerId: EnginePeer.Id,
-        postbox: Postbox,
-        network: Network,
+        stateManager: AccountStateManager,
         energyUsageSettings: EnergyUsageSettings,
         contentSettings: ContentSettings,
         animationCache: AnimationCache,
         animationRenderer: MultiAnimationRenderer,
-        resolveInlineStickers: @escaping ([Int64]) -> Signal<[Int64: IosappMediaFile], NoError>,
+        resolveInlineStickers: @escaping ([Int64]) -> Signal<[Int64: TelegramMediaFile], NoError>,
         theme: PresentationTheme,
         mode: HorizontalPeerItemMode,
         strings: PresentationStrings,
@@ -238,7 +231,7 @@ public final class ChatListSearchRecentPeersNode: ASDisplayNode {
         
         let peersDisposable = DisposableSet()
         
-        let recent: Signal<([EnginePeer], [EnginePeer.Id: (Int32, Bool)], [EnginePeer.Id : EnginePeer.Presence]), NoError> = _internal_recentPeers(accountPeerId: accountPeerId, postbox: postbox)
+        let recent: Signal<([EnginePeer], [EnginePeer.Id: (Int32, Bool)], [EnginePeer.Id : EnginePeer.Presence]), NoError> = _internal_recentPeers(accountPeerId: accountPeerId, postbox: stateManager.postbox)
         |> filter { value -> Bool in
             switch value {
                 case .disabled:
@@ -256,20 +249,20 @@ public final class ChatListSearchRecentPeersNode: ASDisplayNode {
                     peers.filter {
                         !$0.isDeleted
                     }.map {
-                        postbox.peerView(id: $0.id)
+                        stateManager.postbox.peerView(id: $0.id)
                     }
                 )
                 |> mapToSignal { peerViews -> Signal<([EnginePeer], [EnginePeer.Id: (Int32, Bool)], [EnginePeer.Id: EnginePeer.Presence]), NoError> in
-                    return postbox.combinedView(keys: peerViews.map { item -> PostboxViewKey in
-                        let key = PostboxViewKey.unreadCounts(items: [UnreadMessageCountsItem.peer(id: item.peerId, handleThreads: true)])
+                    return stateManager.postbox.combinedView(keys: peerViews.map { item -> EngineRawPostboxViewKey in
+                        let key = EngineRawPostboxViewKey.unreadCounts(items: [EngineRawUnreadMessageCountsItem.peer(id: item.peerId, handleThreads: true)])
                         return key
                     })
                     |> map { views -> [EnginePeer.Id: Int] in
                         var result: [EnginePeer.Id: Int] = [:]
                         for item in peerViews {
-                            let key = PostboxViewKey.unreadCounts(items: [UnreadMessageCountsItem.peer(id: item.peerId, handleThreads: true)])
-                            
-                            if let view = views.views[key] as? UnreadMessageCountsView {
+                            let key = EngineRawPostboxViewKey.unreadCounts(items: [EngineRawUnreadMessageCountsItem.peer(id: item.peerId, handleThreads: true)])
+
+                            if let view = views.views[key] as? EngineRawUnreadMessageCountsView {
                                 result[item.peerId] = Int(view.count(for: .peer(id: item.peerId, handleThreads: true)) ?? 0)
                             } else {
                                 result[item.peerId] = 0
@@ -284,7 +277,7 @@ public final class ChatListSearchRecentPeersNode: ASDisplayNode {
                         for peerView in peerViews {
                             if let peer = peerViewMainPeer(peerView) {
                                 var isMuted: Bool = false
-                                if let notificationSettings = peerView.notificationSettings as? IosappPeerNotificationSettings {
+                                if let notificationSettings = peerView.notificationSettings as? TelegramPeerNotificationSettings {
                                     switch notificationSettings.muteState {
                                     case .muted:
                                         isMuted = true
@@ -324,8 +317,7 @@ public final class ChatListSearchRecentPeersNode: ASDisplayNode {
                 
                 let transition = preparedRecentPeersTransition(
                     accountPeerId: accountPeerId,
-                    postbox: postbox,
-                    network: network,
+                    stateManager: stateManager,
                     energyUsageSettings: energyUsageSettings,
                     contentSettings: contentSettings,
                     animationCache: animationCache,
@@ -345,7 +337,7 @@ public final class ChatListSearchRecentPeersNode: ASDisplayNode {
             }
         }))
         if case .actionSheet = mode {
-            peersDisposable.add(_internal_managedUpdatedRecentPeers(accountPeerId: accountPeerId, postbox: postbox, network: network).startStrict())
+            peersDisposable.add(_internal_managedUpdatedRecentPeers(accountPeerId: accountPeerId, postbox: stateManager.postbox, network: stateManager.network).startStrict())
         }
         self.disposable.set(peersDisposable)
     }

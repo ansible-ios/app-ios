@@ -2,9 +2,9 @@ import Foundation
 import UIKit
 import Display
 import AsyncDisplayKit
-import IosappCore
+import TelegramCore
 import SwiftSignalKit
-import IosappPresentationData
+import TelegramPresentationData
 import AccountContext
 
 public final class GameController: ViewController {
@@ -33,7 +33,7 @@ public final class GameController: ViewController {
             self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: PresentationResourcesRootController.navigationShareIcon(self.presentationData.theme), style: .plain, target: self, action: #selector(self.sharePressed))
             
             for media in message.media {
-                if let game = media as? IosappMediaGame {
+                if let game = media as? TelegramMediaGame {
                     let titleView = GameControllerTitleView(theme: self.presentationData.theme)
                     
                     var botPeer: EnginePeer?

@@ -2,7 +2,7 @@ import Foundation
 import UIKit
 import Display
 import ComponentFlow
-import IosappPresentationData
+import TelegramPresentationData
 import ContextUI
 import GlassBackgroundComponent
 import EdgeEffect

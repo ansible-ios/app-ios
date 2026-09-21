@@ -1,5 +1,5 @@
 import Foundation
-import IosappCore
+import TelegramCore
 
 public class CountriesConfiguration {
     public let countries: [Country]

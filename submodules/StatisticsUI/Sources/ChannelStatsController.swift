@@ -4,10 +4,10 @@ import Display
 import AsyncDisplayKit
 import SwiftSignalKit
 import Postbox
-import IosappCore
-import IosappPresentationData
-import IosappUIPreferences
-import IosappStringFormatting
+import TelegramCore
+import TelegramPresentationData
+import TelegramUIPreferences
+import TelegramStringFormatting
 import ItemListUI
 import PresentationDataUtils
 import AccountContext
@@ -22,7 +22,7 @@ import UndoUI
 import ItemListPeerActionItem
 import PremiumUI
 import StoryContainerScreen
-import IosappNotices
+import TelegramNotices
 import ComponentFlow
 import BoostLevelIconComponent
 import StarsWithdrawalScreen
@@ -205,7 +205,7 @@ private enum StatsEntry: ItemListNodeEntry {
     case instantPageInteractionsGraph(PresentationTheme, PresentationStrings, PresentationDateTimeFormat, StatsGraph, ChartType)
     
     case postsTitle(PresentationTheme, String)
-    case post(Int32, PresentationTheme, PresentationStrings, PresentationDateTimeFormat, Peer, StatsPostItem, ChannelStatsPostInteractions)
+    case post(Int32, PresentationTheme, PresentationStrings, PresentationDateTimeFormat, EnginePeer, StatsPostItem, ChannelStatsPostInteractions)
 
     case boostLevel(PresentationTheme, Int32, Int32, CGFloat)
     
@@ -636,7 +636,7 @@ private enum StatsEntry: ItemListNodeEntry {
                     return false
                 }
             case let .post(lhsIndex, lhsTheme, lhsStrings, lhsDateTimeFormat, lhsPeer, lhsPost, lhsInteractions):
-                if case let .post(rhsIndex, rhsTheme, rhsStrings, rhsDateTimeFormat, rhsPeer, rhsPost, rhsInteractions) = rhs, lhsIndex == rhsIndex, lhsTheme === rhsTheme, lhsStrings === rhsStrings, lhsDateTimeFormat == rhsDateTimeFormat, arePeersEqual(lhsPeer, rhsPeer), lhsPost == rhsPost, lhsInteractions == rhsInteractions {
+                if case let .post(rhsIndex, rhsTheme, rhsStrings, rhsDateTimeFormat, rhsPeer, rhsPost, rhsInteractions) = rhs, lhsIndex == rhsIndex, lhsTheme === rhsTheme, lhsStrings === rhsStrings, lhsDateTimeFormat == rhsDateTimeFormat, lhsPeer == rhsPeer, lhsPost == rhsPost, lhsInteractions == rhsInteractions {
                     return true
                 } else {
                     return false
@@ -960,7 +960,7 @@ private enum StatsEntry: ItemListNodeEntry {
                 }, sectionId: self.section, style: .blocks)
             case let .post(_, _, _, _, peer, post, interactions):
                 return StatsMessageItem(context: arguments.context, presentationData: presentationData, peer: peer, item: post, views: interactions.views, reactions: interactions.reactions, forwards: interactions.forwards, sectionId: self.section, style: .blocks, action: {
-                    arguments.openPostStats(EnginePeer(peer), post)
+                    arguments.openPostStats(peer, post)
                 }, openStory: { sourceView in
                     if case let .story(_, story) = post {
                         arguments.openStory(story, sourceView)
@@ -1426,11 +1426,11 @@ private func statsEntries(
                 switch post {
                 case let .message(message):
                     if let interactions = interactions[.message(id: message.id)] {
-                        entries.append(.post(index, presentationData.theme, presentationData.strings, presentationData.dateTimeFormat, peer._asPeer(), post, interactions))
+                        entries.append(.post(index, presentationData.theme, presentationData.strings, presentationData.dateTimeFormat, peer, post, interactions))
                     }
                 case let .story(_, story):
                     if let interactions = interactions[.story(peerId: peer.id, id: story.id)] {
-                        entries.append(.post(index, presentationData.theme, presentationData.strings, presentationData.dateTimeFormat, peer._asPeer(), post, interactions))
+                        entries.append(.post(index, presentationData.theme, presentationData.strings, presentationData.dateTimeFormat, peer, post, interactions))
                     }
                 }
                 index += 1
@@ -1946,7 +1946,7 @@ public func channelStatsController(
         }, completed: { peerIds in
             let _ = (context.engine.data.get(
                 EngineDataList(
-                    peerIds.map(IosappEngine.EngineData.Item.Peer.Peer.init)
+                    peerIds.map(TelegramEngine.EngineData.Item.Peer.Peer.init)
                 )
             )
             |> deliverOnMainQueue).start(next: { peerList in
@@ -1976,7 +1976,7 @@ public func channelStatsController(
 
                 presentImpl?(UndoOverlayController(presentationData: presentationData, content: .forward(savedMessages: savedMessages, text: text), elevatedLayout: false, animateInAsReplacement: true, action: { action in
                     if savedMessages, action == .info {
-                        let _ = (context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: context.account.peerId))
+                        let _ = (context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: context.account.peerId))
                         |> deliverOnMainQueue).start(next: { peer in
                             guard let peer else {
                                 return
@@ -2136,14 +2136,14 @@ public func channelStatsController(
     )
     
     let peer = Promise<EnginePeer?>()
-    peer.set(context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: peerId)))
+    peer.set(context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: peerId)))
     
     let canViewStatsValue = Atomic<Bool>(value: true)
     let peerData = context.engine.data.get(
-        IosappEngine.EngineData.Item.Peer.CanViewStats(id: peerId),
-        IosappEngine.EngineData.Item.Peer.AdsRestricted(id: peerId),
-        IosappEngine.EngineData.Item.Peer.CanViewRevenue(id: peerId),
-        IosappEngine.EngineData.Item.Peer.CanViewStarsRevenue(id: peerId)
+        TelegramEngine.EngineData.Item.Peer.CanViewStats(id: peerId),
+        TelegramEngine.EngineData.Item.Peer.AdsRestricted(id: peerId),
+        TelegramEngine.EngineData.Item.Peer.CanViewRevenue(id: peerId),
+        TelegramEngine.EngineData.Item.Peer.CanViewStarsRevenue(id: peerId)
     )
     
     let longLoadingSignal: Signal<Bool, NoError> = .single(false) |> then(.single(true) |> delay(2.0, queue: Queue.mainQueue()))
@@ -2425,7 +2425,7 @@ public func channelStatsController(
         var items: [ContextMenuItem] = []
         items.append(.action(ContextMenuActionItem(text: presentationData.strings.Conversation_ViewInChannel, icon: { theme in generateTintedImage(image: UIImage(bundleImageName: "Chat/Context Menu/GoToMessage"), color: theme.contextMenu.primaryColor) }, action: { [weak controller] c, _ in
             c?.dismiss(completion: {
-                let _ = (context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: peerId))
+                let _ = (context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: peerId))
                 |> deliverOnMainQueue).start(next: { peer in
                     guard let peer = peer else {
                         return
@@ -2472,7 +2472,7 @@ public func channelStatsController(
     }
     navigateToMessageImpl = { [weak controller] messageId in
         let _ = (context.engine.data.get(
-            IosappEngine.EngineData.Item.Peer.Peer(id: messageId.peerId)
+            TelegramEngine.EngineData.Item.Peer.Peer(id: messageId.peerId)
         )
         |> deliverOnMainQueue).start(next: { peer in
             guard let peer = peer else {

@@ -6,11 +6,11 @@ import SolidRoundedButtonNode
 import SwiftSignalKit
 import OverlayStatusController
 import AnimatedStickerNode
-import IosappAnimatedStickerNode
+import TelegramAnimatedStickerNode
 import AccountContext
-import IosappPresentationData
+import TelegramPresentationData
 import PresentationDataUtils
-import IosappCore
+import TelegramCore
 
 public enum TwoFactorAuthSplashMode {
     public struct Intro {
@@ -43,13 +43,13 @@ public enum TwoFactorAuthSplashMode {
 
 public final class TwoFactorAuthSplashScreen: ViewController {
     private let sharedContext: SharedAccountContext
-    private let engine: SomeIosappEngine
+    private let engine: SomeTelegramEngine
     private var presentationData: PresentationData
     private var mode: TwoFactorAuthSplashMode
     
     public var dismissConfirmation: ((@escaping () -> Void) -> Bool)?
     
-    public init(sharedContext: SharedAccountContext, engine: SomeIosappEngine, mode: TwoFactorAuthSplashMode, presentation: ViewControllerNavigationPresentation = .modalInLargeLayout) {
+    public init(sharedContext: SharedAccountContext, engine: SomeTelegramEngine, mode: TwoFactorAuthSplashMode, presentation: ViewControllerNavigationPresentation = .modalInLargeLayout) {
         self.sharedContext = sharedContext
         self.engine = engine
         self.mode = mode
@@ -57,7 +57,7 @@ public final class TwoFactorAuthSplashScreen: ViewController {
         self.presentationData = self.sharedContext.currentPresentationData.with { $0 }
         
         let defaultTheme = NavigationBarTheme(rootControllerTheme: self.presentationData.theme)
-        let navigationBarTheme = NavigationBarTheme(overallDarkAppearance: defaultTheme.overallDarkAppearance, buttonColor: defaultTheme.buttonColor, disabledButtonColor: defaultTheme.disabledButtonColor, primaryTextColor: defaultTheme.primaryTextColor, backgroundColor: .clear, enableBackgroundBlur: false, separatorColor: .clear, badgeBackgroundColor: defaultTheme.badgeBackgroundColor, badgeStrokeColor: defaultTheme.badgeStrokeColor, badgeTextColor: defaultTheme.badgeTextColor, accentButtonColor: defaultTheme.accentButtonColor, accentForegroundColor: defaultTheme.accentForegroundColor)
+        let navigationBarTheme = NavigationBarTheme(overallDarkAppearance: defaultTheme.overallDarkAppearance, buttonColor: defaultTheme.buttonColor, disabledButtonColor: defaultTheme.disabledButtonColor, primaryTextColor: defaultTheme.primaryTextColor, backgroundColor: .clear, enableBackgroundBlur: false, separatorColor: .clear, badgeBackgroundColor: defaultTheme.badgeBackgroundColor, badgeStrokeColor: defaultTheme.badgeStrokeColor, badgeTextColor: defaultTheme.badgeTextColor, accentButtonColor: defaultTheme.accentButtonColor, accentDisabledButtonColor: defaultTheme.accentDisabledButtonColor, accentForegroundColor: defaultTheme.accentForegroundColor)
         
         super.init(navigationBarPresentationData: NavigationBarPresentationData(theme: navigationBarTheme, strings: NavigationBarStrings(back: self.presentationData.strings.Common_Back, close: self.presentationData.strings.Common_Close)))
 

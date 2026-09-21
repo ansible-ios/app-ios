@@ -2,9 +2,9 @@ import Foundation
 import UIKit
 import Display
 import AsyncDisplayKit
-import IosappCore
+import TelegramCore
 import SwiftSignalKit
-import IosappPresentationData
+import TelegramPresentationData
 import AccountContext
 
 public final class BotCheckoutController: ViewController {
@@ -68,7 +68,7 @@ public final class BotCheckoutController: ViewController {
             |> mapToSignal { paymentForm -> Signal<InputData, FetchError> in
                 let botPeer: Signal<EnginePeer?, FetchError>
                 if let paymentBotId = paymentForm.paymentBotId {
-                    botPeer = context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: paymentBotId))
+                    botPeer = context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: paymentBotId))
                     |> castError(FetchError.self)
                 } else {
                     botPeer = .single(nil)
@@ -116,7 +116,7 @@ public final class BotCheckoutController: ViewController {
     }
     
     private let context: AccountContext
-    private let invoice: IosappMediaInvoice
+    private let invoice: TelegramMediaInvoice
     private let source: BotPaymentInvoiceSource
     private let completed: (String, EngineMessage.Id?) -> Void
     private let pending: () -> Void
@@ -129,7 +129,7 @@ public final class BotCheckoutController: ViewController {
 
     private let inputData: Promise<BotCheckoutController.InputData?>
     
-    public init(context: AccountContext, invoice: IosappMediaInvoice, source: BotPaymentInvoiceSource, inputData: Promise<BotCheckoutController.InputData?>, completed: @escaping (String, EngineMessage.Id?) -> Void, pending: @escaping () -> Void = {}, cancelled: @escaping () -> Void = {}, failed: @escaping () -> Void = {}) {
+    public init(context: AccountContext, invoice: TelegramMediaInvoice, source: BotPaymentInvoiceSource, inputData: Promise<BotCheckoutController.InputData?>, completed: @escaping (String, EngineMessage.Id?) -> Void, pending: @escaping () -> Void = {}, cancelled: @escaping () -> Void = {}, failed: @escaping () -> Void = {}) {
         self.context = context
         self.invoice = invoice
         self.source = source
@@ -141,9 +141,10 @@ public final class BotCheckoutController: ViewController {
         
         self.presentationData = context.sharedContext.currentPresentationData.with { $0 }
         
-        super.init(navigationBarPresentationData: NavigationBarPresentationData(presentationData: self.presentationData))
+        super.init(navigationBarPresentationData: NavigationBarPresentationData(presentationData: self.presentationData, style: .glass))
         
         self.statusBar.statusBarStyle = self.presentationData.theme.rootController.statusBarStyle.style
+        self._hasGlassStyle = true
         
         var title = self.presentationData.strings.Checkout_Title
         if invoice.flags.contains(.isTest) {
@@ -151,7 +152,7 @@ public final class BotCheckoutController: ViewController {
         }
         self.title = title
         
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: self.presentationData.strings.Common_Cancel, style: .plain, target: self, action: #selector(self.cancelPressed))
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "___close", style: .plain, target: self, action: #selector(self.cancelPressed))
     }
     
     required public init(coder aDecoder: NSCoder) {

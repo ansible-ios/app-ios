@@ -1,5 +1,5 @@
 import Foundation
-import IosappCore
+import TelegramCore
 import SwiftSignalKit
 import CoreLocation
 import DeviceLocationManager
@@ -8,7 +8,7 @@ import AccountContext
 public final class LiveLocationManagerImpl: LiveLocationManager {
     private let queue = Queue.mainQueue()
     
-    private let engine: IosappEngine
+    private let engine: TelegramEngine
     private let locationManager: DeviceLocationManager
     
     private let summaryManagerImpl: LiveLocationSummaryManagerImpl
@@ -47,7 +47,7 @@ public final class LiveLocationManagerImpl: LiveLocationManager {
     
     private var invalidationTimer: (SwiftSignalKit.Timer, Int32)?
     
-    public init(engine: IosappEngine, locationManager: DeviceLocationManager, inForeground: Signal<Bool, NoError>) {
+    public init(engine: TelegramEngine, locationManager: DeviceLocationManager, inForeground: Signal<Bool, NoError>) {
         self.engine = engine
         self.locationManager = locationManager
         
@@ -66,7 +66,7 @@ public final class LiveLocationManagerImpl: LiveLocationManager {
                         if message.flags.intersection([.Failed, .Unsent]).isEmpty {
                             var activeLiveBroadcastingTimeout: Int32?
                             for media in message.media {
-                                if let telegramMap = media as? IosappMediaMap {
+                                if let telegramMap = media as? TelegramMediaMap {
                                     if let liveBroadcastingTimeout = telegramMap.liveBroadcastingTimeout {
                                         if liveBroadcastingTimeout == liveLocationIndefinitePeriod || message.timestamp + liveBroadcastingTimeout > timestamp {
                                             activeLiveBroadcastingTimeout = liveBroadcastingTimeout

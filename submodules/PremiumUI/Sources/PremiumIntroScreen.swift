@@ -4,13 +4,12 @@ import UIKit
 import Display
 import ComponentFlow
 import SwiftSignalKit
-import IosappCore
+import TelegramCore
 import Postbox
-import IosappPresentationData
+import TelegramPresentationData
 import PresentationDataUtils
 import ViewControllerComponent
 import AccountContext
-import SolidRoundedButtonComponent
 import ButtonComponent
 import MultilineTextComponent
 import MultilineTextWithEntitiesComponent
@@ -25,9 +24,9 @@ import UniversalMediaPlayer
 import CheckNode
 import AnimationCache
 import MultiAnimationRenderer
-import IosappNotices
+import TelegramNotices
 import UndoUI
-import IosappStringFormatting
+import TelegramStringFormatting
 import ListSectionComponent
 import ListActionItemComponent
 import EmojiStatusSelectionComponent
@@ -329,8 +328,14 @@ public enum PremiumSource: Equatable {
             } else {
                 return false
             }
-        case let .auth(lhsPrice):
-            if case let .auth(rhsPrice) = rhs, lhsPrice == rhsPrice {
+        case .richText:
+            if case .richText = rhs {
+                return true
+            } else {
+                return false
+            }
+        case let .auth(lhsPrice, lhsDays):
+            if case let .auth(rhsPrice, rhsDays) = rhs, lhsPrice == rhsPrice, lhsDays == rhsDays {
                 return true
             } else {
                 return false
@@ -362,7 +367,7 @@ public enum PremiumSource: Equatable {
     case animatedEmoji
     case deeplink(String?)
     case profile(EnginePeer.Id)
-    case emojiStatus(EnginePeer.Id, Int64, IosappMediaFile?, LoadedStickerPack?)
+    case emojiStatus(EnginePeer.Id, Int64, TelegramMediaFile?, LoadedStickerPack?)
     case gift(from: EnginePeer.Id, to: EnginePeer.Id, duration: Int32, giftCode: PremiumGiftCodeInfo?)
     case giftTerms
     case voiceToText
@@ -391,8 +396,9 @@ public enum PremiumSource: Equatable {
     case todo
     case copyProtection
     case aiTools
-    case auth(String)
-    case premiumGift(IosappMediaFile)
+    case richText
+    case auth(String, Int32)
+    case premiumGift(TelegramMediaFile)
     
     var identifier: String? {
         switch self {
@@ -492,6 +498,8 @@ public enum PremiumSource: Equatable {
             return "pm_noforwards"
         case .aiTools:
             return "ai_compose"
+        case .richText:
+            return "rich_formatting"
         case .auth:
             return "auth"
         case .premiumGift:
@@ -527,6 +535,7 @@ public enum PremiumPerk: CaseIterable {
     case todo
     case copyProtection
     case aiTools
+    case richText
     
     case businessLocation
     case businessHours
@@ -564,7 +573,8 @@ public enum PremiumPerk: CaseIterable {
             .messageEffects,
             .todo,
             .copyProtection,
-            .aiTools
+            .aiTools,
+            .richText
         ]
     }
     
@@ -644,6 +654,8 @@ public enum PremiumPerk: CaseIterable {
             return "pm_noforwards"
         case .aiTools:
             return "ai_compose"
+        case .richText:
+            return "rich_formatting"
         case .business:
             return "business"
         case .businessLocation:
@@ -719,6 +731,8 @@ public enum PremiumPerk: CaseIterable {
             return strings.Premium_CopyProtection
         case .aiTools:
             return strings.Premium_AiTools
+        case .richText:
+            return strings.Premium_RichText
         case .businessLocation:
             return strings.Business_Location
         case .businessHours:
@@ -792,6 +806,8 @@ public enum PremiumPerk: CaseIterable {
             return strings.Premium_CopyProtectionInfo
         case .aiTools:
             return strings.Premium_AiToolsInfo
+        case .richText:
+            return strings.Premium_RichTextInfo
         case .businessLocation:
             return strings.Business_LocationInfo
         case .businessHours:
@@ -865,6 +881,8 @@ public enum PremiumPerk: CaseIterable {
             return "Item List/Icons/NoForward"
         case .aiTools:
             return "Item List/Icons/AITools"
+        case .richText:
+            return "Item List/Icons/RichText"
         case .businessLocation:
             return "Item List/Icons/Location"
         case .businessHours:
@@ -890,6 +908,7 @@ struct PremiumIntroConfiguration {
         return PremiumIntroConfiguration(perks: [
             .stories,
             .aiTools,
+            .richText,
             .moreUpload,
             .doubleLimits,
             .lastSeen,
@@ -954,8 +973,8 @@ struct PremiumIntroConfiguration {
             }
             
             #if DEBUG
-            if !perks.contains(.aiTools) {
-                perks.insert(.aiTools, at: 1)
+            if !perks.contains(.richText) {
+                perks.insert(.richText, at: 1)
             }
             #endif
                         
@@ -1636,17 +1655,17 @@ private final class PremiumIntroScreenContentComponent: CombinedComponent {
             
             super.init()
             
-            self.newPerks = [PremiumPerk.aiTools.identifier, PremiumPerk.copyProtection.identifier]
+            self.newPerks = [PremiumPerk.aiTools.identifier, PremiumPerk.richText.identifier]
             
             let premiumIntroConfiguration: Signal<PremiumIntroConfiguration, NoError>
             let accountPeer: Signal<EnginePeer?, NoError>
             switch screenContext {
             case let .accountContext(context):
-                premiumIntroConfiguration = context.engine.data.subscribe(IosappEngine.EngineData.Item.Configuration.App())
+                premiumIntroConfiguration = context.engine.data.subscribe(TelegramEngine.EngineData.Item.Configuration.App())
                 |> map { appConfiguration in
                     return PremiumIntroConfiguration.with(appConfiguration: appConfiguration)
                 }
-                accountPeer = context.engine.data.subscribe(IosappEngine.EngineData.Item.Peer.Peer(id: context.account.peerId))
+                accountPeer = context.engine.data.subscribe(TelegramEngine.EngineData.Item.Peer.Peer(id: context.account.peerId))
             case .sharedContext:
                 premiumIntroConfiguration = .single(PremiumIntroConfiguration.defaultValue)
                 accountPeer = .single(nil)
@@ -1682,7 +1701,7 @@ private final class PremiumIntroScreenContentComponent: CombinedComponent {
                     jsonString += "]}}"
                     
                     if let context = screenContext.context, let data = jsonString.data(using: .utf8), let json = JSON(data: data) {
-                        addAppLogEvent(postbox: context.account.postbox, type: "premium.promo_screen_show", data: json)
+                        context.engine.accountData.addAppLogEvent(type: "premium.promo_screen_show", data: json)
                     }
                 }
             })
@@ -1709,7 +1728,7 @@ private final class PremiumIntroScreenContentComponent: CombinedComponent {
                     }
                 })
                                 
-                self.adsEnabledDisposable = (context.engine.data.subscribe(IosappEngine.EngineData.Item.Peer.AdsEnabled(id: context.account.peerId))
+                self.adsEnabledDisposable = (context.engine.data.subscribe(TelegramEngine.EngineData.Item.Peer.AdsEnabled(id: context.account.peerId))
                 |> deliverOnMainQueue).start(next: { [weak self] adsEnabled in
                     guard let self else {
                         return
@@ -1877,7 +1896,7 @@ private final class PremiumIntroScreenContentComponent: CombinedComponent {
                             if let _ = giftCode.usedDate {
                                 textString = strings.Premium_Gift_UsedLink_Text
                             } else {
-                                link = "https://asme.su/giftcode/\(giftCode.slug)"
+                                link = "https://t.me/giftcode/\(giftCode.slug)"
                                 textString = strings.Premium_Gift_Link_Text
                             }
                         } else {
@@ -1906,7 +1925,7 @@ private final class PremiumIntroScreenContentComponent: CombinedComponent {
             }
             
             let markdownAttributes = MarkdownAttributes(body: MarkdownAttributeSet(font: textFont, textColor: textColor), bold: MarkdownAttributeSet(font: boldTextFont, textColor: textColor), link: MarkdownAttributeSet(font: textFont, textColor: accentColor), linkAttribute: { contents in
-                return (IosappTextAttributes.URL, contents)
+                return (TelegramTextAttributes.URL, contents)
             })
             
             let shareLink = context.component.shareLink
@@ -1927,8 +1946,8 @@ private final class PremiumIntroScreenContentComponent: CombinedComponent {
                     lineSpacing: 0.2,
                     highlightColor: environment.theme.list.itemAccentColor.withAlphaComponent(0.2),
                     highlightAction: { attributes in
-                        if let _ = attributes[NSAttributedString.Key(rawValue: IosappTextAttributes.URL)] {
-                            return NSAttributedString.Key(rawValue: IosappTextAttributes.URL)
+                        if let _ = attributes[NSAttributedString.Key(rawValue: TelegramTextAttributes.URL)] {
+                            return NSAttributedString.Key(rawValue: TelegramTextAttributes.URL)
                         } else {
                             return nil
                         }
@@ -1966,6 +1985,7 @@ private final class PremiumIntroScreenContentComponent: CombinedComponent {
                 UIColor(rgb: 0xab4ac4),
                 UIColor(rgb: 0xa34cd7),
                 UIColor(rgb: 0x9b4fed),
+                UIColor(rgb: 0x8958ff),
                 UIColor(rgb: 0x8958ff),
                 UIColor(rgb: 0x676bff),
                 UIColor(rgb: 0x676bff),
@@ -2223,6 +2243,8 @@ private final class PremiumIntroScreenContentComponent: CombinedComponent {
                                 demoSubject = .copyProtection
                             case .aiTools:
                                 demoSubject = .aiTools
+                            case .richText:
+                                demoSubject = .richText
                             case .business:
                                 demoSubject = .business
                             default:
@@ -2260,7 +2282,7 @@ private final class PremiumIntroScreenContentComponent: CombinedComponent {
                             }
                             updateIsFocused(true)
 
-                            addAppLogEvent(postbox: accountContext.account.postbox, type: "premium.promo_screen_tap", data: ["item": perk.identifier])
+                            accountContext.engine.accountData.addAppLogEvent(type: "premium.promo_screen_tap", data: ["item": perk.identifier])
                         },
                         highlighting: accountContext != nil ? .default : .disabled
                     ))))
@@ -2368,7 +2390,7 @@ private final class PremiumIntroScreenContentComponent: CombinedComponent {
                                 switch perk {
                                 case .businessLocation:
                                     let _ = (accountContext.engine.data.get(
-                                        IosappEngine.EngineData.Item.Peer.BusinessLocation(id: accountContext.account.peerId)
+                                        TelegramEngine.EngineData.Item.Peer.BusinessLocation(id: accountContext.account.peerId)
                                     )
                                     |> deliverOnMainQueue).start(next: { [weak accountContext] businessLocation in
                                         guard let accountContext else {
@@ -2378,7 +2400,7 @@ private final class PremiumIntroScreenContentComponent: CombinedComponent {
                                     })
                                 case .businessHours:
                                     let _ = (accountContext.engine.data.get(
-                                        IosappEngine.EngineData.Item.Peer.BusinessHours(id: accountContext.account.peerId)
+                                        TelegramEngine.EngineData.Item.Peer.BusinessHours(id: accountContext.account.peerId)
                                     )
                                     |> deliverOnMainQueue).start(next: { [weak accountContext] businessHours in
                                         guard let accountContext else {
@@ -2679,7 +2701,7 @@ private final class PremiumIntroScreenContentComponent: CombinedComponent {
             let monospaceTermsFont = Font.monospace(13.0)
             let termsTextColor = environment.theme.list.freeTextColor
             let termsMarkdownAttributes = MarkdownAttributes(body: MarkdownAttributeSet(font: termsFont, textColor: termsTextColor), bold: MarkdownAttributeSet(font: termsFont, textColor: termsTextColor), link: MarkdownAttributeSet(font: termsFont, textColor: environment.theme.list.itemAccentColor), linkAttribute: { contents in
-                return (IosappTextAttributes.URL, contents)
+                return (TelegramTextAttributes.URL, contents)
             })
             
             let layoutAdsSettings = {
@@ -2742,8 +2764,8 @@ private final class PremiumIntroScreenContentComponent: CombinedComponent {
                             highlightColor: environment.theme.list.itemAccentColor.withAlphaComponent(0.1),
                             highlightInset: UIEdgeInsets(top: 0.0, left: 0.0, bottom: 0.0, right: -8.0),
                             highlightAction: { attributes in
-                                if let _ = attributes[NSAttributedString.Key(rawValue: IosappTextAttributes.URL)] {
-                                    return NSAttributedString.Key(rawValue: IosappTextAttributes.URL)
+                                if let _ = attributes[NSAttributedString.Key(rawValue: TelegramTextAttributes.URL)] {
+                                    return NSAttributedString.Key(rawValue: TelegramTextAttributes.URL)
                                 } else {
                                     return nil
                                 }
@@ -2771,7 +2793,7 @@ private final class PremiumIntroScreenContentComponent: CombinedComponent {
                 layoutOptions()
             } else if case let .gift(fromPeerId, _, _, giftCode) = context.component.source {
                 if let giftCode, let accountContext = context.component.screenContext.context,  fromPeerId != accountContext.account.peerId, !context.component.justBought {
-                    let link = "https://asme.su/giftcode/\(giftCode.slug)"
+                    let link = "https://t.me/giftcode/\(giftCode.slug)"
                     let linkButton = linkButton.update(
                         component: Button(
                             content: AnyComponent(
@@ -2881,10 +2903,10 @@ private final class PremiumIntroScreenContentComponent: CombinedComponent {
                     
                     let controller = environment.controller
                     let termsTapActionImpl: ([NSAttributedString.Key: Any]) -> Void = { attributes in
-                        if let url = attributes[NSAttributedString.Key(rawValue: IosappTextAttributes.URL)] as? String, let controller = controller() as? PremiumIntroScreen, let context = controller.context, let navigationController = controller.navigationController as? NavigationController {
+                        if let url = attributes[NSAttributedString.Key(rawValue: TelegramTextAttributes.URL)] as? String, let controller = controller() as? PremiumIntroScreen, let context = controller.context, let navigationController = controller.navigationController as? NavigationController {
                             if url.hasPrefix("https://apps.apple.com/account/subscriptions") {
                                 context.sharedContext.applicationBindings.openSubscriptions()
-                            } else if url.hasPrefix("https://") || url.hasPrefix("as://") {
+                            } else if url.hasPrefix("https://") || url.hasPrefix("tg://") {
                                 context.sharedContext.openExternalUrl(context: context, urlContext: .generic, url: url, forceExternal: false, presentationData: presentationData, navigationController: navigationController, dismissInput: {})
                             } else {
                                 let signal: Signal<ResolvedUrl, NoError>?
@@ -2917,8 +2939,8 @@ private final class PremiumIntroScreenContentComponent: CombinedComponent {
                             lineSpacing: 0.0,
                             highlightColor: environment.theme.list.itemAccentColor.withAlphaComponent(0.2),
                             highlightAction: { attributes in
-                                if let _ = attributes[NSAttributedString.Key(rawValue: IosappTextAttributes.URL)] {
-                                    return NSAttributedString.Key(rawValue: IosappTextAttributes.URL)
+                                if let _ = attributes[NSAttributedString.Key(rawValue: TelegramTextAttributes.URL)] {
+                                    return NSAttributedString.Key(rawValue: TelegramTextAttributes.URL)
                                 } else {
                                     return nil
                                 }
@@ -3025,7 +3047,7 @@ private final class PremiumIntroScreenComponent: CombinedComponent {
         var otherPeerName: String?
         var justBought = false
                 
-        var emojiFile: IosappMediaFile?
+        var emojiFile: TelegramMediaFile?
         var emojiPackTitle: String?
         private var emojiFileDisposable: Disposable?
         
@@ -3087,17 +3109,17 @@ private final class PremiumIntroScreenComponent: CombinedComponent {
             if let context = screenContext.context {
                 if case let .gift(fromPeerId, toPeerId, _, _) = source {
                     let otherPeerId = fromPeerId != context.account.peerId ? fromPeerId : toPeerId
-                    otherPeerName = context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: otherPeerId))
+                    otherPeerName = context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: otherPeerId))
                     |> map { peer -> String? in
                         return peer?.compactDisplayTitle
                     }
                 } else if case let .profile(peerId) = source {
-                    otherPeerName = context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: peerId))
+                    otherPeerName = context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: peerId))
                     |> map { peer -> String? in
                         return peer?.compactDisplayTitle
                     }
                 } else if case let .emojiStatus(peerId, _, _, _) = source {
-                    otherPeerName = context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: peerId))
+                    otherPeerName = context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: peerId))
                     |> map { peer -> String? in
                         return peer?.compactDisplayTitle
                     }
@@ -3116,11 +3138,11 @@ private final class PremiumIntroScreenComponent: CombinedComponent {
             let promoConfiguration: Signal<PremiumPromoConfiguration, NoError>
             switch screenContext {
             case let .accountContext(context):
-                isPremium = context.engine.data.subscribe(IosappEngine.EngineData.Item.Peer.Peer(id: context.account.peerId))
+                isPremium = context.engine.data.subscribe(TelegramEngine.EngineData.Item.Peer.Peer(id: context.account.peerId))
                 |> map { peer -> Bool in
                     return peer?.isPremium ?? false
                 }
-                promoConfiguration = context.engine.data.subscribe(IosappEngine.EngineData.Item.Configuration.PremiumPromo())
+                promoConfiguration = context.engine.data.subscribe(TelegramEngine.EngineData.Item.Configuration.PremiumPromo())
             case .sharedContext:
                 isPremium = .single(false)
                 promoConfiguration = .single(PremiumPromoConfiguration.defaultValue)
@@ -3262,7 +3284,7 @@ private final class PremiumIntroScreenComponent: CombinedComponent {
             }
                         
             if let context = self.screenContext.context {
-                addAppLogEvent(postbox: context.account.postbox, type: "premium.promo_screen_accept")
+                context.engine.accountData.addAppLogEvent(type: "premium.promo_screen_accept")
             }
             
             self.inProgress = true
@@ -3316,7 +3338,7 @@ private final class PremiumIntroScreenComponent: CombinedComponent {
                                         self.updated(transition: .immediate)
                                         
                                         if let context = self.screenContext.context {
-                                            addAppLogEvent(postbox: context.account.postbox, type: "premium.promo_screen_fail")
+                                            context.engine.accountData.addAppLogEvent(type: "premium.promo_screen_fail")
                                         }
                                         
                                         let errorText = presentationData.strings.Premium_Purchase_ErrorUnknown
@@ -3368,7 +3390,7 @@ private final class PremiumIntroScreenComponent: CombinedComponent {
                             
                             if let errorText = errorText {
                                 if let context = self.screenContext.context {
-                                    addAppLogEvent(postbox: context.account.postbox, type: "premium.promo_screen_fail")
+                                    context.engine.accountData.addAppLogEvent(type: "premium.promo_screen_fail")
                                 }
                                 
                                 let alertController = textAlertController(sharedContext: self.screenContext.sharedContext, title: nil, text: errorText, actions: [TextAlertAction(type: .defaultAction, title: presentationData.strings.Common_OK, action: {})])
@@ -3416,7 +3438,7 @@ private final class PremiumIntroScreenComponent: CombinedComponent {
         let title = Child(MultilineTextComponent.self)
         let secondaryTitle = Child(MultilineTextWithEntitiesComponent.self)
         let bottomEdgeEffect = Child(EdgeEffectComponent.self)
-        let button = Child(SolidRoundedButtonComponent.self)
+        let button = Child(ButtonComponent.self)
         
         var updatedInstalled: Bool?
         
@@ -3628,8 +3650,8 @@ private final class PremiumIntroScreenComponent: CombinedComponent {
                     maximumNumberOfLines: 2,
                     lineSpacing: 0.0,
                     highlightAction: highlightableLinks ? { attributes in
-                        if let _ = attributes[NSAttributedString.Key(rawValue: IosappTextAttributes.URL)] {
-                            return NSAttributedString.Key(rawValue: IosappTextAttributes.URL)
+                        if let _ = attributes[NSAttributedString.Key(rawValue: TelegramTextAttributes.URL)] {
+                            return NSAttributedString.Key(rawValue: TelegramTextAttributes.URL)
                         } else {
                             return nil
                         }
@@ -3645,8 +3667,16 @@ private final class PremiumIntroScreenComponent: CombinedComponent {
                                     
                                     let controller = context.sharedContext.makeStickerPackScreen(context: context, updatedPresentationData: nil, mainStickerPack: packReference, stickerPacks: [packReference], loadedStickerPacks: loadedPack.flatMap { [$0] } ?? [], actionTitle: nil, isEditing: false, expandIfNeeded: false, parentNavigationController: navigationController, sendSticker: { _, _, _ in
                                         return false
-                                    }, actionPerformed: { added in
-                                        updatedInstalled = added
+                                    }, actionPerformed: { actions in
+                                        guard let action = actions.first?.action else {
+                                            return
+                                        }
+                                        switch action {
+                                        case .add:
+                                            updatedInstalled = true
+                                        case .remove:
+                                            updatedInstalled = false
+                                        }
                                     })
                                     presentController(controller)
                                     break
@@ -3786,9 +3816,16 @@ private final class PremiumIntroScreenComponent: CombinedComponent {
             if !buttonIsHidden {
                 let buttonTitle: String
                 var buttonSubtitle: String?
-                if case let .auth(price) = context.component.source {
+                if case let .auth(price, days) = context.component.source {
                     buttonTitle = environment.strings.Premium_Week_SignUp(price).string
-                    buttonSubtitle = environment.strings.Premium_Week_SignUpInfo
+                    if days == 7 {
+                        buttonSubtitle = environment.strings.Premium_Week_SignUpInfo
+                    } else if days > 0 {
+                        let daysString = environment.strings.Premium_SignUp_SignUpNewInfo_Days(days)
+                        buttonSubtitle = environment.strings.Premium_SignUp_SignUpNewInfo(daysString).string
+                    } else {
+                        buttonSubtitle = environment.strings.Premium_SignUp_SignUpNewInfoNone
+                    }
                 } else if isUnusedGift {
                     buttonTitle = environment.strings.Premium_Gift_ApplyLink
                 } else if state.isPremium == true && state.canUpgrade {
@@ -3810,25 +3847,51 @@ private final class PremiumIntroScreenComponent: CombinedComponent {
                 }
                 
                 let controller = environment.controller
+                let buttonGradientColors = [
+                    UIColor(rgb: 0x0077ff),
+                    UIColor(rgb: 0x6b93ff),
+                    UIColor(rgb: 0x8878ff),
+                    UIColor(rgb: 0xe46ace)
+                ]
+                let buttonContent: AnyComponent<Empty>
+                if let buttonSubtitle {
+                    buttonContent = AnyComponent(VStack([
+                        AnyComponentWithIdentity(id: AnyHashable(0), component: AnyComponent(Text(
+                            text: buttonTitle,
+                            font: Font.semibold(17.0),
+                            color: .white
+                        ))),
+                        AnyComponentWithIdentity(id: AnyHashable(1), component: AnyComponent(Text(
+                            text: buttonSubtitle,
+                            font: Font.medium(11.0),
+                            color: UIColor.white.withAlphaComponent(0.7)
+                        )))
+                    ], spacing: 1.0))
+                } else {
+                    buttonContent = AnyComponent(ButtonTextContentComponent(
+                        text: buttonTitle,
+                        badge: 0,
+                        textColor: .white,
+                        badgeBackground: .white,
+                        badgeForeground: buttonGradientColors[0]
+                    ))
+                }
                 let button = button.update(
-                    component: SolidRoundedButtonComponent(
-                        title: buttonTitle,
-                        subtitle: buttonSubtitle,
-                        theme: SolidRoundedButtonComponent.Theme(
-                            backgroundColor: UIColor(rgb: 0x8878ff),
-                            backgroundColors: [
-                                UIColor(rgb: 0x0077ff),
-                                UIColor(rgb: 0x6b93ff),
-                                UIColor(rgb: 0x8878ff),
-                                UIColor(rgb: 0xe46ace)
-                            ],
-                            foregroundColor: .white
+                    component: ButtonComponent(
+                        background: ButtonComponent.Background(
+                            style: .glass,
+                            color: UIColor(rgb: 0x8878ff),
+                            foreground: .white,
+                            pressedColor: UIColor(rgb: 0x8878ff).withMultipliedAlpha(0.8),
+                            cornerRadius: 26.0,
+                            isShimmering: true,
+                            gradient: ButtonComponent.Background.Gradient(colors: buttonGradientColors)
                         ),
-                        height: 52.0,
-                        cornerRadius: 26.0,
-                        gloss: true,
-                        glass: true,
-                        isLoading: state.inProgress,
+                        content: AnyComponentWithIdentity(
+                            id: AnyHashable("\(buttonTitle)-\(buttonSubtitle ?? "")"),
+                            component: buttonContent
+                        ),
+                        displaysProgress: state.inProgress,
                         action: {
                             if let controller = controller() as? PremiumIntroScreen, let customProceed = controller.customProceed {
                                 controller.dismiss()
@@ -3888,7 +3951,7 @@ private final class PremiumIntroScreenComponent: CombinedComponent {
 public final class PremiumIntroScreen: ViewControllerComponentContainer {
     public enum ScreenContext {
         case accountContext(AccountContext)
-        case sharedContext(SharedAccountContext, IosappEngineUnauthorized, InAppPurchaseManager)
+        case sharedContext(SharedAccountContext, TelegramEngineUnauthorized, InAppPurchaseManager)
         
         var context: AccountContext? {
             switch self {

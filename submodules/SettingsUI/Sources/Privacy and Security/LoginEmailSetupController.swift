@@ -2,9 +2,9 @@ import Foundation
 import UIKit
 import Display
 import SwiftSignalKit
-import IosappCore
+import TelegramCore
 import AccountContext
-import IosappPresentationData
+import TelegramPresentationData
 import PresentationDataUtils
 import AuthorizationUI
 import AuthenticationServices

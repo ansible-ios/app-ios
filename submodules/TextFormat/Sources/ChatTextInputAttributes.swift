@@ -2,9 +2,8 @@ import Foundation
 import UIKit
 import Display
 import AsyncDisplayKit
-import Postbox
-import IosappCore
-import IosappPresentationData
+import TelegramCore
+import TelegramPresentationData
 import Emoji
 
 private let alphanumericCharacters = CharacterSet.alphanumerics
@@ -317,9 +316,9 @@ public func textAttributedStringForStateText(context: AnyObject, stateText: NSAt
 }
 
 public final class ChatTextInputTextMentionAttribute: NSObject {
-    public let peerId: PeerId
+    public let peerId: EnginePeer.Id
     
-    public init(peerId: PeerId) {
+    public init(peerId: EnginePeer.Id) {
         self.peerId = peerId
         
         super.init()
@@ -434,13 +433,13 @@ public final class ChatTextInputTextCustomEmojiAttribute: NSObject, Codable {
         case dice
     }
     
-    public let interactivelySelectedFromPackId: ItemCollectionId?
+    public let interactivelySelectedFromPackId: EngineItemCollectionId?
     public let fileId: Int64
-    public let file: IosappMediaFile?
+    public let file: TelegramMediaFile?
     public let custom: Custom?
     public let enableAnimation: Bool
     
-    public init(interactivelySelectedFromPackId: ItemCollectionId?, fileId: Int64, file: IosappMediaFile?, custom: Custom? = nil, enableAnimation: Bool = true) {
+    public init(interactivelySelectedFromPackId: EngineItemCollectionId?, fileId: Int64, file: TelegramMediaFile?, custom: Custom? = nil, enableAnimation: Bool = true) {
         self.interactivelySelectedFromPackId = interactivelySelectedFromPackId
         self.fileId = fileId
         self.file = file
@@ -452,9 +451,9 @@ public final class ChatTextInputTextCustomEmojiAttribute: NSObject, Codable {
     
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.interactivelySelectedFromPackId = try container.decodeIfPresent(ItemCollectionId.self, forKey: .interactivelySelectedFromPackId)
+        self.interactivelySelectedFromPackId = try container.decodeIfPresent(EngineItemCollectionId.self, forKey: .interactivelySelectedFromPackId)
         self.fileId = try container.decode(Int64.self, forKey: .fileId)
-        self.file = try container.decodeIfPresent(IosappMediaFile.self, forKey: .file)
+        self.file = try container.decodeIfPresent(TelegramMediaFile.self, forKey: .file)
         self.custom = nil
         self.enableAnimation = try container.decodeIfPresent(Bool.self, forKey: .enableAnimation) ?? true
     }
@@ -604,17 +603,11 @@ private func refreshTextMentions(text: NSString, initialAttributedText: NSAttrib
     }
 }
 
-private let textUrlEdgeCharacters: CharacterSet = {
-    var set: CharacterSet = .alphanumerics
-    set.formUnion(.symbols)
-    set.formUnion(.punctuationCharacters)
-    set.remove("(")
-    set.remove(")")
-    return set
-}()
+private let textUrlEdgeCharacters = CharacterSet.alphanumerics
 
 private let textUrlCharacters: CharacterSet = {
-    var set: CharacterSet = textUrlEdgeCharacters
+    var set = textUrlEdgeCharacters
+    set.insert(charactersIn: "@_")
     set.formUnion(.whitespacesAndNewlines)
     return set
 }()

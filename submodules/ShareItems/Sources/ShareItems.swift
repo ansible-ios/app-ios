@@ -1,7 +1,7 @@
 import Foundation
 import SwiftSignalKit
 import Postbox
-import IosappCore
+import TelegramCore
 import MtProtoKit
 import Display
 import AccountContext
@@ -91,7 +91,7 @@ private func preparedShareItem(postbox: Postbox, network: Network, to peerId: Pe
             return .never()
         }
     } else if let asset = value["video"] as? AVURLAsset {
-        var flags: IosappMediaVideoFlags = [.supportsStreaming]
+        var flags: TelegramMediaVideoFlags = [.supportsStreaming]
         let sendAsInstantRoundVideo = value["isRoundMessage"] as? Bool ?? false
         var adjustments: TGVideoEditAdjustments? = nil
         if sendAsInstantRoundVideo {
@@ -237,7 +237,7 @@ private func preparedShareItem(postbox: Postbox, network: Network, to peerId: Pe
                     convertedData
                     |> castError(PreparedShareItemError.self)
                     |> mapToSignal { data, dimensions, duration, converted in
-                        var attributes: [IosappMediaFileAttribute] = []
+                        var attributes: [TelegramMediaFileAttribute] = []
                         let mimeType: String
                         if converted {
                             mimeType = "video/mp4"
@@ -347,9 +347,9 @@ private func preparedShareItem(postbox: Postbox, network: Network, to peerId: Pe
                 let disposable = TGShareLocationSignals.locationMessageContent(for: url).start(next: { value in
                     if let value = value as? TGShareLocationResult {
                         if let title = value.title {
-                            subscriber.putNext(.done(.media(.media(.standalone(media: IosappMediaMap(latitude: value.latitude, longitude: value.longitude, heading: nil, accuracyRadius: nil, venue: MapVenue(title: title, address: value.address, provider: value.provider, id: value.venueId, type: value.venueType), liveBroadcastingTimeout: nil, liveProximityNotificationRadius: nil))))))
+                            subscriber.putNext(.done(.media(.media(.standalone(media: TelegramMediaMap(latitude: value.latitude, longitude: value.longitude, heading: nil, accuracyRadius: nil, venue: MapVenue(title: title, address: value.address, provider: value.provider, id: value.venueId, type: value.venueType), liveBroadcastingTimeout: nil, liveProximityNotificationRadius: nil))))))
                         } else {
-                            subscriber.putNext(.done(.media(.media(.standalone(media: IosappMediaMap(latitude: value.latitude, longitude: value.longitude, heading: nil, accuracyRadius: nil, venue: nil, liveBroadcastingTimeout: nil, liveProximityNotificationRadius: nil))))))
+                            subscriber.putNext(.done(.media(.media(.standalone(media: TelegramMediaMap(latitude: value.latitude, longitude: value.longitude, heading: nil, accuracyRadius: nil, venue: nil, liveBroadcastingTimeout: nil, liveProximityNotificationRadius: nil))))))
                         }
                         subscriber.putCompletion()
                     } else if let value = value as? String {
@@ -447,9 +447,9 @@ public func sentShareItems(accountPeerId: PeerId, postbox: Postbox, network: Net
     if items.count > 1 {
         for item in items {
             if case let .media(result) = item, case let .media(media) = result {
-                if media.media is IosappMediaImage {
+                if media.media is TelegramMediaImage {
                     mediaTypes.photo += 1
-                } else if let media = media.media as? IosappMediaFile {
+                } else if let media = media.media as? TelegramMediaFile {
                     if media.isVideo {
                         mediaTypes.video += 1
                     } else if media.isVoice || media.isAnimated || media.isSticker {
@@ -478,6 +478,7 @@ public func sentShareItems(accountPeerId: PeerId, postbox: Postbox, network: Net
     
     var mediaMessageCount = 0
     var consumedText = false
+    var captionAssigned = false
     for item in items {
         switch item {
         case let .text(text):
@@ -493,11 +494,22 @@ public func sentShareItems(accountPeerId: PeerId, postbox: Postbox, network: Net
         case let .media(media):
             switch media {
             case let .media(reference):
+                let captionText: String
+                if !captionAssigned {
+                    if let file = reference.media as? TelegramMediaFile, file.isInstantVideo {
+                        captionText = ""
+                    } else {
+                        captionText = additionalText
+                        captionAssigned = true
+                    }
+                } else {
+                    captionText = ""
+                }
                 var message = StandaloneSendEnqueueMessage(
                     content: .arbitraryMedia(
                         media: reference,
                         text: StandaloneSendEnqueueMessage.Text(
-                            string: additionalText,
+                            string: captionText,
                             entities: []
                         )
                     ),

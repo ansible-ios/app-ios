@@ -1,22 +1,21 @@
 import Foundation
 import Display
 import SwiftSignalKit
-import Postbox
-import IosappCore
-import IosappPresentationData
+import TelegramCore
+import TelegramPresentationData
 
 public protocol ContactSelectionController: ViewController {
     var result: Signal<([ContactListPeer], ContactListAction, Bool, Int32?, NSAttributedString?, ChatSendMessageActionSheetController.SendParameters?)?, NoError> { get }
     var displayProgress: Bool { get set }
     var dismissed: (() -> Void)? { get set }
-    var presentScheduleTimePicker: (@escaping (Int32, Int32?) -> Void) -> Void { get set }
+    var presentScheduleTimePicker: (@escaping (Int32, Int32?, Bool) -> Void) -> Void { get set }
     
     func dismissSearch()
 }
 
 public enum ContactSelectionControllerMode {
     case generic
-    case starsGifting(birthdays: [EnginePeer.Id: IosappBirthday]?, hasActions: Bool, showSelf: Bool, selfSubtitle: String?)
+    case starsGifting(birthdays: [EnginePeer.Id: TelegramBirthday]?, hasActions: Bool, showSelf: Bool, selfSubtitle: String?)
 }
 
 public struct ContactListAdditionalOption: Equatable {
@@ -47,7 +46,7 @@ public struct ContactListAdditionalOption: Equatable {
 }
 
 public enum ContactListPeerId: Hashable {
-    case peer(PeerId)
+    case peer(EnginePeer.Id)
     case deviceContact(DeviceContactStableId)
 }
 
@@ -59,9 +58,9 @@ public enum ContactListAction: Equatable {
 }
 
 public enum ContactListPeer: Equatable {
-    case peer(peer: Peer, isGlobal: Bool, participantCount: Int32?)
+    case peer(peer: EnginePeer, isGlobal: Bool, participantCount: Int32?)
     case deviceContact(DeviceContactStableId, DeviceContactBasicData)
-    
+
     public var id: ContactListPeerId {
         switch self {
         case let .peer(peer, _, _):
@@ -70,8 +69,8 @@ public enum ContactListPeer: Equatable {
             return .deviceContact(id)
         }
     }
-    
-    public var indexName: PeerIndexNameRepresentation {
+
+    public var indexName: EnginePeer.IndexName {
         switch self {
         case let .peer(peer, _, _):
             return peer.indexName
@@ -79,11 +78,11 @@ public enum ContactListPeer: Equatable {
             return .personName(first: contact.firstName, last: contact.lastName, addressNames: [], phoneNumber: "")
         }
     }
-    
+
     public static func ==(lhs: ContactListPeer, rhs: ContactListPeer) -> Bool {
         switch lhs {
         case let .peer(lhsPeer, lhsIsGlobal, lhsParticipantCount):
-            if case let .peer(rhsPeer, rhsIsGlobal, rhsParticipantCount) = rhs, lhsPeer.isEqual(rhsPeer), lhsIsGlobal == rhsIsGlobal, lhsParticipantCount == rhsParticipantCount {
+            if case let .peer(rhsPeer, rhsIsGlobal, rhsParticipantCount) = rhs, lhsPeer == rhsPeer, lhsIsGlobal == rhsIsGlobal, lhsParticipantCount == rhsParticipantCount {
                 return true
             } else {
                 return false

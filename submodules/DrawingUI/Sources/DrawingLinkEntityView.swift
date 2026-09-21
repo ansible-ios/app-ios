@@ -3,9 +3,9 @@ import UIKit
 import Display
 import SwiftSignalKit
 import AccountContext
-import IosappCore
+import TelegramCore
 import AnimatedStickerNode
-import IosappAnimatedStickerNode
+import TelegramAnimatedStickerNode
 import StickerResources
 import MediaEditor
 

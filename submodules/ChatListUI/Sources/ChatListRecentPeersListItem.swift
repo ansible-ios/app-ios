@@ -3,8 +3,8 @@ import UIKit
 import AsyncDisplayKit
 import Display
 import SwiftSignalKit
-import IosappCore
-import IosappPresentationData
+import TelegramCore
+import TelegramPresentationData
 import ChatListSearchRecentPeersNode
 import ContextUI
 import AccountContext
@@ -122,8 +122,7 @@ class ChatListRecentPeersListItemNode: ListViewItemNode {
                     } else {
                         peersNode = ChatListSearchRecentPeersNode(
                             accountPeerId: item.context.account.peerId,
-                            postbox: item.context.account.postbox,
-                            network: item.context.account.network,
+                            stateManager: item.context.account.stateManager,
                             energyUsageSettings: item.context.sharedContext.energyUsageSettings,
                             contentSettings: item.context.currentContentSettings.with { $0 },
                             animationCache: item.context.animationCache,

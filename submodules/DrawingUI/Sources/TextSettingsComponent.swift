@@ -3,7 +3,7 @@ import UIKit
 import Display
 import ComponentFlow
 import LegacyComponents
-import IosappCore
+import TelegramCore
 import LottieAnimationComponent
 import MediaEditor
 

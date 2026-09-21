@@ -3,14 +3,14 @@ import UIKit
 import AsyncDisplayKit
 import Display
 import SwiftSignalKit
-import IosappCore
-import IosappPresentationData
+import TelegramCore
+import TelegramPresentationData
 import TextFormat
 import Markdown
 import RadialStatusNode
 import AppBundle
 import AnimatedStickerNode
-import IosappAnimatedStickerNode
+import TelegramAnimatedStickerNode
 import SlotMachineAnimationNode
 import AnimationUI
 import StickerResources
@@ -361,14 +361,14 @@ final class UndoOverlayControllerNode: ViewControllerTracingNode {
                 self.avatarNode = nil
                 self.iconNode = nil
                 self.iconCheckNode = nil
-                self.animationNode = AnimationNode(animation: "anim_banned", colors: ["info1.info1.stroke": self.animationBackgroundColor, "info2.info2.Fill": self.animationBackgroundColor], scale: 1.0)
+                self.animationNode = AnimationNode(animation: "anim_banned", colors: ["info1.info1.stroke": self.animationBackgroundColor, "info2.info2.Fill": self.animationBackgroundColor], scale: 0.9)
                 self.animatedStickerNode = nil
             
                 let body = MarkdownAttributeSet(font: Font.regular(14.0), textColor: .white)
                 let bold = MarkdownAttributeSet(font: Font.semibold(14.0), textColor: .white)
                 let attributedText = parseMarkdownIntoAttributedString(text, attributes: MarkdownAttributes(body: body, bold: bold, link: body, linkAttribute: { _ in return nil }), textAlignment: .natural)
                 self.textNode.attributedText = attributedText
-                self.textNode.maximumNumberOfLines = 2
+                self.textNode.maximumNumberOfLines = 5
                 displayUndo = false
                 self.originalRemainingSeconds = 5
             case let .importedMessage(text):
@@ -554,7 +554,7 @@ final class UndoOverlayControllerNode: ViewControllerTracingNode {
                 self.stillStickerNode = stillStickerNode
                 
                 enum StickerPackThumbnailItem {
-                    case still(IosappMediaImageRepresentation)
+                    case still(TelegramMediaImageRepresentation)
                     case animated(EngineMediaResource, PixelDimensions, Bool)
                 }
                 
@@ -573,8 +573,8 @@ final class UndoOverlayControllerNode: ViewControllerTracingNode {
                     if itemFile.isAnimatedSticker || itemFile.isVideoSticker {
                         thumbnailItem = .animated(EngineMediaResource(itemFile.resource), itemFile.dimensions ?? PixelDimensions(width: 512, height: 512), itemFile.isVideoSticker)
                         resourceReference = MediaResourceReference.media(media: .standalone(media: itemFile), resource: itemFile.resource)
-                    } else if let dimensions = itemFile.dimensions, let resource = chatMessageStickerResource(file: itemFile, small: true) as? IosappMediaResource {
-                        thumbnailItem = .still(IosappMediaImageRepresentation(dimensions: dimensions, resource: resource, progressiveSizes: [], immediateThumbnailData: nil, hasVideo: false, isPersonal: false))
+                    } else if let dimensions = itemFile.dimensions, let resource = chatMessageStickerResource(file: itemFile, small: true) as? TelegramMediaResource {
+                        thumbnailItem = .still(TelegramMediaImageRepresentation(dimensions: dimensions, resource: resource, progressiveSizes: [], immediateThumbnailData: nil, hasVideo: false, isPersonal: false))
                         resourceReference = MediaResourceReference.media(media: .standalone(media: itemFile), resource: resource)
                     }
                 }
@@ -597,7 +597,7 @@ final class UndoOverlayControllerNode: ViewControllerTracingNode {
                         updatedImageSignal = chatMessageStickerPackThumbnail(postbox: context.account.postbox, resource: resource._asResource(), animated: true)
                     }
                     if let resourceReference = resourceReference {
-                        updatedFetchSignal = fetchedMediaResource(mediaBox: context.account.postbox.mediaBox, userLocation: .other, userContentType: .other, reference: resourceReference)
+                        updatedFetchSignal = context.engine.resources.fetch(reference: resourceReference, userLocation: .other, userContentType: .other)
                         |> mapError { _ -> EngineMediaResource.Fetch.Error in
                             return .generic
                         }
@@ -881,7 +881,7 @@ final class UndoOverlayControllerNode: ViewControllerTracingNode {
                 self.stillStickerNode = stillStickerNode
                 
                 enum StickerThumbnailItem {
-                    case still(IosappMediaImageRepresentation)
+                    case still(TelegramMediaImageRepresentation)
                     case animated(EngineMediaResource)
                 }
                 
@@ -891,8 +891,8 @@ final class UndoOverlayControllerNode: ViewControllerTracingNode {
                 if file.isAnimatedSticker {
                     thumbnailItem = .animated(EngineMediaResource(file.resource))
                     resourceReference = MediaResourceReference.media(media: .standalone(media: file), resource: file.resource)
-                } else if let dimensions = file.dimensions, let resource = chatMessageStickerResource(file: file, small: true) as? IosappMediaResource {
-                    thumbnailItem = .still(IosappMediaImageRepresentation(dimensions: dimensions, resource: resource, progressiveSizes: [], immediateThumbnailData: nil, hasVideo: false, isPersonal: false))
+                } else if let dimensions = file.dimensions, let resource = chatMessageStickerResource(file: file, small: true) as? TelegramMediaResource {
+                    thumbnailItem = .still(TelegramMediaImageRepresentation(dimensions: dimensions, resource: resource, progressiveSizes: [], immediateThumbnailData: nil, hasVideo: false, isPersonal: false))
                     resourceReference = MediaResourceReference.media(media: .standalone(media: file), resource: resource)
                 }
                 
@@ -914,7 +914,7 @@ final class UndoOverlayControllerNode: ViewControllerTracingNode {
                         updatedImageSignal = chatMessageStickerPackThumbnail(postbox: context.account.postbox, resource: resource._asResource(), animated: true)
                     }
                     if let resourceReference = resourceReference {
-                        updatedFetchSignal = fetchedMediaResource(mediaBox: context.account.postbox.mediaBox, userLocation: .other, userContentType: .other, reference: resourceReference)
+                        updatedFetchSignal = context.engine.resources.fetch(reference: resourceReference, userLocation: .other, userContentType: .other)
                         |> mapError { _ -> EngineMediaResource.Fetch.Error in
                             return .generic
                         }

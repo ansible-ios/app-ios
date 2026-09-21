@@ -3,8 +3,8 @@ import UIKit
 import AsyncDisplayKit
 import SwiftSignalKit
 import Display
-import IosappCore
-import IosappPresentationData
+import TelegramCore
+import TelegramPresentationData
 import ItemListUI
 import MergeLists
 import AccountContext
@@ -307,7 +307,7 @@ final class HashtagSearchRecentQueryItemNode: ItemListRevealOptionsItemNode {
                         if item.clear {
                             strongSelf.setRevealOptions((left: [], right: []))
                         } else {
-                            strongSelf.setRevealOptions((left: [], right: [ItemListRevealOption(key: RevealOptionKey.delete.rawValue, title: item.strings.Common_Delete, icon: .none, color: item.theme.list.itemDisclosureActions.destructive.fillColor, textColor: item.theme.list.itemDisclosureActions.destructive.foregroundColor)]))
+                            strongSelf.setRevealOptions((left: [], right: [ItemListRevealOption(key: RevealOptionKey.delete.rawValue, title: item.strings.Common_Delete, icon: .none, color: item.theme.list.itemDisclosureActions.destructive.fillColor, iconColor: item.theme.list.itemDisclosureActions.destructive.foregroundColor, textColor: item.theme.list.itemSecondaryTextColor)]))
                         }
                     }
                 })

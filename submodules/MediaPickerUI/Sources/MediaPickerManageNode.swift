@@ -2,7 +2,7 @@ import Foundation
 import UIKit
 import AsyncDisplayKit
 import Display
-import IosappPresentationData
+import TelegramPresentationData
 import SolidRoundedButtonNode
 
 final class MediaPickerManageNode: ASDisplayNode {
@@ -15,7 +15,7 @@ final class MediaPickerManageNode: ASDisplayNode {
     private let measureButtonNode: ImmediateTextNode
     private let buttonNode: SolidRoundedButtonNode
     
-    var pressed: () -> Void = {}
+    var pressed: (UIView) -> Void = { _ in }
     
     override init() {
         self.textNode = ImmediateTextNode()
@@ -33,7 +33,10 @@ final class MediaPickerManageNode: ASDisplayNode {
         self.addSubnode(self.buttonNode)
         
         self.buttonNode.pressed = { [weak self] in
-            self?.pressed()
+            guard let self else {
+                return
+            }
+            self.pressed(self.buttonNode.view)
         }
     }
     

@@ -1,8 +1,8 @@
 import Foundation
 import UIKit
-import IosappCore
+import TelegramCore
 import Display
-import IosappPresentationData
+import TelegramPresentationData
 import TextFormat
 import Markdown
 
@@ -16,7 +16,7 @@ public func authorizationCurrentOptionText(_ type: SentAuthorizationCodeType, ph
     case .sms:
         return parseMarkdownIntoAttributedString(strings.Login_EnterCodeSMSText(phoneNumber).string, attributes: attributes, textAlignment: .center)
     case .otherSession:
-        return parseMarkdownIntoAttributedString(strings.Login_EnterCodeIosappText(phoneNumber).string, attributes: attributes, textAlignment: .center)
+        return parseMarkdownIntoAttributedString(strings.Login_EnterCodeTelegramText(phoneNumber).string, attributes: attributes, textAlignment: .center)
     case .missedCall:
         let body = MarkdownAttributeSet(font: Font.regular(fontSize), textColor: primaryColor)
         let bold = MarkdownAttributeSet(font: Font.semibold(fontSize), textColor: primaryColor)
@@ -32,7 +32,7 @@ public func authorizationCurrentOptionText(_ type: SentAuthorizationCodeType, ph
         if let regex = try? NSRegularExpression(pattern: "\\*", options: []) {
             let matches = regex.matches(in: mutableString.string, options: [], range: NSMakeRange(0, mutableString.length))
             if let first = matches.first {
-                mutableString.addAttribute(NSAttributedString.Key(rawValue: IosappTextAttributes.Spoiler), value: true, range: NSRange(location: first.range.location, length: matches.count))
+                mutableString.addAttribute(NSAttributedString.Key(rawValue: TelegramTextAttributes.Spoiler), value: true, range: NSRange(location: first.range.location, length: matches.count))
             }
         }
 

@@ -1,6 +1,6 @@
 import Foundation
 import Contacts
-import IosappCore
+import TelegramCore
 import FlatBuffers
 import FlatSerialization
 
@@ -13,7 +13,7 @@ public final class DeviceContactPhoneNumberData: Equatable {
         self.value = value
     }
     
-    init(flatBuffersObject: IosappCore_DeviceContactPhoneNumberData) {
+    init(flatBuffersObject: TelegramCore_DeviceContactPhoneNumberData) {
         self.label = flatBuffersObject.label
         self.value = flatBuffersObject.value
     }
@@ -22,7 +22,7 @@ public final class DeviceContactPhoneNumberData: Equatable {
         let labelOffset = builder.create(string: self.label)
         let valueOffset = builder.create(string: self.value)
         
-        return IosappCore_DeviceContactPhoneNumberData.createDeviceContactPhoneNumberData(
+        return TelegramCore_DeviceContactPhoneNumberData.createDeviceContactPhoneNumberData(
             &builder,
             labelOffset: labelOffset,
             valueOffset: valueOffset
@@ -204,7 +204,7 @@ public final class DeviceContactInstantMessagingProfileData: Equatable, Hashable
 }
 
 public let phonebookUsernamePathPrefix = "@id"
-private let phonebookUsernamePrefix = "https://asme.su/" + phonebookUsernamePathPrefix
+private let phonebookUsernamePrefix = "https://t.me/" + phonebookUsernamePathPrefix
 
 public extension DeviceContactUrlData {
     convenience init(appProfile: EnginePeer.Id) {
@@ -234,7 +234,7 @@ public final class DeviceContactBasicData: Equatable {
         self.phoneNumbers = phoneNumbers
     }
     
-    public init(flatBuffersObject: IosappCore_StoredDeviceContactData) {
+    public init(flatBuffersObject: TelegramCore_StoredDeviceContactData) {
         self.firstName = flatBuffersObject.firstName
         self.lastName = flatBuffersObject.lastName
         
@@ -258,7 +258,7 @@ public final class DeviceContactBasicData: Equatable {
         let firstNameOffset = builder.create(string: self.firstName)
         let lastNameOffset = builder.create(string: self.lastName)
         
-        return IosappCore_StoredDeviceContactData.createStoredDeviceContactData(
+        return TelegramCore_StoredDeviceContactData.createStoredDeviceContactData(
             &builder,
             firstNameOffset: firstNameOffset,
             lastNameOffset: lastNameOffset,
@@ -304,7 +304,7 @@ public final class DeviceContactDataState: Codable {
         
         let contactsData = try container.decode([Data].self, forKey: .contactsData).map { data in
             var byteBuffer = ByteBuffer(data: data)
-            let deserializedValue = FlatBuffers_getRoot(byteBuffer: &byteBuffer) as IosappCore_StoredDeviceContactData
+            let deserializedValue = FlatBuffers_getRoot(byteBuffer: &byteBuffer) as TelegramCore_StoredDeviceContactData
             let parsedValue = DeviceContactBasicData(flatBuffersObject: deserializedValue)
             return parsedValue
         }

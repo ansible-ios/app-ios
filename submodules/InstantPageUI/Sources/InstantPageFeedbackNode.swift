@@ -2,14 +2,14 @@ import Foundation
 import UIKit
 import AsyncDisplayKit
 import Display
-import IosappCore
+import TelegramCore
 import SwiftSignalKit
-import IosappPresentationData
+import TelegramPresentationData
 import AccountContext
 
 final class InstantPageFeedbackNode: ASDisplayNode, InstantPageNode {
     private let context: AccountContext
-    let webPage: IosappMediaWebpage
+    let webPage: TelegramMediaWebpage
     private let openUrl: (InstantPageUrlItem) -> Void
     
     private let highlightedBackgroundNode: ASDisplayNode
@@ -19,7 +19,7 @@ final class InstantPageFeedbackNode: ASDisplayNode, InstantPageNode {
     
     private let resolveDisposable = MetaDisposable()
     
-    init(context: AccountContext, strings: PresentationStrings, theme: InstantPageTheme, webPage: IosappMediaWebpage, openUrl: @escaping (InstantPageUrlItem) -> Void) {
+    init(context: AccountContext, strings: PresentationStrings, theme: InstantPageTheme, webPage: TelegramMediaWebpage, openUrl: @escaping (InstantPageUrlItem) -> Void) {
         self.context = context
         self.webPage = webPage
         self.openUrl = openUrl
@@ -80,7 +80,7 @@ final class InstantPageFeedbackNode: ASDisplayNode, InstantPageNode {
         }
         |> deliverOnMainQueue).start(next: { [weak self] peer in
             if let strongSelf = self, let _ = peer, let webPageId = strongSelf.webPage.id?.id {
-                strongSelf.openUrl(InstantPageUrlItem(url: "https://asme.su/previews?start=webpage\(webPageId)", webpageId: nil))
+                strongSelf.openUrl(InstantPageUrlItem(url: "https://t.me/previews?start=webpage\(webPageId)", webpageId: nil))
             }
         }))
     }

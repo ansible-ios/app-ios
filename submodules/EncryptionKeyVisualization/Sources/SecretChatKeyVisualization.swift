@@ -1,6 +1,6 @@
 import Foundation
 import UIKit
-import IosappCore
+import TelegramCore
 import EncryptionKeyVisualizationImpl
 
 public func secretChatKeyImage(_ fingerprint: SecretChatKeyFingerprint, size: CGSize) -> UIImage? {

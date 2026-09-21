@@ -4,11 +4,10 @@ import Display
 import AsyncDisplayKit
 import ComponentFlow
 import SwiftSignalKit
-import Postbox
-import IosappCore
+import TelegramCore
 import AccountContext
-import IosappPresentationData
-import IosappStringFormatting
+import TelegramPresentationData
+import TelegramStringFormatting
 import ItemListUI
 import PresentationDataUtils
 import PhotoResources
@@ -19,7 +18,7 @@ public class StatsMessageItem: ListViewItem, ItemListItem {
     let context: AccountContext
     let presentationData: ItemListPresentationData
     let systemStyle: ItemListSystemStyle
-    let peer: Peer
+    let peer: EnginePeer
     let item: StatsPostItem
     let views: Int32
     let reactions: Int32
@@ -31,7 +30,7 @@ public class StatsMessageItem: ListViewItem, ItemListItem {
     let openStory: (UIView) -> Void
     let contextAction: ((ASDisplayNode, ContextGesture?) -> Void)?
     
-    init(context: AccountContext, presentationData: ItemListPresentationData, systemStyle: ItemListSystemStyle = .glass, peer: Peer, item: StatsPostItem, views: Int32, reactions: Int32, forwards: Int32, isPeer: Bool = false, sectionId: ItemListSectionId, style: ItemListStyle, action: (() -> Void)?, openStory: @escaping (UIView) -> Void, contextAction: ((ASDisplayNode, ContextGesture?) -> Void)?) {
+    init(context: AccountContext, presentationData: ItemListPresentationData, systemStyle: ItemListSystemStyle = .glass, peer: EnginePeer, item: StatsPostItem, views: Int32, reactions: Int32, forwards: Int32, isPeer: Bool = false, sectionId: ItemListSectionId, style: ItemListStyle, action: (() -> Void)?, openStory: @escaping (UIView) -> Void, contextAction: ((ASDisplayNode, ContextGesture?) -> Void)?) {
         self.context = context
         self.presentationData = presentationData
         self.systemStyle = systemStyle
@@ -124,7 +123,7 @@ final class StatsMessageItemNode: ListViewItemNode, ItemListItemNode {
     private let activateArea: AccessibilityAreaNode
     
     private var item: StatsMessageItem?
-    private var contentImageMedia: Media?
+    private var contentImageMedia: EngineRawMedia?
     
     override public var canBeSelected: Bool {
         return true
@@ -307,7 +306,7 @@ final class StatsMessageItemNode: ListViewItemNode, ItemListItemNode {
             let presentationData = item.context.sharedContext.currentPresentationData.with { $0 }
             
             var text: String
-            var contentImageMedia: Media?
+            var contentImageMedia: EngineRawMedia?
             let timestamp: Int32
             
             switch item.item {
@@ -317,15 +316,15 @@ final class StatsMessageItemNode: ListViewItemNode, ItemListItemNode {
                 text = !message.text.isEmpty ? message.text : stringForMediaKind(contentKind, strings: item.presentationData.strings).0.string
                 
                 for media in message.media {
-                    if let image = media as? IosappMediaImage {
+                    if let image = media as? TelegramMediaImage {
                         contentImageMedia = image
                         break
-                    } else if let file = media as? IosappMediaFile {
+                    } else if let file = media as? TelegramMediaFile {
                         if file.isVideo && !file.isInstantVideo {
                             contentImageMedia = file
                             break
                         }
-                    } else if let webpage = media as? IosappMediaWebpage, case let .Loaded(content) = webpage.content {
+                    } else if let webpage = media as? TelegramMediaWebpage, case let .Loaded(content) = webpage.content {
                         if let image = content.image {
                             contentImageMedia = image
                             break
@@ -341,17 +340,17 @@ final class StatsMessageItemNode: ListViewItemNode, ItemListItemNode {
             case let .story(_, story):
                 text = item.presentationData.strings.Message_Story
                 timestamp = story.timestamp
-                if let image = story.media._asMedia() as? IosappMediaImage {
+                if let image = story.media._asMedia() as? TelegramMediaImage {
                     contentImageMedia = image
                     break
-                } else if let file = story.media._asMedia() as? IosappMediaFile {
+                } else if let file = story.media._asMedia() as? TelegramMediaFile {
                     contentImageMedia = file
                     break
                 }
             }
             
             if item.isPeer {
-                text = EnginePeer(item.peer).displayTitle(strings: item.presentationData.strings, displayOrder: item.presentationData.nameDisplayOrder)
+                text = item.peer.displayTitle(strings: item.presentationData.strings, displayOrder: item.presentationData.nameDisplayOrder)
             } else {
                 text = foldLineBreaks(text)
             }
@@ -366,16 +365,16 @@ final class StatsMessageItemNode: ListViewItemNode, ItemListItemNode {
                 } else {
                     switch item.item {
                     case let .message(message):
-                        if let image = contentImageMedia as? IosappMediaImage {
+                        if let image = contentImageMedia as? TelegramMediaImage {
                             updateImageSignal = mediaGridMessagePhoto(account: item.context.account, userLocation: .peer(message.id.peerId), photoReference: .message(message: MessageReference(message), media: image))
-                        } else if let file = contentImageMedia as? IosappMediaFile {
+                        } else if let file = contentImageMedia as? TelegramMediaFile {
                             updateImageSignal = mediaGridMessageVideo(postbox: item.context.account.postbox, userLocation: .peer(message.id.peerId), videoReference: .message(message: MessageReference(message), media: file), autoFetchFullSizeThumbnail: true)
                         }
                     case let .story(_, story):
                         if let peerReference = PeerReference(item.peer) {
-                            if let image = contentImageMedia as? IosappMediaImage {
+                            if let image = contentImageMedia as? TelegramMediaImage {
                                 updateImageSignal = mediaGridMessagePhoto(account: item.context.account, userLocation: .peer(item.peer.id), photoReference: .story(peer: peerReference, id: story.id, media: image))
-                            } else if let file = contentImageMedia as? IosappMediaFile {
+                            } else if let file = contentImageMedia as? TelegramMediaFile {
                                 updateImageSignal = mediaGridMessageVideo(postbox: item.context.account.postbox, userLocation: .peer(item.peer.id), videoReference: .story(peer: peerReference, id: story.id, media: file), autoFetchFullSizeThumbnail: true)
                             }
                         }
@@ -476,7 +475,7 @@ final class StatsMessageItemNode: ListViewItemNode, ItemListItemNode {
                             strongSelf.offsetContainerNode.addSubnode(avatarNode)
                             strongSelf.avatarNode = avatarNode
                         }
-                        avatarNode.setPeer(context: item.context, theme: item.presentationData.theme, peer: EnginePeer(item.peer))
+                        avatarNode.setPeer(context: item.context, theme: item.presentationData.theme, peer: item.peer)
                         
                         if case .story = item.item {
                             contentImageInset += 3.0
@@ -486,9 +485,9 @@ final class StatsMessageItemNode: ListViewItemNode, ItemListItemNode {
                         strongSelf.avatarNode?.removeFromSupernode()
                         strongSelf.avatarNode = nil
                         
-                        if let contentImageMedia = contentImageMedia as? IosappMediaImage {
+                        if let contentImageMedia = contentImageMedia as? TelegramMediaImage {
                             dimensions = largestRepresentationForPhoto(contentImageMedia)?.dimensions.cgSize
-                        } else if let contentImageMedia = contentImageMedia as? IosappMediaFile {
+                        } else if let contentImageMedia = contentImageMedia as? TelegramMediaFile {
                             dimensions = contentImageMedia.dimensions?.cgSize
                         }
                     }

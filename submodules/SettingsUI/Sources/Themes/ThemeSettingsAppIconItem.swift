@@ -3,8 +3,8 @@ import UIKit
 import Display
 import AsyncDisplayKit
 import SwiftSignalKit
-import IosappCore
-import IosappPresentationData
+import TelegramCore
+import TelegramPresentationData
 import ItemListUI
 import PresentationDataUtils
 import AppBundle
@@ -179,7 +179,7 @@ private final class ThemeSettingsAppIconNode : ASDisplayNode {
         self.iconNode.frame = CGRect(origin: CGPoint(x: floorToScreenPixels((bounds.width - iconSize.width) / 2.0), y: 13.0), size: iconSize)
         self.overlayNode.frame = self.iconNode.frame
         
-        let textSize = self.textNode.updateLayout(bounds.size)
+        let textSize = self.textNode.updateLayout(CGSize(width: bounds.size.width + 8.0, height: bounds.size.height))
         let textFrame = CGRect(origin: CGPoint(x: floorToScreenPixels((bounds.width - textSize.width) / 2.0), y: 81.0), size: textSize)
         self.textNode.frame = textFrame
         
@@ -377,7 +377,7 @@ class ThemeSettingsAppIconItemNode: ListViewItemNode, ItemListItemNode {
                             var bordered = true
                             switch icon.name {
                                 case "BlueIcon":
-                                    name = "Steel"
+                                    name = item.strings.Appearance_AppIconDefault
                                 case "BlackIcon":
                                     name = item.strings.Appearance_AppIconDefaultX
                                 case "BlueClassicIcon":
@@ -402,24 +402,6 @@ class ThemeSettingsAppIconItemNode: ListViewItemNode, ItemListItemNode {
                                     name = item.strings.Appearance_AppIconBlack
                                 case "PremiumTurbo":
                                     name = item.strings.Appearance_AppIconTurbo
-                                case "BH01":
-                                    name = "Ghost"
-                                case "BH02":
-                                    name = "Noir"
-                                case "BH03":
-                                    name = "Blaze"
-                                case "BH04":
-                                    name = "Frost"
-                                case "BH05":
-                                    name = "Aurora"
-                                case "BH06":
-                                    name = "Void"
-                                case "BH07":
-                                    name = "Ember"
-                                case "BH08":
-                                    name = "Pulse"
-                                case "BH09":
-                                    name = "Jade"
                                 default:
                                     name = icon.name
                             }

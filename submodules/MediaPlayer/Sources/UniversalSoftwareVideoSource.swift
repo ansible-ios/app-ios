@@ -7,7 +7,7 @@ import TGUIKit
 #endif
 import SwiftSignalKit
 import Postbox
-import IosappCore
+import TelegramCore
 import FFMpegBinding
 import CoreMedia
 

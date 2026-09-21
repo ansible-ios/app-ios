@@ -3,10 +3,9 @@ import UIKit
 import Display
 import ComponentFlow
 import SwiftSignalKit
-import Postbox
-import IosappCore
+import TelegramCore
 import MultilineTextComponent
-import IosappPresentationData
+import TelegramPresentationData
 import PhotoResources
 import AccountContext
 import ContextUI
@@ -25,22 +24,22 @@ private let iconTextBackgroundImage = generateImage(CGSize(width: 40.0, height: 
 final class BrowserAddressListItemComponent: Component {
     let context: AccountContext
     let theme: PresentationTheme
-    let webPage: IosappMediaWebpage
-    var message: Message?
+    let webPage: TelegramMediaWebpage
+    var message: EngineMessage?
     let hasNext: Bool
     let insets: UIEdgeInsets
     let action: () -> Void
-    let contextAction: ((IosappMediaWebpage, Message?, ContextExtractedContentContainingView, ContextGesture) -> Void)?
-    
+    let contextAction: ((TelegramMediaWebpage, EngineMessage?, ContextExtractedContentContainingView, ContextGesture) -> Void)?
+
     init(
         context: AccountContext,
         theme: PresentationTheme,
-        webPage: IosappMediaWebpage,
-        message: Message?,
+        webPage: TelegramMediaWebpage,
+        message: EngineMessage?,
         hasNext: Bool,
         insets: UIEdgeInsets,
         action: @escaping () -> Void,
-        contextAction: ((IosappMediaWebpage, Message?, ContextExtractedContentContainingView, ContextGesture) -> Void)?
+        contextAction: ((TelegramMediaWebpage, EngineMessage?, ContextExtractedContentContainingView, ContextGesture) -> Void)?
     ) {
         self.context = context
         self.theme = theme
@@ -85,7 +84,7 @@ final class BrowserAddressListItemComponent: Component {
         private var component: BrowserAddressListItemComponent?
         private weak var state: EmptyComponentState?
         
-        private var currentIconImageRepresentation: IosappMediaImageRepresentation?
+        private var currentIconImageRepresentation: TelegramMediaImageRepresentation?
         
         override init(frame: CGRect) {
             super.init(frame: frame)
@@ -177,7 +176,7 @@ final class BrowserAddressListItemComponent: Component {
             let title: String
             let subtitle: String
             var parsedUrl: URL?
-            var iconImageReferenceAndRepresentation: (AnyMediaReference, IosappMediaImageRepresentation)?
+            var iconImageReferenceAndRepresentation: (AnyMediaReference, TelegramMediaImageRepresentation)?
             var updateIconImageSignal: Signal<(TransformImageArguments) -> DrawingContext?, NoError>?
             
             if case let .Loaded(content) = component.webPage.content {
@@ -190,7 +189,7 @@ final class BrowserAddressListItemComponent: Component {
                 if let image = content.image {
                     if let representation = imageRepresentationLargerThan(image.representations, size: PixelDimensions(width: 80, height: 80)) {
                         if let message = component.message {
-                            iconImageReferenceAndRepresentation = (.message(message: MessageReference(message), media: image), representation)
+                            iconImageReferenceAndRepresentation = (.message(message: MessageReference(message._asMessage()), media: image), representation)
                         } else {
                             iconImageReferenceAndRepresentation = (.standalone(media: image), representation)
                         }
@@ -198,7 +197,7 @@ final class BrowserAddressListItemComponent: Component {
                 } else if let file = content.file {
                     if let representation = smallestImageRepresentation(file.previewRepresentations) {
                         if let message = component.message {
-                            iconImageReferenceAndRepresentation = (.message(message: MessageReference(message), media: file), representation)
+                            iconImageReferenceAndRepresentation = (.message(message: MessageReference(message._asMessage()), media: file), representation)
                         } else {
                             iconImageReferenceAndRepresentation = (.standalone(media: file), representation)
                         }
@@ -207,9 +206,9 @@ final class BrowserAddressListItemComponent: Component {
                 
                 if currentIconImageRepresentation != iconImageReferenceAndRepresentation?.1 {
                     if let iconImageReferenceAndRepresentation = iconImageReferenceAndRepresentation {
-                        if let imageReference = iconImageReferenceAndRepresentation.0.concrete(IosappMediaImage.self) {
+                        if let imageReference = iconImageReferenceAndRepresentation.0.concrete(TelegramMediaImage.self) {
                             updateIconImageSignal = chatWebpageSnippetPhoto(account: component.context.account, userLocation: (component.message?.id.peerId).flatMap(MediaResourceUserLocation.peer) ?? .other, photoReference: imageReference)
-                        } else if let fileReference = iconImageReferenceAndRepresentation.0.concrete(IosappMediaFile.self) {
+                        } else if let fileReference = iconImageReferenceAndRepresentation.0.concrete(TelegramMediaFile.self) {
                             updateIconImageSignal = chatWebpageSnippetFile(account: component.context.account, userLocation: (component.message?.id.peerId).flatMap(MediaResourceUserLocation.peer) ?? .other, mediaReference: fileReference.abstract, representation: iconImageReferenceAndRepresentation.1)
                         }
                     } else {

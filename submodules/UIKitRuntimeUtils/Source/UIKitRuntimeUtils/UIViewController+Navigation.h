@@ -60,7 +60,7 @@ typedef NS_OPTIONS(NSUInteger, UIResponderDisableAutomaticKeyboardHandling) {
 
 @end
 
-@interface CALayer (IosappAddAnimation)
+@interface CALayer (TelegramAddAnimation)
 
 + (void)pushSpringParametersOverride:(CALayerSpringParametersOverride * _Nonnull)springParametersOverride;
 + (void)popSpringParametersOverride;

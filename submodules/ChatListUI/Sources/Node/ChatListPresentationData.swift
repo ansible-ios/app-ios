@@ -1,7 +1,7 @@
 import Foundation
 import UIKit
-import IosappPresentationData
-import IosappUIPreferences
+import TelegramPresentationData
+import TelegramUIPreferences
 
 public final class ChatListPresentationData {
     public let theme: PresentationTheme

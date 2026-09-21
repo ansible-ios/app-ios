@@ -2,7 +2,7 @@ import Foundation
 import AsyncDisplayKit
 import Display
 import ChatPresentationInterfaceState
-import IosappPresentationData
+import TelegramPresentationData
 
 open class ChatMediaInputPane: ASDisplayNode {
     var inputNodeInteraction: ChatMediaInputNodeInteraction?

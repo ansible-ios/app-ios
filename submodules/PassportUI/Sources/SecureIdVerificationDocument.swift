@@ -1,5 +1,5 @@
 import Foundation
-import IosappCore
+import TelegramCore
 
 enum SecureIdVerificationLocalDocumentState: Equatable {
     case uploading(Float)
@@ -8,7 +8,7 @@ enum SecureIdVerificationLocalDocumentState: Equatable {
 
 struct SecureIdVerificationLocalDocument: Equatable {
     let id: Int64
-    let resource: IosappMediaResource
+    let resource: TelegramMediaResource
     let timestamp: Int32
     var state: SecureIdVerificationLocalDocumentState
     
@@ -56,7 +56,7 @@ enum SecureIdVerificationDocument: Equatable {
         }
     }
     
-    var resource: IosappMediaResource {
+    var resource: TelegramMediaResource {
         switch self {
             case let .remote(file):
                 return SecureFileMediaResource(file: file)

@@ -2,9 +2,8 @@ import Foundation
 import UIKit
 import AsyncDisplayKit
 import Display
-import IosappCore
+import TelegramCore
 import SwiftSignalKit
-import Postbox
 
 final class ListMessageHoleItem: ListViewItem {
     public init() {
@@ -103,7 +102,7 @@ final class ListMessageHoleItemNode: ListViewItemNode {
         }
     }
     
-    func transitionNode(id: MessageId, media: Media) -> ASDisplayNode? {
+    func transitionNode(id: EngineMessage.Id, media: EngineMedia) -> ASDisplayNode? {
         return nil
     }
     

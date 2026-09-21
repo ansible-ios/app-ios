@@ -2,7 +2,7 @@ import Foundation
 import UIKit
 import Display
 import AsyncDisplayKit
-import IosappPresentationData
+import TelegramPresentationData
 import ProgressNavigationButtonNode
 
 final class AuthorizationSequencePasswordRecoveryController: ViewController {

@@ -1,7 +1,7 @@
 import Foundation
 import UIKit
 import Postbox
-import IosappCore
+import TelegramCore
 import SwiftSignalKit
 import Display
 
@@ -17,22 +17,22 @@ public struct SecureIdLocalImageResourceId {
     }
 }
 
-public class SecureIdLocalImageResource: IosappMediaResource {
+public class SecureIdLocalImageResource: TelegramMediaResource {
     public let localId: Int64
-    public let source: IosappMediaResource
+    public let source: TelegramMediaResource
     
     public var size: Int64? {
         return nil
     }
     
-    public init(localId: Int64, source: IosappMediaResource) {
+    public init(localId: Int64, source: TelegramMediaResource) {
         self.localId = localId
         self.source = source
     }
     
     public required init(decoder: PostboxDecoder) {
         self.localId = decoder.decodeInt64ForKey("i", orElse: 0)
-        self.source = decoder.decodeObjectForKey("s") as! IosappMediaResource
+        self.source = decoder.decodeObjectForKey("s") as! TelegramMediaResource
     }
     
     public func encode(_ encoder: PostboxEncoder) {

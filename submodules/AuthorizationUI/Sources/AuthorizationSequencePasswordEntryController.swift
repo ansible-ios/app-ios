@@ -2,7 +2,7 @@ import Foundation
 import UIKit
 import Display
 import AsyncDisplayKit
-import IosappPresentationData
+import TelegramPresentationData
 import PresentationDataUtils
 import ProgressNavigationButtonNode
 import AccountContext

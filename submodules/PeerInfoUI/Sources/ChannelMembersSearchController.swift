@@ -1,9 +1,9 @@
 import Foundation
 import UIKit
 import Display
-import IosappCore
+import TelegramCore
 import SwiftSignalKit
-import IosappPresentationData
+import TelegramPresentationData
 import AccountContext
 import SearchUI
 import CounterControllerTitleView
@@ -62,7 +62,7 @@ public final class ChannelMembersSearchControllerImpl: ViewController, ChannelMe
             self.title = title
         }
         
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: self.presentationData.strings.Common_Cancel, style: .plain, target: self, action: #selector(self.cancelPressed))
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "___close", style: .plain, target: self, action: #selector(self.cancelPressed))
         
         self.scrollToTop = { [weak self] in
             if let strongSelf = self {
@@ -91,7 +91,7 @@ public final class ChannelMembersSearchControllerImpl: ViewController, ChannelMe
             }
         })
         
-        let _ = (params.context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: self.peerId))
+        let _ = (params.context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: self.peerId))
         |> take(1)
         |> deliverOnMainQueue).start(next: { [weak self] peer in
             guard let self, let peer else {

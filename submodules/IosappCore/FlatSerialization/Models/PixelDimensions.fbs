@@ -1,6 +1,0 @@
-namespace IosappCore;
-
-struct PixelDimensions {
-    width: int;
-    height: int;
-}

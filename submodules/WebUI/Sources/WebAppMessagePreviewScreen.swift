@@ -4,11 +4,10 @@ import AsyncDisplayKit
 import Display
 import ComponentFlow
 import SwiftSignalKit
-import Postbox
-import IosappCore
+import TelegramCore
 import Markdown
 import TextFormat
-import IosappPresentationData
+import TelegramPresentationData
 import ViewControllerComponent
 import SheetComponent
 import BalancedTextComponent
@@ -20,7 +19,7 @@ import AccountContext
 import PresentationDataUtils
 import ListSectionComponent
 import ListItemComponentAdaptor
-import IosappStringFormatting
+import TelegramStringFormatting
 import UndoUI
 import ChatMessagePaymentAlertController
 import GlassBarButtonComponent
@@ -113,7 +112,7 @@ private final class SheetContent: CombinedComponent {
             let amountFont = Font.regular(13.0)
             let amountTextColor = theme.list.freeTextColor
             let amountMarkdownAttributes = MarkdownAttributes(body: MarkdownAttributeSet(font: amountFont, textColor: amountTextColor), bold: MarkdownAttributeSet(font: amountFont, textColor: amountTextColor), link: MarkdownAttributeSet(font: amountFont, textColor: theme.list.itemAccentColor), linkAttribute: { contents in
-                return (IosappTextAttributes.URL, contents)
+                return (TelegramTextAttributes.URL, contents)
             })
 
             let amountInfoString = NSMutableAttributedString(attributedString: parseMarkdownIntoAttributedString(environment.strings.WebApp_ShareMessage_Info(component.botName).string, attributes: amountMarkdownAttributes, textAlignment: .natural))
@@ -123,8 +122,8 @@ private final class SheetContent: CombinedComponent {
                 highlightColor: environment.theme.list.itemAccentColor.withAlphaComponent(0.1),
                 highlightInset: UIEdgeInsets(top: 0.0, left: 0.0, bottom: 0.0, right: -8.0),
                 highlightAction: { attributes in
-                    if let _ = attributes[NSAttributedString.Key(rawValue: IosappTextAttributes.URL)] {
-                        return NSAttributedString.Key(rawValue: IosappTextAttributes.URL)
+                    if let _ = attributes[NSAttributedString.Key(rawValue: TelegramTextAttributes.URL)] {
+                        return NSAttributedString.Key(rawValue: TelegramTextAttributes.URL)
                     } else {
                         return nil
                     }
@@ -138,7 +137,8 @@ private final class SheetContent: CombinedComponent {
                         
             var text: String = ""
             var entities: TextEntitiesMessageAttribute?
-            var media: [Media] = []
+            var richText: RichTextMessageAttribute?
+            var media: [EngineRawMedia] = []
             var replyMarkup: ReplyMarkupMessageAttribute?
             
             switch component.preparedMessage.result {
@@ -153,8 +153,9 @@ private final class SheetContent: CombinedComponent {
                         media = [image]
                     }
                     replyMarkup = replyMarkupValue
-                case let .text(textValue, entitiesValue, disableUrlPreview, previewParameters, replyMarkupValue):
+                case let .text(textValue, entitiesValue, richTextValue, disableUrlPreview, previewParameters, replyMarkupValue):
                     text = textValue
+                    richText = richTextValue
                     entities = entitiesValue
                     let _ = disableUrlPreview
                     let _ = previewParameters
@@ -168,8 +169,10 @@ private final class SheetContent: CombinedComponent {
                 case let .invoice(invoice, replyMarkupValue):
                     media = [invoice]
                     replyMarkup = replyMarkupValue
-                default:
-                    break
+                case let .webpage(textValue, entitiesValue, _, _, replyMarkupValue):
+                    text = textValue
+                    entities = entitiesValue
+                    replyMarkup = replyMarkupValue
                 }
             case let .externalReference(reference):
                 switch reference.message {
@@ -180,9 +183,10 @@ private final class SheetContent: CombinedComponent {
                         media = [content]
                     }
                     replyMarkup = replyMarkupValue
-                case let .text(textValue, entitiesValue, disableUrlPreview, previewParameters, replyMarkupValue):
+                case let .text(textValue, entitiesValue, richTextValue, disableUrlPreview, previewParameters, replyMarkupValue):
                     text = textValue
                     entities = entitiesValue
+                    richText = richTextValue
                     let _ = disableUrlPreview
                     let _ = previewParameters
                     replyMarkup = replyMarkupValue
@@ -195,14 +199,17 @@ private final class SheetContent: CombinedComponent {
                 case let .invoice(invoice, replyMarkupValue):
                     media = [invoice]
                     replyMarkup = replyMarkupValue
-                default:
-                    break
+                case let .webpage(textValue, entitiesValue, _, _, replyMarkupValue):
+                    text = textValue
+                    entities = entitiesValue
+                    replyMarkup = replyMarkupValue
                 }
             }
             
             let messageItem = PeerNameColorChatPreviewItem.MessageItem(
                 text: text,
                 entities: entities,
+                richText: richText,
                 media: media,
                 replyMarkup: replyMarkup,
                 botAddress: component.botAddress
@@ -441,10 +448,10 @@ public final class WebAppMessagePreviewScreen: ViewControllerComponentContainer 
     fileprivate func complete(peers: [EnginePeer], controller: ViewController?) {
         let _ = (self.context.engine.data.get(
             EngineDataMap(
-                peers.map { IosappEngine.EngineData.Item.Peer.SendPaidMessageStars.init(id: $0.id) }
+                peers.map { TelegramEngine.EngineData.Item.Peer.SendPaidMessageStars.init(id: $0.id) }
             ),
             EngineDataList(
-                peers.map { IosappEngine.EngineData.Item.Peer.RenderedPeer.init(id: $0.id) }
+                peers.map { TelegramEngine.EngineData.Item.Peer.RenderedPeer.init(id: $0.id) }
             )
         )
         |> deliverOnMainQueue).start(next: { [weak self] sendPaidMessageStars, renderedPeers in
@@ -552,7 +559,7 @@ public final class WebAppMessagePreviewScreen: ViewControllerComponentContainer 
             types.append(.user(.init(isBot: true, isPremium: nil)))
         }
         if peerTypes.contains(.channels) {
-            types.append(.channel(.init(isCreator: false, hasUsername: nil, userAdminRights: IosappChatAdminRights(rights: [.canPostMessages]), botAdminRights: nil)))
+            types.append(.channel(.init(isCreator: false, hasUsername: nil, userAdminRights: TelegramChatAdminRights(rights: [.canPostMessages]), botAdminRights: nil)))
         }
         if peerTypes.contains(.groups) {
             types.append(.group(.init(isCreator: false, hasUsername: nil, isForum: nil, botParticipant: false, userAdminRights: nil, botAdminRights: nil)))

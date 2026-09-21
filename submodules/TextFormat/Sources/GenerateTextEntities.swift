@@ -1,12 +1,14 @@
 import Foundation
 import UIKit
-import IosappCore
+import TelegramCore
 import Emoji
 
 private let whitelistedHosts: Set<String> = Set([
     "telegram.org",
-    "asme.su",
+    "t.me",
+    "telegram.me",
     "telegra.ph",
+    "telesco.pe",
     "fragment.com"
 ])
 
@@ -278,7 +280,7 @@ public func generateTextEntities(_ text: String, enabledTypes: EnabledEntityType
                                 guard let url = result.url else {
                                     return
                                 }
-                                if url.scheme != "as" {
+                                if url.scheme != "tg" {
                                     guard var host = url.host?.lowercased() else {
                                         return
                                     }

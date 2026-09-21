@@ -1,11 +1,11 @@
 import Foundation
 import UIKit
-import IosappCore
+import TelegramCore
 import SwiftSignalKit
 import Display
 import AsyncDisplayKit
-import IosappPresentationData
-import IosappUIPreferences
+import TelegramPresentationData
+import TelegramUIPreferences
 import PresentationDataUtils
 import ProgressNavigationButtonNode
 import AccountContext
@@ -118,7 +118,7 @@ public class TermsOfServiceController: ViewController, StandalonePresentableCont
             }
             strongSelf.present(textAlertController(context: strongSelf.context, title: strongSelf.presentationData.strings.PrivacyPolicy_Decline, text: text, actions: [TextAlertAction(type: .destructiveAction, title: declineTitle, action: {
                 self?.decline()
-            }), TextAlertAction(type: .defaultAction, title: strongSelf.presentationData.strings.Common_Cancel, action: {
+            }), TextAlertAction(type: .genericAction, title: strongSelf.presentationData.strings.Common_Cancel, action: {
             })], actionLayout: .vertical), in: .window(.root))
         }, rightAction: { [weak self] in
             guard let strongSelf = self else {

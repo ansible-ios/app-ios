@@ -1,12 +1,12 @@
 import Foundation
 import SwiftSignalKit
-import IosappCore
-import IosappPresentationData
-import IosappStringFormatting
+import TelegramCore
+import TelegramPresentationData
+import TelegramStringFormatting
 import MapKit
 import AccountContext
 
-extension IosappMediaMap {
+extension TelegramMediaMap {
     convenience init(coordinate: CLLocationCoordinate2D, liveBroadcastingTimeout: Int32? = nil, proximityNotificationRadius: Int32? = nil) {
         self.init(latitude: coordinate.latitude, longitude: coordinate.longitude, heading: nil, accuracyRadius: nil, venue: nil, liveBroadcastingTimeout: liveBroadcastingTimeout, liveProximityNotificationRadius: proximityNotificationRadius)
     }
@@ -43,13 +43,13 @@ extension CLLocationCoordinate2D {
 public func nearbyVenues(context: AccountContext, story: Bool = false, latitude: Double, longitude: Double, query: String? = nil) -> Signal<ChatContextResultCollection?, NoError> {
     let botUsername: Signal<String, NoError>
     if story {
-        botUsername = context.engine.data.get(IosappEngine.EngineData.Item.Configuration.App())
+        botUsername = context.engine.data.get(TelegramEngine.EngineData.Item.Configuration.App())
         |> map { appConfiguration in
             let storiesConfiguration = StoriesConfiguration.with(appConfiguration: appConfiguration)
             return storiesConfiguration.venueSearchBot
         }
     } else {
-        botUsername = context.engine.data.get(IosappEngine.EngineData.Item.Configuration.SearchBots())
+        botUsername = context.engine.data.get(TelegramEngine.EngineData.Item.Configuration.SearchBots())
         |> map { searchBotsConfiguration -> String in
             return searchBotsConfiguration.venueBotUsername ?? "foursquare"
         }

@@ -2,9 +2,8 @@ import Foundation
 import UIKit
 import Display
 import SwiftSignalKit
-import Postbox
-import IosappCore
-import IosappPresentationData
+import TelegramCore
+import TelegramPresentationData
 import MtProtoKit
 import ItemListUI
 import PresentationDataUtils
@@ -260,7 +259,11 @@ private func proxySettingsControllerEntries(theme: PresentationTheme, strings: P
     entries.append(.serversHeader(theme, strings.SocksProxySetup_SavedProxies))
     entries.append(.addServer(theme, strings.SocksProxySetup_AddProxy, state.editing))
     var index = 0
+    var existingServers = Set<ProxyServerSettings>()
     for server in proxySettings.servers {
+        if !existingServers.insert(server).inserted {
+            continue
+        }
         let status: ProxyServerStatus = statuses[server] ?? .checking
         let displayStatus: DisplayProxyServerStatus
         if proxySettings.enabled && server == proxySettings.activeServer {
@@ -301,7 +304,7 @@ private func proxySettingsControllerEntries(theme: PresentationTheme, strings: P
         entries.append(.server(index, theme, strings, server, server == proxySettings.activeServer, displayStatus, ProxySettingsServerItemEditing(editable: true, editing: state.editing, revealed: state.revealedServer == server), proxySettings.enabled))
         index += 1
     }
-    if !proxySettings.servers.isEmpty {
+    if !existingServers.isEmpty {
         entries.append(.shareProxyList(theme, strings.SocksProxySetup_ShareProxyList))
     }
     
@@ -325,10 +328,10 @@ public enum ProxySettingsControllerMode {
 
 public func proxySettingsController(context: AccountContext, mode: ProxySettingsControllerMode = .default, focusOnItemTag: ProxySettingsEntryTag? = nil) -> ViewController {
     let presentationData = context.sharedContext.currentPresentationData.with { $0 }
-    return proxySettingsController(accountManager: context.sharedContext.accountManager, sharedContext: context.sharedContext, context: context, postbox: context.account.postbox, network: context.account.network, mode: mode, presentationData: presentationData, updatedPresentationData: context.sharedContext.presentationData, focusOnItemTag: focusOnItemTag)
+    return proxySettingsController(accountManager: context.sharedContext.accountManager, sharedContext: context.sharedContext, context: context, network: context.account.network, mode: mode, presentationData: presentationData, updatedPresentationData: context.sharedContext.presentationData, focusOnItemTag: focusOnItemTag)
 }
 
-public func proxySettingsController(accountManager: AccountManager<IosappAccountManagerTypes>, sharedContext: SharedAccountContext, context: AccountContext? = nil, postbox: Postbox, network: Network, mode: ProxySettingsControllerMode, presentationData: PresentationData, updatedPresentationData: Signal<PresentationData, NoError>, focusOnItemTag: ProxySettingsEntryTag? = nil) -> ViewController {
+public func proxySettingsController(accountManager: AccountManager<TelegramAccountManagerTypes>, sharedContext: SharedAccountContext, context: AccountContext? = nil, network: Network, mode: ProxySettingsControllerMode, presentationData: PresentationData, updatedPresentationData: Signal<PresentationData, NoError>, focusOnItemTag: ProxySettingsEntryTag? = nil) -> ViewController {
     var pushControllerImpl: ((ViewController) -> Void)?
     var dismissImpl: (() -> Void)?
     let stateValue = Atomic(value: ProxySettingsControllerState())
@@ -425,9 +428,13 @@ public func proxySettingsController(accountManager: AccountManager<IosappAccount
     
     let signal = combineLatest(updatedPresentationData, statePromise.get(), proxySettings.get(), statusesContext.statuses(), network.connectionStatus)
     |> map { presentationData, state, proxySettings, statuses, connectionStatus -> (ItemListControllerState, (ItemListNodeState, Any)) in
+        var presentationData = presentationData
+        let updatedTheme = presentationData.theme.withModalBlocksBackground()
+        presentationData = presentationData.withUpdated(theme: updatedTheme)
+        
         var leftNavigationButton: ItemListNavigationButton?
         if case .modal = mode {
-            leftNavigationButton = ItemListNavigationButton(content: .text(presentationData.strings.Common_Cancel), style: .regular, enabled: true, action: {
+            leftNavigationButton = ItemListNavigationButton(content: .icon(.close), style: .regular, enabled: true, action: {
                 dismissImpl?()
             })
         }
@@ -436,7 +443,7 @@ public func proxySettingsController(accountManager: AccountManager<IosappAccount
         if proxySettings.servers.isEmpty {
             rightNavigationButton = nil
         } else if state.editing {
-            rightNavigationButton = ItemListNavigationButton(content: .text(presentationData.strings.Common_Done), style: .bold, enabled: true, action: {
+            rightNavigationButton = ItemListNavigationButton(content: .icon(.done), style: .bold, enabled: true, action: {
                 updateState { state in
                     var state = state
                     state.editing = false
@@ -537,10 +544,10 @@ public func proxySettingsController(accountManager: AccountManager<IosappAccount
                     switch server.connection {
                     case let .mtp(secret):
                         let secret = MTProxySecret.parseData(secret)?.serializeToString() ?? ""
-                        string = "https://asme.su/proxy?server=\(server.host)&port=\(server.port)"
+                        string = "https://t.me/proxy?server=\(server.host)&port=\(server.port)"
                         string += "&secret=\((secret as NSString).addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryValueAllowed) ?? "")"
                     case let .socks5(username, password):
-                        string = "https://asme.su/socks?server=\(server.host)&port=\(server.port)"
+                        string = "https://t.me/socks?server=\(server.host)&port=\(server.port)"
                         if let username = username, let password = password {
                             string += "&user=\((username as NSString).addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryValueAllowed) ?? "")&pass=\((password as NSString).addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryValueAllowed) ?? "")"
                         }

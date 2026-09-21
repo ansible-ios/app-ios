@@ -2,8 +2,8 @@ import Foundation
 import UIKit
 import Display
 import AsyncDisplayKit
-import IosappCore
-import IosappPresentationData
+import TelegramCore
+import TelegramPresentationData
 import AvatarNode
 import LocationResources
 import AppBundle
@@ -77,7 +77,7 @@ private func generateHeadingArrowImage() -> UIImage? {
 public final class ChatMessageLiveLocationPositionNode: ASDisplayNode {
     public enum Mode {
         case liveLocation(peer: EnginePeer, active: Bool, latitude: Double, longitude: Double, heading: Int32?)
-        case location(IosappMediaMap?)
+        case location(TelegramMediaMap?)
     }
     
     private let backgroundNode: ASImageNode

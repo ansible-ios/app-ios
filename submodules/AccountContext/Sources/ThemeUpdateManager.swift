@@ -1,7 +1,7 @@
 import Foundation
 import SwiftSignalKit
-import IosappCore
-import IosappPresentationData
+import TelegramCore
+import TelegramPresentationData
 
 public protocol ThemeUpdateManager: AnyObject {
 }

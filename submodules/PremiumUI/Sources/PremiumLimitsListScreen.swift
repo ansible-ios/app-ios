@@ -2,12 +2,11 @@ import Foundation
 import UIKit
 import Display
 import AsyncDisplayKit
-import IosappCore
-import Postbox
+import TelegramCore
 import SwiftSignalKit
 import AccountContext
-import IosappPresentationData
-import IosappUIPreferences
+import TelegramPresentationData
+import TelegramUIPreferences
 import PresentationDataUtils
 import ComponentFlow
 import ViewControllerComponent
@@ -43,7 +42,7 @@ public class PremiumLimitsListScreen: ViewController {
                 
         var isPremium: Bool?
         var reactions: [AvailableReactions.Reaction]?
-        var stickers: [IosappMediaFile]?
+        var stickers: [TelegramMediaFile]?
         var appIcons: [PresentationAppIcon]?
         var disposable: Disposable?
         var promoConfiguration: PremiumPromoConfiguration?
@@ -98,63 +97,50 @@ public class PremiumLimitsListScreen: ViewController {
                 accountSpecificStickerOverrides = []
             }
             let stickerOverrideMessages = context.engine.data.get(
-                EngineDataMap(accountSpecificStickerOverrides.map(\.messageId).map(IosappEngine.EngineData.Item.Messages.Message.init))
+                EngineDataMap(accountSpecificStickerOverrides.map(\.messageId).map(TelegramEngine.EngineData.Item.Messages.Message.init))
             )
             
             self.appIcons = controller.context.sharedContext.applicationBindings.getAvailableAlternateIcons()
             
-            let stickersKey: PostboxViewKey = .orderedItemList(id: Namespaces.OrderedItemList.CloudPremiumStickers)
             self.disposable = (combineLatest(
                 queue: Queue.mainQueue(),
-                context.account.postbox.combinedView(keys: [stickersKey])
-                |> map { views -> [OrderedItemListEntry]? in
-                    if let view = views.views[stickersKey] as? OrderedItemListView {
-                        return view.items
-                    } else {
-                        return nil
-                    }
-                }
-                |> filter { items in
-                    return items != nil
-                }
+                context.engine.data.subscribe(TelegramEngine.EngineData.Item.OrderedLists.ListItems(collectionId: Namespaces.OrderedItemList.CloudPremiumStickers))
                 |> take(1),
                 context.engine.data.get(
-                    IosappEngine.EngineData.Item.Peer.Peer(id: context.account.peerId),
-                    IosappEngine.EngineData.Item.Configuration.PremiumPromo()
+                    TelegramEngine.EngineData.Item.Peer.Peer(id: context.account.peerId),
+                    TelegramEngine.EngineData.Item.Configuration.PremiumPromo()
                 ),
                 stickerOverrideMessages
             )
-            |> map { items, data, stickerOverrideMessages -> ([IosappMediaFile], Bool?, PremiumPromoConfiguration?) in
-                var stickerOverrides: [MessageReaction.Reaction: IosappMediaFile] = [:]
+            |> map { items, data, stickerOverrideMessages -> ([TelegramMediaFile], Bool?, PremiumPromoConfiguration?) in
+                var stickerOverrides: [MessageReaction.Reaction: TelegramMediaFile] = [:]
                 for item in accountSpecificStickerOverrides {
                     if let maybeMessage = stickerOverrideMessages[item.messageId], let message = maybeMessage {
                         for media in message.media {
-                            if let file = media as? IosappMediaFile, file.fileId == item.mediaId {
+                            if let file = media as? TelegramMediaFile, file.fileId == item.mediaId {
                                 stickerOverrides[item.key] = file
                             }
                         }
                     }
                 }
                 
-                var result: [IosappMediaFile.Accessor] = []
-                if let items = items {
-                    for item in items {
-                        if let mediaItem = item.contents.get(RecentMediaItem.self) {
-                            result.append(mediaItem.media)
-                        }
+                var result: [TelegramMediaFile.Accessor] = []
+                for item in items {
+                    if let mediaItem = item.contents.get(RecentMediaItem.self) {
+                        result.append(mediaItem.media)
                     }
                 }
-                return (result.map { file -> IosappMediaFile in
+                return (result.map { file -> TelegramMediaFile in
                     let file = file._parse()
-                    if let displayText = IosappMediaFile.Accessor(file).stickerDisplayText {
+                    if let displayText = TelegramMediaFile.Accessor(file).stickerDisplayText {
                         if let replacementFile = stickerOverrides[.builtin(displayText)], let dimensions = replacementFile.dimensions {
                             let _ = dimensions
-                            return IosappMediaFile(
+                            return TelegramMediaFile(
                                 fileId: file.fileId,
                                 partialReference: file.partialReference,
                                 resource: file.resource,
                                 previewRepresentations: file.previewRepresentations,
-                                videoThumbnails: [IosappMediaFile.VideoThumbnail(dimensions: dimensions, resource: replacementFile.resource)],
+                                videoThumbnails: [TelegramMediaFile.VideoThumbnail(dimensions: dimensions, resource: replacementFile.resource)],
                                 immediateThumbnailData: file.immediateThumbnailData,
                                 mimeType: file.mimeType,
                                 size: file.size,
@@ -384,7 +370,7 @@ public class PremiumLimitsListScreen: ViewController {
             let theme = self.presentationData.theme
             let strings = self.presentationData.strings
             
-            let videos: [String: IosappMediaFile] = self.promoConfiguration?.videos ?? [:]
+            let videos: [String: TelegramMediaFile] = self.promoConfiguration?.videos ?? [:]
             let stickers = self.stickers ?? []
             let appIcons = self.appIcons ?? []
             
@@ -898,6 +884,26 @@ public class PremiumLimitsListScreen: ViewController {
                                 )),
                                 title: strings.Premium_AiTools,
                                 text: strings.Premium_AiToolsInfo,
+                                textColor: textColor
+                            )
+                        )
+                    )
+                )
+                
+                availableItems[.richText] = DemoPagerComponent.Item(
+                    AnyComponentWithIdentity(
+                        id: PremiumDemoScreen.Subject.richText,
+                        component: AnyComponent(
+                            PageComponent(
+                                content: AnyComponent(PhoneDemoComponent(
+                                    context: context,
+                                    position: .top,
+                                    model: .island,
+                                    videoFile: videos["rich_formatting"],
+                                    decoration: .badgeStars
+                                )),
+                                title: strings.Premium_RichText,
+                                text: strings.Premium_RichTextInfo,
                                 textColor: textColor
                             )
                         )

@@ -50,7 +50,7 @@ swift_library(
         "//submodules/Display",
         "//submodules/MetalEngine",
         "//submodules/LottieCpp",
-        "//submodules/IosappUI/Components/LottieMetal",
+        "//submodules/TelegramUI/Components/LottieMetal",
         "//submodules/rlottie:RLottieBinding",
         "//Tests/LottieMetalTest/QOILoader",
         "//Tests/LottieMetalTest/SoftwareLottieRenderer",

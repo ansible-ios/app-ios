@@ -3,11 +3,11 @@ import UIKit
 import Display
 import AsyncDisplayKit
 import SwiftSignalKit
-import IosappPresentationData
-import IosappStringFormatting
+import TelegramPresentationData
+import TelegramStringFormatting
 import SearchBarNode
 import AppBundle
-import IosappCore
+import TelegramCore
 import ComponentFlow
 import BundleIconComponent
 import GlassBarButtonComponent
@@ -77,7 +77,7 @@ private func loadCountryCodes() -> [Country] {
 private var countryCodes: [Country] = loadCountryCodes()
 private var countryCodesByPrefix: [String: (Country, Country.CountryCode)] = [:]
 
-public func loadServerCountryCodes(accountManager: AccountManager<IosappAccountManagerTypes>, engine: IosappEngineUnauthorized, completion: @escaping () -> Void) {
+public func loadServerCountryCodes(accountManager: AccountManager<TelegramAccountManagerTypes>, engine: TelegramEngineUnauthorized, completion: @escaping () -> Void) {
     let _ = (engine.localization.getCountriesList(accountManager: accountManager, langCode: nil)
     |> deliverOnMainQueue).start(next: { countries in
         countryCodes = countries
@@ -102,7 +102,7 @@ public func loadServerCountryCodes(accountManager: AccountManager<IosappAccountM
     })
 }
 
-public func loadServerCountryCodes(accountManager: AccountManager<IosappAccountManagerTypes>, engine: IosappEngine, completion: @escaping () -> Void) {
+public func loadServerCountryCodes(accountManager: AccountManager<TelegramAccountManagerTypes>, engine: TelegramEngine, completion: @escaping () -> Void) {
     let _ = (engine.localization.getCountriesList(accountManager: accountManager, langCode: nil)
     |> deliverOnMainQueue).start(next: { countries in
         countryCodes = countries

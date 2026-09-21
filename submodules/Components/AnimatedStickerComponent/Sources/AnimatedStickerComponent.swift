@@ -2,15 +2,15 @@ import Foundation
 import UIKit
 import ComponentFlow
 import AnimatedStickerNode
-import IosappAnimatedStickerNode
+import TelegramAnimatedStickerNode
 import HierarchyTrackingLayer
-import IosappCore
+import TelegramCore
 
 public final class AnimatedStickerComponent: Component {
     public struct Animation: Equatable {
         public enum Source: Equatable {
             case bundle(name: String)
-            case file(media: IosappMediaFile)
+            case file(media: TelegramMediaFile)
         }
         
         public var source: Source

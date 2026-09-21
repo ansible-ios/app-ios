@@ -3,8 +3,8 @@ import UIKit
 import AsyncDisplayKit
 import ComponentFlow
 import SwiftSignalKit
-import IosappCore
-import IosappPresentationData
+import TelegramCore
+import TelegramPresentationData
 import AccountContext
 import ChatListUI
 import SegmentedControlNode

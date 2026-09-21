@@ -5,7 +5,7 @@ import SwiftSignalKit
 import UIKitRuntimeUtils
 import Display
 import DirectionalPanGesture
-import IosappPresentationData
+import TelegramPresentationData
 import MapKit
 import WebKit
 import ComponentFlow
@@ -479,7 +479,9 @@ final class AttachmentContainer: ASDisplayNode, ASGestureRecognizerDelegate {
         if self.isDismissed {
             return
         }
-        self.bottomClipNode.cornerRadius = layout.deviceMetrics.screenCornerRadius - 2.0
+        
+        let containerCornerRadius = max(24.0, layout.deviceMetrics.screenCornerRadius)
+        self.bottomClipNode.cornerRadius = containerCornerRadius - 2.0
         
         self.isUpdatingState = true
         

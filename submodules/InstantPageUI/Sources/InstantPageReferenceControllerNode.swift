@@ -2,19 +2,19 @@ import Foundation
 import UIKit
 import Display
 import AsyncDisplayKit
-import IosappCore
+import TelegramCore
 import SafariServices
-import IosappPresentationData
+import TelegramPresentationData
 import AccountContext
 import OpenInExternalAppUI
-import IosappUIPreferences
+import TelegramUIPreferences
 
 class InstantPageReferenceControllerNode: ViewControllerTracingNode, ASScrollViewDelegate {
     private let context: AccountContext
     private let sourceLocation: InstantPageSourceLocation
     private let theme: InstantPageTheme
     private var presentationData: PresentationData
-    private let webPage: (webPage: IosappMediaWebpage, instantPage: InstantPage?)
+    private let webPage: (webPage: TelegramMediaWebpage, instantPage: InstantPage?)
     private let anchorText: NSAttributedString
 
     private let dimNode: ASDisplayNode
@@ -37,7 +37,7 @@ class InstantPageReferenceControllerNode: ViewControllerTracingNode, ASScrollVie
     var dismiss: (() -> Void)?
     var close: (() -> Void)?
     
-    init(context: AccountContext, sourceLocation: InstantPageSourceLocation, theme: InstantPageTheme, webPage: IosappMediaWebpage, instantPage: InstantPage?, anchorText: NSAttributedString, openUrl: @escaping (InstantPageUrlItem) -> Void, openUrlIn: @escaping (InstantPageUrlItem) -> Void, present: @escaping (ViewController, Any?) -> Void) {
+    init(context: AccountContext, sourceLocation: InstantPageSourceLocation, theme: InstantPageTheme, webPage: TelegramMediaWebpage, instantPage: InstantPage?, anchorText: NSAttributedString, openUrl: @escaping (InstantPageUrlItem) -> Void, openUrlIn: @escaping (InstantPageUrlItem) -> Void, present: @escaping (ViewController, Any?) -> Void) {
         self.context = context
         self.sourceLocation = sourceLocation
         self.presentationData = context.sharedContext.currentPresentationData.with { $0 }
@@ -52,6 +52,7 @@ class InstantPageReferenceControllerNode: ViewControllerTracingNode, ASScrollVie
         self.wrappingScrollNode.view.alwaysBounceVertical = true
         self.wrappingScrollNode.view.delaysContentTouches = false
         self.wrappingScrollNode.view.canCancelContentTouches = true
+        self.wrappingScrollNode.view.scrollsToTop = false
         
         self.dimNode = ASDisplayNode()
         self.dimNode.backgroundColor = UIColor(white: 0.0, alpha: 0.5)

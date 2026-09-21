@@ -3,11 +3,11 @@ import UIKit
 import AsyncDisplayKit
 import Display
 import SwiftSignalKit
-import IosappPresentationData
+import TelegramPresentationData
 import AnimatedStickerNode
-import IosappAnimatedStickerNode
+import TelegramAnimatedStickerNode
 import AppBundle
-import IosappCore
+import TelegramCore
 import TextFormat
 import UrlEscaping
 import AccountContext
@@ -571,11 +571,11 @@ private final class TooltipScreenNode: ViewControllerTracingNode {
         let highlightColor: UIColor? = UIColor.white.withAlphaComponent(0.5)
         let highlightAction: (([NSAttributedString.Key: Any]) -> NSAttributedString.Key?)? = { attributes in
             let highlightedAttributes = [
-                IosappTextAttributes.URL,
-                IosappTextAttributes.PeerMention,
-                IosappTextAttributes.PeerTextMention,
-                IosappTextAttributes.BotCommand,
-                IosappTextAttributes.Hashtag
+                TelegramTextAttributes.URL,
+                TelegramTextAttributes.PeerMention,
+                TelegramTextAttributes.PeerTextMention,
+                TelegramTextAttributes.BotCommand,
+                TelegramTextAttributes.Hashtag
             ]
             
             for attribute in highlightedAttributes {
@@ -589,19 +589,19 @@ private final class TooltipScreenNode: ViewControllerTracingNode {
             guard let strongSelf = self else {
                 return
             }
-            if let url = attributes[NSAttributedString.Key(rawValue: IosappTextAttributes.URL)] as? String {
+            if let url = attributes[NSAttributedString.Key(rawValue: TelegramTextAttributes.URL)] as? String {
                 var concealed = true
-                if let (attributeText, fullText) = (strongSelf.textView.view as? BalancedTextComponent.View)?.attributeSubstring(name: IosappTextAttributes.URL, index: index) {
+                if let (attributeText, fullText) = (strongSelf.textView.view as? BalancedTextComponent.View)?.attributeSubstring(name: TelegramTextAttributes.URL, index: index) {
                     concealed = !doesUrlMatchText(url: url, text: attributeText, fullText: fullText)
                 }
                 strongSelf.openActiveTextItem?(.url(url, concealed), .tap)
-            } else if let mention = attributes[NSAttributedString.Key(rawValue: IosappTextAttributes.PeerMention)] as? IosappPeerMention {
+            } else if let mention = attributes[NSAttributedString.Key(rawValue: TelegramTextAttributes.PeerMention)] as? TelegramPeerMention {
                 strongSelf.openActiveTextItem?(.mention(mention.peerId, mention.mention), .tap)
-            } else if let mention = attributes[NSAttributedString.Key(rawValue: IosappTextAttributes.PeerTextMention)] as? String {
+            } else if let mention = attributes[NSAttributedString.Key(rawValue: TelegramTextAttributes.PeerTextMention)] as? String {
                 strongSelf.openActiveTextItem?(.textMention(mention), .tap)
-            } else if let command = attributes[NSAttributedString.Key(rawValue: IosappTextAttributes.BotCommand)] as? String {
+            } else if let command = attributes[NSAttributedString.Key(rawValue: TelegramTextAttributes.BotCommand)] as? String {
                 strongSelf.openActiveTextItem?(.botCommand(command), .tap)
-            } else if let hashtag = attributes[NSAttributedString.Key(rawValue: IosappTextAttributes.Hashtag)] as? IosappHashtag {
+            } else if let hashtag = attributes[NSAttributedString.Key(rawValue: TelegramTextAttributes.Hashtag)] as? TelegramHashtag {
                 strongSelf.openActiveTextItem?(.hashtag(hashtag.hashtag), .tap)
             }
         }
@@ -609,19 +609,19 @@ private final class TooltipScreenNode: ViewControllerTracingNode {
             guard let strongSelf = self else {
                 return
             }
-            if let url = attributes[NSAttributedString.Key(rawValue: IosappTextAttributes.URL)] as? String {
+            if let url = attributes[NSAttributedString.Key(rawValue: TelegramTextAttributes.URL)] as? String {
                 var concealed = true
-                if let (attributeText, fullText) = (strongSelf.textView.view as? BalancedTextComponent.View)?.attributeSubstring(name: IosappTextAttributes.URL, index: index) {
+                if let (attributeText, fullText) = (strongSelf.textView.view as? BalancedTextComponent.View)?.attributeSubstring(name: TelegramTextAttributes.URL, index: index) {
                     concealed = !doesUrlMatchText(url: url, text: attributeText, fullText: fullText)
                 }
                 strongSelf.openActiveTextItem?(.url(url, concealed), .longTap)
-            } else if let mention = attributes[NSAttributedString.Key(rawValue: IosappTextAttributes.PeerMention)] as? IosappPeerMention {
+            } else if let mention = attributes[NSAttributedString.Key(rawValue: TelegramTextAttributes.PeerMention)] as? TelegramPeerMention {
                 strongSelf.openActiveTextItem?(.mention(mention.peerId, mention.mention), .longTap)
-            } else if let mention = attributes[NSAttributedString.Key(rawValue: IosappTextAttributes.PeerTextMention)] as? String {
+            } else if let mention = attributes[NSAttributedString.Key(rawValue: TelegramTextAttributes.PeerTextMention)] as? String {
                 strongSelf.openActiveTextItem?(.textMention(mention), .longTap)
-            } else if let command = attributes[NSAttributedString.Key(rawValue: IosappTextAttributes.BotCommand)] as? String {
+            } else if let command = attributes[NSAttributedString.Key(rawValue: TelegramTextAttributes.BotCommand)] as? String {
                 strongSelf.openActiveTextItem?(.botCommand(command), .longTap)
-            } else if let hashtag = attributes[NSAttributedString.Key(rawValue: IosappTextAttributes.Hashtag)] as? IosappHashtag {
+            } else if let hashtag = attributes[NSAttributedString.Key(rawValue: TelegramTextAttributes.Hashtag)] as? TelegramHashtag {
                 strongSelf.openActiveTextItem?(.hashtag(hashtag.hashtag), .longTap)
             }
         }

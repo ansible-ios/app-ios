@@ -2,7 +2,7 @@ import Foundation
 import SwiftSignalKit
 import Postbox
 import CoreMedia
-import IosappCore
+import TelegramCore
 import FFMpegBinding
 
 private struct StreamContext {

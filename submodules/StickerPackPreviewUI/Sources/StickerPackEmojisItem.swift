@@ -1,15 +1,14 @@
 import Foundation
 import UIKit
 import Display
-import IosappCore
+import TelegramCore
 import SwiftSignalKit
 import AsyncDisplayKit
-import Postbox
 import StickerResources
 import AccountContext
 import AnimatedStickerNode
-import IosappAnimatedStickerNode
-import IosappPresentationData
+import TelegramAnimatedStickerNode
+import TelegramPresentationData
 import ShimmerEffect
 import EntityKeyboard
 import AnimationCache
@@ -193,7 +192,7 @@ final class StickerPackEmojisItemNode: GridItemNode {
         self.boundsChangeTrackerLayer =  boundsChangeTrackerLayer
     }
     
-    func targetItem(at point: CGPoint) -> (IosappMediaFile, CALayer)? {
+    func targetItem(at point: CGPoint) -> (TelegramMediaFile, CALayer)? {
         if let (item, _) = self.item(atPoint: point), let file = item.itemFile {
             let itemId = EmojiKeyboardItemLayer.Key(
                 groupId: 0,

@@ -3,9 +3,9 @@ import UIKit
 import AsyncDisplayKit
 import Display
 import SwiftSignalKit
-import IosappCore
-import IosappPresentationData
-import IosappUIPreferences
+import TelegramCore
+import TelegramPresentationData
+import TelegramUIPreferences
 import MergeLists
 import AccountContext
 import SearchUI
@@ -15,7 +15,7 @@ import ContextUI
 import PhoneNumberFormat
 import ItemListUI
 import AnimatedStickerNode
-import IosappAnimatedStickerNode
+import TelegramAnimatedStickerNode
 import ComponentFlow
 import SearchInputPanelComponent
 
@@ -161,8 +161,8 @@ private enum ContactListSearchEntry: Comparable, Identifiable {
                 let peerItem: ContactsPeerItemPeer
                 switch peer {
                     case let .peer(peer, _, _):
-                        peerItem = .peer(peer: EnginePeer(peer), chatPeer: EnginePeer(peer))
-                        nativePeer = EnginePeer(peer)
+                        peerItem = .peer(peer: peer, chatPeer: peer)
+                        nativePeer = peer
                     case let .deviceContact(stableId, contact):
                         peerItem = .deviceContact(stableId: stableId, contact: contact)
                 }
@@ -178,7 +178,7 @@ private enum ContactListSearchEntry: Comparable, Identifiable {
                     openPeer(peer, .generic)
                 }, disabledAction: { _ in
                     if case let .peer(peer, _, _) = peer {
-                        openDisabledPeer(EnginePeer(peer), requiresPremiumForMessaging ? .premiumRequired : .generic)
+                        openDisabledPeer(peer, requiresPremiumForMessaging ? .premiumRequired : .generic)
                     }
                 }, contextAction: contextAction.flatMap { contextAction in
                     return nativePeer.flatMap { nativePeer in
@@ -404,12 +404,12 @@ public final class ContactsSearchContainerNode: SearchDisplayControllerContentNo
                         
                         if let foundRemoteContacts = foundPeers.foundRemoteContacts {
                             for peer in foundRemoteContacts.0 {
-                                if let user = peer.peer as? IosappUser, user.flags.contains(.requirePremium) {
+                                if case let .user(user) = peer.peer, user.flags.contains(.requirePremium) {
                                     result.insert(user.id)
                                 }
                             }
                             for peer in foundRemoteContacts.1 {
-                                if let user = peer.peer as? IosappUser, user.flags.contains(.requirePremium) {
+                                if case let .user(user) = peer.peer, user.flags.contains(.requirePremium) {
                                     result.insert(user.id)
                                 }
                             }
@@ -421,7 +421,7 @@ public final class ContactsSearchContainerNode: SearchDisplayControllerContentNo
                     |> mapToSignal { peerIds -> Signal<[EnginePeer.Id: Bool], NoError> in
                         return context.engine.data.subscribe(
                             EngineDataMap(
-                                peerIds.map(IosappEngine.EngineData.Item.Peer.IsPremiumRequiredForMessaging.init(id:))
+                                peerIds.map(TelegramEngine.EngineData.Item.Peer.IsPremiumRequiredForMessaging.init(id:))
                             )
                         )
                     }
@@ -485,13 +485,13 @@ public final class ContactsSearchContainerNode: SearchDisplayControllerContentNo
                         var enabled = true
                         var requiresPremiumForMessaging = false
                         if onlyWriteable {
-                            enabled = canSendMessagesToPeer(peer._asPeer())
+                            enabled = canSendMessagesToPeer(peer)
                             if let value = peerRequiresPremiumForMessaging[peer.id], value {
                                 requiresPremiumForMessaging = true
                                 enabled = false
                             }
                         }
-                        entries.append(.peer(index: index, theme: themeAndStrings.0, strings: themeAndStrings.1, peer: .peer(peer: peer._asPeer(), isGlobal: false, participantCount: nil), presence: localPeersAndPresences.1[peer.id], group: .contacts, enabled: enabled, requiresPremiumForMessaging: requiresPremiumForMessaging, displayCallIcons: displayCallIcons))
+                        entries.append(.peer(index: index, theme: themeAndStrings.0, strings: themeAndStrings.1, peer: .peer(peer: peer, isGlobal: false, participantCount: nil), presence: localPeersAndPresences.1[peer.id], group: .contacts, enabled: enabled, requiresPremiumForMessaging: requiresPremiumForMessaging, displayCallIcons: displayCallIcons))
                         if searchDeviceContacts, case let .user(user) = peer, let phone = user.phone {
                             existingNormalizedPhoneNumbers.insert(DeviceContactNormalizedPhoneNumber(rawValue: formatPhoneNumber(phone)))
                         }
@@ -499,14 +499,13 @@ public final class ContactsSearchContainerNode: SearchDisplayControllerContentNo
                     }
                     if let remotePeers = remotePeers {
                         for peer in remotePeers.0 {
-                            if !(peer.peer is IosappUser) {
-                                if let channel = peer.peer as? IosappChannel, case .broadcast = channel.info, categories.contains(.channels) {
-                                } else {
-                                    continue
-                                }
+                            if case .user = peer.peer {
+                            } else if case let .channel(channel) = peer.peer, case .broadcast = channel.info, categories.contains(.channels) {
+                            } else {
+                                continue
                             }
 
-                            if let user = peer.peer as? IosappUser {
+                            if case let .user(user) = peer.peer {
                                 if requirePhoneNumbers {
                                     let phone = user.phone ?? ""
                                     if phone.isEmpty {
@@ -517,12 +516,12 @@ public final class ContactsSearchContainerNode: SearchDisplayControllerContentNo
                                     if user.botInfo != nil {
                                         continue
                                     }
-                                } 
+                                }
                             }
-                            
+
                             if !existingPeerIds.contains(peer.peer.id) {
                                 existingPeerIds.insert(peer.peer.id)
-                                
+
                                 var enabled = true
                                 var requiresPremiumForMessaging = false
                                 if onlyWriteable {
@@ -532,32 +531,31 @@ public final class ContactsSearchContainerNode: SearchDisplayControllerContentNo
                                         enabled = false
                                     }
                                 }
-                                
+
                                 entries.append(.peer(index: index, theme: themeAndStrings.0, strings: themeAndStrings.1, peer: .peer(peer: peer.peer, isGlobal: true, participantCount: peer.subscribers), presence: nil, group: .global, enabled: enabled, requiresPremiumForMessaging: requiresPremiumForMessaging, displayCallIcons: displayCallIcons))
-                                if searchDeviceContacts, let user = peer.peer as? IosappUser, let phone = user.phone {
+                                if searchDeviceContacts, case let .user(user) = peer.peer, let phone = user.phone {
                                     existingNormalizedPhoneNumbers.insert(DeviceContactNormalizedPhoneNumber(rawValue: formatPhoneNumber(phone)))
                                 }
                                 index += 1
                             }
                         }
                         for peer in remotePeers.1 {
-                            if !(peer.peer is IosappUser) {
-                                if let channel = peer.peer as? IosappChannel, case .broadcast = channel.info, categories.contains(.channels) {
-                                } else {
-                                    continue
-                                }
+                            if case .user = peer.peer {
+                            } else if case let .channel(channel) = peer.peer, case .broadcast = channel.info, categories.contains(.channels) {
+                            } else {
+                                continue
                             }
-                            
-                            if let user = peer.peer as? IosappUser, requirePhoneNumbers {
+
+                            if case let .user(user) = peer.peer, requirePhoneNumbers {
                                 let phone = user.phone ?? ""
                                 if phone.isEmpty {
                                     continue
                                 }
                             }
-                            
+
                             if !existingPeerIds.contains(peer.peer.id) {
                                 existingPeerIds.insert(peer.peer.id)
-                                
+
                                 var enabled = true
                                 var requiresPremiumForMessaging = false
                                 if onlyWriteable {
@@ -567,9 +565,9 @@ public final class ContactsSearchContainerNode: SearchDisplayControllerContentNo
                                         enabled = false
                                     }
                                 }
-                                
+
                                 entries.append(.peer(index: index, theme: themeAndStrings.0, strings: themeAndStrings.1, peer: .peer(peer: peer.peer, isGlobal: true, participantCount: peer.subscribers), presence: nil, group: .global, enabled: enabled, requiresPremiumForMessaging: requiresPremiumForMessaging, displayCallIcons: displayCallIcons))
-                                if searchDeviceContacts, let user = peer.peer as? IosappUser, let phone = user.phone {
+                                if searchDeviceContacts, case let .user(user) = peer.peer, let phone = user.phone {
                                     existingNormalizedPhoneNumbers.insert(DeviceContactNormalizedPhoneNumber(rawValue: formatPhoneNumber(phone)))
                                 }
                                 index += 1

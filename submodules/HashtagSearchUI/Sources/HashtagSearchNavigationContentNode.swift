@@ -2,9 +2,8 @@ import Foundation
 import UIKit
 import AsyncDisplayKit
 import Display
-import Postbox
-import IosappCore
-import IosappPresentationData
+import TelegramCore
+import TelegramPresentationData
 import SearchBarNode
 import ComponentFlow
 import ComponentDisplayAdapters

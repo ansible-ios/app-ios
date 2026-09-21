@@ -1,20 +1,20 @@
 import Foundation
 import UIKit
-import IosappCore
+import TelegramCore
 import AsyncDisplayKit
-import IosappPresentationData
-import IosappUIPreferences
+import TelegramPresentationData
+import TelegramUIPreferences
 import AccountContext
 import ContextUI
 
 final class InstantPageSlideshowItem: InstantPageItem {
     var frame: CGRect
-    let webPage: IosappMediaWebpage
+    let webPage: TelegramMediaWebpage
     let wantsNode: Bool = true
     let separatesTiles: Bool = false
     let medias: [InstantPageMedia]
     
-    init(frame: CGRect, webPage: IosappMediaWebpage, medias: [InstantPageMedia]) {
+    init(frame: CGRect, webPage: TelegramMediaWebpage, medias: [InstantPageMedia]) {
         self.frame = frame
         self.webPage = webPage
         self.medias = medias
@@ -30,7 +30,7 @@ final class InstantPageSlideshowItem: InstantPageItem {
     
     func matchesNode(_ node: InstantPageNode) -> Bool {
         if let node = node as? InstantPageSlideshowNode {
-            return self.medias == node.medias
+            return instantPageMediaArraysMatchNodeIdentity(self.medias, node.medias)
         } else {
             return false
         }
@@ -55,4 +55,3 @@ final class InstantPageSlideshowItem: InstantPageItem {
     func drawInTile(context: CGContext) {
     }
 }
-

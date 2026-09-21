@@ -3,10 +3,10 @@ import UIKit
 import Display
 import ComponentFlow
 import SwiftSignalKit
-import IosappCore
+import TelegramCore
 import Markdown
 import TextFormat
-import IosappPresentationData
+import TelegramPresentationData
 import ViewControllerComponent
 import SheetComponent
 import BundleIconComponent
@@ -100,7 +100,7 @@ private final class SheetContent: CombinedComponent {
             let linkColor = theme.actionSheet.controlAccentColor
             
             let markdownAttributes = MarkdownAttributes(body: MarkdownAttributeSet(font: textFont, textColor: textColor), bold: MarkdownAttributeSet(font: textFont, textColor: textColor), link: MarkdownAttributeSet(font: textFont, textColor: linkColor), linkAttribute: { contents in
-                return (IosappTextAttributes.URL, contents)
+                return (TelegramTextAttributes.URL, contents)
             })
                         
             let spacing: CGFloat = 16.0
@@ -263,8 +263,8 @@ private final class SheetContent: CombinedComponent {
                     highlightColor: linkColor.withMultipliedAlpha(0.1),
                     highlightInset: UIEdgeInsets(top: 0.0, left: 0.0, bottom: 0.0, right: -8.0),
                     highlightAction: { attributes in
-                        if let _ = attributes[NSAttributedString.Key(rawValue: IosappTextAttributes.URL)] {
-                            return NSAttributedString.Key(rawValue: IosappTextAttributes.URL)
+                        if let _ = attributes[NSAttributedString.Key(rawValue: TelegramTextAttributes.URL)] {
+                            return NSAttributedString.Key(rawValue: TelegramTextAttributes.URL)
                         } else {
                             return nil
                         }

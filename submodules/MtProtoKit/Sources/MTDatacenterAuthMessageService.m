@@ -48,31 +48,26 @@ static NSArray<MTDatacenterAuthPublicKey *> *defaultPublicKeys(bool isProduction
     static NSArray<MTDatacenterAuthPublicKey *> *productionPublicKeys = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        // Ansible backend RSA public key — same key used by app-desktop
-        // (see ansible-desktop/app-desktop Telegram/SourceFiles/mtproto/mtproto_dc_options.cpp
-        // kTestPublicRSAKeys / kPublicRSAKeys) and by adlib td.
-        // Expected fingerprint: ddcf36f8466e4286.
-        //
-        // Must stay a single key. The server announces TWO fingerprints in
-        // resPQ (07435f2b6146814f legacy + ddcf36f8466e4286) but holds only
-        // ONE private key — the one below. selectPublicKey() iterates the
-        // server list in the outer loop, so shipping the retired key
-        // alongside this one makes it win the match again; the server then
-        // fails to decrypt p_q_inner_data and silently drops the connection
-        // instead of answering req_DH_params.
-        NSString *ansiblePublicKey = @"-----BEGIN RSA PUBLIC KEY-----\n"
-             "MIIBCgKCAQEAvqCL9IFBWxiDU3dFAdFv4vP50Wzv2eXNgH8d7j/ZdzZIMMGbdNgq\n"
-             "+jKXStI6yrnkx6IGq1z9ymGmErbocJ5RLwUh+VqJhKZ683hVsHhPka2/s7So/YRV\n"
-             "NbMjJj4L15CSFdGNPsQNpFCQrGfI71eGh8q2lNuW2cbe+AafWFhqtmfKglJJdwiM\n"
-             "sl+5/FAN2Ks0s5CWNhRNsZmo00eLb4cBxOIh4LVxjlrXgiBQ+b0OKIymqa9/0Hvv\n"
-             "veTrPO6qPkNcMjumx79l3AZtasg821gBHafzTh+acLYJyqtEAlCtAQGYGhcl7wSo\n"
-             "VJyRJX7reja7fCNc4jpAs79VAF8TNCAWSwIDAQAB\n"
-             "-----END RSA PUBLIC KEY-----";
         testingPublicKeys = @[
-            [[MTDatacenterAuthPublicKey alloc] initWithPublicKey:ansiblePublicKey]
+            [[MTDatacenterAuthPublicKey alloc] initWithPublicKey:@"-----BEGIN RSA PUBLIC KEY-----\n"
+             "MIIBCgKCAQEAyMEdY1aR+sCR3ZSJrtztKTKqigvO/vBfqACJLZtS7QMgCGXJ6XIR\n"
+             "yy7mx66W0/sOFa7/1mAZtEoIokDP3ShoqF4fVNb6XeqgQfaUHd8wJpDWHcR2OFwv\n"
+             "plUUI1PLTktZ9uW2WE23b+ixNwJjJGwBDJPQEQFBE+vfmH0JP503wr5INS1poWg/\n"
+             "j25sIWeYPHYeOrFp/eXaqhISP6G+q2IeTaWTXpwZj4LzXq5YOpk4bYEQ6mvRq7D1\n"
+             "aHWfYmlEGepfaYR8Q0YqvvhYtMte3ITnuSJs171+GDqpdKcSwHnd6FudwGO4pcCO\n"
+             "j4WcDuXc2CTHgH8gFTNhp/Y8/SpDOhvn9QIDAQAB\n"
+             "-----END RSA PUBLIC KEY-----"]
         ];
+
         productionPublicKeys = @[
-            [[MTDatacenterAuthPublicKey alloc] initWithPublicKey:ansiblePublicKey]
+            [[MTDatacenterAuthPublicKey alloc] initWithPublicKey:@"-----BEGIN RSA PUBLIC KEY-----\n"
+             "MIIBCgKCAQEA6LszBcC1LGzyr992NzE0ieY+BSaOW622Aa9Bd4ZHLl+TuFQ4lo4g\n"
+             "5nKaMBwK/BIb9xUfg0Q29/2mgIR6Zr9krM7HjuIcCzFvDtr+L0GQjae9H0pRB2OO\n"
+             "62cECs5HKhT5DZ98K33vmWiLowc621dQuwKWSQKjWf50XYFw42h21P2KXUGyp2y/\n"
+             "+aEyZ+uVgLLQbRA1dEjSDZ2iGRy12Mk5gpYc397aYp438fsJoHIgJ2lgMv5h7WY9\n"
+             "t6N/byY9Nw9p21Og3AoXSL2q/2IJ1WRUhebgAdGVMlV1fkuOQoEzR7EdpqtQD9Cs\n"
+             "5+bfo3Nhmcyvk5ftB0WkJ9z6bNZ7yxrP8wIDAQAB\n"
+             "-----END RSA PUBLIC KEY-----"]
         ];
     });
     if (isProduction) {

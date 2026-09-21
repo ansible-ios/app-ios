@@ -1,11 +1,11 @@
 import Foundation
 import UIKit
 import Display
-import IosappCore
+import TelegramCore
 import SwiftSignalKit
 import AsyncDisplayKit
-import IosappPresentationData
-import IosappStringFormatting
+import TelegramPresentationData
+import TelegramStringFormatting
 import SelectablePeerNode
 import PeerPresenceStatusManager
 import AccountContext
@@ -236,8 +236,7 @@ final class ShareControllerPeerGridItemNode: GridItemNode {
                 let resolveInlineStickers = context.resolveInlineStickers
                 self.peerNode.setup(
                     accountPeerId: context.accountPeerId,
-                    postbox: context.stateManager.postbox,
-                    network: context.stateManager.network,
+                    stateManager: context.stateManager,
                     energyUsageSettings: environment.energyUsageSettings,
                     contentSettings: context.contentSettings,
                     animationCache: context.animationCache,
@@ -272,8 +271,7 @@ final class ShareControllerPeerGridItemNode: GridItemNode {
                 }
                 self.peerNode.setupStoryRepost(
                     accountPeerId: context.accountPeerId,
-                    postbox: context.stateManager.postbox,
-                    network: context.stateManager.network,
+                    stateManager: context.stateManager,
                     theme: theme,
                     strings: strings,
                     synchronousLoad: synchronousLoad,

@@ -2,13 +2,13 @@ import Foundation
 import UIKit
 import AsyncDisplayKit
 import Display
-import IosappCore
+import TelegramCore
 import SwiftSignalKit
-import IosappPresentationData
+import TelegramPresentationData
 import ItemListUI
 import PresentationDataUtils
 import AccountContext
-import IosappStringFormatting
+import TelegramStringFormatting
 
 final class BotReceiptControllerArguments {
     fileprivate let account: Account
@@ -27,7 +27,7 @@ private enum BotReceiptSection: Int32 {
 }
 
 enum BotReceiptEntry: ItemListNodeEntry {
-    case header(PresentationTheme, IosappMediaInvoice, String)
+    case header(PresentationTheme, TelegramMediaInvoice, String)
     case price(Int, PresentationTheme, String, String, Bool, Bool)
     case paymentMethod(PresentationTheme, String, String)
     case shippingInfo(PresentationTheme, String, String)
@@ -175,7 +175,7 @@ enum BotReceiptEntry: ItemListNodeEntry {
     }
 }
 
-private func botReceiptControllerEntries(presentationData: PresentationData, invoice: IosappMediaInvoice?, formInvoice: BotPaymentInvoice?, formInfo: BotPaymentRequestedInfo?, shippingOption: BotPaymentShippingOption?, paymentMethodTitle: String?, botPeer: EnginePeer?, tipAmount: Int64?) -> [BotReceiptEntry] {
+private func botReceiptControllerEntries(presentationData: PresentationData, invoice: TelegramMediaInvoice?, formInvoice: BotPaymentInvoice?, formInfo: BotPaymentRequestedInfo?, shippingOption: BotPaymentShippingOption?, paymentMethodTitle: String?, botPeer: EnginePeer?, tipAmount: Int64?) -> [BotReceiptEntry] {
     var entries: [BotReceiptEntry] = []
     
     var botName = ""
@@ -273,7 +273,7 @@ final class BotReceiptControllerNode: ItemListControllerNode {
     
     private var presentationData: PresentationData
     
-    private let receiptData = Promise<(BotPaymentInvoice, BotPaymentRequestedInfo?, BotPaymentShippingOption?, String?, IosappMediaInvoice, Int64?)?>(nil)
+    private let receiptData = Promise<(BotPaymentInvoice, BotPaymentRequestedInfo?, BotPaymentShippingOption?, String?, TelegramMediaInvoice, Int64?)?>(nil)
     private var dataRequestDisposable: Disposable?
 
     private let actionButtonPanelNode: ASDisplayNode
@@ -292,7 +292,7 @@ final class BotReceiptControllerNode: ItemListControllerNode {
             context.sharedContext.presentationData,
             receiptData.get(),
             context.engine.data.get(
-                IosappEngine.EngineData.Item.Peer.Peer(id: messageId.peerId)
+                TelegramEngine.EngineData.Item.Peer.Peer(id: messageId.peerId)
             )
         )
         |> map { presentationData, receiptData, botPeer -> (ItemListPresentationData, (ItemListNodeState, Any)) in

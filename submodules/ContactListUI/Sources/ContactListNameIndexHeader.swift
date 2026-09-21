@@ -1,7 +1,7 @@
 import Foundation
 import Display
 import UIKit
-import IosappPresentationData
+import TelegramPresentationData
 import ListSectionHeaderNode
 
 final class ContactListNameIndexHeader: Equatable, ListViewItemHeader {

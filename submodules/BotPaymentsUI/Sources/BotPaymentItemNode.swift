@@ -2,7 +2,7 @@ import Foundation
 import UIKit
 import AsyncDisplayKit
 import Display
-import IosappPresentationData
+import TelegramPresentationData
 
 private func botPaymentListHasRoundedBlockLayout(_ width: CGFloat) -> Bool {
     return width >= 375.0

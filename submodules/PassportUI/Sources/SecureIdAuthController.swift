@@ -3,9 +3,8 @@ import UIKit
 import Display
 import AsyncDisplayKit
 import SwiftSignalKit
-import Postbox
-import IosappCore
-import IosappPresentationData
+import TelegramCore
+import TelegramPresentationData
 import TextFormat
 import ProgressNavigationButtonNode
 import AccountContext
@@ -19,7 +18,7 @@ public enum SecureIdRequestResult: String {
     case error = "error"
 }
 
-public func secureIdCallbackUrl(with baseUrl: String, peerId: PeerId, result: SecureIdRequestResult, parameters: [String : String]) -> String {
+public func secureIdCallbackUrl(with baseUrl: String, peerId: EnginePeer.Id, result: SecureIdRequestResult, parameters: [String : String]) -> String {
     var query = (parameters.compactMap({ (key, value) -> String in
         return "\(key)=\(value)"
     }) as Array).joined(separator: "&")
@@ -46,10 +45,10 @@ final class SecureIdAuthControllerInteraction {
     let setupPassword: () -> Void
     let grant: () -> Void
     let openUrl: (String) -> Void
-    let openMention: (IosappPeerMention) -> Void
+    let openMention: (TelegramPeerMention) -> Void
     let deleteAll: () -> Void
     
-    fileprivate init(updateState: @escaping ((SecureIdAuthControllerState) -> SecureIdAuthControllerState) -> Void, present: @escaping (ViewController, Any?) -> Void, push: @escaping (ViewController) -> Void, checkPassword: @escaping (String) -> Void, openPasswordHelp: @escaping () -> Void, setupPassword: @escaping () -> Void, grant: @escaping () -> Void, openUrl: @escaping (String) -> Void, openMention: @escaping (IosappPeerMention) -> Void, deleteAll: @escaping () -> Void) {
+    fileprivate init(updateState: @escaping ((SecureIdAuthControllerState) -> SecureIdAuthControllerState) -> Void, present: @escaping (ViewController, Any?) -> Void, push: @escaping (ViewController) -> Void, checkPassword: @escaping (String) -> Void, openPasswordHelp: @escaping () -> Void, setupPassword: @escaping () -> Void, grant: @escaping () -> Void, openUrl: @escaping (String) -> Void, openMention: @escaping (TelegramPeerMention) -> Void, deleteAll: @escaping () -> Void) {
         self.updateState = updateState
         self.present = present
         self.push = push
@@ -64,7 +63,7 @@ final class SecureIdAuthControllerInteraction {
 }
 
 public enum SecureIdAuthControllerMode {
-    case form(peerId: PeerId, scope: String, publicKey: String, callbackUrl: String?, opaquePayload: Data, opaqueNonce: Data)
+    case form(peerId: EnginePeer.Id, scope: String, publicKey: String, callbackUrl: String?, opaquePayload: Data, opaqueNonce: Data)
     case list
 }
 
@@ -174,7 +173,7 @@ public final class SecureIdAuthController: ViewController, StandalonePresentable
             }
         }))
         
-        let handleError: (Any, String?, PeerId?) -> Void = { [weak self] error, callbackUrl, peerId in
+        let handleError: (Any, String?, EnginePeer.Id?) -> Void = { [weak self] error, callbackUrl, peerId in
             if let strongSelf = self {
                 var passError: String?
                 var appUpdateRequired = false
@@ -217,8 +216,8 @@ public final class SecureIdAuthController: ViewController, StandalonePresentable
                 self.formDisposable = (combineLatest(requestSecureIdForm(accountPeerId: context.account.peerId, postbox: context.account.postbox, network: context.account.network, peerId: peerId, scope: scope, publicKey: publicKey), secureIdConfiguration(postbox: context.account.postbox, network: context.account.network) |> castError(RequestSecureIdFormError.self))
                 |> mapToSignal { form, configuration -> Signal<SecureIdEncryptedFormData, RequestSecureIdFormError> in
                     return context.engine.data.get(
-                        IosappEngine.EngineData.Item.Peer.Peer(id: context.account.peerId),
-                        IosappEngine.EngineData.Item.Peer.Peer(id: form.peerId)
+                        TelegramEngine.EngineData.Item.Peer.Peer(id: context.account.peerId),
+                        TelegramEngine.EngineData.Item.Peer.Peer(id: form.peerId)
                     )
                     |> castError(RequestSecureIdFormError.self)
                     |> mapToSignal { accountPeer, servicePeer -> Signal<SecureIdEncryptedFormData, RequestSecureIdFormError> in
@@ -227,7 +226,7 @@ public final class SecureIdAuthController: ViewController, StandalonePresentable
                         }
                         
                         let primaryLanguageByCountry = configuration.nativeLanguageByCountry
-                        return .single(SecureIdEncryptedFormData(form: form, primaryLanguageByCountry: primaryLanguageByCountry, accountPeer: accountPeer._asPeer(), servicePeer: servicePeer._asPeer()))
+                        return .single(SecureIdEncryptedFormData(form: form, primaryLanguageByCountry: primaryLanguageByCountry, accountPeer: accountPeer, servicePeer: servicePeer))
                     }
                 }
                 |> deliverOnMainQueue).start(next: { [weak self] formData in
@@ -251,7 +250,7 @@ public final class SecureIdAuthController: ViewController, StandalonePresentable
                 self.formDisposable = (combineLatest(
                     getAllSecureIdValues(network: self.context.account.network),
                     secureIdConfiguration(postbox: context.account.postbox, network: context.account.network) |> castError(GetAllSecureIdValuesError.self),
-                    context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: context.account.peerId)) |> castError(GetAllSecureIdValuesError.self) |> mapToSignal { accountPeer -> Signal<EnginePeer, GetAllSecureIdValuesError> in
+                    context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: context.account.peerId)) |> castError(GetAllSecureIdValuesError.self) |> mapToSignal { accountPeer -> Signal<EnginePeer, GetAllSecureIdValuesError> in
                         guard let accountPeer = accountPeer else {
                             return .fail(.generic)
                         }
@@ -268,7 +267,7 @@ public final class SecureIdAuthController: ViewController, StandalonePresentable
                             case .form:
                                 break
                             case var .list(list):
-                                list.accountPeer = accountPeer._asPeer()
+                                list.accountPeer = accountPeer
                                 list.primaryLanguageByCountry = primaryLanguageByCountry
                                 list.encryptedValues = values
                                 return .list(list)
@@ -328,7 +327,14 @@ public final class SecureIdAuthController: ViewController, StandalonePresentable
             guard let strongSelf = self else {
                 return
             }
-            let _ = (strongSelf.context.account.postbox.loadedPeerWithId(mention.peerId)
+            let _ = (strongSelf.context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: mention.peerId))
+            |> mapToSignal { peer -> Signal<EnginePeer, NoError> in
+                if let peer {
+                    return .single(peer)
+                } else {
+                    return .never()
+                }
+            }
             |> deliverOnMainQueue).start(next: { peer in
                 guard let strongSelf = self else {
                     return

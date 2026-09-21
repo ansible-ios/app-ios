@@ -7,7 +7,7 @@ import ItemListUI
 import CheckNode
 import AvatarNode
 import AccountContext
-import IosappPresentationData
+import TelegramPresentationData
 import ChatListSearchItemHeader
 
 public class ChatListAdditionalCategoryItem: ItemListItem, ListViewItemWithHeader {

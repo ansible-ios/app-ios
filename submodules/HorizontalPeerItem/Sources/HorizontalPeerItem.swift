@@ -2,16 +2,15 @@ import Foundation
 import UIKit
 import Display
 import AsyncDisplayKit
-import IosappCore
-import Postbox
+import TelegramCore
 import SwiftSignalKit
-import IosappPresentationData
-import IosappStringFormatting
+import TelegramPresentationData
+import TelegramStringFormatting
 import PeerOnlineMarkerNode
 import SelectablePeerNode
 import ContextUI
 import AccountContext
-import IosappUIPreferences
+import TelegramUIPreferences
 import AnimationCache
 import MultiAnimationRenderer
 
@@ -27,13 +26,12 @@ public final class HorizontalPeerItem: ListViewItem {
     let strings: PresentationStrings
     let mode: HorizontalPeerItemMode
     let accountPeerId: EnginePeer.Id
-    let postbox: Postbox
-    let network: Network
+    let stateManager: AccountStateManager
     let energyUsageSettings: EnergyUsageSettings
     let contentSettings: ContentSettings
     let animationCache: AnimationCache
     let animationRenderer: MultiAnimationRenderer
-    let resolveInlineStickers: ([Int64]) -> Signal<[Int64: IosappMediaFile], NoError>
+    let resolveInlineStickers: ([Int64]) -> Signal<[Int64: TelegramMediaFile], NoError>
     
     public let peer: EnginePeer
     let action: (EnginePeer) -> Void
@@ -48,13 +46,12 @@ public final class HorizontalPeerItem: ListViewItem {
         strings: PresentationStrings,
         mode: HorizontalPeerItemMode,
         accountPeerId: EnginePeer.Id,
-        postbox: Postbox,
-        network: Network,
+        stateManager: AccountStateManager,
         energyUsageSettings: EnergyUsageSettings,
         contentSettings: ContentSettings,
         animationCache: AnimationCache,
         animationRenderer: MultiAnimationRenderer,
-        resolveInlineStickers: @escaping ([Int64]) -> Signal<[Int64: IosappMediaFile], NoError>,
+        resolveInlineStickers: @escaping ([Int64]) -> Signal<[Int64: TelegramMediaFile], NoError>,
         peer: EnginePeer,
         presence: EnginePeer.Presence?,
         unreadBadge: (Int32, Bool)?,
@@ -67,8 +64,7 @@ public final class HorizontalPeerItem: ListViewItem {
         self.strings = strings
         self.mode = mode
         self.accountPeerId = accountPeerId
-        self.postbox = postbox
-        self.network = network
+        self.stateManager = stateManager
         self.energyUsageSettings = energyUsageSettings
         self.contentSettings = contentSettings
         self.animationCache = animationCache
@@ -228,7 +224,7 @@ public final class HorizontalPeerItemNode: ListViewItemNode {
                     } else {
                         strongSelf.peerNode.compact = false
                     }
-                    strongSelf.peerNode.setup(accountPeerId: item.accountPeerId, postbox: item.postbox, network: item.network, energyUsageSettings: item.energyUsageSettings, contentSettings: item.contentSettings, animationCache: item.animationCache, animationRenderer: item.animationRenderer, resolveInlineStickers: item.resolveInlineStickers, theme: item.theme, strings: item.strings, peer: EngineRenderedPeer(peer: item.peer), requiresPremiumForMessaging: false, numberOfLines: 1, synchronousLoad: synchronousLoads)
+                    strongSelf.peerNode.setup(accountPeerId: item.accountPeerId, stateManager: item.stateManager, energyUsageSettings: item.energyUsageSettings, contentSettings: item.contentSettings, animationCache: item.animationCache, animationRenderer: item.animationRenderer, resolveInlineStickers: item.resolveInlineStickers, theme: item.theme, strings: item.strings, peer: EngineRenderedPeer(peer: item.peer), requiresPremiumForMessaging: false, numberOfLines: 1, synchronousLoad: synchronousLoads)
                     strongSelf.peerNode.frame = CGRect(origin: CGPoint(), size: itemLayout.size)
                     strongSelf.peerNode.updateSelection(selected: item.isPeerSelected(item.peer.id), animated: false)
                     

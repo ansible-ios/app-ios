@@ -4,13 +4,13 @@ import Display
 import AsyncDisplayKit
 import SwiftSignalKit
 import ComponentFlow
-import IosappCore
+import TelegramCore
 import AccountContext
 import ReactionSelectionNode
-import IosappPresentationData
+import TelegramPresentationData
 import AccountContext
 import AnimatedStickerNode
-import IosappAnimatedStickerNode
+import TelegramAnimatedStickerNode
 import ShimmerEffect
 import StickerResources
 
@@ -18,12 +18,12 @@ final class StickersCarouselComponent: Component {
     public typealias EnvironmentType = DemoPageEnvironment
     
     let context: AccountContext
-    let stickers: [IosappMediaFile]
+    let stickers: [TelegramMediaFile]
     let tapAction: () -> Void
     
     public init(
         context: AccountContext,
-        stickers: [IosappMediaFile],
+        stickers: [TelegramMediaFile],
         tapAction: @escaping () -> Void
     ) {
         self.context = context
@@ -88,7 +88,7 @@ private let itemSize = CGSize(width: 220.0, height: 220.0)
 
 private class StickerNode: ASDisplayNode {
     private let context: AccountContext
-    private let file: IosappMediaFile
+    private let file: TelegramMediaFile
     
     public var imageNode: TransformImageNode
     public var animationNode: AnimatedStickerNode?
@@ -101,7 +101,7 @@ private class StickerNode: ASDisplayNode {
     
     private var setupTimestamp: Double?
     
-    init(context: AccountContext, file: IosappMediaFile, forceIsPremium: Bool) {
+    init(context: AccountContext, file: TelegramMediaFile, forceIsPremium: Bool) {
         self.context = context
         self.file = file
         
@@ -116,7 +116,7 @@ private class StickerNode: ASDisplayNode {
             let dimensions = file.dimensions ?? PixelDimensions(width: 512, height: 512)
             let fittedDimensions = dimensions.cgSize.aspectFitted(CGSize(width: 240.0, height: 240.0))
             
-            let pathPrefix = context.account.postbox.mediaBox.shortLivedResourceCachePathPrefix(file.resource.id)
+            let pathPrefix = context.engine.resources.shortLivedResourceCachePathPrefix(id: EngineMediaResource.Id(file.resource.id))
             animationNode.setup(source: AnimatedStickerResourceSource(account: self.context.account, resource: file.resource, isVideo: file.isVideoSticker), width: Int(fittedDimensions.width * 1.6), height: Int(fittedDimensions.height * 1.6), playbackMode: .loop, mode: .direct(cachePathPrefix: pathPrefix))
             
             self.imageNode.setSignal(chatMessageAnimatedSticker(postbox: context.account.postbox, userLocation: .other, file: file, small: false, size: fittedDimensions))
@@ -133,7 +133,7 @@ private class StickerNode: ASDisplayNode {
                 additionalAnimationNode = DirectAnimatedStickerNode()
                 
                 var pathPrefix: String?
-                pathPrefix = context.account.postbox.mediaBox.shortLivedResourceCachePathPrefix(effect.resource.id)
+                pathPrefix = context.engine.resources.shortLivedResourceCachePathPrefix(id: EngineMediaResource.Id(effect.resource.id))
                 pathPrefix = nil
                 
                 additionalAnimationNode.setup(source: source, width: Int(fittedDimensions.width * 1.5), height: Int(fittedDimensions.height * 1.5), playbackMode: .loop, mode: .direct(cachePathPrefix: pathPrefix))
@@ -281,7 +281,7 @@ private class StickerNode: ASDisplayNode {
 
 private class StickersCarouselNode: ASDisplayNode, ASScrollViewDelegate {
     private let context: AccountContext
-    private let stickers: [IosappMediaFile]
+    private let stickers: [TelegramMediaFile]
     private let tapAction: () -> Void
     
     private var itemContainerNodes: [ASDisplayNode] = []
@@ -302,7 +302,7 @@ private class StickersCarouselNode: ASDisplayNode, ASScrollViewDelegate {
     private var previousInteractionTimestamp: Double = 0.0
     private var timer: SwiftSignalKit.Timer?
     
-    init(context: AccountContext, stickers: [IosappMediaFile], tapAction: @escaping () -> Void) {
+    init(context: AccountContext, stickers: [TelegramMediaFile], tapAction: @escaping () -> Void) {
         self.context = context
         self.stickers = stickers
         self.tapAction = tapAction
@@ -335,6 +335,7 @@ private class StickersCarouselNode: ASDisplayNode, ASScrollViewDelegate {
         self.scrollNode.view.showsHorizontalScrollIndicator = false
         self.scrollNode.view.showsVerticalScrollIndicator = false
         self.scrollNode.view.canCancelContentTouches = true
+        self.scrollNode.view.scrollsToTop = false
         
         self.tapNode.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.stickerTapped(_:))))
     }

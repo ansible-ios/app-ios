@@ -1,12 +1,11 @@
 import Foundation
 import UIKit
-import Postbox
-import IosappCore
+import TelegramCore
 import SwiftSignalKit
-import IosappUIPreferences
+import TelegramUIPreferences
 
 private struct SettingsSearchRecentQueryItemId {
-    public let rawValue: MemoryBuffer
+    public let rawValue: EngineMemoryBuffer
     
     var value: Int64 {
         return self.rawValue.makeData().withUnsafeBytes { buffer -> Int64 in
@@ -17,13 +16,13 @@ private struct SettingsSearchRecentQueryItemId {
         }
     }
     
-    init(_ rawValue: MemoryBuffer) {
+    init(_ rawValue: EngineMemoryBuffer) {
         self.rawValue = rawValue
     }
     
     init(_ value: Int64) {
         var value = value
-        self.rawValue = MemoryBuffer(data: Data(bytes: &value, count: MemoryLayout.size(ofValue: value)))
+        self.rawValue = EngineMemoryBuffer(data: Data(bytes: &value, count: MemoryLayout.size(ofValue: value)))
     }
 }
 
@@ -38,28 +37,28 @@ public final class RecentSettingsSearchQueryItem: Codable {
     }
 }
 
-func addRecentSettingsSearchItem(engine: IosappEngine, item: AnyHashable) {
+func addRecentSettingsSearchItem(engine: TelegramEngine, item: AnyHashable) {
     guard let id = item.base as? String, let data = id.data(using: .ascii) else {
         return
     }
-    let itemId = MemoryBuffer(data: data)
+    let itemId = EngineMemoryBuffer(data: data)
     let _ = engine.orderedLists.addOrMoveToFirstPosition(collectionId: ApplicationSpecificOrderedItemListCollectionId.settingsSearchRecentItems, id: itemId, item: RecentSettingsSearchQueryItem(), removeTailIfCountExceeds: 100).start()
 }
 
-func removeRecentSettingsSearchItem(engine: IosappEngine, item: AnyHashable) {
+func removeRecentSettingsSearchItem(engine: TelegramEngine, item: AnyHashable) {
     guard let id = item.base as? String, let data = id.data(using: .ascii) else {
         return
     }
-    let itemId = MemoryBuffer(data: data)
+    let itemId = EngineMemoryBuffer(data: data)
     let _ = engine.orderedLists.removeItem(collectionId: ApplicationSpecificOrderedItemListCollectionId.settingsSearchRecentItems, id: itemId).start()
 }
 
-func clearRecentSettingsSearchItems(engine: IosappEngine) {
+func clearRecentSettingsSearchItems(engine: TelegramEngine) {
     let _ = engine.orderedLists.clear(collectionId: ApplicationSpecificOrderedItemListCollectionId.settingsSearchRecentItems).start()
 }
 
-func settingsSearchRecentItems(engine: IosappEngine) -> Signal<[AnyHashable], NoError> {
-    return engine.data.subscribe(IosappEngine.EngineData.Item.OrderedLists.ListItems(collectionId: ApplicationSpecificOrderedItemListCollectionId.settingsSearchRecentItems))
+func settingsSearchRecentItems(engine: TelegramEngine) -> Signal<[AnyHashable], NoError> {
+    return engine.data.subscribe(TelegramEngine.EngineData.Item.OrderedLists.ListItems(collectionId: ApplicationSpecificOrderedItemListCollectionId.settingsSearchRecentItems))
     |> map { items -> [AnyHashable] in
         var result: [AnyHashable] = []
         for item in items {

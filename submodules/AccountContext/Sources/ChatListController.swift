@@ -1,7 +1,7 @@
 import Foundation
 import UIKit
 import Display
-import IosappCore
+import TelegramCore
 
 public enum ChatListControllerLocation: Equatable {
     case chatList(groupId: EngineChatList.Group)
@@ -31,4 +31,8 @@ public protocol ChatListController: ViewController {
     
     func activateEdit()
     func openEmojiStatusSetup()
+}
+
+public protocol CommunityViewScreen: ViewController {
+    
 }

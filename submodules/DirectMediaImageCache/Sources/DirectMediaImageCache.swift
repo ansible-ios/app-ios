@@ -1,7 +1,7 @@
 import Foundation
 import SwiftSignalKit
 import Postbox
-import IosappCore
+import TelegramCore
 import UIKit
 import TinyThumbnail
 import Display
@@ -316,7 +316,7 @@ public final class DirectMediaImageCache {
         }
     }
 
-    private func getProgressiveSize(mediaReference: AnyMediaReference, width: Int, representations: [IosappMediaImageRepresentation]) -> (resource: MediaResourceReference, size: Int64)? {
+    private func getProgressiveSize(mediaReference: AnyMediaReference, width: Int, representations: [TelegramMediaImageRepresentation]) -> (resource: MediaResourceReference, size: Int64)? {
         if let representation = representations.first(where: { !$0.progressiveSizes.isEmpty }) {
             let selectedSize: Int64
             let progressiveSizes = representation.progressiveSizes
@@ -343,29 +343,29 @@ public final class DirectMediaImageCache {
         }
     }
 
-    private func getResource(message: Message, image: IosappMediaImage, width: Int) -> (resource: MediaResourceReference, size: Int64)? {
+    private func getResource(message: Message, image: TelegramMediaImage, width: Int) -> (resource: MediaResourceReference, size: Int64)? {
         return self.getProgressiveSize(mediaReference: MediaReference.message(message: MessageReference(message), media: image).abstract, width: width, representations: image.representations)
     }
 
-    private func getResource(message: Message, file: IosappMediaFile, width: Int) -> (resource: MediaResourceReference, size: Int64)? {
+    private func getResource(message: Message, file: TelegramMediaFile, width: Int) -> (resource: MediaResourceReference, size: Int64)? {
         return self.getProgressiveSize(mediaReference: MediaReference.message(message: MessageReference(message), media: file).abstract, width: width, representations: file.previewRepresentations)
     }
     
-    private func getResource(peer: PeerReference, story: EngineStoryItem, image: IosappMediaImage, width: Int) -> (resource: MediaResourceReference, size: Int64)? {
+    private func getResource(peer: PeerReference, story: EngineStoryItem, image: TelegramMediaImage, width: Int) -> (resource: MediaResourceReference, size: Int64)? {
         return self.getProgressiveSize(mediaReference: MediaReference.story(peer: peer, id: story.id, media: image).abstract, width: width, representations: image.representations)
     }
 
-    private func getResource(peer: PeerReference, story: EngineStoryItem, file: IosappMediaFile, width: Int) -> (resource: MediaResourceReference, size: Int64)? {
+    private func getResource(peer: PeerReference, story: EngineStoryItem, file: TelegramMediaFile, width: Int) -> (resource: MediaResourceReference, size: Int64)? {
         return self.getProgressiveSize(mediaReference: MediaReference.story(peer: peer, id: story.id, media: file).abstract, width: width, representations: file.previewRepresentations)
     }
 
     private func getImageSynchronous(message: Message, userLocation: MediaResourceUserLocation, media: Media, width: Int, aspectRatio: CGFloat, possibleWidths: [Int], includeBlurred: Bool) -> GetMediaResult? {
         var immediateThumbnailData: Data?
         var resource: (resource: MediaResourceReference, size: Int64)?
-        if let image = media as? IosappMediaImage {
+        if let image = media as? TelegramMediaImage {
             immediateThumbnailData = image.immediateThumbnailData
             resource = self.getResource(message: message, image: image, width: width)
-        } else if let file = media as? IosappMediaFile {
+        } else if let file = media as? TelegramMediaFile {
             immediateThumbnailData = file.immediateThumbnailData
             resource = self.getResource(message: message, file: file, width: width)
         }
@@ -411,9 +411,9 @@ public final class DirectMediaImageCache {
             return self.getImageSynchronous(message: message, userLocation: .peer(message.id.peerId), media: media, width: width, aspectRatio: 1.0, possibleWidths: possibleWidths, includeBlurred: includeBlurred)
         } else {
             var immediateThumbnailData: Data?
-            if let image = media as? IosappMediaImage {
+            if let image = media as? TelegramMediaImage {
                 immediateThumbnailData = image.immediateThumbnailData
-            } else if let file = media as? IosappMediaFile {
+            } else if let file = media as? TelegramMediaFile {
                 immediateThumbnailData = file.immediateThumbnailData
             }
             var blurredImage: UIImage?
@@ -448,10 +448,10 @@ public final class DirectMediaImageCache {
     private func getImageSynchronous(peer: PeerReference, story: EngineStoryItem, userLocation: MediaResourceUserLocation, media: Media, width: Int, aspectRatio: CGFloat, possibleWidths: [Int], includeBlurred: Bool) -> GetMediaResult? {
         var immediateThumbnailData: Data?
         var resource: (resource: MediaResourceReference, size: Int64)?
-        if let image = media as? IosappMediaImage {
+        if let image = media as? TelegramMediaImage {
             immediateThumbnailData = image.immediateThumbnailData
             resource = self.getResource(peer: peer, story: story, image: image, width: width)
-        } else if let file = media as? IosappMediaFile {
+        } else if let file = media as? TelegramMediaFile {
             immediateThumbnailData = file.immediateThumbnailData
             resource = self.getResource(peer: peer, story: story, file: file, width: width)
         }
@@ -524,9 +524,9 @@ public final class DirectMediaImageCache {
             return self.getImageSynchronous(peer: peer, story: story, userLocation: .peer(peer.id), media: media, width: width, aspectRatio: aspectRatio, possibleWidths: possibleWidths, includeBlurred: includeBlurred)
         } else {
             var immediateThumbnailData: Data?
-            if let image = media as? IosappMediaImage {
+            if let image = media as? TelegramMediaImage {
                 immediateThumbnailData = image.immediateThumbnailData
-            } else if let file = media as? IosappMediaFile {
+            } else if let file = media as? TelegramMediaFile {
                 immediateThumbnailData = file.immediateThumbnailData
             }
             var blurredImage: UIImage?

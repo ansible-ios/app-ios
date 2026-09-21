@@ -4,9 +4,9 @@ import Display
 import AsyncDisplayKit
 import SwiftSignalKit
 import Postbox
-import IosappCore
+import TelegramCore
 import Lottie
-import IosappPresentationData
+import TelegramPresentationData
 import AnimationUI
 import AccountContext
 import RadialStatusNode
@@ -33,8 +33,8 @@ class ChatAnimationGalleryItem: GalleryItem {
     func node(synchronous: Bool) -> GalleryItemNode {
         let node = ChatAnimationGalleryItemNode(context: self.context, presentationData: self.presentationData)
 
-        for media in self.message.media {
-            if let file = media as? IosappMediaFile {
+        for media in self.message.effectiveMedia {
+            if let file = media as? TelegramMediaFile {
                 node.setFile(context: self.context, fileReference: .message(message: MessageReference(self.message), media: file))
                 break
             }
@@ -93,7 +93,7 @@ final class ChatAnimationGalleryItemNode: ZoomableContentGalleryItemNode {
     private var disposable = MetaDisposable()
     private var fetchDisposable = MetaDisposable()
     private let statusDisposable = MetaDisposable()
-    private var status: MediaResourceStatus?
+    private var status: EngineMediaResource.FetchStatus?
     
     init(context: AccountContext, presentationData: PresentationData) {
         self.context = context
@@ -195,7 +195,7 @@ final class ChatAnimationGalleryItemNode: ZoomableContentGalleryItemNode {
     }
     
     private func setupStatus(resource: MediaResource) {
-        self.statusDisposable.set((self.context.account.postbox.mediaBox.resourceStatus(resource)
+        self.statusDisposable.set((self.context.engine.resources.status(resource: EngineMediaResource(resource))
         |> deliverOnMainQueue).start(next: { [weak self] status in
             if let strongSelf = self {
                 let previousStatus = strongSelf.status
@@ -310,7 +310,7 @@ final class ChatAnimationGalleryItemNode: ZoomableContentGalleryItemNode {
     override func visibilityUpdated(isVisible: Bool) {
         super.visibilityUpdated(isVisible: isVisible)
         
-        if let (_, mediaReference) = self.contextAndMedia, let _ = mediaReference.concrete(IosappMediaFile.self) {
+        if let (_, mediaReference) = self.contextAndMedia, let _ = mediaReference.concrete(TelegramMediaFile.self) {
             if isVisible {
             } else {
                 self.fetchDisposable.set(nil)
@@ -334,14 +334,14 @@ final class ChatAnimationGalleryItemNode: ZoomableContentGalleryItemNode {
         if let (_, mediaReference) = self.contextAndMedia, let status = self.status {
             var resource: MediaResourceReference?
             var statsCategory: MediaResourceStatsCategory?
-            if let fileReference = mediaReference.concrete(IosappMediaFile.self) {
+            if let fileReference = mediaReference.concrete(TelegramMediaFile.self) {
                 resource = fileReference.resourceReference(fileReference.media.resource)
                 statsCategory = statsCategoryForFileWithAttributes(fileReference.media.attributes)
             }
             if let resource = resource {
                 switch status {
                     case .Fetching:
-                        self.context.account.postbox.mediaBox.cancelInteractiveResourceFetch(resource.resource)
+                        self.context.engine.resources.cancelInteractiveResourceFetch(id: EngineMediaResource.Id(resource.resource.id))
                     case .Remote:
                     self.fetchDisposable.set(fetchedMediaResource(mediaBox: self.context.account.postbox.mediaBox, userLocation: (self.message?.id.peerId).flatMap(MediaResourceUserLocation.peer) ?? .other, userContentType: .file, reference: resource, statsCategory: statsCategory ?? .generic).start())
                     default:

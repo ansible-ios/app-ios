@@ -2,17 +2,17 @@ import Foundation
 import UIKit
 import AsyncDisplayKit
 import Display
-import IosappCore
+import TelegramCore
 import SwiftSignalKit
-import IosappPresentationData
-import IosappUIPreferences
+import TelegramPresentationData
+import TelegramUIPreferences
 import ItemListUI
 import PresentationDataUtils
 import AccountContext
-import IosappNotices
+import TelegramNotices
 import ChatListSearchItemHeader
 import AnimatedStickerNode
-import IosappAnimatedStickerNode
+import TelegramAnimatedStickerNode
 import AppBundle
 import ItemListPeerActionItem
 import EdgeEffect
@@ -355,7 +355,7 @@ final class CallListControllerNode: ASDisplayNode {
                 return
             }
             let _ = (context.engine.data.get(
-                IosappEngine.EngineData.Item.Peer.Peer(id: peerId)
+                TelegramEngine.EngineData.Item.Peer.Peer(id: peerId)
             )
             |> deliverOnMainQueue).startStandalone(next: { peer in
                 guard let strongSelf = self, let peer = peer else {
@@ -414,7 +414,7 @@ final class CallListControllerNode: ASDisplayNode {
 
             let engine = strongSelf.context.engine
             var signal: Signal<EngineGroupCallDescription?, NoError> = context.engine.data.get(
-                IosappEngine.EngineData.Item.Peer.GroupCallDescription(id: peerId)
+                TelegramEngine.EngineData.Item.Peer.GroupCallDescription(id: peerId)
             )
             |> mapToSignal { activeCall -> Signal<EngineGroupCallDescription?, NoError> in
                 if let activeCall = activeCall {
@@ -940,7 +940,7 @@ final class CallListControllerNode: ASDisplayNode {
         insets.top += max(navigationBarHeight, layout.insets(options: [.statusBar]).top)
         
         let inset: CGFloat
-        if layout.size.width >= 375.0 {
+        if layout.size.width >= 320.0 {
             inset = max(16.0, floor((layout.size.width - 674.0) / 2.0))
         } else {
             inset = 0.0

@@ -2,8 +2,8 @@ import Foundation
 import UIKit
 import AsyncDisplayKit
 import Display
-import IosappCore
-import IosappPresentationData
+import TelegramCore
+import TelegramPresentationData
 import TextFormat
 import AccountContext
 import Markdown
@@ -45,19 +45,19 @@ final class LanguageLinkPreviewContentNode: ASDisplayNode, ShareContentContainer
         }
         let body = MarkdownAttributeSet(font: Font.regular(15.0), textColor: theme.actionSheet.primaryTextColor)
         let bold = MarkdownAttributeSet(font: Font.semibold(15.0), textColor: theme.actionSheet.primaryTextColor)
-        let link = MarkdownAttributeSet(font: Font.regular(15.0), textColor: theme.actionSheet.controlAccentColor, additionalAttributes: [IosappTextAttributes.URL: ""])
+        let link = MarkdownAttributeSet(font: Font.regular(15.0), textColor: theme.actionSheet.controlAccentColor, additionalAttributes: [TelegramTextAttributes.URL: ""])
         
         self.textNode.attributedText = parseMarkdownIntoAttributedString(text, attributes: MarkdownAttributes(body: body, bold: bold, link: link, linkAttribute: { _ in nil }), textAlignment: .center)
         self.textNode.linkHighlightColor = theme.actionSheet.controlAccentColor.withAlphaComponent(0.5)
         self.textNode.highlightAttributeAction = { attributes in
-            if let _ = attributes[NSAttributedString.Key(rawValue: IosappTextAttributes.URL)] {
-                return NSAttributedString.Key(rawValue: IosappTextAttributes.URL)
+            if let _ = attributes[NSAttributedString.Key(rawValue: TelegramTextAttributes.URL)] {
+                return NSAttributedString.Key(rawValue: TelegramTextAttributes.URL)
             } else {
                 return nil
             }
         }
         self.textNode.tapAttributeAction = { attributes, _ in
-            if let _ = attributes[NSAttributedString.Key(rawValue: IosappTextAttributes.URL)] {
+            if let _ = attributes[NSAttributedString.Key(rawValue: TelegramTextAttributes.URL)] {
                 let url: String
                 if localizationInfo.platformUrl.isEmpty {
                     url = localizationInfo.platformUrl

@@ -1,6 +1,5 @@
 import Foundation
-import Postbox
-import IosappCore
+import TelegramCore
 
 public enum WebsiteType {
     case generic
@@ -24,7 +23,7 @@ public enum InstantPageType {
     case album
 }
 
-public func instantPageType(of webpage: IosappMediaWebpageLoadedContent) -> InstantPageType {
+public func instantPageType(of webpage: TelegramMediaWebpageLoadedContent) -> InstantPageType {
     if let type = webpage.type, type == "telegram_album" {
         return .album
     }
@@ -37,18 +36,18 @@ public func instantPageType(of webpage: IosappMediaWebpageLoadedContent) -> Inst
     }
 }
 
-public func defaultWebpageImageSizeIsSmall(webpage: IosappMediaWebpageLoadedContent) -> Bool {
+public func defaultWebpageImageSizeIsSmall(webpage: TelegramMediaWebpageLoadedContent) -> Bool {
     let type = websiteType(of: webpage.websiteName)
     
-    let mainMedia: Media?
+    let mainMedia: EngineMedia?
     switch type {
     case .instagram, .twitter:
-        mainMedia = webpage.story ?? webpage.image ?? webpage.file
+        mainMedia = webpage.story.map(EngineMedia.story) ?? webpage.image.map(EngineMedia.image) ?? webpage.file.map(EngineMedia.file)
     default:
-        mainMedia = webpage.story ?? webpage.file ?? webpage.image
+        mainMedia = webpage.story.map(EngineMedia.story) ?? webpage.file.map(EngineMedia.file) ?? webpage.image.map(EngineMedia.image)
     }
-    
-    if let image = mainMedia as? IosappMediaImage {
+
+    if case let .image(image) = mainMedia {
         if let type = webpage.type, (["photo", "video", "embed", "gif", "document", "telegram_album"] as [String]).contains(type) {
         } else if let type = webpage.type, (["article"] as [String]).contains(type) {
             return true

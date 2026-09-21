@@ -11,11 +11,11 @@ swift_library(
     ],
     deps = [
         "//submodules/AsyncDisplayKit:AsyncDisplayKit",
-        "//submodules/IosappCore:IosappCore",
+        "//submodules/TelegramCore:TelegramCore",
         "//submodules/Display:Display",
         "//submodules/TextFormat:TextFormat",
         "//submodules/Markdown:Markdown",
-        "//submodules/IosappPresentationData:IosappPresentationData",
+        "//submodules/TelegramPresentationData:TelegramPresentationData",
     ],
     visibility = [
         "//visibility:public",

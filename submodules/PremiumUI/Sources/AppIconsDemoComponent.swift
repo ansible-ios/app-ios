@@ -4,9 +4,9 @@ import Display
 import AsyncDisplayKit
 import SwiftSignalKit
 import ComponentFlow
-import IosappCore
+import TelegramCore
 import AccountContext
-import IosappPresentationData
+import TelegramPresentationData
 import AccountContext
 import AppBundle
 

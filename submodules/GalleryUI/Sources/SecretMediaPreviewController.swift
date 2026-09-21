@@ -3,21 +3,21 @@ import UIKit
 import AsyncDisplayKit
 import Display
 import Postbox
-import IosappCore
+import TelegramCore
 import SwiftSignalKit
-import IosappPresentationData
+import TelegramPresentationData
 import AccountContext
 import RadialStatusNode
 import ScreenCaptureDetection
 import AppBundle
 import LocalizedPeerData
 import TooltipUI
-import IosappNotices
+import TelegramNotices
 
 private func galleryMediaForMedia(media: Media) -> Media? {
-    if let media = media as? IosappMediaImage {
+    if let media = media as? TelegramMediaImage {
         return media
-    } else if let file = media as? IosappMediaFile {
+    } else if let file = media as? TelegramMediaFile {
         if file.mimeType.hasPrefix("audio/") {
             return nil
         } else if !file.isVideo && file.mimeType.hasPrefix("video/") {
@@ -30,10 +30,10 @@ private func galleryMediaForMedia(media: Media) -> Media? {
 }
 
 private func mediaForMessage(message: Message) -> Media? {
-    for media in message.media {
+    for media in message.effectiveMedia {
         if let result = galleryMediaForMedia(media: media) {
             return result
-        } else if let webpage = media as? IosappMediaWebpage {
+        } else if let webpage = media as? TelegramMediaWebpage {
             switch webpage.content {
             case let .Loaded(content):
                 if let embedUrl = content.embedUrl, !embedUrl.isEmpty {
@@ -315,7 +315,7 @@ public final class SecretMediaPreviewController: ViewController {
                         var beginTimeAndTimeout: (Double, Double, Bool)?
                         var videoDuration: Double?
                         for media in message.media {
-                            if let file = media as? IosappMediaFile {
+                            if let file = media as? TelegramMediaFile {
                                 videoDuration = file.duration
                             }
                         }
@@ -350,7 +350,7 @@ public final class SecretMediaPreviewController: ViewController {
                            }
                         }
                         
-                        if let file = media as? IosappMediaFile {
+                        if let file = media as? TelegramMediaFile {
                             if file.isAnimated {
                                 strongSelf.title = strongSelf.presentationData.strings.SecretGif_Title
                             } else {
@@ -385,7 +385,7 @@ public final class SecretMediaPreviewController: ViewController {
                                 let contentNode = SecretMediaPreviewFooterContentNode()
                                 let peerTitle = messageMainPeer(EngineMessage(message))?.compactDisplayTitle ?? ""
                                 let text: String
-                                if let file = media as? IosappMediaFile {
+                                if let file = media as? TelegramMediaFile {
                                     if file.isAnimated {
                                         text = strongSelf.presentationData.strings.SecretGIF_NotViewedYet(peerTitle).string
                                     } else {
@@ -422,7 +422,7 @@ public final class SecretMediaPreviewController: ViewController {
             |> deliverOnMainQueue).start(next: { [weak self] _ in
                 if let strongSelf = self, strongSelf.traceVisibility() {
                     if strongSelf.messageId.peerId.namespace == Namespaces.Peer.CloudUser {
-                        let _ = enqueueMessages(account: strongSelf.context.account, peerId: strongSelf.messageId.peerId, messages: [.message(text: "", attributes: [], inlineStickers: [:], mediaReference: .standalone(media: IosappMediaAction(action: IosappMediaActionType.historyScreenshot)), threadId: nil, replyToMessageId: nil, replyToStoryId: nil, localGroupingKey: nil, correlationId: nil, bubbleUpEmojiOrStickersets: [])]).start()
+                        let _ = enqueueMessages(account: strongSelf.context.account, peerId: strongSelf.messageId.peerId, messages: [.message(text: "", attributes: [], inlineStickers: [:], mediaReference: .standalone(media: TelegramMediaAction(action: TelegramMediaActionType.historyScreenshot)), threadId: nil, replyToMessageId: nil, replyToStoryId: nil, localGroupingKey: nil, correlationId: nil, bubbleUpEmojiOrStickersets: [])]).start()
                     } else if strongSelf.messageId.peerId.namespace == Namespaces.Peer.SecretChat {
                         let _ = strongSelf.context.engine.messages.addSecretChatMessageScreenshot(peerId: strongSelf.messageId.peerId).start()
                     }
@@ -503,7 +503,7 @@ public final class SecretMediaPreviewController: ViewController {
         if let messageView = self.messageView, let m = messageView.message {
             message = m
             for media in m.media {
-                if media is IosappMediaExpiredContent {
+                if media is TelegramMediaExpiredContent {
                     message = nil
                     break
                 }
@@ -515,8 +515,8 @@ public final class SecretMediaPreviewController: ViewController {
                 var tempFilePath: String?
                 var duration: Double = 0.0
                 for media in message.media {
-                    if let file = media as? IosappMediaFile {
-                        if let path = self.context.account.postbox.mediaBox.completedResourcePath(file.resource) {
+                    if let file = media as? TelegramMediaFile {
+                        if let path = self.context.engine.resources.completedResourcePath(id: EngineMediaResource.Id(file.resource.id)) {
                             let tempFile = TempBox.shared.file(path: path, fileName: file.fileName ?? "file")
                             self.tempFile = tempFile
                             tempFilePath = tempFile.path
@@ -553,7 +553,7 @@ public final class SecretMediaPreviewController: ViewController {
                 var beginTimeAndTimeout: (Double, Double, Bool)?
                 var videoDuration: Double?
                 for media in message.media {
-                    if let file = media as? IosappMediaFile {
+                    if let file = media as? TelegramMediaFile {
                         videoDuration = file.duration
                     }
                 }

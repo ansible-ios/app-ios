@@ -1,14 +1,14 @@
 import Foundation
 import SwiftSignalKit
-import IosappCore
-import IosappPresentationData
+import TelegramCore
+import TelegramPresentationData
 
 public enum WallpaperUploadManagerStatus {
     case none
-    case uploading(IosappWallpaper, Float)
-    case uploaded(IosappWallpaper, IosappWallpaper)
+    case uploading(TelegramWallpaper, Float)
+    case uploaded(TelegramWallpaper, TelegramWallpaper)
     
-    public var wallpaper: IosappWallpaper? {
+    public var wallpaper: TelegramWallpaper? {
         switch self {
         case let .uploading(wallpaper, _), let .uploaded(wallpaper, _):
             return wallpaper

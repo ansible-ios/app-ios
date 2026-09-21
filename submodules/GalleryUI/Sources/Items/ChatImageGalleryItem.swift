@@ -4,8 +4,8 @@ import Display
 import AsyncDisplayKit
 import SwiftSignalKit
 import Postbox
-import IosappCore
-import IosappPresentationData
+import TelegramCore
+import TelegramPresentationData
 import AccountContext
 import RadialStatusNode
 import PhotoResources
@@ -21,6 +21,7 @@ import UndoUI
 import ContextUI
 import SaveToCameraRoll
 import Pasteboard
+import ChatRichTextEditorComposer
 import AdUI
 import AdsInfoScreen
 import AdsReportScreen
@@ -65,9 +66,9 @@ final class ChatMediaGalleryThumbnailItem: GalleryThumbnailItem {
     init?(account: Account, userLocation: MediaResourceUserLocation, mediaReference: AnyMediaReference) {
         self.account = account
         self.userLocation = userLocation
-        if let imageReference = mediaReference.concrete(IosappMediaImage.self) {
+        if let imageReference = mediaReference.concrete(TelegramMediaImage.self) {
             self.thumbnail = .image(imageReference)
-        } else if let fileReference = mediaReference.concrete(IosappMediaFile.self) {
+        } else if let fileReference = mediaReference.concrete(TelegramMediaFile.self) {
             if fileReference.media.isVideo {
                 self.thumbnail = .video(fileReference)
             } else {
@@ -152,9 +153,9 @@ class ChatImageGalleryItem: GalleryItem {
         
         node.setMessage(self.message, mediaSubject: self.mediaSubject, displayInfo: !self.displayInfoOnTop, translateToLanguage: self.translateToLanguage, peerIsCopyProtected: self.peerIsCopyProtected, isSecret: self.isSecret, location: self.location)
         if let (media, _) = selectedMediaAndMediaImageForMessage(message: self.message, mediaSubject: self.mediaSubject) {
-            if let image = media as? IosappMediaImage {
+            if let image = media as? TelegramMediaImage {
                 node.setImage(userLocation: .peer(self.message.id.peerId), imageReference: .message(message: MessageReference(self.message), media: image))
-            } else if let file = media as? IosappMediaFile, file.mimeType.hasPrefix("image/") {
+            } else if let file = media as? TelegramMediaFile, file.mimeType.hasPrefix("image/") {
                 node.setFile(context: self.context, userLocation: .peer(self.message.id.peerId), fileReference: .message(message: MessageReference(self.message), media: file))
             }
         }
@@ -175,7 +176,7 @@ class ChatImageGalleryItem: GalleryItem {
             if case let .paidMediaIndex(index) = self.mediaSubject {
                 mediaIndex = index
             }
-            if case let .full(fullMedia) = paidContent.extendedMedia[Int(mediaIndex)], let m = fullMedia as? IosappMediaImage {
+            if case let .full(fullMedia) = paidContent.extendedMedia[Int(mediaIndex)], let m = fullMedia as? TelegramMediaImage {
                 mediaReference = .message(message: MessageReference(self.message), media: m)
             }
             if let mediaReference {
@@ -183,9 +184,9 @@ class ChatImageGalleryItem: GalleryItem {
                     return (0, item)
                 }
             }
-        } else if let poll = self.message.media.first(where: { $0 is IosappMediaPoll }) as? IosappMediaPoll, case let .pollOption(opaqueIdentifier) = self.mediaSubject {
+        } else if let poll = self.message.media.first(where: { $0 is TelegramMediaPoll }) as? TelegramMediaPoll, case let .pollOption(opaqueIdentifier) = self.mediaSubject {
             var mediaReference: AnyMediaReference?
-            if let optionMedia = poll.options.first(where: { $0.opaqueIdentifier == opaqueIdentifier })?.media as? IosappMediaImage {
+            if let optionMedia = poll.options.first(where: { $0.opaqueIdentifier == opaqueIdentifier })?.media as? TelegramMediaImage {
                 mediaReference = .message(message: MessageReference(self.message), media: optionMedia)
             }
             if let mediaReference {
@@ -196,9 +197,9 @@ class ChatImageGalleryItem: GalleryItem {
         } else if let id = self.message.groupInfo?.stableId {
             var mediaReference: AnyMediaReference?
             for m in self.message.media {
-                if let m = m as? IosappMediaImage {
+                if let m = m as? TelegramMediaImage {
                     mediaReference = .message(message: MessageReference(self.message), media: m)
-                } else if let m = m as? IosappMediaFile {
+                } else if let m = m as? TelegramMediaFile {
                     mediaReference = .message(message: MessageReference(self.message), media: m)
                 }
             }
@@ -249,7 +250,7 @@ final class ChatImageGalleryItemNode: ZoomableContentGalleryItemNode {
     private let statusDisposable = MetaDisposable()
     private let dataDisposable = MetaDisposable()
     private let recognitionDisposable = MetaDisposable()
-    private var status: MediaResourceStatus?
+    private var status: EngineMediaResource.FetchStatus?
     private var fetchedDimensions: PixelDimensions?
     
     private let pagingEnabledPromise = ValuePromise<Bool>(true)
@@ -408,15 +409,25 @@ final class ChatImageGalleryItemNode: ZoomableContentGalleryItemNode {
                             }
                         case .translate:
                             if let parentController = strongSelf.baseNavigationController()?.topViewController as? ViewController {
-                                let controller = TranslateScreen(context: strongSelf.context, text: string, canCopy: true, fromLanguage: nil)
-                                controller.pushController = { [weak parentController] c in
-                                    (parentController?.navigationController as? NavigationController)?._keepModalDismissProgress = true
-                                    parentController?.push(c)
+                                Task { @MainActor [weak parentController, weak strongSelf] in
+                                    guard let strongSelf else {
+                                        return
+                                    }
+                                    let presentationData = strongSelf.context.sharedContext.currentPresentationData.with({ $0 })
+                                    let controller = await strongSelf.context.sharedContext.makeTextProcessingScreen(
+                                        context: strongSelf.context,
+                                        theme: nil,
+                                        mode: .translate(fromLanguage: nil, applyResult: nil),
+                                        inputText: .plain(text: string, entities: []),
+                                        copyResult: { [weak parentController] text in
+                                            storeComposedRichMessageInPasteboard(text)
+                                            let tooltipController = UndoOverlayController(presentationData: presentationData, content: .copy(text: presentationData.strings.Conversation_TextCopied), elevatedLayout: true, animateInAsReplacement: false, action: { _ in return false })
+                                            parentController?.present(tooltipController, in: .window(.root))
+                                        },
+                                        translateChat: nil
+                                    )
+                                    parentController?.present(controller, in: .window(.root))
                                 }
-                                controller.presentController = { [weak parentController] c in
-                                    parentController?.present(c, in: .window(.root))
-                                }
-                                parentController.present(controller, in: .window(.root))
                             }
                         }
                     })
@@ -507,7 +518,7 @@ final class ChatImageGalleryItemNode: ZoomableContentGalleryItemNode {
                 
                 self.zoomableContent = (largestSize.dimensions.cgSize, self.imageNode)
                 
-                self.fetchDisposable.set(fetchedMediaResource(mediaBox: self.context.account.postbox.mediaBox, userLocation: userLocation, userContentType: .image, reference: imageReference.resourceReference(largestSize.resource)).start())
+                self.fetchDisposable.set(self.context.engine.resources.fetch(reference: imageReference.resourceReference(largestSize.resource), userLocation: userLocation, userContentType: .image).start())
                 self.setupStatus(resource: largestSize.resource)
             } else {
                 self._ready.set(.single(Void()))
@@ -693,7 +704,7 @@ final class ChatImageGalleryItemNode: ZoomableContentGalleryItemNode {
     private func contextMenuMainItems() -> Signal<[ContextMenuItem], NoError> {
         let peer: Signal<EnginePeer?, NoError>
         if let message = self.message {
-            peer = self.context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: message.id.peerId))
+            peer = self.context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: message.id.peerId))
         } else {
             peer = .single(nil)
         }
@@ -729,9 +740,9 @@ final class ChatImageGalleryItemNode: ZoomableContentGalleryItemNode {
                         guard let self else {
                             return
                         }
-                        let _ = (fetchMediaData(context: context, postbox: context.account.postbox, userLocation: .other, mediaReference: media)
+                        let _ = (fetchMediaData(context: context, userLocation: .other, mediaReference: media)
                         |> deliverOnMainQueue).start(next: { [weak self] (value, isImage) in
-                            guard let self, case let .data(data) = value, data.complete, isImage, let image = UIImage(contentsOfFile: data.path) else {
+                            guard let self, case let .data(data) = value, data.isComplete, isImage, let image = UIImage(contentsOfFile: data.path) else {
                                 return
                             }
                             let sendSticker = self.sendSticker
@@ -755,7 +766,7 @@ final class ChatImageGalleryItemNode: ZoomableContentGalleryItemNode {
                     items.append(.action(ContextMenuActionItem(text: self.presentationData.strings.Gallery_SaveImage, icon: { theme in generateTintedImage(image: UIImage(bundleImageName: "Chat/Context Menu/Download"), color: theme.actionSheet.primaryTextColor) }, action: { [weak self] _, f in
                         f(.default)
                                                 
-                        let _ = (SaveToCameraRoll.saveToCameraRoll(context: context, postbox: context.account.postbox, userLocation: .peer(message.id.peerId), mediaReference: media)
+                        let _ = (SaveToCameraRoll.saveToCameraRoll(context: context, userLocation: .peer(message.id.peerId), mediaReference: media)
                         |> deliverOnMainQueue).start(completed: { [weak self] in
                             guard let strongSelf = self else {
                                 return
@@ -769,7 +780,7 @@ final class ChatImageGalleryItemNode: ZoomableContentGalleryItemNode {
                 }
             }
             
-            if let peer, let message = self.message, canSendMessagesToPeer(peer._asPeer()) {
+            if let peer, let message = self.message, canSendMessagesToPeer(peer) {
                 items.append(.action(ContextMenuActionItem(text: self.presentationData.strings.Conversation_ContextMenuReply, icon: { theme in generateTintedImage(image: UIImage(bundleImageName: "Chat/Context Menu/Reply"), color: theme.contextMenu.primaryColor)}, action: { [weak self] _, f in
                     if let self, let navigationController = self.baseNavigationController() {
                         self.beginCustomDismiss(.simpleAnimation)
@@ -932,7 +943,7 @@ final class ChatImageGalleryItemNode: ZoomableContentGalleryItemNode {
                 }
                 self._rightBarButtonItems.set(.single(barButtonItems))
                 
-                self.fetchDisposable.set(fetchedMediaResource(mediaBox: self.context.account.postbox.mediaBox, userLocation: userLocation, userContentType: .image, reference: fileReference.resourceReference(fileReference.media.resource)).start())
+                self.fetchDisposable.set(self.context.engine.resources.fetch(reference: fileReference.resourceReference(fileReference.media.resource), userLocation: userLocation, userContentType: .image).start())
             } else {
                 let _ = (chatMessageFileDatas(account: context.account, userLocation: userLocation, fileReference: fileReference, progressive: false, fetched: true)
                 |> mapToSignal { value -> Signal<UIImage?, NoError> in
@@ -957,7 +968,7 @@ final class ChatImageGalleryItemNode: ZoomableContentGalleryItemNode {
     }
     
     private func setupStatus(resource: MediaResource) {
-        self.statusDisposable.set((self.context.account.postbox.mediaBox.resourceStatus(resource)
+        self.statusDisposable.set((self.context.engine.resources.status(resource: EngineMediaResource(resource))
         |> deliverOnMainQueue).start(next: { [weak self] status in
             if let strongSelf = self {
                 let previousStatus = strongSelf.status
@@ -1158,7 +1169,7 @@ final class ChatImageGalleryItemNode: ZoomableContentGalleryItemNode {
     override func visibilityUpdated(isVisible: Bool) {
         super.visibilityUpdated(isVisible: isVisible)
         
-        /*if let (_, mediaReference) = self.contextAndMedia, let _ = mediaReference.concrete(IosappMediaFile.self) {
+        /*if let (_, mediaReference) = self.contextAndMedia, let _ = mediaReference.concrete(TelegramMediaFile.self) {
             if isVisible {
             } else {
                 self.fetchDisposable.set(nil)
@@ -1186,17 +1197,17 @@ final class ChatImageGalleryItemNode: ZoomableContentGalleryItemNode {
         if let (_, mediaReference) = self.contextAndMedia, let status = self.status {
             var resource: MediaResourceReference?
             var statsCategory: MediaResourceStatsCategory?
-            if let fileReference = mediaReference.concrete(IosappMediaFile.self) {
+            if let fileReference = mediaReference.concrete(TelegramMediaFile.self) {
                 resource = fileReference.resourceReference(fileReference.media.resource)
                 statsCategory = statsCategoryForFileWithAttributes(fileReference.media.attributes)
-            } else if let imageReference = mediaReference.concrete(IosappMediaImage.self ) {
+            } else if let imageReference = mediaReference.concrete(TelegramMediaImage.self ) {
                 resource = (largestImageRepresentation(imageReference.media.representations)?.resource).flatMap(imageReference.resourceReference)
                 statsCategory = .image
             }
             if let resource = resource {
                 switch status {
                     case .Fetching:
-                        self.context.account.postbox.mediaBox.cancelInteractiveResourceFetch(resource.resource)
+                        self.context.engine.resources.cancelInteractiveResourceFetch(id: EngineMediaResource.Id(resource.resource.id))
                     case .Remote:
                     self.fetchDisposable.set(fetchedMediaResource(mediaBox: self.context.account.postbox.mediaBox, userLocation: (self.message?.id.peerId).flatMap(MediaResourceUserLocation.peer) ?? .other, userContentType: .image, reference: resource, statsCategory: statsCategory ?? .generic).start())
                     default:
@@ -1218,11 +1229,11 @@ final class ChatImageGalleryItemNode: ZoomableContentGalleryItemNode {
         }
         var canDelete = false
         if let peer = message.peers[message.id.peerId] {
-            if peer is IosappUser || peer is IosappSecretChat {
+            if peer is TelegramUser || peer is TelegramSecretChat {
                 canDelete = true
-            } else if let _ = peer as? IosappGroup {
+            } else if let _ = peer as? TelegramGroup {
                 canDelete = true
-            } else if let channel = peer as? IosappChannel {
+            } else if let channel = peer as? TelegramChannel {
                 if message.flags.contains(.Incoming) {
                     canDelete = channel.hasPermission(.deleteAllMessages)
                 } else {
@@ -1234,7 +1245,7 @@ final class ChatImageGalleryItemNode: ZoomableContentGalleryItemNode {
         } else {
             canDelete = false
         }
-        if let _ = message.media.first(where: { $0 is IosappMediaPoll }) {
+        if let _ = message.media.first(where: { $0 is TelegramMediaPoll }) {
             canDelete = false
         }
         return canDelete

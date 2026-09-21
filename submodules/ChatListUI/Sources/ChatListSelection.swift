@@ -1,7 +1,7 @@
 import Foundation
 import UIKit
 import SwiftSignalKit
-import IosappCore
+import TelegramCore
 import AccountContext
 
 enum ChatListSelectionReadOption: Equatable {
@@ -28,7 +28,7 @@ func chatListSelectionOptions(context: AccountContext, peerIds: Set<EnginePeer.I
             }
             |> distinctUntilChanged
         } else {
-            return context.engine.data.subscribe(IosappEngine.EngineData.Item.Messages.TotalReadCounters())
+            return context.engine.data.subscribe(TelegramEngine.EngineData.Item.Messages.TotalReadCounters())
             |> map { readCounters -> ChatListSelectionOptions in
                 var hasUnread = false
                 if readCounters.count(for: .raw, in: .chats, with: .all) != 0 {
@@ -40,7 +40,7 @@ func chatListSelectionOptions(context: AccountContext, peerIds: Set<EnginePeer.I
         }
     } else {
         return context.engine.data.subscribe(EngineDataList(
-            peerIds.map(IosappEngine.EngineData.Item.Messages.PeerReadCounters.init)
+            peerIds.map(TelegramEngine.EngineData.Item.Messages.PeerReadCounters.init)
         ))
         |> map { readCounters -> ChatListSelectionOptions in
             var hasUnread = false
@@ -59,8 +59,8 @@ func chatListSelectionOptions(context: AccountContext, peerIds: Set<EnginePeer.I
 
 func forumSelectionOptions(context: AccountContext, peerId: EnginePeer.Id, threadIds: Set<Int64>) -> Signal<ChatListSelectionOptions, NoError> {
     return context.engine.data.get(
-        IosappEngine.EngineData.Item.Peer.Peer(id: peerId),
-        EngineDataList(threadIds.map { IosappEngine.EngineData.Item.Peer.ThreadData(id: peerId, threadId: $0) })
+        TelegramEngine.EngineData.Item.Peer.Peer(id: peerId),
+        EngineDataList(threadIds.map { TelegramEngine.EngineData.Item.Peer.ThreadData(id: peerId, threadId: $0) })
     )
     |> map { peer, threadDatas -> ChatListSelectionOptions in
         guard !threadIds.isEmpty, case let .channel(channel) = peer else {

@@ -3,7 +3,7 @@ import UIKit
 import Postbox
 import SwiftSignalKit
 import Display
-import IosappCore
+import TelegramCore
 import MediaResources
 import Tuples
 import ImageBlur
@@ -39,7 +39,7 @@ public func imageFromAJpeg(data: Data) -> (UIImage, UIImage)? {
     return nil
 }
 
-public func chatMessageStickerResource(file: IosappMediaFile, small: Bool) -> MediaResource {
+public func chatMessageStickerResource(file: TelegramMediaFile, small: Bool) -> MediaResource {
     let resource: MediaResource
     if small, let smallest = largestImageRepresentation(file.previewRepresentations) {
         resource = smallest.resource
@@ -49,7 +49,7 @@ public func chatMessageStickerResource(file: IosappMediaFile, small: Bool) -> Me
     return resource
 }
 
-private func chatMessageStickerDatas(postbox: Postbox, userLocation: MediaResourceUserLocation, file: IosappMediaFile, small: Bool, fetched: Bool, onlyFullSize: Bool, synchronousLoad: Bool) -> Signal<Tuple3<Data?, Data?, Bool>, NoError> {
+private func chatMessageStickerDatas(postbox: Postbox, userLocation: MediaResourceUserLocation, file: TelegramMediaFile, small: Bool, fetched: Bool, onlyFullSize: Bool, synchronousLoad: Bool) -> Signal<Tuple3<Data?, Data?, Bool>, NoError> {
     let thumbnailResource = chatMessageStickerResource(file: file, small: true)
     let resource = chatMessageStickerResource(file: file, small: small)
     
@@ -99,7 +99,7 @@ private func chatMessageStickerDatas(postbox: Postbox, userLocation: MediaResour
     }
 }
 
-public func chatMessageAnimatedStickerDatas(postbox: Postbox, userLocation: MediaResourceUserLocation, file: IosappMediaFile, small: Bool, size: CGSize, fitzModifier: EmojiFitzModifier? = nil, fetched: Bool, onlyFullSize: Bool, synchronousLoad: Bool) -> Signal<Tuple3<Data?, Data?, Bool>, NoError> {
+public func chatMessageAnimatedStickerDatas(postbox: Postbox, userLocation: MediaResourceUserLocation, file: TelegramMediaFile, small: Bool, size: CGSize, fitzModifier: EmojiFitzModifier? = nil, fetched: Bool, onlyFullSize: Bool, synchronousLoad: Bool) -> Signal<Tuple3<Data?, Data?, Bool>, NoError> {
     let thumbnailResource = chatMessageStickerResource(file: file, small: true)
     let resource = chatMessageStickerResource(file: file, small: false)
     
@@ -150,7 +150,7 @@ public func chatMessageAnimatedStickerDatas(postbox: Postbox, userLocation: Medi
     }
 }
 
-private func chatMessageStickerThumbnailData(postbox: Postbox, userLocation: MediaResourceUserLocation, file: IosappMediaFile, synchronousLoad: Bool) -> Signal<Data?, NoError> {
+private func chatMessageStickerThumbnailData(postbox: Postbox, userLocation: MediaResourceUserLocation, file: TelegramMediaFile, synchronousLoad: Bool) -> Signal<Data?, NoError> {
     let thumbnailResource = chatMessageStickerResource(file: file, small: true)
     
     let maybeFetched = postbox.mediaBox.cachedResourceRepresentation(thumbnailResource, representation: CachedStickerAJpegRepresentation(size: nil), complete: false, fetch: false, attemptSynchronously: synchronousLoad)
@@ -260,76 +260,8 @@ public func chatMessageAnimatedStickerBackingData(postbox: Postbox, fileReferenc
     }
 }
 
-public func chatMessageLegacySticker(account: Account, userLocation: MediaResourceUserLocation, file: IosappMediaFile, small: Bool, fitSize: CGSize, fetched: Bool = false, onlyFullSize: Bool = false) -> Signal<(TransformImageArguments) -> DrawingContext?, NoError> {
-    let signal = chatMessageStickerDatas(postbox: account.postbox, userLocation: userLocation, file: file, small: small, fetched: fetched, onlyFullSize: onlyFullSize, synchronousLoad: false)
-    return signal |> map { value in
-        let fullSizeData = value._1
-        let fullSizeComplete = value._2
-        return { preArguments in
-            var fullSizeImage: (UIImage, UIImage)?
-            if let fullSizeData = fullSizeData, fullSizeComplete {
-                if let image = imageFromAJpeg(data: fullSizeData) {
-                    fullSizeImage = image
-                }
-            }
-            
-            if let fullSizeImage = fullSizeImage {
-                var updatedFitSize = fitSize
-                if updatedFitSize.width.isEqual(to: 1.0) {
-                    updatedFitSize = fullSizeImage.0.size
-                }
-                
-                let contextSize = fullSizeImage.0.size.aspectFitted(updatedFitSize)
-                
-                let arguments = TransformImageArguments(corners: preArguments.corners, imageSize: contextSize, boundingSize: contextSize, intrinsicInsets: preArguments.intrinsicInsets)
-                
-                guard let context = DrawingContext(size: arguments.drawingSize, clear: true) else {
-                    return nil
-                }
-                
-                let thumbnailImage: CGImage? = nil
-                
-                var blurredThumbnailImage: UIImage?
-                if let thumbnailImage = thumbnailImage {
-                    let thumbnailSize = CGSize(width: thumbnailImage.width, height: thumbnailImage.height)
-                    let thumbnailContextSize = thumbnailSize.aspectFitted(CGSize(width: 150.0, height: 150.0))
-                    if let thumbnailContext = DrawingContext(size: thumbnailContextSize, scale: 1.0) {
-                        thumbnailContext.withFlippedContext { c in
-                            c.interpolationQuality = .none
-                            c.draw(thumbnailImage, in: CGRect(origin: CGPoint(), size: thumbnailContextSize))
-                        }
-                        imageFastBlur(Int32(thumbnailContextSize.width), Int32(thumbnailContextSize.height), Int32(thumbnailContext.bytesPerRow), thumbnailContext.bytes)
-                        
-                        blurredThumbnailImage = thumbnailContext.generateImage()
-                    }
-                }
-                
-                context.withFlippedContext { c in
-                    c.setBlendMode(.copy)
-                    if let blurredThumbnailImage = blurredThumbnailImage {
-                        c.interpolationQuality = .low
-                        c.draw(blurredThumbnailImage.cgImage!, in: arguments.drawingRect)
-                    }
-                    
-                    if let cgImage = fullSizeImage.0.cgImage, let cgImageAlpha = fullSizeImage.1.cgImage {
-                        c.setBlendMode(.normal)
-                        c.interpolationQuality = .medium
-                        
-                        let mask = CGImage(maskWidth: cgImageAlpha.width, height: cgImageAlpha.height, bitsPerComponent: cgImageAlpha.bitsPerComponent, bitsPerPixel: cgImageAlpha.bitsPerPixel, bytesPerRow: cgImageAlpha.bytesPerRow, provider: cgImageAlpha.dataProvider!, decode: nil, shouldInterpolate: true)
-                        
-                        c.draw(cgImage.masking(mask!)!, in: arguments.drawingRect)
-                    }
-                }
-                
-                return context
-            } else {
-                return nil
-            }
-        }
-    }
-}
 
-public func chatMessageSticker(account: Account, userLocation: MediaResourceUserLocation, file: IosappMediaFile, small: Bool, fetched: Bool = false, onlyFullSize: Bool = false, thumbnail: Bool = false, synchronousLoad: Bool = false, colorSpace: CGColorSpace? = nil) -> Signal<(TransformImageArguments) -> DrawingContext?, NoError> {
+public func chatMessageSticker(account: Account, userLocation: MediaResourceUserLocation, file: TelegramMediaFile, small: Bool, fetched: Bool = false, onlyFullSize: Bool = false, thumbnail: Bool = false, synchronousLoad: Bool = false, colorSpace: CGColorSpace? = nil) -> Signal<(TransformImageArguments) -> DrawingContext?, NoError> {
     return chatMessageSticker(postbox: account.postbox, userLocation: userLocation, file: file, small: small, fetched: fetched, onlyFullSize: onlyFullSize, thumbnail: thumbnail, synchronousLoad: synchronousLoad, colorSpace: colorSpace)
 }
 
@@ -386,7 +318,7 @@ public func chatMessageStickerPackThumbnail(postbox: Postbox, resource: MediaRes
     }
 }
 
-public func chatMessageSticker(postbox: Postbox, userLocation: MediaResourceUserLocation, file: IosappMediaFile, small: Bool, fetched: Bool = false, onlyFullSize: Bool = false, thumbnail: Bool = false, synchronousLoad: Bool = false, colorSpace: CGColorSpace? = nil) -> Signal<(TransformImageArguments) -> DrawingContext?, NoError> {
+public func chatMessageSticker(postbox: Postbox, userLocation: MediaResourceUserLocation, file: TelegramMediaFile, small: Bool, fetched: Bool = false, onlyFullSize: Bool = false, thumbnail: Bool = false, synchronousLoad: Bool = false, colorSpace: CGColorSpace? = nil) -> Signal<(TransformImageArguments) -> DrawingContext?, NoError> {
     let signal: Signal<Tuple3<Data?, Data?, Bool>, NoError>
     
     if thumbnail {
@@ -488,7 +420,7 @@ public func chatMessageSticker(postbox: Postbox, userLocation: MediaResourceUser
     }
 }
 
-public func chatMessageAnimatedSticker(postbox: Postbox, userLocation: MediaResourceUserLocation, file: IosappMediaFile, small: Bool, size: CGSize, fitzModifier: EmojiFitzModifier? = nil, fetched: Bool = false, onlyFullSize: Bool = false, thumbnail: Bool = false, synchronousLoad: Bool = false) -> Signal<(TransformImageArguments) -> DrawingContext?, NoError> {
+public func chatMessageAnimatedSticker(postbox: Postbox, userLocation: MediaResourceUserLocation, file: TelegramMediaFile, small: Bool, size: CGSize, fitzModifier: EmojiFitzModifier? = nil, fetched: Bool = false, onlyFullSize: Bool = false, thumbnail: Bool = false, synchronousLoad: Bool = false) -> Signal<(TransformImageArguments) -> DrawingContext?, NoError> {
     let signal: Signal<Tuple3<Data?, Data?, Bool>, NoError>
     if thumbnail {
         signal = chatMessageStickerThumbnailData(postbox: postbox, userLocation: userLocation, file: file, synchronousLoad: synchronousLoad)

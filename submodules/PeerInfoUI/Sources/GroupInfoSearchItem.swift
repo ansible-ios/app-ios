@@ -2,7 +2,7 @@ import Foundation
 import UIKit
 import Display
 import AsyncDisplayKit
-import IosappCore
+import TelegramCore
 import SwiftSignalKit
 import ItemListUI
 import PresentationDataUtils

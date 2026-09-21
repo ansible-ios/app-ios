@@ -3,7 +3,7 @@ import UIKit
 import Display
 import AsyncDisplayKit
 import SwiftSignalKit
-import IosappPresentationData
+import TelegramPresentationData
 
 public class ItemListPlaceholderItem: ListViewItem, ItemListItem {
     let theme: PresentationTheme

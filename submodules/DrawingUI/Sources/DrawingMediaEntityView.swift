@@ -2,7 +2,7 @@ import Foundation
 import UIKit
 import Display
 import SwiftSignalKit
-import IosappCore
+import TelegramCore
 import AccountContext
 import MediaEditor
 import Photos

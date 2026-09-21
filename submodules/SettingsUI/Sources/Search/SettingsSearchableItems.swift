@@ -2,10 +2,9 @@ import Foundation
 import UIKit
 import Display
 import SwiftSignalKit
-import Postbox
-import IosappCore
-import IosappUIPreferences
-import IosappCallsUI
+import TelegramCore
+import TelegramUIPreferences
+import TelegramCallsUI
 import OverlayStatusController
 import AccountContext
 import PassportUI
@@ -122,7 +121,7 @@ private func profileSearchableItems(
             id: "search",
             isVisible: false,
             present: { context, _, present in
-                if let rootController = context.sharedContext.mainWindow?.viewController as? IosappRootControllerInterface {
+                if let rootController = context.sharedContext.mainWindow?.viewController as? TelegramRootControllerInterface {
                     rootController.openSettings(edit: false)
                     Queue.mainQueue().after(0.1) {
                         rootController.getSettingsController()?.tabBarActivateSearch()
@@ -137,7 +136,7 @@ private func profileSearchableItems(
             icon: icon,
             isVisible: false,
             present: { context, _, present in
-                if let rootController = context.sharedContext.mainWindow?.viewController as? IosappRootControllerInterface {
+                if let rootController = context.sharedContext.mainWindow?.viewController as? TelegramRootControllerInterface {
                     rootController.openSettings(edit: true)
                 }
             }
@@ -150,7 +149,7 @@ private func profileSearchableItems(
             icon: icon,
             isVisible: false,
             present: { context, _, present in
-                if let rootController = context.sharedContext.mainWindow?.viewController as? IosappRootControllerInterface {
+                if let rootController = context.sharedContext.mainWindow?.viewController as? TelegramRootControllerInterface {
                     rootController.openSettings(edit: true)
                 }
             }
@@ -164,7 +163,7 @@ private func profileSearchableItems(
             icon: .profile,
             isVisible: false,
             present: { context, _, present in
-                if let rootController = context.sharedContext.mainWindow?.viewController as? IosappRootControllerInterface {
+                if let rootController = context.sharedContext.mainWindow?.viewController as? TelegramRootControllerInterface {
                     rootController.openSettings(edit: true)
                 }
             }
@@ -178,7 +177,7 @@ private func profileSearchableItems(
             icon: icon,
             isVisible: false,
             present: { context, _, present in
-                if let rootController = context.sharedContext.mainWindow?.viewController as? IosappRootControllerInterface {
+                if let rootController = context.sharedContext.mainWindow?.viewController as? TelegramRootControllerInterface {
                     rootController.openSettings(edit: true)
                 }
             }
@@ -193,7 +192,7 @@ private func profileSearchableItems(
             icon: icon,
             breadcrumbs: [strings.EditProfile_Title],
             present: { context, _, present in
-                let _ = (context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: context.account.peerId))
+                let _ = (context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: context.account.peerId))
                 |> deliverOnMainQueue).start(next: { peer in
                     var phoneNumber: String?
                     if case let .user(user) = peer {
@@ -253,9 +252,9 @@ private func profileSearchableItems(
                             }
                             
                             let toastText: String
-                            var mappedChannel: IosappPersonalChannel?
+                            var mappedChannel: TelegramPersonalChannel?
                             if let channel {
-                                mappedChannel = IosappPersonalChannel(peerId: channel.peer.id, subscriberCount: channel.subscriberCount.flatMap(Int32.init(clamping:)), topMessageId: nil)
+                                mappedChannel = TelegramPersonalChannel(peerId: channel.peer.id, subscriberCount: channel.subscriberCount.flatMap(Int32.init(clamping:)), topMessageId: nil)
                                 if initialData.channelId != nil {
                                     toastText = presentationData.strings.Settings_PersonalChannelUpdatedToast
                                 } else {
@@ -293,7 +292,7 @@ private func profileSearchableItems(
             icon: icon,
             isVisible: false,
             present: { context, _, present in
-                if let rootController = context.sharedContext.mainWindow?.viewController as? IosappRootControllerInterface {
+                if let rootController = context.sharedContext.mainWindow?.viewController as? TelegramRootControllerInterface {
                     rootController.openSettings(edit: false)
                     Queue.mainQueue().justDispatch {
                         if let settingsScreen = rootController.getSettingsController() as? PeerInfoScreen {
@@ -311,7 +310,7 @@ private func profileSearchableItems(
             icon: icon,
             isVisible: false,
             present: { context, _, present in
-                if let rootController = context.sharedContext.mainWindow?.viewController as? IosappRootControllerInterface {
+                if let rootController = context.sharedContext.mainWindow?.viewController as? TelegramRootControllerInterface {
                     rootController.openPhotoSetup(completedWithUploadingImage: { [weak rootController] _, _ in
                         rootController?.openSettings(edit: false)
                         return nil
@@ -328,13 +327,13 @@ private func profileSearchableItems(
             present: { context, _, present in
                 let controller = AvatarEditorScreen(context: context, inputData: AvatarEditorScreen.inputData(context: context, isGroup: false), peerType: .user, markup: nil)
                 controller.imageCompletion = { image, commit in
-                    if let rootController = context.sharedContext.mainWindow?.viewController as? IosappRootControllerInterface, let settingsController = rootController.getSettingsController() as? PeerInfoScreen {
+                    if let rootController = context.sharedContext.mainWindow?.viewController as? TelegramRootControllerInterface, let settingsController = rootController.getSettingsController() as? PeerInfoScreen {
                         settingsController.updateProfilePhoto(image)
                         commit()
                     }
                 }
                 controller.videoCompletion = { image, url, values, markup, commit in
-                    if let rootController = context.sharedContext.mainWindow?.viewController as? IosappRootControllerInterface, let settingsController = rootController.getSettingsController() as? PeerInfoScreen {
+                    if let rootController = context.sharedContext.mainWindow?.viewController as? TelegramRootControllerInterface, let settingsController = rootController.getSettingsController() as? PeerInfoScreen {
                         settingsController.updateProfileVideo(image, video: nil, values: nil, markup: markup)
                         commit()
                     }
@@ -367,7 +366,7 @@ private func profileSearchableItems(
             icon: icon,
             breadcrumbs: [strings.EditProfile_Title],
             present: { context, navigationController, present in
-                let _ = (context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: context.account.peerId))
+                let _ = (context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: context.account.peerId))
                 |> deliverOnMainQueue).start(next: { peer in
                     var phoneNumber: String?
                     if case let .user(user) = peer {
@@ -858,7 +857,7 @@ private func premiumSearchableItems(context: AccountContext) -> [SettingsSearcha
                                         action: { [weak navigationController] action in
                                             if case .undo = action, let navigationController {
                                                 let _ = (context.engine.data.get(
-                                                    IosappEngine.EngineData.Item.Peer.Peer(id: peerId)
+                                                    TelegramEngine.EngineData.Item.Peer.Peer(id: peerId)
                                                 )
                                                 |> deliverOnMainQueue).start(next: { peer in
                                                     guard let peer else {
@@ -909,8 +908,23 @@ private func premiumSearchableItems(context: AccountContext) -> [SettingsSearcha
         )
     }
     
-    // Ansible: TON removed — no "My TON" settings-search entry (it bypassed the hidden row).
-
+    items.append(
+        SettingsSearchableItem(
+            id: "ton",
+            title: strings.Settings_MyTon,
+            alternate: [],
+            icon: .ton,
+            breadcrumbs: [],
+            present: { context, _, present in
+                guard let tonContext = context.tonContext else {
+                    return
+                }
+                let controller = context.sharedContext.makeStarsTransactionsScreen(context: context, starsContext: tonContext)
+                present(.push, controller)
+            }
+        )
+    )
+    
     items.append(
         SettingsSearchableItem(
             id: "send-gift",
@@ -951,9 +965,9 @@ private func myProfileSearchableItems(context: AccountContext) -> [SettingsSearc
             id: "qr-code",
             isVisible: false,
             present: { context, _, present in
-                let _ = (context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: context.account.peerId))
+                let _ = (context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: context.account.peerId))
                 |> deliverOnMainQueue).start(next: { peer in
-                    guard let peer = peer?._asPeer() else {
+                    guard let peer = peer else {
                         return
                     }
                     let controller = context.sharedContext.makeChatQrCodeScreen(context: context, peer: peer, threadId: nil, temporary: false)
@@ -962,16 +976,16 @@ private func myProfileSearchableItems(context: AccountContext) -> [SettingsSearc
             }
         )
     )
-    
+
     //TODO:fix
     items.append(
         SettingsSearchableItem(
             id: "qr-code/share",
             isVisible: false,
             present: { context, _, present in
-                let _ = (context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: context.account.peerId))
+                let _ = (context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: context.account.peerId))
                 |> deliverOnMainQueue).start(next: { peer in
-                    guard let peer = peer?._asPeer() else {
+                    guard let peer = peer else {
                         return
                     }
                     let controller = context.sharedContext.makeChatQrCodeScreen(context: context, peer: peer, threadId: nil, temporary: false)
@@ -1000,9 +1014,9 @@ private func myProfileSearchableItems(context: AccountContext) -> [SettingsSearc
             icon: .myProfile,
             breadcrumbs: [],
             present: { context, _, present in
-                let _ = (context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: context.account.peerId))
+                let _ = (context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: context.account.peerId))
                 |> deliverOnMainQueue).start(next: { peer in
-                    guard let peer = peer?._asPeer() else {
+                    guard let peer = peer else {
                         return
                     }
                     let controller = context.sharedContext.makePeerInfoController(
@@ -1019,16 +1033,16 @@ private func myProfileSearchableItems(context: AccountContext) -> [SettingsSearc
             }
         )
     )
-    
+
     items.append(
         SettingsSearchableItem(
             id: "my-profile/edit",
             icon: .myProfile,
             isVisible: false,
             present: { context, _, present in
-                let _ = (context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: context.account.peerId))
+                let _ = (context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: context.account.peerId))
                 |> deliverOnMainQueue).start(next: { peer in
-                    guard let peer = peer?._asPeer() else {
+                    guard let peer = peer else {
                         return
                     }
                     let controller = context.sharedContext.makePeerInfoController(
@@ -1041,7 +1055,7 @@ private func myProfileSearchableItems(context: AccountContext) -> [SettingsSearc
                         requestsContext: nil
                     )
                     present(.push, controller)
-                    
+
                     Queue.mainQueue().justDispatch {
                         if let controller = controller as? PeerInfoScreen {
                             controller.activateEdit()
@@ -1060,9 +1074,9 @@ private func myProfileSearchableItems(context: AccountContext) -> [SettingsSearc
             icon: .myProfile,
             breadcrumbs: [strings.Settings_MyProfile],
             present: { context, _, present in
-                let _ = (context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: context.account.peerId))
+                let _ = (context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: context.account.peerId))
                 |> deliverOnMainQueue).start(next: { peer in
-                    guard let peer = peer?._asPeer() else {
+                    guard let peer = peer else {
                         return
                     }
                     let controller = context.sharedContext.makePeerInfoController(
@@ -1196,7 +1210,7 @@ private func callSearchableItems(context: AccountContext) -> [SettingsSearchable
             icon: icon,
             isVisible: false,
             present: { context, _, present in
-                if let rootController = context.sharedContext.mainWindow?.viewController as? IosappRootControllerInterface {
+                if let rootController = context.sharedContext.mainWindow?.viewController as? TelegramRootControllerInterface {
                     rootController.startNewCall()
                 }
             }
@@ -1256,9 +1270,9 @@ private func chatFoldersSearchableItems(context: AccountContext) -> [SettingsSea
                 let _ = combineLatest(
                     queue: Queue.mainQueue(),
                     context.engine.data.get(
-                        IosappEngine.EngineData.Item.Peer.Peer(id: context.account.peerId),
-                        IosappEngine.EngineData.Item.Configuration.UserLimits(isPremium: false),
-                        IosappEngine.EngineData.Item.Configuration.UserLimits(isPremium: true)
+                        TelegramEngine.EngineData.Item.Peer.Peer(id: context.account.peerId),
+                        TelegramEngine.EngineData.Item.Configuration.UserLimits(isPremium: false),
+                        TelegramEngine.EngineData.Item.Configuration.UserLimits(isPremium: true)
                     ),
                     filtersWithCounts |> take(1)
                 ).start(next: { result, filters in
@@ -1527,16 +1541,16 @@ private func notificationSearchableItems(context: AccountContext, settings: Glob
         
     let defaultStorySettings = PeerStoryNotificationSettings.default
     let exceptions = { () -> (NotificationExceptionMode, NotificationExceptionMode, NotificationExceptionMode, NotificationExceptionMode) in
-        var users:[PeerId : NotificationExceptionWrapper] = [:]
-        var groups: [PeerId : NotificationExceptionWrapper] = [:]
-        var channels: [PeerId : NotificationExceptionWrapper] = [:]
-        var stories: [PeerId : NotificationExceptionWrapper] = [:]
+        var users:[EnginePeer.Id: NotificationExceptionWrapper] = [:]
+        var groups: [EnginePeer.Id: NotificationExceptionWrapper] = [:]
+        var channels: [EnginePeer.Id: NotificationExceptionWrapper] = [:]
+        var stories: [EnginePeer.Id: NotificationExceptionWrapper] = [:]
         
         if let list = exceptionsList {
             for (key, value) in list.settings {
                 if let peer = list.peers[key], !peer.debugDisplayTitle.isEmpty, peer.id != context.account.peerId {
                     if value.storySettings != defaultStorySettings {
-                        stories[key] = NotificationExceptionWrapper(settings: value, peer: EnginePeer(peer))
+                        stories[key] = NotificationExceptionWrapper(settings: value, peer: peer)
                     }
                     
                     switch value.muteState {
@@ -1547,24 +1561,24 @@ private func notificationSearchableItems(context: AccountContext, settings: Glob
                                 default:
                                     switch key.namespace {
                                         case Namespaces.Peer.CloudUser:
-                                            users[key] = NotificationExceptionWrapper(settings: value, peer: EnginePeer(peer))
+                                            users[key] = NotificationExceptionWrapper(settings: value, peer: peer)
                                         default:
-                                            if let peer = peer as? IosappChannel, case .broadcast = peer.info {
+                                            if case let .channel(peer) = peer, case .broadcast = peer.info {
                                                 channels[key] = NotificationExceptionWrapper(settings: value, peer: .channel(peer))
                                             } else {
-                                                groups[key] = NotificationExceptionWrapper(settings: value, peer: EnginePeer(peer))
+                                                groups[key] = NotificationExceptionWrapper(settings: value, peer: peer)
                                             }
                                     }
                             }
                         default:
                             switch key.namespace {
                                 case Namespaces.Peer.CloudUser:
-                                    users[key] = NotificationExceptionWrapper(settings: value, peer: EnginePeer(peer))
+                                    users[key] = NotificationExceptionWrapper(settings: value, peer: peer)
                                 default:
-                                    if let peer = peer as? IosappChannel, case .broadcast = peer.info {
+                                    if case let .channel(peer) = peer, case .broadcast = peer.info {
                                         channels[key] = NotificationExceptionWrapper(settings: value, peer: .channel(peer))
                                     } else {
-                                        groups[key] = NotificationExceptionWrapper(settings: value, peer: EnginePeer(peer))
+                                        groups[key] = NotificationExceptionWrapper(settings: value, peer: peer)
                                     }
                             }
                     }
@@ -2058,11 +2072,11 @@ private func privacySearchableItems(context: AccountContext, privacySettings: Ac
         }
         let callsSignal: Signal<(VoiceCallSettings, VoipConfiguration)?, NoError>
         if case .voiceCalls = kind {
-            callsSignal = combineLatest(context.sharedContext.accountManager.sharedData(keys: [ApplicationSpecificSharedDataKeys.voiceCallSettings]), context.account.postbox.preferencesView(keys: [PreferencesKeys.voipConfiguration]))
+            callsSignal = combineLatest(context.sharedContext.accountManager.sharedData(keys: [ApplicationSpecificSharedDataKeys.voiceCallSettings]), context.engine.data.subscribe(TelegramEngine.EngineData.Item.Configuration.ApplicationSpecificPreference(key: PreferencesKeys.voipConfiguration)))
             |> take(1)
             |> map { sharedData, view -> (VoiceCallSettings, VoipConfiguration)? in
                 let voiceCallSettings: VoiceCallSettings = sharedData.entries[ApplicationSpecificSharedDataKeys.voiceCallSettings]?.get(VoiceCallSettings.self) ?? .defaultSettings
-                let voipConfiguration = view.values[PreferencesKeys.voipConfiguration]?.get(VoipConfiguration.self) ?? .defaultValue
+                let voipConfiguration = view?.get(VoipConfiguration.self) ?? .defaultValue
                 return (voiceCallSettings, voipConfiguration)
             }
         } else {
@@ -3009,7 +3023,7 @@ private func privacySearchableItems(context: AccountContext, privacySettings: Ac
             breadcrumbs: [strings.Settings_PrivacySettings],
             present: { context, navigationController, present in
                 let settingsPromise: Promise<TwoStepAuthData?>
-                if let rootController = context.sharedContext.mainWindow?.viewController as? IosappRootControllerInterface, let current = rootController.getTwoStepAuthData() {
+                if let rootController = context.sharedContext.mainWindow?.viewController as? TelegramRootControllerInterface, let current = rootController.getTwoStepAuthData() {
                     settingsPromise = current
                 } else {
                     settingsPromise = Promise()
@@ -3116,6 +3130,18 @@ private func privacySearchableItems(context: AccountContext, privacySettings: Ac
             breadcrumbs: [strings.Settings_PrivacySettings],
             present: { context, _, present in
                 presentDataPrivacySettings(context, present, nil)
+            }
+        )
+    )
+    items.append(
+        SettingsSearchableItem(
+            id: "privacy/open-links",
+            title: strings.ChatSettings_OpenLinksIn,
+            alternate: synonyms(strings.SettingsSearch_Synonyms_ChatSettings_OpenLinksIn),
+            icon: icon,
+            breadcrumbs: [strings.Settings_PrivacySettings],
+            present: { context, _, present in
+                present(.push, webBrowserSettingsController(context: context))
             }
         )
     )
@@ -3657,16 +3683,6 @@ private func dataSearchableItems(context: AccountContext) -> [SettingsSearchable
             }
         ),
         SettingsSearchableItem(
-            id: "data/open-links",
-            title: strings.ChatSettings_OpenLinksIn,
-            alternate: synonyms(strings.SettingsSearch_Synonyms_ChatSettings_OpenLinksIn),
-            icon: icon,
-            breadcrumbs: [strings.Settings_ChatSettings],
-            present: { context, _, present in
-                present(.push, webBrowserSettingsController(context: context))
-            }
-        ),
-        SettingsSearchableItem(
             id: "data/share-sheet",
             title: strings.ChatSettings_IntentsSettings,
             alternate: synonyms(strings.SettingsSearch_Synonyms_ChatSettings_IntentsSettings),
@@ -3999,7 +4015,7 @@ private func appearanceSearchableItems(context: AccountContext) -> [SettingsSear
                 }
                 |> deliverOnMainQueue).start(next: { [weak navigationController] themeReference in
                     let controller = editThemeController(context: context, mode: .create(nil, nil), navigateToChat: { [weak navigationController] peerId in
-                        let _ = (context.engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: peerId))
+                        let _ = (context.engine.data.get(TelegramEngine.EngineData.Item.Peer.Peer(id: peerId))
                         |> deliverOnMainQueue).start(next: { [weak navigationController] peer in
                             guard let peer else {
                                 return
@@ -4302,11 +4318,11 @@ func settingsSearchableItems(
         return accountsAndPeers.1.count + 1 < maximumNumberOfAccounts
     }
     
-    let notificationSettings = context.account.postbox.preferencesView(keys: [PreferencesKeys.globalNotifications])
+    let notificationSettings = context.engine.data.subscribe(TelegramEngine.EngineData.Item.Configuration.ApplicationSpecificPreference(key: PreferencesKeys.globalNotifications))
     |> take(1)
     |> map { view -> GlobalNotificationSettingsSet in
         let viewSettings: GlobalNotificationSettingsSet
-        if let settings = view.values[PreferencesKeys.globalNotifications]?.get(GlobalNotificationSettings.self) {
+        if let settings = view?.get(GlobalNotificationSettings.self) {
             viewSettings = settings.effective
         } else {
             viewSettings = GlobalNotificationSettingsSet.defaultSettings
@@ -4333,7 +4349,7 @@ func settingsSearchableItems(
     }
     
     let localizations = combineLatest(
-        context.engine.data.subscribe(IosappEngine.EngineData.Item.Configuration.LocalizationList()),
+        context.engine.data.subscribe(TelegramEngine.EngineData.Item.Configuration.LocalizationList()),
         context.sharedContext.accountManager.sharedData(keys: [SharedDataKeys.localizationSettings])
     )
     |> map { localizationListState, sharedData -> [LocalizationInfo] in
@@ -4500,20 +4516,20 @@ func settingsSearchableItems(
     }
 }
 
-private func stringTokens(_ string: String) -> [ValueBoxKey] {
+private func stringTokens(_ string: String) -> [EngineDataBuffer] {
     let nsString = string.folding(options: .diacriticInsensitive, locale: .current).lowercased() as NSString
     
     let flag = UInt(kCFStringTokenizerUnitWord)
     let tokenizer = CFStringTokenizerCreate(kCFAllocatorDefault, nsString, CFRangeMake(0, nsString.length), flag, CFLocaleCopyCurrent())
     var tokenType = CFStringTokenizerAdvanceToNextToken(tokenizer)
-    var tokens: [ValueBoxKey] = []
+    var tokens: [EngineDataBuffer] = []
     
-    var addedTokens = Set<ValueBoxKey>()
+    var addedTokens = Set<EngineDataBuffer>()
     while tokenType != [] {
         let currentTokenRange = CFStringTokenizerGetCurrentTokenRange(tokenizer)
         
         if currentTokenRange.location >= 0 && currentTokenRange.length != 0 {
-            let token = ValueBoxKey(length: currentTokenRange.length * 2)
+            let token = EngineDataBuffer(length: currentTokenRange.length * 2)
             nsString.getCharacters(token.memory.assumingMemoryBound(to: unichar.self), range: NSMakeRange(currentTokenRange.location, currentTokenRange.length))
             if !addedTokens.contains(token) {
                 tokens.append(token)
@@ -4526,7 +4542,7 @@ private func stringTokens(_ string: String) -> [ValueBoxKey] {
     return tokens
 }
 
-private func matchStringTokens(_ tokens: [ValueBoxKey], with other: [ValueBoxKey]) -> Bool {
+private func matchStringTokens(_ tokens: [EngineDataBuffer], with other: [EngineDataBuffer]) -> Bool {
     if other.isEmpty {
         return false
     } else if other.count == 1 {
@@ -4600,7 +4616,7 @@ public func handleSettingsPathUrl(context: AccountContext, path: String, navigat
     } else if path.hasPrefix("privacy/active-websites") {
         webSessionsContext = .single(context.engine.privacy.webSessions())
     } else if path.hasPrefix("notifications") {
-        if let rootController = context.sharedContext.mainWindow?.viewController as? IosappRootControllerInterface, let current = rootController.getNotificationExceptions() {
+        if let rootController = context.sharedContext.mainWindow?.viewController as? TelegramRootControllerInterface, let current = rootController.getNotificationExceptions() {
             notificationExceptionsList = current.get()
         } else {
             notificationExceptionsList = context.engine.peers.notificationExceptionsList()
@@ -4639,7 +4655,7 @@ public func handleSettingsPathUrl(context: AccountContext, path: String, navigat
 
 private func presentSetupBirthday(context: AccountContext, present: @escaping (SettingsSearchableItemPresentation, ViewController?) -> Void) {
     let settingsPromise: Promise<AccountPrivacySettings?>
-    if let rootController = context.sharedContext.mainWindow?.viewController as? IosappRootControllerInterface, let current = rootController.getPrivacySettings() {
+    if let rootController = context.sharedContext.mainWindow?.viewController as? TelegramRootControllerInterface, let current = rootController.getPrivacySettings() {
         settingsPromise = current
     } else {
         settingsPromise = Promise()

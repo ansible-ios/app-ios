@@ -3,7 +3,7 @@ import UIKit
 import AsyncDisplayKit
 import Display
 import SwiftSignalKit
-import IosappPresentationData
+import TelegramPresentationData
 import TextFormat
 import Markdown
 import SolidRoundedButtonNode
@@ -102,7 +102,7 @@ final class AuthorizationSequenceSignUpControllerNode: ASDisplayNode, UITextFiel
         self.termsNode.maximumNumberOfLines = 0
         self.termsNode.displaysAsynchronously = false
         let body = MarkdownAttributeSet(font: Font.regular(13.0), textColor: theme.list.itemSecondaryTextColor)
-        let link = MarkdownAttributeSet(font: Font.regular(13.0), textColor: theme.list.itemAccentColor, additionalAttributes: [IosappTextAttributes.URL: ""])
+        let link = MarkdownAttributeSet(font: Font.regular(13.0), textColor: theme.list.itemAccentColor, additionalAttributes: [TelegramTextAttributes.URL: ""])
         self.termsNode.attributedText = parseMarkdownIntoAttributedString(strings.Login_TermsOfServiceLabel.replacingOccurrences(of: "\n", with: " ").replacingOccurrences(of: "]", with: "]()"), attributes: MarkdownAttributes(body: body, bold: body, link: link, linkAttribute: { _ in nil }), textAlignment: .center)
         
         self.firstSeparatorNode = ASDisplayNode()
@@ -185,14 +185,14 @@ final class AuthorizationSequenceSignUpControllerNode: ASDisplayNode, UITextFiel
         
         self.termsNode.linkHighlightColor = self.theme.list.itemAccentColor.withAlphaComponent(0.2)
         self.termsNode.highlightAttributeAction = { attributes in
-            if let _ = attributes[NSAttributedString.Key(rawValue: IosappTextAttributes.URL)] {
-                return NSAttributedString.Key(rawValue: IosappTextAttributes.URL)
+            if let _ = attributes[NSAttributedString.Key(rawValue: TelegramTextAttributes.URL)] {
+                return NSAttributedString.Key(rawValue: TelegramTextAttributes.URL)
             } else {
                 return nil
             }
         }
         self.termsNode.tapAttributeAction = { [weak self] attributes, _ in
-            if let _ = attributes[NSAttributedString.Key(rawValue: IosappTextAttributes.URL)] {
+            if let _ = attributes[NSAttributedString.Key(rawValue: TelegramTextAttributes.URL)] {
                 self?.openTermsOfService?()
             }
         }

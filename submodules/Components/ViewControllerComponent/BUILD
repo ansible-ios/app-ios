@@ -14,7 +14,7 @@ swift_library(
         "//submodules/ComponentFlow:ComponentFlow",
         "//submodules/SSignalKit/SwiftSignalKit:SwiftSignalKit",
         "//submodules/AccountContext:AccountContext",
-        "//submodules/IosappPresentationData:IosappPresentationData",
+        "//submodules/TelegramPresentationData:TelegramPresentationData",
         "//submodules/Components/ComponentDisplayAdapters:ComponentDisplayAdapters",
     ],
     visibility = [

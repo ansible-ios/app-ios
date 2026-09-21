@@ -4,9 +4,8 @@ import Display
 import AsyncDisplayKit
 import ComponentFlow
 import SwiftSignalKit
-import Postbox
-import IosappCore
-import IosappPresentationData
+import TelegramCore
+import TelegramPresentationData
 import ItemListUI
 import PresentationDataUtils
 import AccountContext
@@ -746,9 +745,9 @@ private func generateStarsIcon(amount: Int64) -> UIImage {
     let image = generateGradientTintedImage(
         image: UIImage(bundleImageName: "Peer Info/PremiumIcon"),
         colors: [
-            UIColor(rgb: 0x86ddff),
-            UIColor(rgb: 0x53c7f5),
-            UIColor(rgb: 0x1a86d9)
+            UIColor(rgb: 0xfed219),
+            UIColor(rgb: 0xf3a103),
+            UIColor(rgb: 0xe78104)
         ],
         direction: .diagonal
     )!

@@ -2,9 +2,9 @@ import Foundation
 import UIKit
 import Display
 import SwiftSignalKit
-import IosappCore
-import IosappPresentationData
-import IosappUIPreferences
+import TelegramCore
+import TelegramPresentationData
+import TelegramUIPreferences
 import ItemListUI
 import PresentationDataUtils
 import AccountContext
@@ -172,12 +172,17 @@ public func archiveSettingsController(context: AccountContext) -> ViewController
     
     let signal = combineLatest(queue: .mainQueue(),
         context.sharedContext.presentationData,
-        context.engine.data.subscribe(IosappEngine.EngineData.Item.Configuration.GlobalPrivacy()),
-        context.engine.data.subscribe(IosappEngine.EngineData.Item.Configuration.App()),
-        context.engine.data.subscribe(IosappEngine.EngineData.Item.Peer.Peer(id: context.account.peerId))
+        context.engine.data.subscribe(TelegramEngine.EngineData.Item.Configuration.GlobalPrivacy()),
+        context.engine.data.subscribe(TelegramEngine.EngineData.Item.Configuration.App()),
+        context.engine.data.subscribe(TelegramEngine.EngineData.Item.Peer.Peer(id: context.account.peerId))
     )
     |> deliverOnMainQueue
     |> map { presentationData, settings, appConfiguration, accountPeer -> (ItemListControllerState, (ItemListNodeState, Any)) in
+        var presentationData = presentationData
+
+        let updatedTheme = presentationData.theme.withModalBlocksBackground()
+        presentationData = presentationData.withUpdated(theme: updatedTheme)
+        
         let isPremium = accountPeer?.isPremium ?? false
         let isPremiumDisabled = PremiumConfiguration.with(appConfiguration: appConfiguration).isPremiumDisabled
         

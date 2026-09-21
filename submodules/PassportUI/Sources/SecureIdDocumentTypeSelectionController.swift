@@ -3,8 +3,8 @@ import UIKit
 import Display
 import AsyncDisplayKit
 import SwiftSignalKit
-import IosappCore
-import IosappPresentationData
+import TelegramCore
+import TelegramPresentationData
 import AccountContext
 
 private func stringForDocumentType(_ type: SecureIdRequestedIdentityDocument, strings: PresentationStrings) -> String {

@@ -1,11 +1,11 @@
 import Foundation
 import SwiftSignalKit
-import IosappCore
+import TelegramCore
 import AccountContext
 import InstantPageUI
 import InstantPageCache
 import UrlHandling
-import IosappUIPreferences
+import TelegramUIPreferences
 
 func faqSearchableItems(context: AccountContext, resolvedUrl: Signal<ResolvedUrl?, NoError>, suggestAccountDeletion: Bool) -> Signal<[SettingsSearchableItem], NoError> {
     let strings = context.sharedContext.currentPresentationData.with { $0 }.strings
@@ -38,7 +38,7 @@ func faqSearchableItems(context: AccountContext, resolvedUrl: Signal<ResolvedUrl
                             case let .list(items, false):
                                 if let currentSection = currentSection {
                                     for item in items {
-                                        if case let .text(itemText, _) = item, case let .url(text, url, _) = itemText {
+                                        if case let .text(itemText, _, _) = item, case let .url(text, url, _) = itemText {
                                             let (_, anchor) = extractAnchor(string: url)
                                             guard let anchor else {
                                                 continue

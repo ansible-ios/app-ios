@@ -4,10 +4,9 @@ import Display
 import AsyncDisplayKit
 import ComponentFlow
 import SwiftSignalKit
-import Postbox
-import IosappCore
+import TelegramCore
 import AccountContext
-import IosappPresentationData
+import TelegramPresentationData
 import ContextUI
 import UndoUI
 import ListActionItemComponent
@@ -137,9 +136,9 @@ final class BrowserAddressListComponent: Component {
         
     final class View: UIView, UIScrollViewDelegate {
         struct State {
-            let recent: [IosappMediaWebpage]
+            let recent: [TelegramMediaWebpage]
             let isRecentExpanded: Bool
-            let bookmarks: [Message]
+            let bookmarks: [EngineMessage]
         }
         
         private let outerView = UIButton()
@@ -366,18 +365,23 @@ final class BrowserAddressListComponent: Component {
                             containerSize: itemFrame.size
                         )
                     } else {
-                        var webPage: IosappMediaWebpage?
-                        var itemMessage: Message?
-                        
+                        var webPage: TelegramMediaWebpage?
+                        var itemMessage: EngineMessage?
+
                         if section.id == 0 {
                             webPage = state.recent[i]
                         } else if section.id == 1 {
                             let message = state.bookmarks[i]
                             if let primaryUrl = getPrimaryUrl(message: message) {
-                                if let media = message.media.first(where: { $0 is IosappMediaWebpage }) as? IosappMediaWebpage {
-                                    webPage = media
+                                if let foundWebpage = message.engineMedia.compactMap({ engineMedia -> TelegramMediaWebpage? in
+                                    if case let .webpage(webpage) = engineMedia {
+                                        return webpage
+                                    }
+                                    return nil
+                                }).first {
+                                    webPage = foundWebpage
                                 } else {
-                                    webPage = IosappMediaWebpage(webpageId: MediaId(namespace: 0, id: 0), content: .Loaded(IosappMediaWebpageLoadedContent(url: primaryUrl, displayUrl: "", hash: 0, type: nil, websiteName: "", title: message.text, text: "", embedUrl: nil, embedType: nil, embedSize: nil, duration: nil, author: nil, isMediaLargeByDefault: nil, imageIsVideoCover: false, image: nil, file: nil, story: nil, attributes: [], instantPage: nil)))
+                                    webPage = TelegramMediaWebpage(webpageId: EngineMedia.Id(namespace: 0, id: 0), content: .Loaded(TelegramMediaWebpageLoadedContent(url: primaryUrl, displayUrl: "", hash: 0, type: nil, websiteName: "", title: message.text, text: "", embedUrl: nil, embedType: nil, embedSize: nil, duration: nil, author: nil, isMediaLargeByDefault: nil, imageIsVideoCover: false, image: nil, file: nil, story: nil, attributes: [], instantPage: nil)))
                                 }
                                 itemMessage = message
                             } else {
@@ -523,9 +527,9 @@ final class BrowserAddressListComponent: Component {
                         return
                     }
                     
-                    var bookmarks: [Message] = []
+                    var bookmarks: [EngineMessage] = []
                     for entry in view.0.entries.reversed() {
-                        bookmarks.append(entry.message)
+                        bookmarks.append(EngineMessage(entry.message))
                     }
                     
                     let isFirstTime = self.stateValue == nil
@@ -567,7 +571,7 @@ final class BrowserAddressListComponent: Component {
                 component: AnyComponent(BrowserAddressListItemComponent(
                     context: component.context,
                     theme: component.theme,
-                    webPage: IosappMediaWebpage(webpageId: EngineMedia.Id(namespace: 0, id: 0), content: .Loaded(IosappMediaWebpageLoadedContent(url: "https://telegram.org", displayUrl: "https://telegram.org", hash: 0, type: nil, websiteName: "Telegram", title: "Telegram Telegram", text: "Telegram", embedUrl: nil, embedType: nil, embedSize: nil, duration: nil, author: nil, isMediaLargeByDefault: nil, imageIsVideoCover: false, image: nil, file: nil, story: nil, attributes: [], instantPage: nil))),
+                    webPage: TelegramMediaWebpage(webpageId: EngineMedia.Id(namespace: 0, id: 0), content: .Loaded(TelegramMediaWebpageLoadedContent(url: "https://telegram.org", displayUrl: "https://telegram.org", hash: 0, type: nil, websiteName: "Telegram", title: "Telegram Telegram", text: "Telegram", embedUrl: nil, embedType: nil, embedSize: nil, duration: nil, author: nil, isMediaLargeByDefault: nil, imageIsVideoCover: false, image: nil, file: nil, story: nil, attributes: [], instantPage: nil))),
                     message: nil,
                     hasNext: true,
                     insets: .zero,

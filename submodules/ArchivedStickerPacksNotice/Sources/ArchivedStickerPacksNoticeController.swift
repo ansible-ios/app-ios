@@ -3,8 +3,8 @@ import UIKit
 import AsyncDisplayKit
 import Display
 import SwiftSignalKit
-import IosappCore
-import IosappPresentationData
+import TelegramCore
+import TelegramPresentationData
 import ActivityIndicator
 import AccountContext
 import AlertUI

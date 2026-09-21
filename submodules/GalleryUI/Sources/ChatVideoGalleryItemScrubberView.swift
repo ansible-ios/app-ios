@@ -2,14 +2,13 @@ import Foundation
 import UIKit
 import AsyncDisplayKit
 import SwiftSignalKit
-import IosappCore
-import Postbox
+import TelegramCore
 import Display
 import UniversalMediaPlayer
-import IosappPresentationData
+import TelegramPresentationData
 import RangeSet
 import ShimmerEffect
-import IosappUniversalVideoContent
+import TelegramUniversalVideoContent
 import ComponentFlow
 import ComponentDisplayAdapters
 import GlassBackgroundComponent
@@ -304,7 +303,7 @@ final class ChatVideoGalleryItemScrubberView: UIView {
         self.scrubberNode.bufferingStatus = status
     }
     
-    func setFetchStatusSignal(_ fetchStatus: Signal<MediaResourceStatus, NoError>?, strings: PresentationStrings, decimalSeparator: String, fileSize: Int64?) {
+    func setFetchStatusSignal(_ fetchStatus: Signal<EngineMediaResource.FetchStatus, NoError>?, strings: PresentationStrings, decimalSeparator: String, fileSize: Int64?) {
         let formatting = DataSizeStringFormatting(strings: strings, decimalSeparator: decimalSeparator)
         if let fileSize = fileSize {
             if let fetchStatus = fetchStatus {
