@@ -157,7 +157,7 @@ def copy_profiles_from_directory(source_path, destination_path, team_id, bundle_
         '.NotificationContent': 'NotificationContent',
         '.NotificationService': 'NotificationService',
         '.Share': 'Share',
-        '': 'Telegram',
+        '': 'Iosapp',
         '.watchkitapp': 'WatchApp',
         '.watchkitapp.watchkitextension': 'WatchExtension',
         '.Widget': 'Widget',

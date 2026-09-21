@@ -9,7 +9,7 @@ import hashlib
 import tempfile
 
 # Read the modules JSON file
-modules_json_path = "bazel-bin/Telegram/spm_build_root_modules.json"
+modules_json_path = "bazel-bin/iosapp/iosapp_spm_build_root_modules.json"
 
 with open(modules_json_path, 'r') as f:
     modules = json.load(f)

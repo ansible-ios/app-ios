@@ -163,11 +163,11 @@ def remote_build_darwin_containers(darwin_containers_path, darwin_containers_hos
 
             session_scp_download(session=session, source_path='/Users/Shared/telegram-ios/build/artifacts/*', destination_path='{artifacts_path}/'.format(artifacts_path=artifacts_path))
 
-            if os.path.exists(artifacts_path + '/Telegram.ipa'):
+            if os.path.exists(artifacts_path + '/iosapp.ipa'):
                 print('Artifacts have been stored at {}'.format(artifacts_path))
                 sys.exit(0)
             else:
-                print('Telegram.ipa not found')
+                print('iosapp.ipa not found')
                 sys.exit(1)
 
         DarwinContainers.run_remote_ssh(credentials=credentials, command='')
@@ -219,7 +219,7 @@ def remote_deploy_testflight(darwin_containers_path, darwin_containers_host, mac
                 set -e
 
                 export DELIVER_ITMSTRANSPORTER_ADDITIONAL_UPLOAD_PARAMETERS="-t DAV"
-                FASTLANE_PASSWORD="{password}" xcrun altool --upload-app --type ios --file "Telegram.ipa" --username "{username}" --password "@env:FASTLANE_PASSWORD"
+                FASTLANE_PASSWORD="{password}" xcrun altool --upload-app --type ios --file "iosapp.ipa" --username "{username}" --password "@env:FASTLANE_PASSWORD"
             '''.format(username=username, password=password)
 
             guest_upload_file_path = tempfile.mktemp()

@@ -226,7 +226,7 @@ class BazelCommandLine:
             '--define=buildNumber={}'.format(self.build_number),
         ]
         if self.embed_watch_app:
-            args += ['--//Telegram:embedWatchApp']
+            args += ['--//iosapp:embedWatchApp']
             # watch_api_id/hash are guaranteed non-None here: set_watch_app is the only
             # setter of embed_watch_app, and build() raises if they are missing.
             args += [

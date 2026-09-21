@@ -84,7 +84,7 @@ class ProjectGenerator {
 
         // Create project
         let project = PBXProject(
-            name: "Telegram",
+            name: "iosapp",
             buildConfigurationList: projectConfigList,
             compatibilityVersion: "Xcode 14.0",
             preferredProjectObjectVersion: 56,

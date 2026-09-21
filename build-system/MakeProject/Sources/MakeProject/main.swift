@@ -9,7 +9,7 @@ struct MakeProject: ParsableCommand {
     )
 
     @Option(name: .long, help: "Path to modules JSON file")
-    var modulesJson: String = "bazel-bin/Telegram/spm_build_root_modules.json"
+    var modulesJson: String = "bazel-bin/iosapp/iosapp_spm_build_root_modules.json"
 
     @Option(name: .long, help: "Output directory for generated project")
     var output: String = "xcode-files"
@@ -34,7 +34,7 @@ struct MakeProject: ParsableCommand {
 
         guard modulesPath.exists else {
             print("Error: Modules JSON not found at \(modulesPath)")
-            print("Run 'bazel build //Telegram:spm_build_root' first")
+            print("Run 'bazel build //iosapp:spm_build_root' first")
             throw ExitCode.failure
         }
 
