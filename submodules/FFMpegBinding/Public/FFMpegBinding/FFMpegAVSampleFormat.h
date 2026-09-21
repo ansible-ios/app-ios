@@ -3,7 +3,7 @@
 //  FFMpeg
 //
 //  Created by Peter Iakovlev on 11/12/2018.
-//  Copyright © 2018 Iosapp Messenger LLP. All rights reserved.
+//  Copyright © 2018 Telegram Messenger LLP. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>

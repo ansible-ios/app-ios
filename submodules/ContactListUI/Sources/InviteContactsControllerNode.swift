@@ -24,11 +24,11 @@ private enum InviteContactsEntryId: Hashable {
 
 private final class InviteContactsInteraction {
     let toggleContact: (String) -> Void
-    let shareIosapp: () -> Void
+    let shareTelegram: () -> Void
     
-    init(toggleContact: @escaping (String) -> Void, shareIosapp: @escaping () -> Void) {
+    init(toggleContact: @escaping (String) -> Void, shareTelegram: @escaping () -> Void) {
         self.toggleContact = toggleContact
-        self.shareIosapp = shareIosapp
+        self.shareTelegram = shareTelegram
     }
 }
 
@@ -185,8 +185,8 @@ struct InviteContactsGroupSelectionState: Equatable {
 private func inviteContactsEntries(accountPeer: EnginePeer?, sortedContacts: [(DeviceContactStableId, DeviceContactBasicData, Int32)]?, selectionState: InviteContactsGroupSelectionState, theme: PresentationTheme, strings: PresentationStrings, nameSortOrder: PresentationPersonNameOrder, nameDisplayOrder: PresentationPersonNameOrder, interaction: InviteContactsInteraction) -> [InviteContactsEntry] {
     var entries: [InviteContactsEntry] = []
         
-    entries.append(.option(0, ContactListAdditionalOption(title: strings.Contacts_ShareIosapp, icon: .generic(UIImage(bundleImageName: "Contact List/InviteActionIcon")!), action: {
-        interaction.shareIosapp()
+    entries.append(.option(0, ContactListAdditionalOption(title: strings.Contacts_ShareTelegram, icon: .generic(UIImage(bundleImageName: "Contact List/InviteActionIcon")!), action: {
+        interaction.shareTelegram()
     }), theme, strings))
     
     var index = 0
@@ -235,7 +235,7 @@ final class InviteContactsControllerNode: ASDisplayNode {
     
     var requestActivateSearch: (() -> Void)?
     var requestDeactivateSearch: (() -> Void)?
-    var requestShareIosapp: (() -> Void)?
+    var requestShareTelegram: (() -> Void)?
     var requestShare: (([(DeviceContactBasicData, Int32)]) -> Void)?
     var selectionChanged: (() -> Void)?
     
@@ -336,8 +336,8 @@ final class InviteContactsControllerNode: ASDisplayNode {
             if let strongSelf = self {
                 strongSelf.selectionState = strongSelf.selectionState.withToggledContactId(id)
             }
-        }, shareIosapp: { [weak self] in
-            self?.requestShareIosapp?()
+        }, shareTelegram: { [weak self] in
+            self?.requestShareTelegram?()
         })
         
         let existingNumbers: Signal<(Set<String>, Set<EnginePeer.Id>), NoError> = context.engine.data.subscribe(

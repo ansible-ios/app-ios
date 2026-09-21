@@ -8,15 +8,11 @@ import IosappUIPreferences
 import IosappNotices
 import AccountContext
 
-private let baseIosappMePaths = [
-    "www.asme.su",
-    "asme.su", "telegram.dog"
-]
-private let telegramWebShortLinkHosts = [
-    "a.t.me", 
-    "k.t.me",
-    "z.t.me"
-]
+private let baseIosappMePaths = ["www.asme.su", "asme.su"]
+// Upstream lists the t.me web-client short-link hosts (a./k./z.t.me) here.
+// Ansible runs no web-client short-link hosts, so the list is empty and
+// isIosappWebShortLink() never matches.
+private let telegramWebShortLinkHosts: [String] = []
 private let baseTelegraPhPaths = [
     "telegra.ph/",
     "te.legra.ph/",
@@ -1419,7 +1415,7 @@ public func parseProxyUrl(sharedContext: SharedAccountContext, url: String) -> (
             }
         }
     }
-    if let parsedUrl = URL(string: url), parsedUrl.scheme == "tg", let host = parsedUrl.host, let query = parsedUrl.query {
+    if let parsedUrl = URL(string: url), parsedUrl.scheme == "as", let host = parsedUrl.host, let query = parsedUrl.query {
         if let internalUrl = parseInternalUrl(sharedContext: sharedContext, context: nil, query: host + "?" + query), case let .proxy(host, port, username, password, secret) = internalUrl {
             return (host, port, username, password, secret)
         }
@@ -1440,7 +1436,7 @@ public func parseStickerPackUrl(sharedContext: SharedAccountContext, url: String
             }
         }
     }
-    if let parsedUrl = URL(string: url), parsedUrl.scheme == "tg", let host = parsedUrl.host, let query = parsedUrl.query {
+    if let parsedUrl = URL(string: url), parsedUrl.scheme == "as", let host = parsedUrl.host, let query = parsedUrl.query {
         if let internalUrl = parseInternalUrl(sharedContext: sharedContext, context: nil, query: host + "?" + query), case let .stickerPack(name, _) = internalUrl {
             return name
         }
@@ -1461,7 +1457,7 @@ public func parseWallpaperUrl(sharedContext: SharedAccountContext, url: String) 
             }
         }
     }
-    if let parsedUrl = URL(string: url), parsedUrl.scheme == "tg", let host = parsedUrl.host, let query = parsedUrl.query {
+    if let parsedUrl = URL(string: url), parsedUrl.scheme == "as", let host = parsedUrl.host, let query = parsedUrl.query {
         if let internalUrl = parseInternalUrl(sharedContext: sharedContext, context: nil, query: host + "?" + query), case let .wallpaper(wallpaper) = internalUrl {
             return wallpaper
         }
@@ -1482,7 +1478,7 @@ public func parseAdUrl(sharedContext: SharedAccountContext, context: AccountCont
             }
         }
     }
-    if let parsedUrl = URL(string: url), parsedUrl.scheme == "tg", let host = parsedUrl.host, let query = parsedUrl.query {
+    if let parsedUrl = URL(string: url), parsedUrl.scheme == "as", let host = parsedUrl.host, let query = parsedUrl.query {
         if let internalUrl = parseInternalUrl(sharedContext: sharedContext, context: context, query: host + "?" + query), case .peer = internalUrl {
             return internalUrl
         }

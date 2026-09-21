@@ -86,7 +86,7 @@ plist_fragment(
     <key>CFBundleIdentifier</key>
     <string>ph.telegra.Telegraph</string>
     <key>CFBundleName</key>
-    <string>Iosapp</string>
+    <string>Telegram</string>
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleSignature</key>
@@ -154,7 +154,7 @@ ios_application(
         "//Tests/Common:LaunchScreen",
     ],
     extensions = [
-        "//Iosapp:WidgetExtension",
+        "//iosapp:WidgetExtension",
     ],
     deps = [
         "//Tests/Common:Main",

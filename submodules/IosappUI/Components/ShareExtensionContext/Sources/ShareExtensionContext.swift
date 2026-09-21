@@ -260,7 +260,7 @@ public class ShareRootControllerImpl {
             
             setupSharedLogger(rootPath: rootPath, path: logsPath)
             
-            let applicationBindings = IosappApplicationBindings(isMainApp: false, appBundleId: self.initializationData.appBundleId, appBuildType: self.initializationData.appBuildType, containerPath: self.initializationData.appGroupPath, appSpecificScheme: "tg", openUrl: { [weak self] url in
+            let applicationBindings = IosappApplicationBindings(isMainApp: false, appBundleId: self.initializationData.appBundleId, appBuildType: self.initializationData.appBuildType, containerPath: self.initializationData.appGroupPath, appSpecificScheme: "as", openUrl: { [weak self] url in
                 self?.openUrl(url)
             }, openUniversalUrl: { _, completion in
                 completion.completion(false)
@@ -346,7 +346,7 @@ public class ShareRootControllerImpl {
             immediatePeerId = nil
             #else
             if #available(iOS 13.2, *), let sendMessageIntent = self.getExtensionContext()?.intent as? INSendMessageIntent {
-                if let contact = sendMessageIntent.recipients?.first, let handle = contact.customIdentifier, handle.hasPrefix("tg") {
+                if let contact = sendMessageIntent.recipients?.first, let handle = contact.customIdentifier, handle.hasPrefix("as") {
                     let string = handle.suffix(from: handle.index(handle.startIndex, offsetBy: 2))
                     if let peerId = Int64(string) {
                         immediatePeerId = PeerId(peerId)

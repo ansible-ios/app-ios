@@ -1637,7 +1637,7 @@ private final class ChatSendStarsScreenComponent: Component {
             var topCutoffFraction: CGFloat?
             
             var topCount: Int?
-            var sliderColor: UIColor = UIColor(rgb: 0xFFB10D)
+            var sliderColor: UIColor = UIColor(rgb: 0x2a9ef1)
             switch component.initialData.subjectInitialData {
             case let .react(reactData):
                 let topOthersCount: Int? = reactData.topPeers.filter({ !$0.isMy }).max(by: { $0.count < $1.count })?.count
@@ -2170,7 +2170,7 @@ private final class ChatSendStarsScreenComponent: Component {
                         let topPeersBackgroundSize = CGSize(width: topPeersTitleSize.width + 16.0 * 2.0, height: topPeersTitleSize.height + 9.0 * 2.0)
                         let topPeersBackgroundFrame = CGRect(origin: CGPoint(x: floor((availableSize.width - topPeersBackgroundSize.width) * 0.5), y: contentHeight), size: topPeersBackgroundSize)
                         
-                        topPeersTitleBackground.backgroundColor = UIColor(rgb: 0xFFB10D).cgColor
+                        topPeersTitleBackground.backgroundColor = UIColor(rgb: 0x2a9ef1).cgColor
                         topPeersTitleBackground.cornerRadius = topPeersBackgroundFrame.height * 0.5
                         transition.setFrame(layer: topPeersTitleBackground, frame: topPeersBackgroundFrame)
                         
@@ -2251,7 +2251,7 @@ private final class ChatSendStarsScreenComponent: Component {
                         
                         let itemCountString = presentationStringsFormattedNumber(Int32(topPeer.count), environment.dateTimeFormat.groupingSeparator)
                         
-                        var peerColor: UIColor = UIColor(rgb: 0xFFB10D)
+                        var peerColor: UIColor = UIColor(rgb: 0x2a9ef1)
                         var topPlace: Int?
                         if case let .liveStream(_, _, _, liveChatMessageParams, _, _) = reactData.reactSubject {
                             let color = GroupCallMessagesContext.getStarAmountParamMapping(params: liveChatMessageParams, value: Int64(topPeer.count)).color ?? GroupCallMessagesContext.Message.Color(rawValue: 0x985FDC)

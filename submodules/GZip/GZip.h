@@ -1,5 +1,5 @@
-#ifndef Iosapp_GZip_h
-#define Iosapp_GZip_h
+#ifndef Telegram_GZip_h
+#define Telegram_GZip_h
 
 #import <Foundation/Foundation.h>
 

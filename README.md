@@ -1,116 +1,104 @@
-# Telegram iOS Source Code Compilation Guide
+# Ansible for iOS
 
-We welcome all developers to use our API and source code to create applications on our platform.
-There are several things we require from **all developers** for the moment.
+iOS client for the [Ansible](https://ansible.su) messaging service.
 
-# Creating your Telegram Application
+> **This project is a fork of [Telegram for iOS](https://github.com/TelegramMessenger/Telegram-iOS).**
+> We are grateful to the Telegram-iOS contributors for their work —
+> without it this fork would not exist.
+>
+> **Important:** the upstream Telegram-iOS repository does not contain
+> a top-level LICENSE file. This fork is created in good-faith reliance
+> on the permissions implied by the upstream README and is distributed
+> under GPL v2 (or later) by the fork authors. See [NOTICE](NOTICE) for
+> the full discussion of the upstream license situation.
+>
+> Ansible for iOS is **not affiliated with, endorsed by, or sponsored
+> by Telegram FZ-LLC**. It connects to Ansible servers, not Telegram
+> servers, and cannot be used to access Telegram accounts.
 
-1. [**Obtain your own api_id**](https://core.telegram.org/api/obtaining_api_id) for your application.
-2. Please **do not** use the name Telegram for your app — or make sure your users understand that it is unofficial.
-3. Kindly **do not** use our standard logo (white paper plane in a blue circle) as your app's logo.
-3. Please study our [**security guidelines**](https://core.telegram.org/mtproto/security_guidelines) and take good care of your users' data and privacy.
-4. Please remember to publish **your** code too in order to comply with the licences.
+[![Upstream](https://img.shields.io/badge/forked%20from-Telegram--iOS-orange.svg)](https://github.com/TelegramMessenger/Telegram-iOS)
 
-# Quick Compilation Guide
+---
 
-## Get the Code
+## What this is
 
-```
-git clone --recursive -j8 https://github.com/TelegramMessenger/Telegram-iOS.git
-```
+Ansible for iOS is the official iOS client for the Ansible messenger.
+It is built on top of the Telegram-iOS codebase, with the following
+high-level modifications:
 
-## Setup Xcode
+- Networking layer rewritten to use the **MVSy 1.0** protocol and
+  connect to Ansible backend servers (instead of MTProto 2.0 / Telegram
+  DCs).
+- Branding, visual identity, and product naming replaced throughout.
+- Telegram-specific features removed where not applicable to Ansible
+  (e.g., Telegram Premium subscriptions, Telegram Stars, Fragment
+  integration, sponsored messages).
+- Additional features added that are unique to Ansible.
 
-Install Xcode (directly from https://developer.apple.com/download/applications or using the App Store).
+The complete list of changes is tracked in [`CHANGELOG.md`](CHANGELOG.md).
 
-## Adjust Configuration
+## Compliance with upstream README requirements
 
-1. Generate a random identifier:
-```
-openssl rand -hex 8
-```
-2. Create a new Xcode project. Use `Telegram` as the Product Name. Use `org.{identifier from step 1}` as the Organization Identifier.
-3. Open `Keychain Access` and navigate to `Certificates`. Locate `Apple Development: your@email.address (XXXXXXXXXX)` and double tap the certificate. Under `Details`, locate `Organizational Unit`. This is the Team ID.
-4. Edit `build-system/template_minimal_development_configuration.json`. Use data from the previous steps.
+The upstream Telegram-iOS README requests the following from forks. We
+comply as follows:
 
-## Generate an Xcode project
+| Upstream request | Status in this fork |
+|---|---|
+| Obtain your own api_id | N/A — Ansible uses MVSy 1.0, not MTProto |
+| Don't use the name "Telegram" | ✅ Rebranded to Ansible |
+| Don't use Telegram's logo | ✅ Independent Ansible logo |
+| Follow security guidelines | ✅ Inherited from upstream |
+| Publish your code | ✅ This repository is public |
 
-```
-python3 build-system/Make/Make.py \
-    --cacheDir="$HOME/telegram-bazel-cache" \
-    generateProject \
-    --configurationPath=build-system/template_minimal_development_configuration.json \
-    --xcodeManagedCodesigning
-```
+## Relationship to upstream
 
-# Advanced Compilation Guide
+| | Telegram for iOS | Ansible for iOS |
+|---|---|---|
+| Upstream LICENSE file | Not present | (See NOTICE — fork author license: GPL v2+) |
+| Backend | Telegram DCs | Ansible servers (`mvsy.ansible.su`) |
+| Protocol | MTProto 2.0 | MVSy 1.0 |
+| Trademarks | Telegram | Ansible |
+| Account compatibility | Telegram accounts | Ansible accounts (separate system) |
+| Source repository | [TelegramMessenger/Telegram-iOS](https://github.com/TelegramMessenger/Telegram-iOS) | [Ansible-ios/Telegram-iOS](https://github.com/Ansible-ios/Telegram-iOS) |
 
-## Xcode
+We do **not** merge updates from upstream automatically. The fork is
+independently maintained.
 
-1. Copy and edit `build-system/appstore-configuration.json`.
-2. Copy `build-system/fake-codesigning`. Create and download provisioning profiles, using the `profiles` folder as a reference for the entitlements.
-3. Generate an Xcode project:
-```
-python3 build-system/Make/Make.py \
-    --cacheDir="$HOME/telegram-bazel-cache" \
-    generateProject \
-    --configurationPath=configuration_from_step_1.json \
-    --codesigningInformationPath=directory_from_step_2
-```
+## Building from source
 
-## IPA
+The build process is unchanged from upstream. Refer to the upstream
+README's compilation instructions; substitute the Ansible backend
+endpoint for the Telegram DC list in the configuration step.
 
-1. Repeat the steps from the previous section. Use distribution provisioning profiles.
-2. Run:
-```
-python3 build-system/Make/Make.py \
-    --cacheDir="$HOME/telegram-bazel-cache" \
-    build \
-    --configurationPath=...see previous section... \
-    --codesigningInformationPath=...see previous section... \
-    --buildNumber=100001 \
-    --configuration=release_arm64
-```
-
-# FAQ
-
-## Xcode is stuck at "build-request.json not updated yet"
-
-Occasionally, you might observe the following message in your build log:
-```
-"/Users/xxx/Library/Developer/Xcode/DerivedData/Telegram-xxx/Build/Intermediates.noindex/XCBuildData/xxx.xcbuilddata/build-request.json" not updated yet, waiting...
+```sh
+git clone --recursive -j8 https://github.com/Ansible-ios/Telegram-iOS.git
 ```
 
-Should this occur, simply cancel the ongoing build and initiate a new one.
+Then follow the upstream Xcode setup, configuration, and project
+generation steps.
 
-## Telegram_xcodeproj: no such package 
+## License
 
-Following a system restart, the auto-generated Xcode project might encounter a build failure accompanied by this error:
-```
-ERROR: Skipping '@rules_xcodeproj_generated//generator/Telegram/Telegram_xcodeproj:Telegram_xcodeproj': no such package '@rules_xcodeproj_generated//generator/Telegram/Telegram_xcodeproj': BUILD file not found in directory 'generator/Telegram/Telegram_xcodeproj' of external repository @rules_xcodeproj_generated. Add a BUILD file to a directory to mark it as a package.
-```
+See the [NOTICE](NOTICE) file for a complete discussion of the upstream
+license situation and the fork-author license.
 
-If you encounter this issue, re-run the project generation steps in the README.
+For modifications introduced by the Ansible iOS Authors, the applicable
+license is **GNU General Public License v2 (or any later version)**.
 
+By contributing to this repository, you agree that your contributions
+will be licensed under the same terms.
 
-# Tips
+## Trademarks
 
-## Codesigning is not required for simulator-only builds
+"Telegram" is a registered trademark of Telegram FZ-LLC. It is used in
+this README and in source code comments solely to identify the upstream
+project from which this fork is derived. It is **not** used as a
+trademark of this product.
 
-Add `--disableProvisioningProfiles`:
-```
-python3 build-system/Make/Make.py \
-    --cacheDir="$HOME/telegram-bazel-cache" \
-    generateProject \
-    --configurationPath=path-to-configuration.json \
-    --codesigningInformationPath=path-to-provisioning-data \
-    --disableProvisioningProfiles
-```
+"Ansible" is a trademark of the Ansible iOS Authors.
 
-## Versions
+## Contact
 
-Each release is built using a specific Xcode version (see `versions.json`). The helper script checks the versions of the installed software and reports an error if they don't match the ones specified in `versions.json`. It is possible to bypass these checks:
-
-```
-python3 build-system/Make/Make.py --overrideXcodeVersion build ... # Don't check the version of Xcode
-```
+- General: <https://ansible.su>
+- Source code questions: open an issue on this repository
+- License compliance / DMCA: <legal@ansible.su>

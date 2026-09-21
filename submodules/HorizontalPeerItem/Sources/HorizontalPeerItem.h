@@ -3,7 +3,7 @@
 //  HorizontalPeerItem
 //
 //  Created by Peter on 8/5/19.
-//  Copyright © 2019 Iosapp Messenger LLP. All rights reserved.
+//  Copyright © 2019 Telegram Messenger LLP. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>

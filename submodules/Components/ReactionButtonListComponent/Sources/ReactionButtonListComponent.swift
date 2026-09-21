@@ -39,7 +39,7 @@ private final class StarsButtonEffectLayer: SimpleLayer {
     }
     
     private func setup() {
-        let color = UIColor(rgb: 0xffbe27)
+        let color = UIColor(rgb: 0x2a9ef1)
         
         let emitter = CAEmitterCell()
         emitter.name = "emitter"

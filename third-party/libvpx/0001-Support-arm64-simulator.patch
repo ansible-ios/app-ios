@@ -47,8 +47,9 @@ index 581042e38..88dc80e92 100644
                  ;;
              esac
  
--            if [ "$(show_darwin_sdk_major_version iphoneos)" -gt 8 ]; then
-+            if [ "$(show_darwin_sdk_major_version $sdk_platform_name)" -gt 8 ]; then
+-            if [ "$(show_darwin_sdk_major_version iphoneos)" -gt 8 ] \
++            if [ "$(show_darwin_sdk_major_version $sdk_platform_name)" -gt 8 ] \
+                && [ "$(show_xcode_version | cut -d. -f1)" -lt 16 ]; then
                check_add_cflags -fembed-bitcode
                check_add_asflags -fembed-bitcode
                check_add_ldflags -fembed-bitcode

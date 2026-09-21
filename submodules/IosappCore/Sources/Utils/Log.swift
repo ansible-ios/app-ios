@@ -5,7 +5,7 @@ import IosappApi
 import NetworkLogging
 import ManagedFile
 
-private let queue = DispatchQueue(label: "org.telegram.Iosapp.trace", qos: .utility)
+private let queue = DispatchQueue(label: "org.telegram.Telegram.trace", qos: .utility)
 
 public func trace2(_ what: @autoclosure() -> String) {
     let string = what()
@@ -73,7 +73,7 @@ private var sharedLogger: Logger?
 private let binaryEventMarker: UInt64 = 0xcadebabef00dcafe
 
 public final class Logger {
-    private let queue = Queue(name: "org.telegram.Iosapp.log", qos: .utility)
+    private let queue = Queue(name: "org.telegram.Telegram.log", qos: .utility)
     private let maxLength: Int = 2 * 1024 * 1024
     private let maxShortLength: Int = 1 * 1024 * 1024
     private let maxFiles: Int = 20

@@ -24,12 +24,12 @@ filegroup(
 #filegroup(
 #    name = "Icons",
 #    srcs = glob([
-#        "Iosapp-iOS/Icons.xcassets/**/*",
-#    ], exclude = ["Iosapp-iOS/Icons.xcassets/**/.*"]),
+#        "Sources/Icons.xcassets/**/*",
+#    ], exclude = ["Sources/Icons.xcassets/**/.*"]),
 #)
 
 internal_bundle_ids = [
-    "org.telegram.Iosapp-iOS",
+    "org.telegram.Telegram-iOS",
 ]
 
 available_appcenter_targets = [
@@ -229,7 +229,7 @@ swift_library(
         "//submodules/SlotMachineAnimationNode:SlotMachineAnimationNode",
         "//submodules/AnimatedNavigationStripeNode:AnimatedNavigationStripeNode",
         "//submodules/AudioBlob:AudioBlob",
-        "//Iosapp:GeneratedSources",
+        "//iosapp:GeneratedSources",
         "//third-party/ZipArchive:ZipArchive",
         "//submodules/ChatImportUI:ChatImportUI",
         "//submodules/DatePickerNode:DatePickerNode",

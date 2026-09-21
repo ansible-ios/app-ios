@@ -66,7 +66,7 @@ private final class SignpostContextImpl: SignpostContext {
         }
     }
     
-    private let signpost = OSSignposter(subsystem: "org.telegram.Iosapp-iOS", category: "StorageUsageScreen")
+    private let signpost = OSSignposter(subsystem: "org.telegram.Telegram-iOS", category: "StorageUsageScreen")
     private let id: OSSignpostID
     
     override init() {

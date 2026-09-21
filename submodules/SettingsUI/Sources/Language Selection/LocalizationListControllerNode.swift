@@ -765,9 +765,13 @@ final class LocalizationListControllerNode: ViewControllerTracingNode {
             }
             strongSelf.applyingCode.set(.single(info.languageCode))
             strongSelf.applyDisposable.set((strongSelf.context.engine.localization.downloadAndApplyLocalization(accountManager: strongSelf.context.sharedContext.accountManager, languageCode: info.languageCode)
-                |> deliverOnMainQueue).start(completed: { [weak self] in
+                |> deliverOnMainQueue).start(error: { [weak self] _ in
+                    guard let strongSelf = self else { return }
+                    strongSelf.applyingCode.set(.single(nil))
+                    let presentationData = strongSelf.context.sharedContext.currentPresentationData.with { $0 }
+                    strongSelf.present(textAlertController(context: strongSelf.context, title: nil, text: presentationData.strings.Login_UnknownError, actions: [TextAlertAction(type: .defaultAction, title: presentationData.strings.Common_OK, action: {})]), nil)
+                }, completed: { [weak self] in
                     self?.applyingCode.set(.single(nil))
-                
                     self?.context.engine.messages.refreshAttachMenuBots()
                 }))
         }

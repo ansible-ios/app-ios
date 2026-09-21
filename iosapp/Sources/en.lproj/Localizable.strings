@@ -2609,8 +2609,8 @@ Unused sets are archived when you add more.";
 "Conversation.HoldForAudio" = "Hold to record audio. Tap to switch to video.";
 "Conversation.HoldForVideo" = "Hold to record video. Tap to switch to audio.";
 
-"UserInfo.TelegramCall" = "Telegram Call";
-"UserInfo.TelegramVideoCall" = "Telegram Video Call";
+"UserInfo.IosappCall" = "Telegram Call";
+"UserInfo.IosappVideoCall" = "Telegram Video Call";
 "UserInfo.PhoneCall" = "Phone Call";
 
 "SharedMedia.CategoryMedia" = "Media";
@@ -3507,15 +3507,15 @@ Unused sets are archived when you add more.";
 "Passport.Address.ScansHelp" = "The document must contain your first and last name, your residential address, a stamp / barcode / QR code / logo, and issue date, no more than 3 months ago.";
 
 "Passport.Phone.Title" = "Phone Number";
-"Passport.Phone.UseTelegramNumber" = "Use %@";
-"Passport.Phone.UseTelegramNumberHelp" = "Use the same phone number as on Telegram.";
+"Passport.Phone.UseIosappNumber" = "Use %@";
+"Passport.Phone.UseIosappNumberHelp" = "Use the same phone number as on Telegram.";
 "Passport.Phone.EnterOtherNumber" = "OR ENTER NEW PHONE NUMBER";
 "Passport.Phone.Help" = "Note: You will receive a confirmation code on the phone number you provide.";
 "Passport.Phone.Delete" = "Delete Phone Number";
 
 "Passport.Email.Title" = "Email";
-"Passport.Email.UseTelegramEmail" = "Use %@";
-"Passport.Email.UseTelegramEmailHelp" = "Use the same address as on Telegram.";
+"Passport.Email.UseIosappEmail" = "Use %@";
+"Passport.Email.UseIosappEmailHelp" = "Use the same address as on Telegram.";
 "Passport.Email.EnterOtherEmail" = "OR ENTER NEW EMAIL ADDRESS";
 "Passport.Email.EmailPlaceholder" = "Enter your email address";
 "Passport.Email.Help" = "Note: You will receive a confirmation code to the email address you provide.";
@@ -6671,7 +6671,7 @@ Sorry for the inconvenience.";
 "Privacy.PaymentsClear.AllInfoCleared" = "Payment and shipping info cleared.";
 
 "Settings.Tips" = "Telegram Features";
-"Settings.TipsUsername" = "TelegramTips";
+"Settings.TipsUsername" = "IosappTips";
 
 "Calls.NoVoiceAndVideoCallsPlaceholder" = "Your recent voice and video calls will appear here.";
 "Calls.StartNewCall" = "Start New Call";
@@ -7249,9 +7249,9 @@ Sorry for the inconvenience.";
 "Conversation.InviteRequestInfo" = "You received this message because you requested to join %1$@ on %2$@.";
 "Conversation.InviteRequestInfoConfirm" = "I understand";
 
-"AuthSessions.HeaderInfo" = "Link [Telegram Desktop](desktop) or [Telegram Web](web) by scanning a QR code.";
+"AuthSessions.HeaderInfo" = "Link [Ansible Desktop](desktop) or [Ansible Web](web) by scanning a QR code.";
 "AuthSessions.LinkDesktopDevice" = "Link Desktop Device";
-"AuthSessions.AddDevice.ScanInstallInfo" = "Go to [getdesktop.telegram.org](desktop) or [web.telegram.org](web) to get the QR code";
+"AuthSessions.AddDevice.ScanInstallInfo" = "Go to [desktop.ansible.su](desktop) or [web.ansible.su](web) to get the QR code";
 
 "Channel.AdminLog.MessageSent" = "%@ sent message:";
 
@@ -7559,7 +7559,7 @@ Sorry for the inconvenience.";
 "WebApp.RemoveConfirmationText" = "Remove **%@** from the attachment menu?";
 
 "Notifications.SystemTones" = "SYSTEM TONES";
-"Notifications.TelegramTones" = "TELEGRAM TONES";
+"Notifications.IosappTones" = "TELEGRAM TONES";
 
 "Notifications.UploadSound" = "Upload Sound";
 "Notifications.MessageSoundInfo" = "Press and hold a short voice note or mp3 file in any chat and select \"Save for Notifications\". It will appear here.";
@@ -8112,8 +8112,8 @@ Sorry for the inconvenience.";
 "Login.EnterCodeSMSTitle" = "Enter Code";
 "Login.EnterCodeSMSText" = "We've sent an SMS with an activation code to your phone **%@**.";
 "Login.SendCodeAsSMS" = "Send the code as an SMS";
-"Login.EnterCodeTelegramTitle" = "Enter Code";
-"Login.EnterCodeTelegramText" = "We've sent the code to the **Telegram app** for %@ on your other device.";
+"Login.EnterCodeIosappTitle" = "Enter Code";
+"Login.EnterCodeIosappText" = "We've sent the code to the **Telegram app** for %@ on your other device.";
 "Login.AddEmailTitle" = "Add Email";
 "Login.AddEmailText" = "Please enter your valid email address to protect your account.";
 "Login.AddEmailPlaceholder" = "Enter your email";
@@ -10476,8 +10476,8 @@ Sorry for the inconvenience.";
 "GiftLink.Reason.Unclaimed" = "Incomplete Giveaway";
 "GiftLink.Date" = "Date";
 "GiftLink.NoRecipient" = "No recipient";
-"GiftLink.TelegramPremium_1" = "Telegram Premium for %@ month";
-"GiftLink.TelegramPremium_any" = "Telegram Premium for %@ months";
+"GiftLink.IosappPremium_1" = "Telegram Premium for %@ month";
+"GiftLink.IosappPremium_any" = "Telegram Premium for %@ months";
 "GiftLink.LinkHidden" = "Only the recipient can see the link.";
 
 "ChannelBoost.EnableColors" = "Enable Colors";
@@ -12271,8 +12271,8 @@ Sorry for the inconvenience.";
 "Chat.Context.Phone.CreateNewContact" = "Create New Contact";
 "Chat.Context.Phone.AddToExistingContact" = "Add to Existing Contact";
 "Chat.Context.Phone.SendMessage" = "Send Message";
-"Chat.Context.Phone.TelegramVoiceCall" = "Telegram Voice Call";
-"Chat.Context.Phone.TelegramVideoCall" = "Telegram Video Call";
+"Chat.Context.Phone.IosappVoiceCall" = "Telegram Voice Call";
+"Chat.Context.Phone.IosappVideoCall" = "Telegram Video Call";
 "Chat.Context.Phone.InviteToTelegram" = "Invite to Telegram";
 "Chat.Context.Phone.CallViaCarrier" = "Call via Carrier";
 "Chat.Context.Phone.CopyNumber" = "Copy Number";
@@ -12328,8 +12328,8 @@ Sorry for the inconvenience.";
 "Stars.Intro.Transaction.FragmentTopUp.Subtitle" = "via Fragment";
 "Stars.Intro.Transaction.FragmentWithdrawal.Title" = "Withdrawal";
 "Stars.Intro.Transaction.FragmentWithdrawal.Subtitle" = "via Fragment";
-"Stars.Intro.Transaction.TelegramAds.Title" = "Withdrawal";
-"Stars.Intro.Transaction.TelegramAds.Subtitle" = "via Telegram Ads";
+"Stars.Intro.Transaction.IosappAds.Title" = "Withdrawal";
+"Stars.Intro.Transaction.IosappAds.Subtitle" = "via Telegram Ads";
 "Stars.Intro.Transaction.Gift" = "Gift";
 "Stars.Intro.Transaction.ConvertedGift" = "Converted Gift";
 "Stars.Intro.Transaction.Unsupported.Title" = "Unsupported";
@@ -12378,8 +12378,8 @@ Sorry for the inconvenience.";
 "Stars.Transaction.FragmentTopUp.Subtitle" = "Fragment";
 "Stars.Transaction.FragmentWithdrawal.Title" = "Stars Withdrawal";
 "Stars.Transaction.FragmentWithdrawal.Subtitle" = "Fragment";
-"Stars.Transaction.TelegramAds.Title" = "Stars Withdrawal";
-"Stars.Transaction.TelegramAds.Subtitle" = "Telegram Ads";
+"Stars.Transaction.IosappAds.Title" = "Stars Withdrawal";
+"Stars.Transaction.IosappAds.Subtitle" = "Telegram Ads";
 "Stars.Transaction.Unsupported.Title" = "Unsupported";
 "Stars.Transaction.Refund" = "Refund";
 
@@ -13192,13 +13192,13 @@ Sorry for the inconvenience.";
 "TopApps.Info.Text" = "This catalogue ranks mini apps based on their daily revenue, measured in Stars. To be listed, developers must set their main mini app in [@botfather]() (as described [here](https://core.telegram.org/bots/webapps#launching-the-main-mini-app)), have over **1,000** daily users, and earn a daily revenue above **1,000** Stars, based on weekly average.";
 "TopApps.Info.Done" = "Understood";
 
-"Stars.Intro.Transaction.TelegramBotApi.Title" = "Paid Broadcast";
-"Stars.Intro.Transaction.TelegramBotApi.Messages_1" = "%@ Message";
-"Stars.Intro.Transaction.TelegramBotApi.Messages_any" = "%@ Messages";
+"Stars.Intro.Transaction.IosappBotApi.Title" = "Paid Broadcast";
+"Stars.Intro.Transaction.IosappBotApi.Messages_1" = "%@ Message";
+"Stars.Intro.Transaction.IosappBotApi.Messages_any" = "%@ Messages";
 
-"Stars.Transaction.TelegramBotApi.Title" = "Paid Broadcast";
-"Stars.Transaction.TelegramBotApi.Messages_1" = "%@ Message";
-"Stars.Transaction.TelegramBotApi.Messages_any" = "%@ Messages";
+"Stars.Transaction.IosappBotApi.Title" = "Paid Broadcast";
+"Stars.Transaction.IosappBotApi.Messages_1" = "%@ Message";
+"Stars.Transaction.IosappBotApi.Messages_any" = "%@ Messages";
 
 "Monetization.Bot.Header" = "Telegram shares 50% of the revenue from ads displayed in your bot. [Learn More >]()";
 "Monetization.Bot.BalanceTitle" = "AVAILABLE BALANCE";
@@ -13903,11 +13903,11 @@ Sorry for the inconvenience.";
 "Stars.Intro.Transaction.PaidMessage_1" = "Fee for %@ Message";
 "Stars.Intro.Transaction.PaidMessage_any" = "Fee for %@ Messages";
 
-"Stars.Transaction.TelegramPremium_1" = "Premium for %@ Month";
-"Stars.Transaction.TelegramPremium_any" = "Premium for %@ Months";
+"Stars.Transaction.IosappPremium_1" = "Premium for %@ Month";
+"Stars.Transaction.IosappPremium_any" = "Premium for %@ Months";
 
-"Stars.Intro.Transaction.TelegramPremium_1" = "Premium for %@ Month";
-"Stars.Intro.Transaction.TelegramPremium_any" = "Premium for %@ Months";
+"Stars.Intro.Transaction.IosappPremium_1" = "Premium for %@ Month";
+"Stars.Intro.Transaction.IosappPremium_any" = "Premium for %@ Months";
 
 "Stars.Purchase.SendMessageInfo" = "Buy Stars to send a message to **%@**.";
 "Stars.Purchase.SendGroupMessageInfo" = "Buy Stars to send a message in **%@**.";

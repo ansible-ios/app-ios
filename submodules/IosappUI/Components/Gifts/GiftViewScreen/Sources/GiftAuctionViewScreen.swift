@@ -940,7 +940,7 @@ private final class GiftAuctionViewSheetContent: CombinedComponent {
                                     )
                                 )),
                                 AnyComponentWithIdentity(id: "text", component: AnyComponent(
-                                    MultilineTextComponent(text: .plain(NSAttributedString(string: "  \(strings.Gift_Value_ForSaleOnIosapp)", font: Font.regular(17.0), textColor: theme.actionSheet.controlAccentColor)))
+                                    MultilineTextComponent(text: .plain(NSAttributedString(string: "  \(strings.Gift_Value_ForSaleOnTelegram)", font: Font.regular(17.0), textColor: theme.actionSheet.controlAccentColor)))
                                 )),
                                 AnyComponentWithIdentity(id: "arrow", component: AnyComponent(
                                     BundleIconComponent(name: "Chat/Context Menu/Arrow", tintColor: theme.actionSheet.controlAccentColor)

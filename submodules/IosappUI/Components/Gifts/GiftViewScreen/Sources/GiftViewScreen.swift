@@ -3839,7 +3839,7 @@ private final class GiftViewSheetContent: CombinedComponent {
                         if let peerId = uniqueGift.hostPeerId, let peer = state.peerMap[peerId] {
                             tableItems.append(.init(
                                 id: "telegram",
-                                title: strings.Gift_Unique_Iosapp,
+                                title: strings.Gift_Unique_Telegram,
                                 component: AnyComponent(Button(
                                     content: AnyComponent(
                                         PeerTableCellComponent(

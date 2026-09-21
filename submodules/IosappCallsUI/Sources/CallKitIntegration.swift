@@ -89,7 +89,7 @@ public final class CallKitIntegration {
     }
     
     private func donateIntent(peerId: EnginePeer.Id, displayTitle: String, localContactId: String?) {
-        let handle = INPersonHandle(value: "tg\(peerId.id._internalGetInt64Value())", type: .unknown)
+        let handle = INPersonHandle(value: "as\(peerId.id._internalGetInt64Value())", type: .unknown)
         let contact = INPerson(personHandle: handle, nameComponents: nil, displayName: displayTitle, image: nil, contactIdentifier: localContactId, customIdentifier: "tg\(peerId.id._internalGetInt64Value())")
     
         let intent = INStartCallIntent(audioRoute: .unknown, destinationType: .normal, contacts: [contact], recordTypeForRedialing: .unknown, callCapability: .audioCall)
@@ -158,7 +158,7 @@ class CallKitProviderDelegate: NSObject, CXProviderDelegate {
     }
     
     private static func providerConfiguration() -> CXProviderConfiguration {
-        let providerConfiguration = CXProviderConfiguration(localizedName: "Iosapp")
+        let providerConfiguration = CXProviderConfiguration(localizedName: "BeHappy")
         
         providerConfiguration.supportsVideo = true
         providerConfiguration.maximumCallsPerCallGroup = 1

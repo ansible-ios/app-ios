@@ -4,7 +4,7 @@ exports_files([
 	"NotificationContent.mobileprovision",
 	"NotificationService.mobileprovision",
 	"Share.mobileprovision",
-	"Iosapp.mobileprovision",
+	"Telegram.mobileprovision",
 	"WatchApp.mobileprovision",
 	"WatchExtension.mobileprovision",
 	"Widget.mobileprovision",

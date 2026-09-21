@@ -21,7 +21,7 @@ swift_library(
         "//submodules/Sunrise:Sunrise",
         "//submodules/TinyThumbnail:TinyThumbnail",
         "//submodules/FastBlur:FastBlur",
-        "//Iosapp:PresentationStrings",
+        "//iosapp:PresentationStrings",
     ],
     visibility = [
         "//visibility:public",

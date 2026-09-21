@@ -19,7 +19,7 @@ if (typeof window === 'undefined') {
     global.isJsCore = true;
 
     global.navigator = {
-        userAgent: "Iosapp"
+        userAgent: "Telegram"
     };
 
     global.now = function() {

@@ -50,7 +50,7 @@ func updateLocalizationListStateInteractively(transaction: Transaction, _ f: @es
 }
 
 func _internal_synchronizedLocalizationListState(postbox: Postbox, network: Network) -> Signal<Never, NoError> {
-    return network.request(Api.functions.langpack.getLanguages(langPack: ""))
+    return network.request(Api.functions.langpack.getLanguages(langPack: "ios"))
     |> retryRequest
     |> mapToSignal { languages -> Signal<Never, NoError> in
         let infos: [LocalizationInfo] = languages.map(LocalizationInfo.init(apiLanguage:))

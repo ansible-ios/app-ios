@@ -652,7 +652,7 @@ private func dataAndStorageControllerEntries(context: AccountContext, state: Dat
             case .socks5:
                 proxyValue = presentationData.strings.ChatSettings_ConnectionType_UseSocks5
             case .mtp:
-                proxyValue = presentationData.strings.SocksProxySetup_ProxyIosapp
+                proxyValue = presentationData.strings.SocksProxySetup_ProxyTelegram
         }
     } else {
         proxyValue = presentationData.strings.GroupInfo_SharedMediaNone

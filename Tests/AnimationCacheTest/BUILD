@@ -82,7 +82,7 @@ plist_fragment(
     <key>CFBundleIdentifier</key>
     <string>org.telegram.{module_name}</string>
     <key>CFBundleName</key>
-    <string>Iosapp</string>
+    <string>Telegram</string>
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleSignature</key>

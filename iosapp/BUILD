@@ -71,7 +71,7 @@ config_setting(
 
 bool_flag(
     name = "disableExtensions",
-    build_setting_default = False,
+    build_setting_default = True,
     visibility = ["//visibility:public"],
 )
 
@@ -144,11 +144,11 @@ genrule(
     name = "GeneratedPresentationStrings",
     srcs = [
         "//build-system:GenerateStrings/GenerateStrings.py",
-        "Iosapp-iOS/en.lproj/Localizable.strings",
+        "Sources/en.lproj/Localizable.strings",
     ],
     cmd = '''
         python3 $(location //build-system:GenerateStrings/GenerateStrings.py) \\
-            --source=$(location Iosapp-iOS/en.lproj/Localizable.strings) \\
+            --source=$(location Sources/en.lproj/Localizable.strings) \\
             --outImplementation=$(location GeneratedPresentationStrings/Sources/PresentationStrings.m) \\
             --outHeader=$(location GeneratedPresentationStrings/PublicHeaders/PresentationStrings/PresentationStrings.h) \\
             --outData=$(location GeneratedPresentationStrings/Resources/PresentationStrings.data) \\
@@ -261,14 +261,14 @@ strip_framework = select({
 filegroup(
     name = "AppResources",
     srcs = glob([
-        "Iosapp-iOS/Resources/**/*",
-    ], exclude = ["Iosapp-iOS/Resources/**/.*"]),
+        "Sources/Resources/**/*",
+    ], exclude = ["Sources/Resources/**/.*"]),
 )
 
 filegroup(
     name = "AppStringResources",
     srcs = [
-        "Iosapp-iOS/en.lproj/Localizable.strings",
+        "Sources/en.lproj/Localizable.strings",
     ] + [
         "{}.lproj/Localizable.strings".format(language) for language in empty_languages
     ],
@@ -277,42 +277,42 @@ filegroup(
 filegroup(
     name = "AppIntentVocabularyResources",
     srcs = glob([
-        "Iosapp-iOS/*.lproj/AppIntentVocabulary.plist",
-    ], exclude = ["Iosapp-iOS/*.lproj/**/.*"]),
+        "Sources/*.lproj/AppIntentVocabulary.plist",
+    ], exclude = ["Sources/*.lproj/**/.*"]),
 )
 
 filegroup(
     name = "InfoPlistStringResources",
     srcs = glob([
-        "Iosapp-iOS/*.lproj/InfoPlist.strings",
-    ], exclude = ["Iosapp-iOS/*.lproj/**/.*"]),
+        "Sources/*.lproj/InfoPlist.strings",
+    ], exclude = ["Sources/*.lproj/**/.*"]),
 )
 
 filegroup(
     name = "Icons",
     srcs = glob([
-        "Iosapp-iOS/Icons.xcassets/**/*",
-    ], exclude = ["Iosapp-iOS/Icons.xcassets/**/.*"]),
+        "Sources/Icons.xcassets/**/*",
+    ], exclude = ["Sources/Icons.xcassets/**/.*"]),
 )
 
 filegroup(
     name = "AppIcons",
     srcs = glob([
-        "Iosapp-iOS/AppIcons.xcassets/**/*",
-    ], exclude = ["Iosapp-iOS/AppIcons.xcassets/**/.*"]),
+        "Sources/AppIcons.xcassets/**/*",
+    ], exclude = ["Sources/AppIcons.xcassets/**/.*"]),
 )
 
 filegroup(
     name = "DefaultAppIcon",
     srcs = glob([
-        "Iosapp-iOS/DefaultAppIcon.xcassets/**/*",
-    ], exclude = ["Iosapp-iOS/DefaultAppIcon.xcassets/**/.*"]),
+        "Sources/DefaultAppIcon.xcassets/**/*",
+    ], exclude = ["Sources/DefaultAppIcon.xcassets/**/.*"]),
 )
 
 filegroup(
     name = "DefaultIcon",
     srcs = glob([
-        "Iosapp-iOS/AppIcons.xcassets/BlueIcon.appiconset/*.png",
+        "Sources/AppIcons.xcassets/BlueIcon.appiconset/*.png",
     ]),
 )
 
@@ -329,15 +329,24 @@ alternate_icon_folders = [
     "Premium",
     "PremiumBlack",
     "PremiumTurbo",
+    "BH01",
+    "BH02",
+    "BH03",
+    "BH04",
+    "BH05",
+    "BH06",
+    "BH07",
+    "BH08",
+    "BH09",
 ]
 
-composer_icon_folders = ["Iosapp"]
+composer_icon_folders = []
 
 [
     filegroup(
         name = "{}".format(name),
         srcs = glob([
-            "Iosapp-iOS/{}.alticon/*.png".format(name),
+            "Sources/{}.alticon/*.png".format(name),
         ]),
     ) for name in alternate_icon_folders
 ]
@@ -346,7 +355,7 @@ composer_icon_folders = ["Iosapp"]
     filegroup(
         name = "{}_icon".format(name),
         srcs = glob([
-            "Iosapp-iOS/{}.icon/**/*".format(name),
+            "Sources/{}.icon/**/*".format(name),
         ]),
     ) for name in composer_icon_folders
 ]
@@ -354,7 +363,7 @@ composer_icon_folders = ["Iosapp"]
 filegroup(
     name = "LaunchScreen",
     srcs = glob([
-        "Iosapp-iOS/Base.lproj/LaunchScreen.xib",
+        "Sources/Base.lproj/LaunchScreen.xib",
     ]),
 )
 
@@ -362,7 +371,7 @@ objc_library(
     name = "Main",
     module_name = "Main",
     srcs = [
-        "Iosapp-iOS/main.m"
+        "Sources/main.m"
     ],
 )
 
@@ -370,7 +379,7 @@ swift_library(
     name = "Lib",
     module_name = "Lib",
     srcs = glob([
-        "Iosapp-iOS/Application.swift",
+        "Sources/Application.swift",
     ]),
     data = [
         ":Icons",
@@ -420,7 +429,7 @@ plist_fragment(
             <string>{telegram_bundle_id}</string>
             <key>CFBundleURLSchemes</key>
             <array>
-                <string>telegram</string>
+                <string>ansible</string>
             </array>
         </dict>
         <dict>
@@ -430,7 +439,7 @@ plist_fragment(
             <string>{telegram_bundle_id}.compatibility</string>
             <key>CFBundleURLSchemes</key>
             <array>
-                <string>tg</string>
+                <string>as</string>
                 <string>tonsite</string>
             </array>
         </dict>
@@ -446,15 +455,15 @@ official_apple_pay_merchants = [
     "merchant.sberbank.test.ph.telegra.Telegraph",
     "merchant.privatbank.test.telergramios",
     "merchant.privatbank.prod.telergram",
-    "merchant.paymaster.test.iosappios",
-    "merchant.paymaster.prod.iosappios",
-    "merchant.smartglocal.prod.iosappios",
-    "merchant.smartglocal.test.iosappios",
-    "merchant.yoomoney.test.iosappios",
-    "merchant.yoomoney.prod.iosappios",
+    "merchant.paymaster.test.telegramios",
+    "merchant.paymaster.prod.telegramios",
+    "merchant.smartglocal.prod.telegramios",
+    "merchant.smartglocal.test.telegramios",
+    "merchant.yoomoney.test.telegramios",
+    "merchant.yoomoney.prod.telegramios",
     "merchant.org.telegram.Best2pay.test",
-    "merchant.psbank.test.iosappios",
-    "merchant.psbank.prod.iosappios",
+    "merchant.psbank.test.telegramios",
+    "merchant.psbank.prod.telegramios",
     "merchant.org.telegram.billinenet.test",
     "merchant.org.telegram.billinenet.prod",
     "merchant.org.telegram.portmone.test",
@@ -464,7 +473,7 @@ official_apple_pay_merchants = [
 
 official_bundle_ids = [
     "ph.telegra.Telegraph",
-    "org.telegram.Iosapp-iOS",
+    "org.telegram.Telegram-iOS",
 ]
 
 store_bundle_ids = [
@@ -517,10 +526,9 @@ icloud_fragment = "" if not telegram_enable_icloud else """
 associated_domains_fragment = "" if telegram_bundle_id not in official_bundle_ids else """
 <key>com.apple.developer.associated-domains</key>
 <array>
-    <string>applinks:telegram.me</string>
-    <string>applinks:t.me</string>
-    <string>applinks:*.t.me</string>
-    <string>webcredentials:t.me</string>
+    <string>applinks:asme.su</string>
+    <string>applinks:*.asme.su</string>
+    <string>webcredentials:asme.su</string>
     <string>webcredentials:telegram.org</string>
 </array>
 """
@@ -574,7 +582,7 @@ official_background_gpu_fragment = """
 background_gpu_fragment = official_background_gpu_fragment if telegram_bundle_id == "ph.telegra.Telegraph" else ""
 
 plist_fragment(
-    name = "IosappEntitlements",
+    name = "TelegramEntitlements",
     extension = "entitlements",
     template = "".join([
         aps_fragment,
@@ -629,7 +637,7 @@ plist_fragment(
     template =
     """
     <key>CFBundleDisplayName</key>
-    <string>Iosapp</string>
+    <string>Ansible</string>
     """
 )
 
@@ -765,11 +773,11 @@ plist_fragment(
     template =
     """
     <key>CFBundleIdentifier</key>
-    <string>{telegram_bundle_id}.IosappApi</string>
+    <string>{telegram_bundle_id}.TelegramApi</string>
     <key>CFBundleDevelopmentRegion</key>
     <string>en</string>
     <key>CFBundleName</key>
-    <string>IosappApi</string>
+    <string>TelegramApi</string>
     <key>CFBundlePackageType</key>
     <string>FMWK</string>
     """.format(
@@ -783,11 +791,11 @@ plist_fragment(
     template =
     """
     <key>CFBundleIdentifier</key>
-    <string>{telegram_bundle_id}.IosappCore</string>
+    <string>{telegram_bundle_id}.TelegramCore</string>
     <key>CFBundleDevelopmentRegion</key>
     <string>en</string>
     <key>CFBundleName</key>
-    <string>IosappCore</string>
+    <string>TelegramCore</string>
     <key>CFBundlePackageType</key>
     <string>FMWK</string>
     """.format(
@@ -797,7 +805,7 @@ plist_fragment(
 
 ios_framework(
     name = "IosappCoreFramework",
-    bundle_id = "{telegram_bundle_id}.IosappCore".format(
+    bundle_id = "{telegram_bundle_id}.TelegramCore".format(
         telegram_bundle_id = telegram_bundle_id,
     ),
     families = [
@@ -881,11 +889,11 @@ genrule(
 genrule(
     name = "GenerateAddAlternateIcons",
     srcs = [
-        "Iosapp-iOS/AddAlternateIcons.sh",
+        "Sources/AddAlternateIcons.sh",
     ],
     cmd_bash =
 """
-    cat $(location Iosapp-iOS/AddAlternateIcons.sh) >> $(location AddAlternateIcons.sh)
+    cat $(location Sources/AddAlternateIcons.sh) >> $(location AddAlternateIcons.sh)
 """,
     outs = [
         "AddAlternateIcons.sh",
@@ -899,8 +907,8 @@ genrule(
 sh_binary(
     name = "AddAlternateIcons",
     data = [
-        "Iosapp-iOS/AlternateIcons.plist",
-        "Iosapp-iOS/AlternateIcons-iPad.plist",
+        "Sources/AlternateIcons.plist",
+        "Sources/AlternateIcons-iPad.plist",
     ],
     srcs = [":GenerateAddAlternateIcons"],
 )
@@ -911,11 +919,11 @@ plist_fragment(
     template =
     """
     <key>CFBundleIdentifier</key>
-    <string>{telegram_bundle_id}.IosappUI</string>
+    <string>{telegram_bundle_id}.TelegramUI</string>
     <key>CFBundleDevelopmentRegion</key>
     <string>en</string>
     <key>CFBundleName</key>
-    <string>IosappUI</string>
+    <string>TelegramUI</string>
     <key>CFBundlePackageType</key>
     <string>FMWK</string>
     """.format(
@@ -925,7 +933,7 @@ plist_fragment(
 
 ios_framework(
     name = "IosappUIFramework",
-    bundle_id = "{telegram_bundle_id}.IosappUI".format(
+    bundle_id = "{telegram_bundle_id}.TelegramUI".format(
         telegram_bundle_id = telegram_bundle_id,
     ),
     families = [
@@ -962,7 +970,7 @@ plist_fragment(
     <key>CFBundleIdentifier</key>
     <string>{telegram_bundle_id}.Share</string>
     <key>CFBundleName</key>
-    <string>Iosapp</string>
+    <string>Telegram</string>
     <key>CFBundlePackageType</key>
     <string>XPC!</string>
     <key>NSExtension</key>
@@ -1054,7 +1062,7 @@ plist_fragment(
     <key>CFBundleIdentifier</key>
     <string>{telegram_bundle_id}.NotificationContent</string>
     <key>CFBundleName</key>
-    <string>Iosapp</string>
+    <string>Telegram</string>
     <key>CFBundlePackageType</key>
     <string>XPC!</string>
     <key>NSExtension</key>
@@ -1161,7 +1169,7 @@ plist_fragment(
     <key>CFBundleIdentifier</key>
     <string>{telegram_bundle_id}.Widget</string>
     <key>CFBundleName</key>
-    <string>Iosapp</string>
+    <string>Telegram</string>
     <key>CFBundlePackageType</key>
     <string>XPC!</string>
     <key>NSExtension</key>
@@ -1205,7 +1213,7 @@ swift_library(
         "//submodules/Postbox:Postbox",
         "//submodules/IosappCore:IosappCore",
         "//submodules/OpenSSLEncryptionProvider:OpenSSLEncryptionProvider",
-        "//Iosapp:GeneratedSources",
+        "//iosapp:GeneratedSources",
     ],
 )
 
@@ -1274,7 +1282,7 @@ plist_fragment(
     <key>CFBundleIdentifier</key>
     <string>{telegram_bundle_id}.SiriIntents</string>
     <key>CFBundleName</key>
-    <string>Iosapp</string>
+    <string>Telegram</string>
     <key>CFBundlePackageType</key>
     <string>XPC!</string>
     <key>NSExtension</key>
@@ -1341,7 +1349,7 @@ swift_library(
         "//submodules/BuildConfig:BuildConfig",
         "//submodules/OpenSSLEncryptionProvider:OpenSSLEncryptionProvider",
         "//submodules/AppLockState:AppLockState",
-        "//Iosapp:GeneratedSources",
+        "//iosapp:GeneratedSources",
         "//submodules/WidgetItems:WidgetItems",
     ],
 )
@@ -1405,7 +1413,7 @@ plist_fragment(
     <key>CFBundleIdentifier</key>
     <string>{telegram_bundle_id}.BroadcastUpload</string>
     <key>CFBundleName</key>
-    <string>Iosapp</string>
+    <string>Telegram</string>
     <key>CFBundlePackageType</key>
     <string>XPC!</string>
     <key>NSExtension</key>
@@ -1499,7 +1507,7 @@ plist_fragment(
     <key>CFBundleIdentifier</key>
     <string>{telegram_bundle_id}.NotificationService</string>
     <key>CFBundleName</key>
-    <string>Iosapp</string>
+    <string>Telegram</string>
     <key>CFBundlePackageType</key>
     <string>XPC!</string>
     <key>NSExtension</key>
@@ -1542,7 +1550,7 @@ ios_extension(
         ":disableProvisioningProfilesSetting": None,
         "//conditions:default": "@build_configuration//provisioning:NotificationService.mobileprovision",
     }),
-    deps = ["//Iosapp/NotificationService:NotificationServiceExtensionLib"],
+    deps = ["//iosapp/NotificationService:NotificationServiceExtensionLib"],
     frameworks = [
         ":MtProtoKitFramework",
         ":SwiftSignalKitFramework",
@@ -1553,7 +1561,7 @@ ios_extension(
 )
 
 plist_fragment(
-    name = "IosappInfoPlist",
+    name = "TelegramInfoPlist",
     extension = "plist",
     template = 
     """
@@ -1568,11 +1576,11 @@ plist_fragment(
     <key>CFBundleDevelopmentRegion</key>
     <string>en</string>
     <key>CFBundleDisplayName</key>
-    <string>Iosapp</string>
+    <string>Ansible</string>
     <key>CFBundleIdentifier</key>
     <string>{telegram_bundle_id}</string>
     <key>CFBundleName</key>
-    <string>Iosapp</string>
+    <string>Ansible</string>
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleSignature</key>
@@ -1630,17 +1638,17 @@ plist_fragment(
     <key>NSCameraUsageDescription</key>
     <string>We need this so that you can take and share photos and videos.</string>
     <key>NSContactsUsageDescription</key>
-    <string>Iosapp stores your contacts heavily encrypted in the cloud to let you connect with your friends across all your devices.</string>
+    <string>Telegram stores your contacts heavily encrypted in the cloud to let you connect with your friends across all your devices.</string>
     <key>NSFaceIDUsageDescription</key>
     <string>You can use Face ID to unlock the app.</string>
     <key>NSLocationAlwaysUsageDescription</key>
-    <string>When you send your location to your friends, Iosapp needs access to show them a map. You also need this to send locations from an Apple Watch.</string>
+    <string>When you send your location to your friends, Telegram needs access to show them a map. You also need this to send locations from an Apple Watch.</string>
     <key>NSLocationWhenInUseUsageDescription</key>
-    <string>When you send your location to your friends, Iosapp needs access to show them a map.</string>
+    <string>When you send your location to your friends, Telegram needs access to show them a map.</string>
     <key>NSMicrophoneUsageDescription</key>
     <string>We need this so that you can record and share voice messages and videos with sound.</string>
     <key>NSMotionUsageDescription</key>
-    <string>When you send your location to your friends, Iosapp needs access to show them a map.</string>
+    <string>When you send your location to your friends, Telegram needs access to show them a map.</string>
     <key>NSPhotoLibraryAddUsageDescription</key>
     <string>We need this so that you can share photos and videos from your photo library.</string>
     <key>NSPhotoLibraryUsageDescription</key>
@@ -1708,13 +1716,13 @@ plist_fragment(
                 <string>public.data</string>
             </array>
             <key>UTTypeDescription</key>
-            <string>Iosapp iOS Color Theme File</string>
+            <string>Telegram iOS Color Theme File</string>
             <key>UTTypeIconFiles</key>
             <array>
                 <string>BlueIcon@3x.png</string>
             </array>
             <key>UTTypeIdentifier</key>
-            <string>org.telegram.Iosapp-iOS.theme</string>
+            <string>org.telegram.Telegram-iOS.theme</string>
             <key>UTTypeTagSpecification</key>
             <dict>
                 <key>public.filename-extension</key>
@@ -1734,15 +1742,15 @@ plist_fragment(
 )
 
 local_provisioning_profile(
-    name = "Iosapp_local_profile",
+    name = "Telegram_local_profile",
     profile_name = "iOS Team Provisioning Profile: {}".format(telegram_bundle_id),
     team_id = telegram_team_id,
 )
 
 xcode_provisioning_profile(
-   name = "Iosapp_xcode_profile",
+   name = "Telegram_xcode_profile",
    managed_by_xcode = True,
-   provisioning_profile = ":Iosapp_local_profile",
+   provisioning_profile = ":Telegram_local_profile",
 )
 
 apple_prebuilt_watchos_application(
@@ -1759,7 +1767,7 @@ apple_prebuilt_watchos_application(
 )
 
 ios_application(
-    name = "Iosapp",
+    name = "iosapp",
     bundle_id = "{telegram_bundle_id}".format(
         telegram_bundle_id = telegram_bundle_id,
     ),
@@ -1767,11 +1775,11 @@ ios_application(
     minimum_os_version = minimum_os_version,
     provisioning_profile = select({
         ":disableProvisioningProfilesSetting": None,
-        "//conditions:default": ":Iosapp_xcode_profile" if telegram_use_xcode_managed_codesigning else "@build_configuration//provisioning:Iosapp.mobileprovision",
+        "//conditions:default": ":Telegram_xcode_profile" if telegram_use_xcode_managed_codesigning else "@build_configuration//provisioning:Telegram.mobileprovision",
     }),
-    entitlements = ":IosappEntitlements.entitlements",
+    entitlements = ":TelegramEntitlements.entitlements",
     infoplists = [
-        ":IosappInfoPlist",
+        ":TelegramInfoPlist",
         ":BuildNumberInfoPlist",
         ":VersionInfoPlist",
         ":RequiredDeviceCapabilitiesPlist",
@@ -1783,7 +1791,7 @@ ios_application(
     ],
     resources = [
         ":LaunchScreen",
-        #":DefaultAppIcon",
+        ":DefaultAppIcon",
     ],
     frameworks = [
         ":MtProtoKitFramework",
@@ -1821,12 +1829,12 @@ ios_application(
 )
 
 xcodeproj(
-    name = "Iosapp_xcodeproj",
+    name = "iosapp_xcodeproj",
     bazel_path = telegram_bazel_path,
-    project_name = "Iosapp",
+    project_name = "iosapp",
     tags = ["manual"],
     top_level_targets = [
-        top_level_target(":Iosapp", target_environments = ["device", "simulator"]),
+        top_level_target(":iosapp", target_environments = ["simulator"]),
         ":iOSAppUITestSuite",
     ],
     xcode_configurations = {
@@ -1862,13 +1870,13 @@ swift_library(
 
 ios_ui_test_suite(
     name = "iOSAppUITestSuite",
-    bundle_id = "org.telegram.Iosapp-iOS-uitests",
+    bundle_id = "org.telegram.Telegram-iOS-uitests",
     minimum_os_version = minimum_os_version,
     runners = [
         ":iPhone-17__26.2",
     ],
     tags = ["manual"],
-    test_host = "//Iosapp",
+    test_host = "//iosapp:iosapp",
     visibility = ["@rules_xcodeproj//xcodeproj:generated"],
     deps = [":iOSAppUITestSuite.library"],
 )
@@ -1884,11 +1892,11 @@ ios_application(
     minimum_os_version = minimum_os_version,
     provisioning_profile = select({
         ":disableProvisioningProfilesSetting": None,
-        "//conditions:default": "@build_configuration//provisioning:Iosapp.mobileprovision",
+        "//conditions:default": "@build_configuration//provisioning:Telegram.mobileprovision",
     }),
-    entitlements = ":IosappEntitlements.entitlements",
+    entitlements = ":TelegramEntitlements.entitlements",
     infoplists = [
-        ":IosappInfoPlist",
+        ":TelegramInfoPlist",
         ":BuildNumberInfoPlist",
         ":VersionInfoPlist",
         ":RequiredDeviceCapabilitiesPlist",
@@ -1927,11 +1935,11 @@ ios_application(
     minimum_os_version = minimum_os_version,
     provisioning_profile = select({
         ":disableProvisioningProfilesSetting": None,
-        "//conditions:default": "@build_configuration//provisioning:Iosapp.mobileprovision",
+        "//conditions:default": "@build_configuration//provisioning:Telegram.mobileprovision",
     }),
-    entitlements = ":IosappEntitlements.entitlements",
+    entitlements = ":TelegramEntitlements.entitlements",
     infoplists = [
-        ":IosappInfoPlist",
+        ":TelegramInfoPlist",
         ":BuildNumberInfoPlist",
         ":VersionInfoPlist",
         ":RequiredDeviceCapabilitiesPlist",
@@ -1952,11 +1960,11 @@ ios_application(
     minimum_os_version = minimum_os_version,
     provisioning_profile = select({
         ":disableProvisioningProfilesSetting": None,
-        "//conditions:default": "@build_configuration//provisioning:Iosapp.mobileprovision",
+        "//conditions:default": "@build_configuration//provisioning:Telegram.mobileprovision",
     }),
-    entitlements = ":IosappEntitlements.entitlements",
+    entitlements = ":TelegramEntitlements.entitlements",
     infoplists = [
-        ":IosappInfoPlist",
+        ":TelegramInfoPlist",
         ":BuildNumberInfoPlist",
         ":VersionInfoPlist",
         ":RequiredDeviceCapabilitiesPlist",

@@ -127,7 +127,7 @@ public class InviteContactsController: ViewController, MFMessageComposeViewContr
             self?.activateSearch()
         }
         
-        self.contactsNode.requestShareIosapp = { [weak self] in
+        self.contactsNode.requestShareTelegram = { [weak self] in
             if let strongSelf = self {
                 let url = strongSelf.presentationData.strings.InviteText_URL
                 let body = strongSelf.presentationData.strings.InviteText_SingleContact(url).string

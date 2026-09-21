@@ -2,9 +2,7 @@ import Foundation
 
 private let whitelistedHosts: Set<String> = Set([
     "asme.su",
-    "www.asme.su",
     "telegra.ph",
-    "telesco.pe",
     "fragment.com"
 ])
 

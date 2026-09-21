@@ -676,7 +676,7 @@ private func deviceContactInfoEntries(context: ShareControllerAccountContext, pr
         if let _ = peer {
             entries.append(.sendMessage(entries.count, presentationData.theme, presentationData.strings.UserInfo_SendMessage))
         } else {
-            entries.append(.invite(entries.count, presentationData.theme, presentationData.strings.Contacts_InviteToIosapp))
+            entries.append(.invite(entries.count, presentationData.theme, presentationData.strings.Contacts_InviteToTelegram))
         }
         
         if !isContact {

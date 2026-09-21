@@ -55,9 +55,9 @@ static NSString *fallbackString(NSString *key, NSString *code) {
             appTitle = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleDisplayName"];
         }
         if (appTitle == nil) {
-            appTitle = @"Iosapp";
+            appTitle = @"Telegram";
         }
-        NSString *originalTitle = @"Iosapp";
+        NSString *originalTitle = @"Telegram";
         if (![appTitle isEqualToString:originalTitle]) {
             NSMutableDictionary *updatedDict = [[NSMutableDictionary alloc] initWithDictionary:dict];
             for (NSString *key in dict.keyEnumerator) {

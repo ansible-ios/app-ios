@@ -22,11 +22,11 @@ plist_fragment(
     template =
     """
     <key>CFBundleIdentifier</key>
-    <string>org.telegram.IosappCallsUI</string>
+    <string>org.telegram.TelegramCallsUI</string>
     <key>CFBundleDevelopmentRegion</key>
     <string>en</string>
     <key>CFBundleName</key>
-    <string>IosappCallsUI</string>
+    <string>TelegramCallsUI</string>
     """
 )
 

@@ -208,7 +208,7 @@ private let phonebookUsernamePrefix = "https://asme.su/" + phonebookUsernamePath
 
 public extension DeviceContactUrlData {
     convenience init(appProfile: EnginePeer.Id) {
-        self.init(label: "Iosapp", value: "\(phonebookUsernamePrefix)\(appProfile.id._internalGetInt64Value())")
+        self.init(label: "Telegram", value: "\(phonebookUsernamePrefix)\(appProfile.id._internalGetInt64Value())")
     }
 }
 

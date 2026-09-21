@@ -1,12 +1,12 @@
 set -euo pipefail
 
-ADD_PLIST="${0}.runfiles/__main__/Iosapp/Iosapp-iOS/AlternateIcons.plist"
-ADD_PLIST_IPAD="${0}.runfiles/__main__/Iosapp/Iosapp-iOS/AlternateIcons-iPad.plist"
+ADD_PLIST="${0}.runfiles/__main__/Telegram/Sources/AlternateIcons.plist"
+ADD_PLIST_IPAD="${0}.runfiles/__main__/Telegram/Sources/AlternateIcons-iPad.plist"
 
-if [ -f "$1/Payload/Iosapp.app/Info.plist" ]; then
-	INFO_PLIST="$1/Payload/Iosapp.app/Info.plist"
+if [ -f "$1/Payload/Telegram.app/Info.plist" ]; then
+	INFO_PLIST="$1/Payload/Telegram.app/Info.plist"
 else
-	INFO_PLIST="$1/Iosapp.app/Info.plist"
+	INFO_PLIST="$1/Telegram.app/Info.plist"
 fi
 
 /usr/libexec/PlistBuddy -c "add :CFBundleIcons:CFBundleAlternateIcons dict" "$INFO_PLIST"

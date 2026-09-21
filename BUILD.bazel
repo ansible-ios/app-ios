@@ -6,12 +6,12 @@ setup_sourcekit_bsp(
     name = "setup_sourcekit_bsp",
     bazel_wrapper = "./build-input/bazel-8.4.2-darwin-arm64",
     files_to_watch = [
-        "Iosapp/**/*.swift",
-        "Iosapp/**/*.h",
-        "Iosapp/**/*.m",
-        "Iosapp/**/*.mm",
-        "Iosapp/**/*.c",
-        "Iosapp/**/*.cpp",
+        "Telegram/**/*.swift",
+        "Telegram/**/*.h",
+        "Telegram/**/*.m",
+        "Telegram/**/*.mm",
+        "Telegram/**/*.c",
+        "Telegram/**/*.cpp",
         "submodules/**/*.swift",
         "submodules/**/*.h",
         "submodules/**/*.m",
@@ -26,6 +26,6 @@ setup_sourcekit_bsp(
     ],
     index_build_batch_size = 10,
     targets = [
-        "//Iosapp:Iosapp",
+        "//iosapp:iosapp",
     ],
 )

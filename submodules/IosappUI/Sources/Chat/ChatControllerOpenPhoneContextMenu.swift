@@ -115,13 +115,13 @@ extension ChatControllerImpl: MFMessageComposeViewControllerDelegate {
                 }
             } else {
                 items.append(
-                    .action(ContextMenuActionItem(text: self.presentationData.strings.Chat_Context_Phone_InviteToIosapp, icon: { theme in return generateTintedImage(image: UIImage(bundleImageName: "Chat/Context Menu/Iosapp"), color: theme.contextMenu.primaryColor) }, action: { [weak self]  _, f in
+                    .action(ContextMenuActionItem(text: self.presentationData.strings.Chat_Context_Phone_InviteToTelegram, icon: { theme in return generateTintedImage(image: UIImage(bundleImageName: "Chat/Context Menu/Telegram"), color: theme.contextMenu.primaryColor) }, action: { [weak self]  _, f in
                         f(.default)
                         
                         guard let self else {
                             return
                         }
-                        self.inviteToIosapp(numbers: [number])
+                        self.inviteToTelegram(numbers: [number])
                     }))
                 )
             }
@@ -178,7 +178,7 @@ extension ChatControllerImpl: MFMessageComposeViewControllerDelegate {
             } else {
                 let emptyAction: ((ContextMenuActionItem.Action) -> Void)? = nil
                 items.append(
-                    .action(ContextMenuActionItem(text: self.presentationData.strings.Chat_Context_Phone_NotOnIosapp, textLayout: .multiline, textFont: .small, icon: { _ in return nil }, action: emptyAction))
+                    .action(ContextMenuActionItem(text: self.presentationData.strings.Chat_Context_Phone_NotOnTelegram, textLayout: .multiline, textFont: .small, icon: { _ in return nil }, action: emptyAction))
                 )
             }
             
@@ -193,7 +193,7 @@ extension ChatControllerImpl: MFMessageComposeViewControllerDelegate {
         })
     }
     
-    private func inviteToIosapp(numbers: [String]) {
+    private func inviteToTelegram(numbers: [String]) {
         if MFMessageComposeViewController.canSendText() {
             let composer = MFMessageComposeViewController()
             composer.messageComposeDelegate = self

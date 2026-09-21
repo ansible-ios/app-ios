@@ -213,7 +213,7 @@ private func proxyServerSettingsControllerEntries(presentationData: Presentation
     }
     
     entries.append(.modeSocks5(presentationData.theme, presentationData.strings.SocksProxySetup_ProxySocks5, state.mode == .socks5))
-    entries.append(.modeMtp(presentationData.theme, presentationData.strings.SocksProxySetup_ProxyIosapp, state.mode == .mtp))
+    entries.append(.modeMtp(presentationData.theme, presentationData.strings.SocksProxySetup_ProxyTelegram, state.mode == .mtp))
     
     entries.append(.connectionHeader(presentationData.theme, presentationData.strings.SocksProxySetup_Connection.uppercased()))
     entries.append(.connectionServer(presentationData.theme, presentationData.strings, presentationData.strings.SocksProxySetup_Hostname, state.host))

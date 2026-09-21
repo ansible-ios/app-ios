@@ -96,12 +96,8 @@ final class BalanceComponent: Component {
 
             var rawString: String = ""
             let starsBalanceString = "**⭐️\(presentationStringsFormattedNumber(Int32(clamping: self.starsBalance), presentationData.dateTimeFormat.groupingSeparator))**"
-            if self.tonBalance > 0 {
-                let tonBalanceString = "**💎\(formatTonAmountText(self.tonBalance, dateTimeFormat: presentationData.dateTimeFormat))**"
-                rawString = starsBalanceString + "\n" + tonBalanceString
-            } else {
-                rawString = presentationData.strings.Stars_Purchase_Balance + "\n" + starsBalanceString
-            }
+            // Ansible: TON removed — the gift-store balance chip shows the crystal balance only.
+            rawString = presentationData.strings.Stars_Purchase_Balance + "\n" + starsBalanceString
             
             let attributedText = parseMarkdownIntoAttributedString(
                 rawString,

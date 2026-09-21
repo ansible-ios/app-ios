@@ -294,7 +294,7 @@ private final class GiftValueSheetContent: CombinedComponent {
                 if component.valueInfo.isLastSaleOnFragment {
                     descriptionText = strings.Gift_Value_DescriptionLastPriceFragment(giftTitle).string
                 } else {
-                    descriptionText = strings.Gift_Value_DescriptionLastPriceIosapp(giftTitle).string
+                    descriptionText = strings.Gift_Value_DescriptionLastPriceTelegram(giftTitle).string
                 }
             }
             if !descriptionText.isEmpty {
@@ -556,7 +556,7 @@ private final class GiftValueSheetContent: CombinedComponent {
                                     )
                                 )),
                                 AnyComponentWithIdentity(id: "label", component: AnyComponent(
-                                    MultilineTextComponent(text: .plain(NSAttributedString(string: "  \(strings.Gift_Value_ForSaleOnIosapp)", font: Font.regular(17.0), textColor: theme.actionSheet.controlAccentColor)))
+                                    MultilineTextComponent(text: .plain(NSAttributedString(string: "  \(strings.Gift_Value_ForSaleOnTelegram)", font: Font.regular(17.0), textColor: theme.actionSheet.controlAccentColor)))
                                 )),
                                 AnyComponentWithIdentity(id: "arrow", component: AnyComponent(
                                     BundleIconComponent(name: "Chat/Context Menu/Arrow", tintColor: theme.actionSheet.controlAccentColor)

@@ -184,7 +184,7 @@ Result<int32> tl_constructor_from_string(td_api::SupergroupMembersFilter *object
 
 Result<int32> tl_constructor_from_string(td_api::TargetChat *object, const std::string &str);
 
-Result<int32> tl_constructor_from_string(td_api::TelegramPaymentPurpose *object, const std::string &str);
+Result<int32> tl_constructor_from_string(td_api::IosappPaymentPurpose *object, const std::string &str);
 
 Result<int32> tl_constructor_from_string(td_api::TextEntityType *object, const std::string &str);
 

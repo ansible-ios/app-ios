@@ -594,7 +594,7 @@ private func recentSessionsControllerEntries(presentationData: PresentationData,
             entries.append(.terminateAllWebSessions(SortIndex(section: 0, item: 0), presentationData.strings.AuthSessions_LogOutApplications))
             entries.append(.currentSessionInfo(SortIndex(section: 0, item: 1), presentationData.strings.AuthSessions_LogOutApplicationsHelp))
             
-            entries.append(.otherSessionsHeader(SortIndex(section: 0, item: 2), presentationData.strings.AuthSessions_LoggedInWithIosapp))
+            entries.append(.otherSessionsHeader(SortIndex(section: 0, item: 2), presentationData.strings.AuthSessions_LoggedInWithTelegram))
             
             let filteredWebsites: [WebAuthorization] = websites.sorted(by: { lhs, rhs in
                 return lhs.dateActive > rhs.dateActive

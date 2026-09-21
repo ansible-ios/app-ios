@@ -11125,7 +11125,7 @@ class inputInlineQueryResultVoiceNote final : public InputInlineQueryResult {
   void store(TlStorerToString &s, const char *field_name) const final;
 };
 
-class TelegramPaymentPurpose;
+class IosappPaymentPurpose;
 
 class InputInvoice: public Object {
  public:
@@ -11172,11 +11172,11 @@ class inputInvoiceTelegram final : public InputInvoice {
   }
 
  public:
-  object_ptr<TelegramPaymentPurpose> purpose_;
+  object_ptr<IosappPaymentPurpose> purpose_;
 
   inputInvoiceTelegram();
 
-  explicit inputInvoiceTelegram(object_ptr<TelegramPaymentPurpose> &&purpose_);
+  explicit inputInvoiceTelegram(object_ptr<IosappPaymentPurpose> &&purpose_);
 
   static const std::int32_t ID = -1762853139;
 
@@ -28036,11 +28036,11 @@ class formattedText;
 
 class giveawayParameters;
 
-class TelegramPaymentPurpose: public Object {
+class IosappPaymentPurpose: public Object {
  public:
 };
 
-class telegramPaymentPurposePremiumGift final : public TelegramPaymentPurpose {
+class telegramPaymentPurposePremiumGift final : public IosappPaymentPurpose {
   std::int32_t get_id() const final {
     return ID;
   }
@@ -28061,7 +28061,7 @@ class telegramPaymentPurposePremiumGift final : public TelegramPaymentPurpose {
   void store(TlStorerToString &s, const char *field_name) const final;
 };
 
-class telegramPaymentPurposePremiumGiftCodes final : public TelegramPaymentPurpose {
+class telegramPaymentPurposePremiumGiftCodes final : public IosappPaymentPurpose {
   std::int32_t get_id() const final {
     return ID;
   }
@@ -28083,7 +28083,7 @@ class telegramPaymentPurposePremiumGiftCodes final : public TelegramPaymentPurpo
   void store(TlStorerToString &s, const char *field_name) const final;
 };
 
-class telegramPaymentPurposePremiumGiveaway final : public TelegramPaymentPurpose {
+class telegramPaymentPurposePremiumGiveaway final : public IosappPaymentPurpose {
   std::int32_t get_id() const final {
     return ID;
   }
@@ -28104,7 +28104,7 @@ class telegramPaymentPurposePremiumGiveaway final : public TelegramPaymentPurpos
   void store(TlStorerToString &s, const char *field_name) const final;
 };
 
-class telegramPaymentPurposeStars final : public TelegramPaymentPurpose {
+class telegramPaymentPurposeStars final : public IosappPaymentPurpose {
   std::int32_t get_id() const final {
     return ID;
   }
@@ -28123,7 +28123,7 @@ class telegramPaymentPurposeStars final : public TelegramPaymentPurpose {
   void store(TlStorerToString &s, const char *field_name) const final;
 };
 
-class telegramPaymentPurposeGiftedStars final : public TelegramPaymentPurpose {
+class telegramPaymentPurposeGiftedStars final : public IosappPaymentPurpose {
   std::int32_t get_id() const final {
     return ID;
   }
@@ -28143,7 +28143,7 @@ class telegramPaymentPurposeGiftedStars final : public TelegramPaymentPurpose {
   void store(TlStorerToString &s, const char *field_name) const final;
 };
 
-class telegramPaymentPurposeStarGiveaway final : public TelegramPaymentPurpose {
+class telegramPaymentPurposeStarGiveaway final : public IosappPaymentPurpose {
   std::int32_t get_id() const final {
     return ID;
   }
@@ -28164,7 +28164,7 @@ class telegramPaymentPurposeStarGiveaway final : public TelegramPaymentPurpose {
   void store(TlStorerToString &s, const char *field_name) const final;
 };
 
-class telegramPaymentPurposeJoinChat final : public TelegramPaymentPurpose {
+class telegramPaymentPurposeJoinChat final : public IosappPaymentPurpose {
   std::int32_t get_id() const final {
     return ID;
   }

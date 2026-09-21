@@ -528,28 +528,37 @@ func initializedNetwork(accountId: AccountRecordId, arguments: NetworkInitializa
             
             let seedAddressList: [Int: [String]]
             
+            // Ansible bootstrap seed — single DC. DC1 = prod-spb
+            // (ws.ansible.su -> 85.193.80.91, SPB LB, 2026-08-08); the old
+            // MSK LB 45.93.201.204 (2026-07-12), the dev LB 5.129.243.207 and
+            // the 144.31.* hosts before it are decommissioned. Keep in sync
+            // with the `dcs` PG table, with the server's help.getConfig
+            // response, and with app-desktop
+            // Telegram/SourceFiles/mtproto/mtproto_dc_options.cpp.
+            //
+            // There is no fallback behind this: the apv3.stel.com DoH
+            // bootstrap is disabled below, so a stale address here means the
+            // client has nowhere to connect. Clients pick up any additional
+            // DCs dynamically via dcOptions. Never mix addresses from two
+            // different deployments in one seed set — they have separate
+            // auth-key state and you get AUTH_KEY_UNREGISTERED.
             if testingEnvironment {
                 seedAddressList = [
-                    1: ["149.154.175.10"],
-                    2: ["149.154.167.40"],
-                    3: ["149.154.175.117"]
+                    1: ["85.193.80.91"]
                 ]
             } else {
                 seedAddressList = [
-                    1: ["149.154.175.50", "2001:b28:f23d:f001::a"],
-                    2: ["149.154.167.50", "95.161.76.100", "2001:67c:4e8:f002::a"],
-                    3: ["149.154.175.100", "2001:b28:f23d:f003::a"],
-                    4: ["149.154.167.91", "2001:67c:4e8:f004::a"],
-                    5: ["149.154.171.5", "2001:b28:f23f:f005::a"]
+                    1: ["85.193.80.91"]
                 ]
             }
             
             for (id, ips) in seedAddressList {
-                context.setSeedAddressSetForDatacenterWithId(id, seedAddressSet: MTDatacenterAddressSet(addressList: ips.map { MTDatacenterAddress(ip: $0, port: 443, preferForMedia: false, restrictToTcp: false, cdn: false, preferForProxy: false, secret: nil) }))
+                context.setSeedAddressSetForDatacenterWithId(id, seedAddressSet: MTDatacenterAddressSet(addressList: ips.map { MTDatacenterAddress(ip: $0, port: 10443, preferForMedia: false, restrictToTcp: false, cdn: false, preferForProxy: false, secret: nil) }))
             }
             
             context.keychain = keychain
             var wrappedAdditionalSource: MTSignal?
+            _ = wrappedAdditionalSource // suppress unused-write warning after Ansible disabled the apv3.stel.com DoH bootstrap
             #if os(iOS)
             if #available(iOS 10.0, *), !supplementary, arguments.isICloudEnabled {
                 var cloudDataContextValue: CloudDataContext?
@@ -576,7 +585,10 @@ func initializedNetwork(accountId: AccountRecordId, arguments: NetworkInitializa
             #endif
             
             if !supplementary {
-                context.setDiscoverBackupAddressListSignal(MTBackupAddressSignals.fetchBackupIps(testingEnvironment, currentContext: context, additionalSource: wrappedAdditionalSource, phoneNumber: phoneNumber, mainDatacenterId: datacenterId))
+                // Ansible: do not run Telegram's apv3.stel.com DoH fallback,
+                // which would override our DC seed list with Telegram production
+                // IPs the first time help.getConfig hasn't completed yet.
+                // context.setDiscoverBackupAddressListSignal(MTBackupAddressSignals.fetchBackupIps(testingEnvironment, currentContext: context, additionalSource: wrappedAdditionalSource, phoneNumber: phoneNumber, mainDatacenterId: datacenterId))
                 let externalRequestVerificationStream = arguments.externalRequestVerificationStream
                 context.setExternalRequestVerification({ nonce in
                     return MTSignal(generator: { subscriber in

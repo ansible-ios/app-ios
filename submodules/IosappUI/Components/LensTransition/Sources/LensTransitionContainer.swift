@@ -1432,7 +1432,7 @@ final class LensTransitionContainerImpl: UIView, LensTransitionContainerProtocol
     }
     
     public func animateOut(fromRect: CGRect, toRect: CGRect, fromCornerRadius: CGFloat, toCornerRadius: CGFloat, isDark: Bool, sourceEffectView: LensTransitionContainerEffectView) {
-        // Iosapp call sites pass expanded->collapsed, while the keyframed implementation
+        // Telegram call sites pass expanded->collapsed, while the keyframed implementation
         // expects collapsed->expanded. Adapt arguments here to preserve standalone parity.
         self.animateOut(
             fromRect: toRect,

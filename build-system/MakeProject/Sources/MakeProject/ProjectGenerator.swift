@@ -130,12 +130,12 @@ class ProjectGenerator {
         try xcodeproj.write(path: projectPath)
 
         // Generate scheme for main target
-        if let telegramTarget = targetBuilder.getTarget(named: "TelegramUI") {
+        if let telegramTarget = targetBuilder.getTarget(named: "IosappUI") {
             print("Generating scheme...")
             let schemeGenerator = SchemeGenerator(projectPath: projectPath, pbxproj: pbxproj)
-            try schemeGenerator.generateScheme(for: telegramTarget, named: "TelegramUI")
+            try schemeGenerator.generateScheme(for: telegramTarget, named: "IosappUI")
         } else {
-            print("Warning: Could not find TelegramUI target for scheme")
+            print("Warning: Could not find IosappUI target for scheme")
         }
 
         // Clean up stale files

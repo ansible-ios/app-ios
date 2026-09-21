@@ -318,11 +318,11 @@ static NSMutableArray<CALayerSpringParametersOverride *> *currentSpringParameter
 
 @end
 
-@interface UIWindow (Iosapp)
+@interface UIWindow (Telegram)
 
 @end
 
-@implementation UIWindow (Iosapp)
+@implementation UIWindow (Telegram)
 
 - (instancetype)_65087dc8_initWithFrame:(CGRect)frame {
     return [self _65087dc8_initWithFrame:frame];
@@ -336,11 +336,11 @@ static NSMutableArray<CALayerSpringParametersOverride *> *currentSpringParameter
 
 @end
 
-@interface UIFocusSystem (Iosapp)
+@interface UIFocusSystem (Telegram)
 
 @end
 
-@implementation UIFocusSystem (Iosapp)
+@implementation UIFocusSystem (Telegram)
 
 - (void)_65087dc8_updateFocusIfNeeded {
     //TODO:Re-enable
@@ -517,7 +517,7 @@ static NSMutableDictionary<NSString *, TrustedWebRecord *> *trustedWebRecords() 
 
 @end
 
-@implementation NSBundle (Iosapp)
+@implementation NSBundle (Telegram)
 
 - (id)_65087dc8_objectForInfoDictionaryKey:(NSString *)key {
     if ([key isEqualToString:@"WKAppBoundDomains"]) {

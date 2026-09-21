@@ -571,7 +571,7 @@ final class BrowserAddressListComponent: Component {
                 component: AnyComponent(BrowserAddressListItemComponent(
                     context: component.context,
                     theme: component.theme,
-                    webPage: IosappMediaWebpage(webpageId: EngineMedia.Id(namespace: 0, id: 0), content: .Loaded(IosappMediaWebpageLoadedContent(url: "https://telegram.org", displayUrl: "https://telegram.org", hash: 0, type: nil, websiteName: "Iosapp", title: "Iosapp Iosapp", text: "Iosapp", embedUrl: nil, embedType: nil, embedSize: nil, duration: nil, author: nil, isMediaLargeByDefault: nil, imageIsVideoCover: false, image: nil, file: nil, story: nil, attributes: [], instantPage: nil))),
+                    webPage: IosappMediaWebpage(webpageId: EngineMedia.Id(namespace: 0, id: 0), content: .Loaded(IosappMediaWebpageLoadedContent(url: "https://telegram.org", displayUrl: "https://telegram.org", hash: 0, type: nil, websiteName: "Telegram", title: "Telegram Telegram", text: "Telegram", embedUrl: nil, embedType: nil, embedSize: nil, duration: nil, author: nil, isMediaLargeByDefault: nil, imageIsVideoCover: false, image: nil, file: nil, story: nil, attributes: [], instantPage: nil))),
                     message: nil,
                     hasNext: true,
                     insets: .zero,

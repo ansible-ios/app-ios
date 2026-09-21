@@ -218,7 +218,7 @@ class BazelCommandLine:
             '--expunge'
         ]
 
-        print('TelegramBuild: running {}'.format(combined_arguments))
+        print('Build: running {}'.format(combined_arguments))
         call_executable(combined_arguments)
 
     def get_define_arguments(self):
@@ -286,7 +286,7 @@ class BazelCommandLine:
         if self.custom_target is not None:
             combined_arguments += [self.custom_target]
         else:
-            combined_arguments += ['Telegram/Telegram']
+            combined_arguments += ['iosapp/iosapp']
 
         if self.continue_on_error:
             combined_arguments += ['--keep_going']
@@ -297,7 +297,7 @@ class BazelCommandLine:
             combined_arguments += ['--spawn_strategy=sandboxed']
 
         if self.disable_provisioning_profiles:
-            combined_arguments += ['--//Telegram:disableProvisioningProfiles']
+            combined_arguments += ['--//iosapp:disableProvisioningProfiles']
 
         combined_arguments += self.common_args
         combined_arguments += self.common_build_args
@@ -318,7 +318,7 @@ class BazelCommandLine:
         if self.profile_swift:
             combined_arguments += ['--config=swift_profile']
 
-        print('TelegramBuild: running')
+        print('Build: running')
         print(subprocess.list2cmdline(combined_arguments))
         call_executable(combined_arguments)
 
@@ -351,7 +351,7 @@ class BazelCommandLine:
 
         combined_arguments += self.configuration_args
 
-        print('TelegramBuild: running')
+        print('Build: running')
         print(subprocess.list2cmdline(combined_arguments))
         call_executable(combined_arguments)
 
@@ -382,7 +382,7 @@ class BazelCommandLine:
         # Add user-provided query arguments
         combined_arguments += query_args
 
-        print('TelegramBuild: running')
+        print('Build: running')
         print(subprocess.list2cmdline(combined_arguments))
         call_executable(combined_arguments)
 
@@ -394,7 +394,7 @@ class BazelCommandLine:
         combined_arguments += ['build']
 
         # Build the generate_spm target directly to get the dependency tree JSON
-        combined_arguments += ['//Telegram:spm_build_root']
+        combined_arguments += ['//iosapp:spm_build_root']
 
         if self.continue_on_error:
             combined_arguments += ['--keep_going']
@@ -405,7 +405,7 @@ class BazelCommandLine:
             combined_arguments += ['--spawn_strategy=sandboxed']
 
         if self.disable_provisioning_profiles:
-            combined_arguments += ['--//Telegram:disableProvisioningProfiles']
+            combined_arguments += ['--//iosapp:disableProvisioningProfiles']
 
         combined_arguments += self.common_args
         combined_arguments += self.common_build_args
@@ -564,7 +564,7 @@ def generate_project(bazel, arguments):
     disable_provisioning_profiles = False
     project_include_release = False
     generate_dsym = False
-    target_name = "Telegram"
+    target_name = "iosapp"
 
     if arguments.disableExtensions is not None:
         disable_extensions = arguments.disableExtensions
@@ -591,7 +591,7 @@ def generate_project(bazel, arguments):
         target_name=target_name
     )
 
-    if target_name == "Telegram":
+    if target_name == "iosapp":
         run_executable_with_output('swift', arguments=[
             'run',
             '-c',
@@ -602,7 +602,7 @@ def generate_project(bazel, arguments):
             '--project-path',
             xcodeproj_path,
             '--output-path',
-            'Telegram/Telegram.LSP.json'
+            'iosapp/iosapp.LSP.json'
         ], check_result=True)
 
     call_executable(['open', xcodeproj_path])
@@ -705,24 +705,24 @@ def build(bazel, arguments):
 
     if arguments.outputBuildArtifactsPath is not None:
         artifacts_path = os.path.abspath(arguments.outputBuildArtifactsPath)
-        if os.path.exists(artifacts_path + '/Telegram.ipa'):
-            os.remove(artifacts_path + '/Telegram.ipa')
+        if os.path.exists(artifacts_path + '/iosapp.ipa'):
+            os.remove(artifacts_path + '/iosapp.ipa')
         if os.path.exists(artifacts_path + '/DSYMs'):
             shutil.rmtree(artifacts_path + '/DSYMs')
         os.makedirs(artifacts_path, exist_ok=True)
         os.makedirs(artifacts_path + '/DSYMs', exist_ok=True)
 
-        built_ipa_path_prefix = 'bazel-bin/Telegram'
-        ipa_paths = glob.glob('{}/Telegram.ipa'.format(built_ipa_path_prefix))
+        built_ipa_path_prefix = 'bazel-bin/iosapp'
+        ipa_paths = glob.glob('{}/iosapp.ipa'.format(built_ipa_path_prefix))
         if len(ipa_paths) == 0:
-            print(f'Could not find the IPA at {built_ipa_path_prefix}/Telegram.ipa')
+            print(f'Could not find the IPA at {built_ipa_path_prefix}/iosapp.ipa')
             sys.exit(1)
         elif len(ipa_paths) > 1:
             print('Multiple matching IPA files found: {}'.format(ipa_paths))
             sys.exit(1)
-        shutil.copyfile(ipa_paths[0], artifacts_path + '/Telegram.ipa')
+        shutil.copyfile(ipa_paths[0], artifacts_path + '/iosapp.ipa')
 
-        dsym_paths = glob.glob('bazel-bin/Telegram/*.dSYM')
+        dsym_paths = glob.glob('bazel-bin/iosapp/*.dSYM')
         for dsym_path in dsym_paths:
             file_name = os.path.basename(dsym_path)
             shutil.copytree(dsym_path, artifacts_path + '/DSYMs/{}'.format(file_name))
@@ -730,7 +730,7 @@ def build(bazel, arguments):
         os.chdir(artifacts_path)
         run_executable_with_output('zip', arguments=[
             '-r',
-            'Telegram.DSYMs.zip',
+            'iosapp.DSYMs.zip',
             './DSYMs'
         ], check_result=True)
         os.chdir(previous_directory)
@@ -1348,7 +1348,7 @@ if __name__ == '__main__':
         metavar='query_string'
     )
 
-    spm_parser = subparsers.add_parser('spm', help='Generate SPM package (outputs bazel-bin/Telegram/spm_build_root_modules.json)')
+    spm_parser = subparsers.add_parser('spm', help='Generate SPM package (outputs bazel-bin/iosapp/iosapp_spm_build_root_modules.json)')
     spm_parser.add_argument(
         '--buildNumber',
         required=False,

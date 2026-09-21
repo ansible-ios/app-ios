@@ -800,7 +800,7 @@ private func extractAccountManagerState(records: AccountRecordsView<IosappAccoun
                 if parsed.scheme == nil || parsed.scheme!.isEmpty {
                     parsedUrl = URL(string: "https://\(url)")
                 }
-                if parsed.scheme == "tg" {
+                if parsed.scheme == "as" {
                     return
                 }
             }
@@ -948,24 +948,19 @@ private func extractAccountManagerState(records: AccountRecordsView<IosappAccoun
             self.window?.rootViewController?.dismiss(animated: true, completion: nil)
         }, getAvailableAlternateIcons: {
             if #available(iOS 10.3, *) {
-                var icons = [
-                    PresentationAppIcon(name: "BlueIcon", imageName: "BlueIcon", isDefault: buildConfig.isAppStoreBuild),
-                    PresentationAppIcon(name: "New2", imageName: "New2"),
-                    PresentationAppIcon(name: "New1", imageName: "New1"),
-                    PresentationAppIcon(name: "BlackIcon", imageName: "BlackIcon"),
-                    PresentationAppIcon(name: "BlueClassicIcon", imageName: "BlueClassicIcon"),
-                    PresentationAppIcon(name: "BlackClassicIcon", imageName: "BlackClassicIcon"),
-                    PresentationAppIcon(name: "BlueFilledIcon", imageName: "BlueFilledIcon"),
-                    PresentationAppIcon(name: "BlackFilledIcon", imageName: "BlackFilledIcon")
+                let icons = [
+                    PresentationAppIcon(name: "BlueIcon", imageName: "BlueIcon", isDefault: true),
+                    PresentationAppIcon(name: "BH01", imageName: "BH01", isDefault: false),
+                    PresentationAppIcon(name: "BH02", imageName: "BH02", isDefault: false),
+                    PresentationAppIcon(name: "BH03", imageName: "BH03", isDefault: false),
+                    PresentationAppIcon(name: "BH04", imageName: "BH04", isDefault: false),
+                    PresentationAppIcon(name: "BH05", imageName: "BH05", isDefault: false),
+                    PresentationAppIcon(name: "BH06", imageName: "BH06", isDefault: false),
+                    PresentationAppIcon(name: "BH07", imageName: "BH07", isDefault: false),
+                    PresentationAppIcon(name: "BH08", imageName: "BH08", isDefault: false),
+                    PresentationAppIcon(name: "BH09", imageName: "BH09", isDefault: false),
                 ]
-                if buildConfig.isInternalBuild {
-                    icons.append(PresentationAppIcon(name: "WhiteFilledIcon", imageName: "WhiteFilledIcon"))
-                }
-                
-                icons.append(PresentationAppIcon(name: "Premium", imageName: "Premium", isPremium: true))
-                icons.append(PresentationAppIcon(name: "PremiumTurbo", imageName: "PremiumTurbo", isPremium: true))
-                icons.append(PresentationAppIcon(name: "PremiumBlack", imageName: "PremiumBlack", isPremium: true))
-                
+
                 return icons
             } else {
                 return []
@@ -1513,9 +1508,9 @@ private func extractAccountManagerState(records: AccountRecordsView<IosappAccoun
         })
         
         if let url = launchOptions?[.url] {
-            if let url = url as? URL, url.scheme == "tg" || url.scheme == buildConfig.appSpecificUrlScheme {
+            if let url = url as? URL, url.scheme == "as" || url.scheme == buildConfig.appSpecificUrlScheme {
                 self.openUrlWhenReady(url: url, external: true)
-            } else if let urlString = url as? String, urlString.lowercased().hasPrefix("tg:") || urlString.lowercased().hasPrefix("\(buildConfig.appSpecificUrlScheme):"), let url = URL(string: urlString) {
+            } else if let urlString = url as? String, urlString.lowercased().hasPrefix("as:") || urlString.lowercased().hasPrefix("\(buildConfig.appSpecificUrlScheme):"), let url = URL(string: urlString) {
                 self.openUrlWhenReady(url: url, external: true)
             }
         }
@@ -2597,7 +2592,7 @@ private func extractAccountManagerState(records: AccountRecordsView<IosappAccoun
                         if let peerByContact = peerByContact {
                             startCall(peerByContact.id)
                             processed = true
-                        } else if let handle = contact.customIdentifier, handle.hasPrefix("tg") {
+                        } else if let handle = contact.customIdentifier, handle.hasPrefix("as") {
                             let string = handle.suffix(from: handle.index(handle.startIndex, offsetBy: 2))
                             if let value = Int64(string) {
                                 startCall(PeerId(value))
@@ -2646,7 +2641,7 @@ private func extractAccountManagerState(records: AccountRecordsView<IosappAccoun
                     return true
                 }
             } else if let sendMessageIntent = userActivity.interaction?.intent as? INSendMessageIntent {
-                if let contact = sendMessageIntent.recipients?.first, let handle = contact.customIdentifier, handle.hasPrefix("tg") {
+                if let contact = sendMessageIntent.recipients?.first, let handle = contact.customIdentifier, handle.hasPrefix("as") {
                     let string = handle.suffix(from: handle.index(handle.startIndex, offsetBy: 2))
                     if let value = Int64(string) {
                         self.openChatWhenReady(accountId: nil, peerId: PeerId(value), threadId: nil, activateInput: true, storyId: nil)

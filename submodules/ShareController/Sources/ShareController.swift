@@ -2589,7 +2589,7 @@ public class ShareToInstagramActivity: UIActivity {
     }
     
     public override var activityType: UIActivity.ActivityType? {
-        return UIActivity.ActivityType(rawValue: "org.telegram.Iosapp.ShareToInstagram")
+        return UIActivity.ActivityType(rawValue: "org.telegram.Telegram.ShareToInstagram")
     }
 
     public override class var activityCategory: UIActivity.Category {

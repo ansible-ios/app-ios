@@ -81,7 +81,7 @@ func settingsItems(data: PeerInfoScreenData?, context: AccountContext, presentat
     
     if let settings = data.globalSettings {
         if settings.premiumGracePeriod {
-            items[.phone]!.append(PeerInfoScreenInfoItem(id: 0, title: "Your access to Iosapp Premium will expire soon!", text: .markdown("Unfortunately, your latest payment didn't come through. To keep your access to exclusive features, please renew the subscription."), isWarning: true, linkAction: nil))
+            items[.phone]!.append(PeerInfoScreenInfoItem(id: 0, title: "Your access to Telegram Premium will expire soon!", text: .markdown("Unfortunately, your latest payment didn't come through. To keep your access to exclusive features, please renew the subscription."), isWarning: true, linkAction: nil))
             items[.phone]!.append(PeerInfoScreenActionItem(id: 1, text: "Restore Subscription", action: {
                 interaction.openSettings(.premiumManagement)
             }))
@@ -156,7 +156,7 @@ func settingsItems(data: PeerInfoScreenData?, context: AccountContext, presentat
             if settings.proxySettings.enabled, let activeServer = settings.proxySettings.activeServer {
                 switch activeServer.connection {
                 case .mtp:
-                    proxyType = presentationData.strings.SocksProxySetup_ProxyIosapp
+                    proxyType = presentationData.strings.SocksProxySetup_ProxyTelegram
                 case .socks5:
                     proxyType = presentationData.strings.SocksProxySetup_ProxySocks5
                 }
@@ -273,23 +273,7 @@ func settingsItems(data: PeerInfoScreenData?, context: AccountContext, presentat
             }))
         }
     }
-    if let tonState = data.tonState {
-        if abs(tonState.balance.value) > 0 {
-            let balanceText: NSAttributedString
-            if abs(tonState.balance.value) > 0 {
-                let formattedLabel = formatTonAmountText(tonState.balance.value, dateTimeFormat: presentationData.dateTimeFormat)
-                let smallLabelFont = Font.regular(floor(presentationData.listsFontSize.itemListBaseFontSize / 17.0 * 13.0))
-                let labelFont = Font.regular(presentationData.listsFontSize.itemListBaseFontSize)
-                let labelColor = presentationData.theme.list.itemSecondaryTextColor
-                balanceText = tonAmountAttributedString(formattedLabel, integralFont: labelFont, fractionalFont: smallLabelFont, color: labelColor, decimalSeparator: presentationData.dateTimeFormat.decimalSeparator)
-            } else {
-                balanceText = NSAttributedString()
-            }
-            items[.payment]!.append(PeerInfoScreenDisclosureItem(id: 103, label: .attributedText(balanceText), text: presentationData.strings.Settings_MyTon, icon: PresentationResourcesSettings.ton, action: {
-                interaction.openSettings(.ton)
-            }))
-        }
-    }
+    // Ansible: TON removed as a separate currency — the "My TON" settings row is gone.
     if !isPremiumDisabled || context.isPremium {
         items[.payment]!.append(PeerInfoScreenDisclosureItem(id: 104, label: .text(""), additionalBadgeLabel: nil, text: presentationData.strings.Settings_Business, icon: PresentationResourcesSettings.business, action: {
             interaction.openSettings(.businessSetup)
