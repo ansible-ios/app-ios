@@ -1341,7 +1341,7 @@ final class PeerAllowedReactionsScreenComponent: Component {
                         self.paidReactionsSection = paidReactionsSection
                     }
                     
-                    let parsedString = parseMarkdownIntoAttributedString(environment.strings.PeerInfo_AllowedReactions_StarReactionsFooter, attributes: MarkdownAttributes(
+                    let parsedString = parseMarkdownIntoAttributedString(environment.strings.PeerInfo_AllowedReactions_DiamondReactionsFooter, attributes: MarkdownAttributes(
                         body: MarkdownAttributeSet(font: Font.regular(13.0), textColor: environment.theme.list.freeTextColor),
                         bold: MarkdownAttributeSet(font: Font.semibold(13.0), textColor: environment.theme.list.freeTextColor),
                         link: MarkdownAttributeSet(font: Font.regular(13.0), textColor: environment.theme.list.itemAccentColor),
@@ -1387,7 +1387,7 @@ final class PeerAllowedReactionsScreenComponent: Component {
                             items: [
                                 AnyComponentWithIdentity(id: 0, component: AnyComponent(ListSwitchItemComponent(
                                     theme: environment.theme,
-                                    title: environment.strings.PeerInfo_AllowedReactions_StarReactions,
+                                    title: environment.strings.PeerInfo_AllowedReactions_DiamondReactions,
                                     value: self.areStarsReactionsEnabled,
                                     valueUpdated: { [weak self] value in
                                         guard let self, let component = self.component else {

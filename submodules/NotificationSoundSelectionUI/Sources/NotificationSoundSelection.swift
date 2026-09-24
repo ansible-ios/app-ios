@@ -215,7 +215,7 @@ private func notificationsAndSoundsEntries(presentationData: PresentationData, d
     
     var entries: [NotificationSoundSelectionEntry] = []
     
-    entries.append(.cloudHeader(presentationData.strings.Notifications_IosappTones))
+    entries.append(.cloudHeader(presentationData.strings.Notifications_AnsibleTones))
     if let notificationSoundList = notificationSoundList {
         let cloudSounds = notificationSoundList.sounds.filter({ CloudSoundBuiltinCategory(id: $0.file.fileId.id) == nil })
         let modernSounds = notificationSoundList.sounds.filter({ CloudSoundBuiltinCategory(id: $0.file.fileId.id) == .modern })

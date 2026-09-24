@@ -36,7 +36,7 @@ public func giftOfferAlertController(
     let priceString: String
     switch amount.currency {
     case .stars:
-        priceString = strings.Chat_GiftPurchaseOffer_AcceptConfirmation_Text_Stars(Int32(clamping: amount.amount.value))
+        priceString = strings.Chat_GiftPurchaseOffer_AcceptConfirmation_Text_Diamonds(Int32(clamping: amount.amount.value))
     case .ton:
         priceString = formatTonAmountText(amount.amount.value, dateTimeFormat: presentationData.dateTimeFormat, formatString: strings.Currency_Grams)
     }
@@ -46,7 +46,7 @@ public func giftOfferAlertController(
     switch amount.currency {
     case .stars:
         let starsValue = Int32(floor(Float(amount.amount.value) * Float(resaleConfiguration.starGiftCommissionStarsPermille) / 1000.0))
-        finalPriceString = strings.Chat_GiftPurchaseOffer_AcceptConfirmation_Text_Stars(starsValue)
+        finalPriceString = strings.Chat_GiftPurchaseOffer_AcceptConfirmation_Text_Diamonds(starsValue)
     case .ton:
         let tonValue = Int64(Float(amount.amount.value) * Float(resaleConfiguration.starGiftCommissionTonPermille) / 1000.0)
         finalPriceString = formatTonAmountText(tonValue, dateTimeFormat: presentationData.dateTimeFormat, maxDecimalPositions: 3, formatString: strings.Currency_Grams)

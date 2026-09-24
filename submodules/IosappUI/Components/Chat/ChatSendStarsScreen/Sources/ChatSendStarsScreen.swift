@@ -509,7 +509,7 @@ private final class PeerComponent: Component {
             if let peer = component.peer {
                 peerTitle = peer.compactDisplayTitle
             } else {
-                peerTitle = component.strings.SendStarReactions_UserLabelAnonymous
+                peerTitle = component.strings.SendDiamondReactions_UserLabelAnonymous
             }
             
             let titleSize = self.title.update(
@@ -696,7 +696,7 @@ private final class SliderBackgroundComponent: Component {
             let topTextSize = self.topForegroundText.update(
                 transition: .immediate,
                 component: AnyComponent(MultilineTextComponent(
-                    text: .plain(NSAttributedString(string: component.strings.SendStarReactions_SliderTop, font: Font.semibold(15.0), textColor: UIColor(white: 1.0, alpha: 0.4)))
+                    text: .plain(NSAttributedString(string: component.strings.SendDiamondReactions_SliderTop, font: Font.semibold(15.0), textColor: UIColor(white: 1.0, alpha: 0.4)))
                 )),
                 environment: {},
                 containerSize: CGSize(width: availableSize.width, height: 100.0)
@@ -704,7 +704,7 @@ private final class SliderBackgroundComponent: Component {
             let _ = self.topBackgroundText.update(
                 transition: .immediate,
                 component: AnyComponent(MultilineTextComponent(
-                    text: .plain(NSAttributedString(string: component.strings.SendStarReactions_SliderTop, font: Font.semibold(15.0), textColor: component.theme.overallDarkAppearance ? UIColor(white: 1.0, alpha: 0.22) : UIColor(white: 0.0, alpha: 0.2)))
+                    text: .plain(NSAttributedString(string: component.strings.SendDiamondReactions_SliderTop, font: Font.semibold(15.0), textColor: component.theme.overallDarkAppearance ? UIColor(white: 1.0, alpha: 0.22) : UIColor(white: 0.0, alpha: 0.2)))
                 )),
                 environment: {},
                 containerSize: CGSize(width: availableSize.width, height: 100.0)
@@ -1755,17 +1755,17 @@ private final class ChatSendStarsScreenComponent: Component {
                 
                 perks.append((
                     shortTimeIntervalString(strings: environment.strings, value: Int32(params.period), useLargeFormat: false),
-                    environment.strings.SendStarReactions_LiveStreamPerk1Title
+                    environment.strings.SendDiamondReactions_LiveStreamPerk1Title
                 ))
                 
                 perks.append((
                     "\(params.maxLength)",
-                    environment.strings.SendStarReactions_LiveStreamPerk2Title
+                    environment.strings.SendDiamondReactions_LiveStreamPerk2Title
                 ))
                 
                 perks.append((
                     "\(params.emojiCount)",
-                    environment.strings.SendStarReactions_LiveStreamPerk3Title
+                    environment.strings.SendDiamondReactions_LiveStreamPerk3Title
                 ))
                 
                 contentHeight += 54.0
@@ -1906,7 +1906,7 @@ private final class ChatSendStarsScreenComponent: Component {
             case let .react(reactData):
                 if case .message = reactData.reactSubject {
                     let currentMyPeer = self.currentMyPeer ?? reactData.myPeer
-                    subtitleText = environment.strings.SendStarReactions_SubtitleFrom(currentMyPeer.compactDisplayTitle).string
+                    subtitleText = environment.strings.SendDiamondReactions_SubtitleFrom(currentMyPeer.compactDisplayTitle).string
                 } else {
                     subtitleText = nil
                 }
@@ -1929,9 +1929,9 @@ private final class ChatSendStarsScreenComponent: Component {
             let titleText: String
             switch component.initialData.subjectInitialData {
             case .react:
-                titleText = environment.strings.SendStarReactions_Title
+                titleText = environment.strings.SendDiamondReactions_Title
             case .liveStreamMessage:
-                titleText = environment.strings.SendStarReactions_LiveStreamMessageTitle
+                titleText = environment.strings.SendDiamondReactions_LiveStreamMessageTitle
             }
             
             let titleSize = title.update(
@@ -1972,16 +1972,16 @@ private final class ChatSendStarsScreenComponent: Component {
             switch component.initialData.subjectInitialData {
             case let .react(reactData):
                 if case .liveStream = reactData.reactSubject {
-                    text = environment.strings.SendStarReactions_LiveStreamReactionText(reactData.peer.displayTitle(strings: environment.strings, displayOrder: .firstLast)).string
+                    text = environment.strings.SendDiamondReactions_LiveStreamReactionText(reactData.peer.displayTitle(strings: environment.strings, displayOrder: .firstLast)).string
                 } else {
                     if let currentSentAmount = reactData.currentSentAmount {
-                        text = environment.strings.SendStarReactions_TextSentStars(Int32(clamping: currentSentAmount))
+                        text = environment.strings.SendDiamondReactions_TextSentDiamonds(Int32(clamping: currentSentAmount))
                     } else {
-                        text = environment.strings.SendStarReactions_TextGeneric(reactData.peer.debugDisplayTitle).string
+                        text = environment.strings.SendDiamondReactions_TextGeneric(reactData.peer.debugDisplayTitle).string
                     }
                 }
             case let .liveStreamMessage(liveStreamMessageData):
-                text = environment.strings.SendStarReactions_LiveStreamMessageText(liveStreamMessageData.peer.displayTitle(strings: environment.strings, displayOrder: .firstLast)).string
+                text = environment.strings.SendDiamondReactions_LiveStreamMessageText(liveStreamMessageData.peer.displayTitle(strings: environment.strings, displayOrder: .firstLast)).string
             }
             
             let addDescriptionText: () -> Void = {
@@ -2162,7 +2162,7 @@ private final class ChatSendStarsScreenComponent: Component {
                         let topPeersTitleSize = topPeersTitle.update(
                             transition: .immediate,
                             component: AnyComponent(MultilineTextComponent(
-                                text: .plain(NSAttributedString(string: environment.strings.SendStarReactions_SectionTop, font: Font.semibold(15.0), textColor: .white))
+                                text: .plain(NSAttributedString(string: environment.strings.SendDiamondReactions_SectionTop, font: Font.semibold(15.0), textColor: .white))
                             )),
                             environment: {},
                             containerSize: CGSize(width: 300.0, height: 100.0)
@@ -2405,7 +2405,7 @@ private final class ChatSendStarsScreenComponent: Component {
                                     selected: self.privacyPeer != .anonymous
                                 ))),
                                 AnyComponentWithIdentity(id: AnyHashable(1), component: AnyComponent(MultilineTextComponent(
-                                    text: .plain(NSAttributedString(string: environment.strings.SendStarReactions_ShowMyselfInTop, font: Font.regular(17.0), textColor: environment.theme.list.itemPrimaryTextColor))
+                                    text: .plain(NSAttributedString(string: environment.strings.SendDiamondReactions_ShowMyselfInTop, font: Font.regular(17.0), textColor: environment.theme.list.itemPrimaryTextColor))
                                 )))
                             ], spacing: 10.0)),
                             effectAlignment: .center,
@@ -2504,12 +2504,12 @@ private final class ChatSendStarsScreenComponent: Component {
             switch component.initialData.subjectInitialData {
             case .react:
                 if isOnlyDisplay {
-                    buttonString = environment.strings.SendStarReactions_OwnLiveStreamCloseButton
+                    buttonString = environment.strings.SendDiamondReactions_OwnLiveStreamCloseButton
                 } else {
-                    buttonString = environment.strings.SendStarReactions_SendButtonTitle("\(self.amount.realValue)").string
+                    buttonString = environment.strings.SendDiamondReactions_SendButtonTitle("\(self.amount.realValue)").string
                 }
             case .liveStreamMessage:
-                buttonString = environment.strings.SendStarReactions_LiveStreamActionButton("\(self.amount.realValue)").string
+                buttonString = environment.strings.SendDiamondReactions_LiveStreamActionButton("\(self.amount.realValue)").string
             }
             let buttonAttributedString = NSMutableAttributedString(string: buttonString, font: Font.semibold(17.0), textColor: environment.theme.list.itemCheckColors.foregroundColor, paragraphAlignment: .center)
             if let range = buttonAttributedString.string.range(of: "#"), let starImage = self.cachedStarImage?.0 {
@@ -2637,7 +2637,7 @@ private final class ChatSendStarsScreenComponent: Component {
                 buttonDescriptionTextSize = self.buttonDescriptionText.update(
                     transition: .immediate,
                     component: AnyComponent(MultilineTextComponent(
-                        text: .markdown(text: isOnlyDisplay ? environment.strings.SendStarReactions_OwnLiveStreamInfoText : environment.strings.SendStarReactions_TermsOfServiceFooter, attributes: MarkdownAttributes(
+                        text: .markdown(text: isOnlyDisplay ? environment.strings.SendDiamondReactions_OwnLiveStreamInfoText : environment.strings.SendDiamondReactions_TermsOfServiceFooter, attributes: MarkdownAttributes(
                             body: MarkdownAttributeSet(font: Font.regular(13.0), textColor: environment.theme.list.itemSecondaryTextColor),
                             bold: MarkdownAttributeSet(font: Font.semibold(13.0), textColor: environment.theme.list.itemSecondaryTextColor),
                             link: MarkdownAttributeSet(font: Font.regular(13.0), textColor: environment.theme.list.itemAccentColor),

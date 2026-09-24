@@ -144,9 +144,9 @@ public final class StarsBalanceOverlayComponent: Component {
                 case .ton:
                     balanceString = "**💎\(formatTonAmountText(self.tonBalance, dateTimeFormat: presentationData.dateTimeFormat))**"
                 }
-                rawString = presentationData.strings.StarsBalance_YourBalance(balanceString).string
+                rawString = presentationData.strings.DiamondsBalance_YourBalance(balanceString).string
             } else {
-                rawString = presentationData.strings.StarsBalance_ChannelBalance("**⭐️\(balance)**").string
+                rawString = presentationData.strings.DiamondsBalance_ChannelBalance("**⭐️\(balance)**").string
             }
             
             let attributedText = parseMarkdownIntoAttributedString(
@@ -207,7 +207,7 @@ public final class StarsBalanceOverlayComponent: Component {
                 if self.cachedChevronImage == nil || self.cachedChevronImage?.1 !== component.theme {
                     self.cachedChevronImage = (generateTintedImage(image: UIImage(bundleImageName: "Item List/InlineTextRightArrow"), color: component.theme.rootController.navigationBar.accentTextColor)!, component.theme)
                 }
-                let actionText = NSMutableAttributedString(string: presentationData.strings.StarsBalance_GetMoreStars, font: Font.regular(13.0), textColor: component.theme.rootController.navigationBar.accentTextColor)
+                let actionText = NSMutableAttributedString(string: presentationData.strings.DiamondsBalance_GetMoreDiamonds, font: Font.regular(13.0), textColor: component.theme.rootController.navigationBar.accentTextColor)
                 if let range = actionText.string.range(of: ">"), let chevronImage = self.cachedChevronImage?.0 {
                     actionText.addAttribute(.attachment, value: chevronImage, range: NSRange(range, in: actionText.string))
                     actionText.addAttribute(.baselineOffset, value: 1.0, range: NSRange(range, in: actionText.string))

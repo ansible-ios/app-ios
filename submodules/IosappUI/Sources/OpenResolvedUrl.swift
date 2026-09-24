@@ -1089,8 +1089,8 @@ func openResolvedUrlImpl(
                             scale: 0.066,
                             colors: [:],
                             title: nil,
-                            text: presentationData.strings.Stars_Purchase_EnoughStars,
-                            customUndoText: presentationData.strings.Stars_Purchase_BuyAnyway,
+                            text: presentationData.strings.Diamonds_Purchase_EnoughDiamonds,
+                            customUndoText: presentationData.strings.Diamonds_Purchase_BuyAnyway,
                             timeout: nil
                         ),
                         elevatedLayout: true,

@@ -93,7 +93,7 @@ extension ChatControllerImpl: MFMessageComposeViewControllerDelegate {
                         }))
                     )
                     items.append(
-                        .action(ContextMenuActionItem(text: self.presentationData.strings.Chat_Context_Phone_IosappVoiceCall, icon: { theme in return generateTintedImage(image: UIImage(bundleImageName: "Chat/Context Menu/Call"), color: theme.contextMenu.primaryColor) }, action: { [weak self]  _, f in
+                        .action(ContextMenuActionItem(text: self.presentationData.strings.Chat_Context_Phone_AnsibleVoiceCall, icon: { theme in return generateTintedImage(image: UIImage(bundleImageName: "Chat/Context Menu/Call"), color: theme.contextMenu.primaryColor) }, action: { [weak self]  _, f in
                             f(.default)
                             
                             guard let self else {
@@ -103,7 +103,7 @@ extension ChatControllerImpl: MFMessageComposeViewControllerDelegate {
                         }))
                     )
                     items.append(
-                        .action(ContextMenuActionItem(text: self.presentationData.strings.Chat_Context_Phone_IosappVideoCall, icon: { theme in return generateTintedImage(image: UIImage(bundleImageName: "Chat/Context Menu/VideoCall"), color: theme.contextMenu.primaryColor) }, action: { [weak self]  _, f in
+                        .action(ContextMenuActionItem(text: self.presentationData.strings.Chat_Context_Phone_AnsibleVideoCall, icon: { theme in return generateTintedImage(image: UIImage(bundleImageName: "Chat/Context Menu/VideoCall"), color: theme.contextMenu.primaryColor) }, action: { [weak self]  _, f in
                             f(.default)
                             
                             guard let self else {
@@ -115,7 +115,7 @@ extension ChatControllerImpl: MFMessageComposeViewControllerDelegate {
                 }
             } else {
                 items.append(
-                    .action(ContextMenuActionItem(text: self.presentationData.strings.Chat_Context_Phone_InviteToTelegram, icon: { theme in return generateTintedImage(image: UIImage(bundleImageName: "Chat/Context Menu/Telegram"), color: theme.contextMenu.primaryColor) }, action: { [weak self]  _, f in
+                    .action(ContextMenuActionItem(text: self.presentationData.strings.Chat_Context_Phone_InviteToAnsible, icon: { theme in return generateTintedImage(image: UIImage(bundleImageName: "Chat/Context Menu/Telegram"), color: theme.contextMenu.primaryColor) }, action: { [weak self]  _, f in
                         f(.default)
                         
                         guard let self else {
@@ -178,7 +178,7 @@ extension ChatControllerImpl: MFMessageComposeViewControllerDelegate {
             } else {
                 let emptyAction: ((ContextMenuActionItem.Action) -> Void)? = nil
                 items.append(
-                    .action(ContextMenuActionItem(text: self.presentationData.strings.Chat_Context_Phone_NotOnTelegram, textLayout: .multiline, textFont: .small, icon: { _ in return nil }, action: emptyAction))
+                    .action(ContextMenuActionItem(text: self.presentationData.strings.Chat_Context_Phone_NotOnAnsible, textLayout: .multiline, textFont: .small, icon: { _ in return nil }, action: emptyAction))
                 )
             }
             

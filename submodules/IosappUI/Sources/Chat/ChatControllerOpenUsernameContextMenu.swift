@@ -125,7 +125,7 @@ extension ChatControllerImpl {
             } else {
                 let emptyAction: ((ContextMenuActionItem.Action) -> Void)? = nil
                 items.append(
-                    .action(ContextMenuActionItem(text: self.presentationData.strings.Chat_Context_Username_NotOnTelegram, textLayout: .multiline, textFont: .small, icon: { _ in return nil }, action: emptyAction))
+                    .action(ContextMenuActionItem(text: self.presentationData.strings.Chat_Context_Username_NotOnAnsible, textLayout: .multiline, textFont: .small, icon: { _ in return nil }, action: emptyAction))
                 )
             }
             

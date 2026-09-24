@@ -349,10 +349,10 @@ public class ChatMessageGiveawayBubbleContentNode: ChatMessageBubbleContentNode,
                         }
                     ), textAlignment: .center)
                 case let .stars(amount):
-                    let starsString = item.presentationData.strings.Chat_Giveaway_Message_Stars_Stars(Int32(clamping: amount))
-                    prizeTextString = parseMarkdownIntoAttributedString(item.presentationData.strings.Chat_Giveaway_Message_Stars_PrizeText(
+                    let starsString = item.presentationData.strings.Chat_Giveaway_Message_Diamonds_Diamonds(Int32(clamping: amount))
+                    prizeTextString = parseMarkdownIntoAttributedString(item.presentationData.strings.Chat_Giveaway_Message_Diamonds_PrizeText(
                         starsString,
-                        item.presentationData.strings.Chat_Giveaway_Message_Stars_Winners(giveaway.quantity)
+                        item.presentationData.strings.Chat_Giveaway_Message_Diamonds_Winners(giveaway.quantity)
                     ).string, attributes: MarkdownAttributes(
                         body: MarkdownAttributeSet(font: textFont, textColor: textColor),
                         bold: MarkdownAttributeSet(font: boldTextFont, textColor: textColor),
@@ -467,8 +467,8 @@ public class ChatMessageGiveawayBubbleContentNode: ChatMessageBubbleContentNode,
                 dateTextString = NSAttributedString(string: stringForFullDate(timestamp: giveaway.untilDate, strings: item.presentationData.strings, dateTimeFormat: item.presentationData.dateTimeFormat), font: textFont, textColor: textColor)
             } else if let giveawayResults {
                 if case let .stars(stars) = giveawayResults.prize {
-                    let starsString = item.presentationData.strings.Chat_Giveaway_Message_WinnersInfo_Stars(Int32(clamping: stars))
-                    dateTextString = parseMarkdownIntoAttributedString(giveawayResults.winnersCount > 1 ? item.presentationData.strings.Chat_Giveaway_Message_WinnersInfo_Stars_Many(starsString).string : item.presentationData.strings.Chat_Giveaway_Message_WinnersInfo_Stars_One(starsString).string, attributes: MarkdownAttributes(
+                    let starsString = item.presentationData.strings.Chat_Giveaway_Message_WinnersInfo_Diamonds(Int32(clamping: stars))
+                    dateTextString = parseMarkdownIntoAttributedString(giveawayResults.winnersCount > 1 ? item.presentationData.strings.Chat_Giveaway_Message_WinnersInfo_Diamonds_Many(starsString).string : item.presentationData.strings.Chat_Giveaway_Message_WinnersInfo_Diamonds_One(starsString).string, attributes: MarkdownAttributes(
                         body: MarkdownAttributeSet(font: textFont, textColor: textColor),
                         bold: MarkdownAttributeSet(font: boldTextFont, textColor: textColor),
                         link: MarkdownAttributeSet(font: textFont, textColor: accentColor),

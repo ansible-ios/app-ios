@@ -234,8 +234,8 @@ public func chatMessagePaymentAlertController(
     let messagesString = strings.Chat_PaidMessage_Confirm_Text_Messages(count)
     let text: String
     if peers.count == 1, let peer = peers.first {
-        let amountString = strings.Chat_PaidMessage_Confirm_Text_Stars(Int32(clamping: amount.value))
-        let totalString = strings.Chat_PaidMessage_Confirm_Text_Stars(Int32(clamping: amount.value * Int64(count)))
+        let amountString = strings.Chat_PaidMessage_Confirm_Text_Diamonds(Int32(clamping: amount.value))
+        let totalString = strings.Chat_PaidMessage_Confirm_Text_Diamonds(Int32(clamping: amount.value * Int64(count)))
         if case let .channel(channel) = peer.chatOrMonoforumMainPeer, case .broadcast = channel.info {
             text = strings.Chat_PaidMessage_Confirm_SingleComment_Text(EnginePeer(channel).compactDisplayTitle, amountString, totalString, messagesString).string
         } else {
@@ -244,7 +244,7 @@ public func chatMessagePaymentAlertController(
     } else {
         let amount = totalAmount ?? amount
         let usersString = strings.Chat_PaidMessage_Confirm_Text_Users(Int32(peers.count))
-        let totalString = strings.Chat_PaidMessage_Confirm_Text_Stars(Int32(clamping: amount.value * Int64(count)))
+        let totalString = strings.Chat_PaidMessage_Confirm_Text_Diamonds(Int32(clamping: amount.value * Int64(count)))
         text = strings.Chat_PaidMessage_Confirm_Multiple_Text(usersString, totalString, messagesString).string
     }
         
@@ -330,7 +330,7 @@ public func chatMessageRemovePaymentAlertController(
         content.append(AnyComponentWithIdentity(
             id: "check",
             component: AnyComponent(
-                AlertCheckComponent(title: strings.Chat_PaidMessage_RemoveFee_Refund(strings.Chat_PaidMessage_RemoveFee_Refund_Stars(Int32(clamping: amount.value))).string, initialValue: false, externalState: checkState)
+                AlertCheckComponent(title: strings.Chat_PaidMessage_RemoveFee_Refund(strings.Chat_PaidMessage_RemoveFee_Refund_Diamonds(Int32(clamping: amount.value))).string, initialValue: false, externalState: checkState)
             )
         ))
     }

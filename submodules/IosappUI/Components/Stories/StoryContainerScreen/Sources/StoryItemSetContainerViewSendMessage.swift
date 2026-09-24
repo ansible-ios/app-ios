@@ -466,7 +466,7 @@ final class StoryItemSetContainerSendMessage: @unchecked(Sendable) {
         var items: [ContextMenuItem] = []
 
         if case .liveStream = component.slice.item.storyItem.media {
-            items.append(.action(ContextMenuActionItem(text: self.currentLiveStreamMessageStars != nil ? presentationData.strings.LiveStream_InputContextMenuEditStars : presentationData.strings.LiveStream_InputContextMenuAddStars, icon: { theme in return generateTintedImage(image: UIImage(bundleImageName: "Chat/Input/Text/AccessoryIconSuggestPost"), color: theme.contextMenu.primaryColor)
+            items.append(.action(ContextMenuActionItem(text: self.currentLiveStreamMessageStars != nil ? presentationData.strings.LiveStream_InputContextMenuEditDiamonds : presentationData.strings.LiveStream_InputContextMenuAddDiamonds, icon: { theme in return generateTintedImage(image: UIImage(bundleImageName: "Chat/Input/Text/AccessoryIconSuggestPost"), color: theme.contextMenu.primaryColor)
             }, action: { [weak self, weak view] _, a in
                 a(.default)
 
@@ -486,7 +486,7 @@ final class StoryItemSetContainerSendMessage: @unchecked(Sendable) {
             }
 
             if canRemoveStars {
-                items.append(.action(ContextMenuActionItem(text: presentationData.strings.LiveStream_InputContextMenuRemoveStars, icon: { theme in return generateTintedImage(image: UIImage(bundleImageName: "Chat/Context Menu/RemovePrice"), color: theme.contextMenu.primaryColor)
+                items.append(.action(ContextMenuActionItem(text: presentationData.strings.LiveStream_InputContextMenuRemoveDiamonds, icon: { theme in return generateTintedImage(image: UIImage(bundleImageName: "Chat/Context Menu/RemovePrice"), color: theme.contextMenu.primaryColor)
                 }, action: { [weak self, weak view] _, a in
                     a(.default)
 
@@ -4128,17 +4128,17 @@ final class StoryItemSetContainerSendMessage: @unchecked(Sendable) {
 
                 let title: String
                 /*if case .anonymous = privacy {
-                 title = self.presentationData.strings.Chat_ToastStarsSent_AnonymousTitle(Int32(self.currentSendStarsUndoCount))
+                 title = self.presentationData.strings.Chat_ToastDiamondsSent_AnonymousTitle(Int32(self.currentSendStarsUndoCount))
                  } else if case .peer = privacy, let privacyPeer {
-                 let rawTitle = self.presentationData.strings.Chat_ToastStarsSent_TitleChannel(Int32(self.currentSendStarsUndoCount))
+                 let rawTitle = self.presentationData.strings.Chat_ToastDiamondsSent_TitleChannel(Int32(self.currentSendStarsUndoCount))
                  title = rawTitle.replacingOccurrences(of: "{name}", with: privacyPeer.compactDisplayTitle)
                  } else*/ do {
-                     title = component.strings.Chat_ToastStarsSent_Title(Int32(totalStars))
+                     title = component.strings.Chat_ToastDiamondsSent_Title(Int32(totalStars))
                  }
 
-                let textItems = AnimatedTextComponent.extractAnimatedTextString(string: component.strings.Chat_ToastStarsSent_Text("", ""), id: "text", mapping: [
+                let textItems = AnimatedTextComponent.extractAnimatedTextString(string: component.strings.Chat_ToastDiamondsSent_Text("", ""), id: "text", mapping: [
                     0: .number(totalStars, minDigits: 1),
-                    1: .text(component.strings.Chat_ToastStarsSent_TextStarAmount(Int32(totalStars)))
+                    1: .text(component.strings.Chat_ToastDiamondsSent_TextDiamondAmount(Int32(totalStars)))
                 ])
 
                 if let current = self.currentSendStarsUndoController {

@@ -344,7 +344,7 @@ private final class GiftSetupScreenComponent: Component {
                             title: environment.strings.Gift_Send_Premium_Confirmation_Title,
                             text: environment.strings.Gift_Send_Premium_Confirmation_Text(
                                 peer.compactDisplayTitle,
-                                environment.strings.Gift_Send_Premium_Confirmation_Text_Stars(Int32(clamping: starsPrice))
+                                environment.strings.Gift_Send_Premium_Confirmation_Text_Diamonds(Int32(clamping: starsPrice))
                             ).string,
                             actions: [
                                 TextAlertAction(type: .genericAction, title: environment.strings.Common_Cancel, action: {}),
@@ -559,7 +559,7 @@ private final class GiftSetupScreenComponent: Component {
                                 file: starGift.file,
                                 loop: true,
                                 title: nil,
-                                text: presentationData.strings.Gift_Send_Success(self.peerMap[peerId]?.compactDisplayTitle ?? "", presentationData.strings.Gift_Send_Success_Stars(Int32(clamping: starGift.price))).string,
+                                text: presentationData.strings.Gift_Send_Success(self.peerMap[peerId]?.compactDisplayTitle ?? "", presentationData.strings.Gift_Send_Success_Diamonds(Int32(clamping: starGift.price))).string,
                                 undoText: nil,
                                 customAction: nil
                             ),
@@ -1509,7 +1509,7 @@ private final class GiftSetupScreenComponent: Component {
                 if let starsPrice = product.starsPrice { //}, balance >= starsPrice {
                     let balanceString = presentationStringsFormattedNumber(Int32(balance), environment.dateTimeFormat.groupingSeparator)
                     
-                    let starsFooterRawString = environment.strings.Gift_Send_PayWithStars_Info("# \(balanceString)").string
+                    let starsFooterRawString = environment.strings.Gift_Send_PayWithDiamonds_Info("# \(balanceString)").string
                     let starsFooterText = NSMutableAttributedString(attributedString: parseMarkdownIntoAttributedString(starsFooterRawString, attributes: footerAttributes))
                     
                     if self.cachedChevronImage == nil || self.cachedChevronImage?.1 !== environment.theme {
@@ -1523,7 +1523,7 @@ private final class GiftSetupScreenComponent: Component {
                     }
                     
                     let priceString = presentationStringsFormattedNumber(Int32(starsPrice), environment.dateTimeFormat.groupingSeparator)
-                    let starsAttributedText = NSMutableAttributedString(string: environment.strings.Gift_Send_PayWithStars("#\(priceString)").string, font: Font.regular(presentationData.listsFontSize.baseDisplaySize), textColor: theme.list.itemPrimaryTextColor)
+                    let starsAttributedText = NSMutableAttributedString(string: environment.strings.Gift_Send_PayWithDiamonds("#\(priceString)").string, font: Font.regular(presentationData.listsFontSize.baseDisplaySize), textColor: theme.list.itemPrimaryTextColor)
                     let range = (starsAttributedText.string as NSString).range(of: "#")
                     if range.location != NSNotFound {
                         starsAttributedText.addAttribute(ChatTextInputAttributes.customEmoji, value: ChatTextInputTextCustomEmojiAttribute(interactivelySelectedFromPackId: nil, fileId: 0, file: nil, custom: .stars(tinted: false)), range: range)

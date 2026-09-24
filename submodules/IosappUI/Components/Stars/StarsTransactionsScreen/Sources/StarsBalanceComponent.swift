@@ -222,7 +222,7 @@ final class StarsBalanceComponent: Component {
             if let rate = component.rate {
                 subtitleText = "~\(formatTonUsdValue(component.count.value, divide: false, rate: rate, dateTimeFormat: component.dateTimeFormat))"
             } else {
-                subtitleText = component.strings.Stars_Intro_YourBalance
+                subtitleText = component.strings.Diamonds_Intro_YourBalance
             }
             
             let subtitleSize = self.subtitle.update(

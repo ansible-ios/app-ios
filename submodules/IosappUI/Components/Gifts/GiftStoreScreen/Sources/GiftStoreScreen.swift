@@ -552,7 +552,7 @@ public final class GiftStoreContentComponent: Component {
                 f(.default)
                 self?.updateStarsOnly(false)
             })))
-            items.append(.action(ContextMenuActionItem(text: presentationData.strings.Gift_Store_StarsOnlyListings, icon: { theme in
+            items.append(.action(ContextMenuActionItem(text: presentationData.strings.Gift_Store_DiamondsOnlyListings, icon: { theme in
                 return component.resaleGiftsContext.currentState?.starsOnly == true ? generateTintedImage(image: UIImage(bundleImageName: "Chat/Context Menu/Check"), color: theme.contextMenu.primaryColor) : UIImage()
             }, action: { [weak self] _, f in
                 f(.default)
@@ -1443,7 +1443,7 @@ final class GiftStoreScreenComponent: Component {
                 let starsFilterSize = self.starsFilter.update(
                     transition: transition,
                     component: AnyComponent(
-                        StarsFilterComponent(theme: theme, text: environment.strings.Gift_Store_ShowStarsListings, isSelected: component.resaleGiftsContext.currentState?.starsOnly ?? false, selectionUpdated: { [weak self] starsOnly in
+                        StarsFilterComponent(theme: theme, text: environment.strings.Gift_Store_ShowDiamondsListings, isSelected: component.resaleGiftsContext.currentState?.starsOnly ?? false, selectionUpdated: { [weak self] starsOnly in
                             guard let self else {
                                 return
                             }

@@ -132,7 +132,7 @@ public func universalServiceMessageString(presentationData: (PresentationTheme, 
         for attribute in message.attributes {
             if let attribute = attribute as? PaidStarsMessageAttribute {
                 let messageCount = Int32(messageCount ?? 1)
-                let price = strings.Notification_PaidMessage_Stars(Int32(clamping: attribute.stars.value) * messageCount)
+                let price = strings.Notification_PaidMessage_Diamonds(Int32(clamping: attribute.stars.value) * messageCount)
                 if message.author?.id == accountPeerId {
                     if messageCount > 1 {
                         let messagesString = strings.Notification_PaidMessage_Messages(messageCount)
@@ -866,7 +866,7 @@ public func universalServiceMessageString(presentationData: (PresentationTheme, 
                 } else {
                     let price: String
                     if currency == "XTR" {
-                        price = strings.Notification_PremiumGift_Stars(Int32(clamping: amount))
+                        price = strings.Notification_PremiumGift_Diamonds(Int32(clamping: amount))
                     } else {
                         price = formatCurrencyAmount(amount, currency: currency)
                     }
@@ -881,22 +881,22 @@ public func universalServiceMessageString(presentationData: (PresentationTheme, 
             case let .giftStars(currency, amount, count, _, _, _):
                 let _ = count
                 if !forAdditionalServiceMessage {
-                    let starsPrice = strings.Notification_GiftStars_Stars(Int32(clamping: count))
-                    attributedString = NSAttributedString(string: strings.Notification_GiftStars(starsPrice).string, font: titleFont, textColor: primaryTextColor)
+                    let starsPrice = strings.Notification_GiftDiamonds_Diamonds(Int32(clamping: count))
+                    attributedString = NSAttributedString(string: strings.Notification_GiftDiamonds(starsPrice).string, font: titleFont, textColor: primaryTextColor)
                 } else {
                     let price = formatCurrencyAmount(amount, currency: currency)
                     if message.author?.id == accountPeerId {
-                        attributedString = addAttributesToStringWithRanges(strings.Notification_StarsGift_SentYou(price)._tuple, body: bodyAttributes, argumentAttributes: [0: boldAttributes])
+                        attributedString = addAttributesToStringWithRanges(strings.Notification_DiamondsGift_SentYou(price)._tuple, body: bodyAttributes, argumentAttributes: [0: boldAttributes])
                     } else {
                         var authorName = compactAuthorName
                         var peerIds: [(Int, EnginePeer.Id?)] = [(0, message.author?.id)]
                         if message.id.peerId.namespace == Namespaces.Peer.CloudUser && message.id.peerId.id._internalGetInt64Value() == 777000 {
-                            authorName = strings.Notification_StarsGift_UnknownUser
+                            authorName = strings.Notification_DiamondsGift_UnknownUser
                             peerIds = []
                         }
                         var attributes = peerMentionsAttributes(primaryTextColor: primaryTextColor, peerIds: peerIds)
                         attributes[1] = boldAttributes
-                        attributedString = addAttributesToStringWithRanges(strings.Notification_StarsGift_Sent(authorName, price)._tuple, body: bodyAttributes, argumentAttributes: attributes)
+                        attributedString = addAttributesToStringWithRanges(strings.Notification_DiamondsGift_Sent(authorName, price)._tuple, body: bodyAttributes, argumentAttributes: attributes)
                     }
                 }
             case let .topicCreated(title, iconColor, iconFileId):
@@ -1122,8 +1122,8 @@ public func universalServiceMessageString(presentationData: (PresentationTheme, 
                 }
                 let resultTitleString: PresentationStrings.FormattedString
                 if let stars {
-                    let starsString = strings.Notification_StarsGiveawayStarted_Stars(Int32(clamping: stars))
-                    resultTitleString = isGroup ? strings.Notification_StarsGiveawayStartedGroup(compactAuthorName, starsString) : strings.Notification_StarsGiveawayStarted(compactAuthorName, starsString)
+                    let starsString = strings.Notification_DiamondsGiveawayStarted_Diamonds(Int32(clamping: stars))
+                    resultTitleString = isGroup ? strings.Notification_DiamondsGiveawayStartedGroup(compactAuthorName, starsString) : strings.Notification_DiamondsGiveawayStarted(compactAuthorName, starsString)
                 } else {
                     resultTitleString = isGroup ? strings.Notification_GiveawayStartedGroup(compactAuthorName) : strings.Notification_GiveawayStarted(compactAuthorName)
                 }
@@ -1138,7 +1138,7 @@ public func universalServiceMessageString(presentationData: (PresentationTheme, 
                 }
                 if winners == 0 {
                     if stars {
-                        attributedString = parseMarkdownIntoAttributedString(isGroup ? strings.Notification_StarsGiveawayResultsNoWinners_Group : strings.Notification_StarsGiveawayResultsNoWinners, attributes: MarkdownAttributes(body: bodyAttributes, bold: boldAttributes, link: bodyAttributes, linkAttribute: { _ in return nil }))
+                        attributedString = parseMarkdownIntoAttributedString(isGroup ? strings.Notification_DiamondsGiveawayResultsNoWinners_Group : strings.Notification_DiamondsGiveawayResultsNoWinners, attributes: MarkdownAttributes(body: bodyAttributes, bold: boldAttributes, link: bodyAttributes, linkAttribute: { _ in return nil }))
                     } else {
                         attributedString = parseMarkdownIntoAttributedString(isGroup ? strings.Notification_GiveawayResultsNoWinners_Group(unclaimed) : strings.Notification_GiveawayResultsNoWinners(unclaimed), attributes: MarkdownAttributes(body: bodyAttributes, bold: boldAttributes, link: bodyAttributes, linkAttribute: { _ in return nil }))
                     }
@@ -1206,7 +1206,7 @@ public func universalServiceMessageString(presentationData: (PresentationTheme, 
                 }
                 attributedString = mutableString
             case .prizeStars:
-                attributedString = NSAttributedString(string: strings.Notification_StarsPrize, font: titleFont, textColor: primaryTextColor)
+                attributedString = NSAttributedString(string: strings.Notification_DiamondsPrize, font: titleFont, textColor: primaryTextColor)
             case let .starGift(gift, _, text, entities, _, _, _, _, _, upgradeStars, _, isPrepaidUpgrade, _, peerId, senderId, _, _, _, upgradeSeparate, isAuctionAcquired, _, _):
                 if !forAdditionalServiceMessage {
                     if let text {
@@ -1214,7 +1214,7 @@ public func universalServiceMessageString(presentationData: (PresentationTheme, 
                         attributedString = mutableAttributedString
                     } else {
                         if isPrepaidUpgrade {
-                            let starsPrice = strings.Notification_PrepaidGiftUpgrade_Stars(Int32(clamping: upgradeStars ?? 0))
+                            let starsPrice = strings.Notification_PrepaidGiftUpgrade_Diamonds(Int32(clamping: upgradeStars ?? 0))
                             attributedString = NSAttributedString(string: strings.Notification_PrepaidGiftUpgrade(starsPrice).string, font: titleFont, textColor: primaryTextColor)
                         } else {
                             attributedString = NSAttributedString(string: strings.Notification_Gift, font: titleFont, textColor: primaryTextColor)
@@ -1225,19 +1225,19 @@ public func universalServiceMessageString(presentationData: (PresentationTheme, 
                     if let upgradeStars, !upgradeSeparate {
                         finalPrice += upgradeStars
                     }
-                    let starsPrice = strings.Notification_StarsGift_Stars(Int32(clamping: finalPrice))
+                    let starsPrice = strings.Notification_DiamondsGift_Diamonds(Int32(clamping: finalPrice))
                     var authorName = compactAuthorName
                     var peerIds: [(Int, EnginePeer.Id?)] = [(0, message.author?.id)]
                     if message.id.peerId.namespace == Namespaces.Peer.CloudUser && message.id.peerId.id._internalGetInt64Value() == 777000 {
-                        authorName = strings.Notification_StarsGift_UnknownUser
+                        authorName = strings.Notification_DiamondsGift_UnknownUser
                         peerIds = []
                     }
                     if isAuctionAcquired {
                         attributedString = addAttributesToStringWithRanges(strings.Notification_GiftAuction_Acquired(starsPrice)._tuple, body: bodyAttributes, argumentAttributes: [0: boldAttributes])
                     } else if message.id.peerId.isIosappNotifications && senderId == nil {
-                        attributedString = NSAttributedString(string: strings.Notification_StarsGift_SentSomeone, font: titleFont, textColor: primaryTextColor)
+                        attributedString = NSAttributedString(string: strings.Notification_DiamondsGift_SentSomeone, font: titleFont, textColor: primaryTextColor)
                     } else if message.id.peerId == accountPeerId {
-                        attributedString = addAttributesToStringWithRanges(strings.Notification_StarsGift_Self_Bought(starsPrice)._tuple, body: bodyAttributes, argumentAttributes: [0: boldAttributes])
+                        attributedString = addAttributesToStringWithRanges(strings.Notification_DiamondsGift_Self_Bought(starsPrice)._tuple, body: bodyAttributes, argumentAttributes: [0: boldAttributes])
                     } else if message.author?.id == accountPeerId {
                         if isPrepaidUpgrade, let peerId {
                             peerIds = [(1, peerId)]
@@ -1245,12 +1245,12 @@ public func universalServiceMessageString(presentationData: (PresentationTheme, 
                             if let name = message.peers[peerId].flatMap(EnginePeer.init)?.compactDisplayTitle {
                                 peerName = name
                             }
-                            let starsPrice = strings.Notification_StarsGift_Stars(Int32(clamping: upgradeStars ?? 0))
+                            let starsPrice = strings.Notification_DiamondsGift_Diamonds(Int32(clamping: upgradeStars ?? 0))
                             if let senderId, senderId != accountPeerId {
                                 if senderId == peerId {
                                     var attributes = peerMentionsAttributes(primaryTextColor: primaryTextColor, peerIds: peerIds)
                                     attributes[0] = boldAttributes
-                                    attributedString = addAttributesToStringWithRanges(strings.Notification_StarsGift_SentUpgradeYouUnknown(starsPrice, peerName)._tuple, body: bodyAttributes, argumentAttributes: attributes)
+                                    attributedString = addAttributesToStringWithRanges(strings.Notification_DiamondsGift_SentUpgradeYouUnknown(starsPrice, peerName)._tuple, body: bodyAttributes, argumentAttributes: attributes)
                                 } else {
                                     var otherPeerName = ""
                                     if let name = message.peers[senderId].flatMap(EnginePeer.init)?.compactDisplayTitle {
@@ -1259,23 +1259,23 @@ public func universalServiceMessageString(presentationData: (PresentationTheme, 
                                     peerIds = [(1, peerId), (2, senderId)]
                                     var attributes = peerMentionsAttributes(primaryTextColor: primaryTextColor, peerIds: peerIds)
                                     attributes[0] = boldAttributes
-                                    attributedString = addAttributesToStringWithRanges(strings.Notification_StarsGift_SentUpgradeYouOther(starsPrice, peerName, otherPeerName)._tuple, body: bodyAttributes, argumentAttributes: attributes)
+                                    attributedString = addAttributesToStringWithRanges(strings.Notification_DiamondsGift_SentUpgradeYouOther(starsPrice, peerName, otherPeerName)._tuple, body: bodyAttributes, argumentAttributes: attributes)
                                 }
                             } else {
                                 var attributes = peerMentionsAttributes(primaryTextColor: primaryTextColor, peerIds: peerIds)
                                 attributes[0] = boldAttributes
-                                attributedString = addAttributesToStringWithRanges(strings.Notification_StarsGift_SentUpgradeYou(starsPrice, peerName)._tuple, body: bodyAttributes, argumentAttributes: attributes)
+                                attributedString = addAttributesToStringWithRanges(strings.Notification_DiamondsGift_SentUpgradeYou(starsPrice, peerName)._tuple, body: bodyAttributes, argumentAttributes: attributes)
                             }
                         } else {
-                            attributedString = addAttributesToStringWithRanges(strings.Notification_StarsGift_SentYou(starsPrice)._tuple, body: bodyAttributes, argumentAttributes: [0: boldAttributes])
+                            attributedString = addAttributesToStringWithRanges(strings.Notification_DiamondsGift_SentYou(starsPrice)._tuple, body: bodyAttributes, argumentAttributes: [0: boldAttributes])
                         }
                     } else if let peerId {
                         if isPrepaidUpgrade {
                             peerIds = [(1, peerId)]
-                            let starsPrice = strings.Notification_StarsGift_Stars(Int32(clamping: upgradeStars ?? 0))
+                            let starsPrice = strings.Notification_DiamondsGift_Diamonds(Int32(clamping: upgradeStars ?? 0))
                             var attributes = peerMentionsAttributes(primaryTextColor: primaryTextColor, peerIds: peerIds)
                             attributes[0] = boldAttributes
-                            attributedString = addAttributesToStringWithRanges(strings.Notification_StarsGift_SentUpgrade(authorName, starsPrice)._tuple, body: bodyAttributes, argumentAttributes: attributes)
+                            attributedString = addAttributesToStringWithRanges(strings.Notification_DiamondsGift_SentUpgrade(authorName, starsPrice)._tuple, body: bodyAttributes, argumentAttributes: attributes)
                         } else {
                             peerIds = [(1, peerId)]
                             var peerName = ""
@@ -1290,12 +1290,12 @@ public func universalServiceMessageString(presentationData: (PresentationTheme, 
                             }
                             var attributes = peerMentionsAttributes(primaryTextColor: primaryTextColor, peerIds: peerIds)
                             attributes[2] = boldAttributes
-                            attributedString = addAttributesToStringWithRanges(strings.Notification_StarsGift_Channel_Sent(authorName, peerName, starsPrice)._tuple, body: bodyAttributes, argumentAttributes: attributes)
+                            attributedString = addAttributesToStringWithRanges(strings.Notification_DiamondsGift_Channel_Sent(authorName, peerName, starsPrice)._tuple, body: bodyAttributes, argumentAttributes: attributes)
                         }
                     } else {
                         var attributes = peerMentionsAttributes(primaryTextColor: primaryTextColor, peerIds: peerIds)
                         attributes[1] = boldAttributes
-                        attributedString = addAttributesToStringWithRanges(strings.Notification_StarsGift_Sent(authorName, starsPrice)._tuple, body: bodyAttributes, argumentAttributes: attributes)
+                        attributedString = addAttributesToStringWithRanges(strings.Notification_DiamondsGift_Sent(authorName, starsPrice)._tuple, body: bodyAttributes, argumentAttributes: attributes)
                     }
                 }
             case let .starGiftUnique(gift, isUpgrade, _, _, _, _, _, isPrepaidUpgrade, peerId, senderId, _, resaleStars, _, _, _, assigned, fromOffer, _, isCrafted):
@@ -1307,22 +1307,22 @@ public func universalServiceMessageString(presentationData: (PresentationTheme, 
                         var peerIds: [(Int, EnginePeer.Id?)] = [(0, messagePeer.id)]
                         if isUpgrade {
                             if message.id.peerId.isIosappNotifications {
-                                attributedString = NSAttributedString(string: strings.Notification_StarsGift_UpgradeChannel, font: titleFont, textColor: primaryTextColor)
+                                attributedString = NSAttributedString(string: strings.Notification_DiamondsGift_UpgradeChannel, font: titleFont, textColor: primaryTextColor)
                             } else if message.id.peerId == accountPeerId {
-                                attributedString = NSAttributedString(string: strings.Notification_StarsGift_UpgradeSelf, font: titleFont, textColor: primaryTextColor)
+                                attributedString = NSAttributedString(string: strings.Notification_DiamondsGift_UpgradeSelf, font: titleFont, textColor: primaryTextColor)
                             } else if message.author?.id == accountPeerId {
                                 let attributes = peerMentionsAttributes(primaryTextColor: primaryTextColor, peerIds: peerIds)
                                 if isPrepaidUpgrade {
-                                    attributedString = addAttributesToStringWithRanges(strings.Notification_StarsGift_UpgradePrepaidYou(peerName)._tuple, body: bodyAttributes, argumentAttributes: attributes)
+                                    attributedString = addAttributesToStringWithRanges(strings.Notification_DiamondsGift_UpgradePrepaidYou(peerName)._tuple, body: bodyAttributes, argumentAttributes: attributes)
                                 } else {
-                                    attributedString = addAttributesToStringWithRanges(strings.Notification_StarsGift_UpgradeYou(peerName)._tuple, body: bodyAttributes, argumentAttributes: attributes)
+                                    attributedString = addAttributesToStringWithRanges(strings.Notification_DiamondsGift_UpgradeYou(peerName)._tuple, body: bodyAttributes, argumentAttributes: attributes)
                                 }
                             } else {
                                 let attributes = peerMentionsAttributes(primaryTextColor: primaryTextColor, peerIds: peerIds)
                                 if isPrepaidUpgrade {
-                                    attributedString = addAttributesToStringWithRanges(strings.Notification_StarsGift_UpgradePrepaid(peerName)._tuple, body: bodyAttributes, argumentAttributes: attributes)
+                                    attributedString = addAttributesToStringWithRanges(strings.Notification_DiamondsGift_UpgradePrepaid(peerName)._tuple, body: bodyAttributes, argumentAttributes: attributes)
                                 } else {
-                                    attributedString = addAttributesToStringWithRanges(strings.Notification_StarsGift_Upgrade(peerName)._tuple, body: bodyAttributes, argumentAttributes: attributes)
+                                    attributedString = addAttributesToStringWithRanges(strings.Notification_DiamondsGift_Upgrade(peerName)._tuple, body: bodyAttributes, argumentAttributes: attributes)
                                 }
                             }
                         } else {
@@ -1330,7 +1330,7 @@ public func universalServiceMessageString(presentationData: (PresentationTheme, 
                                 let starsString: String
                                 switch resaleStars.currency {
                                 case .stars:
-                                    starsString = strings.Notification_StarsGiftOffer_Accepted_Stars(Int32(clamping: resaleStars.amount.value))
+                                    starsString = strings.Notification_DiamondsGiftOffer_Accepted_Diamonds(Int32(clamping: resaleStars.amount.value))
                                 case .ton:
                                     starsString = formatTonAmountText(resaleStars.amount.value, dateTimeFormat: dateTimeFormat, formatString: strings.Currency_Grams)
                                 }
@@ -1344,40 +1344,40 @@ public func universalServiceMessageString(presentationData: (PresentationTheme, 
                                     var attributes = peerMentionsAttributes(primaryTextColor: primaryTextColor, peerIds: peerIds)
                                     attributes[0] = boldAttributes
                                     attributes[2] = boldAttributes
-                                    attributedString = addAttributesToStringWithRanges(strings.Notification_StarsGiftOffer_AcceptedYou(giftTitle, peerName, starsString)._tuple, body: bodyAttributes, argumentAttributes: attributes)
+                                    attributedString = addAttributesToStringWithRanges(strings.Notification_DiamondsGiftOffer_AcceptedYou(giftTitle, peerName, starsString)._tuple, body: bodyAttributes, argumentAttributes: attributes)
                                 } else {
                                     let peerIds: [(Int, EnginePeer.Id?)] = [(0, message.author?.id)]
                                     var attributes = peerMentionsAttributes(primaryTextColor: primaryTextColor, peerIds: peerIds)
                                     attributes[1] = boldAttributes
                                     attributes[2] = boldAttributes
-                                    attributedString = addAttributesToStringWithRanges(strings.Notification_StarsGiftOffer_Accepted(peerName, giftTitle, starsString)._tuple, body: bodyAttributes, argumentAttributes: attributes)
+                                    attributedString = addAttributesToStringWithRanges(strings.Notification_DiamondsGiftOffer_Accepted(peerName, giftTitle, starsString)._tuple, body: bodyAttributes, argumentAttributes: attributes)
                                 }
                             } else if message.id.peerId == accountPeerId && assigned {
                                 let attributes: [Int: MarkdownAttributeSet] = [0: boldAttributes]
                                 let giftTitle = "\(gift.title) #\(formatCollectibleNumber(gift.number, dateTimeFormat: dateTimeFormat))"
-                                attributedString = addAttributesToStringWithRanges(strings.Notification_StarsGift_Assigned(giftTitle)._tuple, body: bodyAttributes, argumentAttributes: attributes)
+                                attributedString = addAttributesToStringWithRanges(strings.Notification_DiamondsGift_Assigned(giftTitle)._tuple, body: bodyAttributes, argumentAttributes: attributes)
                             } else if message.id.peerId.isIosappNotifications && senderId == nil {
-                                attributedString = NSAttributedString(string: strings.Notification_StarsGift_SentSomeone, font: titleFont, textColor: primaryTextColor)
+                                attributedString = NSAttributedString(string: strings.Notification_DiamondsGift_SentSomeone, font: titleFont, textColor: primaryTextColor)
                             } else if message.author?.id == accountPeerId {
                                 if let resaleStars {
                                     let starsString: String
                                     switch resaleStars.currency {
                                     case .stars:
-                                        starsString = strings.Notification_StarsGift_Bought_Stars(Int32(clamping: resaleStars.amount.value))
+                                        starsString = strings.Notification_DiamondsGift_Bought_Diamonds(Int32(clamping: resaleStars.amount.value))
                                     case .ton:
                                         starsString = formatTonAmountText(resaleStars.amount.value, dateTimeFormat: dateTimeFormat, formatString: strings.Currency_Grams)
                                     }
                                     if message.id.peerId == accountPeerId {
-                                        attributedString = addAttributesToStringWithRanges(strings.Notification_StarsGift_BoughtForYouself(starsString)._tuple, body: bodyAttributes, argumentAttributes: [0: boldAttributes])
+                                        attributedString = addAttributesToStringWithRanges(strings.Notification_DiamondsGift_BoughtForYouself(starsString)._tuple, body: bodyAttributes, argumentAttributes: [0: boldAttributes])
                                     } else {
                                         let giftTitle = "\(gift.title) #\(presentationStringsFormattedNumber(gift.number, dateTimeFormat.groupingSeparator))"
-                                        attributedString = addAttributesToStringWithRanges(strings.Notification_StarsGift_BoughtYou(giftTitle, starsString)._tuple, body: bodyAttributes, argumentAttributes: [0: boldAttributes, 1: boldAttributes])
+                                        attributedString = addAttributesToStringWithRanges(strings.Notification_DiamondsGift_BoughtYou(giftTitle, starsString)._tuple, body: bodyAttributes, argumentAttributes: [0: boldAttributes, 1: boldAttributes])
                                     }
                                 } else {
                                     if isCrafted {
-                                        attributedString = NSAttributedString(string: strings.Notification_StarsGift_Crafted, font: titleFont, textColor: primaryTextColor)
+                                        attributedString = NSAttributedString(string: strings.Notification_DiamondsGift_Crafted, font: titleFont, textColor: primaryTextColor)
                                     } else {
-                                        attributedString = NSAttributedString(string: strings.Notification_StarsGift_TransferYou, font: titleFont, textColor: primaryTextColor)
+                                        attributedString = NSAttributedString(string: strings.Notification_DiamondsGift_TransferYou, font: titleFont, textColor: primaryTextColor)
                                     }
                                 }
                             } else if let senderId, let peer = message.peers[senderId] {
@@ -1386,19 +1386,19 @@ public func universalServiceMessageString(presentationData: (PresentationTheme, 
                                         peerName = EnginePeer(targetPeer).compactDisplayTitle
                                         peerIds = [(0, peerId)]
                                         let attributes = peerMentionsAttributes(primaryTextColor: primaryTextColor, peerIds: peerIds)
-                                        attributedString = addAttributesToStringWithRanges(strings.Notification_StarsGift_TransferToChannelYou(peerName)._tuple, body: bodyAttributes, argumentAttributes: attributes)
+                                        attributedString = addAttributesToStringWithRanges(strings.Notification_DiamondsGift_TransferToChannelYou(peerName)._tuple, body: bodyAttributes, argumentAttributes: attributes)
                                     } else {
                                         let targetPeerName = EnginePeer(targetPeer).compactDisplayTitle
                                         peerName = EnginePeer(peer).compactDisplayTitle
                                         peerIds = [(0, peer.id), (1, targetPeer.id)]
                                         let attributes = peerMentionsAttributes(primaryTextColor: primaryTextColor, peerIds: peerIds)
-                                        attributedString = addAttributesToStringWithRanges(strings.Notification_StarsGift_TransferToChannel(peerName, targetPeerName)._tuple, body: bodyAttributes, argumentAttributes: attributes)
+                                        attributedString = addAttributesToStringWithRanges(strings.Notification_DiamondsGift_TransferToChannel(peerName, targetPeerName)._tuple, body: bodyAttributes, argumentAttributes: attributes)
                                     }
                                 } else {
                                     peerName = EnginePeer(peer).compactDisplayTitle
                                     peerIds = [(0, senderId)]
                                     let attributes = peerMentionsAttributes(primaryTextColor: primaryTextColor, peerIds: peerIds)
-                                    attributedString = addAttributesToStringWithRanges(strings.Notification_StarsGift_Transfer(peerName)._tuple, body: bodyAttributes, argumentAttributes: attributes)
+                                    attributedString = addAttributesToStringWithRanges(strings.Notification_DiamondsGift_Transfer(peerName)._tuple, body: bodyAttributes, argumentAttributes: attributes)
                                 }
                             } else {
                                 var attributes = peerMentionsAttributes(primaryTextColor: primaryTextColor, peerIds: peerIds)
@@ -1406,23 +1406,23 @@ public func universalServiceMessageString(presentationData: (PresentationTheme, 
                                     let starsString: String
                                     switch resaleStars.currency {
                                     case .stars:
-                                        starsString = strings.Notification_StarsGift_Bought_Stars(Int32(clamping: resaleStars.amount.value))
+                                        starsString = strings.Notification_DiamondsGift_Bought_Diamonds(Int32(clamping: resaleStars.amount.value))
                                     case .ton:
                                         starsString = formatTonAmountText(resaleStars.amount.value, dateTimeFormat: dateTimeFormat, formatString: strings.Currency_Grams)
                                     }
                                     let giftTitle = "\(gift.title) #\(formatCollectibleNumber(gift.number, dateTimeFormat: dateTimeFormat))"
                                     attributes[1] = boldAttributes
                                     attributes[2] = boldAttributes
-                                    attributedString = addAttributesToStringWithRanges(strings.Notification_StarsGift_Bought(peerName, giftTitle, starsString)._tuple, body: bodyAttributes, argumentAttributes: attributes)
+                                    attributedString = addAttributesToStringWithRanges(strings.Notification_DiamondsGift_Bought(peerName, giftTitle, starsString)._tuple, body: bodyAttributes, argumentAttributes: attributes)
                                 } else {
-                                    attributedString = addAttributesToStringWithRanges(strings.Notification_StarsGift_Transfer(peerName)._tuple, body: bodyAttributes, argumentAttributes: attributes)
+                                    attributedString = addAttributesToStringWithRanges(strings.Notification_DiamondsGift_Transfer(peerName)._tuple, body: bodyAttributes, argumentAttributes: attributes)
                                 }
                             }
                         }
                     }
                 }
             case let .paidMessagesRefunded(_, stars):
-                let starsString = strings.Notification_PaidMessageRefund_Stars(Int32(clamping: stars))
+                let starsString = strings.Notification_PaidMessageRefund_Diamonds(Int32(clamping: stars))
                 
                 var isOutgoing = false
                 var messagePeer: EnginePeer?
@@ -1466,7 +1466,7 @@ public func universalServiceMessageString(presentationData: (PresentationTheme, 
                     attributedString = addAttributesToStringWithRanges(resultString._tuple, body: bodyAttributes, argumentAttributes: attributes)
                 }
             case let .paidMessagesPriceEdited(stars, broadcastMessagesAllowed):
-                let starsString = strings.Notification_PaidMessagePriceChanged_Stars(Int32(clamping: stars))
+                let starsString = strings.Notification_PaidMessagePriceChanged_Diamonds(Int32(clamping: stars))
                 if message.author?.id == accountPeerId {
                     let resultString: PresentationStrings.FormattedString
                     resultString = strings.Notification_PaidMessagePriceChangedYou(starsString)
@@ -1637,7 +1637,7 @@ public func universalServiceMessageString(presentationData: (PresentationTheme, 
                 let amountString: String
                 switch amount.currency {
                 case .stars:
-                    amountString = strings.Chat_PostApproval_DetailStatus_StarsAmount(Int32((amount.amount.value == 1 && amount.amount.nanos == 0) ? 1 : 100)).replacingOccurrences(of: "#", with: "\(amount.amount)")
+                    amountString = strings.Chat_PostApproval_DetailStatus_DiamondsAmount(Int32((amount.amount.value == 1 && amount.amount.nanos == 0) ? 1 : 100)).replacingOccurrences(of: "#", with: "\(amount.amount)")
                 case .ton:
                     amountString = strings.Chat_PostApproval_DetailStatus_TonAmount(Int32((amount.amount.value == 1 * 1_000_000_000) ? 1 : 100)).replacingOccurrences(of: "#", with: "\(formatTonAmountText(amount.amount.value, dateTimeFormat: dateTimeFormat, maxDecimalPositions: 3))")
                 }
@@ -1669,17 +1669,17 @@ public func universalServiceMessageString(presentationData: (PresentationTheme, 
                 } else {
                     let price = formatCurrencyAmount(amount, currency: currency)
                     if message.author?.id == accountPeerId {
-                        attributedString = addAttributesToStringWithRanges(strings.Notification_StarsGift_SentYou(price)._tuple, body: bodyAttributes, argumentAttributes: [0: boldAttributes])
+                        attributedString = addAttributesToStringWithRanges(strings.Notification_DiamondsGift_SentYou(price)._tuple, body: bodyAttributes, argumentAttributes: [0: boldAttributes])
                     } else {
                         var authorName = compactAuthorName
                         var peerIds: [(Int, EnginePeer.Id?)] = [(0, message.author?.id)]
                         if message.id.peerId.namespace == Namespaces.Peer.CloudUser && message.id.peerId.id._internalGetInt64Value() == 777000 {
-                            authorName = strings.Notification_StarsGift_UnknownUser
+                            authorName = strings.Notification_DiamondsGift_UnknownUser
                             peerIds = []
                         }
                         var attributes = peerMentionsAttributes(primaryTextColor: primaryTextColor, peerIds: peerIds)
                         attributes[1] = boldAttributes
-                        attributedString = addAttributesToStringWithRanges(strings.Notification_StarsGift_Sent(authorName, price)._tuple, body: bodyAttributes, argumentAttributes: attributes)
+                        attributedString = addAttributesToStringWithRanges(strings.Notification_DiamondsGift_Sent(authorName, price)._tuple, body: bodyAttributes, argumentAttributes: attributes)
                     }
                 }
             case let .starGiftPurchaseOffer(gift, amount, _, _, _):
@@ -1701,22 +1701,22 @@ public func universalServiceMessageString(presentationData: (PresentationTheme, 
                     let priceString: String
                     switch amount.currency {
                     case .stars:
-                        priceString = strings.Notification_StarsGiftOffer_OfferYou_Stars(Int32(clamping: amount.amount.value))
+                        priceString = strings.Notification_DiamondsGiftOffer_OfferYou_Diamonds(Int32(clamping: amount.amount.value))
                     case .ton:
                         priceString = formatTonAmountText(amount.amount.value, dateTimeFormat: dateTimeFormat, formatString: strings.Currency_Grams)
                     }
                     
-                    attributedString = addAttributesToStringWithRanges(strings.Notification_StarsGiftOffer_OfferYou(peerName, priceString, giftTitle)._tuple, body: bodyAttributes, argumentAttributes: attributes)
+                    attributedString = addAttributesToStringWithRanges(strings.Notification_DiamondsGiftOffer_OfferYou(peerName, priceString, giftTitle)._tuple, body: bodyAttributes, argumentAttributes: attributes)
                 } else {
                     let priceString: String
                     switch amount.currency {
                     case .stars:
-                        priceString = strings.Notification_StarsGiftOffer_Offer_Stars(Int32(clamping: amount.amount.value))
+                        priceString = strings.Notification_DiamondsGiftOffer_Offer_Diamonds(Int32(clamping: amount.amount.value))
                     case .ton:
                         priceString = formatTonAmountText(amount.amount.value, dateTimeFormat: dateTimeFormat, formatString: strings.Currency_Grams)
                     }
                     
-                    attributedString = addAttributesToStringWithRanges(strings.Notification_StarsGiftOffer_Offer(peerName, priceString, giftTitle)._tuple, body: bodyAttributes, argumentAttributes: attributes)
+                    attributedString = addAttributesToStringWithRanges(strings.Notification_DiamondsGiftOffer_Offer(peerName, priceString, giftTitle)._tuple, body: bodyAttributes, argumentAttributes: attributes)
                 }
             case let .starGiftPurchaseOfferDeclined(gift, amount, hasExpired):
                 let peerName = message.peers[message.id.peerId].flatMap { EnginePeer($0) }?.compactDisplayTitle ?? ""
@@ -1734,7 +1734,7 @@ public func universalServiceMessageString(presentationData: (PresentationTheme, 
                         let priceString: String
                         switch amount.currency {
                         case .stars:
-                            priceString = strings.Notification_StarsGiftOffer_ExpiredYou_Stars(Int32(clamping: amount.amount.value))
+                            priceString = strings.Notification_DiamondsGiftOffer_ExpiredYou_Diamonds(Int32(clamping: amount.amount.value))
                         case .ton:
                             priceString = formatTonAmountText(amount.amount.value, dateTimeFormat: dateTimeFormat, formatString: strings.Currency_Grams)
                         }
@@ -1742,12 +1742,12 @@ public func universalServiceMessageString(presentationData: (PresentationTheme, 
                         var attributes = peerMentionsAttributes(primaryTextColor: primaryTextColor, peerIds: peerIds)
                         attributes[1] = boldAttributes
                         attributes[2] = boldAttributes
-                        attributedString = addAttributesToStringWithRanges(strings.Notification_StarsGiftOffer_ExpiredYou(peerName, giftTitle, priceString)._tuple, body: bodyAttributes, argumentAttributes: attributes)
+                        attributedString = addAttributesToStringWithRanges(strings.Notification_DiamondsGiftOffer_ExpiredYou(peerName, giftTitle, priceString)._tuple, body: bodyAttributes, argumentAttributes: attributes)
                     } else {
                         let priceString: String
                         switch amount.currency {
                         case .stars:
-                            priceString = strings.Notification_StarsGiftOffer_Expired_Stars(Int32(clamping: amount.amount.value))
+                            priceString = strings.Notification_DiamondsGiftOffer_Expired_Diamonds(Int32(clamping: amount.amount.value))
                         case .ton:
                             priceString = formatTonAmountText(amount.amount.value, dateTimeFormat: dateTimeFormat, formatString: strings.Currency_Grams)
                         }
@@ -1758,17 +1758,17 @@ public func universalServiceMessageString(presentationData: (PresentationTheme, 
                         attributes[1] = boldAttributes
                         attributes[2] = boldAttributes
                         attributes[3] = boldAttributes
-                        attributedString = addAttributesToStringWithRanges(strings.Notification_StarsGiftOffer_Expired(peerName, giftTitle, timeString, priceString)._tuple, body: bodyAttributes, argumentAttributes: attributes)
+                        attributedString = addAttributesToStringWithRanges(strings.Notification_DiamondsGiftOffer_Expired(peerName, giftTitle, timeString, priceString)._tuple, body: bodyAttributes, argumentAttributes: attributes)
                     }
                 } else {
                     if message.author?.id == accountPeerId {
                         let attributes = peerMentionsAttributes(primaryTextColor: primaryTextColor, peerIds: peerIds)
-                        attributedString = addAttributesToStringWithRanges(strings.Notification_StarsGiftOffer_RejectedYou(peerName)._tuple, body: bodyAttributes, argumentAttributes: attributes)
+                        attributedString = addAttributesToStringWithRanges(strings.Notification_DiamondsGiftOffer_RejectedYou(peerName)._tuple, body: bodyAttributes, argumentAttributes: attributes)
                     } else {
                         let priceString: String
                         switch amount.currency {
                         case .stars:
-                            priceString = strings.Notification_StarsGiftOffer_Rejected_Stars(Int32(clamping: amount.amount.value))
+                            priceString = strings.Notification_DiamondsGiftOffer_Rejected_Diamonds(Int32(clamping: amount.amount.value))
                         case .ton:
                             priceString = formatTonAmountText(amount.amount.value, dateTimeFormat: dateTimeFormat, formatString: strings.Currency_Grams)
                         }
@@ -1776,7 +1776,7 @@ public func universalServiceMessageString(presentationData: (PresentationTheme, 
                         var attributes = peerMentionsAttributes(primaryTextColor: primaryTextColor, peerIds: peerIds)
                         attributes[1] = boldAttributes
                         attributes[2] = boldAttributes
-                        attributedString = addAttributesToStringWithRanges(strings.Notification_StarsGiftOffer_Rejected(peerName, giftTitle, priceString)._tuple, body: bodyAttributes, argumentAttributes: attributes)
+                        attributedString = addAttributesToStringWithRanges(strings.Notification_DiamondsGiftOffer_Rejected(peerName, giftTitle, priceString)._tuple, body: bodyAttributes, argumentAttributes: attributes)
                     }
                 }
             case let .groupCreatorChange(groupCreatorChange):

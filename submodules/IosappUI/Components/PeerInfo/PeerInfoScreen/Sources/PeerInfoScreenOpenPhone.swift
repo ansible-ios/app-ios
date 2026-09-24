@@ -97,12 +97,12 @@ extension PeerInfoScreenNode {
             
             if case let .user(peer) = peer, let peerPhoneNumber = peer.phone, formattedPhoneNumber == formatPhoneNumber(context: strongSelf.context, number: peerPhoneNumber) {
                 if !strongSelf.isMyProfile {
-                    items.append(.action(ContextMenuActionItem(text: presentationData.strings.UserInfo_IosappCall, icon: { theme in generateTintedImage(image: UIImage(bundleImageName: "Chat/Context Menu/Call"), color: theme.contextMenu.primaryColor) }, action: { c, _ in
+                    items.append(.action(ContextMenuActionItem(text: presentationData.strings.UserInfo_AnsibleCall, icon: { theme in generateTintedImage(image: UIImage(bundleImageName: "Chat/Context Menu/Call"), color: theme.contextMenu.primaryColor) }, action: { c, _ in
                         c?.dismiss {
                             telegramCallAction(false)
                         }
                     })))
-                    items.append(.action(ContextMenuActionItem(text: presentationData.strings.UserInfo_IosappVideoCall, icon: { theme in generateTintedImage(image: UIImage(bundleImageName: "Chat/Context Menu/VideoCall"), color: theme.contextMenu.primaryColor) }, action: { c, _ in
+                    items.append(.action(ContextMenuActionItem(text: presentationData.strings.UserInfo_AnsibleVideoCall, icon: { theme in generateTintedImage(image: UIImage(bundleImageName: "Chat/Context Menu/VideoCall"), color: theme.contextMenu.primaryColor) }, action: { c, _ in
                         c?.dismiss {
                             telegramCallAction(true)
                         }

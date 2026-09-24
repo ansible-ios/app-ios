@@ -233,20 +233,20 @@ final class StarsTransactionItemNode: ListViewItemNode, ItemListItemNode {
                     case let .peer(peer):
                         if item.transaction.flags.contains(.isPaidMessage) {
                             itemTitle = peer.displayTitle(strings: item.presentationData.strings, displayOrder: .firstLast)
-                            itemSubtitle = item.presentationData.strings.Stars_Intro_Transaction_PaidMessage(item.transaction.paidMessageCount ?? 1)
+                            itemSubtitle = item.presentationData.strings.Diamonds_Intro_Transaction_PaidMessage(item.transaction.paidMessageCount ?? 1)
                         } else if let starGift = item.transaction.starGift {
                             if item.transaction.flags.contains(.isStarGiftAuctionBid), case let .generic(gift) = starGift {
                                 itemTitle = gift.title ?? "Gift"
-                                itemSubtitle = item.presentationData.strings.Stars_Intro_Transaction_GiftAuctionBid
+                                itemSubtitle = item.presentationData.strings.Diamonds_Intro_Transaction_GiftAuctionBid
                             } else if item.transaction.flags.contains(.isStarGiftPrepaidUpgrade) {
                                 itemTitle = peer.displayTitle(strings: item.presentationData.strings, displayOrder: .firstLast)
-                                itemSubtitle = item.presentationData.strings.Stars_Intro_Transaction_PrepaidGiftUpgrade
+                                itemSubtitle = item.presentationData.strings.Diamonds_Intro_Transaction_PrepaidGiftUpgrade
                             } else if item.transaction.flags.contains(.isStarGiftDropOriginalDetails), case let .unique(gift) = starGift {
                                 itemTitle = "\(gift.title) #\(formatCollectibleNumber(gift.number, dateTimeFormat: item.presentationData.dateTimeFormat))"
-                                itemSubtitle = item.presentationData.strings.Stars_Intro_Transaction_GiftDropOriginalDetails
+                                itemSubtitle = item.presentationData.strings.Diamonds_Intro_Transaction_GiftDropOriginalDetails
                             } else if item.transaction.flags.contains(.isStarGiftUpgrade), case let .unique(gift) = starGift {
                                 itemTitle = "\(gift.title) #\(formatCollectibleNumber(gift.number, dateTimeFormat: item.presentationData.dateTimeFormat))"
-                                itemSubtitle = item.presentationData.strings.Stars_Intro_Transaction_GiftUpgrade
+                                itemSubtitle = item.presentationData.strings.Diamonds_Intro_Transaction_GiftUpgrade
                             } else {
                                 itemTitle = peer.displayTitle(strings: item.presentationData.strings, displayOrder: .firstLast)
                                 switch starGift {
@@ -254,62 +254,62 @@ final class StarsTransactionItemNode: ListViewItemNode, ItemListItemNode {
                                     if item.transaction.flags.contains(.isStarGiftOffer) {
                                         itemSubtitle = item.presentationData.strings.Gift_Offer_Title
                                     } else {
-                                        itemSubtitle = item.transaction.count.amount > StarsAmount.zero ? item.presentationData.strings.Stars_Intro_Transaction_ConvertedGift : item.presentationData.strings.Stars_Intro_Transaction_Gift
+                                        itemSubtitle = item.transaction.count.amount > StarsAmount.zero ? item.presentationData.strings.Diamonds_Intro_Transaction_ConvertedGift : item.presentationData.strings.Diamonds_Intro_Transaction_Gift
                                     }
                                 case .unique:
                                     if item.transaction.flags.contains(.isStarGiftOffer) {
                                         itemSubtitle = item.presentationData.strings.Gift_Offer_Title
                                     } else if item.transaction.count.amount > StarsAmount.zero {
-                                        itemSubtitle = item.presentationData.strings.Stars_Intro_Transaction_GiftSale
+                                        itemSubtitle = item.presentationData.strings.Diamonds_Intro_Transaction_GiftSale
                                     } else {
                                         if item.transaction.flags.contains(.isStarGiftResale) {
-                                            itemSubtitle = item.presentationData.strings.Stars_Intro_Transaction_GiftPurchase
+                                            itemSubtitle = item.presentationData.strings.Diamonds_Intro_Transaction_GiftPurchase
                                         } else {
-                                            itemSubtitle = item.presentationData.strings.Stars_Intro_Transaction_GiftTransfer
+                                            itemSubtitle = item.presentationData.strings.Diamonds_Intro_Transaction_GiftTransfer
                                         }
                                     }
                                 }
                             }
                         } else if !item.transaction.media.isEmpty {
-                            itemTitle = item.presentationData.strings.Stars_Intro_Transaction_MediaPurchase
+                            itemTitle = item.presentationData.strings.Diamonds_Intro_Transaction_MediaPurchase
                             itemSubtitle = peer.displayTitle(strings: item.presentationData.strings, displayOrder: .firstLast)
                         } else if let title = item.transaction.title {
                             itemTitle = title
                             itemSubtitle = peer.displayTitle(strings: item.presentationData.strings, displayOrder: .firstLast)
                         } else {
                             if item.transaction.flags.contains(.isReaction) {
-                                itemSubtitle = item.presentationData.strings.Stars_Intro_Transaction_Reaction_Title
+                                itemSubtitle = item.presentationData.strings.Diamonds_Intro_Transaction_Reaction_Title
                             } else if let _ = item.transaction.subscriptionPeriod {
-                                itemSubtitle = item.presentationData.strings.Stars_Intro_Transaction_SubscriptionFee_Title
+                                itemSubtitle = item.presentationData.strings.Diamonds_Intro_Transaction_SubscriptionFee_Title
                             } else {
                                 itemSubtitle = nil
                             }
                             itemTitle = peer.displayTitle(strings: item.presentationData.strings, displayOrder: .firstLast)
                         }
                     case .appStore:
-                        itemTitle = item.presentationData.strings.Stars_Intro_Transaction_AppleTopUp_Title
-                        itemSubtitle = item.presentationData.strings.Stars_Intro_Transaction_AppleTopUp_Subtitle
+                        itemTitle = item.presentationData.strings.Diamonds_Intro_Transaction_AppleTopUp_Title
+                        itemSubtitle = item.presentationData.strings.Diamonds_Intro_Transaction_AppleTopUp_Subtitle
                     case .playMarket:
-                        itemTitle = item.presentationData.strings.Stars_Intro_Transaction_GoogleTopUp_Title
-                        itemSubtitle = item.presentationData.strings.Stars_Intro_Transaction_GoogleTopUp_Subtitle
+                        itemTitle = item.presentationData.strings.Diamonds_Intro_Transaction_GoogleTopUp_Title
+                        itemSubtitle = item.presentationData.strings.Diamonds_Intro_Transaction_GoogleTopUp_Subtitle
                     case .fragment:
-                        itemTitle = item.presentationData.strings.Stars_Intro_Transaction_FragmentWithdrawal_Title
-                        itemSubtitle = item.presentationData.strings.Stars_Intro_Transaction_FragmentWithdrawal_Subtitle
+                        itemTitle = item.presentationData.strings.Diamonds_Intro_Transaction_FragmentWithdrawal_Title
+                        itemSubtitle = item.presentationData.strings.Diamonds_Intro_Transaction_FragmentWithdrawal_Subtitle
                     case .premiumBot:
-                        itemTitle = item.presentationData.strings.Stars_Intro_Transaction_PremiumBotTopUp_Title
-                        itemSubtitle = item.presentationData.strings.Stars_Intro_Transaction_PremiumBotTopUp_Subtitle
+                        itemTitle = item.presentationData.strings.Diamonds_Intro_Transaction_PremiumBotTopUp_Title
+                        itemSubtitle = item.presentationData.strings.Diamonds_Intro_Transaction_PremiumBotTopUp_Subtitle
                     case .ads:
-                        itemTitle = item.presentationData.strings.Stars_Intro_Transaction_IosappAds_Title
-                        itemSubtitle = item.presentationData.strings.Stars_Intro_Transaction_IosappAds_Subtitle
+                        itemTitle = item.presentationData.strings.Diamonds_Intro_Transaction_AnsibleAds_Title
+                        itemSubtitle = item.presentationData.strings.Diamonds_Intro_Transaction_AnsibleAds_Subtitle
                     case .apiLimitExtension:
-                        itemTitle = item.presentationData.strings.Stars_Intro_Transaction_IosappBotApi_Title
+                        itemTitle = item.presentationData.strings.Diamonds_Intro_Transaction_AnsibleBotApi_Title
                         if let floodskipNumber = item.transaction.floodskipNumber {
-                            itemSubtitle = item.presentationData.strings.Stars_Intro_Transaction_IosappBotApi_Messages(floodskipNumber)
+                            itemSubtitle = item.presentationData.strings.Diamonds_Intro_Transaction_AnsibleBotApi_Messages(floodskipNumber)
                         } else {
                             itemSubtitle = nil
                         }
                     case .unsupported:
-                        itemTitle = item.presentationData.strings.Stars_Intro_Transaction_Unsupported_Title
+                        itemTitle = item.presentationData.strings.Diamonds_Intro_Transaction_Unsupported_Title
                         itemSubtitle = nil
                     }
                     
@@ -324,7 +324,7 @@ final class StarsTransactionItemNode: ListViewItemNode, ItemListItemNode {
                     var itemDateColor = item.presentationData.theme.list.itemSecondaryTextColor
                     itemDate = stringForMediumCompactDate(timestamp: item.transaction.date, strings: item.presentationData.strings, dateTimeFormat: item.presentationData.dateTimeFormat)
                     if item.transaction.flags.contains(.isRefund) {
-                        itemDate += " – \(item.presentationData.strings.Stars_Intro_Transaction_Refund)"
+                        itemDate += " – \(item.presentationData.strings.Diamonds_Intro_Transaction_Refund)"
                     } else if item.transaction.flags.contains(.isPending) {
                         itemDate += " – \(item.presentationData.strings.Monetization_Transaction_Pending)"
                     } else if item.transaction.flags.contains(.isFailed) {

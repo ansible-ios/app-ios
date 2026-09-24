@@ -280,7 +280,7 @@ class ContactMultiselectionControllerImpl: ViewController, ContactMultiselection
             if case let .contacts(contactsNode) = self.contactsNode.contentNode {
                 count = contactsNode.selectionState?.selectedPeerIndices.count ?? 0
             }
-            self.titleView.title = CounterControllerTitle(title: self.params.title ?? (hasActions ? self.presentationData.strings.Premium_Gift_ContactSelection_Title : self.presentationData.strings.Stars_Purchase_GiftStars), counter: "\(count)/\(maxCount)")
+            self.titleView.title = CounterControllerTitle(title: self.params.title ?? (hasActions ? self.presentationData.strings.Premium_Gift_ContactSelection_Title : self.presentationData.strings.Diamonds_Purchase_GiftDiamonds), counter: "\(count)/\(maxCount)")
         case .requestedUsersSelection:
             let maxCount: Int32 = self.limit ?? 10
             var count = 0

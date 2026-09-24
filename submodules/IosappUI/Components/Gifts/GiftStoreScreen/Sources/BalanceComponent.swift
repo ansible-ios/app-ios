@@ -97,7 +97,7 @@ final class BalanceComponent: Component {
             var rawString: String = ""
             let starsBalanceString = "**⭐️\(presentationStringsFormattedNumber(Int32(clamping: self.starsBalance), presentationData.dateTimeFormat.groupingSeparator))**"
             // Ansible: TON removed — the gift-store balance chip shows the crystal balance only.
-            rawString = presentationData.strings.Stars_Purchase_Balance + "\n" + starsBalanceString
+            rawString = presentationData.strings.Diamonds_Purchase_Balance + "\n" + starsBalanceString
             
             let attributedText = parseMarkdownIntoAttributedString(
                 rawString,

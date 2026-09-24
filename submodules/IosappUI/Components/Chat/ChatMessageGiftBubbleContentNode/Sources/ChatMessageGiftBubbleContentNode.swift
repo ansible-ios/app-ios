@@ -480,8 +480,8 @@ public class ChatMessageGiftBubbleContentNode: ChatMessageBubbleContentNode {
                             if let peer = item.message.peers[item.message.id.peerId] {
                                 peerName = EnginePeer(peer).compactDisplayTitle
                             }
-                            title = item.presentationData.strings.Notification_StarsGift_Title(Int32(count))
-                            text = incoming ? item.presentationData.strings.Notification_StarsGift_Subtitle : item.presentationData.strings.Notification_StarsGift_SubtitleYou(peerName).string
+                            title = item.presentationData.strings.Notification_DiamondsGift_Title(Int32(count))
+                            text = incoming ? item.presentationData.strings.Notification_DiamondsGift_Subtitle : item.presentationData.strings.Notification_DiamondsGift_SubtitleYou(peerName).string
                         case let .giftTon(_, amount, _, cryptoAmount, _):
                             if amount < 10000000000 {
                                 months = 1000
@@ -512,9 +512,9 @@ public class ChatMessageGiftBubbleContentNode: ChatMessageBubbleContentNode {
                             if let channelId, let channel = item.message.peers[channelId] {
                                 peerName = EnginePeer(channel).compactDisplayTitle
                             }
-                            title = item.presentationData.strings.Notification_StarsGiveaway_Title
-                            let starsString = item.presentationData.strings.Notification_StarsGiveaway_Subtitle_Stars(Int32(clamping: count)).replacingOccurrences(of: " ", with: "\u{00A0}")
-                            text = item.presentationData.strings.Notification_StarsGiveaway_Subtitle(peerName, starsString).string
+                            title = item.presentationData.strings.Notification_DiamondsGiveaway_Title
+                            let starsString = item.presentationData.strings.Notification_DiamondsGiveaway_Subtitle_Diamonds(Int32(clamping: count)).replacingOccurrences(of: " ", with: "\u{00A0}")
+                            text = item.presentationData.strings.Notification_DiamondsGiveaway_Subtitle(peerName, starsString).string
                         case let .giftCode(_, fromGiveaway, unclaimed, channelId, daysValue, _, _, _, _, giftText, giftEntities):
                             let monthsValue = max(3, Int32(round(Float(daysValue) / 30.0)))
                             if channelId == nil {
@@ -566,7 +566,7 @@ public class ChatMessageGiftBubbleContentNode: ChatMessageBubbleContentNode {
                                     convertStars = nil
                                 }
                                 if let releasedBy = gift.releasedBy, let peer = item.message.peers[releasedBy], let addressName = peer.addressName {
-                                    creatorButtonTitle = item.presentationData.strings.Notification_StarGift_ReleasedBy("**@\(addressName)**").string
+                                    creatorButtonTitle = item.presentationData.strings.Notification_DiamondGift_ReleasedBy("**@\(addressName)**").string
                                 }
                                 isStarGift = true
                                 
@@ -581,20 +581,20 @@ public class ChatMessageGiftBubbleContentNode: ChatMessageBubbleContentNode {
                                 
                                 let isChannelGift = item.message.id.peerId.namespace == Namespaces.Peer.CloudChannel || channelPeerId != nil
                                 if isSelfGift {
-                                    title = item.presentationData.strings.Notification_StarGift_Purchased_Title
+                                    title = item.presentationData.strings.Notification_DiamondGift_Purchased_Title
                                 } else {
                                     if isPrepaidUpgrade && senderPeerId == channelPeerId {
                                         title = item.presentationData.strings.Gift_View_Unknown_Title
                                     } else {
                                         if let senderPeerId, let name = item.message.peers[senderPeerId].flatMap(EnginePeer.init)?.compactDisplayTitle {
-                                            title = item.presentationData.strings.Notification_StarGift_Title(name).string
+                                            title = item.presentationData.strings.Notification_DiamondGift_Title(name).string
                                         } else if !incoming {
                                             var recipientPeerId = item.message.id.peerId
                                             if let toPeerId {
                                                 recipientPeerId = toPeerId
                                             }
                                             if let name = item.message.peers[recipientPeerId].flatMap(EnginePeer.init)?.compactDisplayTitle {
-                                                title = item.presentationData.strings.Notification_StarGift_TitleTo(name).string
+                                                title = item.presentationData.strings.Notification_DiamondGift_TitleTo(name).string
                                             } else {
                                                 title = item.presentationData.strings.Gift_View_Unknown_Title
                                             }
@@ -608,31 +608,31 @@ public class ChatMessageGiftBubbleContentNode: ChatMessageBubbleContentNode {
                                     entities = giftEntities ?? []
                                 } else {
                                     if isRefunded {
-                                        text = item.presentationData.strings.Notification_StarGift_Subtitle_Refunded
+                                        text = item.presentationData.strings.Notification_DiamondGift_Subtitle_Refunded
                                     } else if upgraded {
-                                        text = item.presentationData.strings.Notification_StarGift_Subtitle_Upgraded
+                                        text = item.presentationData.strings.Notification_DiamondGift_Subtitle_Upgraded
                                     } else if incoming {
                                         if converted {
-                                            text = item.presentationData.strings.Notification_StarGift_Subtitle_Converted(item.presentationData.strings.Notification_StarGift_Subtitle_Converted_Stars(Int32(clamping: convertStars ?? 0))).string
+                                            text = item.presentationData.strings.Notification_DiamondGift_Subtitle_Converted(item.presentationData.strings.Notification_DiamondGift_Subtitle_Converted_Diamonds(Int32(clamping: convertStars ?? 0))).string
                                         } else if upgradeStars != nil {
-                                            text = item.presentationData.strings.Notification_StarGift_Subtitle_Upgrade
+                                            text = item.presentationData.strings.Notification_DiamondGift_Subtitle_Upgrade
                                         } else if isSelfGift && canUpgrade {
-                                            text = item.presentationData.strings.Notification_StarsGift_Subtitle_Self
+                                            text = item.presentationData.strings.Notification_DiamondsGift_Subtitle_Self
                                         } else if savedToProfile {
                                             if let convertStars {
-                                                text =  item.presentationData.strings.Notification_StarGift_Subtitle_Displaying(item.presentationData.strings.Notification_StarGift_Subtitle_Displaying_Stars(Int32(clamping: convertStars))).string
+                                                text =  item.presentationData.strings.Notification_DiamondGift_Subtitle_Displaying(item.presentationData.strings.Notification_DiamondGift_Subtitle_Displaying_Diamonds(Int32(clamping: convertStars))).string
                                             } else {
-                                                text = item.presentationData.strings.Notification_StarGift_Bot_Subtitle_Displaying
+                                                text = item.presentationData.strings.Notification_DiamondGift_Bot_Subtitle_Displaying
                                             }
                                         } else {
                                             if let convertStars, convertStars > 0 {
                                                 if isChannelGift {
-                                                    text = item.presentationData.strings.Notification_StarGift_Subtitle_Channel(item.presentationData.strings.Notification_StarGift_Subtitle_Stars(Int32(clamping: convertStars))).string
+                                                    text = item.presentationData.strings.Notification_DiamondGift_Subtitle_Channel(item.presentationData.strings.Notification_DiamondGift_Subtitle_Diamonds(Int32(clamping: convertStars))).string
                                                 } else {
-                                                    text = item.presentationData.strings.Notification_StarGift_Subtitle(item.presentationData.strings.Notification_StarGift_Subtitle_Stars(Int32(clamping: convertStars))).string
+                                                    text = item.presentationData.strings.Notification_DiamondGift_Subtitle(item.presentationData.strings.Notification_DiamondGift_Subtitle_Diamonds(Int32(clamping: convertStars))).string
                                                 }
                                             } else {
-                                                text = item.presentationData.strings.Notification_StarGift_Bot_Subtitle
+                                                text = item.presentationData.strings.Notification_DiamondGift_Bot_Subtitle
                                             }
                                         }
                                     } else {
@@ -646,25 +646,25 @@ public class ChatMessageGiftBubbleContentNode: ChatMessageBubbleContentNode {
                                         }
                                         if peerName.isEmpty {
                                             if let convertStars, convertStars > 0 {
-                                                let starsString = item.presentationData.strings.Notification_StarGift_Subtitle_Stars(Int32(clamping: convertStars)).replacingOccurrences(of: " ", with: "\u{00A0}")
-                                                text = item.presentationData.strings.Notification_StarGift_Subtitle(starsString).string
+                                                let starsString = item.presentationData.strings.Notification_DiamondGift_Subtitle_Diamonds(Int32(clamping: convertStars)).replacingOccurrences(of: " ", with: "\u{00A0}")
+                                                text = item.presentationData.strings.Notification_DiamondGift_Subtitle(starsString).string
                                             } else {
-                                                text =  item.presentationData.strings.Notification_StarGift_Bot_Subtitle
+                                                text =  item.presentationData.strings.Notification_DiamondGift_Bot_Subtitle
                                             }
                                         } else {
                                             if isPrepaidUpgrade {
-                                                text =  item.presentationData.strings.Notification_StarGift_Subtitle_Upgrade_Prepaid(peerName).string
+                                                text =  item.presentationData.strings.Notification_DiamondGift_Subtitle_Upgrade_Prepaid(peerName).string
                                             } else if upgradeStars != nil {
-                                                text =  item.presentationData.strings.Notification_StarGift_Subtitle_Upgrade_Other(peerName).string
+                                                text =  item.presentationData.strings.Notification_DiamondGift_Subtitle_Upgrade_Other(peerName).string
                                             } else if let convertStars, convertStars > 0 {
-                                                let starsString = item.presentationData.strings.Notification_StarGift_Subtitle_Other_Stars(Int32(clamping: convertStars)).replacingOccurrences(of: " ", with: "\u{00A0}")
-                                                let formattedString = item.presentationData.strings.Notification_StarGift_Subtitle_Other(peerName, starsString)
+                                                let starsString = item.presentationData.strings.Notification_DiamondGift_Subtitle_Other_Diamonds(Int32(clamping: convertStars)).replacingOccurrences(of: " ", with: "\u{00A0}")
+                                                let formattedString = item.presentationData.strings.Notification_DiamondGift_Subtitle_Other(peerName, starsString)
                                                 text = formattedString.string
                                                 if let starsRange = formattedString.ranges.last {
                                                     entities.append(MessageTextEntity(range: starsRange.range.lowerBound ..< starsRange.range.upperBound, type: .Bold))
                                                 }
                                             } else {
-                                                text = item.presentationData.strings.Notification_StarGift_Subtitle_OtherNoConvert
+                                                text = item.presentationData.strings.Notification_DiamondGift_Subtitle_OtherNoConvert
                                             }
                                         }
                                     }
@@ -677,16 +677,16 @@ public class ChatMessageGiftBubbleContentNode: ChatMessageBubbleContentNode {
                                     } else {
                                         availabilityString = "\(availability.total)"
                                     }
-                                    ribbonTitle = item.presentationData.strings.Notification_StarGift_OneOf(availabilityString).string
+                                    ribbonTitle = item.presentationData.strings.Notification_DiamondGift_OneOf(availabilityString).string
                                 }
                                 if incoming || item.presentationData.isPreview, let upgradeStars, upgradeStars > 0, !upgraded {
-                                    buttonTitle = item.presentationData.strings.Notification_StarGift_Unpack
+                                    buttonTitle = item.presentationData.strings.Notification_DiamondGift_Unpack
                                     buttonIcon = "GiftUnpack"
                                 } else {
                                     if isPrepaidUpgrade && !incoming {
                                         buttonTitle = ""
                                     } else {
-                                        buttonTitle = item.presentationData.strings.Notification_StarGift_View
+                                        buttonTitle = item.presentationData.strings.Notification_DiamondGift_View
                                     }
                                 }
                             }
@@ -695,7 +695,7 @@ public class ChatMessageGiftBubbleContentNode: ChatMessageBubbleContentNode {
                                 isStarGift = true
                                 
                                 if let releasedBy = gift.releasedBy, let peer = item.message.peers[releasedBy], let addressName = peer.addressName {
-                                    creatorButtonTitle = item.presentationData.strings.Notification_StarGift_ReleasedBy("**@\(addressName)**").string
+                                    creatorButtonTitle = item.presentationData.strings.Notification_DiamondGift_ReleasedBy("**@\(addressName)**").string
                                 }
                                 
                                 let isSelfGift = item.message.id.peerId == item.context.account.peerId
@@ -713,32 +713,32 @@ public class ChatMessageGiftBubbleContentNode: ChatMessageBubbleContentNode {
                                     title = uniqueGift.title
                                 } else if isSelfGift {
                                     if isCrafted {
-                                        title = item.presentationData.strings.Notification_StarGift_Crafted_Title
+                                        title = item.presentationData.strings.Notification_DiamondGift_Crafted_Title
                                     } else if isUpgrade {
-                                        title = item.presentationData.strings.Notification_StarGift_Upgraded_Title
+                                        title = item.presentationData.strings.Notification_DiamondGift_Upgraded_Title
                                     } else {
-                                        title = item.presentationData.strings.Notification_StarGift_Purchased_Title
+                                        title = item.presentationData.strings.Notification_DiamondGift_Purchased_Title
                                     }
                                 } else if item.message.id.peerId.isIosappNotifications {
-                                    title = item.presentationData.strings.Notification_StarGift_TitleShort
+                                    title = item.presentationData.strings.Notification_DiamondGift_TitleShort
                                 } else {
-                                    title = item.presentationData.strings.Notification_StarGift_Title(authorName).string
+                                    title = item.presentationData.strings.Notification_DiamondGift_Title(authorName).string
                                 }    
-                                text = isStoryEntity ? "**\(item.presentationData.strings.Notification_StarGift_Collectible) #\(formatCollectibleNumber(uniqueGift.number, dateTimeFormat: item.presentationData.dateTimeFormat))**" : "**\(uniqueGift.title) #\(formatCollectibleNumber(uniqueGift.number, dateTimeFormat: item.presentationData.dateTimeFormat))**"
+                                text = isStoryEntity ? "**\(item.presentationData.strings.Notification_DiamondGift_Collectible) #\(formatCollectibleNumber(uniqueGift.number, dateTimeFormat: item.presentationData.dateTimeFormat))**" : "**\(uniqueGift.title) #\(formatCollectibleNumber(uniqueGift.number, dateTimeFormat: item.presentationData.dateTimeFormat))**"
                                 if fromOffer {
-                                    ribbonTitle = incoming ? "" : item.presentationData.strings.Notification_StarGift_Sold
+                                    ribbonTitle = incoming ? "" : item.presentationData.strings.Notification_DiamondGift_Sold
                                     customRibbonColors = [UIColor(rgb: 0xd9433a), UIColor(rgb: 0xff645b)]
                                 } else {
-                                    ribbonTitle = isStoryEntity ? "" : item.presentationData.strings.Notification_StarGift_Gift
+                                    ribbonTitle = isStoryEntity ? "" : item.presentationData.strings.Notification_DiamondGift_Gift
                                 }
                                                                 
-                                buttonTitle = isStoryEntity ? "" : item.presentationData.strings.Notification_StarGift_View
-                                modelTitle = item.presentationData.strings.Notification_StarGift_Model
-                                backdropTitle = item.presentationData.strings.Notification_StarGift_Backdrop
-                                symbolTitle = item.presentationData.strings.Notification_StarGift_Symbol
+                                buttonTitle = isStoryEntity ? "" : item.presentationData.strings.Notification_DiamondGift_View
+                                modelTitle = item.presentationData.strings.Notification_DiamondGift_Model
+                                backdropTitle = item.presentationData.strings.Notification_DiamondGift_Backdrop
+                                symbolTitle = item.presentationData.strings.Notification_DiamondGift_Symbol
                                 
                                 if uniqueGift.flags.contains(.isBurned) {
-                                    ribbonTitle = item.presentationData.strings.Notification_StarGift_Burned
+                                    ribbonTitle = item.presentationData.strings.Notification_DiamondGift_Burned
                                     customRibbonColors = [UIColor(rgb: 0xd9433a), UIColor(rgb: 0xff645b)]
                                     buttonTitle = ""
                                 }
@@ -765,8 +765,8 @@ public class ChatMessageGiftBubbleContentNode: ChatMessageBubbleContentNode {
                             } else if isRefunded, case let .generic(gift) = gift {
                                 isStarGift = true
                                 let authorName = item.message.author.flatMap { EnginePeer($0) }?.compactDisplayTitle ?? ""
-                                title = item.presentationData.strings.Notification_StarGift_Title(authorName).string
-                                text = item.presentationData.strings.Notification_StarGift_Subtitle_Refunded
+                                title = item.presentationData.strings.Notification_DiamondGift_Title(authorName).string
+                                text = item.presentationData.strings.Notification_DiamondGift_Subtitle_Refunded
                                 animationFile = gift.file
                             }
                         case let .setChatTheme(chatTheme):

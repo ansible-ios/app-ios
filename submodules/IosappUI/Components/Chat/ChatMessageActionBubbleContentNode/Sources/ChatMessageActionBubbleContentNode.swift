@@ -281,7 +281,7 @@ public class ChatMessageActionBubbleContentNode: ChatMessageBubbleContentNode {
                             let amountString: String
                             switch amount.currency {
                             case .stars:
-                                amountString = item.presentationData.strings.Chat_PostApproval_DetailStatus_StarsAmount(Int32((amount.amount.value == 1 && amount.amount.nanos == 0) ? 1 : 100)).replacingOccurrences(of: "#", with: "\(amount.amount)")
+                                amountString = item.presentationData.strings.Chat_PostApproval_DetailStatus_DiamondsAmount(Int32((amount.amount.value == 1 && amount.amount.nanos == 0) ? 1 : 100)).replacingOccurrences(of: "#", with: "\(amount.amount)")
                             case .ton:
                                 amountString = item.presentationData.strings.Chat_PostApproval_DetailStatus_TonAmount(Int32((amount.amount.value == 1 * 1_000_000_000) ? 1 : 100)).replacingOccurrences(of: "#", with: "\(formatTonAmountText(amount.amount.value, dateTimeFormat: item.presentationData.dateTimeFormat, maxDecimalPositions: 3))")
                             }
@@ -289,9 +289,9 @@ public class ChatMessageActionBubbleContentNode: ChatMessageBubbleContentNode {
                             switch amount.currency {
                             case .stars:
                                 if isUser {
-                                    pricePart = "\n\n" + item.presentationData.strings.Chat_PostApproval_Message_UserAgreementPriceStars(amountString, channelName).string
+                                    pricePart = "\n\n" + item.presentationData.strings.Chat_PostApproval_Message_UserAgreementPriceDiamonds(amountString, channelName).string
                                 } else {
-                                    pricePart = "\n\n" + item.presentationData.strings.Chat_PostApproval_Message_AdminAgreementPriceStars(amountString, channelName).string
+                                    pricePart = "\n\n" + item.presentationData.strings.Chat_PostApproval_Message_AdminAgreementPriceDiamonds(amountString, channelName).string
                                 }
                             case .ton:
                                 if isUser {
@@ -501,7 +501,7 @@ public class ChatMessageActionBubbleContentNode: ChatMessageBubbleContentNode {
                 var buyStarsButtonSize: CGSize?
                 if hasBuyStarsButton {
                     let serviceColor = serviceMessageColorComponents(theme: item.presentationData.theme.theme, wallpaper: item.presentationData.theme.wallpaper)
-                    let buyStarsTitleLayoutAndApplyValue = makeBuyStarsTitleLayout(TextNodeLayoutArguments(attributedString:  NSAttributedString(string: item.presentationData.strings.Chat_PostApproval_Message_BuyStars, font: Font.semibold(15.0), textColor: serviceColor.primaryText), backgroundColor: nil, maximumNumberOfLines: 0, truncationType: .end, constrainedSize: CGSize(width: constrainedSize.width - 32.0, height: CGFloat.greatestFiniteMagnitude), alignment: textAlignment, cutout: nil, insets: UIEdgeInsets()))
+                    let buyStarsTitleLayoutAndApplyValue = makeBuyStarsTitleLayout(TextNodeLayoutArguments(attributedString:  NSAttributedString(string: item.presentationData.strings.Chat_PostApproval_Message_BuyDiamonds, font: Font.semibold(15.0), textColor: serviceColor.primaryText), backgroundColor: nil, maximumNumberOfLines: 0, truncationType: .end, constrainedSize: CGSize(width: constrainedSize.width - 32.0, height: CGFloat.greatestFiniteMagnitude), alignment: textAlignment, cutout: nil, insets: UIEdgeInsets()))
                     buyStarsTitleLayoutAndApply = buyStarsTitleLayoutAndApplyValue
                     
                     let buyStarsButtonSizeValue = CGSize(width: buyStarsTitleLayoutAndApplyValue.0.size.width + 20.0 * 2.0, height: buyStarsTitleLayoutAndApplyValue.0.size.height + 8.0 * 2.0)

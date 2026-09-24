@@ -151,18 +151,18 @@ public func presentGiveawayInfoController(
             
             let intro: String
             if stars > 0 {
-                let starsString = presentationData.strings.Chat_Giveaway_Info_Stars_Stars(Int32(clamping: stars))
+                let starsString = presentationData.strings.Chat_Giveaway_Info_Diamonds_Diamonds(Int32(clamping: stars))
                 if case .almostOver = status {
                     if isGroup {
-                        intro = presentationData.strings.Chat_Giveaway_Info_Stars_Group_EndedIntro(peerName, starsString).string
+                        intro = presentationData.strings.Chat_Giveaway_Info_Diamonds_Group_EndedIntro(peerName, starsString).string
                     } else {
-                        intro = presentationData.strings.Chat_Giveaway_Info_Stars_EndedIntro(peerName, starsString).string
+                        intro = presentationData.strings.Chat_Giveaway_Info_Diamonds_EndedIntro(peerName, starsString).string
                     }
                 } else {
                     if isGroup {
-                        intro = presentationData.strings.Chat_Giveaway_Info_Stars_Group_OngoingIntro(peerName, starsString).string
+                        intro = presentationData.strings.Chat_Giveaway_Info_Diamonds_Group_OngoingIntro(peerName, starsString).string
                     } else {
-                        intro = presentationData.strings.Chat_Giveaway_Info_Stars_OngoingIntro(peerName, starsString).string
+                        intro = presentationData.strings.Chat_Giveaway_Info_Diamonds_OngoingIntro(peerName, starsString).string
                     }
                 }
             } else {
@@ -277,11 +277,11 @@ public func presentGiveawayInfoController(
             
             let intro: String
             if stars > 0 {
-                let starsString = presentationData.strings.Chat_Giveaway_Info_Stars_Stars(Int32(clamping: stars))
+                let starsString = presentationData.strings.Chat_Giveaway_Info_Diamonds_Diamonds(Int32(clamping: stars))
                 if isGroup {
-                    intro = presentationData.strings.Chat_Giveaway_Info_Stars_Group_EndedIntro(peerName, starsString).string
+                    intro = presentationData.strings.Chat_Giveaway_Info_Diamonds_Group_EndedIntro(peerName, starsString).string
                 } else {
-                    intro = presentationData.strings.Chat_Giveaway_Info_Stars_EndedIntro(peerName, starsString).string
+                    intro = presentationData.strings.Chat_Giveaway_Info_Diamonds_EndedIntro(peerName, starsString).string
                 }
             } else {
                 let subscriptionsString = presentationData.strings.Chat_Giveaway_Info_Subscriptions(quantity)

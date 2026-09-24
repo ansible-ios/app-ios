@@ -122,23 +122,23 @@ private final class SheetContent: CombinedComponent {
             
             switch component.mode {
             case let .withdraw(status, _):
-                titleString = environment.strings.Stars_Withdraw_Title
-                amountTitle = environment.strings.Stars_Withdraw_AmountTitle
-                amountPlaceholder = environment.strings.Stars_Withdraw_AmountPlaceholder
+                titleString = environment.strings.Diamonds_Withdraw_Title
+                amountTitle = environment.strings.Diamonds_Withdraw_AmountTitle
+                amountPlaceholder = environment.strings.Diamonds_Withdraw_AmountPlaceholder
                 
                 minAmount = withdrawConfiguration.minWithdrawAmount.flatMap { StarsAmount(value: $0, nanos: 0) }
                 maxAmount = status.balances.availableBalance.amount
             case .accountWithdraw:
-                titleString = environment.strings.Stars_Withdraw_Title
-                amountTitle = environment.strings.Stars_Withdraw_AmountTitle
-                amountPlaceholder = environment.strings.Stars_Withdraw_AmountPlaceholder
+                titleString = environment.strings.Diamonds_Withdraw_Title
+                amountTitle = environment.strings.Diamonds_Withdraw_AmountTitle
+                amountPlaceholder = environment.strings.Diamonds_Withdraw_AmountPlaceholder
                 
                 minAmount = withdrawConfiguration.minWithdrawAmount.flatMap { StarsAmount(value: $0, nanos: 0) }
                 maxAmount = state.starsBalance
             case .paidMedia:
-                titleString = environment.strings.Stars_PaidContent_Title
-                amountTitle = environment.strings.Stars_PaidContent_AmountTitle
-                amountPlaceholder = environment.strings.Stars_PaidContent_AmountPlaceholder
+                titleString = environment.strings.Diamonds_PaidContent_Title
+                amountTitle = environment.strings.Diamonds_PaidContent_AmountTitle
+                amountPlaceholder = environment.strings.Diamonds_PaidContent_AmountPlaceholder
                
                 minAmount = StarsAmount(value: 1, nanos: 0)
                 maxAmount = withdrawConfiguration.maxPaidMediaAmount.flatMap { StarsAmount(value: $0, nanos: 0) }
@@ -148,23 +148,23 @@ private final class SheetContent: CombinedComponent {
                     amountLabel = "~\(formatTonUsdValue(amount.value, divide: false, rate: usdRate, dateTimeFormat: environment.dateTimeFormat))"
                 }
             case .reaction:
-                titleString = environment.strings.Stars_SendStars_Title
-                amountTitle = environment.strings.Stars_SendStars_AmountTitle
-                amountPlaceholder = environment.strings.Stars_SendStars_AmountPlaceholder
+                titleString = environment.strings.Diamonds_SendDiamonds_Title
+                amountTitle = environment.strings.Diamonds_SendDiamonds_AmountTitle
+                amountPlaceholder = environment.strings.Diamonds_SendDiamonds_AmountPlaceholder
                 
                 minAmount = StarsAmount(value: 1, nanos: 0)
                 maxAmount = withdrawConfiguration.maxPaidMediaAmount.flatMap { StarsAmount(value: $0, nanos: 0) }
             case let .starGiftResell(_, update, _):
-                titleString = update ? environment.strings.Stars_SellGift_EditTitle : environment.strings.Stars_SellGift_Title
-                amountPlaceholder = environment.strings.Stars_SellGift_AmountPlaceholder
+                titleString = update ? environment.strings.Diamonds_SellGift_EditTitle : environment.strings.Diamonds_SellGift_Title
+                amountPlaceholder = environment.strings.Diamonds_SellGift_AmountPlaceholder
                 
                 switch state.currency {
                 case .stars:
-                    amountTitle = environment.strings.Stars_SellGift_AmountTitle
+                    amountTitle = environment.strings.Diamonds_SellGift_AmountTitle
                     minAmount = StarsAmount(value: resaleConfiguration.starGiftResaleMinStarsAmount, nanos: 0)
                     maxAmount = StarsAmount(value: resaleConfiguration.starGiftResaleMaxStarsAmount, nanos: 0)
                 case .ton:
-                    amountTitle = environment.strings.Stars_SellGift_TonAmountTitle
+                    amountTitle = environment.strings.Diamonds_SellGift_TonAmountTitle
                     #if DEBUG
                     minAmount = StarsAmount(value: 48000000000, nanos: 0)
                     #else
@@ -173,9 +173,9 @@ private final class SheetContent: CombinedComponent {
                     maxAmount = StarsAmount(value: resaleConfiguration.starGiftResaleMaxTonAmount, nanos: 0)
                 }
             case let .paidMessages(_, minAmountValue, _, _, _):
-                titleString = environment.strings.Stars_SendMessage_AdjustmentTitle
-                amountTitle = environment.strings.Stars_SendMessage_AdjustmentSectionHeader
-                amountPlaceholder = environment.strings.Stars_SendMessage_AdjustmentPlaceholder
+                titleString = environment.strings.Diamonds_SendMessage_AdjustmentTitle
+                amountTitle = environment.strings.Diamonds_SendMessage_AdjustmentSectionHeader
+                amountPlaceholder = environment.strings.Diamonds_SendMessage_AdjustmentPlaceholder
                 
                 minAmount = StarsAmount(value: minAmountValue, nanos: 0)
                 maxAmount = StarsAmount(value: resaleConfiguration.paidMessageMaxAmount, nanos: 0)
@@ -188,7 +188,7 @@ private final class SheetContent: CombinedComponent {
                 }
                 switch state.currency {
                 case .stars:
-                    amountTitle = environment.strings.Chat_PostSuggestion_Suggest_PriceSectionStars
+                    amountTitle = environment.strings.Chat_PostSuggestion_Suggest_PriceSectionDiamonds
                     maxAmount = StarsAmount(value: resaleConfiguration.channelMessageSuggestionMaxStarsAmount, nanos: 0)
                     minAmount = StarsAmount(value: resaleConfiguration.channelMessageSuggestionMinStarsAmount, nanos: 0)
                 case .ton:
@@ -213,7 +213,7 @@ private final class SheetContent: CombinedComponent {
                 titleString = environment.strings.Gift_Offer_Title
                 switch state.currency {
                 case .stars:
-                    amountTitle = environment.strings.Gift_Offer_PriceSectionStars
+                    amountTitle = environment.strings.Gift_Offer_PriceSectionDiamonds
                     minAmount = StarsAmount(value: gift.minOfferStars ?? resaleConfiguration.starGiftResaleMinStarsAmount, nanos: 0)
                     maxAmount = StarsAmount(value: resaleConfiguration.starGiftResaleMaxStarsAmount, nanos: 0)
                 case .ton:
@@ -306,16 +306,16 @@ private final class SheetContent: CombinedComponent {
                             displayCurrencySelector = true
                         }
                     }
-                    starsTitle = environment.strings.Chat_PostSuggestion_Suggest_OfferStars
+                    starsTitle = environment.strings.Chat_PostSuggestion_Suggest_OfferDiamonds
                     tonTitle = environment.strings.Chat_PostSuggestion_Suggest_OfferTon
                 case .admin:
                     displayCurrencySelector = true
-                    starsTitle = environment.strings.Chat_PostSuggestion_Suggest_RequestStars
+                    starsTitle = environment.strings.Chat_PostSuggestion_Suggest_RequestDiamonds
                     tonTitle = environment.strings.Chat_PostSuggestion_Suggest_RequestTon
                 }
             case .starGiftOffer:
                 displayCurrencySelector = true
-                starsTitle = environment.strings.Gift_Offer_OfferStars
+                starsTitle = environment.strings.Gift_Offer_OfferDiamonds
                 tonTitle = environment.strings.Gift_Offer_OfferTon
             default:
                 starsTitle = ""
@@ -393,7 +393,7 @@ private final class SheetContent: CombinedComponent {
             let amountFooter: AnyComponent<Empty>?
             switch component.mode {
             case .paidMedia:
-                let amountInfoString = NSMutableAttributedString(attributedString: parseMarkdownIntoAttributedString(environment.strings.Stars_PaidContent_AmountInfo, attributes: amountMarkdownAttributes, textAlignment: .natural))
+                let amountInfoString = NSMutableAttributedString(attributedString: parseMarkdownIntoAttributedString(environment.strings.Diamonds_PaidContent_AmountInfo, attributes: amountMarkdownAttributes, textAlignment: .natural))
                 if let range = amountInfoString.string.range(of: ">"), let chevronImage = state.cachedChevronImage?.0 {
                     amountInfoString.addAttribute(.attachment, value: chevronImage, range: NSRange(range, in: amountInfoString.string))
                 }
@@ -411,12 +411,12 @@ private final class SheetContent: CombinedComponent {
                     },
                     tapAction: { attributes, _ in
                         if let controller = controller() as? StarsWithdrawScreen, let navigationController = controller.navigationController as? NavigationController {
-                            component.context.sharedContext.openExternalUrl(context: component.context, urlContext: .generic, url: strings.Stars_PaidContent_AmountInfo_URL, forceExternal: false, presentationData: presentationData, navigationController: navigationController, dismissInput: {})
+                            component.context.sharedContext.openExternalUrl(context: component.context, urlContext: .generic, url: strings.Diamonds_PaidContent_AmountInfo_URL, forceExternal: false, presentationData: presentationData, navigationController: navigationController, dismissInput: {})
                         }
                     }
                 ))
             case let .reaction(starsToTop, _):
-                let amountInfoString = NSMutableAttributedString(attributedString: parseMarkdownIntoAttributedString(environment.strings.Stars_SendStars_AmountInfo("\(starsToTop ?? 0)").string, attributes: amountMarkdownAttributes, textAlignment: .natural))
+                let amountInfoString = NSMutableAttributedString(attributedString: parseMarkdownIntoAttributedString(environment.strings.Diamonds_SendDiamonds_AmountInfo("\(starsToTop ?? 0)").string, attributes: amountMarkdownAttributes, textAlignment: .natural))
                 amountFooter = AnyComponent(MultilineTextComponent(
                     text: .plain(amountInfoString),
                     maximumNumberOfLines: 0
@@ -427,27 +427,27 @@ private final class SheetContent: CombinedComponent {
                 case .stars:
                     if let value = state.amount?.value, value > 0 {
                         let starsValue = Int32(floor(Float(value) * Float(resaleConfiguration.starGiftCommissionStarsPermille) / 1000.0))
-                        let starsString = environment.strings.Stars_SellGift_AmountInfo_Stars(starsValue)
-                        amountInfoString = NSAttributedString(attributedString: parseMarkdownIntoAttributedString(environment.strings.Stars_SellGift_AmountInfo(starsString).string, attributes: amountMarkdownAttributes, textAlignment: .natural))
+                        let starsString = environment.strings.Diamonds_SellGift_AmountInfo_Diamonds(starsValue)
+                        amountInfoString = NSAttributedString(attributedString: parseMarkdownIntoAttributedString(environment.strings.Diamonds_SellGift_AmountInfo(starsString).string, attributes: amountMarkdownAttributes, textAlignment: .natural))
                         
                         if let usdWithdrawRate = withdrawConfiguration.usdWithdrawRate {
                             let usdRate = Double(usdWithdrawRate) / 1000.0 / 100.0
                             amountRightLabel = "~\(formatTonUsdValue(Int64(starsValue), divide: false, rate: usdRate, dateTimeFormat: environment.dateTimeFormat))"
                         }
                     } else {
-                        amountInfoString = NSAttributedString(attributedString: parseMarkdownIntoAttributedString(environment.strings.Stars_SellGift_AmountInfo("\(resaleConfiguration.starGiftCommissionStarsPermille / 10)%").string, attributes: amountMarkdownAttributes, textAlignment: .natural))
+                        amountInfoString = NSAttributedString(attributedString: parseMarkdownIntoAttributedString(environment.strings.Diamonds_SellGift_AmountInfo("\(resaleConfiguration.starGiftCommissionStarsPermille / 10)%").string, attributes: amountMarkdownAttributes, textAlignment: .natural))
                     }
                 case .ton:
                     if let value = state.amount?.value, value > 0 {
                         let tonValue = Int64(Float(value) * Float(resaleConfiguration.starGiftCommissionTonPermille) / 1000.0)
                         let tonString = formatTonAmountText(tonValue, dateTimeFormat: environment.dateTimeFormat, maxDecimalPositions: 3, formatString: presentationData.strings.Currency_Grams)
-                        amountInfoString = NSAttributedString(attributedString: parseMarkdownIntoAttributedString(environment.strings.Stars_SellGift_AmountInfo(tonString).string, attributes: amountMarkdownAttributes, textAlignment: .natural))
+                        amountInfoString = NSAttributedString(attributedString: parseMarkdownIntoAttributedString(environment.strings.Diamonds_SellGift_AmountInfo(tonString).string, attributes: amountMarkdownAttributes, textAlignment: .natural))
                         
                         if let tonUsdRate = withdrawConfiguration.tonUsdRate {
                             amountRightLabel = "~\(formatTonUsdValue(tonValue, divide: true, rate: tonUsdRate, dateTimeFormat: environment.dateTimeFormat))"
                         }
                     } else {
-                        amountInfoString = NSAttributedString(attributedString: parseMarkdownIntoAttributedString(environment.strings.Stars_SellGift_AmountInfo("\(resaleConfiguration.starGiftCommissionTonPermille / 10)%").string, attributes: amountMarkdownAttributes, textAlignment: .natural))
+                        amountInfoString = NSAttributedString(attributedString: parseMarkdownIntoAttributedString(environment.strings.Diamonds_SellGift_AmountInfo("\(resaleConfiguration.starGiftCommissionTonPermille / 10)%").string, attributes: amountMarkdownAttributes, textAlignment: .natural))
                     }
                 }
                 amountFooter = AnyComponent(MultilineTextComponent(
@@ -459,9 +459,9 @@ private final class SheetContent: CombinedComponent {
                 if let value = state.amount?.value, value > 0 {
                     let fullValue: Int64 = Int64(value) * 1_000_000_000 * Int64(fractionAfterCommission) / 100
                     let amountValue = StarsAmount(value: fullValue / 1_000_000_000, nanos: Int32(fullValue % 1_000_000_000))
-                    amountInfoString = NSAttributedString(attributedString: parseMarkdownIntoAttributedString(environment.strings.Stars_SendMessage_AdjustmentSectionFooterValue("\(amountValue)").string, attributes: amountMarkdownAttributes, textAlignment: .natural))
+                    amountInfoString = NSAttributedString(attributedString: parseMarkdownIntoAttributedString(environment.strings.Diamonds_SendMessage_AdjustmentSectionFooterValue("\(amountValue)").string, attributes: amountMarkdownAttributes, textAlignment: .natural))
                 } else {
-                    amountInfoString = NSAttributedString(attributedString: parseMarkdownIntoAttributedString(environment.strings.Stars_SendMessage_AdjustmentSectionFooterEmptyValue("\(fractionAfterCommission)").string, attributes: amountMarkdownAttributes, textAlignment: .natural))
+                    amountInfoString = NSAttributedString(attributedString: parseMarkdownIntoAttributedString(environment.strings.Diamonds_SendMessage_AdjustmentSectionFooterEmptyValue("\(fractionAfterCommission)").string, attributes: amountMarkdownAttributes, textAlignment: .natural))
                 }
                 amountFooter = AnyComponent(MultilineTextComponent(
                     text: .plain(amountInfoString),
@@ -474,14 +474,14 @@ private final class SheetContent: CombinedComponent {
                     if isFromAdmin {
                         switch state.currency {
                         case .stars:
-                            string = environment.strings.Chat_PostSuggestion_Suggest_RequestDescriptionStars
+                            string = environment.strings.Chat_PostSuggestion_Suggest_RequestDescriptionDiamonds
                         case .ton:
                             string = environment.strings.Chat_PostSuggestion_Suggest_RequestDescriptionTon
                         }
                     } else {
                         switch state.currency {
                         case .stars:
-                            string = environment.strings.Chat_PostSuggestion_Suggest_OfferDescriptionStars(channel.compactDisplayTitle).string
+                            string = environment.strings.Chat_PostSuggestion_Suggest_OfferDescriptionDiamonds(channel.compactDisplayTitle).string
                         case .ton:
                             string = environment.strings.Chat_PostSuggestion_Suggest_OfferDescriptionTon(channel.compactDisplayTitle).string
                         }
@@ -495,7 +495,7 @@ private final class SheetContent: CombinedComponent {
                     let string: String
                     switch state.currency {
                     case .stars:
-                        string = environment.strings.Chat_PostSuggestion_Suggest_RequestDescriptionStars
+                        string = environment.strings.Chat_PostSuggestion_Suggest_RequestDescriptionDiamonds
                     case .ton:
                         string = environment.strings.Chat_PostSuggestion_Suggest_RequestDescriptionTon
                     }
@@ -510,7 +510,7 @@ private final class SheetContent: CombinedComponent {
                 let string: String
                 switch state.currency {
                 case .stars:
-                    string = environment.strings.Gift_Offer_PriceDescriptionStars(giftTitle).string
+                    string = environment.strings.Gift_Offer_PriceDescriptionDiamonds(giftTitle).string
                 case .ton:
                     string = environment.strings.Gift_Offer_PriceDescriptionTon(giftTitle).string
                 }
@@ -691,7 +691,7 @@ private final class SheetContent: CombinedComponent {
                 let footerString: String
                 switch state.currency {
                 case .stars:
-                    footerString = environment.strings.Gift_Offer_DurationDescriptionStars(peerName).string
+                    footerString = environment.strings.Gift_Offer_DurationDescriptionDiamonds(peerName).string
                 case .ton:
                     footerString = environment.strings.Gift_Offer_DurationDescriptionTon(peerName).string
                 }
@@ -763,7 +763,7 @@ private final class SheetContent: CombinedComponent {
     
             let buttonString: String
             if case .paidMedia = component.mode {
-                buttonString = environment.strings.Stars_PaidContent_Create
+                buttonString = environment.strings.Diamonds_PaidContent_Create
             } else if case .starGiftResell = component.mode {
                 if let amount = state.amount, amount.value > 0 {
                     let currencySymbol: String
@@ -776,12 +776,12 @@ private final class SheetContent: CombinedComponent {
                         currencySymbol = "$"
                         currencyAmount = formatTonAmountText(amount.value, dateTimeFormat: environment.dateTimeFormat, maxDecimalPositions: nil)
                     }
-                    buttonString = "\(environment.strings.Stars_SellGift_SellFor)  \(currencySymbol) \(currencyAmount)"
+                    buttonString = "\(environment.strings.Diamonds_SellGift_SellFor)  \(currencySymbol) \(currencyAmount)"
                 } else {
-                    buttonString = environment.strings.Stars_SellGift_Sell
+                    buttonString = environment.strings.Diamonds_SellGift_Sell
                 }
             } else if case .paidMessages = component.mode {
-                buttonString = environment.strings.Stars_SendMessage_AdjustmentAction
+                buttonString = environment.strings.Diamonds_SendMessage_AdjustmentAction
             } else if case let .suggestedPost(mode, _, _, _) = component.mode {
                 switch mode {
                 case .sender:
@@ -820,9 +820,9 @@ private final class SheetContent: CombinedComponent {
                     buttonString = environment.strings.Gift_Offer_Offer
                 }
             } else if let amount = state.amount {
-                buttonString = "\(environment.strings.Stars_Withdraw_Withdraw)  # \(presentationStringsFormattedNumber(amount, environment.dateTimeFormat.groupingSeparator))"
+                buttonString = "\(environment.strings.Diamonds_Withdraw_Withdraw)  # \(presentationStringsFormattedNumber(amount, environment.dateTimeFormat.groupingSeparator))"
             } else {
-                buttonString = environment.strings.Stars_Withdraw_Withdraw
+                buttonString = environment.strings.Diamonds_Withdraw_Withdraw
             }
             
             if state.cachedStarImage == nil || state.cachedStarImage?.1 !== theme {
@@ -1340,14 +1340,14 @@ public final class StarsWithdrawScreen: ViewControllerComponentContainer {
     
     func presentMinAmountTooltip(_ minAmount: Int64, currency: CurrencyAmount.Currency) {
         let presentationData = self.context.sharedContext.currentPresentationData.with { $0 }
-        var text = presentationData.strings.Stars_Withdraw_Withdraw_ErrorMinimum(presentationData.strings.Stars_Withdraw_Withdraw_ErrorMinimum_Stars(Int32(clamping: minAmount))).string
+        var text = presentationData.strings.Diamonds_Withdraw_Withdraw_ErrorMinimum(presentationData.strings.Diamonds_Withdraw_Withdraw_ErrorMinimum_Diamonds(Int32(clamping: minAmount))).string
         if case .starGiftResell = self.mode {
             switch currency {
             case .stars:
-                text = presentationData.strings.Stars_SellGiftMinAmountToast_Text("\(presentationData.strings.Stars_Withdraw_Withdraw_ErrorMinimum_Stars(Int32(clamping: minAmount)))").string
+                text = presentationData.strings.Diamonds_SellGiftMinAmountToast_Text("\(presentationData.strings.Diamonds_Withdraw_Withdraw_ErrorMinimum_Diamonds(Int32(clamping: minAmount)))").string
             case .ton:
                 let amountString = formatTonAmountText(minAmount, dateTimeFormat: presentationData.dateTimeFormat, formatString: presentationData.strings.Currency_Grams)
-                text = presentationData.strings.Stars_SellGiftMinAmountToast_Text(amountString).string
+                text = presentationData.strings.Diamonds_SellGiftMinAmountToast_Text(amountString).string
             }
         } else if case let .suggestedPost(mode, _, _, _) = self.mode {
             let resaleConfiguration = StarsSubscriptionConfiguration.with(appConfiguration: self.context.currentAppConfiguration.with { $0 })
@@ -1355,12 +1355,12 @@ public final class StarsWithdrawScreen: ViewControllerComponentContainer {
             case .stars:
                 switch mode {
                 case .admin:
-                    text = presentationData.strings.Chat_PostSuggestion_Suggest_AdminMinAmountStars_Text("\(resaleConfiguration.channelMessageSuggestionMinStarsAmount)").string
+                    text = presentationData.strings.Chat_PostSuggestion_Suggest_AdminMinAmountDiamonds_Text("\(resaleConfiguration.channelMessageSuggestionMinStarsAmount)").string
                 case let .sender(_, isFromAdmin):
                     if isFromAdmin {
-                        text = presentationData.strings.Chat_PostSuggestion_Suggest_AdminMinAmountStars_Text("\(resaleConfiguration.channelMessageSuggestionMinStarsAmount)").string
+                        text = presentationData.strings.Chat_PostSuggestion_Suggest_AdminMinAmountDiamonds_Text("\(resaleConfiguration.channelMessageSuggestionMinStarsAmount)").string
                     } else {
-                        text = presentationData.strings.Chat_PostSuggestion_Suggest_UserMinAmountStars_Text("\(resaleConfiguration.channelMessageSuggestionMinStarsAmount)").string
+                        text = presentationData.strings.Chat_PostSuggestion_Suggest_UserMinAmountDiamonds_Text("\(resaleConfiguration.channelMessageSuggestionMinStarsAmount)").string
                     }
                 }
             case .ton:
@@ -1369,7 +1369,7 @@ public final class StarsWithdrawScreen: ViewControllerComponentContainer {
         } else if case .starGiftOffer = self.mode {
             switch currency {
             case .stars:
-                text = presentationData.strings.Gift_Offer_GiftMinAmountToast_Text("\(presentationData.strings.Stars_Withdraw_Withdraw_ErrorMinimum_Stars(Int32(clamping: minAmount)))").string
+                text = presentationData.strings.Gift_Offer_GiftMinAmountToast_Text("\(presentationData.strings.Diamonds_Withdraw_Withdraw_ErrorMinimum_Diamonds(Int32(clamping: minAmount)))").string
             case .ton:
                 let amountString = formatTonAmountText(minAmount, dateTimeFormat: presentationData.dateTimeFormat, formatString: presentationData.strings.Currency_Grams)
                 text = presentationData.strings.Gift_Offer_GiftMinAmountToast_Text(amountString).string
@@ -2065,7 +2065,7 @@ private final class BalanceComponent: CombinedComponent {
             
             let title = title.update(
                 component: MultilineTextComponent(
-                    text: .plain(NSAttributedString(string: context.component.strings.SendStarReactions_Balance, font: Font.regular(14.0), textColor: context.component.theme.list.itemPrimaryTextColor))
+                    text: .plain(NSAttributedString(string: context.component.strings.SendDiamondReactions_Balance, font: Font.regular(14.0), textColor: context.component.theme.list.itemPrimaryTextColor))
                 ),
                 availableSize: context.availableSize,
                 transition: .immediate

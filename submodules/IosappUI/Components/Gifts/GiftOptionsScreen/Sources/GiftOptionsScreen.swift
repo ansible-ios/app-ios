@@ -1209,7 +1209,7 @@ final class GiftOptionsScreenComponent: Component {
                 transition: .immediate,
                 component: AnyComponent(MultilineTextComponent(
                     text: .plain(NSAttributedString(
-                        string: strings.Stars_Purchase_Balance,
+                        string: strings.Diamonds_Purchase_Balance,
                         font: Font.regular(14.0),
                         textColor: theme.actionSheet.primaryTextColor
                     )),
@@ -1430,7 +1430,7 @@ final class GiftOptionsScreenComponent: Component {
                         var label: String?
                         if showStarPrice {
                             if let starsPrice = product.starsPrice {
-                                label = strings.Gift_Options_Premium_OrStars("**#\(presentationStringsFormattedNumber(Int32(starsPrice), environment.dateTimeFormat.groupingSeparator))**").string
+                                label = strings.Gift_Options_Premium_OrDiamonds("**#\(presentationStringsFormattedNumber(Int32(starsPrice), environment.dateTimeFormat.groupingSeparator))**").string
                             }
                         }
                         

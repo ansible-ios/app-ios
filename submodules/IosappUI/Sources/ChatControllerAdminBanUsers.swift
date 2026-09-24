@@ -462,8 +462,8 @@ extension ChatControllerImpl {
                     let textString: String
                     switch attribute.currency {
                     case .stars:
-                        titleString = self.presentationData.strings.Chat_DeletePaidMessageStars_Title
-                        textString = self.presentationData.strings.Chat_DeletePaidMessageStars_Text
+                        titleString = self.presentationData.strings.Chat_DeletePaidMessageDiamonds_Title
+                        textString = self.presentationData.strings.Chat_DeletePaidMessageDiamonds_Text
                     case .ton:
                         titleString = self.presentationData.strings.Chat_DeletePaidMessageTon_Title
                         textString = self.presentationData.strings.Chat_DeletePaidMessageTon_Text

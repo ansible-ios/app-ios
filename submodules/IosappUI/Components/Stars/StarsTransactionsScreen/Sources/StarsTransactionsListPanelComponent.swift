@@ -306,36 +306,36 @@ final class StarsTransactionsListPanelComponent: Component {
                     case let .peer(peer):
                         if let months = item.premiumGiftMonths {
                             itemTitle = peer.displayTitle(strings: environment.strings, displayOrder: .firstLast)
-                            itemSubtitle = environment.strings.Stars_Intro_Transaction_IosappPremium(months)
+                            itemSubtitle = environment.strings.Diamonds_Intro_Transaction_AnsiblePremium(months)
                         } else if item.flags.contains(.isPostsSearch) {
-                            itemTitle = environment.strings.Stars_Intro_Transaction_SearchFee
+                            itemTitle = environment.strings.Diamonds_Intro_Transaction_SearchFee
                             itemSubtitle = ""
                             itemPeer = .search
                         } else if item.flags.contains(.isLiveStreamPaidMessage) {
                             itemTitle = peer.displayTitle(strings: environment.strings, displayOrder: .firstLast)
                             if item.flags.contains(.isReaction) {
-                                itemSubtitle = environment.strings.Stars_Intro_Transaction_LiveStreamReaction
+                                itemSubtitle = environment.strings.Diamonds_Intro_Transaction_LiveStreamReaction
                             } else {
-                                itemSubtitle = environment.strings.Stars_Intro_Transaction_LiveStreamPaidMessage(item.paidMessageCount ?? 1)
+                                itemSubtitle = environment.strings.Diamonds_Intro_Transaction_LiveStreamPaidMessage(item.paidMessageCount ?? 1)
                             }
                         } else if item.flags.contains(.isPaidMessage) {
                             itemTitle = peer.displayTitle(strings: environment.strings, displayOrder: .firstLast)
-                            itemSubtitle = environment.strings.Stars_Intro_Transaction_PaidMessage(item.paidMessageCount ?? 1)
+                            itemSubtitle = environment.strings.Diamonds_Intro_Transaction_PaidMessage(item.paidMessageCount ?? 1)
                         } else if let starGift = item.starGift {
                             if item.flags.contains(.isStarGiftAuctionBid), case let .generic(gift) = starGift {
                                 itemTitle = gift.title ?? "Gift"
-                                itemSubtitle = environment.strings.Stars_Intro_Transaction_GiftAuctionBid
+                                itemSubtitle = environment.strings.Diamonds_Intro_Transaction_GiftAuctionBid
                                 itemGift = starGift
                             } else if item.flags.contains(.isStarGiftPrepaidUpgrade) {
                                 itemTitle = peer.displayTitle(strings: environment.strings, displayOrder: .firstLast)
-                                itemSubtitle = environment.strings.Stars_Intro_Transaction_PrepaidGiftUpgrade
+                                itemSubtitle = environment.strings.Diamonds_Intro_Transaction_PrepaidGiftUpgrade
                             } else if item.flags.contains(.isStarGiftDropOriginalDetails), case let .unique(gift) = starGift {
                                 itemTitle = "\(gift.title) #\(formatCollectibleNumber(gift.number, dateTimeFormat: environment.dateTimeFormat))"
-                                itemSubtitle = environment.strings.Stars_Intro_Transaction_GiftDropOriginalDetails
+                                itemSubtitle = environment.strings.Diamonds_Intro_Transaction_GiftDropOriginalDetails
                                 itemGift = starGift
                             } else if item.flags.contains(.isStarGiftUpgrade), case let .unique(gift) = starGift {
                                 itemTitle = "\(gift.title) #\(formatCollectibleNumber(gift.number, dateTimeFormat: environment.dateTimeFormat))"
-                                itemSubtitle = environment.strings.Stars_Intro_Transaction_GiftUpgrade
+                                itemSubtitle = environment.strings.Diamonds_Intro_Transaction_GiftUpgrade
                                 itemGift = starGift
                             } else {
                                 itemTitle = peer.displayTitle(strings: environment.strings, displayOrder: .firstLast)
@@ -345,7 +345,7 @@ final class StarsTransactionsListPanelComponent: Component {
                                     if item.flags.contains(.isStarGiftOffer) {
                                         itemSubtitle = environment.strings.Gift_Offer_Title
                                     } else {
-                                        itemSubtitle = item.count.amount > StarsAmount.zero ? environment.strings.Stars_Intro_Transaction_ConvertedGift : environment.strings.Stars_Intro_Transaction_Gift
+                                        itemSubtitle = item.count.amount > StarsAmount.zero ? environment.strings.Diamonds_Intro_Transaction_ConvertedGift : environment.strings.Diamonds_Intro_Transaction_Gift
                                     }
                                 case let .unique(gift):
                                     for attribute in gift.attributes {
@@ -357,21 +357,21 @@ final class StarsTransactionsListPanelComponent: Component {
                                     if item.flags.contains(.isStarGiftOffer) {
                                         itemSubtitle = environment.strings.Gift_Offer_Title
                                     } else if item.count.amount > StarsAmount.zero {
-                                        itemSubtitle = environment.strings.Stars_Intro_Transaction_GiftSale
+                                        itemSubtitle = environment.strings.Diamonds_Intro_Transaction_GiftSale
                                     } else {
                                         if item.flags.contains(.isStarGiftResale) {
-                                            itemSubtitle = environment.strings.Stars_Intro_Transaction_GiftPurchase
+                                            itemSubtitle = environment.strings.Diamonds_Intro_Transaction_GiftPurchase
                                         } else {
-                                            itemSubtitle = environment.strings.Stars_Intro_Transaction_GiftTransfer
+                                            itemSubtitle = environment.strings.Diamonds_Intro_Transaction_GiftTransfer
                                         }
                                     }
                                 }
                             }
                         } else if let _ = item.giveawayMessageId {
                             itemTitle = peer.displayTitle(strings: environment.strings, displayOrder: .firstLast)
-                            itemSubtitle = environment.strings.Stars_Intro_Transaction_GiveawayPrize
+                            itemSubtitle = environment.strings.Diamonds_Intro_Transaction_GiveawayPrize
                         } else if !item.media.isEmpty {
-                            itemTitle = environment.strings.Stars_Intro_Transaction_MediaPurchase
+                            itemTitle = environment.strings.Diamonds_Intro_Transaction_MediaPurchase
                             itemSubtitle = peer.displayTitle(strings: environment.strings, displayOrder: .firstLast)
                         } else if let title = item.title {
                             itemTitle = title
@@ -379,62 +379,62 @@ final class StarsTransactionsListPanelComponent: Component {
                         } else {
                             itemTitle = peer.displayTitle(strings: environment.strings, displayOrder: .firstLast)
                             if item.flags.contains(.isReaction) {
-                                itemSubtitle = environment.strings.Stars_Intro_Transaction_Reaction_Title
+                                itemSubtitle = environment.strings.Diamonds_Intro_Transaction_Reaction_Title
                             } else if item.flags.contains(.isGift) {
-                                itemSubtitle = environment.strings.Stars_Intro_Transaction_Gift_Title
+                                itemSubtitle = environment.strings.Diamonds_Intro_Transaction_Gift_Title
                             } else if let _ = item.subscriptionPeriod {
-                                itemSubtitle = environment.strings.Stars_Intro_Transaction_SubscriptionFee_Title
+                                itemSubtitle = environment.strings.Diamonds_Intro_Transaction_SubscriptionFee_Title
                             } else if let permille = item.starrefCommissionPermille {
-                                itemSubtitle = environment.strings.Stars_Intro_Transaction_Commission_Title("\(formatPermille(permille))%").string
+                                itemSubtitle = environment.strings.Diamonds_Intro_Transaction_Commission_Title("\(formatPermille(permille))%").string
                             } else {
                                 itemSubtitle = nil
                             }
                         }
                     case .appStore:
-                        itemTitle = environment.strings.Stars_Intro_Transaction_AppleTopUp_Title
-                        itemSubtitle = environment.strings.Stars_Intro_Transaction_AppleTopUp_Subtitle
+                        itemTitle = environment.strings.Diamonds_Intro_Transaction_AppleTopUp_Title
+                        itemSubtitle = environment.strings.Diamonds_Intro_Transaction_AppleTopUp_Subtitle
                     case .playMarket:
-                        itemTitle = environment.strings.Stars_Intro_Transaction_GoogleTopUp_Title
-                        itemSubtitle = environment.strings.Stars_Intro_Transaction_GoogleTopUp_Subtitle
+                        itemTitle = environment.strings.Diamonds_Intro_Transaction_GoogleTopUp_Title
+                        itemSubtitle = environment.strings.Diamonds_Intro_Transaction_GoogleTopUp_Subtitle
                     case .fragment:
                         if component.isAccount {
                             if item.flags.contains(.isGift) {
-                                itemTitle = environment.strings.Stars_Intro_Transaction_Gift_UnknownUser
-                                itemSubtitle = environment.strings.Stars_Intro_Transaction_Gift_Title
+                                itemTitle = environment.strings.Diamonds_Intro_Transaction_Gift_UnknownUser
+                                itemSubtitle = environment.strings.Diamonds_Intro_Transaction_Gift_Title
                                 itemPeer = .transactionPeer(.fragment)
                             } else {
                                 if (item.count.amount.value < 0 && !item.flags.contains(.isRefund)) || (item.count.amount.value > 0 && item.flags.contains(.isRefund)) {
-                                    itemTitle = environment.strings.Stars_Intro_Transaction_FragmentWithdrawal_Title
-                                    itemSubtitle = environment.strings.Stars_Intro_Transaction_FragmentWithdrawal_Subtitle
+                                    itemTitle = environment.strings.Diamonds_Intro_Transaction_FragmentWithdrawal_Title
+                                    itemSubtitle = environment.strings.Diamonds_Intro_Transaction_FragmentWithdrawal_Subtitle
                                 } else {
-                                    itemTitle = environment.strings.Stars_Intro_Transaction_FragmentTopUp_Title
-                                    itemSubtitle = environment.strings.Stars_Intro_Transaction_FragmentTopUp_Subtitle
+                                    itemTitle = environment.strings.Diamonds_Intro_Transaction_FragmentTopUp_Title
+                                    itemSubtitle = environment.strings.Diamonds_Intro_Transaction_FragmentTopUp_Subtitle
                                 }
                             }
                         } else {
                             if item.count.amount > StarsAmount.zero && !item.flags.contains(.isRefund) {
-                                itemTitle = environment.strings.Stars_Intro_Transaction_FragmentTopUp_Title
-                                itemSubtitle = environment.strings.Stars_Intro_Transaction_FragmentTopUp_Subtitle
+                                itemTitle = environment.strings.Diamonds_Intro_Transaction_FragmentTopUp_Title
+                                itemSubtitle = environment.strings.Diamonds_Intro_Transaction_FragmentTopUp_Subtitle
                             } else {
-                                itemTitle = environment.strings.Stars_Intro_Transaction_FragmentWithdrawal_Title
-                                itemSubtitle = environment.strings.Stars_Intro_Transaction_FragmentWithdrawal_Subtitle
+                                itemTitle = environment.strings.Diamonds_Intro_Transaction_FragmentWithdrawal_Title
+                                itemSubtitle = environment.strings.Diamonds_Intro_Transaction_FragmentWithdrawal_Subtitle
                             }
                         }
                     case .premiumBot:
-                        itemTitle = environment.strings.Stars_Intro_Transaction_PremiumBotTopUp_Title
-                        itemSubtitle = environment.strings.Stars_Intro_Transaction_PremiumBotTopUp_Subtitle
+                        itemTitle = environment.strings.Diamonds_Intro_Transaction_PremiumBotTopUp_Title
+                        itemSubtitle = environment.strings.Diamonds_Intro_Transaction_PremiumBotTopUp_Subtitle
                     case .ads:
-                        itemTitle = environment.strings.Stars_Intro_Transaction_IosappAds_Title
-                        itemSubtitle = environment.strings.Stars_Intro_Transaction_IosappAds_Subtitle
+                        itemTitle = environment.strings.Diamonds_Intro_Transaction_AnsibleAds_Title
+                        itemSubtitle = environment.strings.Diamonds_Intro_Transaction_AnsibleAds_Subtitle
                     case .apiLimitExtension:
-                        itemTitle = environment.strings.Stars_Intro_Transaction_IosappBotApi_Title
+                        itemTitle = environment.strings.Diamonds_Intro_Transaction_AnsibleBotApi_Title
                         if let floodskipNumber = item.floodskipNumber {
-                            itemSubtitle = environment.strings.Stars_Intro_Transaction_IosappBotApi_Messages(floodskipNumber)
+                            itemSubtitle = environment.strings.Diamonds_Intro_Transaction_AnsibleBotApi_Messages(floodskipNumber)
                         } else {
                             itemSubtitle = nil
                         }
                     case .unsupported:
-                        itemTitle = environment.strings.Stars_Intro_Transaction_Unsupported_Title
+                        itemTitle = environment.strings.Diamonds_Intro_Transaction_Unsupported_Title
                         itemSubtitle = nil
                     }
                     
@@ -460,7 +460,7 @@ final class StarsTransactionsListPanelComponent: Component {
                     var itemDateColor = environment.theme.list.itemSecondaryTextColor
                     itemDate = stringForMediumCompactDate(timestamp: item.date, strings: environment.strings, dateTimeFormat: environment.dateTimeFormat)
                     if item.flags.contains(.isRefund) {
-                        itemDate += " – \(environment.strings.Stars_Intro_Transaction_Refund)"
+                        itemDate += " – \(environment.strings.Diamonds_Intro_Transaction_Refund)"
                     } else if item.flags.contains(.isPending) {
                         itemDate += " – \(environment.strings.Monetization_Transaction_Pending)"
                     } else if item.flags.contains(.isFailed) {

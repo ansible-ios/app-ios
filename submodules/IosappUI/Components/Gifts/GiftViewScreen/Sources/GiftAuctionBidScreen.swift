@@ -1551,9 +1551,9 @@ private final class GiftAuctionBidScreenComponent: Component {
                         presentationData: presentationData,
                         content: .info(
                             title: nil,
-                            text: presentationData.strings.Gift_AuctionBid_AddMoreStars(presentationData.strings.Gift_AuctionBid_AddMoreStars_Stars(Int32(clamping: myMinBidAmount - myBidAmount))).string,
+                            text: presentationData.strings.Gift_AuctionBid_AddMoreDiamonds(presentationData.strings.Gift_AuctionBid_AddMoreDiamonds_Diamonds(Int32(clamping: myMinBidAmount - myBidAmount))).string,
                             timeout: nil,
-                            customUndoText: presentationData.strings.Gift_AuctionBid_AddMoreStars_Set
+                            customUndoText: presentationData.strings.Gift_AuctionBid_AddMoreDiamonds_Set
                         ),
                         position: .bottom,
                         action: { [weak self] action in
@@ -1657,7 +1657,7 @@ private final class GiftAuctionBidScreenComponent: Component {
                             presentationData: presentationData,
                             content: .info(
                                 title: nil,
-                                text: presentationData.strings.Gift_AuctionBid_MinimumBidIncreased(presentationData.strings.Gift_AuctionBid_AddMoreStars_Stars(Int32(clamping: self.amount.realValue))).string,
+                                text: presentationData.strings.Gift_AuctionBid_MinimumBidIncreased(presentationData.strings.Gift_AuctionBid_AddMoreDiamonds_Diamonds(Int32(clamping: self.amount.realValue))).string,
                                 timeout: nil,
                                 customUndoText: nil
                             ),

@@ -496,7 +496,7 @@
 "Contacts.AccessDeniedHelpLandscape" = "Пожалуйста, зайдите в настройки %@ > Конфиденциальность и безопасность > Контакты и разрешите доступ для Telegram.";
 "Contacts.AccessDeniedHelpPortrait" = "Пожалуйста, перейдите в настройки %@ > Конфиденциальность и безопасность > Контакты и разрешите доступ для Telegram.";
 "Contacts.AccessDeniedHelpON" = "ВКЛ";
-"Contacts.InviteToTelegram" = "Пригласить в Telegram";
+"Contacts.InviteToAnsible" = "Пригласить в Telegram";
 "Contacts.InviteFriends" = "Пригласить";
 "Contacts.SelectAll" = "Выбрать всех";
 
@@ -2608,8 +2608,8 @@ Unused sets are archived when you add more.";
 "Conversation.HoldForAudio" = "Звук — удерживайте. Видео — нажмите.";
 "Conversation.HoldForVideo" = "Видео — удерживайте. Звук — нажмите.";
 
-"UserInfo.IosappCall" = "Позвонить через Telegram";
-"UserInfo.IosappVideoCall" = "Видеозвонок через Telegram";
+"UserInfo.AnsibleCall" = "Позвонить через Telegram";
+"UserInfo.AnsibleVideoCall" = "Видеозвонок через Telegram";
 "UserInfo.PhoneCall" = "Позвонить по телефону";
 
 "SharedMedia.CategoryMedia" = "Медиа";
@@ -2796,7 +2796,7 @@ Unused sets are archived when you add more.";
 
 "Contacts.PhoneNumber" = "Номер телефона";
 "Contacts.AddPhoneNumber" = "Добавить %@";
-"Contacts.ShareTelegram" = "Пригласить в Telegram";
+"Contacts.ShareAnsible" = "Пригласить в Telegram";
 
 "Conversation.ViewChannel" = "ПЕРЕЙТИ В КАНАЛ";
 "Conversation.ViewGroup" = "ПЕРЕЙТИ В ГРУППУ";
@@ -3247,7 +3247,7 @@ Unused sets are archived when you add more.";
 "AuthSessions.LoggedIn" = "Сайты";
 "AuthSessions.LogOutApplications" = "Отключить все сайты";
 "AuthSessions.LogOutApplicationsHelp" = "Вы можете использовать свой аккаунт для авторизации на сайтах, которые поддерживают вход через Telegram.";
-"AuthSessions.LoggedInWithTelegram" = "АВТОРИЗОВАННЫЕ САЙТЫ";
+"AuthSessions.LoggedInWithAnsible" = "АВТОРИЗОВАННЫЕ САЙТЫ";
 "AuthSessions.LogOut" = "Выйти";
 "AuthSessions.Message" = "Вы разрешили этому боту писать Вам, когда авторизовались на %@.";
 
@@ -3283,7 +3283,7 @@ Unused sets are archived when you add more.";
 
 "SocksProxySetup.ProxyType" = "ТИП";
 "SocksProxySetup.ProxySocks5" = "SOCKS5";
-"SocksProxySetup.ProxyTelegram" = "MTProto";
+"SocksProxySetup.ProxyAnsible" = "MTProto";
 "SocksProxySetup.HostnamePlaceholder" = "Сервер";
 "SocksProxySetup.PortPlaceholder" = "Порт";
 "SocksProxySetup.UsernamePlaceholder" = "Логин";
@@ -3496,15 +3496,15 @@ Unused sets are archived when you add more.";
 "Passport.Address.ScansHelp" = "В документе должны быть Ваши имя и фамилия, адрес, подтверждение (печать, штрих-код, QR-код или фирменный знак), а также дата выдачи, не более трех месяцев назад.";
 
 "Passport.Phone.Title" = "Номер телефона";
-"Passport.Phone.UseIosappNumber" = "Использовать %@";
-"Passport.Phone.UseIosappNumberHelp" = "Используйте тот же номер телефона, что и в Telegram";
+"Passport.Phone.UseAnsibleNumber" = "Использовать %@";
+"Passport.Phone.UseAnsibleNumberHelp" = "Используйте тот же номер телефона, что и в Telegram";
 "Passport.Phone.EnterOtherNumber" = "ИЛИ ВВЕДИТЕ ДРУГОЙ НОМЕР ТЕЛЕФОНА";
 "Passport.Phone.Help" = "Обратите внимание: на указанный Вами номер телефона придет код подтверждения.";
 "Passport.Phone.Delete" = "Удалить номер телефона";
 
 "Passport.Email.Title" = "Email";
-"Passport.Email.UseIosappEmail" = "Использовать %@";
-"Passport.Email.UseIosappEmailHelp" = "Используйте тот же адрес, что и в Telegram";
+"Passport.Email.UseAnsibleEmail" = "Использовать %@";
+"Passport.Email.UseAnsibleEmailHelp" = "Используйте тот же адрес, что и в Telegram";
 "Passport.Email.EnterOtherEmail" = "ИЛИ УКАЖИТЕ НОВЫЙ АДРЕС";
 "Passport.Email.EmailPlaceholder" = "Укажите электронную почту";
 "Passport.Email.Help" = "На указанную Вами почту придёт код подтверждения.";
@@ -3985,7 +3985,7 @@ Unused sets are archived when you add more.";
 "AttachmentMenu.WebSearch" = "Поиск в сети";
 
 "Conversation.UnsupportedMediaPlaceholder" = "Сообщение не поддерживается в Вашей версии Telegram. Пожалуйста, обновитесь до последней версии.";
-"Conversation.UpdateTelegram" = "ОБНОВИТЬ TELEGRAM";
+"Conversation.UpdateAnsible" = "ОБНОВИТЬ TELEGRAM";
 
 "Cache.LowDiskSpaceText" = "В памяти телефона недостаточно места. Чтобы загружать или скачивать материалы, требуется освободить память.";
 
@@ -7533,7 +7533,7 @@ Sorry for the inconvenience.";
 "WebApp.RemoveConfirmationText" = "Удалить **%@** из меню вложений?";
 
 "Notifications.SystemTones" = "СИСТЕМНЫЕ ЗВУКИ";
-"Notifications.IosappTones" = "ЗВУКИ TELEGRAM";
+"Notifications.AnsibleTones" = "ЗВУКИ TELEGRAM";
 
 "Notifications.UploadSound" = "Загрузить звук";
 "Notifications.MessageSoundInfo" = "Вы можете добавить сюда звук из любого короткого MP3-файла или голосового сообщения в чате: зажмите его пальцем и выберите «Сохранить звук».";
@@ -8074,8 +8074,8 @@ Sorry for the inconvenience.";
 "Login.EnterCodeSMSTitle" = "Введите код";
 "Login.EnterCodeSMSText" = "Мы отправили SMS с кодом проверки на Ваш телефон **%@**.";
 "Login.SendCodeAsSMS" = "Отправить код в SMS";
-"Login.EnterCodeIosappTitle" = "Введите код";
-"Login.EnterCodeIosappText" = "Мы отправили код через **Telegram** на другое устройство, где авторизован %@.";
+"Login.EnterCodeAnsibleTitle" = "Введите код";
+"Login.EnterCodeAnsibleText" = "Мы отправили код через **Telegram** на другое устройство, где авторизован %@.";
 "Login.AddEmailTitle" = "Укажите почту для входа";
 "Login.AddEmailText" = "Вы будете получать коды для входа в Telegram на адрес электронной почты, а не через SMS. Пожалуйста, введите адрес, к которому у Вас есть доступ.";
 "Login.AddEmailPlaceholder" = "Введите адрес почты";
@@ -10285,9 +10285,9 @@ Sorry for the inconvenience.";
 "BoostGift.GiveawayCreated.Text" = "Количество и срок действия голосов, полученных за разыгранные подписки, можно найти в [статистике]() канала.";
 "BoostGift.PremiumGifted.Title" = "Premium-подписки подарены";
 "BoostGift.PremiumGifted.Text" = "Количество и срок действия голосов, полученных за подаренные подписки, можно найти в [статистике]() канала.";
-"BoostGift.StarsGiveawayCreated.Title" = "Звёздный розыгрыш создан";
-"BoostGift.StarsGiveawayCreated.Text" = "Количество и срок действия голосов, полученных за разыгранные звёзды, можно найти в [статистике]() канала.";
-"BoostGift.Group.StarsGiveawayCreated.Text" = "Количество и срок действия голосов, полученных за разыгранные звёзды, можно найти в [статистике голосов]() группы.";
+"BoostGift.DiamondsGiveawayCreated.Title" = "Звёздный розыгрыш создан";
+"BoostGift.DiamondsGiveawayCreated.Text" = "Количество и срок действия голосов, полученных за разыгранные звёзды, можно найти в [статистике]() канала.";
+"BoostGift.Group.DiamondsGiveawayCreated.Text" = "Количество и срок действия голосов, полученных за разыгранные звёзды, можно найти в [статистике голосов]() группы.";
 
 "BoostGift.Subscribers.Title" = "Подарить Premium";
 "BoostGift.Subscribers.Subtitle" = "выберите до %@ подписчиков";
@@ -10436,8 +10436,8 @@ Sorry for the inconvenience.";
 "GiftLink.Reason.Unclaimed" = "Незавершённый розыгрыш";
 "GiftLink.Date" = "Дата";
 "GiftLink.NoRecipient" = "Нет получателя";
-"GiftLink.IosappPremium_1" = "Telegram Premium на %@ месяц";
-"GiftLink.IosappPremium_any" = "Telegram Premium на %@ месяцев";
+"GiftLink.AnsiblePremium_1" = "Telegram Premium на %@ месяц";
+"GiftLink.AnsiblePremium_any" = "Telegram Premium на %@ месяцев";
 "GiftLink.LinkHidden" = "Ссылка видна только получателю.";
 
 "ChannelBoost.EnableColors" = "Цвет канала";
@@ -12231,19 +12231,19 @@ Sorry for the inconvenience.";
 "Chat.Context.Phone.CreateNewContact" = "Создать новый контакт";
 "Chat.Context.Phone.AddToExistingContact" = "Добавить в имеющийся";
 "Chat.Context.Phone.SendMessage" = "Написать";
-"Chat.Context.Phone.IosappVoiceCall" = "Звонок через Telegram";
-"Chat.Context.Phone.IosappVideoCall" = "Видеозвонок через Telegram";
-"Chat.Context.Phone.InviteToTelegram" = "Пригласить в Telegram";
+"Chat.Context.Phone.AnsibleVoiceCall" = "Звонок через Telegram";
+"Chat.Context.Phone.AnsibleVideoCall" = "Видеозвонок через Telegram";
+"Chat.Context.Phone.InviteToAnsible" = "Пригласить в Telegram";
 "Chat.Context.Phone.CallViaCarrier" = "Позвонить по телефону";
 "Chat.Context.Phone.CopyNumber" = "Копировать номер";
-"Chat.Context.Phone.NotOnTelegram" = "Номер не зарегистрирован в Telegram.";
+"Chat.Context.Phone.NotOnAnsible" = "Номер не зарегистрирован в Telegram.";
 "Chat.Context.Phone.ViewProfile" = "Перейти в профиль";
 
 "Chat.Context.Username.SendMessage" = "Написать";
 "Chat.Context.Username.OpenGroup" = "Перейти в группу";
 "Chat.Context.Username.OpenChannel" = "Перейти в канал";
 "Chat.Context.Username.Copy" = "Копировать имя";
-"Chat.Context.Username.NotOnTelegram" = "Такого пользователя Telegram не существует.";
+"Chat.Context.Username.NotOnAnsible" = "Такого пользователя Telegram не существует.";
 
 "Chat.Context.Hashtag.Search" = "Найти сообщения";
 "Chat.Context.Hashtag.Copy" = "Копировать хештег";
@@ -12267,116 +12267,116 @@ Sorry for the inconvenience.";
 "Conversation.ContextMenuAddFactCheck" = "Добавить разъяснение";
 "Conversation.ContextMenuEditFactCheck" = "Изменить разъяснение";
 
-"Stars.Intro.Title" = "Звёзды Telegram";
-"Stars.Intro.Description" = "Звёзды Telegram нужны для оплаты контента и услуг в мини-приложениях.";
-"Stars.Intro.Balance" = "Баланс";
-"Stars.Intro.YourBalance" = "Ваш баланс";
-"Stars.Intro.Buy" = "Купить звёзды";
-"Stars.Intro.AllTransactions" = "Все операции";
-"Stars.Intro.Incoming" = "Зачисления";
-"Stars.Intro.Outgoing" = "Списания";
+"Diamonds.Intro.Title" = "Звёзды Telegram";
+"Diamonds.Intro.Description" = "Звёзды Telegram нужны для оплаты контента и услуг в мини-приложениях.";
+"Diamonds.Intro.Balance" = "Баланс";
+"Diamonds.Intro.YourBalance" = "Ваш баланс";
+"Diamonds.Intro.Buy" = "Купить звёзды";
+"Diamonds.Intro.AllTransactions" = "Все операции";
+"Diamonds.Intro.Incoming" = "Зачисления";
+"Diamonds.Intro.Outgoing" = "Списания";
 
-"Stars.Intro.Transaction.GiveawayPrize" = "Розыгрыш призов";
-"Stars.Intro.Transaction.MediaPurchase" = "Покупка медиаконтента";
-"Stars.Intro.Transaction.AppleTopUp.Title" = "Покупка звёзд";
-"Stars.Intro.Transaction.AppleTopUp.Subtitle" = "в App Store";
-"Stars.Intro.Transaction.GoogleTopUp.Title" = "Покупка звёзд";
-"Stars.Intro.Transaction.GoogleTopUp.Subtitle" = "в Play Store";
-"Stars.Intro.Transaction.PremiumBotTopUp.Title" = "Покупка звёзд";
-"Stars.Intro.Transaction.PremiumBotTopUp.Subtitle" = "через Premium Bot";
-"Stars.Intro.Transaction.FragmentTopUp.Title" = "Покупка звёзд";
-"Stars.Intro.Transaction.FragmentTopUp.Subtitle" = "на Fragment";
-"Stars.Intro.Transaction.FragmentWithdrawal.Title" = "Вывод";
-"Stars.Intro.Transaction.FragmentWithdrawal.Subtitle" = "через Fragment";
-"Stars.Intro.Transaction.IosappAds.Title" = "Вывод";
-"Stars.Intro.Transaction.IosappAds.Subtitle" = "через рекламную платформу";
-"Stars.Intro.Transaction.Gift" = "Подарок";
-"Stars.Intro.Transaction.ConvertedGift" = "Обмен подарка";
-"Stars.Intro.Transaction.Unsupported.Title" = "Недоступно";
-"Stars.Intro.Transaction.Refund" = "Возврат";
-"Stars.Intro.Transaction.GiftUpgrade" = "Улучшение подарка";
+"Diamonds.Intro.Transaction.GiveawayPrize" = "Розыгрыш призов";
+"Diamonds.Intro.Transaction.MediaPurchase" = "Покупка медиаконтента";
+"Diamonds.Intro.Transaction.AppleTopUp.Title" = "Покупка звёзд";
+"Diamonds.Intro.Transaction.AppleTopUp.Subtitle" = "в App Store";
+"Diamonds.Intro.Transaction.GoogleTopUp.Title" = "Покупка звёзд";
+"Diamonds.Intro.Transaction.GoogleTopUp.Subtitle" = "в Play Store";
+"Diamonds.Intro.Transaction.PremiumBotTopUp.Title" = "Покупка звёзд";
+"Diamonds.Intro.Transaction.PremiumBotTopUp.Subtitle" = "через Premium Bot";
+"Diamonds.Intro.Transaction.FragmentTopUp.Title" = "Покупка звёзд";
+"Diamonds.Intro.Transaction.FragmentTopUp.Subtitle" = "на Fragment";
+"Diamonds.Intro.Transaction.FragmentWithdrawal.Title" = "Вывод";
+"Diamonds.Intro.Transaction.FragmentWithdrawal.Subtitle" = "через Fragment";
+"Diamonds.Intro.Transaction.AnsibleAds.Title" = "Вывод";
+"Diamonds.Intro.Transaction.AnsibleAds.Subtitle" = "через рекламную платформу";
+"Diamonds.Intro.Transaction.Gift" = "Подарок";
+"Diamonds.Intro.Transaction.ConvertedGift" = "Обмен подарка";
+"Diamonds.Intro.Transaction.Unsupported.Title" = "Недоступно";
+"Diamonds.Intro.Transaction.Refund" = "Возврат";
+"Diamonds.Intro.Transaction.GiftUpgrade" = "Улучшение подарка";
 
-"Stars.Intro.PurchasedTitle" = "Звёзды зачислены";
-"Stars.Intro.PurchasedText" = "Ваш баланс пополнен на **%@**.";
-"Stars.Intro.PurchasedText.Stars_1" = "%@ звезду";
-"Stars.Intro.PurchasedText.Stars_any" = "%@ звезды";
+"Diamonds.Intro.PurchasedTitle" = "Звёзды зачислены";
+"Diamonds.Intro.PurchasedText" = "Ваш баланс пополнен на **%@**.";
+"Diamonds.Intro.PurchasedText.Diamonds_1" = "%@ звезду";
+"Diamonds.Intro.PurchasedText.Diamonds_any" = "%@ звезды";
 
-"Stars.Purchase.GetStars" = "Купить звёзды";
-"Stars.Purchase.GetStarsInfo" = "Выберите нужное количество звёзд.";
+"Diamonds.Purchase.GetDiamonds" = "Купить звёзды";
+"Diamonds.Purchase.GetDiamondsInfo" = "Выберите нужное количество звёзд.";
 
-"Stars.Purchase.Balance" = "Баланс";
+"Diamonds.Purchase.Balance" = "Баланс";
 
-"Stars.Purchase.StarsNeeded_1" = "Требуется %@ звезда";
-"Stars.Purchase.StarsNeeded_any" = "Требуется %@ звезды";
-"Stars.Purchase.StarsNeededInfo" = "Купите звёзды для оплаты в **%@** и других мини-приложениях.";
-"Stars.Purchase.StarsNeededUnlockInfo" = "Купите звёзды для получения медиаконтента и оплаты в мини-приложениях.";
+"Diamonds.Purchase.DiamondsNeeded_1" = "Требуется %@ звезда";
+"Diamonds.Purchase.DiamondsNeeded_any" = "Требуется %@ звезды";
+"Diamonds.Purchase.DiamondsNeededInfo" = "Купите звёзды для оплаты в **%@** и других мини-приложениях.";
+"Diamonds.Purchase.DiamondsNeededUnlockInfo" = "Купите звёзды для получения медиаконтента и оплаты в мини-приложениях.";
 
-"Stars.Purchase.Stars_1" = "%@ звезда";
-"Stars.Purchase.Stars_any" = "%@ звезды";
-"Stars.Purchase.ShowMore" = "Показать другие варианты";
-"Stars.Purchase.Info" = "Приобретая звёзды, Вы принимаете [условия]() Telegram.";
-"Stars.Purchase.Terms_URL" = "https://telegram.org/tos/stars";
+"Diamonds.Purchase.Diamonds_1" = "%@ звезда";
+"Diamonds.Purchase.Diamonds_any" = "%@ звезды";
+"Diamonds.Purchase.ShowMore" = "Показать другие варианты";
+"Diamonds.Purchase.Info" = "Приобретая звёзды, Вы принимаете [условия]() Telegram.";
+"Diamonds.Purchase.Terms_URL" = "https://telegram.org/tos/stars";
 
-"Stars.Transaction.Via" = "Через";
-"Stars.Transaction.To" = "Кому";
-"Stars.Transaction.From" = "От";
-"Stars.Transaction.Media" = "Медиаконтент";
-"Stars.Transaction.Id" = "ID операции";
-"Stars.Transaction.Date" = "Дата";
-"Stars.Transaction.Terms" = "[Условия]() покупки и использования звёзд.";
-"Stars.Transaction.Terms_URL" = "https://telegram.org/tos/stars";
-"Stars.Transaction.CopiedId" = "Идентификатор операции скопирован.";
+"Diamonds.Transaction.Via" = "Через";
+"Diamonds.Transaction.To" = "Кому";
+"Diamonds.Transaction.From" = "От";
+"Diamonds.Transaction.Media" = "Медиаконтент";
+"Diamonds.Transaction.Id" = "ID операции";
+"Diamonds.Transaction.Date" = "Дата";
+"Diamonds.Transaction.Terms" = "[Условия]() покупки и использования звёзд.";
+"Diamonds.Transaction.Terms_URL" = "https://telegram.org/tos/stars";
+"Diamonds.Transaction.CopiedId" = "Идентификатор операции скопирован.";
 
-"Stars.Transaction.MediaPurchase" = "Покупка медиаконтента";
-"Stars.Transaction.AppleTopUp.Title" = "Покупка звёзд";
-"Stars.Transaction.AppleTopUp.Subtitle" = "App Store";
-"Stars.Transaction.GoogleTopUp.Title" = "Покупка звёзд";
-"Stars.Transaction.GoogleTopUp.Subtitle" = "Play Store";
-"Stars.Transaction.PremiumBotTopUp.Title" = "Покупка звёзд";
-"Stars.Transaction.PremiumBotTopUp.Subtitle" = "Premium Bot";
-"Stars.Transaction.FragmentTopUp.Title" = "Покупка звёзд";
-"Stars.Transaction.FragmentTopUp.Subtitle" = "Fragment";
-"Stars.Transaction.FragmentWithdrawal.Title" = "Вывод звёзд";
-"Stars.Transaction.FragmentWithdrawal.Subtitle" = "Fragment";
-"Stars.Transaction.IosappAds.Title" = "Вывод звёзд";
-"Stars.Transaction.IosappAds.Subtitle" = "Реклама в Telegram";
-"Stars.Transaction.Unsupported.Title" = "Не поддерживается";
-"Stars.Transaction.Refund" = "Возврат";
+"Diamonds.Transaction.MediaPurchase" = "Покупка медиаконтента";
+"Diamonds.Transaction.AppleTopUp.Title" = "Покупка звёзд";
+"Diamonds.Transaction.AppleTopUp.Subtitle" = "App Store";
+"Diamonds.Transaction.GoogleTopUp.Title" = "Покупка звёзд";
+"Diamonds.Transaction.GoogleTopUp.Subtitle" = "Play Store";
+"Diamonds.Transaction.PremiumBotTopUp.Title" = "Покупка звёзд";
+"Diamonds.Transaction.PremiumBotTopUp.Subtitle" = "Premium Bot";
+"Diamonds.Transaction.FragmentTopUp.Title" = "Покупка звёзд";
+"Diamonds.Transaction.FragmentTopUp.Subtitle" = "Fragment";
+"Diamonds.Transaction.FragmentWithdrawal.Title" = "Вывод звёзд";
+"Diamonds.Transaction.FragmentWithdrawal.Subtitle" = "Fragment";
+"Diamonds.Transaction.AnsibleAds.Title" = "Вывод звёзд";
+"Diamonds.Transaction.AnsibleAds.Subtitle" = "Реклама в Telegram";
+"Diamonds.Transaction.Unsupported.Title" = "Не поддерживается";
+"Diamonds.Transaction.Refund" = "Возврат";
 
-"Stars.Transaction.Photos_1" = "%@ фото";
-"Stars.Transaction.Photos_any" = "%@ фото";
-"Stars.Transaction.Videos_1" = "%@ видео";
-"Stars.Transaction.Videos_any" = "%@ видео";
-"Stars.Transaction.SinglePhoto" = "фото";
-"Stars.Transaction.SingleVideo" = "видео";
-"Stars.Transaction.MediaAnd" = "%1$@ и %2$@";
+"Diamonds.Transaction.Photos_1" = "%@ фото";
+"Diamonds.Transaction.Photos_any" = "%@ фото";
+"Diamonds.Transaction.Videos_1" = "%@ видео";
+"Diamonds.Transaction.Videos_any" = "%@ видео";
+"Diamonds.Transaction.SinglePhoto" = "фото";
+"Diamonds.Transaction.SingleVideo" = "видео";
+"Diamonds.Transaction.MediaAnd" = "%1$@ и %2$@";
 
-"Stars.Transfer.Title" = "Подтверждение покупки";
-"Stars.Transfer.Info" = "Вы точно хотите приобрести **%1$@** у **%2$@** за **%3$@**?";
-"Stars.Transfer.Info.Stars_1" = "%@ звезду";
-"Stars.Transfer.Info.Stars_any" = "%@ звезды";
-"Stars.Transfer.Pay" = "Подтвердить и заплатить";
-"Stars.Transfer.PurchasedTitle" = "Спасибо за покупку";
-"Stars.Transfer.PurchasedText" = "Вы приобрели **%1$@** у **%2$@** за **%3$@**.";
-"Stars.Transfer.Purchased.Stars_1" = "%@ звезду";
-"Stars.Transfer.Purchased.Stars_any" = "%@ звезды";
-"Stars.Transfer.UnlockedText" = "Вы получили доступ к медиаконтенту за **%1$@**.";
-"Stars.Transfer.UnlockInfo" = "Раскрыть %1$@ в **%2$@** за **%3$@**?";
-"Stars.Transfer.UnlockBotInfo" = "Раскрыть %1$@ от **%2$@** за **%3$@**?";
+"Diamonds.Transfer.Title" = "Подтверждение покупки";
+"Diamonds.Transfer.Info" = "Вы точно хотите приобрести **%1$@** у **%2$@** за **%3$@**?";
+"Diamonds.Transfer.Info.Diamonds_1" = "%@ звезду";
+"Diamonds.Transfer.Info.Diamonds_any" = "%@ звезды";
+"Diamonds.Transfer.Pay" = "Подтвердить и заплатить";
+"Diamonds.Transfer.PurchasedTitle" = "Спасибо за покупку";
+"Diamonds.Transfer.PurchasedText" = "Вы приобрели **%1$@** у **%2$@** за **%3$@**.";
+"Diamonds.Transfer.Purchased.Diamonds_1" = "%@ звезду";
+"Diamonds.Transfer.Purchased.Diamonds_any" = "%@ звезды";
+"Diamonds.Transfer.UnlockedText" = "Вы получили доступ к медиаконтенту за **%1$@**.";
+"Diamonds.Transfer.UnlockInfo" = "Раскрыть %1$@ в **%2$@** за **%3$@**?";
+"Diamonds.Transfer.UnlockBotInfo" = "Раскрыть %1$@ от **%2$@** за **%3$@**?";
 
-"Stars.Transfer.Balance" = "Баланс";
+"Diamonds.Transfer.Balance" = "Баланс";
 
-"Stars.Transfer.Unavailable" = "К сожалению, покупка звёзд недоступна в Вашей стране.";
+"Diamonds.Transfer.Unavailable" = "К сожалению, покупка звёзд недоступна в Вашей стране.";
 
-"Stars.Transfer.Photos_1" = "%@ фото";
-"Stars.Transfer.Photos_any" = "%@ фото";
-"Stars.Transfer.Videos_1" = "%@ видео";
-"Stars.Transfer.Videos_any" = "%@ видео";
-"Stars.Transfer.SinglePhoto" = "фото";
-"Stars.Transfer.SingleVideo" = "видео";
-"Stars.Transfer.MediaAnd" = "%1$@ и %2$@";
+"Diamonds.Transfer.Photos_1" = "%@ фото";
+"Diamonds.Transfer.Photos_any" = "%@ фото";
+"Diamonds.Transfer.Videos_1" = "%@ видео";
+"Diamonds.Transfer.Videos_any" = "%@ видео";
+"Diamonds.Transfer.SinglePhoto" = "фото";
+"Diamonds.Transfer.SingleVideo" = "видео";
+"Diamonds.Transfer.MediaAnd" = "%1$@ и %2$@";
 
-"Settings.Stars" = "Мои звёзды";
+"Settings.Diamonds" = "Мои звёзды";
 
 "Chat.MessageEffectMenu.TitleAddEffect" = "Добавить анимированный эффект";
 "Chat.MessageEffectMenu.SectionMessageEffects" = "Эффекты сообщения";
@@ -12392,8 +12392,8 @@ Sorry for the inconvenience.";
 
 "PeerInfo.Bot.Username" = "Имя пользователя";
 "PeerInfo.Bot.Balance" = "Баланс";
-"PeerInfo.Bot.Balance.Stars_1" = "%@ звезда";
-"PeerInfo.Bot.Balance.Stars_any" = "%@ звезды";
+"PeerInfo.Bot.Balance.Diamonds_1" = "%@ звезда";
+"PeerInfo.Bot.Balance.Diamonds_any" = "%@ звезды";
 
 "HashtagSearch.StoriesFound_1" = "Найдена %@ история";
 "HashtagSearch.StoriesFound_any" = "Найдено %@ историй";
@@ -12409,40 +12409,40 @@ Sorry for the inconvenience.";
 "HashtagSearch.FoundStories" = "истории";
 "HashtagSearch.FoundPosts" = "публикации";
 
-"Stars.BotRevenue.Title" = "Баланс звёзд";
-"Stars.BotRevenue.Revenue.Title" = "Полученные звёзды";
-"Stars.BotRevenue.Proceeds.Title" = "Поступления";
-"Stars.BotRevenue.Proceeds.Available" = "Доступный баланс";
-"Stars.BotRevenue.Proceeds.Current" = "Общий баланс";
-"Stars.BotRevenue.Proceeds.Total" = "Всего поступлений";
-"Stars.BotRevenue.Proceeds.Info" = "Покупка рекламы и получение вознаграждений за звёзды возможны не ранее чем через 21 день после поступления звёзд на баланс.";
+"Diamonds.BotRevenue.Title" = "Баланс звёзд";
+"Diamonds.BotRevenue.Revenue.Title" = "Полученные звёзды";
+"Diamonds.BotRevenue.Proceeds.Title" = "Поступления";
+"Diamonds.BotRevenue.Proceeds.Available" = "Доступный баланс";
+"Diamonds.BotRevenue.Proceeds.Current" = "Общий баланс";
+"Diamonds.BotRevenue.Proceeds.Total" = "Всего поступлений";
+"Diamonds.BotRevenue.Proceeds.Info" = "Покупка рекламы и получение вознаграждений за звёзды возможны не ранее чем через 21 день после поступления звёзд на баланс.";
 
-"Stars.BotRevenue.Withdraw.Balance" = "Доступный баланс";
-"Stars.BotRevenue.Withdraw.Withdraw" = "Вывести через Fragment";
-"Stars.BotRevenue.Withdraw.WithdrawShort" = "Вывести";
-"Stars.BotRevenue.Withdraw.BuyAds" = "Купить рекламу";
-"Stars.BotRevenue.Withdraw.Info" = "Вы можете обменять звёзды на вознаграждение с помощью Fragment или оплатить ими рекламу своего бота. Вывести можно не менее 1000 звёзд. [Подробнее >]()";
-"Stars.BotRevenue.Withdraw.Info_URL" = "https://telegram.org/tos/bot-developers#6-2-2-tpa-balance";
+"Diamonds.BotRevenue.Withdraw.Balance" = "Доступный баланс";
+"Diamonds.BotRevenue.Withdraw.Withdraw" = "Вывести через Fragment";
+"Diamonds.BotRevenue.Withdraw.WithdrawShort" = "Вывести";
+"Diamonds.BotRevenue.Withdraw.BuyAds" = "Купить рекламу";
+"Diamonds.BotRevenue.Withdraw.Info" = "Вы можете обменять звёзды на вознаграждение с помощью Fragment или оплатить ими рекламу своего бота. Вывести можно не менее 1000 звёзд. [Подробнее >]()";
+"Diamonds.BotRevenue.Withdraw.Info_URL" = "https://telegram.org/tos/bot-developers#6-2-2-tpa-balance";
 
-"Stars.BotRevenue.Transactions.Title" = "История операций";
+"Diamonds.BotRevenue.Transactions.Title" = "История операций";
 
-"Stars.Withdraw.Title" = "Вывод";
-"Stars.Withdraw.AmountTitle" = "УКАЖИТЕ КОЛИЧЕСТВО ДЛЯ ВЫВОДА";
-"Stars.Withdraw.AmountPlaceholder" = "Количество звёзд";
-"Stars.Withdraw.Withdraw" = "Вывести";
+"Diamonds.Withdraw.Title" = "Вывод";
+"Diamonds.Withdraw.AmountTitle" = "УКАЖИТЕ КОЛИЧЕСТВО ДЛЯ ВЫВОДА";
+"Diamonds.Withdraw.AmountPlaceholder" = "Количество звёзд";
+"Diamonds.Withdraw.Withdraw" = "Вывести";
 
-"Stars.Withdraw.Withdraw.ErrorMinimum" = "Вывести можно не менее [%@]().";
-"Stars.Withdraw.Withdraw.ErrorMinimum.Stars_1" = "%@ звезды";
-"Stars.Withdraw.Withdraw.ErrorMinimum.Stars_any" = "%@ звезды";
+"Diamonds.Withdraw.Withdraw.ErrorMinimum" = "Вывести можно не менее [%@]().";
+"Diamonds.Withdraw.Withdraw.ErrorMinimum.Diamonds_1" = "%@ звезды";
+"Diamonds.Withdraw.Withdraw.ErrorMinimum.Diamonds_any" = "%@ звезды";
 
-"Stars.Withdraw.Withdraw.ErrorTimeout" = "Вывод будет доступен через **%@**.";
+"Diamonds.Withdraw.Withdraw.ErrorTimeout" = "Вывод будет доступен через **%@**.";
 
-"Stars.PaidContent.Title" = "Платный контент";
-"Stars.PaidContent.AmountTitle" = "СТОИМОСТЬ ДОСТУПА";
-"Stars.PaidContent.AmountPlaceholder" = "Звёзд за получение доступа";
-"Stars.PaidContent.AmountInfo" = "Пользователи смогут просмотреть этот контент после отправки указанного количества звёзд Вашему каналу. [Подробнее о звёздах >]()";
-"Stars.PaidContent.AmountInfo_URL" = "https://telegram.org/tos/stars";
-"Stars.PaidContent.Create" = "Сделать просмотр платным";
+"Diamonds.PaidContent.Title" = "Платный контент";
+"Diamonds.PaidContent.AmountTitle" = "СТОИМОСТЬ ДОСТУПА";
+"Diamonds.PaidContent.AmountPlaceholder" = "Звёзд за получение доступа";
+"Diamonds.PaidContent.AmountInfo" = "Пользователи смогут просмотреть этот контент после отправки указанного количества звёзд Вашему каналу. [Подробнее о звёздах >]()";
+"Diamonds.PaidContent.AmountInfo_URL" = "https://telegram.org/tos/stars";
+"Diamonds.PaidContent.Create" = "Сделать просмотр платным";
 
 "MediaEditor.AddLink" = "ССЫЛКА";
 
@@ -12468,25 +12468,25 @@ Sorry for the inconvenience.";
 "Chat.MessagesDeletedToast.Text_1" = "%d сообщение удалено";
 "Chat.MessagesDeletedToast.Text_any" = "%d сообщений удалено";
 
-"Monetization.StarsRevenueTitle" = "ПОСТУПЛЕНИЯ";
+"Monetization.DiamondsRevenueTitle" = "ПОСТУПЛЕНИЯ";
 
 "Monetization.TonBalanceTitle" = "БАЛАНС TON";
-"Monetization.StarsBalanceTitle" = "БАЛАНС ЗВЁЗД";
+"Monetization.DiamondsBalanceTitle" = "БАЛАНС ЗВЁЗД";
 
 "Monetization.TonTransactions" = "Операции в TON";
-"Monetization.StarsTransactions" = "Операции в звёздах";
+"Monetization.DiamondsTransactions" = "Операции в звёздах";
 
-"Monetization.BalanceStarsWithdraw" = "Вывести через Fragment";
-"Monetization.BalanceStarsWithdrawShort" = "Вывести";
-"Monetization.BalanceStarsBuyAds" = "Купить рекламу";
-"Monetization.Balance.StarsInfo" = "Вы можете вывести звёзды с помощью Fragment или оплатить ими рекламу своего канала. Вывести можно не менее 1000 звёзд. [Подробнее >]()";
-"Monetization.Balance.StarsInfo_URL" = "https://telegram.org/tos/stars";
+"Monetization.BalanceDiamondsWithdraw" = "Вывести через Fragment";
+"Monetization.BalanceDiamondsWithdrawShort" = "Вывести";
+"Monetization.BalanceDiamondsBuyAds" = "Купить рекламу";
+"Monetization.Balance.DiamondsInfo" = "Вы можете вывести звёзды с помощью Fragment или оплатить ими рекламу своего канала. Вывести можно не менее 1000 звёзд. [Подробнее >]()";
+"Monetization.Balance.DiamondsInfo_URL" = "https://telegram.org/tos/stars";
 
-"Monetization.StarsProceeds.Title" = "ПОСТУПЛЕНИЯ";
-"Monetization.StarsProceeds.Available" = "Доступный баланс";
-"Monetization.StarsProceeds.Current" = "Общий баланс";
-"Monetization.StarsProceeds.Total" = "Всего поступлений";
-"Monetization.StarsProceeds.Info" = "<no value>";
+"Monetization.DiamondsProceeds.Title" = "ПОСТУПЛЕНИЯ";
+"Monetization.DiamondsProceeds.Available" = "Доступный баланс";
+"Monetization.DiamondsProceeds.Current" = "Общий баланс";
+"Monetization.DiamondsProceeds.Total" = "Всего поступлений";
+"Monetization.DiamondsProceeds.Info" = "<no value>";
 
 "Premium.MessageEffects" = "Эффекты в сообщениях";
 "Premium.MessageEffectsInfo" = "Более 500 анимированных эффектов для личных сообщений.";
@@ -12496,8 +12496,8 @@ Sorry for the inconvenience.";
 
 "Attachment.SendWithoutGrouping" = "Отправить без группировки";
 "Attachment.Paid.EditPrice" = "Изменить цену";
-"Attachment.Paid.EditPrice.Stars_1" = "%@ звезда";
-"Attachment.Paid.EditPrice.Stars_any" = "%@ звезды";
+"Attachment.Paid.EditPrice.Diamonds_1" = "%@ звезда";
+"Attachment.Paid.EditPrice.Diamonds_any" = "%@ звезды";
 "Attachment.Paid.Create" = "Сделать платным";
 
 "WebApp.MinimizedTitleFormat" = "%1$@ и %2$@";
@@ -12508,11 +12508,11 @@ Sorry for the inconvenience.";
 "WebApp.Minimized.CloseAll_1" = "Закрыть %@ вкладку";
 "WebApp.Minimized.CloseAll_any" = "Закрыть все %@ вкладок";
 
-"Stars.SendStars.Title" = "Отправить звёзды";
-"Stars.SendStars.AmountTitle" = "КОЛИЧЕСТВО";
-"Stars.SendStars.AmountPlaceholder" = "Количество звёзд";
-"Stars.SendStars.AmountInfo" = "Отправьте %@ или более, чтобы войти в тройку лидеров, поддержавших это сообщение.";
-"Stars.SendStars.SendStars" = "Подтвердить и отправить";
+"Diamonds.SendDiamonds.Title" = "Отправить звёзды";
+"Diamonds.SendDiamonds.AmountTitle" = "КОЛИЧЕСТВО";
+"Diamonds.SendDiamonds.AmountPlaceholder" = "Количество звёзд";
+"Diamonds.SendDiamonds.AmountInfo" = "Отправьте %@ или более, чтобы войти в тройку лидеров, поддержавших это сообщение.";
+"Diamonds.SendDiamonds.SendDiamonds" = "Подтвердить и отправить";
 
 "ChatList.DeleteForMe" = "Удалить у меня";
 "ChatList.DeleteForAllWhenPossible" = "Удалить у всех, где возможно";
@@ -12521,11 +12521,11 @@ Sorry for the inconvenience.";
 "WebApp.Miniapp" = "мини-приложение";
 "WebApp.Share" = "Поделиться";
 
-"Stars.Purchase.GiftStars" = "Подарить звёзды";
-"Stars.Purchase.GiftInfo" = "Звёзды позволят **%1$@** открывать контент и получать услуги в Telegram. [Примеры >]()";
+"Diamonds.Purchase.GiftDiamonds" = "Подарить звёзды";
+"Diamonds.Purchase.GiftInfo" = "Звёзды позволят **%1$@** открывать контент и получать услуги в Telegram. [Примеры >]()";
 
-"Stars.Purchase.SubscriptionInfo" = "Купите звёзды, чтобы подписаться на **%@**.";
-"Stars.Purchase.SubscriptionRenewInfo" = "Купите звёзды, чтобы продлить подписку на «**%@**».";
+"Diamonds.Purchase.SubscriptionInfo" = "Купите звёзды, чтобы подписаться на **%@**.";
+"Diamonds.Purchase.SubscriptionRenewInfo" = "Купите звёзды, чтобы продлить подписку на «**%@**».";
 
 "InviteLink.Create.Subscription" = "Ежемесячная плата";
 "InviteLink.Create.Subscription.Placeholder" = "Количество звёзд в месяц";
@@ -12538,14 +12538,14 @@ Sorry for the inconvenience.";
 "InviteLink.Subscription.Fee" = "Платная подписка";
 "InviteLink.Subscription.Info" = "Вы получаете около %@ в месяц";
 
-"Notification.StarsGift.Sent" = "%1$@ отправил(а) Вам подарок стоимостью %2$@";
-"Notification.StarsGift.SentYou" = "Вы отправили подарок за %@";
+"Notification.DiamondsGift.Sent" = "%1$@ отправил(а) Вам подарок стоимостью %2$@";
+"Notification.DiamondsGift.SentYou" = "Вы отправили подарок за %@";
 
-"Notification.StarsGift.Title_1" = "%@ звезда";
-"Notification.StarsGift.Title_any" = "%@ звезды";
-"Notification.StarsGift.Subtitle" = "Используйте звёзды, чтобы открывать контент и получать услуги в Telegram.";
-"Notification.StarsGift.SubtitleYou" = "Звёзды позволят %@ открывать контент и получать услуги в Telegram.";
-"Notification.StarsGift.UnknownUser" = "Неизвестный пользователь";
+"Notification.DiamondsGift.Title_1" = "%@ звезда";
+"Notification.DiamondsGift.Title_any" = "%@ звезды";
+"Notification.DiamondsGift.Subtitle" = "Используйте звёзды, чтобы открывать контент и получать услуги в Telegram.";
+"Notification.DiamondsGift.SubtitleYou" = "Звёзды позволят %@ открывать контент и получать услуги в Telegram.";
+"Notification.DiamondsGift.UnknownUser" = "Неизвестный пользователь";
 
 "Bot.Settings" = "Настройки бота";
 
@@ -12557,13 +12557,13 @@ Sorry for the inconvenience.";
 "Browser.ContextMenu.CopyLink" = "Копировать ссылку";
 "Browser.ContextMenu.Share" = "Поделиться";
 
-"WebBrowser.Telegram" = "Telegram";
+"WebBrowser.Ansible" = "Telegram";
 
 "Monetization.Proceeds.Ton.Info" = "Покупка рекламы и получение вознаграждений возможны не ранее чем через 3 дня после поступления TON на баланс. Вывести можно от 10 TON.";
-"Monetization.Proceeds.Stars.Info" = "Покупка рекламы и получение вознаграждений возможны не ранее чем через 21 день после поступления звёзд на баланс.";
-"Monetization.Proceeds.TonAndStars.Info" = "Покупка рекламы и получение вознаграждений за звёзды или TON возможны не ранее чем через 21 день или 3 дня после их поступления на баланс соответственно.";
+"Monetization.Proceeds.Diamonds.Info" = "Покупка рекламы и получение вознаграждений возможны не ранее чем через 21 день после поступления звёзд на баланс.";
+"Monetization.Proceeds.TonAndDiamonds.Info" = "Покупка рекламы и получение вознаграждений за звёзды или TON возможны не ранее чем через 21 день или 3 дня после их поступления на баланс соответственно.";
 
-"Stars.Transaction.FragmentUnknown_URL" = "https://fragment.com/stars";
+"Diamonds.Transaction.FragmentUnknown_URL" = "https://fragment.com/stars";
 "Conversation.StatusBotSubscribers_1" = "%d пользователь";
 "Conversation.StatusBotSubscribers_any" = "%d пользователей";
 
@@ -12579,15 +12579,15 @@ Sorry for the inconvenience.";
 "WebBrowser.FileForwardTooltip.ManyChats.One" = "Документ отправлен в чат **%@** и ещё %@ чата";
 "WebBrowser.FileForwardTooltip.SavedMessages.One" = "Документ отправлен в **Избранное**";
 
-"Stars.Intro.StarsSent_1" = "Отправлена %@ звезда.";
-"Stars.Intro.StarsSent_any" = "Отправлено %@ звезды.";
-"Stars.Intro.StarsSent.ViewChat" = "Перейти в чат";
+"Diamonds.Intro.DiamondsSent_1" = "Отправлена %@ звезда.";
+"Diamonds.Intro.DiamondsSent_any" = "Отправлено %@ звезды.";
+"Diamonds.Intro.DiamondsSent.ViewChat" = "Перейти в чат";
 
-"Stars.Gift.Received.Title" = "Подарок Вам";
-"Stars.Gift.Received.Text" = "Используйте звёзды, чтобы открывать контент и получать услуги в Telegram. [Примеры >]()";
+"Diamonds.Gift.Received.Title" = "Подарок Вам";
+"Diamonds.Gift.Received.Text" = "Используйте звёзды, чтобы открывать контент и получать услуги в Telegram. [Примеры >]()";
 
-"Stars.Gift.Sent.Title" = "Подарок от Вас";
-"Stars.Gift.Sent.Text" = "Звёзды позволят %@ открывать контент и получать услуги в Telegram. [Примеры >]()";
+"Diamonds.Gift.Sent.Title" = "Подарок от Вас";
+"Diamonds.Gift.Sent.Text" = "Звёзды позволят %@ открывать контент и получать услуги в Telegram. [Примеры >]()";
 
 "WebBrowser.Reload" = "Обновить";
 "WebBrowser.Share" = "Поделиться";
@@ -12697,14 +12697,14 @@ Sorry for the inconvenience.";
 "WebBrowser.DeleteBookmark" = "Удалить закладку";
 "WebBrowser.RemoveRecent" = "Убрать из недавних";
 
-"Stars.Intro.Transaction.Gift.Title" = "Подарок Вам";
-"Stars.Intro.Transaction.Gift.UnknownUser" = "Неизвестный пользователь";
+"Diamonds.Intro.Transaction.Gift.Title" = "Подарок Вам";
+"Diamonds.Intro.Transaction.Gift.UnknownUser" = "Неизвестный пользователь";
 
 "WebApp.PrivacyPolicy" = "Политика конфиденциальности";
 
 "Conversation.OpenProfile" = "ОТКРЫТЬ ПРОФИЛЬ";
 
-"Stars.Intro.GiftStars" = "Подарить звёзды друзьям";
+"Diamonds.Intro.GiftDiamonds" = "Подарить звёзды друзьям";
 
 "MediaPicker.CreateSticker" = "Создание стикера из фотографии";
 
@@ -12718,58 +12718,58 @@ Sorry for the inconvenience.";
 "InviteLink.CopyShort" = "Копировать";
 "InviteLink.ShareShort" = "Поделиться";
 
-"Stars.Subscription.Terms" = "Оформляя подписку, Вы принимаете [условия]() Telegram.";
-"Stars.Subscription.Terms_URL" = "https://telegram.org/tos/stars/ru";
+"Diamonds.Subscription.Terms" = "Оформляя подписку, Вы принимаете [условия]() Telegram.";
+"Diamonds.Subscription.Terms_URL" = "https://telegram.org/tos/stars/ru";
 
-"Stars.Transaction.Reaction.Title" = "Звёздная реакция";
-"Stars.Transaction.Reaction.Post" = "Публикация";
+"Diamonds.Transaction.Reaction.Title" = "Звёздная реакция";
+"Diamonds.Transaction.Reaction.Post" = "Публикация";
 
-"Stars.Transaction.SubscriptionFee" = "Месячная подписка";
-"Stars.Transaction.Subscription.Title" = "Подписка";
-"Stars.Transaction.Subscription.Active" = "При отмене продления подписка будет действовать до %@";
-"Stars.Transaction.Subscription.Cancelled" = "Вы отменили продление подписки.";
-"Stars.Transaction.Subscription.Renew" = "Возобновить подписку";
-"Stars.Transaction.Subscription.Cancel" = "Отменить продление";
-"Stars.Transaction.Subscription.JoinChannel" = "Присоединиться";
-"Stars.Transaction.Subscription.JoinAgainChannel" = "Присоединиться";
-"Stars.Transaction.Subscription.LeftChannel" = "Вы покинули канал, но можете вернуться до %@.";
-"Stars.Transaction.Subscription.Expired" = "Ваша подписка истекла %@.";
-"Stars.Transaction.Subscription.PerMonth" = "%@ в месяц";
-"Stars.Transaction.Subscription.PerMonthUsd" = "около %@ в месяц";
-"Stars.Transaction.Subscription.Subscription" = "Подписка";
-"Stars.Transaction.Subscription.Subscriber" = "Подписчик";
+"Diamonds.Transaction.SubscriptionFee" = "Месячная подписка";
+"Diamonds.Transaction.Subscription.Title" = "Подписка";
+"Diamonds.Transaction.Subscription.Active" = "При отмене продления подписка будет действовать до %@";
+"Diamonds.Transaction.Subscription.Cancelled" = "Вы отменили продление подписки.";
+"Diamonds.Transaction.Subscription.Renew" = "Возобновить подписку";
+"Diamonds.Transaction.Subscription.Cancel" = "Отменить продление";
+"Diamonds.Transaction.Subscription.JoinChannel" = "Присоединиться";
+"Diamonds.Transaction.Subscription.JoinAgainChannel" = "Присоединиться";
+"Diamonds.Transaction.Subscription.LeftChannel" = "Вы покинули канал, но можете вернуться до %@.";
+"Diamonds.Transaction.Subscription.Expired" = "Ваша подписка истекла %@.";
+"Diamonds.Transaction.Subscription.PerMonth" = "%@ в месяц";
+"Diamonds.Transaction.Subscription.PerMonthUsd" = "около %@ в месяц";
+"Diamonds.Transaction.Subscription.Subscription" = "Подписка";
+"Diamonds.Transaction.Subscription.Subscriber" = "Подписчик";
 
-"Stars.Transaction.Subscription.Status.Expires" = "Истекает";
-"Stars.Transaction.Subscription.Status.Expired" = "Истекла";
-"Stars.Transaction.Subscription.Status.Renews" = "Продлится";
-"Stars.Transaction.Subscription.Status.Subscribed" = "Оформлена";
+"Diamonds.Transaction.Subscription.Status.Expires" = "Истекает";
+"Diamonds.Transaction.Subscription.Status.Expired" = "Истекла";
+"Diamonds.Transaction.Subscription.Status.Renews" = "Продлится";
+"Diamonds.Transaction.Subscription.Status.Subscribed" = "Оформлена";
 
-"Stars.Transaction.Subscription.Cancelled.Title" = "Продление подписки отменено";
-"Stars.Transaction.Subscription.Cancelled.Text" = "Доступ к «[%1$@]()» действует до %2$@.";
+"Diamonds.Transaction.Subscription.Cancelled.Title" = "Продление подписки отменено";
+"Diamonds.Transaction.Subscription.Cancelled.Text" = "Доступ к «[%1$@]()» действует до %2$@.";
 
-"Stars.Transaction.Subscription.Renewed.Title" = "Подписка возобновлена";
-"Stars.Transaction.Subscription.Renewed.Text" = "Вы возобновили подписку на [%1$@]().";
+"Diamonds.Transaction.Subscription.Renewed.Title" = "Подписка возобновлена";
+"Diamonds.Transaction.Subscription.Renewed.Text" = "Вы возобновили подписку на [%1$@]().";
 
-"Stars.Intro.Subscriptions.Title" = "МОИ ПОДПИСКИ";
-"Stars.Intro.Subscriptions.PerMonth" = "в месяц";
-"Stars.Intro.Subscriptions.Renews" = "продлится %@";
-"Stars.Intro.Subscriptions.Expires" = "истекает %@";
-"Stars.Intro.Subscriptions.Expired" = "истекла %@";
-"Stars.Intro.Subscriptions.Cancelled" = "отменена";
-"Stars.Intro.Subscriptions.ExpiredStatus" = "истекла";
-"Stars.Intro.Subscriptions.ShowMore" = "Показать ещё";
+"Diamonds.Intro.Subscriptions.Title" = "МОИ ПОДПИСКИ";
+"Diamonds.Intro.Subscriptions.PerMonth" = "в месяц";
+"Diamonds.Intro.Subscriptions.Renews" = "продлится %@";
+"Diamonds.Intro.Subscriptions.Expires" = "истекает %@";
+"Diamonds.Intro.Subscriptions.Expired" = "истекла %@";
+"Diamonds.Intro.Subscriptions.Cancelled" = "отменена";
+"Diamonds.Intro.Subscriptions.ExpiredStatus" = "истекла";
+"Diamonds.Intro.Subscriptions.ShowMore" = "Показать ещё";
 
-"Stars.Intro.Transaction.SubscriptionFee.Title" = "Месячная подписка";
-"Stars.Intro.Transaction.Reaction.Title" = "Звёздная реакция";
+"Diamonds.Intro.Transaction.SubscriptionFee.Title" = "Месячная подписка";
+"Diamonds.Intro.Transaction.Reaction.Title" = "Звёздная реакция";
 
-"Stars.Purchase.GenericPurchasePurpose" = "Купите звёзды для оплаты контента и услуг в Telegram.";
-"Stars.Purchase.PurchasePurpose.subs" = "Купите звёзды для продления всех подписок.";
+"Diamonds.Purchase.GenericPurchasePurpose" = "Купите звёзды для оплаты контента и услуг в Telegram.";
+"Diamonds.Purchase.PurchasePurpose.subs" = "Купите звёзды для продления всех подписок.";
 
-"Stars.Transfer.Subscribe.Channel.Title" = "Подписка";
-"Stars.Transfer.SubscribeInfo" = "Подписаться на **%1$@** за **%2$@** в месяц?";
-"Stars.Transfer.Subscribe" = "Оформить подписку";
-"Stars.Transfer.Subscribe.Successful.Title" = "Подписка оформлена!";
-"Stars.Transfer.Subscribe.Successful.Text" = "«%2$@» получил %1$@.";
+"Diamonds.Transfer.Subscribe.Channel.Title" = "Подписка";
+"Diamonds.Transfer.SubscribeInfo" = "Подписаться на **%1$@** за **%2$@** в месяц?";
+"Diamonds.Transfer.Subscribe" = "Оформить подписку";
+"Diamonds.Transfer.Subscribe.Successful.Title" = "Подписка оформлена!";
+"Diamonds.Transfer.Subscribe.Successful.Text" = "«%2$@» получил %1$@.";
 
 "Gallery.Ad" = "Реклама";
 
@@ -12806,8 +12806,8 @@ Sorry for the inconvenience.";
 
 "WebApp.PrivacyPolicy_URL" = "https://telegram.org/privacy-tpa/ru";
 
-"ChatList.SubscriptionsLowBalance.Stars_1" = "Требуется %@ звезда";
-"ChatList.SubscriptionsLowBalance.Stars_any" = "Требуется %@ звезды";
+"ChatList.SubscriptionsLowBalance.Diamonds_1" = "Требуется %@ звезда";
+"ChatList.SubscriptionsLowBalance.Diamonds_any" = "Требуется %@ звезды";
 
 "ChatList.SubscriptionsLowBalance.Single.Title" = "%1$@ для «%2$@»";
 "ChatList.SubscriptionsLowBalance.Single.Text" = "Не хватает средств для оплаты подписки.";
@@ -12820,177 +12820,177 @@ Sorry for the inconvenience.";
 "Channel.ShowAuthors" = "Показывать профили авторов";
 "Channel.ShowAuthorsFooter" = "Разрешить администраторам публикацию от имени их канала или личного аккаунта со ссылкой на профиль.";
 
-"SendStarReactions.Title" = "Звёздная реакция";
-"SendStarReactions.Balance" = "Баланс";
-"SendStarReactions.UserLabelAnonymous" = "Аноним";
-"SendStarReactions.SliderTop" = "ЛИДЕР";
-"SendStarReactions.TextSentStars_1" = "Вы поддержали публикацию **%d** звездой.";
-"SendStarReactions.TextSentStars_any" = "Вы поддержали публикацию **%d** звезды.";
-"SendStarReactions.TextGeneric" = "Выберите количество звёзд для отправки **%@** в поддержку этой публикации.";
-"SendStarReactions.SectionTop" = "Лидеры";
-"SendStarReactions.ShowMyselfInTop" = "Показывать меня среди лидеров";
-"SendStarReactions.SendButtonTitle" = "Отправить  # %@";
-"SendStarReactions.TermsOfServiceFooter" = "Отправляя звёзды, Вы принимаете [условия](https://telegram.org/tos/stars/ru)\nих покупки и использования.";
+"SendDiamondReactions.Title" = "Звёздная реакция";
+"SendDiamondReactions.Balance" = "Баланс";
+"SendDiamondReactions.UserLabelAnonymous" = "Аноним";
+"SendDiamondReactions.SliderTop" = "ЛИДЕР";
+"SendDiamondReactions.TextSentDiamonds_1" = "Вы поддержали публикацию **%d** звездой.";
+"SendDiamondReactions.TextSentDiamonds_any" = "Вы поддержали публикацию **%d** звезды.";
+"SendDiamondReactions.TextGeneric" = "Выберите количество звёзд для отправки **%@** в поддержку этой публикации.";
+"SendDiamondReactions.SectionTop" = "Лидеры";
+"SendDiamondReactions.ShowMyselfInTop" = "Показывать меня среди лидеров";
+"SendDiamondReactions.SendButtonTitle" = "Отправить  # %@";
+"SendDiamondReactions.TermsOfServiceFooter" = "Отправляя звёзды, Вы принимаете [условия](https://telegram.org/tos/stars/ru)\nих покупки и использования.";
 
-"PeerInfo.AllowedReactions.StarReactions" = "Включить платные реакции";
-"PeerInfo.AllowedReactions.StarReactionsFooter" = "Включите, чтобы подписчики могли отправлять Звёзды Telegram в качестве реакций. Вы сможете обменять звёзды на вознаграждение в TON. [Подробнее >](https://telegram.org/tos/content-creator-rewards#2-3-subscriber-donations)";
+"PeerInfo.AllowedReactions.DiamondReactions" = "Включить платные реакции";
+"PeerInfo.AllowedReactions.DiamondReactionsFooter" = "Включите, чтобы подписчики могли отправлять Звёзды Telegram в качестве реакций. Вы сможете обменять звёзды на вознаграждение в TON. [Подробнее >](https://telegram.org/tos/content-creator-rewards#2-3-subscriber-donations)";
 
-"Chat.ToastStarsSent.Title_1" = "Реакция отправлена!";
-"Chat.ToastStarsSent.Title_any" = "Реакция отправлена!";
-"Chat.ToastStarsSent.TitleChannel_1" = "Реакция отправлена от имени {name}!";
-"Chat.ToastStarsSent.TitleChannel_any" = "Реакция отправлена от имени {name}!";
+"Chat.ToastDiamondsSent.Title_1" = "Реакция отправлена!";
+"Chat.ToastDiamondsSent.Title_any" = "Реакция отправлена!";
+"Chat.ToastDiamondsSent.TitleChannel_1" = "Реакция отправлена от имени {name}!";
+"Chat.ToastDiamondsSent.TitleChannel_any" = "Реакция отправлена от имени {name}!";
 
-"Chat.ToastStarsSent.AnonymousTitle_1" = "Отправлено анонимно!";
-"Chat.ToastStarsSent.AnonymousTitle_any" = "Отправлено анонимно!";
+"Chat.ToastDiamondsSent.AnonymousTitle_1" = "Отправлено анонимно!";
+"Chat.ToastDiamondsSent.AnonymousTitle_any" = "Отправлено анонимно!";
 
-"Chat.ToastStarsSent.Text" = "Вы отправили %1$@ %2$@.";
-"Chat.ToastStarsSent.TextStarAmount_1" = "звезду";
-"Chat.ToastStarsSent.TextStarAmount_any" = "звезды";
+"Chat.ToastDiamondsSent.Text" = "Вы отправили %1$@ %2$@.";
+"Chat.ToastDiamondsSent.TextDiamondAmount_1" = "звезду";
+"Chat.ToastDiamondsSent.TextDiamondAmount_any" = "звезды";
 
-"Stars.Purchase.StarsReactionsNeededInfo" = "Купите звёзды для отправки платных реакций в **%@** и других каналах.";
-"Chat.ToastStarsReactionsDisabled" = "В %@ отключены звёздные реакции";
+"Diamonds.Purchase.DiamondsReactionsNeededInfo" = "Купите звёзды для отправки платных реакций в **%@** и других каналах.";
+"Chat.ToastDiamondsReactionsDisabled" = "В %@ отключены звёздные реакции";
 
 "ChatContextMenu.SingleReactionEmojiSet" = "Эта реакция из набора #[%@]().";
 
 "Channel.AdminLog.MessageParticipantSubscriptionExtended" = "%@ продлил(а) подписку";
 
-"Notification.StarsPrize" = "Вы получили подарок";
+"Notification.DiamondsPrize" = "Вы получили подарок";
 
-"Notification.GiveawayStartedStars" = "%1$@ только что объявил о розыгрыше ⭐️ %2$@ среди своих подписчиков.";
-"Notification.GiveawayStartedStarsGroup" = "%1$@ только что объявила о розыгрыше ⭐️ %2$@ среди своих участников.";
+"Notification.GiveawayStartedDiamonds" = "%1$@ только что объявил о розыгрыше ⭐️ %2$@ среди своих подписчиков.";
+"Notification.GiveawayStartedDiamondsGroup" = "%1$@ только что объявила о розыгрыше ⭐️ %2$@ среди своих участников.";
 
-"Notification.StarsGiveawayStarted" = "%1$@ только что объявил о розыгрыше %2$@ среди своих подписчиков.";
-"Notification.StarsGiveawayStartedGroup" = "%1$@ только что объявила о розыгрыше %2$@ среди своих участников.";
-"Notification.StarsGiveawayStarted.Stars_1" = "%@ Звезды Telegram";
-"Notification.StarsGiveawayStarted.Stars_any" = "%@ Звезды Telegram";
+"Notification.DiamondsGiveawayStarted" = "%1$@ только что объявил о розыгрыше %2$@ среди своих подписчиков.";
+"Notification.DiamondsGiveawayStartedGroup" = "%1$@ только что объявила о розыгрыше %2$@ среди своих участников.";
+"Notification.DiamondsGiveawayStarted.Diamonds_1" = "%@ Звезды Telegram";
+"Notification.DiamondsGiveawayStarted.Diamonds_any" = "%@ Звезды Telegram";
 
-"Chat.Giveaway.Message.Stars.PrizeText" = "%1$@ %2$@.";
-"Chat.Giveaway.Message.Stars.Stars_1" = "**%@** звезда";
-"Chat.Giveaway.Message.Stars.Stars_any" = "**%@** звезды";
-"Chat.Giveaway.Message.Stars.Winners_1" = "будет отправлена **%@** победителю";
-"Chat.Giveaway.Message.Stars.Winners_any" = "будет распределено между **%@** победителями";
+"Chat.Giveaway.Message.Diamonds.PrizeText" = "%1$@ %2$@.";
+"Chat.Giveaway.Message.Diamonds.Diamonds_1" = "**%@** звезда";
+"Chat.Giveaway.Message.Diamonds.Diamonds_any" = "**%@** звезды";
+"Chat.Giveaway.Message.Diamonds.Winners_1" = "будет отправлена **%@** победителю";
+"Chat.Giveaway.Message.Diamonds.Winners_any" = "будет распределено между **%@** победителями";
 
-"Chat.Giveaway.Info.Stars.Stars_1" = "**%@ звезду**";
-"Chat.Giveaway.Info.Stars.Stars_any" = "**%@ звезды**";
-"Chat.Giveaway.Info.Stars.OngoingIntro" = "Розыгрыш организован администраторами **%1$@**, оплатившими %2$@ для своих подписчиков.";
-"Chat.Giveaway.Info.Stars.EndedIntro" = "Розыгрыш был организован администраторами **%1$@**, оплатившими %2$@ для своих подписчиков.";
-"Chat.Giveaway.Info.Stars.Group.OngoingIntro" = "Розыгрыш организован администраторами **%1$@**, оплатившими %2$@ для участников группы.";
-"Chat.Giveaway.Info.Stars.Group.EndedIntro" = "Розыгрыш был организован администраторами **%1$@**, оплатившими %2$@ для участников группы.";
+"Chat.Giveaway.Info.Diamonds.Diamonds_1" = "**%@ звезду**";
+"Chat.Giveaway.Info.Diamonds.Diamonds_any" = "**%@ звезды**";
+"Chat.Giveaway.Info.Diamonds.OngoingIntro" = "Розыгрыш организован администраторами **%1$@**, оплатившими %2$@ для своих подписчиков.";
+"Chat.Giveaway.Info.Diamonds.EndedIntro" = "Розыгрыш был организован администраторами **%1$@**, оплатившими %2$@ для своих подписчиков.";
+"Chat.Giveaway.Info.Diamonds.Group.OngoingIntro" = "Розыгрыш организован администраторами **%1$@**, оплатившими %2$@ для участников группы.";
+"Chat.Giveaway.Info.Diamonds.Group.EndedIntro" = "Розыгрыш был организован администраторами **%1$@**, оплатившими %2$@ для участников группы.";
 
-"Stars.Transaction.Giveaway.Title" = "Полученный приз";
-"Stars.Transaction.Giveaway.Reason" = "Основание";
-"Stars.Transaction.Giveaway.Giveaway" = "Розыгрыш";
-"Stars.Transaction.Giveaway.Prize" = "Приз";
-"Stars.Transaction.Giveaway.Stars_1" = "%@ звезда";
-"Stars.Transaction.Giveaway.Stars_any" = "%@ звезды";
+"Diamonds.Transaction.Giveaway.Title" = "Полученный приз";
+"Diamonds.Transaction.Giveaway.Reason" = "Основание";
+"Diamonds.Transaction.Giveaway.Giveaway" = "Розыгрыш";
+"Diamonds.Transaction.Giveaway.Prize" = "Приз";
+"Diamonds.Transaction.Giveaway.Diamonds_1" = "%@ звезда";
+"Diamonds.Transaction.Giveaway.Diamonds_any" = "%@ звезды";
 
 "Stats.RevenueInTon" = "Поступления в TON";
-"Stats.RevenueInStars" = "Поступления в звёздах";
+"Stats.RevenueInDiamonds" = "Поступления в звёздах";
 "Stats.RevenueInUsd" = "Поступления в USD";
 
 "BoostGift.NewDescriptionGroup" = "Разыгрывайте призы, чтобы получить больше\nголосов и привлечь новых участников.";
 "BoostGift.NewDescription" = "Разыгрывайте призы, чтобы получить больше\nголосов и привлечь новых подписчиков.";
 "BoostGift.Prize" = "ПРИЗ";
 "BoostGift.Prize.Premium" = "Telegram Premium";
-"BoostGift.Prize.Stars" = "Звёзды Telegram";
-"BoostGift.Stars.Title" = "ПРИЗОВОЙ ФОНД";
-"BoostGift.Stars.Boosts_1" = "%@ ГОЛОС";
-"BoostGift.Stars.Boosts_any" = "%@ ГОЛОСА";
-"BoostGift.Stars.Stars_1" = "%@ звезда";
-"BoostGift.Stars.Stars_any" = "%@ звезды";
-"BoostGift.Stars.PerUser" = "%@ каждому победителю";
-"BoostGift.Stars.ShowMoreOptions" = "Показать другие варианты";
-"BoostGift.Stars.Info" = "Выберите, сколько звёзд Вы хотите разыграть и сколько голосов получить на 1 год.";
-"BoostGift.AdditionalPrizesInfoStarsOff" = "Включите, если хотите вручить победителям свои призы в дополнение к звёздам.";
+"BoostGift.Prize.Diamonds" = "Звёзды Telegram";
+"BoostGift.Diamonds.Title" = "ПРИЗОВОЙ ФОНД";
+"BoostGift.Diamonds.Boosts_1" = "%@ ГОЛОС";
+"BoostGift.Diamonds.Boosts_any" = "%@ ГОЛОСА";
+"BoostGift.Diamonds.Diamonds_1" = "%@ звезда";
+"BoostGift.Diamonds.Diamonds_any" = "%@ звезды";
+"BoostGift.Diamonds.PerUser" = "%@ каждому победителю";
+"BoostGift.Diamonds.ShowMoreOptions" = "Показать другие варианты";
+"BoostGift.Diamonds.Info" = "Выберите, сколько звёзд Вы хотите разыграть и сколько голосов получить на 1 год.";
+"BoostGift.AdditionalPrizesInfoDiamondsOff" = "Включите, если хотите вручить победителям свои призы в дополнение к звёздам.";
 
-"BoostGift.AdditionalPrizesInfoStars_1" = "**%@** звезда";
-"BoostGift.AdditionalPrizesInfoStars_any" = "**%@** звезды";
-"BoostGift.AdditionalPrizesInfoStarsOn" = "Все призы: %1$@%2$@.";
-"BoostGift.AdditionalPrizesInfoStarsAndOther" = "и **%1$@** %2$@";
+"BoostGift.AdditionalPrizesInfoDiamonds_1" = "**%@** звезда";
+"BoostGift.AdditionalPrizesInfoDiamonds_any" = "**%@** звезды";
+"BoostGift.AdditionalPrizesInfoDiamondsOn" = "Все призы: %1$@%2$@.";
+"BoostGift.AdditionalPrizesInfoDiamondsAndOther" = "и **%1$@** %2$@";
 
-"BoostGift.Stars.Winners" = "КОЛИЧЕСТВО ПОБЕДИТЕЛЕЙ";
-"BoostGift.Stars.WinnersInfo" = "Выберите, среди скольких победителей будут распределены звёзды.";
+"BoostGift.Diamonds.Winners" = "КОЛИЧЕСТВО ПОБЕДИТЕЛЕЙ";
+"BoostGift.Diamonds.WinnersInfo" = "Выберите, среди скольких победителей будут распределены звёзды.";
 
-"BoostGift.Group.StarsDateInfo" = "Выберите дату, когда звёзды будут вручены %@ Вашей группы.";
-"BoostGift.StarsDateInfo" = "Выберите дату, когда звёзды будут вручены %@ Вашего канала.";
+"BoostGift.Group.DiamondsDateInfo" = "Выберите дату, когда звёзды будут вручены %@ Вашей группы.";
+"BoostGift.DiamondsDateInfo" = "Выберите дату, когда звёзды будут вручены %@ Вашего канала.";
 
-"BoostGift.PrepaidGiveawayStarsCount_1" = "%@ x Telegram Premium";
-"BoostGift.PrepaidGiveawayStarsCount_any" = "%@ x Telegram Premium";
-"BoostGift.PrepaidGiveawayStarsMonths" = "на %@ мес.";
+"BoostGift.PrepaidGiveawayDiamondsCount_1" = "%@ x Telegram Premium";
+"BoostGift.PrepaidGiveawayDiamondsCount_any" = "%@ x Telegram Premium";
+"BoostGift.PrepaidGiveawayDiamondsMonths" = "на %@ мес.";
 
 "WebBrowser.ShowInstantView" = "Быстрый просмотр";
 "WebBrowser.HideInstantView" = "Стандартный просмотр";
 
-"Stats.Boosts.Stars_1" = "%@ звезда";
-"Stats.Boosts.Stars_any" = "%@ звезды";
-"Stats.Boosts.StarsWinners_1" = "для %@ победителя";
-"Stats.Boosts.StarsWinners_any" = "поровну для %@ победителей";
+"Stats.Boosts.Diamonds_1" = "%@ звезда";
+"Stats.Boosts.Diamonds_any" = "%@ звезды";
+"Stats.Boosts.DiamondsWinners_1" = "для %@ победителя";
+"Stats.Boosts.DiamondsWinners_any" = "поровну для %@ победителей";
 
-"BoostGift.PrepaidGiveaway.StarsCount_1" = "%@ звезда";
-"BoostGift.PrepaidGiveaway.StarsCount_any" = "%@ звезды";
-"BoostGift.PrepaidGiveaway.StarsWinners_1" = "для %@ победителя";
-"BoostGift.PrepaidGiveaway.StarsWinners_any" = "поровну для %@ победителей";
+"BoostGift.PrepaidGiveaway.DiamondsCount_1" = "%@ звезда";
+"BoostGift.PrepaidGiveaway.DiamondsCount_any" = "%@ звезды";
+"BoostGift.PrepaidGiveaway.DiamondsWinners_1" = "для %@ победителя";
+"BoostGift.PrepaidGiveaway.DiamondsWinners_any" = "поровну для %@ победителей";
 
-"Stars.Transaction.Giveaway.Boost.Stars_1" = "%@ звезда";
-"Stars.Transaction.Giveaway.Boost.Stars_any" = "%@ звезды";
-"Stars.Transaction.Giveaway.Boost.Boosts_1" = "%@ голос";
-"Stars.Transaction.Giveaway.Boost.Boosts_any" = "%@ голоса";
-"Stars.Transaction.Giveaway.Boost.Members_1" = "%@ участник";
-"Stars.Transaction.Giveaway.Boost.Members_any" = "%@ участников";
-"Stars.Transaction.Giveaway.Boost.Subscriber_1" = "%@ подписчик";
-"Stars.Transaction.Giveaway.Boost.Subscriber_any" = "%@ подписчиков";
+"Diamonds.Transaction.Giveaway.Boost.Diamonds_1" = "%@ звезда";
+"Diamonds.Transaction.Giveaway.Boost.Diamonds_any" = "%@ звезды";
+"Diamonds.Transaction.Giveaway.Boost.Boosts_1" = "%@ голос";
+"Diamonds.Transaction.Giveaway.Boost.Boosts_any" = "%@ голоса";
+"Diamonds.Transaction.Giveaway.Boost.Members_1" = "%@ участник";
+"Diamonds.Transaction.Giveaway.Boost.Members_any" = "%@ участников";
+"Diamonds.Transaction.Giveaway.Boost.Subscriber_1" = "%@ подписчик";
+"Diamonds.Transaction.Giveaway.Boost.Subscriber_any" = "%@ подписчиков";
 
 "Conversation.ContextMenuCopyEmail" = "Копировать адрес";
 
-"Chat.Giveaway.Message.WinnersInfo.Stars_1" = "**%@ звезду**";
-"Chat.Giveaway.Message.WinnersInfo.Stars_any" = "**%@ звезды**";
-"Chat.Giveaway.Message.WinnersInfo.Stars.One" = "Победитель получил %@.";
-"Chat.Giveaway.Message.WinnersInfo.Stars.Many" = "Все победители получили в общей сложности %@.";
+"Chat.Giveaway.Message.WinnersInfo.Diamonds_1" = "**%@ звезду**";
+"Chat.Giveaway.Message.WinnersInfo.Diamonds_any" = "**%@ звезды**";
+"Chat.Giveaway.Message.WinnersInfo.Diamonds.One" = "Победитель получил %@.";
+"Chat.Giveaway.Message.WinnersInfo.Diamonds.Many" = "Все победители получили в общей сложности %@.";
 
 "Premium.BoostByGiveawayDescription" = "Разыгрывайте призы, чтобы получить больше голосов и привлечь новых подписчиков. [Получить голоса >]()";
 "Premium.Group.BoostByGiveawayDescription" = "Разыгрывайте призы, чтобы получить больше голосов и привлечь новых участников. [Получить голоса >]()";
 
-"Notification.StarsGiveawayResultsNoWinners" = "В этом розыгрыше нет победителей. Все звёзды переданы администраторам канала.";
-"Notification.StarsGiveawayResultsNoWinners.Group" = "В этом розыгрыше нет победителей. Все звёзды переданы администраторам группы.";
+"Notification.DiamondsGiveawayResultsNoWinners" = "В этом розыгрыше нет победителей. Все звёзды переданы администраторам канала.";
+"Notification.DiamondsGiveawayResultsNoWinners.Group" = "В этом розыгрыше нет победителей. Все звёзды переданы администраторам группы.";
 
-"Notification.StarsGiveaway.Title" = "Поздравляем!";
-"Notification.StarsGiveaway.Subtitle" = "Вы выиграли приз в розыгрыше, организованном **%1$@**.\n\nВаш приз — **%2$@**.";
-"Notification.StarsGiveaway.Subtitle.Stars_1" = "%@ звезда";
-"Notification.StarsGiveaway.Subtitle.Stars_any" = "%@ звезды";
+"Notification.DiamondsGiveaway.Title" = "Поздравляем!";
+"Notification.DiamondsGiveaway.Subtitle" = "Вы выиграли приз в розыгрыше, организованном **%1$@**.\n\nВаш приз — **%2$@**.";
+"Notification.DiamondsGiveaway.Subtitle.Diamonds_1" = "%@ звезда";
+"Notification.DiamondsGiveaway.Subtitle.Diamonds_any" = "%@ звезды";
 
 "VerificationCodes.DescriptionText" = "Сторонние сервисы, такие как сайты и магазины, могут отправлять коды подтверждения по номеру телефона не с помощью SMS, а сообщением в Telegram. Такие сообщения приходят в этот чат.\n\nЕсли Вы не запрашивали код, скорее всего, кто-то ошибся при вводе номера.";
 
 "Conversation.CodeCopied" = "Код скопирован в буфер обмена";
 
-"Stars.Purchase.StarGiftInfo" = "Купите звёзды, чтобы отправлять **%@** подарки, которые можно хранить в профиле или обменивать на звёзды.";
+"Diamonds.Purchase.DiamondGiftInfo" = "Купите звёзды, чтобы отправлять **%@** подарки, которые можно хранить в профиле или обменивать на звёзды.";
 
 "SharedMedia.GiftCount_1" = "%@ подарок";
 "SharedMedia.GiftCount_any" = "%@ подарка";
 
-"Stars.Info.Title" = "Для чего нужны звёзды?";
-"Stars.Info.Description" = "Возможности использования Звёзд Telegram:";
-"Stars.Info.Gift.Title" = "Подарки друзьям";
-"Stars.Info.Gift.Text" = "Дарите друзьям подарки, которые они смогут добавить в профиль или обменять на звёзды.";
-"Stars.Info.Miniapp.Title" = "Покупки в мини-приложениях";
-"Stars.Info.Miniapp.Text" = "Оплачивайте дополнительный контент и услуги в мини-приложениях в Telegram. [Примеры >]()";
-"Stars.Info.Media.Title" = "Платный контент в каналах";
-"Stars.Info.Media.Text" = "Открывайте доступ к платным сервисам и материалам в Telegram-каналах.";
-"Stars.Info.Reaction.Title" = "Звёздные реакции";
-"Stars.Info.Reaction.Text" = "Поддержите любимые каналы звёздными реакциями на публикации.";
-"Stars.Info.Done" = "ОК";
+"Diamonds.Info.Title" = "Для чего нужны звёзды?";
+"Diamonds.Info.Description" = "Возможности использования Звёзд Telegram:";
+"Diamonds.Info.Gift.Title" = "Подарки друзьям";
+"Diamonds.Info.Gift.Text" = "Дарите друзьям подарки, которые они смогут добавить в профиль или обменять на звёзды.";
+"Diamonds.Info.Miniapp.Title" = "Покупки в мини-приложениях";
+"Diamonds.Info.Miniapp.Text" = "Оплачивайте дополнительный контент и услуги в мини-приложениях в Telegram. [Примеры >]()";
+"Diamonds.Info.Media.Title" = "Платный контент в каналах";
+"Diamonds.Info.Media.Text" = "Открывайте доступ к платным сервисам и материалам в Telegram-каналах.";
+"Diamonds.Info.Reaction.Title" = "Звёздные реакции";
+"Diamonds.Info.Reaction.Text" = "Поддержите любимые каналы звёздными реакциями на публикации.";
+"Diamonds.Info.Done" = "ОК";
 
 "Gift.View.Title" = "Подарок";
 "Gift.View.ReceivedTitle" = "Подарок Вам";
 "Gift.View.UnavailableTitle" = "Недоступен";
 "Gift.View.KeepOrConvertDescription" = "Вы можете хранить этот подарок в профиле или обменять на %@. [Подробнее о звёздах >]()";
-"Gift.View.KeepOrConvertDescription.Stars_1" = "%@ звезду";
-"Gift.View.KeepOrConvertDescription.Stars_any" = "%@ звезды";
+"Gift.View.KeepOrConvertDescription.Diamonds_1" = "%@ звезду";
+"Gift.View.KeepOrConvertDescription.Diamonds_any" = "%@ звезды";
 "Gift.View.ConvertedDescription" = "Вы обменяли этот подарок на %@. [Подробнее о звёздах >]()";
-"Gift.View.ConvertedDescription.Stars_1" = "%@ звезду";
-"Gift.View.ConvertedDescription.Stars_any" = "%@ звезды";
+"Gift.View.ConvertedDescription.Diamonds_1" = "%@ звезду";
+"Gift.View.ConvertedDescription.Diamonds_any" = "%@ звезды";
 "Gift.View.OtherDescription" = "%1$@ может добавить этот подарок в профиль или обменять на %2$@. [Подробнее о звёздах >]()";
-"Gift.View.OtherDescription.Stars_1" = "%@ звезду";
-"Gift.View.OtherDescription.Stars_any" = "%@ звезды";
+"Gift.View.OtherDescription.Diamonds_1" = "%@ звезду";
+"Gift.View.OtherDescription.Diamonds_any" = "%@ звезды";
 "Gift.View.UnavailableDescription" = "Подарок уже распродан";
 "Gift.View.From" = "От";
 "Gift.View.HiddenName" = "Аноним";
@@ -13000,8 +13000,8 @@ Sorry for the inconvenience.";
 "Gift.View.LastSale" = "Последняя продажа";
 "Gift.View.Value" = "Стоимость";
 "Gift.View.Sale" = "продать за %@";
-"Gift.View.Sale.Stars_1" = "%@ звезду";
-"Gift.View.Sale.Stars_any" = "%@ звезды";
+"Gift.View.Sale.Diamonds_1" = "%@ звезду";
+"Gift.View.Sale.Diamonds_any" = "%@ звезды";
 "Gift.View.Availability" = "Наличие";
 "Gift.View.Availability.Of" = "%1$@ из %2$@";
 "Gift.View.Availability.NewOf" = "%1$@ из %2$@";
@@ -13011,8 +13011,8 @@ Sorry for the inconvenience.";
 "Gift.View.Hide" = "Скрыть из профиля";
 "Gift.View.Display" = "Добавить в профиль";
 "Gift.View.Convert" = "Обменять на %@";
-"Gift.View.Convert.Stars_1" = "%@ звезду";
-"Gift.View.Convert.Stars_any" = "%@ звезды";
+"Gift.View.Convert.Diamonds_1" = "%@ звезду";
+"Gift.View.Convert.Diamonds_any" = "%@ звезды";
 
 "Gift.View.NameHidden" = "Имя отправителя видите только Вы.";
 "Gift.View.NameAndMessageHidden" = "Имя отправителя и сообщение видите только Вы.";
@@ -13029,13 +13029,13 @@ Sorry for the inconvenience.";
 "Gift.Hidden.NewText" = "Подарок скрыт из Вашего профиля.";
 "Gift.Convert.Title" = "Обмен на звёзды";
 "Gift.Convert.Text" = "Обменять этот подарок от **%1$@** на **%2$@**?\n\nПодарок исчезнет навсегда.";
-"Gift.Convert.Stars_1" = "%@ звезду";
-"Gift.Convert.Stars_any" = "%@ звезды";
+"Gift.Convert.Diamonds_1" = "%@ звезду";
+"Gift.Convert.Diamonds_any" = "%@ звезды";
 "Gift.Convert.Convert" = "Обменять";
 "Gift.Convert.Success.Title" = "Вы обменяли подарок";
 "Gift.Convert.Success.Text" = "Ваш баланс пополнен на **%1$@**.";
-"Gift.Convert.Success.Text.Stars_1" = "%@ звезду";
-"Gift.Convert.Success.Text.Stars_any" = "%@ звезды";
+"Gift.Convert.Success.Text.Diamonds_1" = "%@ звезду";
+"Gift.Convert.Success.Text.Diamonds_any" = "%@ звезды";
 
 "Gift.Options.Premium.Title" = "Подарить Premium";
 "Gift.Options.Premium.Text" = "Подарите **%@** доступ к эксклюзивным функциям Telegram. [Подробнее о Premium >]()";
@@ -13059,22 +13059,22 @@ Sorry for the inconvenience.";
 "PeerInfo.Gifts.Send" = "Отправить подарки друзьям";
 "PeerInfo.Gifts.OneOf" = "1 из %@";
 
-"Notification.StarGift.Title" = "Подарок от %@";
-"Notification.StarGift.Subtitle" = "Добавьте его в свой профиль или обменяйте на %@.";
-"Notification.StarGift.Subtitle.Channel" = "Добавьте этот подарок в профиль канала или обменяйте на %@.";
-"Notification.StarGift.Subtitle.Stars_1" = "%@ звезду";
-"Notification.StarGift.Subtitle.Stars_any" = "%@ звезды";
-"Notification.StarGift.Subtitle.Other" = "%1$@ может добавить этот подарок в профиль или обменять на %2$@.";
-"Notification.StarGift.Subtitle.Other.Stars_1" = "%@ звезду";
-"Notification.StarGift.Subtitle.Other.Stars_any" = "%@ звезды";
-"Notification.StarGift.Subtitle.Converted" = "Вы обменяли этот подарок на %@.";
-"Notification.StarGift.Subtitle.Converted.Stars_1" = "%@ звезду";
-"Notification.StarGift.Subtitle.Converted.Stars_any" = "%@ звезды";
-"Notification.StarGift.Subtitle.Displaying" = "Вы добавили подарок в свой профиль. Вы также можете обменять его на %@.";
-"Notification.StarGift.Subtitle.Displaying.Stars_1" = "%@ звезду";
-"Notification.StarGift.Subtitle.Displaying.Stars_any" = "%@ звезды";
-"Notification.StarGift.OneOf" = "1 из %@";
-"Notification.StarGift.View" = "Посмотреть";
+"Notification.DiamondGift.Title" = "Подарок от %@";
+"Notification.DiamondGift.Subtitle" = "Добавьте его в свой профиль или обменяйте на %@.";
+"Notification.DiamondGift.Subtitle.Channel" = "Добавьте этот подарок в профиль канала или обменяйте на %@.";
+"Notification.DiamondGift.Subtitle.Diamonds_1" = "%@ звезду";
+"Notification.DiamondGift.Subtitle.Diamonds_any" = "%@ звезды";
+"Notification.DiamondGift.Subtitle.Other" = "%1$@ может добавить этот подарок в профиль или обменять на %2$@.";
+"Notification.DiamondGift.Subtitle.Other.Diamonds_1" = "%@ звезду";
+"Notification.DiamondGift.Subtitle.Other.Diamonds_any" = "%@ звезды";
+"Notification.DiamondGift.Subtitle.Converted" = "Вы обменяли этот подарок на %@.";
+"Notification.DiamondGift.Subtitle.Converted.Diamonds_1" = "%@ звезду";
+"Notification.DiamondGift.Subtitle.Converted.Diamonds_any" = "%@ звезды";
+"Notification.DiamondGift.Subtitle.Displaying" = "Вы добавили подарок в свой профиль. Вы также можете обменять его на %@.";
+"Notification.DiamondGift.Subtitle.Displaying.Diamonds_1" = "%@ звезду";
+"Notification.DiamondGift.Subtitle.Displaying.Diamonds_any" = "%@ звезды";
+"Notification.DiamondGift.OneOf" = "1 из %@";
+"Notification.DiamondGift.View" = "Посмотреть";
 
 "Gift.Send.Title" = "Отправить подарок";
 "Gift.Send.Customize.Title" = "ОФОРМЛЕНИЕ ПОДАРКА";
@@ -13090,8 +13090,8 @@ Sorry for the inconvenience.";
 "Gift.Send.Sold_1" = "Продан %@";
 "Gift.Send.Sold_any" = "Продано %@";
 "Gift.Send.Success" = "Вы отправили **%1$@** подарок стоимостью **%2$@**.";
-"Gift.Send.Success.Stars_1" = "%@ звезда";
-"Gift.Send.Success.Stars_any" = "%@ звезды";
+"Gift.Send.Success.Diamonds_1" = "%@ звезда";
+"Gift.Send.Success.Diamonds_any" = "%@ звезды";
 
 "Gift.Send.ErrorUnknown" = "Произошла ошибка. Попробуйте ещё раз.";
 "Gift.Send.ErrorOutOfStock" = "Этот подарок распродан. Пожалуйста, выберите другой.";
@@ -13099,7 +13099,7 @@ Sorry for the inconvenience.";
 "Profile.SendGift" = "Отправить подарок";
 "Settings.SendGift" = "Отправить подарок";
 
-"Gift.PremiumOrStars.Title" = "Отправить подарок";
+"Gift.PremiumOrDiamonds.Title" = "Отправить подарок";
 
 "Report.Title.Message" = "Пожаловаться\nна сообщение";
 "Report.Title.Story" = "Пожаловаться на историю";
@@ -13121,8 +13121,8 @@ Sorry for the inconvenience.";
 
 "Notification.PremiumGift.SubscriptionDescription" = "Подписка на эксклюзивные функции Telegram.";
 
-"Notification.StarsGift.Stars_1" = "%@ звезда";
-"Notification.StarsGift.Stars_any" = "%@ звезды";
+"Notification.DiamondsGift.Diamonds_1" = "%@ звезда";
+"Notification.DiamondsGift.Diamonds_any" = "%@ звезды";
 
 "WebBrowser.AuthChallenge.Title" = "Вход в %@";
 "WebBrowser.AuthChallenge.Text" = "Данные будут переданы безопасно.";
@@ -13135,7 +13135,7 @@ Sorry for the inconvenience.";
 "Chat.PrivateMessageEditTimestamp.TodayAt" = "изм. сегодня в %@";
 "Chat.PrivateMessageEditTimestamp.YesterdayAt" = "изм. вчера в %@";
 
-"Stars.Transaction.Gift.Title" = "Подарок";
+"Diamonds.Transaction.Gift.Title" = "Подарок";
 
 "ChatList.Search.Open" = "ОТКРЫТЬ";
 "ChatList.Search.ShowMore" = "Показать больше";
@@ -13152,13 +13152,13 @@ Sorry for the inconvenience.";
 "TopApps.Info.Text" = "В этом каталоге представлены мини-приложения, собирающие наибольшее количество звёзд в среднем за день. Чтобы приложение заняло место в рейтинге, его разработчикам необходимо настроить в боте основное мини-приложение с помощью [@botfather]() (по [инструкции](https://core.telegram.org/bots/webapps#launching-the-main-mini-app)), у него должно быть более **1000** пользователей в день, а его дневная выручка должна составлять более **1000** звёзд (учитывается среднее значение за неделю).";
 "TopApps.Info.Done" = "OK";
 
-"Stars.Intro.Transaction.IosappBotApi.Title" = "Платная отправка";
-"Stars.Intro.Transaction.IosappBotApi.Messages_1" = "%@ сообщение";
-"Stars.Intro.Transaction.IosappBotApi.Messages_any" = "%@ сообщения";
+"Diamonds.Intro.Transaction.AnsibleBotApi.Title" = "Платная отправка";
+"Diamonds.Intro.Transaction.AnsibleBotApi.Messages_1" = "%@ сообщение";
+"Diamonds.Intro.Transaction.AnsibleBotApi.Messages_any" = "%@ сообщения";
 
-"Stars.Transaction.IosappBotApi.Title" = "Платная отправка";
-"Stars.Transaction.IosappBotApi.Messages_1" = "%@ сообщение";
-"Stars.Transaction.IosappBotApi.Messages_any" = "%@ сообщения";
+"Diamonds.Transaction.AnsibleBotApi.Title" = "Платная отправка";
+"Diamonds.Transaction.AnsibleBotApi.Messages_1" = "%@ сообщение";
+"Diamonds.Transaction.AnsibleBotApi.Messages_any" = "%@ сообщения";
 
 "Monetization.Bot.Header" = "Вы сможете получить 50% доходов Telegram от рекламы в Вашем боте в качестве вознаграждения. [Подробнее >]()";
 "Monetization.Bot.BalanceTitle" = "ДОСТУПНЫЙ БАЛАНС";
@@ -13169,7 +13169,7 @@ Sorry for the inconvenience.";
 
 "PeerInfo.BotBalance.Title" = "БАЛАНС";
 "PeerInfo.BotBalance.Ton" = "TON";
-"PeerInfo.BotBalance.Stars" = "Звёзды";
+"PeerInfo.BotBalance.Diamonds" = "Звёзды";
 
 "Gallery.ToastVideoSpeedSwipe" = "Проведите влево или вправо для выбора скорости.";
 "Gallery.VideoSettings.QualitySectionTitle" = "КАЧЕСТВО";
@@ -13216,8 +13216,8 @@ Sorry for the inconvenience.";
 "Chat.HashtagSuggestion.UseLocal.Group.Text" = "поиск только по этой группе";
 
 "Gift.Convert.Period.Text" = "Обменять этот подарок от **%1$@** на **%2$@**?\n\nОбмен доступен ещё %3$@.\n\nПосле обмена подарок исчезнет навсегда.";
-"Gift.Convert.Period.Stars_1" = "%@ звезду";
-"Gift.Convert.Period.Stars_any" = "%@ звезды";
+"Gift.Convert.Period.Diamonds_1" = "%@ звезду";
+"Gift.Convert.Period.Diamonds_any" = "%@ звезды";
 "Gift.Convert.Period.Days_1" = "%@ день";
 "Gift.Convert.Period.Days_any" = "%@ дня";
 
@@ -13230,13 +13230,13 @@ Sorry for the inconvenience.";
 
 "Premium.EmojiStatus.Proceed" = "Получить эмодзи-статусы";
 
-"Stars.Transaction.Subscription.CancelledByBot" = "Подписка отменена ботом.";
-"Stars.Transaction.Subscription.CancelledByBusiness" = "Подписка отменена компанией.";
+"Diamonds.Transaction.Subscription.CancelledByBot" = "Подписка отменена ботом.";
+"Diamonds.Transaction.Subscription.CancelledByBusiness" = "Подписка отменена компанией.";
 
 "Gift.View.BotDescription" = "Вы можете добавить этот подарок в профиль или скрыть его.";
 
-"Notification.StarGift.Bot.Subtitle" = "Показывать подарок в профиле.";
-"Notification.StarGift.Bot.Subtitle.Displaying" = "Теперь подарок виден в Вашем профиле.";
+"Notification.DiamondGift.Bot.Subtitle" = "Показывать подарок в профиле.";
+"Notification.DiamondGift.Bot.Subtitle.Displaying" = "Теперь подарок виден в Вашем профиле.";
 
 "Privacy.Gifts" = "Подарки";
 "Privacy.Gifts.WhoCanSeeMyBio" = "ПОДАРКИ ОТ КОГО БУДУТ ПО УМОЛЧАНИЮ ОТОБРАЖАТЬСЯ В ПРОФИЛЕ";
@@ -13254,15 +13254,15 @@ Sorry for the inconvenience.";
 "PeerInfo.Permissions.Geolocation" = "Геопозиция";
 "PeerInfo.Permissions.Biometry" = "Биометрия";
 
-"Stars.Transaction.Subscription" = "Подписка";
-"Stars.Transaction.Subscription.Bot" = "Бот";
-"Stars.Transaction.Subscription.Business" = "Компания";
+"Diamonds.Transaction.Subscription" = "Подписка";
+"Diamonds.Transaction.Subscription.Bot" = "Бот";
+"Diamonds.Transaction.Subscription.Business" = "Компания";
 
-"Stars.Transfer.BotSubscribeInfo" = "Оформить подписку «**%1$@**» в **%2$@** за **%3$@** в месяц?";
-"Stars.Transfer.BotSubscribeInfo.Stars_1" = "%@ звезду";
-"Stars.Transfer.BotSubscribeInfo.Stars_any" = "%@ звезды";
-"Stars.Transfer.SubscribeFor" = "Подписаться за";
-"Stars.Transfer.SubscribePerMonth" = "в месяц";
+"Diamonds.Transfer.BotSubscribeInfo" = "Оформить подписку «**%1$@**» в **%2$@** за **%3$@** в месяц?";
+"Diamonds.Transfer.BotSubscribeInfo.Diamonds_1" = "%@ звезду";
+"Diamonds.Transfer.BotSubscribeInfo.Diamonds_any" = "%@ звезды";
+"Diamonds.Transfer.SubscribeFor" = "Подписаться за";
+"Diamonds.Transfer.SubscribePerMonth" = "в месяц";
 
 "WebApp.AddToHomeScreen" = "Добавить на экран «Домой»";
 
@@ -13437,21 +13437,21 @@ Sorry for the inconvenience.";
 
 "ChatList.InlineButtonOpenApp" = "ОТКРЫТЬ";
 
-"Monetization.EarnStarsInfo.Title" = "Заработать звёзды";
-"Monetization.EarnStarsInfo.Text" = "Вы можете делиться ссылками на мини-приложения и получать часть их дохода в звёздах.";
+"Monetization.EarnDiamondsInfo.Title" = "Заработать звёзды";
+"Monetization.EarnDiamondsInfo.Text" = "Вы можете делиться ссылками на мини-приложения и получать часть их дохода в звёздах.";
 
 "PeerInfo.ItemAffiliateProgram.Title" = "Партнёрская программа";
 "PeerInfo.ItemAffiliatePrograms.Title" = "Партнёрские программы";
 "PeerInfo.ItemAffiliateProgram.Footer" = "Поделитесь ссылкой на %1$@ с друзьями и получайте %2$@% от их трат.";
 "PeerInfo.ItemAffiliateProgram.ValueOff" = "Нет";
 
-"StarsTransaction.TitleCommission" = "Комиссия %@%";
-"StarsTransaction.StarRefReason.Title" = "Основание";
-"StarsTransaction.StarRefReason.Program" = "Партнёрская программа";
-"StarsTransaction.StarRefReason.Miniapp" = "Мини-приложение";
-"StarsTransaction.StarRefReason.Affiliate" = "Партнёр";
-"StarsTransaction.StarRefReason.Referred" = "Пользователь";
-"StarsTransaction.StarRefReason.Commission" = "Комиссия";
+"DiamondsTransaction.TitleCommission" = "Комиссия %@%";
+"DiamondsTransaction.DiamondRefReason.Title" = "Основание";
+"DiamondsTransaction.DiamondRefReason.Program" = "Партнёрская программа";
+"DiamondsTransaction.DiamondRefReason.Miniapp" = "Мини-приложение";
+"DiamondsTransaction.DiamondRefReason.Affiliate" = "Партнёр";
+"DiamondsTransaction.DiamondRefReason.Referred" = "Пользователь";
+"DiamondsTransaction.DiamondRefReason.Commission" = "Комиссия";
 
 "Gallery.SaveToGallery.cached" = "в кэше";
 
@@ -13532,8 +13532,8 @@ Sorry for the inconvenience.";
 "Gift.Transfer.Confirmation.Title" = "Подтверждение передачи";
 "Gift.Transfer.Confirmation.TextFree" = "Передать **%1$@** новому владельцу — **%2$@**?";
 "Gift.Transfer.Confirmation.Text" = "Передать **%1$@** новому владельцу — **%2$@** — за **%3$@**?";
-"Gift.Transfer.Confirmation.Text.Stars_1" = "%@ звезду";
-"Gift.Transfer.Confirmation.Text.Stars_any" = "%@ звезды";
+"Gift.Transfer.Confirmation.Text.Diamonds_1" = "%@ звезду";
+"Gift.Transfer.Confirmation.Text.Diamonds_any" = "%@ звезды";
 "Gift.Transfer.Confirmation.Transfer" = "Передать за";
 "Gift.Transfer.Confirmation.TransferFree" = "Передать";
 
@@ -13556,38 +13556,38 @@ Sorry for the inconvenience.";
 "FolderLinkPreview.ToastChatsAddedTitleV2" = "Папка {folder} обновлена";
 "FolderLinkPreview.ToastFolderAddedTitleV2" = "Папка {folder} добавлена";
 
-"Stars.Purchase.UpgradeStarGiftInfo" = "Купите звёзды, чтобы превратить подарок в уникальный коллекционный.";
-"Stars.Purchase.TransferStarGiftInfo" = "Купите звёзды, чтобы передать уникальный коллекционный подарок.";
+"Diamonds.Purchase.UpgradeDiamondGiftInfo" = "Купите звёзды, чтобы превратить подарок в уникальный коллекционный.";
+"Diamonds.Purchase.TransferDiamondGiftInfo" = "Купите звёзды, чтобы передать уникальный коллекционный подарок.";
 
 "Gift.Send.Upgrade" = "Сделать уникальным за %@";
 "Gift.Send.Upgrade.Info" = "Включите, чтобы у %1$@ была возможность превратить подарок в уникальный коллекционный. [Подробнее >]()";
 
-"Notification.StarGift.Unpack" = "Распаковать";
+"Notification.DiamondGift.Unpack" = "Распаковать";
 
-"Notification.StarGift.Collectible" = "Коллекционный подарок";
-"Notification.StarGift.Model" = "Модель";
-"Notification.StarGift.Backdrop" = "Фон";
-"Notification.StarGift.Symbol" = "Значок";
+"Notification.DiamondGift.Collectible" = "Коллекционный подарок";
+"Notification.DiamondGift.Model" = "Модель";
+"Notification.DiamondGift.Backdrop" = "Фон";
+"Notification.DiamondGift.Symbol" = "Значок";
 
-"Notification.StarGift.Gift" = "подарок";
+"Notification.DiamondGift.Gift" = "подарок";
 
-"Notification.StarsGift.Upgrade" = "%@ превратил(а) подарок от Вас в уникальный коллекционный";
-"Notification.StarsGift.UpgradeYou" = "Вы превратили подарок от %@ в уникальный коллекционный";
-"Notification.StarsGift.UpgradeSelf" = "Вы превратили подарок в уникальный коллекционный";
+"Notification.DiamondsGift.Upgrade" = "%@ превратил(а) подарок от Вас в уникальный коллекционный";
+"Notification.DiamondsGift.UpgradeYou" = "Вы превратили подарок от %@ в уникальный коллекционный";
+"Notification.DiamondsGift.UpgradeSelf" = "Вы превратили подарок в уникальный коллекционный";
 
-"Notification.StarsGift.Transfer" = "%@ передал(а) Вам уникальный коллекционный подарок";
-"Notification.StarsGift.TransferYou" = "Вы передали уникальный коллекционный подарок";
+"Notification.DiamondsGift.Transfer" = "%@ передал(а) Вам уникальный коллекционный подарок";
+"Notification.DiamondsGift.TransferYou" = "Вы передали уникальный коллекционный подарок";
 
-"Notification.StarGift.Subtitle.Refunded" = "Этот подарок нельзя обменять на звёзды, поскольку связанный с ним платёж был возвращён.";
-"Notification.StarGift.Subtitle.Downgraded" = "Улучшение подарка отменено, поскольку поступил запрос на возврат связанного с подарком платежа — и средства были возвращены.";
+"Notification.DiamondGift.Subtitle.Refunded" = "Этот подарок нельзя обменять на звёзды, поскольку связанный с ним платёж был возвращён.";
+"Notification.DiamondGift.Subtitle.Downgraded" = "Улучшение подарка отменено, поскольку поступил запрос на возврат связанного с подарком платежа — и средства были возвращены.";
 
-"Notification.StarGift.Subtitle.Upgrade" = "Нажмите «Распаковать», чтобы подарок стал уникальным коллекционным.";
-"Notification.StarGift.Subtitle.Upgrade.Other" = "%1$@ может сделать этот подарок уникальным коллекционным.";
+"Notification.DiamondGift.Subtitle.Upgrade" = "Нажмите «Распаковать», чтобы подарок стал уникальным коллекционным.";
+"Notification.DiamondGift.Subtitle.Upgrade.Other" = "%1$@ может сделать этот подарок уникальным коллекционным.";
 
-"Notification.StarGift.Subtitle.Upgraded" = "Подарок был улучшен.";
+"Notification.DiamondGift.Subtitle.Upgraded" = "Подарок был улучшен.";
 
-"Stars.Transaction.GiftFrom" = "Подарок от";
-"Stars.Transaction.GiftUpgrade" = "Улучшение подарка";
+"Diamonds.Transaction.GiftFrom" = "Подарок от";
+"Diamonds.Transaction.GiftUpgrade" = "Улучшение подарка";
 
 "Gift.View.FreeUpgradeDescription" = "Этот подарок можно бесплатно сделать уникальным коллекционным.";
 "Gift.View.FreeUpgradeOtherDescription" = "%1$@ может сделать этот подарок уникальным коллекционным.";
@@ -13607,9 +13607,9 @@ Sorry for the inconvenience.";
 "Gift.SendSelf.HideMyName" = "Скрыть моё имя";
 "Gift.SendSelf.HideMyName.Info" = "Вы можете скрыть своё имя и сообщение от всех, кто просматривает Ваш профиль.";
 
-"Notification.StarGift.Self.Title" = "Сохранённый подарок";
-"Notification.StarsGift.Self.Bought" = "Вы купили подарок стоимостью %@";
-"Notification.StarsGift.Subtitle.Self" = "Вы можете добавить этот подарок в профиль, а также превратить его в уникальный коллекционный и отправить кому-то или оставить себе.";
+"Notification.DiamondGift.Self.Title" = "Сохранённый подарок";
+"Notification.DiamondsGift.Self.Bought" = "Вы купили подарок стоимостью %@";
+"Notification.DiamondsGift.Subtitle.Self" = "Вы можете добавить этот подарок в профиль, а также превратить его в уникальный коллекционный и отправить кому-то или оставить себе.";
 
 "Gift.View.Self.Title" = "Сохранённый подарок";
 "Gift.View.Self.Description" = "Вы можете добавить этот подарок в профиль или превратить в уникальный коллекционный и передать кому-то ещё.";
@@ -13645,7 +13645,7 @@ Sorry for the inconvenience.";
 "Gift.View.Outgoing.NameHidden" = "Ваше имя видит только %@.";
 "Gift.View.Outgoing.NameAndMessageHidden" = "Ваше имя и сообщение видит только %@.";
 
-"Conversation.ViewStarGift" = "ПОКАЗАТЬ ПОДАРОК";
+"Conversation.ViewDiamondGift" = "ПОКАЗАТЬ ПОДАРОК";
 
 "ChatList.AddPhoto.Title" = "Добавьте свою фотографию! 📸";
 "ChatList.AddPhoto.Text" = "Так Вы будете заметнее для друзей.";
@@ -13719,7 +13719,7 @@ Sorry for the inconvenience.";
 "PeerInfo.Gifts.ChannelNotifyTooltip" = "Когда Ваш канал получит подарок, Вам придёт сообщение от Telegram.";
 "PeerInfo.Gifts.ChannelNotifyDisabledTooltip" = "Telegram не будет оповещать Вас о новых подарках, полученных каналом.";
 
-"Notification.StarsGift.Channel.Sent" = "%1$@ отправил(а) %2$@ подарок стоимостью %3$@";
+"Notification.DiamondsGift.Channel.Sent" = "%1$@ отправил(а) %2$@ подарок стоимостью %3$@";
 
 "Gift.View.Display.Channel" = "Добавить в профиль";
 "Gift.View.DisplayedInfoHide.Channel" = "Подарок виден в профиле канала. [Скрыть >]()";
@@ -13782,9 +13782,9 @@ Sorry for the inconvenience.";
 "AvatarUpload.StatusDone" = "Фотография добавлена.";
 "AvatarUpload.ViewAction" = "Посмотреть";
 
-"Notification.StarGift.TitleShort" = "Подарок";
-"Notification.StarsGift.SentSomeone" = "Вам отправили подарок";
-"Notification.StarsGift.UpgradeChannel" = "Подарок стал уникальным коллекционным";
+"Notification.DiamondGift.TitleShort" = "Подарок";
+"Notification.DiamondsGift.SentSomeone" = "Вам отправили подарок";
+"Notification.DiamondsGift.UpgradeChannel" = "Подарок стал уникальным коллекционным";
 
 "Gift.View.TonGiftAddressInfo" = "Подарок хранится в блокчейне TON. [Посмотреть >]()";
 "Gift.View.CopiedAddress" = "Адрес кошелька в сети TON скопирован.";
@@ -13795,15 +13795,15 @@ Sorry for the inconvenience.";
 "NameColor.GiftInfo" = "Фон и узор коллекционных подарков можно использовать в качестве уникального оформления профиля.";
 "NameColor.WearCollectible" = "Носить";
 
-"Notification.StarsGift.TransferToChannel" = "%1$@ передал(а) уникальный коллекционный подарок %2$@";
-"Notification.StarsGift.TransferToChannelYou" = "Вы передали уникальный коллекционный подарок %@";
+"Notification.DiamondsGift.TransferToChannel" = "%1$@ передал(а) уникальный коллекционный подарок %2$@";
+"Notification.DiamondsGift.TransferToChannelYou" = "Вы передали уникальный коллекционный подарок %@";
 
 "Gift.Convert.Success.ChannelText" = "Баланс канала пополнен на **%1$@**";
-"Gift.Convert.Success.ChannelText.Stars_1" = "%@ звезду";
-"Gift.Convert.Success.ChannelText.Stars_any" = "%@ звезды";
+"Gift.Convert.Success.ChannelText.Diamonds_1" = "%@ звезду";
+"Gift.Convert.Success.ChannelText.Diamonds_any" = "%@ звезды";
 
-"Stars.Transfer.Terms" = "Совершая покупку, Вы принимаете [условия]() Telegram.";
-"Stars.Transfer.Terms_URL" = "https://telegram.org/tos/stars/ru";
+"Diamonds.Transfer.Terms" = "Совершая покупку, Вы принимаете [условия]() Telegram.";
+"Diamonds.Transfer.Terms_URL" = "https://telegram.org/tos/stars/ru";
 
 "AvatarEditor.PremiumNeeded.Background" = "Чтобы применить этот фон, оформите подписку Telegram Premium.";
 "AvatarEditor.PremiumNeeded.Emoji" = "Чтобы выбрать этот эмодзи, оформите подписку Telegram Premium.";
@@ -13813,8 +13813,8 @@ Sorry for the inconvenience.";
 "PremiumNeeded.Subscribe" = "Оформить";
 
 "Gift.Convert.Success.ChannelText" = "Баланс канала пополнен на **%1$@**";
-"Gift.Convert.Success.ChannelText.Stars_1" = "%@ звезду";
-"Gift.Convert.Success.ChannelText.Stars_any" = "%@ звезды";
+"Gift.Convert.Success.ChannelText.Diamonds_1" = "%@ звезду";
+"Gift.Convert.Success.ChannelText.Diamonds_any" = "%@ звезды";
 
 "GroupInfo.Permissions.ChargeForMessages" = "Сообщения за звёзды";
 "GroupInfo.Permissions.ChargeForMessagesInfo" = "Включите, чтобы обычные участники группы могли отправлять сообщения только за звёзды.";
@@ -13836,8 +13836,8 @@ Sorry for the inconvenience.";
 "Chat.EmptyStatePaidMessagingDisabled.Text" = "Каждое сообщение для **%1$@**\nстоит **%2$@**.";
 "Chat.EmptyStatePaidMessaging.Action" = "Купить звёзды";
 
-"Notification.PaidMessage.Stars_1" = "%@ звезду";
-"Notification.PaidMessage.Stars_any" = "%@ звезды";
+"Notification.PaidMessage.Diamonds_1" = "%@ звезду";
+"Notification.PaidMessage.Diamonds_any" = "%@ звезды";
 
 "Notification.PaidMessage.Messages_1" = "%@ сообщения";
 "Notification.PaidMessage.Messages_any" = "%@ сообщений";
@@ -13848,36 +13848,36 @@ Sorry for the inconvenience.";
 "Notification.PaidMessageMany" = "%1$@ заплатил(а) %2$@ за отправку %3$@";
 "Notification.PaidMessageYouMany" = "Вы заплатили %1$@ за отправку %2$@";
 
-"Stars.Transfer.Terms" = "Совершая покупку, Вы принимаете [условия]() Telegram.";
-"Stars.Transfer.Terms_URL" = "https://telegram.org/tos/stars/ru";
+"Diamonds.Transfer.Terms" = "Совершая покупку, Вы принимаете [условия]() Telegram.";
+"Diamonds.Transfer.Terms_URL" = "https://telegram.org/tos/stars/ru";
 
-"StarsTransaction.Commission" = "Комиссия";
+"DiamondsTransaction.Commission" = "Комиссия";
 
 "Settings.Privacy.Messages.ValuePaid" = "Платные";
 
-"Stars.Transaction.PaidMessage_1" = "Плата за %@ сообщение";
-"Stars.Transaction.PaidMessage_any" = "Плата за %@ сообщения";
-"Stars.Transaction.PaidMessage.Text" = "Вы получаете **%@%** от выбранной Вами стоимости каждого входящего сообщения. [Изменить стоимость >]()";
-"Stars.Transaction.Paid" = "Полная стоимость";
+"Diamonds.Transaction.PaidMessage_1" = "Плата за %@ сообщение";
+"Diamonds.Transaction.PaidMessage_any" = "Плата за %@ сообщения";
+"Diamonds.Transaction.PaidMessage.Text" = "Вы получаете **%@%** от выбранной Вами стоимости каждого входящего сообщения. [Изменить стоимость >]()";
+"Diamonds.Transaction.Paid" = "Полная стоимость";
 
-"Stars.Intro.Transaction.PaidMessage_1" = "Оплата %@ сообщения";
-"Stars.Intro.Transaction.PaidMessage_any" = "Оплата %@ сообщений";
+"Diamonds.Intro.Transaction.PaidMessage_1" = "Оплата %@ сообщения";
+"Diamonds.Intro.Transaction.PaidMessage_any" = "Оплата %@ сообщений";
 
-"Stars.Transaction.IosappPremium_1" = "Premium на %@ месяц";
-"Stars.Transaction.IosappPremium_any" = "Premium на %@ месяца";
+"Diamonds.Transaction.AnsiblePremium_1" = "Premium на %@ месяц";
+"Diamonds.Transaction.AnsiblePremium_any" = "Premium на %@ месяца";
 
-"Stars.Intro.Transaction.IosappPremium_1" = "Premium на %@ месяц";
-"Stars.Intro.Transaction.IosappPremium_any" = "Premium на %@ месяца";
+"Diamonds.Intro.Transaction.AnsiblePremium_1" = "Premium на %@ месяц";
+"Diamonds.Intro.Transaction.AnsiblePremium_any" = "Premium на %@ месяца";
 
-"Stars.Purchase.SendMessageInfo" = "Купите звёзды, чтобы написать **%@**.";
-"Stars.Purchase.SendGroupMessageInfo" = "Купите звёзды, чтобы написать в **%@**.";
+"Diamonds.Purchase.SendMessageInfo" = "Купите звёзды, чтобы написать **%@**.";
+"Diamonds.Purchase.SendGroupMessageInfo" = "Купите звёзды, чтобы написать в **%@**.";
 
 "Gift.Options.Gift.Transfer" = "Передать";
 "Gift.Options.Gift.Filter.MyGifts" = "Мои";
-"Gift.Options.Premium.OrStars" = "или %@";
+"Gift.Options.Premium.OrDiamonds" = "или %@";
 
-"Gift.Send.PayWithStars" = "Заплатить %@";
-"Gift.Send.PayWithStars.Info" = "У Вас **%@**. [Пополнить баланс >]()";
+"Gift.Send.PayWithDiamonds" = "Заплатить %@";
+"Gift.Send.PayWithDiamonds.Info" = "У Вас **%@**. [Пополнить баланс >]()";
 
 "Chat.PanelCustomStatusShortInfo" = "%@ — значок для [Premium-пользователей >]()";
 
@@ -13904,8 +13904,8 @@ Sorry for the inconvenience.";
 "Chat.InputTextPaidMessagePlaceholder" = "Сообщение за %@";
 "Chat.InputTextPaidCommentPlaceholder" = "Комментарий за %@";
 
-"Privacy.Messages.Stars_1" = "%@ звезда";
-"Privacy.Messages.Stars_any" = "%@ звезды";
+"Privacy.Messages.Diamonds_1" = "%@ звезда";
+"Privacy.Messages.Diamonds_any" = "%@ звезды";
 "Privacy.Messages.Unlock" = "Доступно с Telegram Premium";
 
 "Premium.PaidMessages" = "Платные сообщения";
@@ -13925,20 +13925,20 @@ Sorry for the inconvenience.";
 
 "Gift.Send.Premium.Confirmation.Title" = "Отправить подарок";
 "Gift.Send.Premium.Confirmation.Text" = "Подарить **%1$@** подписку **Telegram Premium** за **%2$@**?";
-"Gift.Send.Premium.Confirmation.Text.Stars_1" = "%@ звезду";
-"Gift.Send.Premium.Confirmation.Text.Stars_any" = "%@ звезды";
+"Gift.Send.Premium.Confirmation.Text.Diamonds_1" = "%@ звезду";
+"Gift.Send.Premium.Confirmation.Text.Diamonds_any" = "%@ звезды";
 "Gift.Send.Premium.Confirmation.Confirm" = "Подтвердить";
 
-"StarsBalance.YourBalance" = "У Вас %@";
-"StarsBalance.GetMoreStars" = "Купить звёзды >";
+"DiamondsBalance.YourBalance" = "У Вас %@";
+"DiamondsBalance.GetMoreDiamonds" = "Купить звёзды >";
 
-"Stars.Intro.BuyShort" = "Пополнить";
-"Stars.Intro.Withdraw" = "Вывести";
-"Stars.Intro.Stats" = "Статистика";
+"Diamonds.Intro.BuyShort" = "Пополнить";
+"Diamonds.Intro.Withdraw" = "Вывести";
+"Diamonds.Intro.Stats" = "Статистика";
 
 "Group.Info.Settings" = "Настройки группы";
 
-"Monetization.Balance.StarsInfoGroup" = "Вы можете обменять звёзды на вознаграждение с помощью платформы Fragment. Вывести можно не менее 1000 звёзд. [Подробнее >]()";
+"Monetization.Balance.DiamondsInfoGroup" = "Вы можете обменять звёзды на вознаграждение с помощью платформы Fragment. Вывести можно не менее 1000 звёзд. [Подробнее >]()";
 
 "PeerInfo.Gifts.ToastPinLimit.Text_1" = "Закрепить можно только %@ подарок.";
 "PeerInfo.Gifts.ToastPinLimit.Text_any" = "Закрепить можно не более %@ подарков.";
@@ -13959,21 +13959,21 @@ Sorry for the inconvenience.";
 "Chat.PaidMessage.Confirm.Text.Users_any" = "**%@** пользователей, которым";
 "Chat.PaidMessage.Confirm.Text.Messages_1" = "**%@** сообщения";
 "Chat.PaidMessage.Confirm.Text.Messages_any" = "**%@** сообщений";
-"Chat.PaidMessage.Confirm.Text.Stars_1" = "%@ звезду";
-"Chat.PaidMessage.Confirm.Text.Stars_any" = "%@ звезды";
+"Chat.PaidMessage.Confirm.Text.Diamonds_1" = "%@ звезду";
+"Chat.PaidMessage.Confirm.Text.Diamonds_any" = "%@ звезды";
 
 "Chat.PaidMessage.RemoveFee.Title" = "Не брать плату";
 "Chat.PaidMessage.RemoveFee.Text" = "Разрешить **%@** писать Вам бесплатно?";
 "Chat.PaidMessage.RemoveFee.Yes" = "Да";
 "Chat.PaidMessage.RemoveFee.Refund" = "Вернуть отправителю **%@**";
-"Chat.PaidMessage.RemoveFee.Refund.Stars_1" = "%@ звезду";
-"Chat.PaidMessage.RemoveFee.Refund.Stars_any" = "%@ звезды";
+"Chat.PaidMessage.RemoveFee.Refund.Diamonds_1" = "%@ звезду";
+"Chat.PaidMessage.RemoveFee.Refund.Diamonds_any" = "%@ звезды";
 
 "Chat.PaidMessage.Sent.Title_1" = "%@ сообщение отправлено";
 "Chat.PaidMessage.Sent.Title_any" = "%@ сообщений отправлено";
 "Chat.PaidMessage.Sent.Text" = "Вы заплатили %@";
-"Chat.PaidMessage.Sent.Text.Stars_1" = "%@ звезду";
-"Chat.PaidMessage.Sent.Text.Stars_any" = "%@ звезды";
+"Chat.PaidMessage.Sent.Text.Diamonds_1" = "%@ звезду";
+"Chat.PaidMessage.Sent.Text.Diamonds_any" = "%@ звезды";
 
 "Chat.PaidMessageFee.Text" = "Каждое сообщение Вам стоит для %1$@ %2$@.";
 "Chat.PaidMessageFee.RemoveFee" = "Не брать плату";
@@ -13987,15 +13987,15 @@ Sorry for the inconvenience.";
 
 "Conversation.VideoTimeLinkCopied" = "Ссылка с меткой времени %@ скопирована.";
 "Share.VideoStartAt" = "Воспроизводить с %@";
-"SendStarReactions.SubtitleFrom" = "от имени %@";
+"SendDiamondReactions.SubtitleFrom" = "от имени %@";
 
-"Notification.PaidMessageRefund.Stars_1" = "%@ звезду";
-"Notification.PaidMessageRefund.Stars_any" = "%@ звезды";
+"Notification.PaidMessageRefund.Diamonds_1" = "%@ звезду";
+"Notification.PaidMessageRefund.Diamonds_any" = "%@ звезды";
 "Notification.PaidMessageRefund" = "%1$@ вернул(а) Вам %2$@";
 "Notification.PaidMessageRefundYou" = "Вы вернули %1$@ %2$@";
 
-"Notification.PaidMessagePriceChanged.Stars_1" = "%@ звезду";
-"Notification.PaidMessagePriceChanged.Stars_any" = "%@ звезды";
+"Notification.PaidMessagePriceChanged.Diamonds_1" = "%@ звезду";
+"Notification.PaidMessagePriceChanged.Diamonds_any" = "%@ звезды";
 "Notification.PaidMessagePriceChanged" = "%1$@ изменил(а) стоимость сообщения; теперь каждое сообщение стоит %2$@";
 "Notification.PaidMessagePriceChangedYou" = "Вы изменили стоимость сообщения; теперь каждое сообщение стоит %1$@";
 
@@ -14023,8 +14023,8 @@ Sorry for the inconvenience.";
 "Premium.MaxExpiringStoriesFinalTextNumberFormat_any" = "**%d** истории";
 "Premium.MaxExpiringStoriesFinalTextFormat" = "В течение **24** часов можно опубликовать только %@.";
 
-"Stars.AccountRevenue.Proceeds.Info" = "Воспользоваться заработанными звёздами можно не ранее чем через 21 день после их поступления на Ваш баланс.";
-"Stars.AccountRevenue.Withdraw.Info" = "Вы можете обменять звёзды на вознаграждение с помощью платформы Fragment. Вывести можно не менее 1000 звёзд. [Подробнее >]()";
+"Diamonds.AccountRevenue.Proceeds.Info" = "Воспользоваться заработанными звёздами можно не ранее чем через 21 день после их поступления на Ваш баланс.";
+"Diamonds.AccountRevenue.Withdraw.Info" = "Вы можете обменять звёзды на вознаграждение с помощью платформы Fragment. Вывести можно не менее 1000 звёзд. [Подробнее >]()";
 
 "Privacy.Gifts.PremiumToast.Text" = "Эта настройка доступна только с **Telegram Premium**.";
 "Privacy.Gifts.PremiumToast.Action" = "Получить";
@@ -14045,12 +14045,12 @@ Sorry for the inconvenience.";
 "ChatbotSetup.Rights.EditProfilePhoto" = "Изменение фото профиля";
 "ChatbotSetup.Rights.EditUsername" = "Смена имени пользователя";
 
-"ChatbotSetup.Rights.ManageGiftsAndStars" = "Подарки и звёзды";
+"ChatbotSetup.Rights.ManageGiftsAndDiamonds" = "Подарки и звёзды";
 "ChatbotSetup.Rights.ViewGifts" = "Просмотр подарков и звёзд";
 "ChatbotSetup.Rights.SellGifts" = "Обмен подарков на звёзды";
 "ChatbotSetup.Rights.ChangeGiftSettings" = "Изменение настроек подарков";
 "ChatbotSetup.Rights.TransferAndUpgradeGifts" = "Передача и улучшение подарков";
-"ChatbotSetup.Rights.TransferStars" = "Отправка звёзд";
+"ChatbotSetup.Rights.TransferDiamonds" = "Отправка звёзд";
 "ChatbotSetup.Rights.ManageStories" = "Управление историями";
 
 "Gift.Send.Upgrade.ForcedInfo" = "%1$@ принимает только уникальные подарки. [Подробнее >]()";
@@ -14116,7 +14116,7 @@ Sorry for the inconvenience.";
 "CallList.NewCall" = "Новый звонок";
 "CallList.NewCallLink" = "Создать ссылку на звонок";
 
-"Chat.SendStarsToBecomeTopInfo" = "Отправьте %@ или больше, чтобы выделить свой профиль";
+"Chat.SendDiamondsToBecomeTopInfo" = "Отправьте %@ или больше, чтобы выделить свой профиль";
 
 "VideoChat.RevokeLink" = "Сбросить ссылку";
 
@@ -14201,11 +14201,11 @@ Sorry for the inconvenience.";
 "Gift.Options.Gift.Filter.Resale" = "Перепродажа";
 "Gift.Options.Gift.Resale" = "маркет";
 
-"Stars.Intro.Transaction.GiftPurchase" = "Покупка подарка";
-"Stars.Intro.Transaction.GiftSale" = "Продажа подарка";
+"Diamonds.Intro.Transaction.GiftPurchase" = "Покупка подарка";
+"Diamonds.Intro.Transaction.GiftSale" = "Продажа подарка";
 
-"Stars.Transaction.GiftPurchase" = "Покупка подарка";
-"Stars.Transaction.GiftSale" = "Продажа подарка";
+"Diamonds.Transaction.GiftPurchase" = "Покупка подарка";
+"Diamonds.Transaction.GiftSale" = "Продажа подарка";
 
 "Channel.Info.AutoTranslate" = "Автоперевод сообщений";
 
@@ -14216,11 +14216,11 @@ Sorry for the inconvenience.";
 "Channel.AdminLog.MessageToggleAutoTranslateOn" = "%@ включил(а) автоперевод";
 "Channel.AdminLog.MessageToggleAutoTranslateOff" = "%@ отключил(а) автоперевод";
 
-"Notification.StarsGift.Bought" = "%1$@ подарил(а) Вам %2$@ за %3$@";
-"Notification.StarsGift.Bought.Stars_1" = "%@ звезду";
-"Notification.StarsGift.Bought.Stars_any" = "%@ звезды";
-"Notification.StarsGift.BoughtYou" = "Вы подарили %1$@ за %2$@";
-"Notification.StarsGift.BoughtForYouself" = "Вы купили подарок за %1$@";
+"Notification.DiamondsGift.Bought" = "%1$@ подарил(а) Вам %2$@ за %3$@";
+"Notification.DiamondsGift.Bought.Diamonds_1" = "%@ звезду";
+"Notification.DiamondsGift.Bought.Diamonds_any" = "%@ звезды";
+"Notification.DiamondsGift.BoughtYou" = "Вы подарили %1$@ за %2$@";
+"Notification.DiamondsGift.BoughtForYouself" = "Вы купили подарок за %1$@";
 
 "Gift.View.Context.ChangePrice" = "Изменить цену";
 "Gift.View.Context.ViewInProfile" = "Посмотреть в профиле";
@@ -14242,18 +14242,18 @@ Sorry for the inconvenience.";
 "Gift.View.Resale.Unlist.Success" = "Подарок %@ снят с продажи.";
 "Gift.View.Resale.List.Success" = "Подарок %@ выставлен на продажу!";
 "Gift.View.Resale.Relist.Success" = "Подарок %1$@ снова выставлен на продажу за %2$@.";
-"Gift.View.Resale.Relist.Success.Stars_1" = "%@ звезду";
-"Gift.View.Resale.Relist.Success.Stars_any" = "%@ звезды";
+"Gift.View.Resale.Relist.Success.Diamonds_1" = "%@ звезду";
+"Gift.View.Resale.Relist.Success.Diamonds_any" = "%@ звезды";
 
-"Stars.SellGift.Title" = "Продать подарок";
-"Stars.SellGift.EditTitle" = "Изменить цену";
-"Stars.SellGift.AmountTitle" = "ЦЕНА В ЗВЁЗДАХ";
-"Stars.SellGift.AmountPlaceholder" = "Укажите цену";
-"Stars.SellGift.AmountInfo" = "Вы получите **%@**.";
-"Stars.SellGift.AmountInfo.Stars_1" = "%@ звезду";
-"Stars.SellGift.AmountInfo.Stars_any" = "%@ звезды";
-"Stars.SellGift.Sell" = "Выставить на продажу";
-"Stars.SellGift.SellFor" = "Продать за";
+"Diamonds.SellGift.Title" = "Продать подарок";
+"Diamonds.SellGift.EditTitle" = "Изменить цену";
+"Diamonds.SellGift.AmountTitle" = "ЦЕНА В ЗВЁЗДАХ";
+"Diamonds.SellGift.AmountPlaceholder" = "Укажите цену";
+"Diamonds.SellGift.AmountInfo" = "Вы получите **%@**.";
+"Diamonds.SellGift.AmountInfo.Diamonds_1" = "%@ звезду";
+"Diamonds.SellGift.AmountInfo.Diamonds_any" = "%@ звезды";
+"Diamonds.SellGift.Sell" = "Выставить на продажу";
+"Diamonds.SellGift.SellFor" = "Продать за";
 
 "PeerInfo.Gifts.Sale" = "продаётся";
 
@@ -14298,16 +14298,16 @@ Sorry for the inconvenience.";
 "FrozenAccount.Violation.TextNew" = "Ваш аккаунт был заморожен за нарушение [Пользовательского соглашения]() Telegram.";
 "FrozenAccount.Violation.TextNew_URL" = "https://telegram.org/tos/ru";
 
-"Stars.Purchase.BuyStarGiftInfo" = "Купите звёзды для приобретения уникального коллекционного подарка.";
+"Diamonds.Purchase.BuyDiamondGiftInfo" = "Купите звёзды для приобретения уникального коллекционного подарка.";
 
-"Stars.Purchase.EnoughStars" = "Сейчас у Вас достаточно звёзд.";
-"Stars.Purchase.BuyAnyway" = "Всё равно купить";
+"Diamonds.Purchase.EnoughDiamonds" = "Сейчас у Вас достаточно звёзд.";
+"Diamonds.Purchase.BuyAnyway" = "Всё равно купить";
 
 "Gift.Buy.Confirm.Title" = "Подтверждение оплаты";
 "Gift.Buy.Confirm.Text" = "Вы точно хотите купить **%1$@** за %2$@?";
 "Gift.Buy.Confirm.GiftText" = "Вы точно хотите купить **%1$@** за %2$@ и подарить **%3$@**?";
-"Gift.Buy.Confirm.Text.Stars_1" = "**%@** звезду";
-"Gift.Buy.Confirm.Text.Stars_any" = "**%@** звезды";
+"Gift.Buy.Confirm.Text.Diamonds_1" = "**%@** звезду";
+"Gift.Buy.Confirm.Text.Diamonds_any" = "**%@** звезды";
 "Gift.Buy.Confirm.BuyFor_1" = "Купить за %@ звезду";
 "Gift.Buy.Confirm.BuyFor_any" = "Купить за %@ звезды";
 
@@ -14319,13 +14319,13 @@ Sorry for the inconvenience.";
 "Gift.Buy.ErrorUnknown" = "Произошла ошибка. Попробуйте позже.";
 "Gift.Buy.ErrorPriceChanged.Title" = "Внимание";
 "Gift.Buy.ErrorPriceChanged.Text" = "Цена увеличилась с **%1$@** до **%2$@**. Всё равно купить подарок?";
-"Gift.Buy.ErrorPriceChanged.Text.Stars_1" = "%@ звезды";
-"Gift.Buy.ErrorPriceChanged.Text.Stars_any" = "%@ звезды";
+"Gift.Buy.ErrorPriceChanged.Text.Diamonds_1" = "%@ звезды";
+"Gift.Buy.ErrorPriceChanged.Text.Diamonds_any" = "%@ звезды";
 
 "ChatbotSetup.Gift.Warning.Title" = "Внимание";
 "ChatbotSetup.Gift.Warning.CombinedText" = "Бот **%@** сможет **управлять Вашими подарками и звёздами**, в том числе передавать их другим пользователям.";
 "ChatbotSetup.Gift.Warning.GiftsText" = "Бот **%@** сможет управлять Вашими **подарками**, в том числе передавать их другим пользователям.";
-"ChatbotSetup.Gift.Warning.StarsText" = "Бот **%@** сможет **отправлять Ваши звёзды**.";
+"ChatbotSetup.Gift.Warning.DiamondsText" = "Бот **%@** сможет **отправлять Ваши звёзды**.";
 "ChatbotSetup.Gift.Warning.UsernameText" = "Бот **%@** сможет **задавать и сбрасывать имена пользователя** для Вашего аккаунта. Это может привести к потере Вашего имени пользователя.";
 "ChatbotSetup.Gift.Warning.Proceed" = "Продолжить";
 
@@ -14389,20 +14389,20 @@ Sorry for the inconvenience.";
 
 "Monoforum.NameFormat" = "Сообщения %@";
 
-"Stars.SendMessage.AdjustmentTitle" = "Стоимость сообщения";
-"Stars.SendMessage.AdjustmentPlaceholder" = "Стоимость сообщения";
-"Stars.SendMessage.AdjustmentSectionHeader" = "ЦЕНА В ЗВЁЗДАХ";
-"Stars.SendMessage.AdjustmentSectionFooterValue" = "Вы получите **%@ ⭐**.";
-"Stars.SendMessage.AdjustmentSectionFooterEmptyValue" = "Вы получите **%1$@%**.";
-"Stars.SendMessage.AdjustmentAction" = "OK";
+"Diamonds.SendMessage.AdjustmentTitle" = "Стоимость сообщения";
+"Diamonds.SendMessage.AdjustmentPlaceholder" = "Стоимость сообщения";
+"Diamonds.SendMessage.AdjustmentSectionHeader" = "ЦЕНА В ЗВЁЗДАХ";
+"Diamonds.SendMessage.AdjustmentSectionFooterValue" = "Вы получите **%@ ⭐**.";
+"Diamonds.SendMessage.AdjustmentSectionFooterEmptyValue" = "Вы получите **%1$@%**.";
+"Diamonds.SendMessage.AdjustmentAction" = "OK";
 
-"Stars.SendMessage.PriceFree" = "Бесплатно";
+"Diamonds.SendMessage.PriceFree" = "Бесплатно";
 
 "Undo.DeletedMonoforum" = "Беседа удалена из списка чатов.";
 
 "Monoforum.DeleteTopic.Title" = "Удалить %@";
 "Channel.RemoveFeeAlert.Text" = "Разрешить **%@** писать каналу бесплатно?";
-"StarsBalance.ChannelBalance" = "У Вашего канала %@";
+"DiamondsBalance.ChannelBalance" = "У Вашего канала %@";
 
 "Chat.TitleJoinGroupCall" = "Подключиться";
 "Invitation.JoinGroupCall.EnableMicrophone" = "Включить микрофон";
@@ -14437,8 +14437,8 @@ Sorry for the inconvenience.";
 "Notification.TodoAddedTaskYou" = "Вы добавили новую задачу «%1$@» в «%2$@».";
 "Notification.TodoAddedMultipleTasksYou" = "Вы добавили %1$@ в «%2$@»";
 
-"Stars.Transaction.GiftTransfer" = "Передача подарка";
-"Stars.Intro.Transaction.GiftTransfer" = "Передача подарка";
+"Diamonds.Transaction.GiftTransfer" = "Передача подарка";
+"Diamonds.Intro.Transaction.GiftTransfer" = "Передача подарка";
 
 "SuggestPost.SetTimeFormat.Date" = "%@";
 "SuggestPost.SetTimeFormat.TodayAt" = "Сегодня в %@";
@@ -14510,8 +14510,8 @@ Sorry for the inconvenience.";
 "Chat.PostApproval.Status.UserApproved" = "Ваш пост принят к публикации";
 "Chat.PostApproval.Status.UserRejected" = "Ваш пост отклонён";
 
-"Chat.PostApproval.DetailStatus.StarsAmount_1" = "# звезду";
-"Chat.PostApproval.DetailStatus.StarsAmount_any" = "# звезды";
+"Chat.PostApproval.DetailStatus.DiamondsAmount_1" = "# звезду";
+"Chat.PostApproval.DetailStatus.DiamondsAmount_any" = "# звезды";
 "Chat.PostApproval.DetailStatus.TonAmount_1" = "# TON";
 "Chat.PostApproval.DetailStatus.TonAmount_any" = "# TON";
 
@@ -14534,11 +14534,11 @@ Sorry for the inconvenience.";
 "Chat.PostApproval.Message.UserTitleRejected" = "❌ Канал **%@** отклонил Ваш пост.";
 "Chat.PostApproval.Message.UserTitleRejectedComment" = "❌ Канал **%@** отклонил Ваш пост с комментарием:";
 "Chat.PostApproval.Message.UserTitleFailedFunds" = "⚠️ **Сделка не состоялась**, поскольку на Вашем балансе недостаточно звёзд.";
-"Chat.PostApproval.Message.BuyStars" = "Купить звёзды";
+"Chat.PostApproval.Message.BuyDiamonds" = "Купить звёзды";
 
-"Chat.PostApproval.Message.UserAgreementPriceStars" = "💰 С Вашего баланса списана плата за публикацию: %1$@.\n\n⏳ Звёзды поступят на баланс **%2$@** спустя 24 часа после публикации.\n\n🔁 Если администраторы удалят пост в течение 24 часов с момента публикации, списанная сумма вернётся на Ваш баланс.";
+"Chat.PostApproval.Message.UserAgreementPriceDiamonds" = "💰 С Вашего баланса списана плата за публикацию: %1$@.\n\n⏳ Звёзды поступят на баланс **%2$@** спустя 24 часа после публикации.\n\n🔁 Если администраторы удалят пост в течение 24 часов с момента публикации, списанная сумма вернётся на Ваш баланс.";
 "Chat.PostApproval.Message.UserAgreementPriceTon" = "💰 С Вашего баланса списана плата за публикацию: %1$@.\n\n⏳ TON поступят на баланс **%2$@** спустя 24 часа после публикации.\n\n🔁 Если администраторы удалят пост в течение 24 часов с момента публикации, списанная сумма вернётся на Ваш баланс.";
-"Chat.PostApproval.Message.AdminAgreementPriceStars" = "💰 С баланса пользователя списана плата за публикацию: %1$@.\n\n⏳ Звёзды поступят на баланс **%2$@** спустя 24 часа после публикации.\n\n🔁 Если Вы удалите пост в течение 24 часов с момента публикации, списанная сумма вернётся на баланс пользователя.";
+"Chat.PostApproval.Message.AdminAgreementPriceDiamonds" = "💰 С баланса пользователя списана плата за публикацию: %1$@.\n\n⏳ Звёзды поступят на баланс **%2$@** спустя 24 часа после публикации.\n\n🔁 Если Вы удалите пост в течение 24 часов с момента публикации, списанная сумма вернётся на баланс пользователя.";
 "Chat.PostApproval.Message.AdminAgreementPriceTon" = "💰 С баланса пользователя списана плата за публикацию: %1$@.\n\n⏳ TON поступят на баланс **%2$@** спустя 24 часа после публикации.\n\n🔁 Если Вы удалите пост в течение 24 часов с момента публикации, списанная сумма вернётся на баланс пользователя.";
 "Chat.PostApproval.Message.AdminDeclined" = "Вы отклонили пост.";
 "Chat.PostApproval.Message.AdminDeclinedComment" = "Вы отклонили пост с комментарием:\n\n%@";
@@ -14588,8 +14588,8 @@ Sorry for the inconvenience.";
 "Settings.TransactionsTon.Title" = "TON";
 "Settings.TransactionsTon.Subtitle" = "TON можно тратить на подарки и предложенные посты в каналах.";
 
-"Chat.DeletePaidMessageStars.Title" = "Вы потеряете звёзды";
-"Chat.DeletePaidMessageStars.Text" = "Вы не получите **звёзды**, если удалите этот пост сейчас. Он должен оставаться в канале не менее **24 часов** с момента публикации.";
+"Chat.DeletePaidMessageDiamonds.Title" = "Вы потеряете звёзды";
+"Chat.DeletePaidMessageDiamonds.Text" = "Вы не получите **звёзды**, если удалите этот пост сейчас. Он должен оставаться в канале не менее **24 часов** с момента публикации.";
 "Chat.DeletePaidMessageTon.Title" = "Вы потеряете TON";
 "Chat.DeletePaidMessageTon.Text" = "Вы не получите **TON**, если удалите этот пост сейчас. Он должен оставаться в канале не менее **24 часов** с момента публикации.";
 "Chat.DeletePaidMessage.Action" = "Всё равно удалить";
@@ -14598,7 +14598,7 @@ Sorry for the inconvenience.";
 "Chat.PostSuggestion.Reject.Placeholder" = "Необязательно";
 
 "Chat.PostSuggestion.Approve.AdminConfirmationText" = "Опубликовать пост от **%@**?";
-"Chat.PostSuggestion.Approve.AdminConfirmationPriceStars" = "Вы получите ⭐ %1$@ (%2$@%) за публикацию поста. Он должен оставаться в канале не менее **24** часов с момента публикации.";
+"Chat.PostSuggestion.Approve.AdminConfirmationPriceDiamonds" = "Вы получите ⭐ %1$@ (%2$@%) за публикацию поста. Он должен оставаться в канале не менее **24** часов с момента публикации.";
 "Chat.PostSuggestion.Approve.AdminConfirmationPriceTon" = "Вы получите %1$@ TON (%2$@%) за публикацию поста. Он должен оставаться в канале не менее **24** часов с момента публикации.";
 
 "Chat.PostSuggestion.Approve.UserConfirmationText" = "Опубликовать пост?";
@@ -14613,10 +14613,10 @@ Sorry for the inconvenience.";
 "Chat.PostSuggestion.SetTime.Text" = "Выберите желаемые дату и\nвремя публикации сообщения.";
 "Chat.PostSuggestion.SetTime.NoTimeAction" = "Опубликовать в любое время";
 
-"Chat.PostSuggestion.ApproveTime.AdminConfirmationPriceStars" = "Вы получите ⭐ %1$@ (%2$@%)\nза публикацию сообщения.";
+"Chat.PostSuggestion.ApproveTime.AdminConfirmationPriceDiamonds" = "Вы получите ⭐ %1$@ (%2$@%)\nза публикацию сообщения.";
 "Chat.PostSuggestion.ApproveTime.AdminConfirmationPriceTon" = "Вы получите %1$@ TON (%2$@%)\nза публикацию сообщения.";
 
-"Chat.PostSuggestion.StarsDisclaimer" = "Платёжные системы позволяют отменять операции со **звёздами** в течение **21** дня. Принимайте звёзды только от тех, кому доверяете.";
+"Chat.PostSuggestion.DiamondsDisclaimer" = "Платёжные системы позволяют отменять операции со **звёздами** в течение **21** дня. Принимайте звёзды только от тех, кому доверяете.";
 
 "VoiceOver.SuggestPost" = "Предложить пост";
 
@@ -14627,16 +14627,16 @@ Sorry for the inconvenience.";
 
 "Chat.PostSuggestion.Suggest.TitleCreate" = "Условия публикации";
 "Chat.PostSuggestion.Suggest.TitleEdit" = "Изменение условий";
-"Chat.PostSuggestion.Suggest.PriceSectionStars" = "УКАЖИТЕ ЦЕНУ В ЗВЁЗДАХ";
+"Chat.PostSuggestion.Suggest.PriceSectionDiamonds" = "УКАЖИТЕ ЦЕНУ В ЗВЁЗДАХ";
 "Chat.PostSuggestion.Suggest.PriceSectionTon" = "УКАЖИТЕ ЦЕНУ В TON";
 "Chat.PostSuggestion.Suggest.PricePlaceholder" = "Цена";
-"Chat.PostSuggestion.Suggest.OfferStars" = "Предложить звёзды";
+"Chat.PostSuggestion.Suggest.OfferDiamonds" = "Предложить звёзды";
 "Chat.PostSuggestion.Suggest.OfferTon" = "Предложить TON";
-"Chat.PostSuggestion.Suggest.RequestStars" = "Запросить звёзды";
+"Chat.PostSuggestion.Suggest.RequestDiamonds" = "Запросить звёзды";
 "Chat.PostSuggestion.Suggest.RequestTon" = "Запросить TON";
-"Chat.PostSuggestion.Suggest.RequestDescriptionStars" = "Укажите, сколько звёзд пользователь должен заплатить за публикацию.";
+"Chat.PostSuggestion.Suggest.RequestDescriptionDiamonds" = "Укажите, сколько звёзд пользователь должен заплатить за публикацию.";
 "Chat.PostSuggestion.Suggest.RequestDescriptionTon" = "Укажите, сколько TON пользователь должен заплатить за публикацию.";
-"Chat.PostSuggestion.Suggest.OfferDescriptionStars" = "Укажите, сколько звёзд Вы хотите заплатить %@ за публикацию.";
+"Chat.PostSuggestion.Suggest.OfferDescriptionDiamonds" = "Укажите, сколько звёзд Вы хотите заплатить %@ за публикацию.";
 "Chat.PostSuggestion.Suggest.OfferDescriptionTon" = "Укажите, сколько TON Вы хотите заплатить %@ за публикацию.";
 "Chat.PostSuggestion.Suggest.OfferDateDescription" = "Выберите желаемые дату и время публикации.";
 "Chat.PostSuggestion.Suggest.EditDateDescription" = "Выберите желаемые дату и время публикации.";
@@ -14644,19 +14644,19 @@ Sorry for the inconvenience.";
 "Chat.PostSuggestion.Suggest.OfferButtonFree" = "Предложить бесплатно";
 "Chat.PostSuggestion.Suggest.UpdateButton" = "Изменить условия";
 
-"Chat.PostSuggestion.Suggest.AdminMinAmountStars.Text" = "Минимальная сумма — ⭐ %@.";
-"Chat.PostSuggestion.Suggest.UserMinAmountStars.Text" = "Минимальное предложение — ⭐ %@.";
+"Chat.PostSuggestion.Suggest.AdminMinAmountDiamonds.Text" = "Минимальная сумма — ⭐ %@.";
+"Chat.PostSuggestion.Suggest.UserMinAmountDiamonds.Text" = "Минимальное предложение — ⭐ %@.";
 
-"Stars.SellGiftMinAmountToast.Text" = "Минимальная цена продажи — %@";
+"Diamonds.SellGiftMinAmountToast.Text" = "Минимальная цена продажи — %@";
 
 "Premium.Week.SignUp" = "Оформите подписку за %@";
 "Premium.Week.SignUpInfo" = "Вы получите Telegram Premium на 1 неделю";
 
 "Settings.MyTon" = "Мои TON";
 
-"Stars.Gift.Ton.Text" = "TON можно тратить на подарки и предложенные посты в каналах.";
-"Stars.Ton.Title" = "TON";
-"Stars.Ton.Description" = "TON можно тратить на подарки и предложенные посты в каналах.";
+"Diamonds.Gift.Ton.Text" = "TON можно тратить на подарки и предложенные посты в каналах.";
+"Diamonds.Ton.Title" = "TON";
+"Diamonds.Ton.Description" = "TON можно тратить на подарки и предложенные посты в каналах.";
 
 "Notification.Ton.Subtitle" = "TON можно тратить на подарки и предложенные посты в каналах.";
 "Notification.Ton.SubtitleYou" = "TON позволят %@ предлагать посты в каналы.";
@@ -14666,7 +14666,7 @@ Sorry for the inconvenience.";
 "Chat.Todo.Message.CompletedBy_1" = "%@ из {count} выполнено {name}";
 "Chat.Todo.Message.CompletedBy_any" = "%@ из {count} выполнено {name}";
 
-"Notification.StarGift.ReleasedBy" = "выпущен %@";
+"Notification.DiamondGift.ReleasedBy" = "выпущен %@";
 
 "Gift.View.ReleasedBy" = "выпущен %@";
 "Gift.Unique.CollectibleBy" = "предмет %1$@, выпущен %2$@";
@@ -14763,16 +14763,16 @@ Sorry for the inconvenience.";
 "Gift.View.EqualsTo" = "Эквивалентно %@";
 
 "Gift.Buy.AcceptsTonOnly" = "Продавец принимает\nоплату только в TON.";
-"Gift.Buy.PayInStars" = "Оплата в звёздах";
+"Gift.Buy.PayInDiamonds" = "Оплата в звёздах";
 "Gift.Buy.PayInTon" = "Оплата в TON";
 "Gift.Buy.PayInTon.Tooltip" = "При оплате в TON не нужно ждать 21 день до повторной передачи подарка.";
 
 "Premium.PremiumGift.Title" = "Premium-подарок";
 "Premium.PremiumGift.Description" = "Отправка до **5** таких подарков и другие эксклюзивные функции доступны с подпиской **Telegram Premium**.";
 
-"Stars.SellGift.TonAmountTitle" = "ЦЕНА В TON";
-"Stars.SellGift.OnlyTon" = "Принимать только TON";
-"Stars.SellGift.OnlyTonInfo" = "При оплате в TON, а не в звёздах, покупатель не сможет запросить возврат средств.";
+"Diamonds.SellGift.TonAmountTitle" = "ЦЕНА В TON";
+"Diamonds.SellGift.OnlyTon" = "Принимать только TON";
+"Diamonds.SellGift.OnlyTonInfo" = "При оплате в TON, а не в звёздах, покупатель не сможет запросить возврат средств.";
 
 "Chat.ViewCollection" = "ОТКРЫТЬ КОЛЛЕКЦИЮ";
 
@@ -14870,11 +14870,11 @@ Sorry for the inconvenience.";
 
 "Gift.Options.Gift.Premium" = "premium";
 
-"Stars.Transaction.FragmentTopUpTon.Title" = "Покупка TON";
-"Stars.Transaction.FragmentWithdrawalTon.Title" = "Вывод TON";
+"Diamonds.Transaction.FragmentTopUpTon.Title" = "Покупка TON";
+"Diamonds.Transaction.FragmentWithdrawalTon.Title" = "Вывод TON";
 
-"Stars.Transaction.SearchFee.Title" = "Поиск публичных постов";
-"Stars.Intro.Transaction.SearchFee" = "Поиск публичных постов";
+"Diamonds.Transaction.SearchFee.Title" = "Поиск публичных постов";
+"Diamonds.Intro.Transaction.SearchFee" = "Поиск публичных постов";
 
 "PeerInfo.Gifts.Upgradable" = "Не улучшенные";
 
@@ -14884,17 +14884,17 @@ Sorry for the inconvenience.";
 "Gift.Upgrade.Transferable.GiftDescription" = "%@ сможет отправить подарок любому пользователю Telegram.";
 "Gift.Upgrade.Tradable.GiftDescription" = "%@ сможет выставить подарок на аукцион на сторонних NFT-площадках.";
 
-"Notification.StarGift.Subtitle.Upgrade.Prepaid" = "%@ теперь может сделать этот подарок уникальным коллекционным.";
+"Notification.DiamondGift.Subtitle.Upgrade.Prepaid" = "%@ теперь может сделать этот подарок уникальным коллекционным.";
 
-"Notification.StarsGift.SentUpgradeYou" = "Вы отправили улучшение стоимостью %1$@ к своему подарку для %2$@";
-"Notification.StarsGift.SentUpgradeYouOther" = "Вы отправили улучшение стоимостью %1$@ для подарка, который %2$@ получил(а) от %3$@";
-"Notification.StarsGift.SentUpgradeYouUnknown" = "Вы отправили улучшение стоимостью %1$@ к подарку для %2$@";
+"Notification.DiamondsGift.SentUpgradeYou" = "Вы отправили улучшение стоимостью %1$@ к своему подарку для %2$@";
+"Notification.DiamondsGift.SentUpgradeYouOther" = "Вы отправили улучшение стоимостью %1$@ для подарка, который %2$@ получил(а) от %3$@";
+"Notification.DiamondsGift.SentUpgradeYouUnknown" = "Вы отправили улучшение стоимостью %1$@ к подарку для %2$@";
 
-"Notification.StarsGift.SentUpgrade" = "%1$@ отправил(а) улучшение стоимостью %2$@ к Вашему подарку";
-"Notification.StarsGift.SentUpgradeOther" = "%1$@ отправил(а) улучшение стоимостью %2$@ для подарка, который Вы получили от %3$@";
+"Notification.DiamondsGift.SentUpgrade" = "%1$@ отправил(а) улучшение стоимостью %2$@ к Вашему подарку";
+"Notification.DiamondsGift.SentUpgradeOther" = "%1$@ отправил(а) улучшение стоимостью %2$@ для подарка, который Вы получили от %3$@";
 
-"Notification.StarsGift.UpgradePrepaidYou" = "Вы распаковали подарок, который %@ помог(ла) улучшить";
-"Notification.StarsGift.UpgradePrepaid" = "%@ распаковал(а) подарок, который Вы помогли улучшить";
+"Notification.DiamondsGift.UpgradePrepaidYou" = "Вы распаковали подарок, который %@ помог(ла) улучшить";
+"Notification.DiamondsGift.UpgradePrepaid" = "%@ распаковал(а) подарок, который Вы помогли улучшить";
 
 "Gift.View.Unknown.Title" = "Подарок";
 
@@ -14947,8 +14947,8 @@ Sorry for the inconvenience.";
 "MediaPlayer.Playlist.SavedMusic" = "ПЛЕЙЛИСТ %@";
 "MediaPlayer.Playlist.SavedMusicYou" = "ВАШ ПЛЕЙЛИСТ";
 
-"Notification.PremiumGift.Stars_1" = "%@ звезда";
-"Notification.PremiumGift.Stars_any" = "%@ звезды";
+"Notification.PremiumGift.Diamonds_1" = "%@ звезда";
+"Notification.PremiumGift.Diamonds_any" = "%@ звезды";
 
 "Ton.ProceedsOverview" = "ПОСТУПЛЕНИЯ";
 "Ton.AvailableBalance" = "Доступный баланс";
@@ -14965,7 +14965,7 @@ Sorry for the inconvenience.";
 
 "Gift.Value.DescriptionAveragePrice" = "Средняя цена **%@** в Telegram и на Fragment за последний месяц.";
 "Gift.Value.DescriptionLastPriceFragment" = "Это цена последней продажи **%@** на Fragment.";
-"Gift.Value.DescriptionLastPriceTelegram" = "Это цена последней продажи **%@** в Telegram.";
+"Gift.Value.DescriptionLastPriceAnsible" = "Это цена последней продажи **%@** в Telegram.";
 
 "Gift.Value.LastPriceInfo" = "**%1$@** — последняя цена подарков **%2$@** в продаже в Telegram и на Fragment.";
 "Gift.Value.MinimumPriceInfo" = "**%1$@** — минимальная цена подарков **%2$@** в продаже в Telegram и на Fragment.";
@@ -14977,18 +14977,18 @@ Sorry for the inconvenience.";
 "Gift.Value.LastPrice" = "Последняя цена";
 "Gift.Value.MinimumPrice" = "Минимальная цена";
 "Gift.Value.AveragePrice" = "Средняя цена";
-"Gift.Value.ForSaleOnTelegram" = "в продаже в Telegram";
+"Gift.Value.ForSaleOnAnsible" = "в продаже в Telegram";
 "Gift.Value.ForSaleOnFragment" = "в продаже на Fragment";
 
 "Gift.View.Context.SetAsTheme" = "Сделать темой в...";
 
-"Notification.GiftStars" = "Подарок за %@";
-"Notification.GiftStars.Stars_1" = "%@ звезду";
-"Notification.GiftStars.Stars_any" = "%@ звезды";
+"Notification.GiftDiamonds" = "Подарок за %@";
+"Notification.GiftDiamonds.Diamonds_1" = "%@ звезду";
+"Notification.GiftDiamonds.Diamonds_any" = "%@ звезды";
 
 "Notification.PrepaidGiftUpgrade" = "Улучшение для подарка за %@";
-"Notification.PrepaidGiftUpgrade.Stars_1" = "%@ звезду";
-"Notification.PrepaidGiftUpgrade.Stars_any" = "%@ звезды";
+"Notification.PrepaidGiftUpgrade.Diamonds_1" = "%@ звезду";
+"Notification.PrepaidGiftUpgrade.Diamonds_any" = "%@ звезды";
 
 "ProfileLevelInfo.RatingTitle" = "Рейтинг";
 "ProfileLevelInfo.FutureRatingTitle" = "Будущий рейтинг";
@@ -15030,9 +15030,9 @@ Error: %8$@";
 "Login.InfoHelp" = "Пожалуйста, добавьте имя и фотографию.";
 "Gift.Upgrade.PriceWillDecrease" = "Цена снизится через {m}:{s}";
 
-"Stars.Purchase.RemoveOriginalDetailsStarGiftInfo" = "Купите звёзды для удаления подписи к Вашему подарку.";
+"Diamonds.Purchase.RemoveOriginalDetailsDiamondGiftInfo" = "Купите звёзды для удаления подписи к Вашему подарку.";
 
-"Notification.StarGift.TitleTo" = "Подарок для %@";
+"Notification.DiamondGift.TitleTo" = "Подарок для %@";
 
 "Gift.Upgrade.Gift.Sent.Text" = "Улучшение отправлено!";
 "Gift.Upgrade.Gift.Sent.GiftMore" = "Подарить ещё";
@@ -15049,8 +15049,8 @@ Error: %8$@";
 "Gift.Send.Limited.Success.Text.None" = "Вы уже отправили максимальное количество таких подарков.";
 
 "Gift.UpgradeCost.Title" = "Стоимость улучшения";
-"Gift.UpgradeCost.Stars_1" = "%@ звезда";
-"Gift.UpgradeCost.Stars_any" = "%@ звезды";
+"Gift.UpgradeCost.Diamonds_1" = "%@ звезда";
+"Gift.UpgradeCost.Diamonds_any" = "%@ звезды";
 "Gift.UpgradeCost.Description" = "Чем раньше пользователь улучшает подарок, тем короче номер коллекционного предмета.";
 "Gift.UpgradeCost.AdditionalDescription" = "Стоимость улучшения снижается с каждой минутой.";
 "Gift.UpgradeCost.Done" = "ОК";
@@ -15107,7 +15107,7 @@ Error: %8$@";
 "Gift.UnavailableAction.Text" = "Действие станет доступно после отправки подарка в Ваш аккаунт пользователя Telegram на платформе Fragment.";
 "Gift.UnavailableAction.OpenFragment" = "Перейти к Fragment";
 
-"Gift.Unique.Telegram" = "Telegram";
+"Gift.Unique.Ansible" = "Telegram";
 
 "VoiceChat.ContextEnableMessages" = "Включить сообщения";
 "VoiceChat.ContextDisableMessages" = "Отключить сообщения";
@@ -15126,15 +15126,15 @@ Error: %8$@";
 
 "ProfileLevelInfo.NegativeRating" = "Отрицательный рейтинг";
 
-"Notification.StarsGift.Assigned" = "Вы добавили %@ в свой профиль.";
+"Notification.DiamondsGift.Assigned" = "Вы добавили %@ в свой профиль.";
 
 "Gift.View.SenderInfo" = "**%@** отправил(а) этот подарок **%@**.";
 
 "VideoChat.EncryptionKeyLabelShort" = "Звонок защищён";
 "VoiceChat.MuteShort" = "выкл. звук";
 
-"Stars.Intro.Transaction.GiftDropOriginalDetails" = "Удаление подписи к подарку";
-"Stars.Intro.Transaction.PrepaidGiftUpgrade" = "Улучшение подарка";
+"Diamonds.Intro.Transaction.GiftDropOriginalDetails" = "Удаление подписи к подарку";
+"Diamonds.Intro.Transaction.PrepaidGiftUpgrade" = "Улучшение подарка";
 
 "Gift.Upgrade.SeePriceDecrease" = "Узнать о снижении цены >";
 
@@ -15198,11 +15198,11 @@ Error: %8$@";
 "Gift.Auction.TimeLeftMinutes" = "Осталось {m}:{s}";
 "Gift.Auction.ItemsBought_1" = "подарок куплен";
 "Gift.Auction.ItemsBought_any" = "подарки куплены";
-"Gift.Auction.ForSaleOnTelegram" = "в продаже в Telegram";
+"Gift.Auction.ForSaleOnAnsible" = "в продаже в Telegram";
 "Gift.Auction.ForSaleOnFragment" = "в продаже на Fragment";
 "Gift.Auction.AveragePriceInfo" = "**%1$@** — средняя цена подарков %2$@.";
-"Gift.Auction.Stars_1" = "%@⭐️";
-"Gift.Auction.Stars_any" = "%@⭐️";
+"Gift.Auction.Diamonds_1" = "%@⭐️";
+"Gift.Auction.Diamonds_any" = "%@⭐️";
 
 "Gift.AuctionBid.Title" = "Размещение ставки";
 "Gift.AuctionBid.Subtitle" = "Выигрывают %@ наибольших ставок";
@@ -15220,10 +15220,10 @@ Error: %8$@";
 "Gift.AuctionBid.Placed.Text" = "Если Ваша ставка не войдёт в %@ наибольших, она автоматически перейдёт в следующий раунд.";
 "Gift.AuctionBid.Increased.Title" = "Ставка повышена";
 "Gift.AuctionBid.Increased.Text" = "Если Ваша ставка не войдёт в %@ наибольших, она автоматически перейдёт в следующий раунд.";
-"Gift.AuctionBid.AddMoreStars" = "Добавьте не менее %@, чтобы повысить ставку.";
-"Gift.AuctionBid.AddMoreStars.Stars_1" = "%@ звезды";
-"Gift.AuctionBid.AddMoreStars.Stars_any" = "%@ звезды";
-"Gift.AuctionBid.AddMoreStars.Set" = "Применить";
+"Gift.AuctionBid.AddMoreDiamonds" = "Добавьте не менее %@, чтобы повысить ставку.";
+"Gift.AuctionBid.AddMoreDiamonds.Diamonds_1" = "%@ звезды";
+"Gift.AuctionBid.AddMoreDiamonds.Diamonds_any" = "%@ звезды";
+"Gift.AuctionBid.AddMoreDiamonds.Set" = "Применить";
 "Gift.AuctionBid.Top" = "ТОП-%@";
 "Gift.AuctionBid.Custom" = "Другая";
 "Gift.AuctionBid.MinimumBidIncreased" = "Минимальная ставка выросла до **%@**.";
@@ -15333,8 +15333,8 @@ Error: %8$@";
 "LiveStreamSettings.PricePerComment" = "СТОИМОСТЬ КОММЕНТАРИЯ";
 "LiveStreamSettings.PricePerCommentInfo" = "Плата за отправку одного комментария.";
 "LiveStreamSettings.PricePerComment.Free" = "Бесплатно";
-"LiveStreamSettings.PricePerComment.Stars_1" = "⭐️%@";
-"LiveStreamSettings.PricePerComment.Stars_any" = "⭐️%@";
+"LiveStreamSettings.PricePerComment.Diamonds_1" = "⭐️%@";
+"LiveStreamSettings.PricePerComment.Diamonds_any" = "⭐️%@";
 "LiveStreamSettings.SaveSettings" = "Сохранить настройки";
 
 "AddContact.Title" = "Новый контакт";
@@ -15360,21 +15360,21 @@ Error: %8$@";
 "ScheduleMessage.PremiumRequired.Text" = "Регулярная отправка доступна с подпиской **Telegram Premium**.";
 "ScheduleMessage.PremiumRequired.Add" = "Оформить";
 
-"Stars.Transaction.GiftAuctionBid" = "Ставка на подарок";
-"Stars.Intro.Transaction.GiftAuctionBid" = "Ставка на подарок";
+"Diamonds.Transaction.GiftAuctionBid" = "Ставка на подарок";
+"Diamonds.Intro.Transaction.GiftAuctionBid" = "Ставка на подарок";
 
-"Stars.Intro.Transaction.LiveStreamReaction" = "Реакция на трансляцию";
-"Stars.Transaction.LiveStreamReaction" = "Реакция на трансляцию";
-"Stars.Transaction.LiveStreamReaction.Text" = "Вы получаете **%@%** от каждой звёздной реакции.";
+"Diamonds.Intro.Transaction.LiveStreamReaction" = "Реакция на трансляцию";
+"Diamonds.Transaction.LiveStreamReaction" = "Реакция на трансляцию";
+"Diamonds.Transaction.LiveStreamReaction.Text" = "Вы получаете **%@%** от каждой звёздной реакции.";
 
-"Stars.Intro.Transaction.LiveStreamPaidMessage_1" = "Плата за %@ комментарий к трансляции";
-"Stars.Intro.Transaction.LiveStreamPaidMessage_any" = "Плата за %@ комментария к трансляции";
-"Stars.Transaction.LiveStreamPaidMessage_1" = "Плата за %@ комментарий к истории";
-"Stars.Transaction.LiveStreamPaidMessage_any" = "Плата за %@ комментариев к истории";
-"Stars.Transaction.LiveStreamPaidMessage.Text" = "Вы получаете **%@%** от выбранной стоимости каждого полученного сообщения.";
+"Diamonds.Intro.Transaction.LiveStreamPaidMessage_1" = "Плата за %@ комментарий к трансляции";
+"Diamonds.Intro.Transaction.LiveStreamPaidMessage_any" = "Плата за %@ комментария к трансляции";
+"Diamonds.Transaction.LiveStreamPaidMessage_1" = "Плата за %@ комментарий к истории";
+"Diamonds.Transaction.LiveStreamPaidMessage_any" = "Плата за %@ комментариев к истории";
+"Diamonds.Transaction.LiveStreamPaidMessage.Text" = "Вы получаете **%@%** от выбранной стоимости каждого полученного сообщения.";
 
-"Notification.StarGift.Subtitle.NoConvert" = "Вы можете добавить этот подарок в профиль — и сделать его коллекционным.";
-"Notification.StarGift.Subtitle.OtherNoConvert" = "Вы можете добавить этот подарок в профиль — и сделать его коллекционным.";
+"Notification.DiamondGift.Subtitle.NoConvert" = "Вы можете добавить этот подарок в профиль — и сделать его коллекционным.";
+"Notification.DiamondGift.Subtitle.OtherNoConvert" = "Вы можете добавить этот подарок в профиль — и сделать его коллекционным.";
 "Gift.View.NoConvertDescription" = "Вы получите оповещение, когда подарок можно будет улучшить.";
 "Gift.View.OtherNoConvertDescription" = "%1$@ получит оповещение, когда подарок можно будет улучшить.";
 
@@ -15385,15 +15385,15 @@ Error: %8$@";
 "Gift.AuctionTransfer.Change" = "Изменить";
 
 "Story.LiveBadge" = "В ЭФИРЕ";
-"SendStarReactions.LiveStreamPerk1Title" = "в чате";
-"SendStarReactions.LiveStreamPerk2Title" = "символов";
-"SendStarReactions.LiveStreamPerk3Title" = "эмодзи";
-"SendStarReactions.LiveStreamMessageTitle" = "Выделить и закрепить";
-"SendStarReactions.LiveStreamReactionText" = "Отправьте звёзды для **%@**, чтобы выделить и закрепить свои сообщения";
-"SendStarReactions.LiveStreamMessageText" = "Выделите и закрепите своё сообщение за звёзды — и поддержите **%@**";
-"SendStarReactions.OwnLiveStreamCloseButton" = "Закрыть";
-"SendStarReactions.OwnLiveStreamInfoText" = "Вы не можете отправить звёздную реакцию, поскольку это Ваша история.";
-"SendStarReactions.LiveStreamActionButton" = "Добавить  # %@";
+"SendDiamondReactions.LiveStreamPerk1Title" = "в чате";
+"SendDiamondReactions.LiveStreamPerk2Title" = "символов";
+"SendDiamondReactions.LiveStreamPerk3Title" = "эмодзи";
+"SendDiamondReactions.LiveStreamMessageTitle" = "Выделить и закрепить";
+"SendDiamondReactions.LiveStreamReactionText" = "Отправьте звёзды для **%@**, чтобы выделить и закрепить свои сообщения";
+"SendDiamondReactions.LiveStreamMessageText" = "Выделите и закрепите своё сообщение за звёзды — и поддержите **%@**";
+"SendDiamondReactions.OwnLiveStreamCloseButton" = "Закрыть";
+"SendDiamondReactions.OwnLiveStreamInfoText" = "Вы не можете отправить звёздную реакцию, поскольку это Ваша история.";
+"SendDiamondReactions.LiveStreamActionButton" = "Добавить  # %@";
 
 "LiveStream.CommentsDisabledPlaceholder" = "Комментарии отключены";
 "LiveStream.LoadingStatus" = "загрузка...";
@@ -15406,9 +15406,9 @@ Error: %8$@";
 "Story.ContextMenuPip" = "Свернуть";
 "Story.ContextMenuLiveSettings" = "Настройки трансляции";
 
-"LiveStream.InputContextMenuAddStars" = "Добавить звёзды";
-"LiveStream.InputContextMenuEditStars" = "Изменить сумму";
-"LiveStream.InputContextMenuRemoveStars" = "Убрать звёзды";
+"LiveStream.InputContextMenuAddDiamonds" = "Добавить звёзды";
+"LiveStream.InputContextMenuEditDiamonds" = "Изменить сумму";
+"LiveStream.InputContextMenuRemoveDiamonds" = "Убрать звёзды";
 
 "Reminders.DeleteRepeatingTitle" = "Удаление регулярного напоминания";
 "Reminders.DeleteRepeatingText" = "Вы точно хотите удалить это напоминание? Для него настроен регулярный повтор отправки.";
@@ -15430,37 +15430,37 @@ Error: %8$@";
 "LiveStream.ErrorMaxAllowedEmoji.Text_1" = "Можно отправить до %d эмодзи.";
 "LiveStream.ErrorMaxAllowedEmoji.Text_any" = "Можно отправить до %d эмодзи.";
 
-"Stars.Purchase.StarGiftOfferInfo" = "Купите звёзды, чтобы делать предложения о покупке подарков.";
+"Diamonds.Purchase.DiamondGiftOfferInfo" = "Купите звёзды, чтобы делать предложения о покупке подарков.";
 
-"Notification.StarsGiftOffer.Offer" = "Пользователь предлагает Вам %2$@ за подарок %3$@";
-"Notification.StarsGiftOffer.Offer.Stars_1" = "%@ звезду";
-"Notification.StarsGiftOffer.Offer.Stars_any" = "%@ звезды";
-"Notification.StarsGiftOffer.OfferYou" = "Вы предложили %1$@ %2$@ за подарок %3$@";
-"Notification.StarsGiftOffer.OfferYou.Stars_1" = "%@ звезду";
-"Notification.StarsGiftOffer.OfferYou.Stars_any" = "%@ звезды";
+"Notification.DiamondsGiftOffer.Offer" = "Пользователь предлагает Вам %2$@ за подарок %3$@";
+"Notification.DiamondsGiftOffer.Offer.Diamonds_1" = "%@ звезду";
+"Notification.DiamondsGiftOffer.Offer.Diamonds_any" = "%@ звезды";
+"Notification.DiamondsGiftOffer.OfferYou" = "Вы предложили %1$@ %2$@ за подарок %3$@";
+"Notification.DiamondsGiftOffer.OfferYou.Diamonds_1" = "%@ звезду";
+"Notification.DiamondsGiftOffer.OfferYou.Diamonds_any" = "%@ звезды";
 
-"Notification.StarsGiftOffer.Accepted" = "%1$@ принял(а) Ваше предложение и продал(а) Вам %2$@ за %3$@";
-"Notification.StarsGiftOffer.Accepted.Stars_1" = "%@ звезду";
-"Notification.StarsGiftOffer.Accepted.Stars_any" = "%@ звезды";
-"Notification.StarsGiftOffer.AcceptedYou" = "Вы продали %1$@ %2$@ за %3$@";
-"Notification.StarsGiftOffer.AcceptedYou.Stars_1" = "%@ звезду";
-"Notification.StarsGiftOffer.AcceptedYou.Stars_any" = "%@ звезды";
+"Notification.DiamondsGiftOffer.Accepted" = "%1$@ принял(а) Ваше предложение и продал(а) Вам %2$@ за %3$@";
+"Notification.DiamondsGiftOffer.Accepted.Diamonds_1" = "%@ звезду";
+"Notification.DiamondsGiftOffer.Accepted.Diamonds_any" = "%@ звезды";
+"Notification.DiamondsGiftOffer.AcceptedYou" = "Вы продали %1$@ %2$@ за %3$@";
+"Notification.DiamondsGiftOffer.AcceptedYou.Diamonds_1" = "%@ звезду";
+"Notification.DiamondsGiftOffer.AcceptedYou.Diamonds_any" = "%@ звезды";
 
-"Notification.StarsGiftOffer.Rejected" = "%1$@ отклонил(а) Ваше предложение о покупке %2$@. Вы получите обратно %3$@";
-"Notification.StarsGiftOffer.Rejected.Stars_1" = "%@ звезду";
-"Notification.StarsGiftOffer.Rejected.Stars_any" = "%@ звезды";
-"Notification.StarsGiftOffer.RejectedYou" = "Вы отклонили предложение %1$@";
-"Notification.StarsGiftOffer.RejectedYou.Stars_1" = "%@ звезда";
-"Notification.StarsGiftOffer.RejectedYou.Stars_any" = "%@ звезды";
+"Notification.DiamondsGiftOffer.Rejected" = "%1$@ отклонил(а) Ваше предложение о покупке %2$@. Вы получите обратно %3$@";
+"Notification.DiamondsGiftOffer.Rejected.Diamonds_1" = "%@ звезду";
+"Notification.DiamondsGiftOffer.Rejected.Diamonds_any" = "%@ звезды";
+"Notification.DiamondsGiftOffer.RejectedYou" = "Вы отклонили предложение %1$@";
+"Notification.DiamondsGiftOffer.RejectedYou.Diamonds_1" = "%@ звезда";
+"Notification.DiamondsGiftOffer.RejectedYou.Diamonds_any" = "%@ звезды";
 
-"Notification.StarsGiftOffer.Expired" = "%1$@ не ответил(а) на предложение о покупке %2$@. Вы получите обратно %4$@";
-"Notification.StarsGiftOffer.Expired.Stars_1" = "%@ звезду";
-"Notification.StarsGiftOffer.Expired.Stars_any" = "%@ звезды";
-"Notification.StarsGiftOffer.Expired.Hours_1" = "%@ часов";
-"Notification.StarsGiftOffer.Expired.Hours_any" = "%@ часов";
-"Notification.StarsGiftOffer.ExpiredYou" = "Срок действия предложения от %1$@ о покупке подарка %2$@ за %3$@ истёк";
-"Notification.StarsGiftOffer.ExpiredYou.Stars_1" = "%@ звезду";
-"Notification.StarsGiftOffer.ExpiredYou.Stars_any" = "%@ звезды";
+"Notification.DiamondsGiftOffer.Expired" = "%1$@ не ответил(а) на предложение о покупке %2$@. Вы получите обратно %4$@";
+"Notification.DiamondsGiftOffer.Expired.Diamonds_1" = "%@ звезду";
+"Notification.DiamondsGiftOffer.Expired.Diamonds_any" = "%@ звезды";
+"Notification.DiamondsGiftOffer.Expired.Hours_1" = "%@ часов";
+"Notification.DiamondsGiftOffer.Expired.Hours_any" = "%@ часов";
+"Notification.DiamondsGiftOffer.ExpiredYou" = "Срок действия предложения от %1$@ о покупке подарка %2$@ за %3$@ истёк";
+"Notification.DiamondsGiftOffer.ExpiredYou.Diamonds_1" = "%@ звезду";
+"Notification.DiamondsGiftOffer.ExpiredYou.Diamonds_any" = "%@ звезды";
 
 "CreateExternalStream.RevokeStreamKey" = "Сбросить ключ трансляции";
 "CreateExternalStream.Revoke.Text" = "Вы точно хотите сбросить ключ трансляции?";
@@ -15578,15 +15578,15 @@ Error: %8$@";
 "Gift.View.Context.BuyOffer" = "Предложить сделку";
 
 "Gift.Offer.Title" = "Предложение о покупке";
-"Gift.Offer.OfferStars" = "Предложить звёзды";
+"Gift.Offer.OfferDiamonds" = "Предложить звёзды";
 "Gift.Offer.OfferTon" = "Предложить TON";
-"Gift.Offer.PriceSectionStars" = "ЦЕНА В ЗВЁЗДАХ";
+"Gift.Offer.PriceSectionDiamonds" = "ЦЕНА В ЗВЁЗДАХ";
 "Gift.Offer.PriceSectionTon" = "ЦЕНА В TON";
 "Gift.Offer.PricePlaceholder" = "Сумма";
-"Gift.Offer.PriceDescriptionStars" = "Укажите, сколько звёзд Вы хотите предложить за **%@**.";
+"Gift.Offer.PriceDescriptionDiamonds" = "Укажите, сколько звёзд Вы хотите предложить за **%@**.";
 "Gift.Offer.PriceDescriptionTon" = "Укажите, сколько TON Вы хотите предложить за **%@**.";
 "Gift.Offer.Duration" = "Срок действия";
-"Gift.Offer.DurationDescriptionStars" = "Выберите срок действия предложения для **%@**. По истечении этого срока звёзды будут возвращены Вам.";
+"Gift.Offer.DurationDescriptionDiamonds" = "Выберите срок действия предложения для **%@**. По истечении этого срока звёзды будут возвращены Вам.";
 "Gift.Offer.DurationDescriptionTon" = "Выберите срок действия предложения для **%@**. По истечении этого срока TON будут возвращены Вам.";
 "Gift.Offer.Duration.Hours_1" = "%@ час";
 "Gift.Offer.Duration.Hours_any" = "%@ часа";
@@ -15598,27 +15598,27 @@ Error: %8$@";
 "Gift.WearPreview.FreeUpgrade" = "Бесплатное\nулучшение";
 "Gift.WearPreview.LearnMore" = "Подробнее о ношении подарков >";
 
-"Notification.StarGift.Sold" = "продан";
-"Notification.StarGiftOffer.Offer" = "Пользователь предлагает Вам **%2$@** за подарок **%3$@**.";
-"Notification.StarGiftOffer.OfferYou" = "Вы предложили **%1$@** **%2$@** за подарок **%3$@**.";
-"Notification.StarGiftOffer.Offer.Stars_1" = "%@ звезду";
-"Notification.StarGiftOffer.Offer.Stars_any" = "%@ звезды";
+"Notification.DiamondGift.Sold" = "продан";
+"Notification.DiamondGiftOffer.Offer" = "Пользователь предлагает Вам **%2$@** за подарок **%3$@**.";
+"Notification.DiamondGiftOffer.OfferYou" = "Вы предложили **%1$@** **%2$@** за подарок **%3$@**.";
+"Notification.DiamondGiftOffer.Offer.Diamonds_1" = "%@ звезду";
+"Notification.DiamondGiftOffer.Offer.Diamonds_any" = "%@ звезды";
 
-"Notification.StarGiftOffer.Status.Accepted" = "Предложение принято.";
-"Notification.StarGiftOffer.Status.Expired" = "Срок действия предложения истёк.";
-"Notification.StarGiftOffer.Status.Expires" = "Предложение действует ещё %@.";
-"Notification.StarGiftOffer.Status.Rejected" = "Предложение отклонено.";
+"Notification.DiamondGiftOffer.Status.Accepted" = "Предложение принято.";
+"Notification.DiamondGiftOffer.Status.Expired" = "Срок действия предложения истёк.";
+"Notification.DiamondGiftOffer.Status.Expires" = "Предложение действует ещё %@.";
+"Notification.DiamondGiftOffer.Status.Rejected" = "Предложение отклонено.";
 
-"Notification.StarGiftOffer.Expiration.Hours_1" = "%@ч";
-"Notification.StarGiftOffer.Expiration.Hours_any" = "%@ч";
-"Notification.StarGiftOffer.Expiration.Minutes_1" = "%@м";
-"Notification.StarGiftOffer.Expiration.Minutes_any" = "%@м";
-"Notification.StarGiftOffer.Expiration.Delimiter" = "";
+"Notification.DiamondGiftOffer.Expiration.Hours_1" = "%@ч";
+"Notification.DiamondGiftOffer.Expiration.Hours_any" = "%@ч";
+"Notification.DiamondGiftOffer.Expiration.Minutes_1" = "%@м";
+"Notification.DiamondGiftOffer.Expiration.Minutes_any" = "%@м";
+"Notification.DiamondGiftOffer.Expiration.Delimiter" = "";
 
 "Chat.GiftPurchaseOffer.AcceptConfirmation.Title" = "Подтверждение продажи";
 "Chat.GiftPurchaseOffer.AcceptConfirmation.Text" = "Вы точно хотите продать **%1$@** %2$@ за **%3$@**? За вычетом комиссии Вы получите **%4$@**.";
-"Chat.GiftPurchaseOffer.AcceptConfirmation.Text.Stars_1" = "%@ звезду";
-"Chat.GiftPurchaseOffer.AcceptConfirmation.Text.Stars_any" = "%@ звезды";
+"Chat.GiftPurchaseOffer.AcceptConfirmation.Text.Diamonds_1" = "%@ звезду";
+"Chat.GiftPurchaseOffer.AcceptConfirmation.Text.Diamonds_any" = "%@ звезды";
 "Chat.GiftPurchaseOffer.AcceptConfirmation.BadValue" = "Стоимость этого подарка на **%@** выше, чем предложенная цена.";
 "Chat.GiftPurchaseOffer.AcceptConfirmation.Confirm" = "Подтвердить продажу";
 
@@ -15672,7 +15672,7 @@ Error: %8$@";
 
 "Appearance.SendWithCmdEnter" = "Отправка сообщений по ⌘+Enter";
 
-"Notification.StarsGift.Crafted" = "Вы изготовили новый подарок";
+"Notification.DiamondsGift.Crafted" = "Вы изготовили новый подарок";
 
 "Gift.Craft.Title" = "Изготовление подарка";
 "Gift.Craft.Description" = "Добавьте до **4 подарков**, чтобы изготовить\n**$ %@**.\n\nВ случае неудачи эти подарки\nпропадут.";
@@ -15723,13 +15723,13 @@ Error: %8$@";
 
 "Gift.View.OnSale" = "В продаже за %@";
 
-"Gift.Store.Balance.MyStars" = "Мои звёзды";
+"Gift.Store.Balance.MyDiamonds" = "Мои звёзды";
 "Gift.Store.Balance.MyTon" = "Мои TON";
 
 "Resolve.GiftErrorNotFound" = "Похоже, такого подарка не существует.";
 "Resolve.GiftErrorBurned" = "К сожалению, этот подарок «сгорел».";
 
-"Notification.StarGift.Burned" = "сожжён";
+"Notification.DiamondGift.Burned" = "сожжён";
 
 "AuthConfirmation.Title" = "Авторизация на **%@**";
 "AuthConfirmation.Description" = "Сайт получит доступ к Вашему **имени**,\n**имени пользователя** и **фото профиля**.";
@@ -15757,9 +15757,9 @@ Error: %8$@";
 "Notification.GroupCreatorChangePending" = "%2$@ станет новым владельцем через 7 дней, если %1$@ не вернётся.";
 "Notification.GroupCreatorChangeApplied" = "%1$@ передал(а) группу новому владельцу — %2$@.";
 
-"Notification.StarGift.Crafted.Title" = "Изготовленный подарок";
-"Notification.StarGift.Upgraded.Title" = "Улучшенный подарок";
-"Notification.StarGift.Purchased.Title" = "Купленный подарок";
+"Notification.DiamondGift.Crafted.Title" = "Изготовленный подарок";
+"Notification.DiamondGift.Upgraded.Title" = "Улучшенный подарок";
+"Notification.DiamondGift.Purchased.Title" = "Купленный подарок";
 
 "LeaveGroup.Title" = "Покинуть %@";
 "LeaveGroup.Text" = "Если Вы выйдете, **%1$@** станет новым владельцем **%2$@** через **1 неделю**.";
@@ -17198,8 +17198,8 @@ Error: %8$@";
 "Gift.Store.ForResale_2" = "%@ предложения";
 "Gift.Store.ForResale_3_10" = "%@ предложения";
 "Gift.Store.ForResale_many" = "%@ предложений";
-"Gift.Store.ShowStarsListings" = "Только предложения за звёзды";
-"Gift.Store.StarsOnlyListings" = "Только за звёзды";
+"Gift.Store.ShowDiamondsListings" = "Только предложения за звёзды";
+"Gift.Store.DiamondsOnlyListings" = "Только за звёзды";
 "Gift.Transfer.Confirmation.Text.Stars_0" = "%@ звёзд";
 "Gift.Transfer.Confirmation.Text.Stars_2" = "%@ звезды";
 "Gift.Transfer.Confirmation.Text.Stars_3_10" = "%@ звезды";

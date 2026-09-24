@@ -195,7 +195,7 @@ private final class StarsTransactionSheetContent: CombinedComponent {
             let amountText: String
             var descriptionText: String
             var boostsText: String?
-            let additionalText = strings.Stars_Transaction_Terms
+            let additionalText = strings.Diamonds_Transaction_Terms
             var buttonText: String? = strings.Common_OK
             
             var cancelButtonText: String?
@@ -241,9 +241,9 @@ private final class StarsTransactionSheetContent: CombinedComponent {
                     fatalError()
                 }
                 let boosts = boost.multiplier
-                titleText = strings.Stars_Transaction_Giveaway_Boost_Stars(Int32(clamping: stars))
+                titleText = strings.Diamonds_Transaction_Giveaway_Boost_Diamonds(Int32(clamping: stars))
                 descriptionText = ""
-                boostsText = strings.Stars_Transaction_Giveaway_Boost_Boosts(boosts)
+                boostsText = strings.Diamonds_Transaction_Giveaway_Boost_Boosts(boosts)
                 count = CurrencyAmount(amount: StarsAmount(value: stars, nanos: 0), currency: .stars)
                 date = boost.date
                 toPeer = state.peerMap[peerId]
@@ -251,8 +251,8 @@ private final class StarsTransactionSheetContent: CombinedComponent {
                 isBoost = true
             case let .importer(peer, pricing, importer, usdRate):
                 let usdValue = formatTonUsdValue(pricing.amount.value, divide: false, rate: usdRate, dateTimeFormat: environment.dateTimeFormat)
-                titleText = strings.Stars_Transaction_Subscription_Title
-                descriptionText = strings.Stars_Transaction_Subscription_PerMonthUsd(usdValue).string
+                titleText = strings.Diamonds_Transaction_Subscription_Title
+                descriptionText = strings.Diamonds_Transaction_Subscription_PerMonthUsd(usdValue).string
                 count = CurrencyAmount(amount: pricing.amount, currency: .stars)
                 countOnTop = true
                 date = importer.date
@@ -270,7 +270,7 @@ private final class StarsTransactionSheetContent: CombinedComponent {
                 if let title = subscription.title {
                     titleText = title
                 } else {
-                    titleText = strings.Stars_Transaction_Subscription_Title
+                    titleText = strings.Diamonds_Transaction_Subscription_Title
                 }
                 photo = subscription.photo
                 
@@ -301,55 +301,55 @@ private final class StarsTransactionSheetContent: CombinedComponent {
                 
                 if hasLeft || isKicked {
                     if subscription.flags.contains(.isCancelled) {
-                        statusText = strings.Stars_Transaction_Subscription_Cancelled
+                        statusText = strings.Diamonds_Transaction_Subscription_Cancelled
                         statusIsDestructive = true
                         if date > Int32(CFAbsoluteTimeGetCurrent() + kCFAbsoluteTimeIntervalSince1970) {
-                            buttonText = strings.Stars_Transaction_Subscription_Renew
+                            buttonText = strings.Diamonds_Transaction_Subscription_Renew
                         } else {
                             if let _ = subscription.inviteHash, !isKicked {
-                                buttonText = strings.Stars_Transaction_Subscription_JoinAgainChannel
+                                buttonText = strings.Diamonds_Transaction_Subscription_JoinAgainChannel
                             } else {
                                 buttonText = strings.Common_OK
                             }
                         }
                     } else {
                         if date < Int32(CFAbsoluteTimeGetCurrent() + kCFAbsoluteTimeIntervalSince1970) {
-                            statusText = strings.Stars_Transaction_Subscription_Expired(stringForMediumDate(timestamp: subscription.untilDate, strings: strings, dateTimeFormat: dateTimeFormat, withTime: false)).string
-                            buttonText = strings.Stars_Transaction_Subscription_Renew
+                            statusText = strings.Diamonds_Transaction_Subscription_Expired(stringForMediumDate(timestamp: subscription.untilDate, strings: strings, dateTimeFormat: dateTimeFormat, withTime: false)).string
+                            buttonText = strings.Diamonds_Transaction_Subscription_Renew
                         } else {
-                            statusText = strings.Stars_Transaction_Subscription_LeftChannel(stringForMediumDate(timestamp: subscription.untilDate, strings: strings, dateTimeFormat: dateTimeFormat, withTime: false)).string
-                            buttonText = strings.Stars_Transaction_Subscription_JoinChannel
+                            statusText = strings.Diamonds_Transaction_Subscription_LeftChannel(stringForMediumDate(timestamp: subscription.untilDate, strings: strings, dateTimeFormat: dateTimeFormat, withTime: false)).string
+                            buttonText = strings.Diamonds_Transaction_Subscription_JoinChannel
                         }
                     }
                     isCancelled = true
                 } else {
                     if subscription.flags.contains(.isCancelledByBot) {
                         if case let .user(user) = subscription.peer, user.botInfo == nil {
-                            statusText = strings.Stars_Transaction_Subscription_CancelledByBusiness
+                            statusText = strings.Diamonds_Transaction_Subscription_CancelledByBusiness
                         } else {
-                            statusText = strings.Stars_Transaction_Subscription_CancelledByBot
+                            statusText = strings.Diamonds_Transaction_Subscription_CancelledByBot
                         }
                         statusIsDestructive = true
                         buttonText = strings.Common_OK
                         isCancelled = true
                     } else if subscription.flags.contains(.isCancelled) {
-                        statusText = strings.Stars_Transaction_Subscription_Cancelled
+                        statusText = strings.Diamonds_Transaction_Subscription_Cancelled
                         statusIsDestructive = true
                         if date > Int32(CFAbsoluteTimeGetCurrent() + kCFAbsoluteTimeIntervalSince1970) {
-                            buttonText = strings.Stars_Transaction_Subscription_Renew
+                            buttonText = strings.Diamonds_Transaction_Subscription_Renew
                         } else {
                             if let _ = subscription.invoiceSlug {
-                                buttonText = strings.Stars_Transaction_Subscription_Renew
+                                buttonText = strings.Diamonds_Transaction_Subscription_Renew
                             } else if let _ = subscription.inviteHash, !isKicked {
-                                buttonText = strings.Stars_Transaction_Subscription_JoinAgainChannel
+                                buttonText = strings.Diamonds_Transaction_Subscription_JoinAgainChannel
                             } else {
                                 buttonText = strings.Common_OK
                             }
                         }
                         isCancelled = true
                     } else {
-                        statusText = strings.Stars_Transaction_Subscription_Active(stringForMediumDate(timestamp: subscription.untilDate, strings: strings, dateTimeFormat: dateTimeFormat, withTime: false)).string
-                        cancelButtonText = strings.Stars_Transaction_Subscription_Cancel
+                        statusText = strings.Diamonds_Transaction_Subscription_Active(stringForMediumDate(timestamp: subscription.untilDate, strings: strings, dateTimeFormat: dateTimeFormat, withTime: false)).string
+                        cancelButtonText = strings.Diamonds_Transaction_Subscription_Cancel
                         buttonText = strings.Common_OK
                     }
                 }
@@ -358,10 +358,10 @@ private final class StarsTransactionSheetContent: CombinedComponent {
                     switch starGift {
                     case .generic:
                         if transaction.flags.contains(.isStarGiftAuctionBid) {
-                            titleText = strings.Stars_Transaction_GiftAuctionBid
+                            titleText = strings.Diamonds_Transaction_GiftAuctionBid
                             isGiftAuctionBid = true
                         } else {
-                            titleText = strings.Stars_Transaction_Gift_Title
+                            titleText = strings.Diamonds_Transaction_Gift_Title
                         }
                         descriptionText = ""
                     case let .unique(gift):
@@ -385,7 +385,7 @@ private final class StarsTransactionSheetContent: CombinedComponent {
                     }
                     isGiftUpgrade = transaction.flags.contains(.isStarGiftUpgrade)
                 } else if let giveawayMessageIdValue = transaction.giveawayMessageId {
-                    titleText = strings.Stars_Transaction_Giveaway_Title
+                    titleText = strings.Diamonds_Transaction_Giveaway_Title
                     descriptionText = ""
                     count = transaction.count
                     transactionId = transaction.id
@@ -396,7 +396,7 @@ private final class StarsTransactionSheetContent: CombinedComponent {
                     }
                     transactionPeer = transaction.peer
                 } else if let _ = transaction.subscriptionPeriod {
-                    titleText = strings.Stars_Transaction_SubscriptionFee
+                    titleText = strings.Diamonds_Transaction_SubscriptionFee
                     descriptionText = ""
                     count = transaction.count
                     transactionId = transaction.id
@@ -407,13 +407,13 @@ private final class StarsTransactionSheetContent: CombinedComponent {
                     transactionPeer = transaction.peer
                     isSubscriptionFee = true
                 } else if transaction.flags.contains(.isGift) {
-                    titleText = strings.Stars_Gift_Received_Title
+                    titleText = strings.Diamonds_Gift_Received_Title
                     count = transaction.count
                     
                     if count.currency == .ton {
-                        descriptionText = strings.Stars_Gift_Ton_Text
+                        descriptionText = strings.Diamonds_Gift_Ton_Text
                     } else {
-                        descriptionText = strings.Stars_Gift_Received_Text
+                        descriptionText = strings.Diamonds_Gift_Received_Text
                     }
                     
                     countOnTop = true
@@ -429,31 +429,31 @@ private final class StarsTransactionSheetContent: CombinedComponent {
                     if transaction.flags.contains(.isLiveStreamPaidMessage) {
                         isPaidMessage = true
                         if transaction.flags.contains(.isReaction) {
-                            titleText = strings.Stars_Transaction_LiveStreamReaction
+                            titleText = strings.Diamonds_Transaction_LiveStreamReaction
                         } else {
-                            titleText = strings.Stars_Transaction_LiveStreamPaidMessage(transaction.paidMessageCount ?? 1)
+                            titleText = strings.Diamonds_Transaction_LiveStreamPaidMessage(transaction.paidMessageCount ?? 1)
                         }
                         if !transaction.flags.contains(.isRefund) {
                             countOnTop = true
                             if transaction.flags.contains(.isReaction) {
-                                descriptionText = strings.Stars_Transaction_LiveStreamReaction_Text(formatPermille(1000 - starrefCommissionPermille)).string
+                                descriptionText = strings.Diamonds_Transaction_LiveStreamReaction_Text(formatPermille(1000 - starrefCommissionPermille)).string
                             } else {
-                                descriptionText = strings.Stars_Transaction_LiveStreamPaidMessage_Text(formatPermille(1000 - starrefCommissionPermille)).string
+                                descriptionText = strings.Diamonds_Transaction_LiveStreamPaidMessage_Text(formatPermille(1000 - starrefCommissionPermille)).string
                             }
                         } else {
                             descriptionText = ""
                         }
                     } else if transaction.flags.contains(.isPaidMessage) {
                         isPaidMessage = true
-                        titleText = strings.Stars_Transaction_PaidMessage(transaction.paidMessageCount ?? 1)
+                        titleText = strings.Diamonds_Transaction_PaidMessage(transaction.paidMessageCount ?? 1)
                         if !transaction.flags.contains(.isRefund) {
                             countOnTop = true
-                            descriptionText = strings.Stars_Transaction_PaidMessage_Text(formatPermille(1000 - starrefCommissionPermille)).string
+                            descriptionText = strings.Diamonds_Transaction_PaidMessage_Text(formatPermille(1000 - starrefCommissionPermille)).string
                         } else {
                             descriptionText = ""
                         }
                     } else if transaction.starrefPeerId == nil {
-                        titleText = strings.StarsTransaction_TitleCommission(formatPermille(starrefCommissionPermille)).string
+                        titleText = strings.DiamondsTransaction_TitleCommission(formatPermille(starrefCommissionPermille)).string
                         countOnTop = false
                         descriptionText = ""
                     } else {
@@ -469,7 +469,7 @@ private final class StarsTransactionSheetContent: CombinedComponent {
                         toPeer = peer
                     }
                 } else if transaction.flags.contains(.isReaction) {
-                    titleText = strings.Stars_Transaction_Reaction_Title
+                    titleText = strings.Diamonds_Transaction_Reaction_Title
                     descriptionText = ""
                     messageId = transaction.paidMessageId
                     count = transaction.count
@@ -481,7 +481,7 @@ private final class StarsTransactionSheetContent: CombinedComponent {
                     transactionPeer = transaction.peer
                     isReaction = true
                 } else if transaction.flags.contains(.isPostsSearch) {
-                    titleText = strings.Stars_Transaction_SearchFee_Title
+                    titleText = strings.Diamonds_Transaction_SearchFee_Title
                     descriptionText = ""
                     count = transaction.count
                     transactionId = transaction.id
@@ -492,70 +492,70 @@ private final class StarsTransactionSheetContent: CombinedComponent {
                     case let .peer(peer):
                         if let months = transaction.premiumGiftMonths {
                             premiumGiftMonths = months
-                            titleText = strings.Stars_Transaction_IosappPremium(months)
+                            titleText = strings.Diamonds_Transaction_AnsiblePremium(months)
                         } else if transaction.flags.contains(.isLiveStreamPaidMessage) {
                             isPaidMessage = true
                             if transaction.flags.contains(.isReaction) {
-                                titleText = strings.Stars_Transaction_LiveStreamReaction
+                                titleText = strings.Diamonds_Transaction_LiveStreamReaction
                             } else {
-                                titleText = strings.Stars_Transaction_LiveStreamPaidMessage(transaction.paidMessageCount ?? 1)
+                                titleText = strings.Diamonds_Transaction_LiveStreamPaidMessage(transaction.paidMessageCount ?? 1)
                             }
                         } else if transaction.flags.contains(.isPaidMessage) {
                             isPaidMessage = true
-                            titleText = strings.Stars_Transaction_PaidMessage(transaction.paidMessageCount ?? 1)
+                            titleText = strings.Diamonds_Transaction_PaidMessage(transaction.paidMessageCount ?? 1)
                         } else if !transaction.media.isEmpty {
-                            titleText = strings.Stars_Transaction_MediaPurchase
+                            titleText = strings.Diamonds_Transaction_MediaPurchase
                         } else {
                             titleText = transaction.title ?? peer.compactDisplayTitle
                         }
                     case .appStore:
-                        titleText = strings.Stars_Transaction_AppleTopUp_Title
-                        via = strings.Stars_Transaction_AppleTopUp_Subtitle
+                        titleText = strings.Diamonds_Transaction_AppleTopUp_Title
+                        via = strings.Diamonds_Transaction_AppleTopUp_Subtitle
                     case .playMarket:
-                        titleText = strings.Stars_Transaction_GoogleTopUp_Title
-                        via = strings.Stars_Transaction_GoogleTopUp_Subtitle
+                        titleText = strings.Diamonds_Transaction_GoogleTopUp_Title
+                        via = strings.Diamonds_Transaction_GoogleTopUp_Subtitle
                     case .premiumBot:
-                        titleText = strings.Stars_Transaction_PremiumBotTopUp_Title
-                        via = strings.Stars_Transaction_PremiumBotTopUp_Subtitle
+                        titleText = strings.Diamonds_Transaction_PremiumBotTopUp_Title
+                        via = strings.Diamonds_Transaction_PremiumBotTopUp_Subtitle
                     case .fragment:
                         if parentPeer.id == component.context.account.peerId {
                             if (transaction.count.amount.value < 0 && !transaction.flags.contains(.isRefund)) || (transaction.count.amount.value > 0 && transaction.flags.contains(.isRefund)) {
                                 switch transaction.count.currency {
                                 case .stars:
-                                    titleText = strings.Stars_Transaction_FragmentWithdrawal_Title
+                                    titleText = strings.Diamonds_Transaction_FragmentWithdrawal_Title
                                 case .ton:
-                                    titleText = strings.Stars_Transaction_FragmentWithdrawalTon_Title
+                                    titleText = strings.Diamonds_Transaction_FragmentWithdrawalTon_Title
                                 }
-                                via = strings.Stars_Transaction_FragmentWithdrawal_Subtitle
+                                via = strings.Diamonds_Transaction_FragmentWithdrawal_Subtitle
                             } else {
                                 switch transaction.count.currency {
                                 case .stars:
-                                    titleText = strings.Stars_Transaction_FragmentTopUp_Title
+                                    titleText = strings.Diamonds_Transaction_FragmentTopUp_Title
                                 case .ton:
-                                    titleText = strings.Stars_Transaction_FragmentTopUpTon_Title
+                                    titleText = strings.Diamonds_Transaction_FragmentTopUpTon_Title
                                 }
-                                via = strings.Stars_Transaction_FragmentTopUp_Subtitle
+                                via = strings.Diamonds_Transaction_FragmentTopUp_Subtitle
                             }
                         } else {
                             switch transaction.count.currency {
                             case .stars:
-                                titleText = strings.Stars_Transaction_FragmentWithdrawal_Title
+                                titleText = strings.Diamonds_Transaction_FragmentWithdrawal_Title
                             case .ton:
-                                titleText = strings.Stars_Transaction_FragmentWithdrawalTon_Title
+                                titleText = strings.Diamonds_Transaction_FragmentWithdrawalTon_Title
                             }
-                            via = strings.Stars_Transaction_FragmentWithdrawal_Subtitle
+                            via = strings.Diamonds_Transaction_FragmentWithdrawal_Subtitle
                         }
                     case .ads:
-                        titleText = strings.Stars_Transaction_IosappAds_Title
-                        via = strings.Stars_Transaction_IosappAds_Subtitle
+                        titleText = strings.Diamonds_Transaction_AnsibleAds_Title
+                        via = strings.Diamonds_Transaction_AnsibleAds_Subtitle
                     case .apiLimitExtension:
-                        titleText = strings.Stars_Transaction_IosappBotApi_Title
+                        titleText = strings.Diamonds_Transaction_AnsibleBotApi_Title
                     case .unsupported:
-                        titleText = strings.Stars_Transaction_Unsupported_Title
+                        titleText = strings.Diamonds_Transaction_Unsupported_Title
                     }
                     
                     if let floodskipNumber = transaction.floodskipNumber {
-                        descriptionText = strings.Stars_Transaction_IosappBotApi_Messages(floodskipNumber)
+                        descriptionText = strings.Diamonds_Transaction_AnsibleBotApi_Messages(floodskipNumber)
                     } else if !transaction.media.isEmpty {
                         var description: String = ""
                         var photoCount: Int32 = 0
@@ -568,18 +568,18 @@ private final class StarsTransactionSheetContent: CombinedComponent {
                             }
                         }
                         if photoCount > 0 && videoCount > 0 {
-                            description += strings.Stars_Transaction_MediaAnd(strings.Stars_Transaction_Photos(photoCount), strings.Stars_Transaction_Videos(videoCount)).string
+                            description += strings.Diamonds_Transaction_MediaAnd(strings.Diamonds_Transaction_Photos(photoCount), strings.Diamonds_Transaction_Videos(videoCount)).string
                         } else if photoCount > 0 {
                             if photoCount > 1 {
-                                description += strings.Stars_Transaction_Photos(photoCount)
+                                description += strings.Diamonds_Transaction_Photos(photoCount)
                             } else {
-                                description += strings.Stars_Transaction_SinglePhoto
+                                description += strings.Diamonds_Transaction_SinglePhoto
                             }
                         } else if videoCount > 0 {
                             if videoCount > 1 {
-                                description += strings.Stars_Transaction_Videos(videoCount)
+                                description += strings.Diamonds_Transaction_Videos(videoCount)
                             } else {
-                                description += strings.Stars_Transaction_SingleVideo
+                                description += strings.Diamonds_Transaction_SingleVideo
                             }
                         }
                         descriptionText = description
@@ -600,7 +600,7 @@ private final class StarsTransactionSheetContent: CombinedComponent {
                     photo = transaction.photo
                     
                     if transaction.flags.contains(.isRefund) {
-                        transactionStatus = (strings.Stars_Transaction_Refund, theme.list.itemDisclosureActions.constructive.fillColor)
+                        transactionStatus = (strings.Diamonds_Transaction_Refund, theme.list.itemDisclosureActions.constructive.fillColor)
                     } else if transaction.flags.contains(.isPending) {
                         transactionStatus = (strings.Monetization_Transaction_Pending, theme.list.itemDisclosureActions.warning.fillColor)
                     }
@@ -620,10 +620,10 @@ private final class StarsTransactionSheetContent: CombinedComponent {
                 let incoming = message.flags.contains(.Incoming)
 
                 let peerName = state.peerMap[message.id.peerId]?.compactDisplayTitle ?? ""
-                descriptionText = incoming ? strings.Stars_Gift_Received_Text : strings.Stars_Gift_Sent_Text(peerName).string
+                descriptionText = incoming ? strings.Diamonds_Gift_Received_Text : strings.Diamonds_Gift_Sent_Text(peerName).string
                 if let action = message.media.first(where: { $0 is IosappMediaAction }) as? IosappMediaAction {
                     if case let .giftStars(_, _, countValue, _, _, _) = action.action {
-                        titleText = incoming ? strings.Stars_Gift_Received_Title : strings.Stars_Gift_Sent_Title
+                        titleText = incoming ? strings.Diamonds_Gift_Received_Title : strings.Diamonds_Gift_Sent_Title
                         
                         count = CurrencyAmount(amount: StarsAmount(value: countValue, nanos: 0), currency: .stars)
                         if !incoming {
@@ -637,7 +637,7 @@ private final class StarsTransactionSheetContent: CombinedComponent {
                             toPeer = state.peerMap[message.id.peerId]
                         }
                     } else if case let .prizeStars(countValue, _, boostPeerId, _, giveawayMessageIdValue) = action.action {
-                        titleText = strings.Stars_Transaction_Giveaway_Title
+                        titleText = strings.Diamonds_Transaction_Giveaway_Title
                         
                         count = CurrencyAmount(amount: StarsAmount(value: countValue, nanos: 0), currency: .stars)
                         countOnTop = true
@@ -714,7 +714,7 @@ private final class StarsTransactionSheetContent: CombinedComponent {
                 countBackgroundColor = UIColor(rgb: 0x9671ff)
                 countFont = Font.with(size: 14.0, design: .round, weight: .semibold)
             } else if isSubscription || isSubscriber {
-                amountText = strings.Stars_Transaction_Subscription_PerMonth(formattedAmount).string
+                amountText = strings.Diamonds_Transaction_Subscription_PerMonth(formattedAmount).string
                 countColor = theme.list.itemSecondaryTextColor
             } else if countIsGeneric {
                 amountText = "\(formattedAmount)"
@@ -906,9 +906,9 @@ private final class StarsTransactionSheetContent: CombinedComponent {
             if isGiftUpgrade {
                 tableItems.append(.init(
                     id: "reason",
-                    title: strings.Stars_Transaction_Giveaway_Reason,
+                    title: strings.Diamonds_Transaction_Giveaway_Reason,
                     component: AnyComponent(
-                        MultilineTextComponent(text: .plain(NSAttributedString(string: strings.Stars_Transaction_GiftUpgrade, font: tableFont, textColor: tableTextColor)))
+                        MultilineTextComponent(text: .plain(NSAttributedString(string: strings.Diamonds_Transaction_GiftUpgrade, font: tableFont, textColor: tableTextColor)))
                     )
                 ))
             } else if case .unique = giftAnimationSubject {
@@ -917,16 +917,16 @@ private final class StarsTransactionSheetContent: CombinedComponent {
                     reason = strings.Gift_Offer_Title
                 } else if count.amount < StarsAmount.zero, case let .transaction(transaction, _) = subject {
                     if transaction.flags.contains(.isStarGiftResale) {
-                        reason = strings.Stars_Transaction_GiftPurchase
+                        reason = strings.Diamonds_Transaction_GiftPurchase
                     } else {
-                        reason = strings.Stars_Transaction_GiftTransfer
+                        reason = strings.Diamonds_Transaction_GiftTransfer
                     }
                 } else {
-                    reason = strings.Stars_Transaction_GiftSale
+                    reason = strings.Diamonds_Transaction_GiftSale
                 }
                 tableItems.append(.init(
                     id: "reason",
-                    title: strings.Stars_Transaction_Giveaway_Reason,
+                    title: strings.Diamonds_Transaction_Giveaway_Reason,
                     component: AnyComponent(
                         MultilineTextComponent(text: .plain(NSAttributedString(string: reason, font: tableFont, textColor: tableTextColor)))
                     )
@@ -936,7 +936,7 @@ private final class StarsTransactionSheetContent: CombinedComponent {
             if isGift && !isGiftAuctionBid, toPeer == nil {
                 tableItems.append(.init(
                     id: "from",
-                    title: strings.Stars_Transaction_From,
+                    title: strings.Diamonds_Transaction_From,
                     component: AnyComponent(
                         Button(
                             content: AnyComponent(
@@ -949,7 +949,7 @@ private final class StarsTransactionSheetContent: CombinedComponent {
                             ),
                             action: {
                                 let presentationData = component.context.sharedContext.currentPresentationData.with { $0 }
-                                component.context.sharedContext.openExternalUrl(context: component.context, urlContext: .generic, url: strings.Stars_Transaction_FragmentUnknown_URL, forceExternal: true, presentationData: presentationData, navigationController: nil, dismissInput: {})
+                                component.context.sharedContext.openExternalUrl(context: component.context, urlContext: .generic, url: strings.Diamonds_Transaction_FragmentUnknown_URL, forceExternal: true, presentationData: presentationData, navigationController: nil, dismissInput: {})
                                 Queue.mainQueue().after(1.0, {
                                     component.cancel(false)
                                 })
@@ -960,19 +960,19 @@ private final class StarsTransactionSheetContent: CombinedComponent {
             } else if let toPeer, !isRefProgram && !isGiftAuctionBid {
                 let title: String
                 if isGiftUpgrade {
-                    title = strings.Stars_Transaction_GiftFrom
+                    title = strings.Diamonds_Transaction_GiftFrom
                 } else if isSubscription {
                     if isBotSubscription {
-                        title = strings.Stars_Transaction_Subscription_Bot
+                        title = strings.Diamonds_Transaction_Subscription_Bot
                     } else if isBusinessSubscription {
-                        title = strings.Stars_Transaction_Subscription_Business
+                        title = strings.Diamonds_Transaction_Subscription_Business
                     } else {
-                        title = strings.Stars_Transaction_Subscription_Subscription
+                        title = strings.Diamonds_Transaction_Subscription_Subscription
                     }
                 } else if isSubscriber {
-                    title = strings.Stars_Transaction_Subscription_Subscriber
+                    title = strings.Diamonds_Transaction_Subscription_Subscriber
                 } else {
-                    title = count.amount < StarsAmount.zero || countIsGeneric ? strings.Stars_Transaction_To : strings.Stars_Transaction_From
+                    title = count.amount < StarsAmount.zero || countIsGeneric ? strings.Diamonds_Transaction_To : strings.Diamonds_Transaction_From
                 }
                 
                 var isGiftResale = false
@@ -1063,7 +1063,7 @@ private final class StarsTransactionSheetContent: CombinedComponent {
                 if case let .subscription(subscription) = component.subject, let title = subscription.title {
                     tableItems.append(.init(
                         id: "subscription",
-                        title: strings.Stars_Transaction_Subscription,
+                        title: strings.Diamonds_Transaction_Subscription,
                         component: AnyComponent(
                             MultilineTextComponent(text: .plain(NSAttributedString(string: title, font: tableFont, textColor: tableTextColor)))
                         )
@@ -1072,7 +1072,7 @@ private final class StarsTransactionSheetContent: CombinedComponent {
             } else if let via {
                 tableItems.append(.init(
                     id: "via",
-                    title: strings.Stars_Transaction_Via,
+                    title: strings.Diamonds_Transaction_Via,
                     component: AnyComponent(
                         MultilineTextComponent(text: .plain(NSAttributedString(string: via, font: tableFont, textColor: tableTextColor)))
                     )
@@ -1082,19 +1082,19 @@ private final class StarsTransactionSheetContent: CombinedComponent {
             if let giveawayMessageId {
                 tableItems.append(.init(
                     id: "prize",
-                    title: strings.Stars_Transaction_Giveaway_Prize,
+                    title: strings.Diamonds_Transaction_Giveaway_Prize,
                     component: AnyComponent(
-                        MultilineTextComponent(text: .plain(NSAttributedString(string: strings.Stars_Transaction_Giveaway_Stars(Int32(clamping: count.amount.value)), font: tableFont, textColor: tableTextColor)))
+                        MultilineTextComponent(text: .plain(NSAttributedString(string: strings.Diamonds_Transaction_Giveaway_Diamonds(Int32(clamping: count.amount.value)), font: tableFont, textColor: tableTextColor)))
                     )
                 ))
                 
                 tableItems.append(.init(
                     id: "reason",
-                    title: strings.Stars_Transaction_Giveaway_Reason,
+                    title: strings.Diamonds_Transaction_Giveaway_Reason,
                     component: AnyComponent(
                         Button(
                             content: AnyComponent(
-                                MultilineTextComponent(text: .plain(NSAttributedString(string: strings.Stars_Transaction_Giveaway_Giveaway, font: tableFont, textColor: tableLinkColor)))
+                                MultilineTextComponent(text: .plain(NSAttributedString(string: strings.Diamonds_Transaction_Giveaway_Giveaway, font: tableFont, textColor: tableLinkColor)))
                             ),
                             action: {
                                 component.openMessage(giveawayMessageId)
@@ -1124,7 +1124,7 @@ private final class StarsTransactionSheetContent: CombinedComponent {
                 }
                 tableItems.append(.init(
                     id: "media",
-                    title: isReaction ? strings.Stars_Transaction_Reaction_Post : strings.Stars_Transaction_Media,
+                    title: isReaction ? strings.Diamonds_Transaction_Reaction_Post : strings.Diamonds_Transaction_Media,
                     component: AnyComponent(
                         Button(
                             content: AnyComponent(
@@ -1146,10 +1146,10 @@ private final class StarsTransactionSheetContent: CombinedComponent {
                     if transaction.starrefPeerId == nil {
                         tableItems.append(.init(
                             id: "reason",
-                            title: strings.StarsTransaction_StarRefReason_Title,
+                            title: strings.DiamondsTransaction_DiamondRefReason_Title,
                             component: AnyComponent(
                                 Button(
-                                    content: AnyComponent(MultilineTextComponent(text: .plain(NSAttributedString(string: strings.StarsTransaction_StarRefReason_Program, font: tableFont, textColor: tableLinkColor))
+                                    content: AnyComponent(MultilineTextComponent(text: .plain(NSAttributedString(string: strings.DiamondsTransaction_DiamondRefReason_Program, font: tableFont, textColor: tableLinkColor))
                                     )),
                                     action: {
                                         if let toPeer {
@@ -1167,7 +1167,7 @@ private final class StarsTransactionSheetContent: CombinedComponent {
                     if let toPeer, transaction.starrefPeerId == nil {
                         tableItems.append(.init(
                             id: "miniapp",
-                            title: strings.StarsTransaction_StarRefReason_Miniapp,
+                            title: strings.DiamondsTransaction_DiamondRefReason_Miniapp,
                             component: AnyComponent(
                                 Button(
                                     content: AnyComponent(
@@ -1200,7 +1200,7 @@ private final class StarsTransactionSheetContent: CombinedComponent {
                     if !transaction.flags.contains(.isPaidMessage) && !transaction.flags.contains(.isStarGiftResale) {
                         tableItems.append(.init(
                             id: "to",
-                            title: strings.StarsTransaction_StarRefReason_Affiliate,
+                            title: strings.DiamondsTransaction_DiamondRefReason_Affiliate,
                             component: AnyComponent(
                                 Button(
                                     content: AnyComponent(
@@ -1232,7 +1232,7 @@ private final class StarsTransactionSheetContent: CombinedComponent {
                     if let toPeer, !transaction.flags.contains(.isStarGiftResale) {
                         tableItems.append(.init(
                             id: "referred",
-                            title: transaction.flags.contains(.isPaidMessage) ? strings.Stars_Transaction_From : strings.StarsTransaction_StarRefReason_Referred,
+                            title: transaction.flags.contains(.isPaidMessage) ? strings.Diamonds_Transaction_From : strings.DiamondsTransaction_DiamondRefReason_Referred,
                             component: AnyComponent(
                                 Button(
                                     content: AnyComponent(
@@ -1287,7 +1287,7 @@ private final class StarsTransactionSheetContent: CombinedComponent {
                         }
                         tableItems.append(.init(
                             id: "paid",
-                            title: strings.Stars_Transaction_Paid,
+                            title: strings.Diamonds_Transaction_Paid,
                             component: AnyComponent(
                                 MultilineTextWithEntitiesComponent(
                                     context: component.context,
@@ -1303,7 +1303,7 @@ private final class StarsTransactionSheetContent: CombinedComponent {
                     } else {
                         tableItems.append(.init(
                             id: "commission",
-                            title: strings.StarsTransaction_StarRefReason_Commission,
+                            title: strings.DiamondsTransaction_DiamondRefReason_Commission,
                             component: AnyComponent(MultilineTextComponent(text: .plain(NSAttributedString(string: "\(formatPermille(starrefCommissionPermille))%", font: tableFont, textColor: tableTextColor)))),
                             insets: UIEdgeInsets(top: 0.0, left: 12.0, bottom: 0.0, right: 5.0)
                         ))
@@ -1314,7 +1314,7 @@ private final class StarsTransactionSheetContent: CombinedComponent {
             if let transactionId {
                 tableItems.append(.init(
                     id: "transaction",
-                    title: strings.Stars_Transaction_Id,
+                    title: strings.Diamonds_Transaction_Id,
                     component: AnyComponent(
                         Button(
                             content: AnyComponent(
@@ -1337,7 +1337,7 @@ private final class StarsTransactionSheetContent: CombinedComponent {
             if isSubscription, let additionalDate {
                 tableItems.append(.init(
                     id: "additionalDate",
-                    title: strings.Stars_Transaction_Subscription_Status_Subscribed,
+                    title: strings.Diamonds_Transaction_Subscription_Status_Subscribed,
                     component: AnyComponent(
                         MultilineTextComponent(text: .plain(NSAttributedString(string: stringForMediumDate(timestamp: additionalDate, strings: strings, dateTimeFormat: dateTimeFormat), font: tableFont, textColor: tableTextColor)))
                     )
@@ -1348,17 +1348,17 @@ private final class StarsTransactionSheetContent: CombinedComponent {
             if isSubscription {
                 if date > Int32(CFAbsoluteTimeGetCurrent() + kCFAbsoluteTimeIntervalSince1970) {
                     if isCancelled {
-                        dateTitle = strings.Stars_Transaction_Subscription_Status_Expires
+                        dateTitle = strings.Diamonds_Transaction_Subscription_Status_Expires
                     } else {
-                        dateTitle = strings.Stars_Transaction_Subscription_Status_Renews
+                        dateTitle = strings.Diamonds_Transaction_Subscription_Status_Renews
                     }
                 } else {
-                    dateTitle = strings.Stars_Transaction_Subscription_Status_Expired
+                    dateTitle = strings.Diamonds_Transaction_Subscription_Status_Expired
                 }
             } else if isSubscriber {
-                dateTitle = strings.Stars_Transaction_Subscription_Status_Subscribed
+                dateTitle = strings.Diamonds_Transaction_Subscription_Status_Subscribed
             } else {
-                dateTitle = strings.Stars_Transaction_Date
+                dateTitle = strings.Diamonds_Transaction_Date
             }
             tableItems.append(.init(
                 id: "date",
@@ -1382,7 +1382,7 @@ private final class StarsTransactionSheetContent: CombinedComponent {
             if isSubscriber, let additionalDate {
                 tableItems.append(.init(
                     id: "additionalDate",
-                    title: strings.Stars_Transaction_Subscription_Status_Renews,
+                    title: strings.Diamonds_Transaction_Subscription_Status_Renews,
                     component: AnyComponent(
                         MultilineTextComponent(text: .plain(NSAttributedString(string: stringForMediumDate(timestamp: additionalDate, strings: strings, dateTimeFormat: dateTimeFormat), font: tableFont, textColor: tableTextColor)))
                     )
@@ -1423,7 +1423,7 @@ private final class StarsTransactionSheetContent: CombinedComponent {
                     tapAction: { attributes, _ in
                         if let controller = controller() as? StarsTransactionScreen, let navigationController = controller.navigationController as? NavigationController {
                             let presentationData = component.context.sharedContext.currentPresentationData.with { $0 }
-                            component.context.sharedContext.openExternalUrl(context: component.context, urlContext: .generic, url: strings.Stars_Transaction_Terms_URL, forceExternal: false, presentationData: presentationData, navigationController: navigationController, dismissInput: {})
+                            component.context.sharedContext.openExternalUrl(context: component.context, urlContext: .generic, url: strings.Diamonds_Transaction_Terms_URL, forceExternal: false, presentationData: presentationData, navigationController: navigationController, dismissInput: {})
                             component.cancel(true)
                         }
                     }
@@ -2063,7 +2063,7 @@ public class StarsTransactionScreen: ViewControllerComponentContainer {
             self.dismissAllTooltips()
             
             let presentationData = context.sharedContext.currentPresentationData.with { $0 }
-            self.present(UndoOverlayController(presentationData: presentationData, content: .copy(text: presentationData.strings.Stars_Transaction_CopiedId), elevatedLayout: false, position: .bottom, action: { _ in return true }), in: .current)
+            self.present(UndoOverlayController(presentationData: presentationData, content: .copy(text: presentationData.strings.Diamonds_Transaction_CopiedId), elevatedLayout: false, position: .bottom, action: { _ in return true }), in: .current)
             
             HapticFeedback().tap()
         }
@@ -2078,8 +2078,8 @@ public class StarsTransactionScreen: ViewControllerComponentContainer {
                 updateSubscription(false)
                 if subscription.untilDate > Int32(CFAbsoluteTimeGetCurrent() + kCFAbsoluteTimeIntervalSince1970) {
                     titleAndText = (
-                        presentationData.strings.Stars_Transaction_Subscription_Renewed_Title,
-                        presentationData.strings.Stars_Transaction_Subscription_Renewed_Text(subscription.peer.compactDisplayTitle).string
+                        presentationData.strings.Diamonds_Transaction_Subscription_Renewed_Title,
+                        presentationData.strings.Diamonds_Transaction_Subscription_Renewed_Text(subscription.peer.compactDisplayTitle).string
                     )
                 }
             } else {
@@ -2088,8 +2088,8 @@ public class StarsTransactionScreen: ViewControllerComponentContainer {
                 } else {
                     updateSubscription(true)
                     titleAndText = (
-                        presentationData.strings.Stars_Transaction_Subscription_Cancelled_Title,
-                        presentationData.strings.Stars_Transaction_Subscription_Cancelled_Text(subscription.peer.compactDisplayTitle, stringForMediumDate(timestamp: subscription.untilDate, strings: presentationData.strings, dateTimeFormat: presentationData.dateTimeFormat)).string
+                        presentationData.strings.Diamonds_Transaction_Subscription_Cancelled_Title,
+                        presentationData.strings.Diamonds_Transaction_Subscription_Cancelled_Text(subscription.peer.compactDisplayTitle, stringForMediumDate(timestamp: subscription.untilDate, strings: presentationData.strings, dateTimeFormat: presentationData.dateTimeFormat)).string
                     )
                 }
             }

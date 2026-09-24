@@ -156,7 +156,7 @@ func settingsItems(data: PeerInfoScreenData?, context: AccountContext, presentat
             if settings.proxySettings.enabled, let activeServer = settings.proxySettings.activeServer {
                 switch activeServer.connection {
                 case .mtp:
-                    proxyType = presentationData.strings.SocksProxySetup_ProxyTelegram
+                    proxyType = presentationData.strings.SocksProxySetup_ProxyAnsible
                 case .socks5:
                     proxyType = presentationData.strings.SocksProxySetup_ProxySocks5
                 }
@@ -268,7 +268,7 @@ func settingsItems(data: PeerInfoScreenData?, context: AccountContext, presentat
             } else {
                 balanceText = NSAttributedString()
             }
-            items[.payment]!.append(PeerInfoScreenDisclosureItem(id: 102, label: .attributedText(balanceText), text: presentationData.strings.Settings_Stars, icon: PresentationResourcesSettings.stars, action: {
+            items[.payment]!.append(PeerInfoScreenDisclosureItem(id: 102, label: .attributedText(balanceText), text: presentationData.strings.Settings_Diamonds, icon: PresentationResourcesSettings.stars, action: {
                 interaction.openSettings(.stars)
             }))
         }

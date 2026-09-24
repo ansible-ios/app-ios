@@ -75,7 +75,7 @@ public func buyStarGiftImpl(
                     let originalPriceString: String
                     switch resellAmount.currency {
                     case .stars:
-                        originalPriceString = presentationData.strings.Gift_Buy_ErrorPriceChanged_Text_Stars(Int32(clamping: resellAmount.amount.value))
+                        originalPriceString = presentationData.strings.Gift_Buy_ErrorPriceChanged_Text_Diamonds(Int32(clamping: resellAmount.amount.value))
                     case .ton:
                         originalPriceString = formatTonAmountText(resellAmount.amount.value, dateTimeFormat: presentationData.dateTimeFormat, maxDecimalPositions: nil, formatString: presentationData.strings.Currency_Grams)
                     }
@@ -84,7 +84,7 @@ public func buyStarGiftImpl(
                     let buttonText: String
                     switch newPrice.currency {
                     case .stars:
-                        newPriceString = presentationData.strings.Gift_Buy_ErrorPriceChanged_Text_Stars(Int32(clamping: newPrice.amount.value))
+                        newPriceString = presentationData.strings.Gift_Buy_ErrorPriceChanged_Text_Diamonds(Int32(clamping: newPrice.amount.value))
                         buttonText = presentationData.strings.Gift_Buy_Confirm_BuyFor(Int32(newPrice.amount.value))
                     case .ton:
                         let tonValueString = formatTonAmountText(newPrice.amount.value, dateTimeFormat: presentationData.dateTimeFormat, maxDecimalPositions: nil)

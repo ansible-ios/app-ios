@@ -772,7 +772,7 @@ private func premiumSearchableItems(context: AccountContext) -> [SettingsSearcha
     items.append(
         SettingsSearchableItem(
             id: "stars",
-            title: strings.Settings_Stars,
+            title: strings.Settings_Diamonds,
             alternate: [],
             icon: .stars,
             breadcrumbs: [],
@@ -849,8 +849,8 @@ private func premiumSearchableItems(context: AccountContext) -> [SettingsSearcha
                                             scale: 0.066,
                                             colors: [:],
                                             title: nil,
-                                            text: presentationData.strings.Stars_Intro_StarsSent(Int32(stars)),
-                                            customUndoText: presentationData.strings.Stars_Intro_StarsSent_ViewChat,
+                                            text: presentationData.strings.Diamonds_Intro_DiamondsSent(Int32(stars)),
+                                            customUndoText: presentationData.strings.Diamonds_Intro_DiamondsSent_ViewChat,
                                             timeout: nil
                                         ),
                                         elevatedLayout: false,
@@ -893,10 +893,10 @@ private func premiumSearchableItems(context: AccountContext) -> [SettingsSearcha
         items.append(
             SettingsSearchableItem(
                 id: "stars/earn",
-                title: strings.Monetization_EarnStarsInfo_Title,
+                title: strings.Monetization_EarnDiamondsInfo_Title,
                 alternate: [],
                 icon: .stars,
-                breadcrumbs: [strings.Settings_Stars],
+                breadcrumbs: [strings.Settings_Diamonds],
                 present: { context, navigationController, present in
                     let _ = (context.sharedContext.makeAffiliateProgramSetupScreenInitialData(context: context, peerId: context.account.peerId, mode: .connectedPrograms)
                     |> deliverOnMainQueue).startStandalone(next: { initialData in

@@ -61,7 +61,7 @@ public final class ChatMessageSuggestedPostInfoNode: ASDisplayNode {
             if let amount, amount.amount != .zero {
                 switch amount.currency {
                 case .stars:
-                    amountString = item.presentationData.strings.Chat_PostApproval_DetailStatus_StarsAmount(Int32((amount.amount.value == 1 && amount.amount.nanos == 0) ? 1 : 100)).replacingOccurrences(of: "#", with: "\(amount.amount)")
+                    amountString = item.presentationData.strings.Chat_PostApproval_DetailStatus_DiamondsAmount(Int32((amount.amount.value == 1 && amount.amount.nanos == 0) ? 1 : 100)).replacingOccurrences(of: "#", with: "\(amount.amount)")
                 case .ton:
                     amountString = item.presentationData.strings.Chat_PostApproval_DetailStatus_TonAmount(Int32((amount.amount.value == 1 * 1_000_000_000) ? 1 : 100)).replacingOccurrences(of: "#", with: "\(formatTonAmountText(amount.amount.value, dateTimeFormat: item.presentationData.dateTimeFormat, maxDecimalPositions: 3))")
                 }

@@ -286,7 +286,7 @@ private func proxySettingsControllerEntries(theme: PresentationTheme, strings: P
                 case .socks5:
                     text = strings.ChatSettings_ConnectionType_UseSocks5
                 case .mtp:
-                    text = strings.SocksProxySetup_ProxyTelegram
+                    text = strings.SocksProxySetup_ProxyAnsible
             }
             switch status {
                 case .notAvailable:
