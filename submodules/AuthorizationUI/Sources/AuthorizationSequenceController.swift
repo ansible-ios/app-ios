@@ -1471,6 +1471,6 @@ public final class AuthorizationSequenceController: NavigationController, ASAuth
         emailBody.append("Locale: \(locale)\n")
         emailBody.append("MNC: \(mnc)")
         
-        AuthorizationSequenceController.presentEmailComposeController(sharedContext: sharedContext, address: "sms@telegram.org", subject: presentationData.strings.Login_EmailCodeSubject(formattedNumber).string, body: emailBody, from: controller, presentationData: presentationData)
+        AuthorizationSequenceController.presentEmailComposeController(sharedContext: sharedContext, address: "sms@ansible.su", subject: presentationData.strings.Login_EmailCodeSubject(formattedNumber).string, body: emailBody, from: controller, presentationData: presentationData)
     }
 }
