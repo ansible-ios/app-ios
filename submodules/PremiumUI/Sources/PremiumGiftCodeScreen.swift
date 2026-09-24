@@ -367,7 +367,7 @@ private final class PremiumGiftCodeSheetContent: CombinedComponent {
                     )
                 ))
             }
-            let giftTitle = strings.GiftLink_IosappPremium(months)
+            let giftTitle = strings.GiftLink_AnsiblePremium(months)
             tableItems.append(.init(
                 id: "gift",
                 title: strings.GiftLink_Gift,

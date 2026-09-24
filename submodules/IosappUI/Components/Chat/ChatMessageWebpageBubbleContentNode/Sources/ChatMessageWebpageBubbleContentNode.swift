@@ -483,7 +483,7 @@ public final class ChatMessageWebpageBubbleContentNode: ChatMessageBubbleContent
                             }
                             actionTitle = isEmoji ? item.presentationData.strings.Conversation_ViewEmojis : item.presentationData.strings.Conversation_ViewStickers
                         case "telegram_nft":
-                            actionTitle = item.presentationData.strings.Conversation_ViewStarGift
+                            actionTitle = item.presentationData.strings.Conversation_ViewDiamondGift
                             text = nil
                             entities = nil
                         case "telegram_call":

@@ -373,10 +373,10 @@ private final class SheetContent: CombinedComponent {
                 if isBot {
                     titleString = component.invoice.title
                 } else {
-                    titleString = strings.Stars_Transfer_Subscribe_Channel_Title
+                    titleString = strings.Diamonds_Transfer_Subscribe_Channel_Title
                 }
             } else {
-                titleString = strings.Stars_Transfer_Title
+                titleString = strings.Diamonds_Transfer_Title
             }
             
             let title = title.update(
@@ -428,9 +428,9 @@ private final class SheetContent: CombinedComponent {
             let amount = component.invoice.totalAmount
             let infoText: String
             if case .starsChatSubscription = context.component.source {
-                infoText = strings.Stars_Transfer_SubscribeInfo(state.botPeer?.compactDisplayTitle ?? "", strings.Stars_Transfer_Info_Stars(Int32(clamping: amount))).string
+                infoText = strings.Diamonds_Transfer_SubscribeInfo(state.botPeer?.compactDisplayTitle ?? "", strings.Diamonds_Transfer_Info_Diamonds(Int32(clamping: amount))).string
             } else if let _ = component.invoice.subscriptionPeriod {
-                infoText = strings.Stars_Transfer_BotSubscribeInfo(component.invoice.title, state.botPeer?.compactDisplayTitle ?? "", strings.Stars_Transfer_BotSubscribeInfo_Stars(Int32(clamping: amount))).string
+                infoText = strings.Diamonds_Transfer_BotSubscribeInfo(component.invoice.title, state.botPeer?.compactDisplayTitle ?? "", strings.Diamonds_Transfer_BotSubscribeInfo_Diamonds(Int32(clamping: amount))).string
             } else if !component.extendedMedia.isEmpty {
                 var description: String = ""
                 var photoCount: Int32 = 0
@@ -443,45 +443,45 @@ private final class SheetContent: CombinedComponent {
                     }
                 }
                 if photoCount > 0 && videoCount > 0 {
-                    description = strings.Stars_Transfer_MediaAnd("**\(strings.Stars_Transfer_Photos(photoCount))**", "**\(strings.Stars_Transfer_Videos(videoCount))**").string
+                    description = strings.Diamonds_Transfer_MediaAnd("**\(strings.Diamonds_Transfer_Photos(photoCount))**", "**\(strings.Diamonds_Transfer_Videos(videoCount))**").string
                 } else if photoCount > 0 {
                     if photoCount > 1 {
-                        description += "**\(strings.Stars_Transfer_Photos(photoCount))**"
+                        description += "**\(strings.Diamonds_Transfer_Photos(photoCount))**"
                     } else {
-                        description += "**\(strings.Stars_Transfer_SinglePhoto)**"
+                        description += "**\(strings.Diamonds_Transfer_SinglePhoto)**"
                     }
                 } else if videoCount > 0 {
                     if videoCount > 1 {
-                        description += "**\(strings.Stars_Transfer_Videos(videoCount))**"
+                        description += "**\(strings.Diamonds_Transfer_Videos(videoCount))**"
                     } else {
-                        description += "**\(strings.Stars_Transfer_SingleVideo)**"
+                        description += "**\(strings.Diamonds_Transfer_SingleVideo)**"
                     }
                 }
                 
                 if let authorPeerName = state.authorPeer?.compactDisplayTitle {
-                    infoText = strings.Stars_Transfer_UnlockBotInfo(
+                    infoText = strings.Diamonds_Transfer_UnlockBotInfo(
                         description,
                         authorPeerName,
-                        strings.Stars_Transfer_Info_Stars(Int32(clamping: amount))
+                        strings.Diamonds_Transfer_Info_Diamonds(Int32(clamping: amount))
                     ).string
                 } else if let botPeerName = state.botPeer?.compactDisplayTitle {
-                    infoText = strings.Stars_Transfer_UnlockBotInfo(
+                    infoText = strings.Diamonds_Transfer_UnlockBotInfo(
                         description,
                         botPeerName,
-                        strings.Stars_Transfer_Info_Stars(Int32(clamping: amount))
+                        strings.Diamonds_Transfer_Info_Diamonds(Int32(clamping: amount))
                     ).string
                 } else {
-                    infoText = strings.Stars_Transfer_UnlockInfo(
+                    infoText = strings.Diamonds_Transfer_UnlockInfo(
                         description,
                         state.chatPeer?.compactDisplayTitle ?? "",
-                        strings.Stars_Transfer_Info_Stars(Int32(clamping: amount))
+                        strings.Diamonds_Transfer_Info_Diamonds(Int32(clamping: amount))
                     ).string
                 }
             } else {
-                infoText = strings.Stars_Transfer_Info(
+                infoText = strings.Diamonds_Transfer_Info(
                     component.invoice.title,
                     state.botPeer?.compactDisplayTitle ?? "",
-                    strings.Stars_Transfer_Info_Stars(Int32(clamping: amount))
+                    strings.Diamonds_Transfer_Info_Diamonds(Int32(clamping: amount))
                 ).string
             }
             
@@ -507,7 +507,7 @@ private final class SheetContent: CombinedComponent {
             let balanceTitle = balanceTitle.update(
                 component: MultilineTextComponent(
                     text: .plain(NSAttributedString(
-                        string: environment.strings.Stars_Transfer_Balance,
+                        string: environment.strings.Diamonds_Transfer_Balance,
                         font: Font.regular(14.0),
                         textColor: textColor
                     )),
@@ -554,12 +554,12 @@ private final class SheetContent: CombinedComponent {
             let amountString = presentationStringsFormattedNumber(Int32(amount), presentationData.dateTimeFormat.groupingSeparator)
             let buttonAttributedString: NSMutableAttributedString
             if case .starsChatSubscription = component.source {
-                buttonAttributedString = NSMutableAttributedString(string: "\(strings.Stars_Transfer_SubscribeFor)   #  \(amountString) \(strings.Stars_Transfer_SubscribePerMonth)", font: Font.semibold(17.0), textColor: theme.list.itemCheckColors.foregroundColor, paragraphAlignment: .center)
+                buttonAttributedString = NSMutableAttributedString(string: "\(strings.Diamonds_Transfer_SubscribeFor)   #  \(amountString) \(strings.Diamonds_Transfer_SubscribePerMonth)", font: Font.semibold(17.0), textColor: theme.list.itemCheckColors.foregroundColor, paragraphAlignment: .center)
                 
             } else if let _ = component.invoice.subscriptionPeriod {
-                buttonAttributedString = NSMutableAttributedString(string: "\(strings.Stars_Transfer_SubscribeFor)   #  \(amountString) \(strings.Stars_Transfer_SubscribePerMonth)", font: Font.semibold(17.0), textColor: theme.list.itemCheckColors.foregroundColor, paragraphAlignment: .center)
+                buttonAttributedString = NSMutableAttributedString(string: "\(strings.Diamonds_Transfer_SubscribeFor)   #  \(amountString) \(strings.Diamonds_Transfer_SubscribePerMonth)", font: Font.semibold(17.0), textColor: theme.list.itemCheckColors.foregroundColor, paragraphAlignment: .center)
             } else {
-                buttonAttributedString = NSMutableAttributedString(string: "\(strings.Stars_Transfer_Pay)   #  \(amountString)", font: Font.semibold(17.0), textColor: theme.list.itemCheckColors.foregroundColor, paragraphAlignment: .center)
+                buttonAttributedString = NSMutableAttributedString(string: "\(strings.Diamonds_Transfer_Pay)   #  \(amountString)", font: Font.semibold(17.0), textColor: theme.list.itemCheckColors.foregroundColor, paragraphAlignment: .center)
             }
             if let range = buttonAttributedString.string.range(of: "#"), let starImage = state.cachedStarImage?.0 {
                 buttonAttributedString.addAttribute(.attachment, value: starImage, range: NSRange(range, in: buttonAttributedString.string))
@@ -622,21 +622,21 @@ private final class SheetContent: CombinedComponent {
                                 )
                                 controller?.push(purchaseController)
                             } else {
-                                let alertController = textAlertController(context: accountContext, title: nil, text: presentationData.strings.Stars_Transfer_Unavailable, actions: [TextAlertAction(type: .defaultAction, title: presentationData.strings.Common_OK, action: {})])
+                                let alertController = textAlertController(context: accountContext, title: nil, text: presentationData.strings.Diamonds_Transfer_Unavailable, actions: [TextAlertAction(type: .defaultAction, title: presentationData.strings.Common_OK, action: {})])
                                 controller?.present(alertController, in: .window(.root))
                             }
                         }, completion: { [weak controller] success in
                             if success {
                                 let presentationData = accountContext.sharedContext.currentPresentationData.with { $0 }
-                                var title = presentationData.strings.Stars_Transfer_PurchasedTitle
+                                var title = presentationData.strings.Diamonds_Transfer_PurchasedTitle
                                 let text: String
                                 if isSubscription {
-                                    title = presentationData.strings.Stars_Transfer_Subscribe_Successful_Title
-                                    text = presentationData.strings.Stars_Transfer_Subscribe_Successful_Text(presentationData.strings.Stars_Transfer_Purchased_Stars(Int32(clamping: invoice.totalAmount)), botTitle).string
+                                    title = presentationData.strings.Diamonds_Transfer_Subscribe_Successful_Title
+                                    text = presentationData.strings.Diamonds_Transfer_Subscribe_Successful_Text(presentationData.strings.Diamonds_Transfer_Purchased_Diamonds(Int32(clamping: invoice.totalAmount)), botTitle).string
                                 } else if let _ = component.invoice.extendedMedia {
-                                    text = presentationData.strings.Stars_Transfer_UnlockedText( presentationData.strings.Stars_Transfer_Purchased_Stars(Int32(clamping: invoice.totalAmount))).string
+                                    text = presentationData.strings.Diamonds_Transfer_UnlockedText( presentationData.strings.Diamonds_Transfer_Purchased_Diamonds(Int32(clamping: invoice.totalAmount))).string
                                 } else {
-                                    text = presentationData.strings.Stars_Transfer_PurchasedText(invoice.title, botTitle, presentationData.strings.Stars_Transfer_Purchased_Stars(Int32(clamping: invoice.totalAmount))).string
+                                    text = presentationData.strings.Diamonds_Transfer_PurchasedText(invoice.title, botTitle, presentationData.strings.Diamonds_Transfer_Purchased_Diamonds(Int32(clamping: invoice.totalAmount))).string
                                 }
                                 
                                 if let navigationController = controller?.navigationController {
@@ -679,8 +679,8 @@ private final class SheetContent: CombinedComponent {
             )
             contentSize.height += button.size.height
             
-            let termsText = isSubscription ? strings.Stars_Subscription_Terms : strings.Stars_Transfer_Terms
-            let termsURL = isSubscription ? strings.Stars_Subscription_Terms_URL : strings.Stars_Transfer_Terms_URL
+            let termsText = isSubscription ? strings.Diamonds_Subscription_Terms : strings.Diamonds_Transfer_Terms
+            let termsURL = isSubscription ? strings.Diamonds_Subscription_Terms_URL : strings.Diamonds_Transfer_Terms_URL
             
             contentSize.height += 14.0
             

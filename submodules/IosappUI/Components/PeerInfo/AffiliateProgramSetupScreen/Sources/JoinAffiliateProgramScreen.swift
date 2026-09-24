@@ -1241,7 +1241,7 @@ private final class JoinAffiliateProgramScreenComponent: Component {
                             return
                         }
                         let presentationData = component.context.sharedContext.currentPresentationData.with { $0 }
-                        component.context.sharedContext.openExternalUrl(context: component.context, urlContext: .generic, url: environment.strings.Stars_Purchase_Terms_URL, forceExternal: false, presentationData: presentationData, navigationController: navigationController, dismissInput: {})
+                        component.context.sharedContext.openExternalUrl(context: component.context, urlContext: .generic, url: environment.strings.Diamonds_Purchase_Terms_URL, forceExternal: false, presentationData: presentationData, navigationController: navigationController, dismissInput: {})
                     }
                 )),
                 environment: {},

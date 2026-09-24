@@ -129,7 +129,7 @@ public class ChatMessageGiftOfferBubbleContentNode: ChatMessageBubbleContentNode
                     let priceString: String
                     switch amount.currency {
                     case .stars:
-                        priceString = item.presentationData.strings.Notification_StarGiftOffer_Offer_Stars(Int32(clamping: amount.amount.value))
+                        priceString = item.presentationData.strings.Notification_DiamondGiftOffer_Offer_Diamonds(Int32(clamping: amount.amount.value))
                     case .ton:
                         priceString = formatTonAmountText(amount.amount.value, dateTimeFormat: item.presentationData.dateTimeFormat, formatString: item.presentationData.strings.Currency_Grams)
                     }
@@ -144,34 +144,34 @@ public class ChatMessageGiftOfferBubbleContentNode: ChatMessageBubbleContentNode
                     }
                     
                     if incoming {
-                        text = item.presentationData.strings.Notification_StarGiftOffer_Offer(peerName, priceString, giftTitle).string
+                        text = item.presentationData.strings.Notification_DiamondGiftOffer_Offer(peerName, priceString, giftTitle).string
                     } else {
-                        text = item.presentationData.strings.Notification_StarGiftOffer_OfferYou(peerName, priceString, giftTitle).string
+                        text = item.presentationData.strings.Notification_DiamondGiftOffer_OfferYou(peerName, priceString, giftTitle).string
                     }
                     
                     if isAccepted {
-                        additionalText = item.presentationData.strings.Notification_StarGiftOffer_Status_Accepted
+                        additionalText = item.presentationData.strings.Notification_DiamondGiftOffer_Status_Accepted
                     } else if isDeclined {
-                        additionalText = item.presentationData.strings.Notification_StarGiftOffer_Status_Rejected
+                        additionalText = item.presentationData.strings.Notification_DiamondGiftOffer_Status_Rejected
                     } else if expireDate > currentTimestamp {
                         func textForTimeout(_ value: Int32) -> String {
                             if value < 3600 {
                                 let minutes = value / 60
-                                return item.presentationData.strings.Notification_StarGiftOffer_Expiration_Minutes(minutes)
+                                return item.presentationData.strings.Notification_DiamondGiftOffer_Expiration_Minutes(minutes)
                             } else {
                                 let hours = value / 3600
                                 let minutes = (value % 3600) / 60
-                                return item.presentationData.strings.Notification_StarGiftOffer_Expiration_Hours(hours) + item.presentationData.strings.Notification_StarGiftOffer_Expiration_Delimiter + item.presentationData.strings.Notification_StarGiftOffer_Expiration_Minutes(minutes)
+                                return item.presentationData.strings.Notification_DiamondGiftOffer_Expiration_Hours(hours) + item.presentationData.strings.Notification_DiamondGiftOffer_Expiration_Delimiter + item.presentationData.strings.Notification_DiamondGiftOffer_Expiration_Minutes(minutes)
                             }
                         }
                         let delta = expireDate - currentTimestamp
-                        additionalText = item.presentationData.strings.Notification_StarGiftOffer_Status_Expires(textForTimeout(delta)).string
+                        additionalText = item.presentationData.strings.Notification_DiamondGiftOffer_Status_Expires(textForTimeout(delta)).string
 
                         if incoming {
                             hasActionButtons = true
                         }
                     } else {
-                        additionalText = item.presentationData.strings.Notification_StarGiftOffer_Status_Expired
+                        additionalText = item.presentationData.strings.Notification_DiamondGiftOffer_Status_Expired
                     }
                 } else {
                     text = ""

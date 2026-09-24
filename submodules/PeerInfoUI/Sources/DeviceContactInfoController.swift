@@ -676,7 +676,7 @@ private func deviceContactInfoEntries(context: ShareControllerAccountContext, pr
         if let _ = peer {
             entries.append(.sendMessage(entries.count, presentationData.theme, presentationData.strings.UserInfo_SendMessage))
         } else {
-            entries.append(.invite(entries.count, presentationData.theme, presentationData.strings.Contacts_InviteToTelegram))
+            entries.append(.invite(entries.count, presentationData.theme, presentationData.strings.Contacts_InviteToAnsible))
         }
         
         if !isContact {
@@ -915,7 +915,7 @@ public func deviceContactInfoController(context: ShareControllerAccountContext, 
                 }
                 controller.setItemGroups([
                     ActionSheetItemGroup(items: [
-                        ActionSheetButtonItem(title: presentationData.strings.UserInfo_IosappCall, action: {
+                        ActionSheetButtonItem(title: presentationData.strings.UserInfo_AnsibleCall, action: {
                             dismissAction()
                             context.requestCall(peerId: user.id, isVideo: false, completion: {})
                         }),

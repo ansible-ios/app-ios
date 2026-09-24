@@ -537,7 +537,7 @@ final class ChatbotSetupScreenComponent: Component {
                 } else if key == .transferAndUpgradeGifts {
                     text = environment.strings.ChatbotSetup_Gift_Warning_GiftsText(botUsername).string
                 } else if key == .transferStars {
-                    text = environment.strings.ChatbotSetup_Gift_Warning_StarsText(botUsername).string
+                    text = environment.strings.ChatbotSetup_Gift_Warning_DiamondsText(botUsername).string
                 } else {
                     text = environment.strings.ChatbotSetup_Gift_Warning_CombinedText(botUsername).string
                 }
@@ -635,12 +635,12 @@ final class ChatbotSetupScreenComponent: Component {
                         Permission(id: "avatar", key: .editProfilePhoto, title: environment.strings.ChatbotSetup_Rights_EditProfilePhoto),
                         Permission(id: "username", key: .editUsername,  title: environment.strings.ChatbotSetup_Rights_EditUsername)
                     ], expanded: false),
-                    Permission(id: "gifts", title: environment.strings.ChatbotSetup_Rights_ManageGiftsAndStars, subpermissions: [
+                    Permission(id: "gifts", title: environment.strings.ChatbotSetup_Rights_ManageGiftsAndDiamonds, subpermissions: [
                         Permission(id: "view", key: .viewGifts, title: environment.strings.ChatbotSetup_Rights_ViewGifts),
                         Permission(id: "sell", key: .sellGifts, title: environment.strings.ChatbotSetup_Rights_SellGifts),
                         Permission(id: "settings", key: .changeGiftSettings, title: environment.strings.ChatbotSetup_Rights_ChangeGiftSettings),
                         Permission(id: "transfer", key: .transferAndUpgradeGifts, title: environment.strings.ChatbotSetup_Rights_TransferAndUpgradeGifts),
-                        Permission(id: "transferStars", key: .transferStars, title: environment.strings.ChatbotSetup_Rights_TransferStars)
+                        Permission(id: "transferStars", key: .transferStars, title: environment.strings.ChatbotSetup_Rights_TransferDiamonds)
                     ], expanded: false),
                     Permission(id: "stories", key: .manageStories, title: environment.strings.ChatbotSetup_Rights_ManageStories)
                 ]

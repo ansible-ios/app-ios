@@ -3184,7 +3184,7 @@ public final class SharedAccountContextImpl: SharedAccountContext {
             context: context,
             mode: starsMode,
             autoDismiss: false,
-            title: { strings in return strings.Stars_Purchase_GiftStars },
+            title: { strings in return strings.Diamonds_Purchase_GiftDiamonds },
             options: contactOptions
         ))
         let _ = (controller.result
@@ -3309,7 +3309,7 @@ public final class SharedAccountContextImpl: SharedAccountContext {
         if case .starGiftTransfer = source {
             title = presentationData.strings.Gift_Transfer_Title
         } else {
-            title = presentationData.strings.Gift_PremiumOrStars_Title
+            title = presentationData.strings.Gift_PremiumOrDiamonds_Title
         }
         
         let options = Promise<[PremiumGiftCodeOption]>()

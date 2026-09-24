@@ -755,7 +755,7 @@ private func notificationPeerExceptionEntries(presentationData: PresentationData
     if displaySounds {
         let defaultSound = isStories == true ? state.defaultStoriesSound : state.defaultSound
         
-        entries.append(.cloudHeader(index: index, text: presentationData.strings.Notifications_IosappTones))
+        entries.append(.cloudHeader(index: index, text: presentationData.strings.Notifications_AnsibleTones))
         index += 1
         
         index = 1000

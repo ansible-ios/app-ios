@@ -340,7 +340,7 @@ public final class StatsGraphItemNode: ListViewItemNode {
                                 zoomOut: item.presentationData.strings.Stats_ZoomOut,
                                 total: item.presentationData.strings.Stats_Total,
                                 revenueInTon: item.presentationData.strings.Stats_RevenueInTon,
-                                revenueInStars: item.presentationData.strings.Stats_RevenueInStars,
+                                revenueInStars: item.presentationData.strings.Stats_RevenueInDiamonds,
                                 revenueInUsd: item.presentationData.strings.Stats_RevenueInUsd
                             )
                         )

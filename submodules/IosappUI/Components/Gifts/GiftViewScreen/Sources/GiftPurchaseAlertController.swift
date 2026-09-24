@@ -111,7 +111,7 @@ public func giftPurchaseAlertController(
         switch currency {
         case .stars:
             if let resellAmount = gift.resellAmounts?.first(where: { $0.currency == .stars }) {
-                priceString = strings.Gift_Buy_Confirm_Text_Stars(Int32(clamping: resellAmount.amount.value))
+                priceString = strings.Gift_Buy_Confirm_Text_Diamonds(Int32(clamping: resellAmount.amount.value))
             }
         case .ton:
             if let resellAmount = gift.resellAmounts?.first(where: { $0.currency == .ton }) {
@@ -369,7 +369,7 @@ private final class AlertCurrencyComponent: Component {
                     items: [
                         TabSelectorComponent.Item(
                             id: AnyHashable(0),
-                            content: .text(environment.strings.Gift_Buy_PayInStars)
+                            content: .text(environment.strings.Gift_Buy_PayInDiamonds)
                         ),
                         TabSelectorComponent.Item(
                             id: AnyHashable(1),

@@ -211,13 +211,13 @@ private final class StarsPurchaseScreenContentComponent: CombinedComponent {
             let textString: String
             switch context.component.purpose {
             case .generic:
-                textString = strings.Stars_Purchase_GetStarsInfo
+                textString = strings.Diamonds_Purchase_GetDiamondsInfo
             case let .topUp(_, purpose):
-                var text = strings.Stars_Purchase_GenericPurchasePurpose
+                var text = strings.Diamonds_Purchase_GenericPurchasePurpose
                 if let purpose, !purpose.isEmpty {
                     switch purpose {
                     case "subs":
-                        text = strings.Stars_Purchase_PurchasePurpose_subs
+                        text = strings.Diamonds_Purchase_PurchasePurpose_subs
                     default:
                         let key = "Stars.Purchase.PurchasePurpose.\(purpose)"
                         if let string = strings.primaryComponent.dict[key] {
@@ -229,33 +229,33 @@ private final class StarsPurchaseScreenContentComponent: CombinedComponent {
                 }
                 textString = text
             case .gift:
-                textString = strings.Stars_Purchase_GiftInfo(component.peers.first?.value.compactDisplayTitle ?? "").string
+                textString = strings.Diamonds_Purchase_GiftInfo(component.peers.first?.value.compactDisplayTitle ?? "").string
             case .transfer:
-                textString = strings.Stars_Purchase_StarsNeededInfo(component.peers.first?.value.compactDisplayTitle ?? "").string
+                textString = strings.Diamonds_Purchase_DiamondsNeededInfo(component.peers.first?.value.compactDisplayTitle ?? "").string
             case .reactions:
-                textString = strings.Stars_Purchase_StarsReactionsNeededInfo(component.peers.first?.value.compactDisplayTitle ?? "").string
+                textString = strings.Diamonds_Purchase_DiamondsReactionsNeededInfo(component.peers.first?.value.compactDisplayTitle ?? "").string
             case let .subscription(_, _, renew):
-                textString = renew ? strings.Stars_Purchase_SubscriptionRenewInfo(component.peers.first?.value.compactDisplayTitle ?? "").string : strings.Stars_Purchase_SubscriptionInfo(component.peers.first?.value.compactDisplayTitle ?? "").string
+                textString = renew ? strings.Diamonds_Purchase_SubscriptionRenewInfo(component.peers.first?.value.compactDisplayTitle ?? "").string : strings.Diamonds_Purchase_SubscriptionInfo(component.peers.first?.value.compactDisplayTitle ?? "").string
             case .unlockMedia:
-                textString = strings.Stars_Purchase_StarsNeededUnlockInfo
+                textString = strings.Diamonds_Purchase_DiamondsNeededUnlockInfo
             case .starGift:
-                textString = strings.Stars_Purchase_StarGiftInfo(component.peers.first?.value.compactDisplayTitle ?? "").string
+                textString = strings.Diamonds_Purchase_DiamondGiftInfo(component.peers.first?.value.compactDisplayTitle ?? "").string
             case .upgradeStarGift:
-                textString = strings.Stars_Purchase_UpgradeStarGiftInfo
+                textString = strings.Diamonds_Purchase_UpgradeDiamondGiftInfo
             case .transferStarGift:
-                textString = strings.Stars_Purchase_TransferStarGiftInfo
+                textString = strings.Diamonds_Purchase_TransferDiamondGiftInfo
             case let .sendMessage(peerId, _):
                 if peerId.namespace == Namespaces.Peer.CloudUser {
-                    textString = strings.Stars_Purchase_SendMessageInfo(component.peers.first?.value.compactDisplayTitle ?? "").string
+                    textString = strings.Diamonds_Purchase_SendMessageInfo(component.peers.first?.value.compactDisplayTitle ?? "").string
                 } else {
-                    textString = strings.Stars_Purchase_SendGroupMessageInfo(component.peers.first?.value.compactDisplayTitle ?? "").string
+                    textString = strings.Diamonds_Purchase_SendGroupMessageInfo(component.peers.first?.value.compactDisplayTitle ?? "").string
                 }
             case .buyStarGift:
-                textString = strings.Stars_Purchase_BuyStarGiftInfo
+                textString = strings.Diamonds_Purchase_BuyDiamondGiftInfo
             case .removeOriginalDetailsStarGift:
-                textString = strings.Stars_Purchase_RemoveOriginalDetailsStarGiftInfo
+                textString = strings.Diamonds_Purchase_RemoveOriginalDetailsDiamondGiftInfo
             case .starGiftOffer:
-                textString = strings.Stars_Purchase_StarGiftOfferInfo
+                textString = strings.Diamonds_Purchase_DiamondGiftOfferInfo
             }
             
             let markdownAttributes = MarkdownAttributes(body: MarkdownAttributeSet(font: textFont, textColor: textColor), bold: MarkdownAttributeSet(font: boldTextFont, textColor: textColor), link: MarkdownAttributeSet(font: textFont, textColor: accentColor), linkAttribute: { contents in
@@ -336,7 +336,7 @@ private final class StarsPurchaseScreenContentComponent: CombinedComponent {
                         continue
                     }
                     
-                    let title = strings.Stars_Purchase_Stars(Int32(clamping: product.count))
+                    let title = strings.Diamonds_Purchase_Diamonds(Int32(clamping: product.count))
                     let price = product.price
                     
                     let titleComponent = AnyComponent(MultilineTextComponent(
@@ -405,7 +405,7 @@ private final class StarsPurchaseScreenContentComponent: CombinedComponent {
             if !context.component.expanded && collapsedItems > 0 {
                 let titleComponent = AnyComponent(MultilineTextComponent(
                     text: .plain(NSAttributedString(
-                        string: strings.Stars_Purchase_ShowMore,
+                        string: strings.Diamonds_Purchase_ShowMore,
                         font: Font.regular(presentationData.listsFontSize.baseDisplaySize),
                         textColor: environment.theme.list.itemAccentColor
                     )),
@@ -464,7 +464,7 @@ private final class StarsPurchaseScreenContentComponent: CombinedComponent {
             
             let termsText = termsText.update(
                 component: BalancedTextComponent(
-                    text: .markdown(text: strings.Stars_Purchase_Info, attributes: termsMarkdownAttributes),
+                    text: .markdown(text: strings.Diamonds_Purchase_Info, attributes: termsMarkdownAttributes),
                     horizontalAlignment: .center,
                     maximumNumberOfLines: 0,
                     lineSpacing: 0.2,
@@ -480,7 +480,7 @@ private final class StarsPurchaseScreenContentComponent: CombinedComponent {
                         guard let controller = controller(), let navigationController = controller.navigationController as? NavigationController else {
                             return
                         }
-                        component.context.sharedContext.openExternalUrl(context: component.context, urlContext: .generic, url: strings.Stars_Purchase_Terms_URL, forceExternal: false, presentationData: presentationData, navigationController: navigationController, dismissInput: {})
+                        component.context.sharedContext.openExternalUrl(context: component.context, urlContext: .generic, url: strings.Diamonds_Purchase_Terms_URL, forceExternal: false, presentationData: presentationData, navigationController: navigationController, dismissInput: {})
                     }
                 ),
                 environment: {},
@@ -819,11 +819,11 @@ private final class StarsPurchaseScreenComponent: CombinedComponent {
             let titleText: String
             switch context.component.purpose {
             case .generic:
-                titleText = strings.Stars_Purchase_GetStars
+                titleText = strings.Diamonds_Purchase_GetDiamonds
             case .gift:
-                titleText = strings.Stars_Purchase_GiftStars
+                titleText = strings.Diamonds_Purchase_GiftDiamonds
             case let .topUp(requiredStars, _), let .transfer(_, requiredStars), let .reactions(_, requiredStars), let .subscription(_, requiredStars, _), let .unlockMedia(requiredStars), let .starGift(_, requiredStars), let .upgradeStarGift(requiredStars), let .transferStarGift(requiredStars), let .sendMessage(_, requiredStars), let .buyStarGift(requiredStars), let .removeOriginalDetailsStarGift(requiredStars), let .starGiftOffer(requiredStars):
-                titleText = strings.Stars_Purchase_StarsNeeded(Int32(requiredStars))
+                titleText = strings.Diamonds_Purchase_DiamondsNeeded(Int32(requiredStars))
             }
             
             let title = title.update(
@@ -840,7 +840,7 @@ private final class StarsPurchaseScreenComponent: CombinedComponent {
             let balanceTitle = balanceTitle.update(
                 component: MultilineTextComponent(
                     text: .plain(NSAttributedString(
-                        string: environment.strings.Stars_Purchase_Balance,
+                        string: environment.strings.Diamonds_Purchase_Balance,
                         font: Font.regular(14.0),
                         textColor: environment.theme.actionSheet.primaryTextColor
                     )),

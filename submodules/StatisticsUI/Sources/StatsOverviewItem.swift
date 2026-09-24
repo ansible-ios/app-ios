@@ -771,7 +771,7 @@ class StatsOverviewItemNode: ListViewItemNode {
                         params.width,
                         item.presentationData,
                         formatTonAmountText(stats.balances.availableBalance.amount.value, dateTimeFormat: item.presentationData.dateTimeFormat),
-                        item.presentationData.strings.Monetization_StarsProceeds_Available,
+                        item.presentationData.strings.Monetization_DiamondsProceeds_Available,
                         (stats.balances.availableBalance.amount.value == 0 ? "" : "~\(formatTonUsdValue(stats.balances.availableBalance.amount.value, rate: stats.usdRate, dateTimeFormat: item.presentationData.dateTimeFormat))", .generic),
                         .ton
                     )
@@ -781,7 +781,7 @@ class StatsOverviewItemNode: ListViewItemNode {
                         params.width,
                         item.presentationData,
                         formatTonAmountText(stats.balances.currentBalance.amount.value, dateTimeFormat: item.presentationData.dateTimeFormat),
-                        item.presentationData.strings.Monetization_StarsProceeds_Current,
+                        item.presentationData.strings.Monetization_DiamondsProceeds_Current,
                         (stats.balances.currentBalance.amount.value == 0 ? "" : "~\(formatTonUsdValue(stats.balances.currentBalance.amount.value, rate: stats.usdRate, dateTimeFormat: item.presentationData.dateTimeFormat))", .generic),
                         .ton
                     )
@@ -791,7 +791,7 @@ class StatsOverviewItemNode: ListViewItemNode {
                         params.width,
                         item.presentationData,
                         formatTonAmountText(stats.balances.overallRevenue.amount.value, dateTimeFormat: item.presentationData.dateTimeFormat),
-                        item.presentationData.strings.Monetization_StarsProceeds_Total,
+                        item.presentationData.strings.Monetization_DiamondsProceeds_Total,
                         (stats.balances.overallRevenue.amount.value == 0 ? "" : "~\(formatTonUsdValue(stats.balances.overallRevenue.amount.value, rate: stats.usdRate, dateTimeFormat: item.presentationData.dateTimeFormat))", .generic),
                         .ton
                     )
@@ -870,7 +870,7 @@ class StatsOverviewItemNode: ListViewItemNode {
                     params.width,
                     item.presentationData,
                     formatStarsAmountText(stats.balances.availableBalance.amount, dateTimeFormat: item.presentationData.dateTimeFormat),
-                    item.presentationData.strings.Monetization_StarsProceeds_Available,
+                    item.presentationData.strings.Monetization_DiamondsProceeds_Available,
                     (stats.balances.availableBalance.amount == StarsAmount.zero ? "" : "~\(formatTonUsdValue(stats.balances.availableBalance.amount.value, divide: false, rate: stats.usdRate, dateTimeFormat: item.presentationData.dateTimeFormat))", .generic),
                     .stars
                 )
@@ -880,7 +880,7 @@ class StatsOverviewItemNode: ListViewItemNode {
                     params.width,
                     item.presentationData,
                     formatStarsAmountText(stats.balances.currentBalance.amount, dateTimeFormat: item.presentationData.dateTimeFormat),
-                    item.presentationData.strings.Monetization_StarsProceeds_Current,
+                    item.presentationData.strings.Monetization_DiamondsProceeds_Current,
                     (stats.balances.currentBalance.amount == StarsAmount.zero ? "" : "~\(formatTonUsdValue(stats.balances.currentBalance.amount.value, divide: false, rate: stats.usdRate, dateTimeFormat: item.presentationData.dateTimeFormat))", .generic),
                     .stars
                 )
@@ -890,7 +890,7 @@ class StatsOverviewItemNode: ListViewItemNode {
                     params.width,
                     item.presentationData,
                     formatStarsAmountText(stats.balances.overallRevenue.amount, dateTimeFormat: item.presentationData.dateTimeFormat),
-                    item.presentationData.strings.Monetization_StarsProceeds_Total,
+                    item.presentationData.strings.Monetization_DiamondsProceeds_Total,
                     (stats.balances.overallRevenue.amount == StarsAmount.zero ? "" : "~\(formatTonUsdValue(stats.balances.overallRevenue.amount.value, divide: false, rate: stats.usdRate, dateTimeFormat: item.presentationData.dateTimeFormat))", .generic),
                     .stars
                 )

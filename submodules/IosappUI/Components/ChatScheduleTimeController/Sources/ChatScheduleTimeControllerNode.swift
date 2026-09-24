@@ -132,7 +132,7 @@ class ChatScheduleTimeControllerNode: ViewControllerTracingNode, ASScrollViewDel
                 switch funds.amount.currency {
                 case .stars:
                     let displayAmount = funds.amount.amount.totalValue * Double(funds.commissionPermille) / 1000.0
-                    subtitle = self.presentationData.strings.Chat_PostSuggestion_ApproveTime_AdminConfirmationPriceStars("\(displayAmount)", "\(commissionValue)").string
+                    subtitle = self.presentationData.strings.Chat_PostSuggestion_ApproveTime_AdminConfirmationPriceDiamonds("\(displayAmount)", "\(commissionValue)").string
                 case .ton:
                     let displayAmount = Double(funds.amount.amount.value) / 1000000000.0 * Double(funds.commissionPermille) / 1000.0
                     subtitle = self.presentationData.strings.Chat_PostSuggestion_ApproveTime_AdminConfirmationPriceTon("\(displayAmount)", "\(commissionValue)").string
@@ -598,7 +598,7 @@ class ChatScheduleTimeControllerNode: ViewControllerTracingNode, ASScrollViewDel
                     )),
                     content: AnyComponent(VStack([
                         AnyComponentWithIdentity(id: 0, component: AnyComponent(MultilineTextComponent(
-                            text: .markdown(text: self.presentationData.strings.Chat_PostSuggestion_StarsDisclaimer, attributes: MarkdownAttributes(body: body, bold: bold, link: body, linkAttribute: { _ in nil })),
+                            text: .markdown(text: self.presentationData.strings.Chat_PostSuggestion_DiamondsDisclaimer, attributes: MarkdownAttributes(body: body, bold: bold, link: body, linkAttribute: { _ in nil })),
                             maximumNumberOfLines: 0
                         )))
                     ], alignment: .left, spacing: 6.0)),

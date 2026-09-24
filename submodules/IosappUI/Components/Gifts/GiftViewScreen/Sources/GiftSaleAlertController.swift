@@ -79,7 +79,7 @@ public func giftSaleAlertController(
     var priceString = ""
     switch resellAmount.currency {
     case .stars:
-        priceString = strings.Gift_Buy_Confirm_Text_Stars(Int32(clamping: resellAmount.amount.value))
+        priceString = strings.Gift_Buy_Confirm_Text_Diamonds(Int32(clamping: resellAmount.amount.value))
     case .ton:
         priceString = "**\(formatTonAmountText(resellAmount.amount.value, dateTimeFormat: presentationData.dateTimeFormat, formatString: presentationData.strings.Currency_Grams))**"
     }

@@ -81,7 +81,7 @@ private final class SheetContent: CombinedComponent {
             
             let title = title.update(
                 component: BalancedTextComponent(
-                    text: .plain(NSAttributedString(string: strings.Stars_Info_Title, font: titleFont, textColor: textColor)),
+                    text: .plain(NSAttributedString(string: strings.Diamonds_Info_Title, font: titleFont, textColor: textColor)),
                     horizontalAlignment: .center,
                     maximumNumberOfLines: 0,
                     lineSpacing: 0.1
@@ -97,7 +97,7 @@ private final class SheetContent: CombinedComponent {
             
             let text = text.update(
                 component: BalancedTextComponent(
-                    text: .plain(NSAttributedString(string: strings.Stars_Info_Description, font: textFont, textColor: secondaryTextColor)),
+                    text: .plain(NSAttributedString(string: strings.Diamonds_Info_Description, font: textFont, textColor: secondaryTextColor)),
                     horizontalAlignment: .center,
                     maximumNumberOfLines: 0,
                     lineSpacing: 0.2
@@ -116,9 +116,9 @@ private final class SheetContent: CombinedComponent {
                 AnyComponentWithIdentity(
                     id: "gift",
                     component: AnyComponent(ParagraphComponent(
-                        title: strings.Stars_Info_Gift_Title,
+                        title: strings.Diamonds_Info_Gift_Title,
                         titleColor: textColor,
-                        text: strings.Stars_Info_Gift_Text,
+                        text: strings.Diamonds_Info_Gift_Text,
                         textColor: secondaryTextColor,
                         accentColor: linkColor,
                         iconName: "Premium/StarsPerk/Gift",
@@ -130,9 +130,9 @@ private final class SheetContent: CombinedComponent {
                 AnyComponentWithIdentity(
                     id: "miniapp",
                     component: AnyComponent(ParagraphComponent(
-                        title: strings.Stars_Info_Miniapp_Title,
+                        title: strings.Diamonds_Info_Miniapp_Title,
                         titleColor: textColor,
-                        text: strings.Stars_Info_Miniapp_Text,
+                        text: strings.Diamonds_Info_Miniapp_Text,
                         textColor: secondaryTextColor,
                         accentColor: linkColor,
                         iconName: "Premium/StarsPerk/Miniapp",
@@ -147,9 +147,9 @@ private final class SheetContent: CombinedComponent {
                 AnyComponentWithIdentity(
                     id: "media",
                     component: AnyComponent(ParagraphComponent(
-                        title: strings.Stars_Info_Media_Title,
+                        title: strings.Diamonds_Info_Media_Title,
                         titleColor: textColor,
-                        text: strings.Stars_Info_Media_Text,
+                        text: strings.Diamonds_Info_Media_Text,
                         textColor: secondaryTextColor,
                         accentColor: linkColor,
                         iconName: "Premium/StarsPerk/Media",
@@ -161,9 +161,9 @@ private final class SheetContent: CombinedComponent {
                 AnyComponentWithIdentity(
                     id: "reaction",
                     component: AnyComponent(ParagraphComponent(
-                        title: strings.Stars_Info_Reaction_Title,
+                        title: strings.Diamonds_Info_Reaction_Title,
                         titleColor: textColor,
-                        text: strings.Stars_Info_Reaction_Text,
+                        text: strings.Diamonds_Info_Reaction_Text,
                         textColor: secondaryTextColor,
                         accentColor: linkColor,
                         iconName: "Premium/StarsPerk/Reaction",
@@ -196,7 +196,7 @@ private final class SheetContent: CombinedComponent {
                         pressedColor: environment.theme.list.itemCheckColors.fillColor.withMultipliedAlpha(0.8)
                     ),
                     content: AnyComponentWithIdentity(id: AnyHashable(0 as Int), component: AnyComponent(
-                        Text(text: strings.Stars_Info_Done, font: Font.semibold(17.0), color: environment.theme.list.itemCheckColors.foregroundColor)
+                        Text(text: strings.Diamonds_Info_Done, font: Font.semibold(17.0), color: environment.theme.list.itemCheckColors.foregroundColor)
                     )),
                     isEnabled: true,
                     displaysProgress: false,

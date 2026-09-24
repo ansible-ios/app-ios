@@ -408,7 +408,7 @@ final class StarsStatisticsScreenComponent: Component {
                 transition: .immediate,
                 component: AnyComponent(
                     MultilineTextComponent(
-                        text: .plain(NSAttributedString(string: strings.Stars_BotRevenue_Title, font: Font.semibold(17.0), textColor: environment.theme.list.itemPrimaryTextColor)),
+                        text: .plain(NSAttributedString(string: strings.Diamonds_BotRevenue_Title, font: Font.semibold(17.0), textColor: environment.theme.list.itemPrimaryTextColor)),
                         horizontalAlignment: .center,
                         truncationType: .end,
                         maximumNumberOfLines: 1
@@ -434,7 +434,7 @@ final class StarsStatisticsScreenComponent: Component {
                         style: .glass,
                         header: AnyComponent(MultilineTextComponent(
                             text: .plain(NSAttributedString(
-                                string: strings.Stars_BotRevenue_Revenue_Title.uppercased(),
+                                string: strings.Diamonds_BotRevenue_Revenue_Title.uppercased(),
                                 font: Font.regular(presentationData.listsFontSize.itemListBaseHeaderFontSize),
                                 textColor: environment.theme.list.freeTextColor
                             )),
@@ -470,7 +470,7 @@ final class StarsStatisticsScreenComponent: Component {
                     style: .glass,
                     header: AnyComponent(MultilineTextComponent(
                         text: .plain(NSAttributedString(
-                            string: strings.Stars_BotRevenue_Proceeds_Title.uppercased(),
+                            string: strings.Diamonds_BotRevenue_Proceeds_Title.uppercased(),
                             font: Font.regular(presentationData.listsFontSize.itemListBaseHeaderFontSize),
                             textColor: environment.theme.list.freeTextColor
                         )),
@@ -478,7 +478,7 @@ final class StarsStatisticsScreenComponent: Component {
                     )),
                     footer: AnyComponent(MultilineTextComponent(
                         text: .plain(NSAttributedString(
-                            string: component.peerId == component.context.account.peerId ? strings.Stars_AccountRevenue_Proceeds_Info : strings.Stars_BotRevenue_Proceeds_Info,
+                            string: component.peerId == component.context.account.peerId ? strings.Diamonds_AccountRevenue_Proceeds_Info : strings.Diamonds_BotRevenue_Proceeds_Info,
                             font: Font.regular(13.0),
                             textColor: environment.theme.list.freeTextColor
                         )),
@@ -488,21 +488,21 @@ final class StarsStatisticsScreenComponent: Component {
                         AnyComponentWithIdentity(id: 0, component: AnyComponent(StarsOverviewItemComponent(
                             theme: environment.theme,
                             dateTimeFormat: environment.dateTimeFormat,
-                            title: strings.Stars_BotRevenue_Proceeds_Available,
+                            title: strings.Diamonds_BotRevenue_Proceeds_Available,
                             value: starsState?.balances.availableBalance ?? CurrencyAmount(amount: .zero, currency: .stars),
                             rate: starsState?.usdRate ?? 0.0
                         ))),
                         AnyComponentWithIdentity(id: 1, component: AnyComponent(StarsOverviewItemComponent(
                             theme: environment.theme,
                             dateTimeFormat: environment.dateTimeFormat,
-                            title: strings.Stars_BotRevenue_Proceeds_Current,
+                            title: strings.Diamonds_BotRevenue_Proceeds_Current,
                             value: starsState?.balances.currentBalance ?? CurrencyAmount(amount: .zero, currency: .stars),
                             rate: starsState?.usdRate ?? 0.0
                         ))),
                         AnyComponentWithIdentity(id: 2, component: AnyComponent(StarsOverviewItemComponent(
                             theme: environment.theme,
                             dateTimeFormat: environment.dateTimeFormat,
-                            title: strings.Stars_BotRevenue_Proceeds_Total,
+                            title: strings.Diamonds_BotRevenue_Proceeds_Total,
                             value: starsState?.balances.overallRevenue ?? CurrencyAmount(amount: .zero, currency: .stars),
                             rate: starsState?.usdRate ?? 0.0
                         )))
@@ -528,7 +528,7 @@ final class StarsStatisticsScreenComponent: Component {
                 return (IosappTextAttributes.URL, contents)
             })
             
-            let balanceRawString = component.peerId == component.context.account.peerId ? strings.Stars_AccountRevenue_Withdraw_Info : strings.Stars_BotRevenue_Withdraw_Info
+            let balanceRawString = component.peerId == component.context.account.peerId ? strings.Diamonds_AccountRevenue_Withdraw_Info : strings.Diamonds_BotRevenue_Withdraw_Info
             let balanceInfoString = NSMutableAttributedString(attributedString: parseMarkdownIntoAttributedString(balanceRawString, attributes: termsMarkdownAttributes, textAlignment: .natural))
             if self.cachedChevronImage == nil || self.cachedChevronImage?.1 !== environment.theme {
                 self.cachedChevronImage = (generateTintedImage(image: UIImage(bundleImageName: "Contact List/SubtitleArrow"), color: environment.theme.list.itemAccentColor)!, environment.theme)
@@ -549,7 +549,7 @@ final class StarsStatisticsScreenComponent: Component {
                             count: self.starsState?.balances.availableBalance.amount ?? StarsAmount.zero,
                             currency: .stars,
                             rate: self.starsState?.usdRate ?? 0,
-                            actionTitle: strings.Stars_Intro_Withdraw,
+                            actionTitle: strings.Diamonds_Intro_Withdraw,
                             actionAvailable: withdrawEnabled,
                             actionIsEnabled: true,
                             actionCooldownUntilTimestamp: self.starsState?.balances.nextWithdrawalTimestamp,
@@ -585,7 +585,7 @@ final class StarsStatisticsScreenComponent: Component {
                             count: self.starsState?.balances.availableBalance.amount ?? StarsAmount.zero,
                             currency: .stars,
                             rate: self.starsState?.usdRate ?? 0,
-                            actionTitle: strings.Stars_BotRevenue_Withdraw_WithdrawShort,
+                            actionTitle: strings.Diamonds_BotRevenue_Withdraw_WithdrawShort,
                             actionAvailable: true,
                             actionIsEnabled: self.starsState?.balances.withdrawEnabled ?? true,
                             actionCooldownUntilTimestamp: self.starsState?.balances.nextWithdrawalTimestamp,
@@ -607,7 +607,7 @@ final class StarsStatisticsScreenComponent: Component {
                                     component.withdraw()
                                 }
                             },
-                            secondaryActionTitle: strings.Stars_BotRevenue_Withdraw_BuyAds,
+                            secondaryActionTitle: strings.Diamonds_BotRevenue_Withdraw_BuyAds,
                             secondaryAction: { [weak self] in
                                 guard let self, let component = self.component else {
                                     return
@@ -626,7 +626,7 @@ final class StarsStatisticsScreenComponent: Component {
                     style: .glass,
                     header: AnyComponent(MultilineTextComponent(
                         text: .plain(NSAttributedString(
-                            string: strings.Stars_BotRevenue_Withdraw_Balance.uppercased(),
+                            string: strings.Diamonds_BotRevenue_Withdraw_Balance.uppercased(),
                             font: Font.regular(presentationData.listsFontSize.itemListBaseHeaderFontSize),
                             textColor: environment.theme.list.freeTextColor
                         )),
@@ -646,7 +646,7 @@ final class StarsStatisticsScreenComponent: Component {
                         },
                         tapAction: { [weak self] attributes, _ in
                             if let controller = self?.controller?() as? StarsStatisticsScreen, let navigationController = controller.navigationController as? NavigationController {
-                                component.context.sharedContext.openExternalUrl(context: component.context, urlContext: .generic, url: strings.Stars_BotRevenue_Withdraw_Info_URL, forceExternal: false, presentationData: presentationData, navigationController: navigationController, dismissInput: {})
+                                component.context.sharedContext.openExternalUrl(context: component.context, urlContext: .generic, url: strings.Diamonds_BotRevenue_Withdraw_Info_URL, forceExternal: false, presentationData: presentationData, navigationController: navigationController, dismissInput: {})
                             }
                         }
                     )),
@@ -694,7 +694,7 @@ final class StarsStatisticsScreenComponent: Component {
                 
                 panelItems.append(StarsTransactionsPanelContainerComponent.Item(
                     id: "all",
-                    title: environment.strings.Stars_Intro_AllTransactions,
+                    title: environment.strings.Diamonds_Intro_AllTransactions,
                     panel: AnyComponent(StarsTransactionsListPanelComponent(
                         context: component.context,
                         transactionsContext: allTransactionsContext,
@@ -707,7 +707,7 @@ final class StarsStatisticsScreenComponent: Component {
                 
                 panelItems.append(StarsTransactionsPanelContainerComponent.Item(
                     id: "incoming",
-                    title: environment.strings.Stars_Intro_Incoming,
+                    title: environment.strings.Diamonds_Intro_Incoming,
                     panel: AnyComponent(StarsTransactionsListPanelComponent(
                         context: component.context,
                         transactionsContext: incomingTransactionsContext,
@@ -720,7 +720,7 @@ final class StarsStatisticsScreenComponent: Component {
                 
                 panelItems.append(StarsTransactionsPanelContainerComponent.Item(
                     id: "outgoing",
-                    title: environment.strings.Stars_Intro_Outgoing,
+                    title: environment.strings.Diamonds_Intro_Outgoing,
                     panel: AnyComponent(StarsTransactionsListPanelComponent(
                         context: component.context,
                         transactionsContext: outgoingTransactionsContext,
@@ -896,8 +896,8 @@ public final class StarsStatisticsScreen: ViewControllerComponentContainer {
                             animation: "StarsBuy",
                             scale: 0.066,
                             colors: [:],
-                            title: presentationData.strings.Stars_Intro_PurchasedTitle,
-                            text: presentationData.strings.Stars_Intro_PurchasedText(presentationData.strings.Stars_Intro_PurchasedText_Stars(Int32(clamping: stars))).string,
+                            title: presentationData.strings.Diamonds_Intro_PurchasedTitle,
+                            text: presentationData.strings.Diamonds_Intro_PurchasedText(presentationData.strings.Diamonds_Intro_PurchasedText_Diamonds(Int32(clamping: stars))).string,
                             customUndoText: nil,
                             timeout: nil
                         ),
@@ -973,7 +973,7 @@ public final class StarsStatisticsScreen: ViewControllerComponentContainer {
                 scale: 0.058,
                 colors: [:],
                 title: nil,
-                text: presentationData.strings.Stars_Withdraw_Withdraw_ErrorTimeout(stringForRemainingTime(remainingCooldownSeconds)).string,
+                text: presentationData.strings.Diamonds_Withdraw_Withdraw_ErrorTimeout(stringForRemainingTime(remainingCooldownSeconds)).string,
                 customUndoText: nil,
                 timeout: nil
             )
@@ -997,7 +997,7 @@ public final class StarsStatisticsScreen: ViewControllerComponentContainer {
                                 scale: 0.058,
                                 colors: [:],
                                 title: nil,
-                                text: presentationData.strings.Stars_Withdraw_Withdraw_ErrorTimeout(stringForRemainingTime(remainingCooldownSeconds)).string,
+                                text: presentationData.strings.Diamonds_Withdraw_Withdraw_ErrorTimeout(stringForRemainingTime(remainingCooldownSeconds)).string,
                                 customUndoText: nil,
                                 timeout: nil
                             )

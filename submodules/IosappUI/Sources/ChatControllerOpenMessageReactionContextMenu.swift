@@ -420,7 +420,7 @@ extension ChatControllerImpl {
                 
                 if case let .known(reactionSettings) = reactionSettings, let starsAllowed = reactionSettings.starsAllowed, !starsAllowed {
                     if let peer = self.presentationInterfaceState.renderedPeer?.chatMainPeer {
-                        self.present(textAlertController(context: self.context, updatedPresentationData: self.updatedPresentationData, title: nil, text: self.presentationData.strings.Chat_ToastStarsReactionsDisabled(peer.debugDisplayTitle).string, actions: [
+                        self.present(textAlertController(context: self.context, updatedPresentationData: self.updatedPresentationData, title: nil, text: self.presentationData.strings.Chat_ToastDiamondsReactionsDisabled(peer.debugDisplayTitle).string, actions: [
                             TextAlertAction(type: .genericAction, title: self.presentationData.strings.Common_OK, action: {})
                         ]), in: .window(.root))
                     }
@@ -548,17 +548,17 @@ extension ChatControllerImpl {
             
             let title: String
             if case .anonymous = privacy {
-                title = self.presentationData.strings.Chat_ToastStarsSent_AnonymousTitle(Int32(self.currentSendStarsUndoCount))
+                title = self.presentationData.strings.Chat_ToastDiamondsSent_AnonymousTitle(Int32(self.currentSendStarsUndoCount))
             } else if case .peer = privacy, let privacyPeer {
-                let rawTitle = self.presentationData.strings.Chat_ToastStarsSent_TitleChannel(Int32(self.currentSendStarsUndoCount))
+                let rawTitle = self.presentationData.strings.Chat_ToastDiamondsSent_TitleChannel(Int32(self.currentSendStarsUndoCount))
                 title = rawTitle.replacingOccurrences(of: "{name}", with: privacyPeer.compactDisplayTitle)
             } else {
-                title = self.presentationData.strings.Chat_ToastStarsSent_Title(Int32(self.currentSendStarsUndoCount))
+                title = self.presentationData.strings.Chat_ToastDiamondsSent_Title(Int32(self.currentSendStarsUndoCount))
             }
             
-            let textItems = AnimatedTextComponent.extractAnimatedTextString(string: self.presentationData.strings.Chat_ToastStarsSent_Text("", ""), id: "text", mapping: [
+            let textItems = AnimatedTextComponent.extractAnimatedTextString(string: self.presentationData.strings.Chat_ToastDiamondsSent_Text("", ""), id: "text", mapping: [
                 0: .number(self.currentSendStarsUndoCount, minDigits: 1),
-                1: .text(self.presentationData.strings.Chat_ToastStarsSent_TextStarAmount(Int32(self.currentSendStarsUndoCount)))
+                1: .text(self.presentationData.strings.Chat_ToastDiamondsSent_TextDiamondAmount(Int32(self.currentSendStarsUndoCount)))
             ])
             
             self.currentSendStarsUndoMessageId = messageId

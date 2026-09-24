@@ -454,7 +454,7 @@ extension ChatControllerImpl {
                                     let alertController = textAlertController(
                                         context: strongSelf.context,
                                         title: nil,
-                                        text: strongSelf.presentationData.strings.Chat_ToastStarsReactionsDisabled(peer.debugDisplayTitle).string,
+                                        text: strongSelf.presentationData.strings.Chat_ToastDiamondsReactionsDisabled(peer.debugDisplayTitle).string,
                                         actions: [
                                             TextAlertAction(type: .genericAction, title: strongSelf.presentationData.strings.Common_OK, action: {})
                                         ]

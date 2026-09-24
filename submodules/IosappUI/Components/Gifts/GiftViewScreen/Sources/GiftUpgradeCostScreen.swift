@@ -131,8 +131,8 @@ private final class GiftUpgradeCostScreenComponent: Component {
                 component: AnyComponent(ProfileLevelRatingBarComponent(
                     theme: environment.theme,
                     value: value,
-                    leftLabel: environment.strings.Gift_UpgradeCost_Stars(Int32(clamping: component.upgradePreview.prices.first?.stars ?? 0)),
-                    rightLabel: environment.strings.Gift_UpgradeCost_Stars(Int32(clamping: component.upgradePreview.prices.last?.stars ?? 0)),
+                    leftLabel: environment.strings.Gift_UpgradeCost_Diamonds(Int32(clamping: component.upgradePreview.prices.first?.stars ?? 0)),
+                    rightLabel: environment.strings.Gift_UpgradeCost_Diamonds(Int32(clamping: component.upgradePreview.prices.last?.stars ?? 0)),
                     badgeValue: "\(self.effectiveUpgradePrice?.stars ?? 0)",
                     badgeTotal: "",
                     level: 0,

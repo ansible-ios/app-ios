@@ -354,11 +354,11 @@ final class MonetizationBalanceItemNode: ListViewItemNode, ItemListItemNode {
                 }
             }
                         
-            var actionTitle = isStars ? item.presentationData.strings.Monetization_BalanceStarsWithdraw : item.presentationData.strings.Monetization_BalanceWithdraw
+            var actionTitle = isStars ? item.presentationData.strings.Monetization_BalanceDiamondsWithdraw : item.presentationData.strings.Monetization_BalanceWithdraw
             var withdrawWidth = width - leftInset - rightInset
             if let _ = item.buyAdsAction {
                 withdrawWidth = (withdrawWidth - 10.0) / 2.0
-                actionTitle = item.presentationData.strings.Monetization_BalanceStarsWithdrawShort
+                actionTitle = item.presentationData.strings.Monetization_BalanceDiamondsWithdrawShort
             }
             
             let content: AnyComponentWithIdentity<Empty>
@@ -415,7 +415,7 @@ final class MonetizationBalanceItemNode: ListViewItemNode, ItemListItemNode {
                             foreground: item.presentationData.theme.list.itemCheckColors.foregroundColor,
                             pressedColor: item.presentationData.theme.list.itemCheckColors.fillColor.withMultipliedAlpha(0.8)
                         ),
-                        content: AnyComponentWithIdentity(id: AnyHashable(0 as Int), component: AnyComponent(Text(text: item.presentationData.strings.Monetization_BalanceStarsBuyAds, font: Font.semibold(17.0), color: item.presentationData.theme.list.itemCheckColors.foregroundColor))),
+                        content: AnyComponentWithIdentity(id: AnyHashable(0 as Int), component: AnyComponent(Text(text: item.presentationData.strings.Monetization_BalanceDiamondsBuyAds, font: Font.semibold(17.0), color: item.presentationData.theme.list.itemCheckColors.foregroundColor))),
                         isEnabled: true,
                         allowActionWhenDisabled: false,
                         displaysProgress: false,

@@ -1019,7 +1019,7 @@ private enum StatsEntry: ItemListNodeEntry {
                         icon = .image(color: color, name: "Premium/Unclaimed")
                     } else if boost.flags.contains(.isGiveaway) {
                         if let stars = boost.stars {
-                            title = presentationData.strings.Stats_Boosts_Stars(Int32(clamping: stars))
+                            title = presentationData.strings.Stats_Boosts_Diamonds(Int32(clamping: stars))
                             icon = .image(color: .stars, name: "Premium/PremiumStar")
                             expiresString = expiresValue
                         } else {
@@ -1229,7 +1229,7 @@ private enum StatsEntry: ItemListNodeEntry {
                     arguments.presentCpmLocked()
                 })
             case .earnStarsInfo:
-                return ItemListDisclosureItem(presentationData: presentationData, systemStyle: .glass, icon: PresentationResourcesSettings.earnStars, title: presentationData.strings.Monetization_EarnStarsInfo_Title, titleBadge: nil, label: presentationData.strings.Monetization_EarnStarsInfo_Text, labelStyle: .multilineDetailText, sectionId: self.section, style: .blocks, action: {
+                return ItemListDisclosureItem(presentationData: presentationData, systemStyle: .glass, icon: PresentationResourcesSettings.earnStars, title: presentationData.strings.Monetization_EarnDiamondsInfo_Title, titleBadge: nil, label: presentationData.strings.Monetization_EarnDiamondsInfo_Text, labelStyle: .multilineDetailText, sectionId: self.section, style: .blocks, action: {
                     arguments.openEarnStars()
                 })
         }
@@ -1476,8 +1476,8 @@ private func boostsEntries(
                 title = presentationData.strings.Stats_Boosts_PrepaidGiveawayCount(giveaway.quantity)
                 text = presentationData.strings.Stats_Boosts_PrepaidGiveawayMonths("\(months)").string
             case let .stars(stars, _):
-                title = presentationData.strings.Stats_Boosts_Stars(Int32(clamping: stars))
-                text = presentationData.strings.Stats_Boosts_StarsWinners(giveaway.quantity)
+                title = presentationData.strings.Stats_Boosts_Diamonds(Int32(clamping: stars))
+                text = presentationData.strings.Stats_Boosts_DiamondsWinners(giveaway.quantity)
             }
             entries.append(.boostPrepaid(i, presentationData.theme, title, text, giveaway))
             i += 1
@@ -1610,12 +1610,12 @@ private func monetizationEntries(
     
     if canViewStarsRevenue {
         if let starsData, !starsData.revenueGraph.isEmpty {
-            entries.append(.adsStarsRevenueTitle(presentationData.theme, presentationData.strings.Monetization_StarsRevenueTitle))
+            entries.append(.adsStarsRevenueTitle(presentationData.theme, presentationData.strings.Monetization_DiamondsRevenueTitle))
             entries.append(.adsStarsRevenueGraph(presentationData.theme, presentationData.strings, presentationData.dateTimeFormat, starsData.revenueGraph, .stars, starsData.usdRate))
         }
     }
         
-    entries.append(.adsProceedsTitle(presentationData.theme, presentationData.strings.Monetization_StarsProceeds_Title))
+    entries.append(.adsProceedsTitle(presentationData.theme, presentationData.strings.Monetization_DiamondsProceeds_Title))
     entries.append(.adsProceedsOverview(presentationData.theme, canViewRevenue ? data : nil, canViewStarsRevenue ? starsData : nil))
     
     let hasTonBalance = (data?.balances.overallRevenue.amount ?? StarsAmount.zero) > StarsAmount.zero
@@ -1623,9 +1623,9 @@ private func monetizationEntries(
     
     let proceedsInfo: String
     if (canViewStarsRevenue && hasStarsBalance) && (canViewRevenue && hasTonBalance) {
-        proceedsInfo = presentationData.strings.Monetization_Proceeds_TonAndStars_Info
+        proceedsInfo = presentationData.strings.Monetization_Proceeds_TonAndDiamonds_Info
     } else if canViewStarsRevenue && hasStarsBalance {
-        proceedsInfo = presentationData.strings.Monetization_Proceeds_Stars_Info
+        proceedsInfo = presentationData.strings.Monetization_Proceeds_Diamonds_Info
     } else {
         proceedsInfo = presentationData.strings.Monetization_Proceeds_Ton_Info
     }
@@ -1658,9 +1658,9 @@ private func monetizationEntries(
     }
     
     if canViewStarsRevenue, let starsData, starsData.balances.overallRevenue.amount > StarsAmount.zero {
-        entries.append(.adsStarsBalanceTitle(presentationData.theme, presentationData.strings.Monetization_StarsBalanceTitle))
+        entries.append(.adsStarsBalanceTitle(presentationData.theme, presentationData.strings.Monetization_DiamondsBalanceTitle))
         entries.append(.adsStarsBalance(presentationData.theme, starsData, isCreator && starsData.balances.availableBalance.amount > StarsAmount.zero, !isGroup, starsData.balances.withdrawEnabled, starsData.balances.nextWithdrawalTimestamp))
-        entries.append(.adsStarsBalanceInfo(presentationData.theme, isGroup ? presentationData.strings.Monetization_Balance_StarsInfoGroup : presentationData.strings.Monetization_Balance_StarsInfo))
+        entries.append(.adsStarsBalanceInfo(presentationData.theme, isGroup ? presentationData.strings.Monetization_Balance_DiamondsInfoGroup : presentationData.strings.Monetization_Balance_DiamondsInfo))
     }
     
     if canJoinRefPrograms && !isGroup {
@@ -1670,7 +1670,7 @@ private func monetizationEntries(
     var addedTransactionsTabs = false
     if !transactionsInfo.transactions.isEmpty && !starsTransactionsInfo.transactions.isEmpty && canViewRevenue && canViewStarsRevenue {
         addedTransactionsTabs = true
-        entries.append(.adsTransactionsTabs(presentationData.theme, presentationData.strings.Monetization_TonTransactions, presentationData.strings.Monetization_StarsTransactions, state.starsSelected))
+        entries.append(.adsTransactionsTabs(presentationData.theme, presentationData.strings.Monetization_TonTransactions, presentationData.strings.Monetization_DiamondsTransactions, state.starsSelected))
     }
     
     var displayTonTransactions = false
@@ -1716,7 +1716,7 @@ private func monetizationEntries(
     
     if displayStarsTransactions {
         if !addedTransactionsTabs {
-            entries.append(.adsTransactionsTitle(presentationData.theme, isGroup ? presentationData.strings.Monetization_TransactionsTitle.uppercased() : presentationData.strings.Monetization_StarsTransactions.uppercased()))
+            entries.append(.adsTransactionsTitle(presentationData.theme, isGroup ? presentationData.strings.Monetization_TransactionsTitle.uppercased() : presentationData.strings.Monetization_DiamondsTransactions.uppercased()))
         }
         
         var transactions = starsTransactionsInfo.transactions
@@ -2588,7 +2588,7 @@ public func channelStatsController(
             scale: 0.058,
             colors: [:],
             title: nil,
-            text: presentationData.strings.Stars_Withdraw_Withdraw_ErrorTimeout(stringForRemainingTime(remainingCooldownSeconds)).string,
+            text: presentationData.strings.Diamonds_Withdraw_Withdraw_ErrorTimeout(stringForRemainingTime(remainingCooldownSeconds)).string,
             customUndoText: nil,
             timeout: nil
         )
@@ -2608,7 +2608,7 @@ public func channelStatsController(
                             scale: 0.058,
                             colors: [:],
                             title: nil,
-                            text: presentationData.strings.Stars_Withdraw_Withdraw_ErrorTimeout(stringForRemainingTime(remainingCooldownSeconds)).string,
+                            text: presentationData.strings.Diamonds_Withdraw_Withdraw_ErrorTimeout(stringForRemainingTime(remainingCooldownSeconds)).string,
                             customUndoText: nil,
                             timeout: nil
                         )

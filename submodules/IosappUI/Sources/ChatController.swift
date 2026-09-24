@@ -1945,7 +1945,7 @@ public final class ChatControllerImpl: IosappBaseController, ChatController, Gal
                                     let alertController = textAlertController(
                                         context: strongSelf.context,
                                         title: nil,
-                                        text: strongSelf.presentationData.strings.Chat_ToastStarsReactionsDisabled(peer.debugDisplayTitle).string,
+                                        text: strongSelf.presentationData.strings.Chat_ToastDiamondsReactionsDisabled(peer.debugDisplayTitle).string,
                                         actions: [
                                             TextAlertAction(type: .genericAction, title: strongSelf.presentationData.strings.Common_OK, action: {})
                                         ]
@@ -2883,7 +2883,7 @@ public final class ChatControllerImpl: IosappBaseController, ChatController, Gal
                                         switch funds.amount.currency {
                                         case .stars:
                                             let displayAmount = funds.amount.amount.totalValue * Double(funds.commissionPermille) / 1000.0
-                                            textString += strongSelf.presentationData.strings.Chat_PostSuggestion_Approve_AdminConfirmationPriceStars("\(displayAmount)", "\(commissionValue)").string
+                                            textString += strongSelf.presentationData.strings.Chat_PostSuggestion_Approve_AdminConfirmationPriceDiamonds("\(displayAmount)", "\(commissionValue)").string
                                         case .ton:
                                             let displayAmount = Double(funds.amount.amount.value) / 1000000000.0 * Double(funds.commissionPermille) / 1000.0
                                             textString += strongSelf.presentationData.strings.Chat_PostSuggestion_Approve_AdminConfirmationPriceTon("\(displayAmount)", "\(commissionValue)").string
@@ -2901,7 +2901,7 @@ public final class ChatControllerImpl: IosappBaseController, ChatController, Gal
                                         let _ = strongSelf.context.engine.messages.monoforumPerformSuggestedPostAction(id: message.id, action: .approve(timestamp: timestamp)).startStandalone()
                                     }),
                                     TextAlertAction(type: .genericAction, title: strongSelf.presentationData.strings.Common_Cancel, action: {})
-                                ], actionLayout: .vertical, parseMarkdown: true, toastText: funds?.amount.currency == .stars ? strongSelf.presentationData.strings.Chat_PostSuggestion_StarsDisclaimer : nil), in: .window(.root))
+                                ], actionLayout: .vertical, parseMarkdown: true, toastText: funds?.amount.currency == .stars ? strongSelf.presentationData.strings.Chat_PostSuggestion_DiamondsDisclaimer : nil), in: .window(.root))
                             }
                         }
                     case 2:

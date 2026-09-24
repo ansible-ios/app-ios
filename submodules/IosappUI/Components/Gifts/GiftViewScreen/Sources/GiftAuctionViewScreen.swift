@@ -585,7 +585,7 @@ private final class GiftAuctionViewSheetContent: CombinedComponent {
                             valueAttributedString.addAttribute(.baselineOffset, value: 1.0, range: range)
                         }
                         
-                        let averagePriceString = strings.Gift_Auction_Stars(Int32(clamping: averagePrice))
+                        let averagePriceString = strings.Gift_Auction_Diamonds(Int32(clamping: averagePrice))
                         items.append(AnyComponentWithIdentity(id: "value", component: AnyComponent(
                             MultilineTextWithEntitiesComponent(
                                 context: component.context,
@@ -940,7 +940,7 @@ private final class GiftAuctionViewSheetContent: CombinedComponent {
                                     )
                                 )),
                                 AnyComponentWithIdentity(id: "text", component: AnyComponent(
-                                    MultilineTextComponent(text: .plain(NSAttributedString(string: "  \(strings.Gift_Value_ForSaleOnTelegram)", font: Font.regular(17.0), textColor: theme.actionSheet.controlAccentColor)))
+                                    MultilineTextComponent(text: .plain(NSAttributedString(string: "  \(strings.Gift_Value_ForSaleOnAnsible)", font: Font.regular(17.0), textColor: theme.actionSheet.controlAccentColor)))
                                 )),
                                 AnyComponentWithIdentity(id: "arrow", component: AnyComponent(
                                     BundleIconComponent(name: "Chat/Context Menu/Arrow", tintColor: theme.actionSheet.controlAccentColor)
