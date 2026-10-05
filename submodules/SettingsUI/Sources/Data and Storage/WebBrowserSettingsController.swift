@@ -329,7 +329,7 @@ private func webBrowserSettingsControllerEntries(context: AccountContext, presen
     let defaultExternalBrowser = localSettings.defaultWebBrowser ?? "default"
     
     entries.append(.browserHeader(presentationData.theme, presentationData.strings.WebBrowser_OpenLinksIn_Title))
-    entries.append(.browser(presentationData.theme, presentationData.strings.WebBrowser_Iosapp, nil, nil, !accountSettings.openExternalBrowser, 0))
+    entries.append(.browser(presentationData.theme, presentationData.strings.WebBrowser_Ansible, nil, nil, !accountSettings.openExternalBrowser, 0))
         
     var index: Int32 = 1
     for option in options {
