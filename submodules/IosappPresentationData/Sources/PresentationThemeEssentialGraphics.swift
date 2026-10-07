@@ -171,10 +171,10 @@ public final class PrincipalThemeEssentialGraphics {
     public let mediaRepliesIcon: UIImage
     public let freeRepliesIcon: UIImage
     
-    public let incomingDateAndStatusStarsIcon: UIImage
-    public let outgoingDateAndStatusStarsIcon: UIImage
-    public let mediaStarsIcon: UIImage
-    public let freeStarsIcon: UIImage
+    public let incomingDateAndStatusDiamondsIcon: UIImage
+    public let outgoingDateAndStatusDiamondsIcon: UIImage
+    public let mediaDiamondsIcon: UIImage
+    public let freeDiamondsIcon: UIImage
     
     public let incomingDateAndStatusTonIcon: UIImage
     public let outgoingDateAndStatusTonIcon: UIImage
@@ -369,11 +369,11 @@ public final class PrincipalThemeEssentialGraphics {
             self.mediaRepliesIcon = generateTintedImage(image: repliesImage, color: .white)!
             self.freeRepliesIcon = generateTintedImage(image: repliesImage, color: serviceColor.primaryText)!
             
-            let starsImage = UIImage(bundleImageName: "Chat/Message/StarsCount")!
-            self.incomingDateAndStatusStarsIcon = generateTintedImage(image: starsImage, color: theme.message.incoming.secondaryTextColor)!
-            self.outgoingDateAndStatusStarsIcon = generateTintedImage(image: starsImage, color: theme.message.outgoing.secondaryTextColor)!
-            self.mediaStarsIcon = generateTintedImage(image: starsImage, color: .white)!
-            self.freeStarsIcon = generateTintedImage(image: starsImage, color: serviceColor.primaryText)!
+            let diamondsImage = UIImage(bundleImageName: "Chat/Message/StarsCount")!
+            self.incomingDateAndStatusDiamondsIcon = generateTintedImage(image: diamondsImage, color: theme.message.incoming.secondaryTextColor)!
+            self.outgoingDateAndStatusDiamondsIcon = generateTintedImage(image: diamondsImage, color: theme.message.outgoing.secondaryTextColor)!
+            self.mediaDiamondsIcon = generateTintedImage(image: diamondsImage, color: .white)!
+            self.freeDiamondsIcon = generateTintedImage(image: diamondsImage, color: serviceColor.primaryText)!
             
             let tonImage = generateScaledImage(image: UIImage(bundleImageName: "Ads/TonMedium"), size: CGSize(width: 12.0, height: 12.0), opaque: false)!
             self.incomingDateAndStatusTonIcon = generateTintedImage(image: tonImage, color: theme.message.incoming.secondaryTextColor)!
@@ -502,11 +502,11 @@ public final class PrincipalThemeEssentialGraphics {
             self.mediaRepliesIcon = generateTintedImage(image: repliesImage, color: .white)!
             self.freeRepliesIcon = generateTintedImage(image: repliesImage, color: serviceColor.primaryText)!
             
-            let starsImage = UIImage(bundleImageName: "Chat/Message/StarsCount")!
-            self.incomingDateAndStatusStarsIcon = generateTintedImage(image: starsImage, color: theme.message.incoming.secondaryTextColor)!
-            self.outgoingDateAndStatusStarsIcon = generateTintedImage(image: starsImage, color: theme.message.outgoing.secondaryTextColor)!
-            self.mediaStarsIcon = generateTintedImage(image: starsImage, color: .white)!
-            self.freeStarsIcon = generateTintedImage(image: starsImage, color: serviceColor.primaryText)!
+            let diamondsImage = UIImage(bundleImageName: "Chat/Message/StarsCount")!
+            self.incomingDateAndStatusDiamondsIcon = generateTintedImage(image: diamondsImage, color: theme.message.incoming.secondaryTextColor)!
+            self.outgoingDateAndStatusDiamondsIcon = generateTintedImage(image: diamondsImage, color: theme.message.outgoing.secondaryTextColor)!
+            self.mediaDiamondsIcon = generateTintedImage(image: diamondsImage, color: .white)!
+            self.freeDiamondsIcon = generateTintedImage(image: diamondsImage, color: serviceColor.primaryText)!
 
             let tonImage = generateScaledImage(image: UIImage(bundleImageName: "Ads/TonMedium"), size: CGSize(width: 12.0, height: 12.0), opaque: false)!
             self.incomingDateAndStatusTonIcon = generateTintedImage(image: tonImage, color: theme.message.incoming.secondaryTextColor)!

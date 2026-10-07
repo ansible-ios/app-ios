@@ -1242,7 +1242,7 @@ public final class EmojiStatusSelectionController: ViewController {
                             if let result, let previewItem = strongSelf.previewItem {
                                 let expirationDate: Int32? = result.timestamp
                                 if let itemGift = previewItem.item.itemGift {
-                                    let _ = (strongSelf.context.engine.accountData.setStarGiftStatus(starGift: itemGift, expirationDate: expirationDate)
+                                    let _ = (strongSelf.context.engine.accountData.setDiamondGiftStatus(starGift: itemGift, expirationDate: expirationDate)
                                     |> deliverOnMainQueue).start()
                                     
                                     if let destinationView = strongSelf.controller?.destinationItemView() {
@@ -1380,7 +1380,7 @@ public final class EmojiStatusSelectionController: ViewController {
                     if let gift = item?.itemGift {
                         animateOutToView = false
                         
-                        let _ = (ApplicationSpecificNotice.getStarGiftWearTips(accountManager: self.context.sharedContext.accountManager)
+                        let _ = (ApplicationSpecificNotice.getDiamondGiftWearTips(accountManager: self.context.sharedContext.accountManager)
                         |> deliverOnMainQueue).start(next: { [weak self] count in
                             guard let self else {
                                 return
@@ -1389,7 +1389,7 @@ public final class EmojiStatusSelectionController: ViewController {
                                 let controller = self.context.sharedContext.makeGiftWearPreviewScreen(context: self.context, gift: .unique(gift), attributes: nil)
                                 pushController(controller)
                             } else {
-                                let _ = (self.context.engine.accountData.setStarGiftStatus(starGift: gift, expirationDate: nil)
+                                let _ = (self.context.engine.accountData.setDiamondGiftStatus(starGift: gift, expirationDate: nil)
                                 |> deliverOnMainQueue).start()
                             }
                         })

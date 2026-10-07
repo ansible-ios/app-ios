@@ -36,11 +36,11 @@ private final class ChannelPermissionsControllerArguments {
     let openChannelExample: () -> Void
     let updateSlowmode: (Int32) -> Void
     let updateUnrestrictBoosters: (Int32) -> Void
-    let updateStarsAmount: (StarsAmount?, Bool) -> Void
-    let openSetCustomStarsAmount: () -> Void
+    let updateDiamondsAmount: (StarsAmount?, Bool) -> Void
+    let openSetCustomDiamondsAmount: () -> Void
     let toggleIsOptionExpanded: (IosappChatBannedRightsFlags) -> Void
     
-    init(context: AccountContext, updatePermission: @escaping (IosappChatBannedRightsFlags, Bool) -> Void, setPeerIdWithRevealedOptions: @escaping (EnginePeer.Id?, EnginePeer.Id?) -> Void, addPeer: @escaping  () -> Void, removePeer: @escaping (EnginePeer.Id) -> Void, openPeer: @escaping (ChannelParticipant) -> Void, openPeerInfo: @escaping (EnginePeer) -> Void, openKicked: @escaping () -> Void, presentRestrictedPermissionAlert: @escaping (IosappChatBannedRightsFlags) -> Void, presentConversionToBroadcastGroup: @escaping () -> Void, openChannelExample: @escaping () -> Void, updateSlowmode: @escaping (Int32) -> Void, updateUnrestrictBoosters: @escaping (Int32) -> Void, updateStarsAmount: @escaping (StarsAmount?, Bool) -> Void, openSetCustomStarsAmount: @escaping () -> Void, toggleIsOptionExpanded: @escaping (IosappChatBannedRightsFlags) -> Void) {
+    init(context: AccountContext, updatePermission: @escaping (IosappChatBannedRightsFlags, Bool) -> Void, setPeerIdWithRevealedOptions: @escaping (EnginePeer.Id?, EnginePeer.Id?) -> Void, addPeer: @escaping  () -> Void, removePeer: @escaping (EnginePeer.Id) -> Void, openPeer: @escaping (ChannelParticipant) -> Void, openPeerInfo: @escaping (EnginePeer) -> Void, openKicked: @escaping () -> Void, presentRestrictedPermissionAlert: @escaping (IosappChatBannedRightsFlags) -> Void, presentConversionToBroadcastGroup: @escaping () -> Void, openChannelExample: @escaping () -> Void, updateSlowmode: @escaping (Int32) -> Void, updateUnrestrictBoosters: @escaping (Int32) -> Void, updateDiamondsAmount: @escaping (StarsAmount?, Bool) -> Void, openSetCustomDiamondsAmount: @escaping () -> Void, toggleIsOptionExpanded: @escaping (IosappChatBannedRightsFlags) -> Void) {
         self.context = context
         self.updatePermission = updatePermission
         self.addPeer = addPeer
@@ -54,8 +54,8 @@ private final class ChannelPermissionsControllerArguments {
         self.openChannelExample = openChannelExample
         self.updateSlowmode = updateSlowmode
         self.updateUnrestrictBoosters = updateUnrestrictBoosters
-        self.updateStarsAmount = updateStarsAmount
-        self.openSetCustomStarsAmount = openSetCustomStarsAmount
+        self.updateDiamondsAmount = updateDiamondsAmount
+        self.openSetCustomDiamondsAmount = openSetCustomDiamondsAmount
         self.toggleIsOptionExpanded = toggleIsOptionExpanded
     }
 }
@@ -419,7 +419,7 @@ private enum ChannelPermissionsEntry: ItemListNodeEntry {
                 }
             case let .chargeForMessages(_, title, value):
                 return ItemListSwitchItem(presentationData: presentationData, systemStyle: .glass, title: title, value: value, sectionId: self.section, style: .blocks, updated: { value in
-                    arguments.updateStarsAmount(value ? StarsAmount(value: 400, nanos: 0) : nil, true)
+                    arguments.updateDiamondsAmount(value ? StarsAmount(value: 400, nanos: 0) : nil, true)
                 })
             case let .chargeForMessagesInfo(_, value):
                 return ItemListTextItem(presentationData: presentationData, text: .plain(value), sectionId: self.section)
@@ -427,7 +427,7 @@ private enum ChannelPermissionsEntry: ItemListNodeEntry {
                 return ItemListSectionHeaderItem(presentationData: presentationData, text: value, sectionId: self.section)
             case let .messagePrice(_, value, maxValue, price):
                 return MessagePriceItem(theme: presentationData.theme, strings: presentationData.strings, systemStyle: .glass, isEnabled: true, minValue: 1, maxValue: maxValue, value: value, price: price, sectionId: self.section, updated: { value, apply in
-                    arguments.updateStarsAmount(StarsAmount(value: value, nanos: 0), apply)
+                    arguments.updateDiamondsAmount(StarsAmount(value: value, nanos: 0), apply)
                 }, openSetCustom: nil)
             case let .messagePriceInfo(_, value):
                 return ItemListTextItem(presentationData: presentationData, text: .plain(value), sectionId: self.section)
@@ -496,7 +496,7 @@ private struct ChannelPermissionsControllerState: Equatable {
     var modifiedRightsFlags: IosappChatBannedRightsFlags?
     var modifiedSlowmodeTimeout: Int32?
     var modifiedUnrestrictBoosters: Int32?
-    var modifiedStarsAmount: StarsAmount?
+    var modifiedDiamondsAmount: StarsAmount?
     var expandedPermissions = Set<IosappChatBannedRightsFlags>()
 }
 
@@ -682,7 +682,7 @@ func groupPermissionDependencies(_ right: IosappChatBannedRightsFlags) -> Iosapp
     }
 }
 
-private func channelPermissionsControllerEntries(context: AccountContext, presentationData: PresentationData, view: EngineRawPeerView, state: ChannelPermissionsControllerState, participants: [RenderedChannelParticipant]?, configuration: StarsSubscriptionConfiguration) -> [ChannelPermissionsEntry] {
+private func channelPermissionsControllerEntries(context: AccountContext, presentationData: PresentationData, view: EngineRawPeerView, state: ChannelPermissionsControllerState, participants: [RenderedChannelParticipant]?, configuration: DiamondsSubscriptionConfiguration) -> [ChannelPermissionsEntry] {
     var entries: [ChannelPermissionsEntry] = []
     
     if let channel = view.peers[view.peerId] as? IosappChannel, let participants = participants, let cachedData = view.cachedData as? CachedChannelData, let defaultBannedRights = channel.defaultBannedRights {
@@ -739,8 +739,8 @@ private func channelPermissionsControllerEntries(context: AccountContext, presen
         }
         
         if cachedData.flags.contains(.paidMessagesAvailable) && channel.hasPermission(.banMembers) {
-            let sendPaidMessageStars = state.modifiedStarsAmount?.value ?? (channel.sendPaidMessageStars?.value ?? 0)
-            let chargeEnabled = sendPaidMessageStars > 0
+            let sendPaidMessageDiamonds = state.modifiedDiamondsAmount?.value ?? (channel.sendPaidMessageDiamonds?.value ?? 0)
+            let chargeEnabled = sendPaidMessageDiamonds > 0
             entries.append(.chargeForMessages(presentationData.theme, presentationData.strings.GroupInfo_Permissions_ChargeForMessages, chargeEnabled))
             entries.append(.chargeForMessagesInfo(presentationData.theme, presentationData.strings.GroupInfo_Permissions_ChargeForMessagesInfo))
             
@@ -751,7 +751,7 @@ private func channelPermissionsControllerEntries(context: AccountContext, presen
                 price = "~\(formatTonUsdValue(sendPaidMessageStars, divide: false, rate: usdRate, dateTimeFormat: presentationData.dateTimeFormat))"
                 
                 entries.append(.messagePriceHeader(presentationData.theme, presentationData.strings.GroupInfo_Permissions_MessagePrice))
-                entries.append(.messagePrice(presentationData.theme, sendPaidMessageStars, configuration.paidMessageMaxAmount, price))
+                entries.append(.messagePrice(presentationData.theme, sendPaidMessageDiamonds, configuration.paidMessageMaxAmount, price))
                 entries.append(.messagePriceInfo(presentationData.theme, presentationData.strings.GroupInfo_Permissions_MessagePriceInfo("\(configuration.paidMessageCommissionPermille / 10)", price).string))
             }
         }
@@ -833,7 +833,7 @@ public func channelPermissionsController(context: AccountContext, updatedPresent
         statePromise.set(stateValue.modify { f($0) })
     }
     
-    let configuration = StarsSubscriptionConfiguration.with(appConfiguration: context.currentAppConfiguration.with { $0 })
+    let configuration = DiamondsSubscriptionConfiguration.with(appConfiguration: context.currentAppConfiguration.with { $0 })
     
     var presentControllerImpl: ((ViewController, Any?) -> Void)?
     var pushControllerImpl: ((ViewController) -> Void)?
@@ -893,8 +893,8 @@ public func channelPermissionsController(context: AccountContext, updatedPresent
     let updateUnrestrictBoostersDisposable = MetaDisposable()
     actionsDisposable.add(updateUnrestrictBoostersDisposable)
     
-    let updateSendPaidMessageStarsDisposable = MetaDisposable()
-    actionsDisposable.add(updateSendPaidMessageStarsDisposable)
+    let updateSendPaidMessageDiamondsDisposable = MetaDisposable()
+    actionsDisposable.add(updateSendPaidMessageDiamondsDisposable)
     
     let peerView = Promise<EngineRawPeerView>()
     peerView.set(sourcePeerId.get()
@@ -1277,10 +1277,10 @@ public func channelPermissionsController(context: AccountContext, updatedPresent
             updateUnrestrictBoostersDisposable.set((context.engine.peers.updateChannelBoostsToUnlockRestrictions(peerId: view.peerId, boosts: value)
             |> deliverOnMainQueue).start())
         })
-    }, updateStarsAmount: { value, apply in
+    }, updateDiamondsAmount: { value, apply in
         updateState { state in
             var state = state
-            state.modifiedStarsAmount = value
+            state.modifiedDiamondsAmount = value
             return state
         }
         
@@ -1292,11 +1292,11 @@ public func channelPermissionsController(context: AccountContext, updatedPresent
                 if value?.value == 0 {
                     effectiveValue = nil
                 }
-                updateSendPaidMessageStarsDisposable.set((context.engine.peers.updateChannelPaidMessagesStars(peerId: view.peerId, stars: effectiveValue, broadcastMessagesAllowed: false)
+                updateSendPaidMessageDiamondsDisposable.set((context.engine.peers.updateChannelPaidMessagesDiamonds(peerId: view.peerId, stars: effectiveValue, broadcastMessagesAllowed: false)
                 |> deliverOnMainQueue).start())
             })
         }
-    }, openSetCustomStarsAmount: {
+    }, openSetCustomDiamondsAmount: {
     }, toggleIsOptionExpanded: { flags in
         updateState { state in
             var state = state

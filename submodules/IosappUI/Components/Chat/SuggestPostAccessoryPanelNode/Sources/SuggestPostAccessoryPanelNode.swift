@@ -40,7 +40,7 @@ public final class SuggestPostAccessoryPanelNode: AccessoryPanelNode {
     
     private var validLayout: (size: CGSize, inset: CGFloat, interfaceState: ChatPresentationInterfaceState)?
     
-    private var inlineTextStarImage: UIImage?
+    private var inlineTextDiamondImage: UIImage?
     private var inlineTextTonImage: (UIImage, UIColor)?
     
     public init(context: AccountContext, theme: PresentationTheme, strings: PresentationStrings, nameDisplayOrder: PresentationPersonNameOrder, dateTimeFormat: PresentationDateTimeFormat, animationCache: AnimationCache?, animationRenderer: MultiAnimationRenderer?) {
@@ -186,22 +186,22 @@ public final class SuggestPostAccessoryPanelNode: AccessoryPanelNode {
         
         let textFont = Font.regular(15.0)
         
-        var inlineTextStarImage: UIImage?
-        if let current = self.inlineTextStarImage {
-            inlineTextStarImage = current
+        var inlineTextDiamondImage: UIImage?
+        if let current = self.inlineTextDiamondImage {
+            inlineTextDiamondImage = current
         } else {
             if let image = UIImage(bundleImageName: "Premium/Stars/StarSmall") {
-                let starInsets = UIEdgeInsets(top: 0.0, left: 0.0, bottom: 0.0, right: 0.0)
-                inlineTextStarImage = generateImage(CGSize(width: starInsets.left + image.size.width + starInsets.right, height: image.size.height), rotatedContext: { size, context in
+                let diamondInsets = UIEdgeInsets(top: 0.0, left: 0.0, bottom: 0.0, right: 0.0)
+                inlineTextDiamondImage = generateImage(CGSize(width: diamondInsets.left + image.size.width + diamondInsets.right, height: image.size.height), rotatedContext: { size, context in
                     context.clear(CGRect(origin: CGPoint(), size: size))
                     UIGraphicsPushContext(context)
                     defer {
                         UIGraphicsPopContext()
                     }
                     
-                    image.draw(at: CGPoint(x: starInsets.left, y: starInsets.top))
+                    image.draw(at: CGPoint(x: diamondInsets.left, y: diamondInsets.top))
                 })?.withRenderingMode(.alwaysOriginal)
-                self.inlineTextStarImage = inlineTextStarImage
+                self.inlineTextDiamondImage = inlineTextDiamondImage
             }
         }
         
@@ -280,7 +280,7 @@ public final class SuggestPostAccessoryPanelNode: AccessoryPanelNode {
             switch currency {
             case .stars:
                 currencySymbol = "#"
-                currencyImage = inlineTextStarImage
+                currencyImage = inlineTextDiamondImage
             case .ton:
                 currencySymbol = "$"
                 currencyImage = inlineTextTonImage

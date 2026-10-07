@@ -1007,7 +1007,7 @@ private func uploadedMediaImageContent(network: Network, postbox: Postbox, trans
                                         switch result {
                                         case let .messageMediaPhoto(messageMediaPhotoData):
                                             let photo = messageMediaPhotoData.photo
-                                            if let photo = photo, let mediaImage = telegramMediaImageFromApiPhoto(photo, video: messageMediaPhotoData.video), let reference = mediaImage.reference, case let .cloud(id, accessHash, maybeFileReference) = reference, let fileReference = maybeFileReference {
+                                            if let photo = photo, let mediaImage = ansibleMediaImageFromApiPhoto(photo, video: messageMediaPhotoData.video), let reference = mediaImage.reference, case let .cloud(id, accessHash, maybeFileReference) = reference, let fileReference = maybeFileReference {
                                                 var flags: Int32 = 0
                                                 var ttlSeconds: Int32?
                                                 if let autoclearMessageAttribute = autoclearMessageAttribute {
@@ -1227,7 +1227,7 @@ private func uploadedMediaPhotoVideoContent(network: Network, postbox: Postbox, 
                     case let .messageMediaDocument(messageMediaDocumentData):
                         let (document, altDocuments) = (messageMediaDocumentData.document, messageMediaDocumentData.altDocuments)
                         if let document = document,
-                           let mediaFile = telegramMediaFileFromApiDocument(document, altDocuments: altDocuments),
+                           let mediaFile = ansibleMediaFileFromApiDocument(document, altDocuments: altDocuments),
                            let resource = mediaFile.resource as? CloudDocumentMediaResource,
                            let fileReference = resource.fileReference {
                             return .single(.inputDocument(.inputDocument(.init(
@@ -1665,7 +1665,7 @@ private func uploadedMediaFileContent(network: Network, postbox: Postbox, auxili
                                     switch result {
                                         case let .messageMediaDocument(messageMediaDocumentData):
                                             let (document, altDocuments) = (messageMediaDocumentData.document, messageMediaDocumentData.altDocuments)
-                                        if let document = document, let mediaFile = telegramMediaFileFromApiDocument(document, altDocuments: altDocuments), let resource = mediaFile.resource as? CloudDocumentMediaResource, let fileReference = resource.fileReference {
+                                        if let document = document, let mediaFile = ansibleMediaFileFromApiDocument(document, altDocuments: altDocuments), let resource = mediaFile.resource as? CloudDocumentMediaResource, let fileReference = resource.fileReference {
                                                 var flags: Int32 = 0
                                                 var ttlSeconds: Int32?
                                                 if let autoclearMessageAttribute = autoclearMessageAttribute {

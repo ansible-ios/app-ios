@@ -388,7 +388,7 @@ public final class PeerInfoGiftsPaneNode: ASDisplayNode, PeerInfoPaneNode, UIScr
                 if let index = updatedPinnedGifts.firstIndex(of: unpinnedReference), let reference = gift.reference {
                     updatedPinnedGifts[index] = reference
                 }
-                self.profileGifts.updatePinnedToTopStarGifts(references: updatedPinnedGifts)
+                self.profileGifts.updatePinnedToTopDiamondGifts(references: updatedPinnedGifts)
                 
                 var title = ""
                 if case let .unique(uniqueGift) = gift.gift {
@@ -877,7 +877,7 @@ public final class PeerInfoGiftsPaneNode: ASDisplayNode, PeerInfoPaneNode, UIScr
                                     return
                                 }
                                 let enabled = !(currentState.notificationsEnabled ?? false)
-                                self.profileGifts.toggleStarGiftsNotifications(enabled: enabled)
+                                self.profileGifts.toggleDiamondGiftsNotifications(enabled: enabled)
                                 
                                 let animation = enabled ? "anim_profileunmute" : "anim_profilemute"
                                 let text = enabled ? presentationData.strings.PeerInfo_Gifts_ChannelNotifyTooltip : presentationData.strings.PeerInfo_Gifts_ChannelNotifyDisabledTooltip
@@ -1111,7 +1111,7 @@ public final class PeerInfoGiftsPaneNode: ASDisplayNode, PeerInfoPaneNode, UIScr
                             return
                         }
                         
-                        profileGifts.updateStarGiftPinnedToTop(reference: reference, pinnedToTop: pinnedToTop)
+                        profileGifts.updateDiamondGiftPinnedToTop(reference: reference, pinnedToTop: pinnedToTop)
                         
                         let toastTitle: String?
                         let toastText: String
@@ -1156,7 +1156,7 @@ public final class PeerInfoGiftsPaneNode: ASDisplayNode, PeerInfoPaneNode, UIScr
                             return
                         }
                         if self.context.isPremium {
-                            let _ = self.context.engine.accountData.setStarGiftStatus(starGift: uniqueGift, expirationDate: nil).startStandalone()
+                            let _ = self.context.engine.accountData.setDiamondGiftStatus(starGift: uniqueGift, expirationDate: nil).startStandalone()
                         } else {
                             let text = strings.Gift_View_TooltipPremiumWearing
                             let tooltipController = UndoOverlayController(
@@ -1284,7 +1284,7 @@ public final class PeerInfoGiftsPaneNode: ASDisplayNode, PeerInfoPaneNode, UIScr
                     }
                     if let reference = gift.reference {
                         let added = !gift.savedToProfile
-                        profileGifts.updateStarGiftAddedToProfile(reference: reference, added: added)
+                        profileGifts.updateDiamondGiftAddedToProfile(reference: reference, added: added)
                         
                         var animationFile: IosappMediaFile?
                         switch gift.gift {
@@ -1358,13 +1358,13 @@ public final class PeerInfoGiftsPaneNode: ASDisplayNode, PeerInfoPaneNode, UIScr
                                 showSelf = true
                             }
                             let transferStars = gift.transferStars ?? 0
-                            let controller = context.sharedContext.makePremiumGiftController(context: context, source: .starGiftTransfer(birthdays, reference, uniqueGift, transferStars, gift.canExportDate, showSelf), completion: { peerIds in
+                            let controller = context.sharedContext.makePremiumGiftController(context: context, source: .diamondGiftTransfer(birthdays, reference, uniqueGift, transferStars, gift.canExportDate, showSelf), completion: { peerIds in
                                 guard let peerId = peerIds.first else {
                                     return .complete()
                                 }
                                 Queue.mainQueue().after(1.5, {
                                     if transferStars > 0 {
-                                        context.starsContext?.load(force: true)
+                                        context.diamondsContext?.load(force: true)
                                     }
                                 })
                                 return profileGifts.transferStarGift(prepaid: transferStars == 0, reference: reference, peerId: peerId)

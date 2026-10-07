@@ -339,7 +339,7 @@ Params default_params()
     params.var_params.width=0;
     
     
-    params.const_params.is_star=0;
+    params.const_params.is_diamond=0;
     
     LayerParams p = default_layer_params();
     
@@ -514,7 +514,7 @@ void draw_textured_shape(const TexturedShape* shape, mat4x4 view_projection_matr
         mat4x4 model_view_projection_matrix;
         mvp_matrix(model_view_projection_matrix, shape->params, view_projection_matrix);
 
-        if (shape->params.const_params.is_star==1) {
+        if (shape->params.const_params.is_diamond==1) {
             vec4 pos;
             vec4 vertex = {0,0,0,1};
             mat4x4_mul_vec4(pos, model_view_projection_matrix, vertex);

@@ -1320,7 +1320,7 @@ final class ShareControllerNode: ViewControllerTracingNode, ASScrollViewDelegate
             |> take(1)
             |> map { views -> ([EnginePeer.Id: EngineRenderedPeer?], [EnginePeer.Id: Int64]) in
                 var result: [EnginePeer.Id: EngineRenderedPeer?] = [:]
-                var requiresStars: [EnginePeer.Id: Int64] = [:]
+                var requiresDiamonds: [EnginePeer.Id: Int64] = [:]
                 for peerId in peerIds {
                     if let view = views.views[PostboxViewKey.basicPeer(peerId)] as? PeerView, let peer = peerViewMainPeer(view) {
                         var peers: [EnginePeer.Id: EnginePeer] = [peer.id: EnginePeer(peer)]
@@ -1330,16 +1330,16 @@ final class ShareControllerNode: ViewControllerTracingNode, ASScrollViewDelegate
                         result[peerId] = EngineRenderedPeer(peerId: peer.id, peers: peers, associatedMedia: [:])
                         if peer is IosappUser, let cachedPeerDataView = views.views[PostboxViewKey.cachedPeerData(peerId: peerId)] as? CachedPeerDataView {
                             if let cachedData = cachedPeerDataView.cachedPeerData as? CachedUserData {
-                                requiresStars[peerId] = cachedData.sendPaidMessageStars?.value
+                                requiresDiamonds[peerId] = cachedData.sendPaidMessageDiamonds?.value
                             }
                         } else if let channel = peer as? IosappChannel {
-                            requiresStars[peerId] = channel.sendPaidMessageStars?.value
+                            requiresDiamonds[peerId] = channel.sendPaidMessageDiamonds?.value
                         }
                     }
                 }
-                return (result, requiresStars)
+                return (result, requiresDiamonds)
             }
-            |> deliverOnMainQueue).start(next: { [weak self] peers, requiresStars in
+            |> deliverOnMainQueue).start(next: { [weak self] peers, requiresDiamonds in
                 guard let self else {
                     return
                 }
@@ -1355,7 +1355,7 @@ final class ShareControllerNode: ViewControllerTracingNode, ASScrollViewDelegate
                     return
                 }
 
-                self.presentPaidMessageAlertIfNeeded(peers: mappedPeers, requiresStars: requiresStars, completion: { [weak self] in
+                self.presentPaidMessageAlertIfNeeded(peers: mappedPeers, requiresDiamonds: requiresDiamonds, completion: { [weak self] in
                     self?.commitSend(peerId: peerId, showNames: showNames, silently: silently)
                 })
                 
@@ -1365,7 +1365,7 @@ final class ShareControllerNode: ViewControllerTracingNode, ASScrollViewDelegate
         }
     }
     
-    private func presentPaidMessageAlertIfNeeded(peers: [EngineRenderedPeer], requiresStars: [EnginePeer.Id: Int64], completion: @escaping () -> Void) {
+    private func presentPaidMessageAlertIfNeeded(peers: [EngineRenderedPeer], requiresDiamonds: [EnginePeer.Id: Int64], completion: @escaping () -> Void) {
         var count: Int32 = Int32(self.messageCount)
         if !self.inputFieldNode.text.isEmpty {
             count += 1
@@ -1373,7 +1373,7 @@ final class ShareControllerNode: ViewControllerTracingNode, ASScrollViewDelegate
         var chargingPeers: [EngineRenderedPeer] = []
         var totalAmount: StarsAmount = .zero
         for peer in peers {
-            if let stars = requiresStars[peer.peerId] {
+            if let stars = requiresDiamonds[peer.peerId] {
                 chargingPeers.append(peer)
                 totalAmount = totalAmount + StarsAmount(value: stars, nanos: 0)
             }
@@ -1613,7 +1613,7 @@ final class ShareControllerNode: ViewControllerTracingNode, ASScrollViewDelegate
         }
     }
     
-    func updatePeers(context: ShareControllerAccountContext, switchableAccounts: [ShareControllerSwitchableAccount], peers: [(peer: EngineRenderedPeer, presence: EnginePeer.Presence?, requiresPremiumForMessaging: Bool, requiresStars: Int64?)], accountPeer: EnginePeer, defaultAction: ShareControllerAction?) {
+    func updatePeers(context: ShareControllerAccountContext, switchableAccounts: [ShareControllerSwitchableAccount], peers: [(peer: EngineRenderedPeer, presence: EnginePeer.Presence?, requiresPremiumForMessaging: Bool, requiresDiamonds: Int64?)], accountPeer: EnginePeer, defaultAction: ShareControllerAction?) {
         self.context = context
                 
         if let peersContentNode = self.peersContentNode, peersContentNode.accountPeer.id == accountPeer.id {

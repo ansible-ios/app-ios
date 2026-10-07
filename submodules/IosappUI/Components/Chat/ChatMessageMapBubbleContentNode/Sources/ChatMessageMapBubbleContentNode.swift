@@ -80,16 +80,16 @@ public class ChatMessageMapBubbleContentNode: ChatMessageBubbleContentNode {
             var selectedMedia: IosappMediaMap?
             var activeLiveBroadcastingTimeout: Int32?
             for media in item.message.media {
-                if let telegramMap = media as? IosappMediaMap {
-                    selectedMedia = telegramMap
-                    if let liveBroadcastingTimeout = telegramMap.liveBroadcastingTimeout {
+                if let ansibleMap = media as? IosappMediaMap {
+                    selectedMedia = ansibleMap
+                    if let liveBroadcastingTimeout = ansibleMap.liveBroadcastingTimeout {
                         let timestamp = Int32(CFAbsoluteTimeGetCurrent() + kCFAbsoluteTimeIntervalSince1970)
                         if item.message.timestamp != scheduleWhenOnlineTimestamp && (liveBroadcastingTimeout == liveLocationIndefinitePeriod || item.message.timestamp + liveBroadcastingTimeout > timestamp) {
                             activeLiveBroadcastingTimeout = liveBroadcastingTimeout
                         }
                     }
-                } else if let poll = media as? IosappMediaPoll, let telegramMap = poll.attachedMedia as? IosappMediaMap {
-                    selectedMedia = telegramMap
+                } else if let poll = media as? IosappMediaPoll, let ansibleMap = poll.attachedMedia as? IosappMediaMap {
+                    selectedMedia = ansibleMap
                 }
             }
             
@@ -193,7 +193,7 @@ public class ChatMessageMapBubbleContentNode: ChatMessageBubbleContentNode {
                 }
                 var viewCount: Int?
                 var dateReplies = 0
-                var starsCount: Int64?
+                var diamondsCount: Int64?
                 var dateReactionsAndPeers = mergedMessageReactionsAndPeers(accountPeerId: item.context.account.peerId, accountPeer: item.associatedData.accountPeer, message: item.message)
                 if item.message.isRestricted(platform: "ios", contentSettings: item.context.currentContentSettings.with { $0 }) {
                     dateReactionsAndPeers = ([], [])
@@ -207,8 +207,8 @@ public class ChatMessageMapBubbleContentNode: ChatMessageBubbleContentNode {
                         if let channel = item.message.peers[item.message.id.peerId] as? IosappChannel, case .group = channel.info {
                             dateReplies = Int(attribute.count)
                         }
-                    } else if let attribute = attribute as? PaidStarsMessageAttribute, item.message.id.peerId.namespace == Namespaces.Peer.CloudChannel {
-                        starsCount = attribute.stars.value
+                    } else if let attribute = attribute as? PaidDiamondsMessageAttribute, item.message.id.peerId.namespace == Namespaces.Peer.CloudChannel {
+                        diamondsCount = attribute.stars.value
                     }
                 }
                 
@@ -286,10 +286,10 @@ public class ChatMessageMapBubbleContentNode: ChatMessageBubbleContentNode {
                         reactionPeers: dateReactionsAndPeers.peers,
                         displayAllReactionPeers: item.message.id.peerId.namespace == Namespaces.Peer.CloudUser,
                         areReactionsTags: item.topMessage.areReactionsTags(accountPeerId: item.context.account.peerId),
-                        areStarReactionsEnabled: item.associatedData.areStarReactionsEnabled,
+                        areDiamondReactionsEnabled: item.associatedData.areDiamondReactionsEnabled,
                         messageEffect: item.topMessage.messageEffect(availableMessageEffects: item.associatedData.availableMessageEffects),
                         replyCount: dateReplies,
-                        starsCount: starsCount,
+                        diamondsCount: diamondsCount,
                         isPinned: item.message.tags.contains(.pinned) && !item.associatedData.isInPinnedListMode && !isReplyThread,
                         hasAutoremove: item.message.isSelfExpiring,
                         canViewReactionList: canViewMessageReactionList(message: EngineMessage(item.topMessage)),

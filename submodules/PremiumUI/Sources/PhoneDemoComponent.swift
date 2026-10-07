@@ -91,7 +91,7 @@ private var phoneBorderMaskImage14 = {
     })
 }()
 
-private var starMaskImage = {
+private var diamondMaskImage = {
     return generateImage(CGSize(width: 88.0, height: 84.0), rotatedContext: { size, context in
         context.clear(CGRect(origin: .zero, size: size))
       
@@ -115,7 +115,7 @@ private final class PhoneView: UIView {
     let shimmerEffectView: ShimmerEffectForegroundView
     let shimmerMaskView: UIView
     let shimmerBorderView: UIImageView
-    let shimmerStarView: UIImageView
+    let shimmerDiamondView: UIImageView
     
     fileprivate var videoNode: UniversalVideoNode?
     
@@ -166,8 +166,8 @@ private final class PhoneView: UIView {
             
         self.shimmerMaskView = UIView()
         self.shimmerBorderView = UIImageView(image: phoneBorderMaskImage)
-        self.shimmerStarView = UIImageView(image: starMaskImage)
-        self.shimmerStarView.alpha = 0.7
+        self.shimmerDiamondView = UIImageView(image: diamondMaskImage)
+        self.shimmerDiamondView.alpha = 0.7
         
         self.backShimmerView = UIView()
         self.backShimmerView.alpha = 0.0
@@ -192,7 +192,7 @@ private final class PhoneView: UIView {
         self.backShimmerView.addSubview(self.backShimmerEffectView)
         
         self.shimmerMaskView.addSubview(self.shimmerBorderView)
-        self.shimmerMaskView.addSubview(self.shimmerStarView)
+        self.shimmerMaskView.addSubview(self.shimmerDiamondView)
         
         self.frontShimmerView.mask = self.shimmerMaskView
         self.frontShimmerView.addSubview(self.shimmerEffectView)
@@ -341,9 +341,9 @@ private final class PhoneView: UIView {
             self.shimmerEffectView.updateAbsoluteRect(CGRect(origin: CGPoint(x: phoneBounds.width * 8.0, y: 0.0), size: phoneBounds.size), within: CGSize(width: phoneBounds.width * 17.0, height: phoneBounds.height))
             
             let notchHeight: CGFloat = 20.0
-            if let starImage = self.shimmerStarView.image {
-                let starSize = starImage.size
-                self.shimmerStarView.frame = CGRect(origin: CGPoint(x: floorToScreenPixels((phoneImage.size.width - starSize.width) / 2.0), y: self.position == .top ? notchHeight + floor((videoSize.height - notchHeight - starSize.height) / 2.0) : self.contentContainerView.frame.height - videoSize.height + floor((videoSize.height - starSize.height) / 2.0)), size: starSize)
+            if let diamondImage = self.shimmerDiamondView.image {
+                let diamondSize = diamondImage.size
+                self.shimmerDiamondView.frame = CGRect(origin: CGPoint(x: floorToScreenPixels((phoneImage.size.width - diamondSize.width) / 2.0), y: self.position == .top ? notchHeight + floor((videoSize.height - notchHeight - diamondSize.height) / 2.0) : self.contentContainerView.frame.height - videoSize.height + floor((videoSize.height - diamondSize.height) / 2.0)), size: diamondSize)
             }
         }
     }
@@ -365,9 +365,9 @@ public final class PhoneDemoComponent: Component {
     public enum BackgroundDecoration {
         case none
         case dataRain
-        case swirlStars
-        case fasterStars
-        case badgeStars
+        case swirlDiamonds
+        case fasterDiamonds
+        case badgeDiamonds
         case emoji
         case hello
         case tag
@@ -496,42 +496,42 @@ public final class PhoneDemoComponent: Component {
                             self.decorationContainerView.addSubview(decorationView)
                         }
                     }
-                case .swirlStars:
-                    if let _ = self.decorationView as? SwirlStarsView {
+                case .swirlDiamonds:
+                    if let _ = self.decorationView as? SwirlDiamondsView {
                     } else {
-                        let decorationView = SwirlStarsView(frame: self.decorationContainerView.bounds)
+                        let decorationView = SwirlDiamondsView(frame: self.decorationContainerView.bounds)
                         self.decorationView = decorationView
                         self.decorationContainerView.addSubview(decorationView)
                     }
-                case .fasterStars:
-                    if let _ = self.decorationView as? FasterStarsView {
+                case .fasterDiamonds:
+                    if let _ = self.decorationView as? FasterDiamondsView {
                     } else {
-                        let decorationView = FasterStarsView(frame: self.decorationContainerView.bounds)
+                        let decorationView = FasterDiamondsView(frame: self.decorationContainerView.bounds)
                         self.decorationView = decorationView
                         self.decorationContainerView.addSubview(decorationView)
                         
                         self.playbackStatusDisposable = (self.phoneView.playbackStatus
                         |> deliverOnMainQueue).start(next: { [weak decorationView] status in
-                            if let starsView = decorationView, let status = status {
+                            if let diamondsView = decorationView, let status = status {
                                 if status.timestamp > 8.0 {
-                                    starsView.resetAnimation()
+                                    diamondsView.resetAnimation()
                                 } else if status.timestamp > 0.85 {
-                                    starsView.startAnimation()
+                                    diamondsView.startAnimation()
                                 }
                             }
                         })
                     }
-                case .badgeStars:
-                    if let _ = self.decorationView as? BadgeStarsView {
+                case .badgeDiamonds:
+                    if let _ = self.decorationView as? BadgeDiamondsView {
                     } else {
-                        let decorationView = BadgeStarsView(frame: self.decorationContainerView.bounds)
+                        let decorationView = BadgeDiamondsView(frame: self.decorationContainerView.bounds)
                         self.decorationView = decorationView
                         self.decorationContainerView.addSubview(decorationView)
                     }
                 case .emoji:
-                    if let _ = self.decorationView as? EmojiStarsView {
+                    if let _ = self.decorationView as? EmojiDiamondsView {
                     } else {
-                        let decorationView = EmojiStarsView(frame: self.decorationContainerView.bounds)
+                        let decorationView = EmojiDiamondsView(frame: self.decorationContainerView.bounds)
                         self.decorationView = decorationView
                         self.decorationContainerView.addSubview(decorationView)
                     }
@@ -543,9 +543,9 @@ public final class PhoneDemoComponent: Component {
                         self.decorationContainerView.addSubview(decorationView)
                     }
                 case .tag:
-                    if let _ = self.decorationView as? TagStarsView {
+                    if let _ = self.decorationView as? TagDiamondsView {
                     } else {
-                        let decorationView = TagStarsView(frame: self.decorationContainerView.bounds)
+                        let decorationView = TagDiamondsView(frame: self.decorationContainerView.bounds)
                         self.decorationView = decorationView
                         self.decorationContainerView.addSubview(decorationView)
                     }

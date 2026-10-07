@@ -11,12 +11,12 @@ import ComponentFlow
 import ListActionItemComponent
 import MultilineTextComponent
 import IosappStringFormatting
-import StarsAvatarComponent
+import DiamondsAvatarComponent
 
-final class StarsTransactionItem: ListViewItem, ItemListItem {
+final class DiamondsTransactionItem: ListViewItem, ItemListItem {
     let context: AccountContext
     let presentationData: ItemListPresentationData
-    let transaction: StarsContext.State.Transaction
+    let transaction: DiamondsContext.State.Transaction
     let action: () -> Void
     let sectionId: ItemListSectionId
     let style: ItemListStyle
@@ -24,7 +24,7 @@ final class StarsTransactionItem: ListViewItem, ItemListItem {
     init(
         context: AccountContext,
         presentationData: ItemListPresentationData,
-        transaction: StarsContext.State.Transaction,
+        transaction: DiamondsContext.State.Transaction,
         action: @escaping () -> Void,
         sectionId: ItemListSectionId,
         style: ItemListStyle
@@ -39,7 +39,7 @@ final class StarsTransactionItem: ListViewItem, ItemListItem {
     
     func nodeConfiguredForParams(async: @escaping (@escaping () -> Void) -> Void, params: ListViewItemLayoutParams, synchronousLoads: Bool, previousItem: ListViewItem?, nextItem: ListViewItem?, completion: @escaping (ListViewItemNode, @escaping () -> (Signal<Void, NoError>?, (ListViewItemApply) -> Void)) -> Void) {
         async {
-            let node = StarsTransactionItemNode()
+            let node = DiamondsTransactionItemNode()
             let (layout, apply) = node.asyncLayout()(self, params, itemListNeighbors(item: self, topItem: previousItem as? ItemListItem, bottomItem: nextItem as? ItemListItem))
             
             node.contentSize = layout.contentSize
@@ -55,7 +55,7 @@ final class StarsTransactionItem: ListViewItem, ItemListItem {
     
     func updateNode(async: @escaping (@escaping () -> Void) -> Void, node: @escaping () -> ListViewItemNode, params: ListViewItemLayoutParams, previousItem: ListViewItem?, nextItem: ListViewItem?, animation: ListViewItemUpdateAnimation, completion: @escaping (ListViewItemNodeLayout, @escaping (ListViewItemApply) -> Void) -> Void) {
         Queue.mainQueue().async {
-            if let nodeValue = node() as? StarsTransactionItemNode {
+            if let nodeValue = node() as? DiamondsTransactionItemNode {
                 let makeLayout = nodeValue.asyncLayout()
                 
                 async {
@@ -78,7 +78,7 @@ final class StarsTransactionItem: ListViewItem, ItemListItem {
     }
 }
 
-final class StarsTransactionItemNode: ListViewItemNode, ItemListItemNode {
+final class DiamondsTransactionItemNode: ListViewItemNode, ItemListItemNode {
     private let backgroundNode: ASDisplayNode
     private let topStripeNode: ASDisplayNode
     private let bottomStripeNode: ASDisplayNode
@@ -89,7 +89,7 @@ final class StarsTransactionItemNode: ListViewItemNode, ItemListItemNode {
     
     private let activateArea: AccessibilityAreaNode
     
-    private var item: StarsTransactionItem?
+    private var item: DiamondsTransactionItem?
     
     var tag: ItemListItemTag? = nil
     
@@ -116,7 +116,7 @@ final class StarsTransactionItemNode: ListViewItemNode, ItemListItemNode {
         super.init(layerBacked: false)
     }
     
-    func asyncLayout() -> (_ item: StarsTransactionItem, _ params: ListViewItemLayoutParams, _ insets: ItemListNeighbors) -> (ListViewItemNodeLayout, () -> Void) {
+    func asyncLayout() -> (_ item: DiamondsTransactionItem, _ params: ListViewItemLayoutParams, _ insets: ItemListNeighbors) -> (ListViewItemNodeLayout, () -> Void) {
         let currentItem = self.item
         
         return { item, params, neighbors in
@@ -235,34 +235,34 @@ final class StarsTransactionItemNode: ListViewItemNode, ItemListItemNode {
                             itemTitle = peer.displayTitle(strings: item.presentationData.strings, displayOrder: .firstLast)
                             itemSubtitle = item.presentationData.strings.Diamonds_Intro_Transaction_PaidMessage(item.transaction.paidMessageCount ?? 1)
                         } else if let starGift = item.transaction.starGift {
-                            if item.transaction.flags.contains(.isStarGiftAuctionBid), case let .generic(gift) = starGift {
+                            if item.transaction.flags.contains(.isDiamondGiftAuctionBid), case let .generic(gift) = starGift {
                                 itemTitle = gift.title ?? "Gift"
                                 itemSubtitle = item.presentationData.strings.Diamonds_Intro_Transaction_GiftAuctionBid
-                            } else if item.transaction.flags.contains(.isStarGiftPrepaidUpgrade) {
+                            } else if item.transaction.flags.contains(.isDiamondGiftPrepaidUpgrade) {
                                 itemTitle = peer.displayTitle(strings: item.presentationData.strings, displayOrder: .firstLast)
                                 itemSubtitle = item.presentationData.strings.Diamonds_Intro_Transaction_PrepaidGiftUpgrade
-                            } else if item.transaction.flags.contains(.isStarGiftDropOriginalDetails), case let .unique(gift) = starGift {
+                            } else if item.transaction.flags.contains(.isDiamondGiftDropOriginalDetails), case let .unique(gift) = starGift {
                                 itemTitle = "\(gift.title) #\(formatCollectibleNumber(gift.number, dateTimeFormat: item.presentationData.dateTimeFormat))"
                                 itemSubtitle = item.presentationData.strings.Diamonds_Intro_Transaction_GiftDropOriginalDetails
-                            } else if item.transaction.flags.contains(.isStarGiftUpgrade), case let .unique(gift) = starGift {
+                            } else if item.transaction.flags.contains(.isDiamondGiftUpgrade), case let .unique(gift) = starGift {
                                 itemTitle = "\(gift.title) #\(formatCollectibleNumber(gift.number, dateTimeFormat: item.presentationData.dateTimeFormat))"
                                 itemSubtitle = item.presentationData.strings.Diamonds_Intro_Transaction_GiftUpgrade
                             } else {
                                 itemTitle = peer.displayTitle(strings: item.presentationData.strings, displayOrder: .firstLast)
                                 switch starGift {
                                 case .generic:
-                                    if item.transaction.flags.contains(.isStarGiftOffer) {
+                                    if item.transaction.flags.contains(.isDiamondGiftOffer) {
                                         itemSubtitle = item.presentationData.strings.Gift_Offer_Title
                                     } else {
                                         itemSubtitle = item.transaction.count.amount > StarsAmount.zero ? item.presentationData.strings.Diamonds_Intro_Transaction_ConvertedGift : item.presentationData.strings.Diamonds_Intro_Transaction_Gift
                                     }
                                 case .unique:
-                                    if item.transaction.flags.contains(.isStarGiftOffer) {
+                                    if item.transaction.flags.contains(.isDiamondGiftOffer) {
                                         itemSubtitle = item.presentationData.strings.Gift_Offer_Title
                                     } else if item.transaction.count.amount > StarsAmount.zero {
                                         itemSubtitle = item.presentationData.strings.Diamonds_Intro_Transaction_GiftSale
                                     } else {
-                                        if item.transaction.flags.contains(.isStarGiftResale) {
+                                        if item.transaction.flags.contains(.isDiamondGiftResale) {
                                             itemSubtitle = item.presentationData.strings.Diamonds_Intro_Transaction_GiftPurchase
                                         } else {
                                             itemSubtitle = item.presentationData.strings.Diamonds_Intro_Transaction_GiftTransfer
@@ -383,9 +383,9 @@ final class StarsTransactionItemNode: ListViewItemNode, ItemListItemNode {
                             theme: item.presentationData.theme,
                             title: AnyComponent(VStack(titleComponents, alignment: .left, spacing: 2.0)),
                             contentInsets: UIEdgeInsets(top: 9.0, left: 0.0, bottom: 8.0, right: 0.0),
-                            leftIcon: .custom(AnyComponentWithIdentity(id: "avatar", component: AnyComponent(StarsAvatarComponent(context: item.context, theme: item.presentationData.theme, peer: .transactionPeer(item.transaction.peer), photo: nil, media: [], gift: nil, backgroundColor: item.presentationData.theme.list.itemBlocksBackgroundColor))), false),
+                            leftIcon: .custom(AnyComponentWithIdentity(id: "avatar", component: AnyComponent(DiamondsAvatarComponent(context: item.context, theme: item.presentationData.theme, peer: .transactionPeer(item.transaction.peer), photo: nil, media: [], gift: nil, backgroundColor: item.presentationData.theme.list.itemBlocksBackgroundColor))), false),
                             icon: nil,
-                            accessory: .custom(ListActionItemComponent.CustomAccessory(component: AnyComponentWithIdentity(id: "label", component: AnyComponent(StarsLabelComponent(text: itemLabel, iconName: itemIconName, iconColor: itemIconColor))), insets: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 16.0))),
+                            accessory: .custom(ListActionItemComponent.CustomAccessory(component: AnyComponentWithIdentity(id: "label", component: AnyComponent(DiamondsLabelComponent(text: itemLabel, iconName: itemIconName, iconColor: itemIconColor))), insets: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 16.0))),
                             action: { [weak self] _ in
                                 guard let self, let item = self.item else {
                                     return

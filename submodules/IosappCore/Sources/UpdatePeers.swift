@@ -133,8 +133,8 @@ func shouldKeepUserStoriesInFeed(peerId: PeerId, isContactOrMember: Bool) -> Boo
 func updatePeers(transaction: Transaction, accountPeerId: PeerId, peers: AccumulatedPeers) {
     var parsedPeers: [Peer] = []
     for (_, user) in peers.users {
-        if let telegramUser = IosappUser.merge(transaction.getPeer(user.peerId) as? IosappUser, rhs: user) {
-            parsedPeers.append(telegramUser)
+        if let ansibleUser = IosappUser.merge(transaction.getPeer(user.peerId) as? IosappUser, rhs: user) {
+            parsedPeers.append(ansibleUser)
             switch user {
             case let .user(userData):
                 let (flags, flags2, storiesMaxId) = (userData.flags, userData.flags2, userData.storiesMaxId)
@@ -159,7 +159,7 @@ func updatePeers(transaction: Transaction, accountPeerId: PeerId, peers: Accumul
                 
                 if !isMin {
                     let isContact = (flags & (1 << 11)) != 0
-                    _internal_updatePeerIsContact(transaction: transaction, user: telegramUser, isContact: isContact)
+                    _internal_updatePeerIsContact(transaction: transaction, user: ansibleUser, isContact: isContact)
                 }
             case .userEmpty:
                 break

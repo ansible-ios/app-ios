@@ -84,7 +84,7 @@ public struct ChatMessageDateAndStatus {
     public var dateReactions: [MessageReaction]
     public var dateReactionPeers: [(MessageReaction.Reaction, EnginePeer)]
     public var dateReplies: Int
-    public var starsCount: Int64?
+    public var diamondsCount: Int64?
     public var isPinned: Bool
     public var dateText: String
 
@@ -95,7 +95,7 @@ public struct ChatMessageDateAndStatus {
         dateReactions: [MessageReaction],
         dateReactionPeers: [(MessageReaction.Reaction, EnginePeer)],
         dateReplies: Int,
-        starsCount: Int64?,
+        diamondsCount: Int64?,
         isPinned: Bool,
         dateText: String
     ) {
@@ -105,7 +105,7 @@ public struct ChatMessageDateAndStatus {
         self.dateReactions = dateReactions
         self.dateReactionPeers = dateReactionPeers
         self.dateReplies = dateReplies
-        self.starsCount = starsCount
+        self.diamondsCount = diamondsCount
         self.isPinned = isPinned
         self.dateText = dateText
     }
@@ -1125,10 +1125,10 @@ public final class ChatMessageInteractiveMediaNode: ASDisplayNode, GalleryItemTr
                     reactionPeers: dateAndStatus.dateReactionPeers,
                     displayAllReactionPeers: message.id.peerId.namespace == Namespaces.Peer.CloudUser,
                     areReactionsTags: message.areReactionsTags(accountPeerId: context.account.peerId),
-                    areStarReactionsEnabled: associatedData.areStarReactionsEnabled,
+                    areDiamondReactionsEnabled: associatedData.areDiamondReactionsEnabled,
                     messageEffect: messageEffect,
                     replyCount: dateAndStatus.dateReplies,
-                    starsCount: dateAndStatus.starsCount,
+                    diamondsCount: dateAndStatus.diamondsCount,
                     isPinned: dateAndStatus.isPinned,
                     hasAutoremove: message.isSelfExpiring,
                     canViewReactionList: canViewMessageReactionList(message: EngineMessage(message)),

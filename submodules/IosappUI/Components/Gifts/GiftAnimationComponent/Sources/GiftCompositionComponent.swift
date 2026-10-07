@@ -38,7 +38,7 @@ public final class GiftCompositionComponent: Component {
     let subject: Subject
     let animationOffset: CGPoint?
     let animationScale: CGFloat?
-    let displayAnimationStars: Bool
+    let displayAnimationDiamonds: Bool
     let animateScaleOnTransition: Bool
     let alwaysAnimateTransition: Bool
     let revealedAttributes: Set<StarGift.UniqueGift.Attribute.AttributeType>
@@ -51,7 +51,7 @@ public final class GiftCompositionComponent: Component {
         subject: Subject,
         animationOffset: CGPoint? = nil,
         animationScale: CGFloat? = nil,
-        displayAnimationStars: Bool = false,
+        displayAnimationDiamonds: Bool = false,
         animateScaleOnTransition: Bool = true,
         alwaysAnimateTransition: Bool = false,
         revealedAttributes: Set<StarGift.UniqueGift.Attribute.AttributeType> = Set(),
@@ -63,7 +63,7 @@ public final class GiftCompositionComponent: Component {
         self.subject = subject
         self.animationOffset = animationOffset
         self.animationScale = animationScale
-        self.displayAnimationStars = displayAnimationStars
+        self.displayAnimationDiamonds = displayAnimationDiamonds
         self.animateScaleOnTransition = animateScaleOnTransition
         self.alwaysAnimateTransition = alwaysAnimateTransition
         self.revealedAttributes = revealedAttributes
@@ -87,7 +87,7 @@ public final class GiftCompositionComponent: Component {
         if lhs.animationScale != rhs.animationScale {
             return false
         }
-        if lhs.displayAnimationStars != rhs.displayAnimationStars {
+        if lhs.displayAnimationDiamonds != rhs.displayAnimationDiamonds {
             return false
         }
         if lhs.animateScaleOnTransition != rhs.animateScaleOnTransition {
@@ -103,7 +103,7 @@ public final class GiftCompositionComponent: Component {
         private var component: GiftCompositionComponent?
         private weak var componentState: EmptyComponentState?
         
-        private var starsLayer: StarsEffectLayer?
+        private var diamondsLayer: DiamondsEffectLayer?
         
         private let background = ComponentView<Empty>()
         private var animationNode: AnimatedStickerNode?
@@ -988,27 +988,27 @@ public final class GiftCompositionComponent: Component {
                 animationTransition.setPosition(layer: animationNode.layer, position: animationFrame.center)
                 animationTransition.setScale(layer: animationNode.layer, scale: size.width / iconSize.width)
                 
-                if component.displayAnimationStars {
-                    var starsTransition = transition
-                    let starsLayer: StarsEffectLayer
-                    if let current = self.starsLayer {
-                        starsLayer = current
+                if component.displayAnimationDiamonds {
+                    var diamondsTransition = transition
+                    let diamondsLayer: DiamondsEffectLayer
+                    if let current = self.diamondsLayer {
+                        diamondsLayer = current
                     } else {
-                        starsTransition = .immediate
-                        starsLayer = StarsEffectLayer()
-                        self.layer.insertSublayer(starsLayer, below: animationNode.layer)
-                        self.starsLayer = starsLayer
-                        starsLayer.animateAlpha(from: 0.0, to: 1.0, duration: 0.25)
+                        diamondsTransition = .immediate
+                        diamondsLayer = DiamondsEffectLayer()
+                        self.layer.insertSublayer(diamondsLayer, below: animationNode.layer)
+                        self.diamondsLayer = diamondsLayer
+                        diamondsLayer.animateAlpha(from: 0.0, to: 1.0, duration: 0.25)
                     }
-                    let starsSize = CGSize(width: 36.0, height: 36.0)
-                    starsLayer.update(color: .white, size: starsSize)
-                    starsLayer.bounds = CGRect(origin: .zero, size: starsSize)
-                    starsTransition.setPosition(layer: starsLayer, position: animationFrame.center)
-                } else if let starsLayer = self.starsLayer {
-                    self.starsLayer = nil
-                    transition.setPosition(layer: starsLayer, position: animationFrame.center)
-                    starsLayer.animateAlpha(from: 1.0, to: 0.0, duration: 0.25, removeOnCompletion: false, completion: { _ in
-                        starsLayer.removeFromSuperlayer()
+                    let diamondsSize = CGSize(width: 36.0, height: 36.0)
+                    diamondsLayer.update(color: .white, size: diamondsSize)
+                    diamondsLayer.bounds = CGRect(origin: .zero, size: diamondsSize)
+                    diamondsTransition.setPosition(layer: diamondsLayer, position: animationFrame.center)
+                } else if let diamondsLayer = self.diamondsLayer {
+                    self.diamondsLayer = nil
+                    transition.setPosition(layer: diamondsLayer, position: animationFrame.center)
+                    diamondsLayer.animateAlpha(from: 1.0, to: 0.0, duration: 0.25, removeOnCompletion: false, completion: { _ in
+                        diamondsLayer.removeFromSuperlayer()
                     })
                 }
             }
@@ -1026,7 +1026,7 @@ public final class GiftCompositionComponent: Component {
     }
 }
 
-private final class StarsEffectLayer: SimpleLayer {
+private final class DiamondsEffectLayer: SimpleLayer {
     private let emitterLayer = CAEmitterLayer()
     
     override init() {

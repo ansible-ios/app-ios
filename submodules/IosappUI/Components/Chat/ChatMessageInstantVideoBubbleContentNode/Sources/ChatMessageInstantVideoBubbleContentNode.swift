@@ -186,8 +186,8 @@ public class ChatMessageInstantVideoBubbleContentNode: ChatMessageBubbleContentN
         return { item, layoutConstants, preparePosition, selection, constrainedSize, avatarInset in
             var selectedFile: IosappMediaFile?
             for media in item.message.media {
-                if let telegramFile = media as? IosappMediaFile {
-                    selectedFile = telegramFile
+                if let ansibleFile = media as? IosappMediaFile {
+                    selectedFile = ansibleFile
                 }
             }
             

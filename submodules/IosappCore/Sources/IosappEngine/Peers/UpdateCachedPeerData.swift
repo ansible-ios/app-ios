@@ -301,7 +301,7 @@ func _internal_fetchAndUpdateCachedPeerData(accountPeerId: PeerId, peerId rawPee
                                 }
                                 switch fullUser {
                                     case let .userFull(userFullData):
-                                        let (userFullFlags, userFullFlags2, userFullAbout, userFullSettings, apiPersonalPhoto, profilePhoto, apiFallbackPhoto, userFullBotInfo, userFullPinnedMsgId, userFullCommonChatsCount, userFullTtlPeriod, userFullChatTheme, groupAdminRights, channelAdminRights, userWallpaper, businessWorkHours, businessLocation, greetingMessage, awayMessage, businessIntro, birthday, personalChannelId, personalChannelMessage, starGiftsCount, starRefProgram, apiVerification, apiSendPaidMessageStars, disallowedStarGifts, starsRating, starsMyPendingRating, starsMyPendingRatingDate, mainTab, savedMusic, note, botManagerId) = (userFullData.flags, userFullData.flags2, userFullData.about, userFullData.settings, userFullData.personalPhoto, userFullData.profilePhoto, userFullData.fallbackPhoto, userFullData.botInfo, userFullData.pinnedMsgId, userFullData.commonChatsCount, userFullData.ttlPeriod, userFullData.theme, userFullData.botGroupAdminRights, userFullData.botBroadcastAdminRights, userFullData.wallpaper, userFullData.businessWorkHours, userFullData.businessLocation, userFullData.businessGreetingMessage, userFullData.businessAwayMessage, userFullData.businessIntro, userFullData.birthday, userFullData.personalChannelId, userFullData.personalChannelMessage, userFullData.stargiftsCount, userFullData.starrefProgram, userFullData.botVerification, userFullData.sendPaidMessagesStars, userFullData.disallowedGifts, userFullData.starsRating, userFullData.starsMyPendingRating, userFullData.starsMyPendingRatingDate, userFullData.mainTab, userFullData.savedMusic, userFullData.note, userFullData.botManagerId)
+                                        let (userFullFlags, userFullFlags2, userFullAbout, userFullSettings, apiPersonalPhoto, profilePhoto, apiFallbackPhoto, userFullBotInfo, userFullPinnedMsgId, userFullCommonChatsCount, userFullTtlPeriod, userFullChatTheme, groupAdminRights, channelAdminRights, userWallpaper, businessWorkHours, businessLocation, greetingMessage, awayMessage, businessIntro, birthday, personalChannelId, personalChannelMessage, diamondGiftsCount, starRefProgram, apiVerification, apiSendPaidMessageDiamonds, disallowedDiamondGifts, starsRating, starsMyPendingRating, starsMyPendingRatingDate, mainTab, savedMusic, note, botManagerId) = (userFullData.flags, userFullData.flags2, userFullData.about, userFullData.settings, userFullData.personalPhoto, userFullData.profilePhoto, userFullData.fallbackPhoto, userFullData.botInfo, userFullData.pinnedMsgId, userFullData.commonChatsCount, userFullData.ttlPeriod, userFullData.theme, userFullData.botGroupAdminRights, userFullData.botBroadcastAdminRights, userFullData.wallpaper, userFullData.businessWorkHours, userFullData.businessLocation, userFullData.businessGreetingMessage, userFullData.businessAwayMessage, userFullData.businessIntro, userFullData.birthday, userFullData.personalChannelId, userFullData.personalChannelMessage, userFullData.stargiftsCount, userFullData.starrefProgram, userFullData.botVerification, userFullData.sendPaidMessagesStars, userFullData.disallowedGifts, userFullData.starsRating, userFullData.starsMyPendingRating, userFullData.starsMyPendingRatingDate, userFullData.mainTab, userFullData.savedMusic, userFullData.note, userFullData.botManagerId)
                                         let botInfo = userFullBotInfo.flatMap(BotInfo.init(apiBotInfo:))
                                         let isBlocked = (userFullFlags & (1 << 0)) != 0
                                         let voiceCallsAvailable = (userFullFlags & (1 << 4)) != 0
@@ -380,9 +380,9 @@ func _internal_fetchAndUpdateCachedPeerData(accountPeerId: PeerId, peerId rawPee
                                         
                                         let autoremoveTimeout: CachedPeerAutoremoveTimeout = .known(CachedPeerAutoremoveTimeout.Value(userFullTtlPeriod))
                                     
-                                        let personalPhoto = apiPersonalPhoto.flatMap { telegramMediaImageFromApiPhoto($0) }
-                                        let photo = profilePhoto.flatMap { telegramMediaImageFromApiPhoto($0) }
-                                        let fallbackPhoto = apiFallbackPhoto.flatMap { telegramMediaImageFromApiPhoto($0) }
+                                        let personalPhoto = apiPersonalPhoto.flatMap { ansibleMediaImageFromApiPhoto($0) }
+                                        let photo = profilePhoto.flatMap { ansibleMediaImageFromApiPhoto($0) }
+                                        let fallbackPhoto = apiFallbackPhoto.flatMap { ansibleMediaImageFromApiPhoto($0) }
                                                                         
                                         let wallpaper = userWallpaper.flatMap { IosappWallpaper(apiWallpaper: $0) }
                                     
@@ -437,31 +437,31 @@ func _internal_fetchAndUpdateCachedPeerData(accountPeerId: PeerId, peerId rawPee
                                             )
                                         }
                                     
-                                        var mappedStarRefProgram: IosappStarRefProgram?
+                                        var mappedDiamondRefProgram: IosappDiamondRefProgram?
                                         if let starRefProgram {
-                                            mappedStarRefProgram = IosappStarRefProgram(apiStarRefProgram: starRefProgram)
+                                            mappedDiamondRefProgram = IosappDiamondRefProgram(apiDiamondRefProgram: starRefProgram)
                                         }
                                     
                                         let verification = apiVerification.flatMap { PeerVerification(apiBotVerification: $0) }
                                         
-                                        let sendPaidMessageStars = apiSendPaidMessageStars.flatMap { StarsAmount(value: $0, nanos: 0) }
+                                        let sendPaidMessageDiamonds = apiSendPaidMessageDiamonds.flatMap { StarsAmount(value: $0, nanos: 0) }
                                     
-                                        let disallowedGifts = IosappDisallowedGifts(apiDisallowedGifts: disallowedStarGifts)
+                                        let disallowedGifts = IosappDisallowedGifts(apiDisallowedGifts: disallowedDiamondGifts)
                                     
                                         let botGroupAdminRights = groupAdminRights.flatMap { IosappChatAdminRights(apiAdminRights: $0) }
                                         let botChannelAdminRights = channelAdminRights.flatMap { IosappChatAdminRights(apiAdminRights: $0) }
                                     
-                                        let mappedStarRating = starsRating.flatMap(IosappStarRating.init(apiRating:))
-                                        var pendingRating: IosappStarPendingRating?
+                                        let mappedDiamondRating = starsRating.flatMap(IosappDiamondRating.init(apiRating:))
+                                        var pendingRating: IosappDiamondPendingRating?
                                         if let starsMyPendingRating, let starsMyPendingRatingDate {
-                                            pendingRating = IosappStarPendingRating(
-                                                rating: IosappStarRating(apiRating: starsMyPendingRating),
+                                            pendingRating = IosappDiamondPendingRating(
+                                                rating: IosappDiamondRating(apiRating: starsMyPendingRating),
                                                 timestamp: starsMyPendingRatingDate
                                             )
                                         }
                                     
                                         let mappedMainProfileTab = mainTab.flatMap { IosappProfileTab(apiTab: $0) }
-                                        let mappedSavedMusic = savedMusic.flatMap { telegramMediaFileFromApiDocument($0, altDocuments: nil) }
+                                        let mappedSavedMusic = savedMusic.flatMap { ansibleMediaFileFromApiDocument($0, altDocuments: nil) }
                                     
                                         let mappedChatTheme: ChatTheme? = userFullChatTheme.flatMap { ChatTheme(apiChatTheme: $0) }
                                     
@@ -503,15 +503,15 @@ func _internal_fetchAndUpdateCachedPeerData(accountPeerId: PeerId, peerId rawPee
                                             .withUpdatedBirthday(mappedBirthday)
                                             .withUpdatedPersonalChannel(personalChannel)
                                             .withUpdatedBotPreview(botPreview)
-                                            .withUpdatedStarGiftsCount(starGiftsCount)
-                                            .withUpdatedStarRefProgram(mappedStarRefProgram)
+                                            .withUpdatedDiamondGiftsCount(diamondGiftsCount)
+                                            .withUpdatedDiamondRefProgram(mappedDiamondRefProgram)
                                             .withUpdatedVerification(verification)
-                                            .withUpdatedSendPaidMessageStars(sendPaidMessageStars)
+                                            .withUpdatedSendPaidMessageDiamonds(sendPaidMessageDiamonds)
                                             .withUpdatedDisallowedGifts(disallowedGifts)
                                             .withUpdatedBotGroupAdminRights(botGroupAdminRights)
                                             .withUpdatedBotChannelAdminRights(botChannelAdminRights)
-                                            .withUpdatedStarRating(mappedStarRating)
-                                            .withUpdatedPendingStarRating(pendingRating)
+                                            .withUpdatedDiamondRating(mappedDiamondRating)
+                                            .withUpdatedPendingDiamondRating(pendingRating)
                                             .withUpdatedMainProfileTab(mappedMainProfileTab)
                                             .withUpdatedSavedMusic(mappedSavedMusic)
                                             .withUpdatedNote(mappedNote)
@@ -572,7 +572,7 @@ func _internal_fetchAndUpdateCachedPeerData(accountPeerId: PeerId, peerId rawPee
                                     }
                                 }
                                 
-                                let photo: IosappMediaImage? = chatFullChatPhoto.flatMap { telegramMediaImageFromApiPhoto($0) }
+                                let photo: IosappMediaImage? = chatFullChatPhoto.flatMap { ansibleMediaImageFromApiPhoto($0) }
                                 
                                 let exportedInvitation = chatFullExportedInvite.flatMap { ExportedInvitation(apiExportedInvite: $0) }
                                 let pinnedMessageId = chatFullPinnedMsgId.flatMap({ MessageId(peerId: peerId, namespace: Namespaces.Message.Cloud, id: $0) })
@@ -626,7 +626,7 @@ func _internal_fetchAndUpdateCachedPeerData(accountPeerId: PeerId, peerId rawPee
                                         mappedAllowedReactions = .empty
                                     }
                                     
-                                    let mappedReactionSettings = PeerReactionSettings(allowedReactions: mappedAllowedReactions, maxReactionCount: reactionsLimit, starsAllowed: nil)
+                                    let mappedReactionSettings = PeerReactionSettings(allowedReactions: mappedAllowedReactions, maxReactionCount: reactionsLimit, diamondsAllowed: nil)
                                     
                                     let mappedChatTheme: ChatTheme? = chatFullThemeEmoticon.flatMap { .emoticon($0) }
                                     
@@ -694,7 +694,7 @@ func _internal_fetchAndUpdateCachedPeerData(accountPeerId: PeerId, peerId rawPee
                                     
                                     switch fullChat {
                                         case let .channelFull(channelFullData):
-                                            let (flags, flags2, about, participantsCount, adminsCount, kickedCount, bannedCount, chatPhoto, apiExportedInvite, apiBotInfos, migratedFromChatId, migratedFromMaxId, pinnedMsgId, stickerSet, minAvailableMsgId, linkedChatId, location, slowmodeSeconds, slowmodeNextSendDate, statsDc, inputCall, ttl, pendingSuggestions, groupcallDefaultJoinAs, themeEmoticon, requestsPending, defaultSendAs, allowedReactions, reactionsLimit, wallpaper, appliedBoosts, boostsUnrestrict, emojiSet, verification, starGiftsCount, sendPaidMessageStars, mainTab, guardBotId) = (channelFullData.flags, channelFullData.flags2, channelFullData.about, channelFullData.participantsCount, channelFullData.adminsCount, channelFullData.kickedCount, channelFullData.bannedCount, channelFullData.chatPhoto, channelFullData.exportedInvite, channelFullData.botInfo, channelFullData.migratedFromChatId, channelFullData.migratedFromMaxId, channelFullData.pinnedMsgId, channelFullData.stickerset, channelFullData.availableMinId, channelFullData.linkedChatId, channelFullData.location, channelFullData.slowmodeSeconds, channelFullData.slowmodeNextSendDate, channelFullData.statsDc, channelFullData.call, channelFullData.ttlPeriod, channelFullData.pendingSuggestions, channelFullData.groupcallDefaultJoinAs, channelFullData.themeEmoticon, channelFullData.requestsPending, channelFullData.defaultSendAs, channelFullData.availableReactions, channelFullData.reactionsLimit, channelFullData.wallpaper, channelFullData.boostsApplied, channelFullData.boostsUnrestrict, channelFullData.emojiset, channelFullData.botVerification, channelFullData.stargiftsCount, channelFullData.sendPaidMessagesStars, channelFullData.mainTab, channelFullData.guardBotId)
+                                            let (flags, flags2, about, participantsCount, adminsCount, kickedCount, bannedCount, chatPhoto, apiExportedInvite, apiBotInfos, migratedFromChatId, migratedFromMaxId, pinnedMsgId, stickerSet, minAvailableMsgId, linkedChatId, location, slowmodeSeconds, slowmodeNextSendDate, statsDc, inputCall, ttl, pendingSuggestions, groupcallDefaultJoinAs, themeEmoticon, requestsPending, defaultSendAs, allowedReactions, reactionsLimit, wallpaper, appliedBoosts, boostsUnrestrict, emojiSet, verification, diamondGiftsCount, sendPaidMessageDiamonds, mainTab, guardBotId) = (channelFullData.flags, channelFullData.flags2, channelFullData.about, channelFullData.participantsCount, channelFullData.adminsCount, channelFullData.kickedCount, channelFullData.bannedCount, channelFullData.chatPhoto, channelFullData.exportedInvite, channelFullData.botInfo, channelFullData.migratedFromChatId, channelFullData.migratedFromMaxId, channelFullData.pinnedMsgId, channelFullData.stickerset, channelFullData.availableMinId, channelFullData.linkedChatId, channelFullData.location, channelFullData.slowmodeSeconds, channelFullData.slowmodeNextSendDate, channelFullData.statsDc, channelFullData.call, channelFullData.ttlPeriod, channelFullData.pendingSuggestions, channelFullData.groupcallDefaultJoinAs, channelFullData.themeEmoticon, channelFullData.requestsPending, channelFullData.defaultSendAs, channelFullData.availableReactions, channelFullData.reactionsLimit, channelFullData.wallpaper, channelFullData.boostsApplied, channelFullData.boostsUnrestrict, channelFullData.emojiset, channelFullData.botVerification, channelFullData.stargiftsCount, channelFullData.sendPaidMessagesStars, channelFullData.mainTab, channelFullData.guardBotId)
                                             var channelFlags = CachedChannelFlags()
                                             if (flags & (1 << 3)) != 0 {
                                                 channelFlags.insert(.canDisplayParticipants)
@@ -736,7 +736,7 @@ func _internal_fetchAndUpdateCachedPeerData(accountPeerId: PeerId, peerId rawPee
                                                 channelFlags.insert(.canViewStarsRevenue)
                                             }
                                             if (flags2 & Int32(1 << 19)) != 0 {
-                                                channelFlags.insert(.starGiftsAvailable)
+                                                channelFlags.insert(.diamondGiftsAvailable)
                                             }
                                             if (flags2 & Int32(1 << 20)) != 0 {
                                                 channelFlags.insert(.paidMessagesAvailable)
@@ -845,7 +845,7 @@ func _internal_fetchAndUpdateCachedPeerData(accountPeerId: PeerId, peerId rawPee
                                                 }
                                             }
                                             
-                                            let photo = telegramMediaImageFromApiPhoto(chatPhoto)
+                                            let photo = ansibleMediaImageFromApiPhoto(chatPhoto)
                                         
                                             let emojiPack: StickerPackCollectionInfo? = emojiSet.flatMap { apiSet -> StickerPackCollectionInfo in
                                                 let namespace: ItemCollectionId.Namespace
@@ -902,8 +902,8 @@ func _internal_fetchAndUpdateCachedPeerData(accountPeerId: PeerId, peerId rawPee
                                                 } else {
                                                     mappedAllowedReactions = .empty
                                                 }
-                                                let starsAllowed: Bool = (flags2 & (1 << 16)) != 0
-                                                let mappedReactionSettings = PeerReactionSettings(allowedReactions: mappedAllowedReactions, maxReactionCount: reactionsLimit, starsAllowed: starsAllowed)
+                                                let diamondsAllowed: Bool = (flags2 & (1 << 16)) != 0
+                                                let mappedReactionSettings = PeerReactionSettings(allowedReactions: mappedAllowedReactions, maxReactionCount: reactionsLimit, diamondsAllowed: diamondsAllowed)
                                                 
                                                 let membersHidden = (flags2 & (1 << 2)) != 0
                                                 let forumViewAsMessages = (flags2 & (1 << 6)) != 0
@@ -912,7 +912,7 @@ func _internal_fetchAndUpdateCachedPeerData(accountPeerId: PeerId, peerId rawPee
                                                 
                                                 let verification = verification.flatMap { PeerVerification(apiBotVerification: $0) }
                                                 
-                                                let mappedSendPaidMessageStars = sendPaidMessageStars.flatMap { StarsAmount(value: $0, nanos: 0) }
+                                                let mappedSendPaidMessageDiamonds = sendPaidMessageDiamonds.flatMap { StarsAmount(value: $0, nanos: 0) }
                                                                
                                                 let mappedMainProfileTab = mainTab.flatMap { IosappProfileTab(apiTab: $0) }
                                                 
@@ -953,8 +953,8 @@ func _internal_fetchAndUpdateCachedPeerData(accountPeerId: PeerId, peerId rawPee
                                                     .withUpdatedAppliedBoosts(appliedBoosts)
                                                     .withUpdatedEmojiPack(emojiPack)
                                                     .withUpdatedVerification(verification)
-                                                    .withUpdatedStarGiftsCount(starGiftsCount)
-                                                    .withUpdatedSendPaidMessageStars(mappedSendPaidMessageStars)
+                                                    .withUpdatedDiamondGiftsCount(diamondGiftsCount)
+                                                    .withUpdatedSendPaidMessageDiamonds(mappedSendPaidMessageDiamonds)
                                                     .withUpdatedMainProfileTab(mappedMainProfileTab)
                                                     .withUpdatedGuardBotId(mappedGuardBotId)
                                             })
@@ -992,7 +992,7 @@ func _internal_fetchAndUpdateCachedPeerData(accountPeerId: PeerId, peerId rawPee
                                                 }
                                             }
                                             
-                                            let photo = telegramMediaImageFromApiPhoto(chatPhoto)
+                                            let photo = ansibleMediaImageFromApiPhoto(chatPhoto)
                                             
                                             transaction.updatePeerCachedData(peerIds: [peerId], update: { _, current in
                                                 let previous: CachedCommunityData

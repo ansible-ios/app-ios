@@ -19,7 +19,7 @@ import BalancedTextComponent
 import AvatarNode
 import TextFormat
 import IosappStringFormatting
-import StarsAvatarComponent
+import DiamondsAvatarComponent
 import EmojiTextAttachmentView
 import EmojiStatusComponent
 import UndoUI
@@ -31,7 +31,7 @@ import LottieComponent
 import ContextUI
 import IosappNotices
 import PremiumLockButtonSubtitleComponent
-import StarsBalanceOverlayComponent
+import DiamondsBalanceOverlayComponent
 import BalanceNeededScreen
 import GiftItemComponent
 import GiftAnimationComponent
@@ -103,11 +103,11 @@ private final class GiftViewSheetContent: CombinedComponent {
         }
         
         var peerMap: [EnginePeer.Id: EnginePeer] = [:]
-        var starGiftsMap: [Int64: StarGift.Gift] = [:]
+        var diamondGiftsMap: [Int64: StarGift.Gift] = [:]
         
-        var cachedStarImage: (UIImage, PresentationTheme)?
-        var cachedSmallStarImage: (UIImage, PresentationTheme)?
-        var cachedSubtitleStarImage: (UIImage, PresentationTheme)?
+        var cachedDiamondImage: (UIImage, PresentationTheme)?
+        var cachedSmallDiamondImage: (UIImage, PresentationTheme)?
+        var cachedSubtitleDiamondImage: (UIImage, PresentationTheme)?
         var cachedTonImage: (UIImage, PresentationTheme)?
         
         var cachedChevronImage: (UIImage, PresentationTheme)?
@@ -146,13 +146,13 @@ private final class GiftViewSheetContent: CombinedComponent {
         
         var keepOriginalInfo = false
                 
-        private var starsTopUpOptionsDisposable: Disposable?
-        private(set) var starsTopUpOptions: [StarsTopUpOption] = [] {
+        private var diamondsTopUpOptionsDisposable: Disposable?
+        private(set) var diamondsTopUpOptions: [DiamondsTopUpOption] = [] {
             didSet {
-                self.starsTopUpOptionsPromise.set(self.starsTopUpOptions)
+                self.diamondsTopUpOptionsPromise.set(self.diamondsTopUpOptions)
             }
         }
-        private let starsTopUpOptionsPromise = ValuePromise<[StarsTopUpOption]?>(nil)
+        private let diamondsTopUpOptionsPromise = ValuePromise<[DiamondsTopUpOption]?>(nil)
         
         private let animateOut: ActionSlot<Action<()>>
         
@@ -217,7 +217,7 @@ private final class GiftViewSheetContent: CombinedComponent {
                     }
                     
                     if let _ = arguments.resellAmounts, !isOwn {
-                        self.buyFormDisposable = (context.engine.payments.fetchBotPaymentForm(source: .starGiftResale(slug: gift.slug, toPeerId: context.account.peerId, ton: gift.resellForTonOnly), themeParams: nil)
+                        self.buyFormDisposable = (context.engine.payments.fetchBotPaymentForm(source: .diamondGiftResale(slug: gift.slug, toPeerId: context.account.peerId, ton: gift.resellForTonOnly), themeParams: nil)
                         |> deliverOnMainQueue).start(next: { [weak self] paymentForm in
                             guard let self else {
                                 return
@@ -228,7 +228,7 @@ private final class GiftViewSheetContent: CombinedComponent {
                             guard let self else {
                                 return
                             }
-                            if case let .starGiftResellTooEarly(remaining) = error {
+                            if case let .diamondGiftResellTooEarly(remaining) = error {
                                 let currentTime = Int32(CFAbsoluteTimeGetCurrent() + kCFAbsoluteTimeIntervalSince1970)
                                 self.resellTooEarlyTimestamp = currentTime + remaining
                             }
@@ -332,7 +332,7 @@ private final class GiftViewSheetContent: CombinedComponent {
                             }
                         ))
                     },
-                    .single(nil) |> then(context.engine.payments.cachedStarGifts())
+                    .single(nil) |> then(context.engine.payments.cachedDiamondGifts())
                 ).startStrict(next: { [weak self] peers, starGifts in
                     if let strongSelf = self {
                         var peersMap: [EnginePeer.Id: EnginePeer] = [:]
@@ -343,15 +343,15 @@ private final class GiftViewSheetContent: CombinedComponent {
                         }
                         strongSelf.peerMap = peersMap
 
-                        var starGiftsMap: [Int64: StarGift.Gift] = [:]
+                        var diamondGiftsMap: [Int64: StarGift.Gift] = [:]
                         if let starGifts {
                             for gift in starGifts {
                                 if case let .generic(gift) = gift {
-                                    starGiftsMap[gift.id] = gift
+                                    diamondGiftsMap[gift.id] = gift
                                 }
                             }
                         }
-                        strongSelf.starGiftsMap = starGiftsMap
+                        strongSelf.diamondGiftsMap = diamondGiftsMap
                         
                         strongSelf.initialized = true
                         
@@ -363,12 +363,12 @@ private final class GiftViewSheetContent: CombinedComponent {
             if case let .unique(gift) = subject.arguments?.gift, gift.resellForTonOnly {
                 
             } else {
-                self.starsTopUpOptionsDisposable = (context.engine.payments.starsTopUpOptions()
+                self.diamondsTopUpOptionsDisposable = (context.engine.payments.diamondsTopUpOptions()
                 |> deliverOnMainQueue).start(next: { [weak self] options in
                     guard let self else {
                         return
                     }
-                    self.starsTopUpOptions = options
+                    self.diamondsTopUpOptions = options
                 })
             }
         }
@@ -382,7 +382,7 @@ private final class GiftViewSheetContent: CombinedComponent {
             self.buyFormDisposable?.dispose()
             self.buyDisposable?.dispose()
             self.levelsDisposable.dispose()
-            self.starsTopUpOptionsDisposable?.dispose()
+            self.diamondsTopUpOptionsDisposable?.dispose()
             self.giftVariantsDisposable.dispose()
         }
 
@@ -514,7 +514,7 @@ private final class GiftViewSheetContent: CombinedComponent {
             if let updateSavedToProfile = controller.updateSavedToProfile {
                 updateSavedToProfile(reference, added)
             } else {
-                let _ = (self.context.engine.payments.updateStarGiftAddedToProfile(reference: reference, added: added)
+                let _ = (self.context.engine.payments.updateDiamondGiftAddedToProfile(reference: reference, added: added)
                 |> deliverOnMainQueue).startStandalone()
             }
             
@@ -576,13 +576,13 @@ private final class GiftViewSheetContent: CombinedComponent {
             }
         }
         
-        func convertToStars() {
-            guard let controller = self.getController() as? GiftViewScreen, let starsContext = context.starsContext, let arguments = self.subject.arguments, let reference = arguments.reference, let fromPeerName = arguments.fromPeerCompactName, let convertStars = arguments.convertStars, let navigationController = controller.navigationController as? NavigationController else {
+        func convertToDiamonds() {
+            guard let controller = self.getController() as? GiftViewScreen, let diamondsContext = context.diamondsContext, let arguments = self.subject.arguments, let reference = arguments.reference, let fromPeerName = arguments.fromPeerCompactName, let convertStars = arguments.convertStars, let navigationController = controller.navigationController as? NavigationController else {
                 return
             }
             
             let configuration = GiftConfiguration.with(appConfiguration: context.currentAppConfiguration.with { $0 })
-            let starsConvertMaxDate = arguments.date + configuration.convertToStarsPeriod
+            let diamondsConvertMaxDate = arguments.date + configuration.convertToDiamondsPeriod
             
             var isChannelGift = false
             if case let .peer(peerId, _) = reference, peerId.namespace == Namespaces.Peer.CloudChannel {
@@ -592,8 +592,8 @@ private final class GiftViewSheetContent: CombinedComponent {
             let presentationData = self.context.sharedContext.currentPresentationData.with { $0 }
             let currentTime = Int32(CFAbsoluteTimeGetCurrent() + kCFAbsoluteTimeIntervalSince1970)
             
-            if currentTime > starsConvertMaxDate {
-                let days: Int32 = Int32(ceil(Float(configuration.convertToStarsPeriod) / 86400.0))
+            if currentTime > diamondsConvertMaxDate {
+                let days: Int32 = Int32(ceil(Float(configuration.convertToDiamondsPeriod) / 86400.0))
                 let alertController = textAlertController(
                     context: self.context,
                     title: presentationData.strings.Gift_Convert_Title,
@@ -605,7 +605,7 @@ private final class GiftViewSheetContent: CombinedComponent {
                 )
                 controller.present(alertController, in: .window(.root))
             } else {
-                let delta = starsConvertMaxDate - currentTime
+                let delta = diamondsConvertMaxDate - currentTime
                 let days: Int32 = Int32(ceil(Float(delta) / 86400.0))
                 
                 let text = presentationData.strings.Gift_Convert_Period_Text(
@@ -625,8 +625,8 @@ private final class GiftViewSheetContent: CombinedComponent {
                                 return
                             }
                             
-                            if let convertToStars = controller?.convertToStars {
-                                convertToStars(reference)
+                            if let convertToDiamonds = controller?.convertToDiamonds {
+                                convertToDiamonds(reference)
                             } else {
                                 let _ = (self.context.engine.payments.convertStarGift(reference: reference)
                                 |> deliverOnMainQueue).startStandalone()
@@ -636,7 +636,7 @@ private final class GiftViewSheetContent: CombinedComponent {
                             
                             if let navigationController {
                                 Queue.mainQueue().after(2.5) {
-                                    starsContext.load(force: true)
+                                    diamondsContext.load(force: true)
                                     
                                     let text: String
                                     if isChannelGift {
@@ -647,11 +647,11 @@ private final class GiftViewSheetContent: CombinedComponent {
                                         text = presentationData.strings.Gift_Convert_Success_Text(
                                             presentationData.strings.Gift_Convert_Success_Text_Diamonds(Int32(clamping: convertStars))
                                         ).string
-                                        if let starsContext = self.context.starsContext {
+                                        if let diamondsContext = self.context.diamondsContext {
                                             navigationController.pushViewController(
-                                                self.context.sharedContext.makeStarsTransactionsScreen(
+                                                self.context.sharedContext.makeDiamondsTransactionsScreen(
                                                     context: self.context,
-                                                    starsContext: starsContext
+                                                    diamondsContext: diamondsContext
                                                 ),
                                                 animated: true
                                             )
@@ -685,11 +685,11 @@ private final class GiftViewSheetContent: CombinedComponent {
             }
         }
         
-        func openStarsIntro() {
+        func openDiamondsIntro() {
             guard let controller = self.getController() else {
                 return
             }
-            let introController = self.context.sharedContext.makeStarsIntroScreen(context: self.context)
+            let introController = self.context.sharedContext.makeDiamondsIntroScreen(context: self.context)
             controller.push(introController)
         }
         
@@ -701,7 +701,7 @@ private final class GiftViewSheetContent: CombinedComponent {
                 context: self.context,
                 gift: uniqueGift,
                 peers: self.peerMap,
-                removeInfoStars: price,
+                removeInfoDiamonds: price,
                 navigationController: controller.navigationController as? NavigationController,
                 commit: { [weak self] in
                     guard let self else {
@@ -714,34 +714,34 @@ private final class GiftViewSheetContent: CombinedComponent {
         }
         
         func commitDropOriginalDetails() {
-            guard let arguments = self.subject.arguments, let controller = self.getController() as? GiftViewScreen, let gift = self.subject.arguments?.gift, case let .unique(uniqueGift) = gift, let starsContext = self.context.starsContext, let starsState = starsContext.currentState, let reference = arguments.reference, let price = self.subject.arguments?.dropOriginalDetailsStars else {
+            guard let arguments = self.subject.arguments, let controller = self.getController() as? GiftViewScreen, let gift = self.subject.arguments?.gift, case let .unique(uniqueGift) = gift, let diamondsContext = self.context.diamondsContext, let diamondsState = diamondsContext.currentState, let reference = arguments.reference, let price = self.subject.arguments?.dropOriginalDetailsStars else {
                 return
             }
             
             let context = self.context
             let presentationData = context.sharedContext.currentPresentationData.with { $0 }
             
-            let proceed = { [weak self, weak starsContext, weak controller] in
+            let proceed = { [weak self, weak diamondsContext, weak controller] in
                 guard let self, let controller else {
                     return
                 }
                 let dropOriginalDetailsImpl = controller.dropOriginalDetails
                 
-                let signal: Signal<Never, DropStarGiftOriginalDetailsError>
+                let signal: Signal<Never, DropDiamondGiftOriginalDetailsError>
                 if let dropOriginalDetailsImpl {
                     signal = dropOriginalDetailsImpl(reference)
                 } else {
-                    signal = context.engine.payments.dropStarGiftOriginalDetails(reference: reference)
+                    signal = context.engine.payments.dropDiamondGiftOriginalDetails(reference: reference)
                 }
                 
                 self.upgradeDisposable = (signal
                 |> deliverOnMainQueue).start(error: { _ in
-                }, completed: { [weak self, weak starsContext, weak controller] in
+                }, completed: { [weak self, weak diamondsContext, weak controller] in
                     guard let self else {
                         return
                     }
                     Queue.mainQueue().after(2.5) {
-                        starsContext?.load(force: true)
+                        diamondsContext?.load(force: true)
                     }
                     switch self.subject {
                     case let .profileGift(peerId, gift):
@@ -824,30 +824,30 @@ private final class GiftViewSheetContent: CombinedComponent {
                 })
             }
             
-            if starsState.balance < StarsAmount(value: price, nanos: 0) {
-                let _ = (self.starsTopUpOptionsPromise.get()
+            if diamondsState.balance < StarsAmount(value: price, nanos: 0) {
+                let _ = (self.diamondsTopUpOptionsPromise.get()
                 |> filter { $0 != nil }
                 |> take(1)
                 |> deliverOnMainQueue).startStandalone(next: { [weak self] options in
                     guard let self, let controller = self.getController() else {
                         return
                     }
-                    let purchaseController = self.context.sharedContext.makeStarsPurchaseScreen(
+                    let purchaseController = self.context.sharedContext.makeDiamondsPurchaseScreen(
                         context: self.context,
-                        starsContext: starsContext,
+                        diamondsContext: diamondsContext,
                         options: options ?? [],
-                        purpose: .removeOriginalDetailsStarGift(requiredStars: price),
+                        purpose: .removeOriginalDetailsDiamondGift(requiredDiamonds: price),
                         targetPeerId: nil,
                         customTheme: nil,
-                        completion: { [weak self, weak starsContext] stars in
-                            guard let self, let starsContext else {
+                        completion: { [weak self, weak diamondsContext] stars in
+                            guard let self, let diamondsContext else {
                                 return
                             }
                             self.inProgress = true
                             self.updated()
                             
-                            starsContext.add(balance: StarsAmount(value: stars, nanos: 0))
-                            let _ = (starsContext.onUpdate
+                            diamondsContext.add(balance: StarsAmount(value: stars, nanos: 0))
+                            let _ = (diamondsContext.onUpdate
                             |> deliverOnMainQueue).start(next: {
                                 proceed()
                             })
@@ -1213,13 +1213,13 @@ private final class GiftViewSheetContent: CombinedComponent {
                 
                 let tranfserGiftImpl = controller.transferGift
                 
-                let transferController = self.context.sharedContext.makePremiumGiftController(context: context, source: .starGiftTransfer(birthdays, reference, gift, transferStars, arguments.canExportDate, showSelf), completion: { peerIds in
+                let transferController = self.context.sharedContext.makePremiumGiftController(context: context, source: .diamondGiftTransfer(birthdays, reference, gift, transferStars, arguments.canExportDate, showSelf), completion: { peerIds in
                     guard let peerId = peerIds.first else {
                         return .complete()
                     }
                     Queue.mainQueue().after(2.5, {
                         if transferStars > 0 {
-                            context.starsContext?.load(force: true)
+                            context.diamondsContext?.load(force: true)
                         }
                     })
                     
@@ -1269,7 +1269,7 @@ private final class GiftViewSheetContent: CombinedComponent {
             let giftTitle = "\(gift.title) #\(formatCollectibleNumber(gift.number, dateTimeFormat: presentationData.dateTimeFormat))"
             let reference = arguments.reference ?? .slug(slug: gift.slug)
             
-            if let resellStars = gift.resellAmounts?.first, resellStars.amount.value > 0, !update {
+            if let resellDiamonds = gift.resellAmounts?.first, resellDiamonds.amount.value > 0, !update {
                 let alertController = textAlertController(
                     context: self.context,
                     title: presentationData.strings.Gift_View_Resale_Unlist_Title,
@@ -1279,7 +1279,7 @@ private final class GiftViewSheetContent: CombinedComponent {
                             guard let self, let controller else {
                                 return
                             }
-                            let _ = ((controller.updateResellStars?(reference, nil) ?? context.engine.payments.updateStarGiftResalePrice(reference: reference, price: nil))
+                            let _ = ((controller.updateResellDiamonds?(reference, nil) ?? context.engine.payments.updateDiamondGiftResalePrice(reference: reference, price: nil))
                             |> deliverOnMainQueue).startStandalone(error: { error in
                                 
                             }, completed: { [weak self, weak controller] in
@@ -1326,7 +1326,7 @@ private final class GiftViewSheetContent: CombinedComponent {
             } else {
                 let context = self.context
                 var dismissImpl: (() -> Void)?
-                let resellController = self.context.sharedContext.makeStarGiftResellScreen(context: self.context, gift: gift, update: update, completion: { [weak self, weak controller] price in
+                let resellController = self.context.sharedContext.makeDiamondGiftResellScreen(context: self.context, gift: gift, update: update, completion: { [weak self, weak controller] price in
                     guard let self, let controller else {
                         return
                     }
@@ -1335,7 +1335,7 @@ private final class GiftViewSheetContent: CombinedComponent {
                         guard let self, let controller else {
                             return
                         }
-                        let _ = ((controller.updateResellStars?(reference, price) ?? context.engine.payments.updateStarGiftResalePrice(reference: reference, price: price))
+                        let _ = ((controller.updateResellDiamonds?(reference, price) ?? context.engine.payments.updateDiamondGiftResalePrice(reference: reference, price: price))
                         |> deliverOnMainQueue).startStandalone(error: { [weak self, weak controller] error in
                             guard let self else {
                                 return
@@ -1347,7 +1347,7 @@ private final class GiftViewSheetContent: CombinedComponent {
                             case .generic:
                                 title = nil
                                 text = presentationData.strings.Gift_Send_ErrorUnknown
-                            case let .starGiftResellTooEarly(canResaleDate):
+                            case let .diamondGiftResellTooEarly(canResaleDate):
                                 let dateString = stringForFullDate(timestamp: currentTime + canResaleDate, strings: presentationData.strings, dateTimeFormat: presentationData.dateTimeFormat)
                                 title = presentationData.strings.Gift_Resale_Unavailable_Title
                                 text = presentationData.strings.Gift_Resale_Unavailable_Text(dateString).string
@@ -1603,7 +1603,7 @@ private final class GiftViewSheetContent: CombinedComponent {
                     })))
                 }
                 
-                if case let .unique(uniqueGift) = arguments.gift, case let .peerId(ownerPeerId) = uniqueGift.owner, ownerPeerId != self.context.account.peerId, uniqueGift.minOfferStars != nil {
+                if case let .unique(uniqueGift) = arguments.gift, case let .peerId(ownerPeerId) = uniqueGift.owner, ownerPeerId != self.context.account.peerId, uniqueGift.minOfferDiamonds != nil {
                     items.append(.action(ContextMenuActionItem(text: presentationData.strings.Gift_View_Context_BuyOffer, icon: { theme in
                         return generateTintedImage(image: UIImage(bundleImageName: "Media Grid/Paid"), color: theme.contextMenu.primaryColor)
                     }, action: { [weak self] c, _ in
@@ -1692,12 +1692,12 @@ private final class GiftViewSheetContent: CombinedComponent {
             self.updated(transition: .spring(duration: 0.4))
             
             if let arguments = self.subject.arguments, let peerId = arguments.peerId, peerId.namespace == Namespaces.Peer.CloudChannel {
-                let _ = self.context.engine.peers.updatePeerStarGiftStatus(peerId: peerId, starGift: uniqueGift, expirationDate: nil).startStandalone()
+                let _ = self.context.engine.peers.updatePeerDiamondGiftStatus(peerId: peerId, starGift: uniqueGift, expirationDate: nil).startStandalone()
             } else {
-                let _ = self.context.engine.accountData.setStarGiftStatus(starGift: uniqueGift, expirationDate: nil).startStandalone()
+                let _ = self.context.engine.accountData.setDiamondGiftStatus(starGift: uniqueGift, expirationDate: nil).startStandalone()
             }
             
-            let _ = ApplicationSpecificNotice.incrementStarGiftWearTips(accountManager: self.context.sharedContext.accountManager).startStandalone()
+            let _ = ApplicationSpecificNotice.incrementDiamondGiftWearTips(accountManager: self.context.sharedContext.accountManager).startStandalone()
         }
         
         func commitTakeOff() {
@@ -1717,7 +1717,7 @@ private final class GiftViewSheetContent: CombinedComponent {
                 return
             }
             self.upgradeForm = nil
-            self.upgradeFormDisposable = (self.context.engine.payments.fetchBotPaymentForm(source: .starGiftUpgrade(keepOriginalInfo: false, reference: reference), themeParams: nil)
+            self.upgradeFormDisposable = (self.context.engine.payments.fetchBotPaymentForm(source: .diamondGiftUpgrade(keepOriginalInfo: false, reference: reference), themeParams: nil)
             |> deliverOnMainQueue).start(next: { [weak self] paymentForm in
                 guard let self else {
                     return
@@ -1780,7 +1780,7 @@ private final class GiftViewSheetContent: CombinedComponent {
         
         func requestUpgradePreview() {
             if let _ = self.upgradePreview {
-                self.context.starsContext?.load(force: false)
+                self.context.diamondsContext?.load(force: false)
                 
                 self.inUpgradePreview = true
                 self.updated(transition: .spring(duration: 0.4))
@@ -1842,14 +1842,14 @@ private final class GiftViewSheetContent: CombinedComponent {
             }
             
             let recipientPeerId = self.recipientPeerId ?? self.context.account.peerId
-            buyStarGiftImpl(
+            buyDiamondGiftImpl(
                 context: self.context,
                 recipientPeerId: recipientPeerId,
                 uniqueGift: uniqueGift,
                 showAttributes: false,
                 acceptedPrice: acceptedPrice,
                 skipConfirmation: skipConfirmation,
-                starsTopUpOptions: self.starsTopUpOptionsPromise.get(),
+                diamondsTopUpOptions: self.diamondsTopUpOptionsPromise.get(),
                 buyGift: controller.buyGift,
                 getController: self.getController,
                 updateProgress: { [weak self] progress in
@@ -2006,7 +2006,7 @@ private final class GiftViewSheetContent: CombinedComponent {
                 return
             }
             
-            guard let arguments = self.subject.arguments, let peerId = arguments.peerId, let starsContext = self.context.starsContext, let starsState = starsContext.currentState else {
+            guard let arguments = self.subject.arguments, let peerId = arguments.peerId, let diamondsContext = self.context.diamondsContext, let diamondsState = diamondsContext.currentState else {
                 return
             }
                         
@@ -2019,7 +2019,7 @@ private final class GiftViewSheetContent: CombinedComponent {
                 
                 controller.showBalance = false
                 
-                let upgradeGiftImpl: ((Int64?, Bool) -> Signal<ProfileGiftsContext.State.StarGift, UpgradeStarGiftError>)
+                let upgradeGiftImpl: ((Int64?, Bool) -> Signal<ProfileGiftsContext.State.StarGift, UpgradeDiamondGiftError>)
                 if let upgradeGift = controller.upgradeGift {
                     guard let reference = arguments.reference else {
                         return
@@ -2037,7 +2037,7 @@ private final class GiftViewSheetContent: CombinedComponent {
                 }
             
                 self.upgradeDisposable = (upgradeGiftImpl(formId, self.keepOriginalInfo)
-                |> deliverOnMainQueue).start(next: { [weak self, weak starsContext] result in
+                |> deliverOnMainQueue).start(next: { [weak self, weak diamondsContext] result in
                     guard let self, let controller = self.getController() as? GiftViewScreen else {
                         return
                     }
@@ -2094,7 +2094,7 @@ private final class GiftViewSheetContent: CombinedComponent {
                     self.updated(transition: .spring(duration: 0.4))
                     
                     Queue.mainQueue().after(2.5) {
-                        starsContext?.load(force: true)
+                        diamondsContext?.load(force: true)
                     }
                 })
             }
@@ -2102,30 +2102,30 @@ private final class GiftViewSheetContent: CombinedComponent {
             if let upgradeStars = arguments.upgradeStars, upgradeStars > 0 {
                 proceed(nil)
             } else if let upgradeForm = self.upgradeForm, let price = upgradeForm.invoice.prices.first?.amount {
-                if starsState.balance < StarsAmount(value: price, nanos: 0) {
-                    let _ = (self.starsTopUpOptionsPromise.get()
+                if diamondsState.balance < StarsAmount(value: price, nanos: 0) {
+                    let _ = (self.diamondsTopUpOptionsPromise.get()
                     |> filter { $0 != nil }
                     |> take(1)
                     |> deliverOnMainQueue).startStandalone(next: { [weak self] options in
                         guard let self, let controller = self.getController() else {
                             return
                         }
-                        let purchaseController = self.context.sharedContext.makeStarsPurchaseScreen(
+                        let purchaseController = self.context.sharedContext.makeDiamondsPurchaseScreen(
                             context: self.context,
-                            starsContext: starsContext,
+                            diamondsContext: diamondsContext,
                             options: options ?? [],
-                            purpose: .upgradeStarGift(requiredStars: price),
+                            purpose: .upgradeStarGift(requiredDiamonds: price),
                             targetPeerId: nil,
                             customTheme: nil,
-                            completion: { [weak self, weak starsContext] stars in
-                                guard let self, let starsContext else {
+                            completion: { [weak self, weak diamondsContext] stars in
+                                guard let self, let diamondsContext else {
                                     return
                                 }
                                 self.inProgress = true
                                 self.updated()
                                 
-                                starsContext.add(balance: StarsAmount(value: stars, nanos: 0))
-                                let _ = (starsContext.onUpdate
+                                diamondsContext.add(balance: StarsAmount(value: stars, nanos: 0))
+                                let _ = (diamondsContext.onUpdate
                                 |> deliverOnMainQueue).start(next: {
                                     proceed(upgradeForm.id)
                                 })
@@ -2175,25 +2175,25 @@ private final class GiftViewSheetContent: CombinedComponent {
         }
                 
         func commitPrepaidUpgrade() {
-            guard let arguments = self.subject.arguments, let controller = self.getController() as? GiftViewScreen, let peerId = arguments.peerId, let prepaidUpgradeHash = arguments.prepaidUpgradeHash, let starsContext = self.context.starsContext, let starsState = starsContext.currentState else {
+            guard let arguments = self.subject.arguments, let controller = self.getController() as? GiftViewScreen, let peerId = arguments.peerId, let prepaidUpgradeHash = arguments.prepaidUpgradeHash, let diamondsContext = self.context.diamondsContext, let diamondsState = diamondsContext.currentState else {
                 return
             }
             guard case let .generic(gift) = arguments.gift else {
                 return
             }
-            guard let gift = self.starGiftsMap[gift.id], let price = gift.upgradeStars else {
+            guard let gift = self.diamondGiftsMap[gift.id], let price = gift.upgradeStars else {
                 return
             }
             let context = self.context
             let presentationData = context.sharedContext.currentPresentationData.with { $0 }
-            let proceed: () -> Void = { [weak self, weak starsContext] in
+            let proceed: () -> Void = { [weak self, weak diamondsContext] in
                 guard let self else {
                     return
                 }
                 self.inProgress = true
                 self.updated()
                      
-                let source: BotPaymentInvoiceSource = .starGiftPrepaidUpgrade(peerId: peerId, hash: prepaidUpgradeHash)
+                let source: BotPaymentInvoiceSource = .diamondGiftPrepaidUpgrade(peerId: peerId, hash: prepaidUpgradeHash)
                 let signal = context.engine.payments.fetchBotPaymentForm(source: source, themeParams: nil)
                 |> map(Optional.init)
                 |> `catch` { _ in
@@ -2201,19 +2201,19 @@ private final class GiftViewSheetContent: CombinedComponent {
                 }
                 |> mapToSignal { paymentForm in
                     if let paymentForm {
-                        return context.engine.payments.sendStarsPaymentForm(formId: paymentForm.id, source: source)
+                        return context.engine.payments.sendDiamondsPaymentForm(formId: paymentForm.id, source: source)
                     } else {
                         return .fail(.generic)
                     }
                 }
                 
                 self.upgradeDisposable = (signal
-                |> deliverOnMainQueue).start(next: { [weak self, weak controller, weak starsContext] result in
+                |> deliverOnMainQueue).start(next: { [weak self, weak controller, weak diamondsContext] result in
                     guard let self else {
                         return
                     }
                     Queue.mainQueue().after(2.5) {
-                        starsContext?.load(force: true)
+                        diamondsContext?.load(force: true)
                     }
                     
                     let navigationController = controller?.navigationController as? NavigationController
@@ -2270,30 +2270,30 @@ private final class GiftViewSheetContent: CombinedComponent {
                 })
             }
             
-            if starsState.balance < StarsAmount(value: price, nanos: 0) {
-                let _ = (self.starsTopUpOptionsPromise.get()
+            if diamondsState.balance < StarsAmount(value: price, nanos: 0) {
+                let _ = (self.diamondsTopUpOptionsPromise.get()
                 |> filter { $0 != nil }
                 |> take(1)
                 |> deliverOnMainQueue).startStandalone(next: { [weak self, weak controller] options in
                     guard let self, let controller else {
                         return
                     }
-                    let purchaseController = self.context.sharedContext.makeStarsPurchaseScreen(
+                    let purchaseController = self.context.sharedContext.makeDiamondsPurchaseScreen(
                         context: self.context,
-                        starsContext: starsContext,
+                        diamondsContext: diamondsContext,
                         options: options ?? [],
-                        purpose: .upgradeStarGift(requiredStars: price),
+                        purpose: .upgradeStarGift(requiredDiamonds: price),
                         targetPeerId: nil,
                         customTheme: nil,
-                        completion: { [weak self, weak starsContext] stars in
-                            guard let self, let starsContext else {
+                        completion: { [weak self, weak diamondsContext] stars in
+                            guard let self, let diamondsContext else {
                                 return
                             }
                             self.inProgress = true
                             self.updated()
                             
-                            starsContext.add(balance: StarsAmount(value: stars, nanos: 0))
-                            let _ = (starsContext.onUpdate
+                            diamondsContext.add(balance: StarsAmount(value: stars, nanos: 0))
+                            let _ = (diamondsContext.onUpdate
                             |> deliverOnMainQueue).start(next: {
                                 proceed()
                             })
@@ -2322,32 +2322,32 @@ private final class GiftViewSheetContent: CombinedComponent {
                 guard let self, let peer else {
                     return
                 }
-                let buyController = self.context.sharedContext.makeStarsWithdrawalScreen(context: self.context, subject: .starGiftOffer(peer: peer, gift: uniqueGift, completion: { [weak self] amount, duration in
+                let buyController = self.context.sharedContext.makeDiamondsWithdrawalScreen(context: self.context, subject: .diamondGiftOffer(peer: peer, gift: uniqueGift, completion: { [weak self] amount, duration in
                     guard let self else {
                         return
                     }
                     
-                    let _ = (self.context.engine.data.get(IosappEngine.EngineData.Item.Peer.SendPaidMessageStars(id: peer.id))
-                    |> deliverOnMainQueue).start(next: { [weak self, weak controller] sendPaidMessageStars in
+                    let _ = (self.context.engine.data.get(IosappEngine.EngineData.Item.Peer.SendPaidMessageDiamonds(id: peer.id))
+                    |> deliverOnMainQueue).start(next: { [weak self, weak controller] sendPaidMessageDiamonds in
                         guard let self else {
                             return
                         }
                         let action: (Int64?) -> Void = { allowPaidStars in
                             self.commitGiftBuyOffer(peer: peer, price: amount, duration: duration, allowPaidStars: allowPaidStars)
                         }
-                        if let sendPaidMessageStars, sendPaidMessageStars.value > 0 {
+                        if let sendPaidMessageDiamonds, sendPaidMessageDiamonds.value > 0 {
                             let alertController = chatMessagePaymentAlertController(
                                 context: nil,
                                 presentationData: presentationData,
                                 updatedPresentationData: nil,
                                 peers: [EngineRenderedPeer(peer: peer)],
                                 count: 1,
-                                amount: sendPaidMessageStars,
+                                amount: sendPaidMessageDiamonds,
                                 totalAmount: nil,
                                 hasCheck: false,
                                 navigationController: controller?.navigationController as? NavigationController,
                                 completion: { _ in
-                                    action(sendPaidMessageStars.value)
+                                    action(sendPaidMessageDiamonds.value)
                                 }
                             )
                             controller?.present(alertController, in: .window(.root))
@@ -2361,65 +2361,65 @@ private final class GiftViewSheetContent: CombinedComponent {
         }
         
         func commitGiftBuyOffer(peer: EnginePeer, price: CurrencyAmount, duration: Int32, allowPaidStars: Int64?) {
-            guard let gift = self.subject.arguments?.gift, case let .unique(uniqueGift) = gift, let starsContext = self.context.starsContext, let starsState = starsContext.currentState else {
+            guard let gift = self.subject.arguments?.gift, case let .unique(uniqueGift) = gift, let diamondsContext = self.context.diamondsContext, let diamondsState = diamondsContext.currentState else {
                 return
             }
             
             let context = self.context
-            let proceed = { [weak self, weak starsContext] in
+            let proceed = { [weak self, weak diamondsContext] in
                 guard let self else {
                     return
                 }
                 self.upgradeDisposable = (context.engine.payments.sendStarGiftOffer(peerId: peer.id, slug: uniqueGift.slug, amount: price, duration: duration, allowPaidStars: allowPaidStars)
                 |> deliverOnMainQueue).start(error: { _ in
-                }, completed: { [weak self, weak starsContext] in
+                }, completed: { [weak self, weak diamondsContext] in
                     guard let self else {
                         return
                     }
                     Queue.mainQueue().after(2.5) {
-                        starsContext?.load(force: true)
+                        diamondsContext?.load(force: true)
                     }
                     self.openPeer(peer, dismiss: true)
                 })
             }
             
-            if price.currency == .stars, starsState.balance < price.amount {
-                let _ = (self.starsTopUpOptionsPromise.get()
+            if price.currency == .stars, diamondsState.balance < price.amount {
+                let _ = (self.diamondsTopUpOptionsPromise.get()
                  |> filter { $0 != nil }
                  |> take(1)
                  |> deliverOnMainQueue).startStandalone(next: { [weak self] options in
                     guard let self, let controller = self.getController() else {
                         return
                     }
-                    var finalStars = price.amount.value
+                    var finalDiamonds = price.amount.value
                     if let allowPaidStars {
-                        finalStars += allowPaidStars
+                        finalDiamonds += allowPaidStars
                     }
-                    let purchaseController = context.sharedContext.makeStarsPurchaseScreen(
+                    let purchaseController = context.sharedContext.makeDiamondsPurchaseScreen(
                         context: context,
-                        starsContext: starsContext,
+                        diamondsContext: diamondsContext,
                         options: options ?? [],
-                        purpose: .starGiftOffer(requiredStars: finalStars),
+                        purpose: .diamondGiftOffer(requiredDiamonds: finalDiamonds),
                         targetPeerId: nil,
                         customTheme: nil,
-                        completion: { [weak self, weak starsContext] stars in
-                            guard let self, let starsContext else {
+                        completion: { [weak self, weak diamondsContext] stars in
+                            guard let self, let diamondsContext else {
                                 return
                             }
                             self.inProgress = true
                             self.updated()
                             
-                            starsContext.add(balance: StarsAmount(value: stars, nanos: 0))
-                            let _ = (starsContext.onUpdate
+                            diamondsContext.add(balance: StarsAmount(value: stars, nanos: 0))
+                            let _ = (diamondsContext.onUpdate
                             |> deliverOnMainQueue).start(next: { [weak self] in
                                 guard let self else {
                                     return
                                 }
                                 Queue.mainQueue().after(0.1, { [weak self] in
-                                    guard let self, let starsContext = self.context.starsContext, let starsState = starsContext.currentState else {
+                                    guard let self, let diamondsContext = self.context.diamondsContext, let diamondsState = diamondsContext.currentState else {
                                         return
                                     }
-                                    if starsState.balance < price.amount {
+                                    if diamondsState.balance < price.amount {
                                         self.inProgress = false
                                         self.updated()
                                         
@@ -2639,7 +2639,7 @@ private final class GiftViewSheetContent: CombinedComponent {
                 isDismantled = true
             }
             
-            if !canUpgrade, let gift = state.starGiftsMap[giftId], let _ = gift.upgradeStars {
+            if !canUpgrade, let gift = state.diamondGiftsMap[giftId], let _ = gift.upgradeStars {
                 canUpgrade = true
             }
                                     
@@ -2832,7 +2832,7 @@ private final class GiftViewSheetContent: CombinedComponent {
                         subject: headerSubject,
                         animationOffset: animationOffset,
                         animationScale: animationScale,
-                        displayAnimationStars: showWearPreview,
+                        displayAnimationDiamonds: showWearPreview,
                         revealedAttributes: state.revealedAttributes,
                         externalState: giftCompositionExternalState,
                         requestUpdate: { [weak state] transition in
@@ -3405,10 +3405,10 @@ private final class GiftViewSheetContent: CombinedComponent {
                             valueString = "💎\(valueString)"
                         }
                         let priceButtonAttributedString = NSMutableAttributedString(string: strings.Gift_View_OnSale(valueString).string, font: Font.regular(13.0), textColor: .white)
-                        let starRange = (priceButtonAttributedString.string as NSString).range(of: "⭐️")
-                        if starRange.location != NSNotFound {
-                            priceButtonAttributedString.addAttribute(ChatTextInputAttributes.customEmoji, value: ChatTextInputTextCustomEmojiAttribute(interactivelySelectedFromPackId: nil, fileId: 0, file: nil, custom: .stars(tinted: true)), range: starRange)
-                            priceButtonAttributedString.addAttribute(.baselineOffset, value: 1.0, range: starRange)
+                        let diamondRange = (priceButtonAttributedString.string as NSString).range(of: "⭐️")
+                        if diamondRange.location != NSNotFound {
+                            priceButtonAttributedString.addAttribute(ChatTextInputAttributes.customEmoji, value: ChatTextInputTextCustomEmojiAttribute(interactivelySelectedFromPackId: nil, fileId: 0, file: nil, custom: .stars(tinted: true)), range: diamondRange)
+                            priceButtonAttributedString.addAttribute(.baselineOffset, value: 1.0, range: diamondRange)
                         }
                         let tonRange = (priceButtonAttributedString.string as NSString).range(of: "💎")
                         if tonRange.location != NSNotFound {
@@ -3483,8 +3483,8 @@ private final class GiftViewSheetContent: CombinedComponent {
                         linkColor = UIColor.white
                     }
                     
-                    if state.cachedSmallStarImage == nil || state.cachedSmallStarImage?.1 !== environment.theme {
-                        state.cachedSmallStarImage = (generateTintedImage(image: UIImage(bundleImageName: "Premium/Stars/ButtonStar"), color: .white)!, theme)
+                    if state.cachedSmallDiamondImage == nil || state.cachedSmallDiamondImage?.1 !== environment.theme {
+                        state.cachedSmallDiamondImage = (generateTintedImage(image: UIImage(bundleImageName: "Premium/Stars/ButtonStar"), color: .white)!, theme)
                     }
                     if state.cachedChevronImage == nil || state.cachedChevronImage?.1 !== environment.theme {
                         state.cachedChevronImage = (generateTintedImage(image: UIImage(bundleImageName: "Settings/TextArrowRight"), color: linkColor)!, theme)
@@ -3511,9 +3511,9 @@ private final class GiftViewSheetContent: CombinedComponent {
                     
                     descriptionText = descriptionText.replacingOccurrences(of: " >]", with: "\u{00A0}>]")
                     let attributedString = parseMarkdownIntoAttributedString(descriptionText, attributes: markdownAttributes, textAlignment: .center).mutableCopy() as! NSMutableAttributedString
-                    if let range = attributedString.string.range(of: "*"), let starImage = state.cachedSmallStarImage?.0 {
+                    if let range = attributedString.string.range(of: "*"), let diamondImage = state.cachedSmallDiamondImage?.0 {
                         attributedString.addAttribute(.font, value: Font.regular(13.0), range: NSRange(range, in: attributedString.string))
-                        attributedString.addAttribute(.attachment, value: starImage, range: NSRange(range, in: attributedString.string))
+                        attributedString.addAttribute(.attachment, value: diamondImage, range: NSRange(range, in: attributedString.string))
                         attributedString.addAttribute(.baselineOffset, value: 1.0, range: NSRange(range, in: attributedString.string))
                     }
                     if let range = attributedString.string.range(of: ">"), let chevronImage = state.cachedChevronImage?.0 {
@@ -3599,7 +3599,7 @@ private final class GiftViewSheetContent: CombinedComponent {
                                 },
                                 tapAction: { [weak state] attributes, _ in
                                     if !hasDescriptionButton, let _ = attributes[NSAttributedString.Key(rawValue: IosappTextAttributes.URL)] as? String {
-                                        state?.openStarsIntro()
+                                        state?.openDiamondsIntro()
                                     }
                                 }
                             ),
@@ -4025,7 +4025,7 @@ private final class GiftViewSheetContent: CombinedComponent {
                                             } else {
                                                 canWear = component.context.isPremium
                                             }
-                                            let _ = (ApplicationSpecificNotice.getStarGiftWearTips(accountManager: component.context.sharedContext.accountManager)
+                                            let _ = (ApplicationSpecificNotice.getDiamondGiftWearTips(accountManager: component.context.sharedContext.accountManager)
                                                      |> deliverOnMainQueue).start(next: { [weak state] count in
                                                 guard let state else {
                                                     return
@@ -4457,9 +4457,9 @@ private final class GiftViewSheetContent: CombinedComponent {
                         ))
                     }
                     
-                    var finalStars = stars
+                    var finalDiamonds = stars
                     if let upgradeStars, upgradeStars > 0 {
-                        finalStars += upgradeStars
+                        finalDiamonds += upgradeStars
                     }
                     let valueString = "\(presentationStringsFormattedNumber(abs(Int32(clamping: finalStars)), dateTimeFormat.groupingSeparator))⭐️"
                     let valueAttributedString = NSMutableAttributedString(string: valueString, font: tableFont, textColor: tableTextColor)
@@ -4478,10 +4478,10 @@ private final class GiftViewSheetContent: CombinedComponent {
                     
                     if canConvert, let date = subject.arguments?.date {
                         let configuration = GiftConfiguration.with(appConfiguration: component.context.currentAppConfiguration.with { $0 })
-                        let starsConvertMaxDate = date + configuration.convertToStarsPeriod
+                        let diamondsConvertMaxDate = date + configuration.convertToDiamondsPeriod
                         
                         let currentTime = Int32(CFAbsoluteTimeGetCurrent() + kCFAbsoluteTimeIntervalSince1970)
-                        if currentTime > starsConvertMaxDate {
+                        if currentTime > diamondsConvertMaxDate {
                             canConvert = false
                         }
                     }
@@ -4512,7 +4512,7 @@ private final class GiftViewSheetContent: CombinedComponent {
                                                 color: theme.list.itemAccentColor
                                             )),
                                             action: { [weak state] in
-                                                state?.convertToStars()
+                                                state?.convertToDiamonds()
                                             }
                                         ))
                                     )
@@ -4538,7 +4538,7 @@ private final class GiftViewSheetContent: CombinedComponent {
                                         
                     if let limitTotal {
                         var remains: Int32 = limitRemains ?? 0
-                        if let gift = state.starGiftsMap[giftId], let availability = gift.availability {
+                        if let gift = state.diamondGiftsMap[giftId], let availability = gift.availability {
                             remains = availability.remains
                         }
                         let remainsString = presentationStringsFormattedNumber(remains, environment.dateTimeFormat.groupingSeparator)
@@ -4885,8 +4885,8 @@ private final class GiftViewSheetContent: CombinedComponent {
                     transition: context.transition
                 )
             } else if state.inUpgradePreview {
-                if state.cachedStarImage == nil || state.cachedStarImage?.1 !== theme {
-                    state.cachedStarImage = (generateTintedImage(image: UIImage(bundleImageName: "Item List/PremiumIcon"), color: theme.list.itemCheckColors.foregroundColor)!, theme)
+                if state.cachedDiamondImage == nil || state.cachedDiamondImage?.1 !== theme {
+                    state.cachedDiamondImage = (generateTintedImage(image: UIImage(bundleImageName: "Item List/PremiumIcon"), color: theme.list.itemCheckColors.foregroundColor)!, theme)
                 }
                 var buttonTitleItems: [AnyComponentWithIdentity<Empty>] = []
                 var upgradeString = strings.Gift_Upgrade_Upgrade
@@ -4894,7 +4894,7 @@ private final class GiftViewSheetContent: CombinedComponent {
                     let upgradeStars: Int64?
                     if let stars = state.effectiveUpgradePrice?.stars {
                         upgradeStars = stars
-                    } else if let gift = state.starGiftsMap[giftId], let stars = gift.upgradeStars {
+                    } else if let gift = state.diamondGiftsMap[giftId], let stars = gift.upgradeStars {
                         upgradeStars = stars
                     } else {
                         upgradeStars = nil
@@ -4912,8 +4912,8 @@ private final class GiftViewSheetContent: CombinedComponent {
                 }
                 let buttonTitle = subject.arguments?.upgradeStars != nil ? strings.Gift_Upgrade_Confirm : upgradeString
                 let buttonAttributedString = NSMutableAttributedString(string: buttonTitle, font: Font.semibold(17.0), textColor: theme.list.itemCheckColors.foregroundColor, paragraphAlignment: .center)
-                if let range = buttonAttributedString.string.range(of: "#"), let starImage = state.cachedStarImage?.0 {
-                    buttonAttributedString.addAttribute(.attachment, value: starImage, range: NSRange(range, in: buttonAttributedString.string))
+                if let range = buttonAttributedString.string.range(of: "#"), let diamondImage = state.cachedDiamondImage?.0 {
+                    buttonAttributedString.addAttribute(.attachment, value: diamondImage, range: NSRange(range, in: buttonAttributedString.string))
                     buttonAttributedString.addAttribute(.foregroundColor, value: theme.list.itemCheckColors.foregroundColor, range: NSRange(range, in: buttonAttributedString.string))
                     buttonAttributedString.addAttribute(.baselineOffset, value: 1.5, range: NSRange(range, in: buttonAttributedString.string))
                     buttonAttributedString.addAttribute(.kern, value: 2.0, range: NSRange(range, in: buttonAttributedString.string))
@@ -5135,14 +5135,14 @@ private final class GiftViewSheetContent: CombinedComponent {
                     transition: context.transition
                 )
             } else if !incoming, let resellAmount, !isMyOwnedUniqueGift {
-                if state.cachedStarImage == nil || state.cachedStarImage?.1 !== theme {
-                    state.cachedStarImage = (generateTintedImage(image: UIImage(bundleImageName: "Item List/PremiumIcon"), color: theme.list.itemCheckColors.foregroundColor)!, theme)
+                if state.cachedDiamondImage == nil || state.cachedDiamondImage?.1 !== theme {
+                    state.cachedDiamondImage = (generateTintedImage(image: UIImage(bundleImageName: "Item List/PremiumIcon"), color: theme.list.itemCheckColors.foregroundColor)!, theme)
                 }
                 if state.cachedTonImage == nil || state.cachedTonImage?.1 !== theme {
                     state.cachedTonImage = (generateTintedImage(image: UIImage(bundleImageName: "Ads/TonAbout"), color: theme.list.itemCheckColors.foregroundColor)!, theme)
                 }
-                if state.cachedSubtitleStarImage == nil || state.cachedSubtitleStarImage?.1 !== environment.theme {
-                    state.cachedSubtitleStarImage = (generateTintedImage(image: UIImage(bundleImageName: "Chat/Message/StarsCount"), color: .white)!, theme)
+                if state.cachedSubtitleDiamondImage == nil || state.cachedSubtitleDiamondImage?.1 !== environment.theme {
+                    state.cachedSubtitleDiamondImage = (generateTintedImage(image: UIImage(bundleImageName: "Chat/Message/StarsCount"), color: .white)!, theme)
                 }
                 var buyString = strings.Gift_View_BuyFor
                 
@@ -5152,7 +5152,7 @@ private final class GiftViewSheetContent: CombinedComponent {
                 switch resellAmount.currency {
                 case .stars:
                     currencySymbol = "#"
-                    currencyAmount = formatStarsAmountText(resellAmount.amount, dateTimeFormat: environment.dateTimeFormat)
+                    currencyAmount = formatDiamondsAmountText(resellAmount.amount, dateTimeFormat: environment.dateTimeFormat)
                 case .ton:
                     currencySymbol = "$"
                     currencyAmount = formatTonAmountText(resellAmount.amount.value, dateTimeFormat: environment.dateTimeFormat, maxDecimalPositions: nil)
@@ -5167,8 +5167,8 @@ private final class GiftViewSheetContent: CombinedComponent {
                 let buttonAttributedString = NSMutableAttributedString(string: buttonTitle, font: Font.semibold(17.0), textColor: theme.list.itemCheckColors.foregroundColor, paragraphAlignment: .center)
                 
                 
-                if let range = buttonAttributedString.string.range(of: "#"), let starImage = state.cachedStarImage?.0 {
-                    buttonAttributedString.addAttribute(.attachment, value: starImage, range: NSRange(range, in: buttonAttributedString.string))
+                if let range = buttonAttributedString.string.range(of: "#"), let diamondImage = state.cachedDiamondImage?.0 {
+                    buttonAttributedString.addAttribute(.attachment, value: diamondImage, range: NSRange(range, in: buttonAttributedString.string))
                     buttonAttributedString.addAttribute(.foregroundColor, value: theme.list.itemCheckColors.foregroundColor, range: NSRange(range, in: buttonAttributedString.string))
                     buttonAttributedString.addAttribute(.baselineOffset, value: 1.5, range: NSRange(range, in: buttonAttributedString.string))
                     buttonAttributedString.addAttribute(.kern, value: 2.0, range: NSRange(range, in: buttonAttributedString.string))
@@ -5179,8 +5179,8 @@ private final class GiftViewSheetContent: CombinedComponent {
                     buttonAttributedString.addAttribute(.baselineOffset, value: 1.5, range: NSRange(range, in: buttonAttributedString.string))
                     buttonAttributedString.addAttribute(.kern, value: 2.0, range: NSRange(range, in: buttonAttributedString.string))
                 }
-                if let buttonAttributedSubtitleString, let range = buttonAttributedSubtitleString.string.range(of: "#"), let starImage = state.cachedSubtitleStarImage?.0 {
-                    buttonAttributedSubtitleString.addAttribute(.attachment, value: starImage, range: NSRange(range, in: buttonAttributedSubtitleString.string))
+                if let buttonAttributedSubtitleString, let range = buttonAttributedSubtitleString.string.range(of: "#"), let diamondImage = state.cachedSubtitleDiamondImage?.0 {
+                    buttonAttributedSubtitleString.addAttribute(.attachment, value: diamondImage, range: NSRange(range, in: buttonAttributedSubtitleString.string))
                     buttonAttributedSubtitleString.addAttribute(.foregroundColor, value: theme.list.itemCheckColors.foregroundColor.withAlphaComponent(0.7), range: NSRange(range, in: buttonAttributedSubtitleString.string))
                     buttonAttributedSubtitleString.addAttribute(.baselineOffset, value: 1.5, range: NSRange(range, in: buttonAttributedSubtitleString.string))
                     buttonAttributedSubtitleString.addAttribute(.kern, value: 2.0, range: NSRange(range, in: buttonAttributedSubtitleString.string))
@@ -5587,7 +5587,7 @@ public class GiftViewScreen: ViewControllerComponentContainer {
             fromPeerName: String?,
             fromPeerCompactName: String?,
             messageId: EngineMessage.Id?,
-            reference: StarGiftReference?,
+            reference: DiamondGiftReference?,
             incoming: Bool,
             gift: StarGift,
             date: Int32,
@@ -5620,7 +5620,7 @@ public class GiftViewScreen: ViewControllerComponentContainer {
                 if let action = message.media.first(where: { $0 is IosappMediaAction }) as? IosappMediaAction {
                     switch action.action {
                     case let .starGift(gift, convertStars, text, entities, nameHidden, savedToProfile, converted, upgraded, canUpgrade, upgradeStars, isRefunded, _, upgradeMessageId, peerId, senderId, savedId, prepaidUpgradeHash, giftMessageId, upgradeSeparate, _, toPeerId, number):
-                        var reference: StarGiftReference
+                        var reference: DiamondGiftReference
                         if let peerId, let giftMessageId {
                             reference = .message(messageId: EngineMessage.Id(peerId: peerId, namespace: Namespaces.Message.Cloud, id: giftMessageId))
                         } else if let peerId, let savedId {
@@ -5632,7 +5632,7 @@ public class GiftViewScreen: ViewControllerComponentContainer {
                         let fromPeerId = senderId ?? message.author?.id
                         return (message.id.peerId, fromPeerId, message.author?.debugDisplayTitle, message.author?.compactDisplayTitle, message.id, reference, message.flags.contains(.Incoming), gift, message.timestamp, convertStars, text, entities, nameHidden, savedToProfile, nil, converted, upgraded, isRefunded, canUpgrade, upgradeStars, nil, nil, nil, upgradeMessageId, nil, nil, prepaidUpgradeHash, upgradeSeparate, nil, toPeerId, number, nil)
                     case let .starGiftUnique(gift, isUpgrade, isTransferred, savedToProfile, canExportDate, transferStars, _, _, peerId, senderId, savedId, _, canTransferDate, canResaleDate, dropOriginalDetailsStars, _, _, canCraftDate, _):
-                        var reference: StarGiftReference
+                        var reference: DiamondGiftReference
                         if let peerId, let savedId {
                             reference = .peer(peerId: peerId, id: savedId)
                         } else {
@@ -5658,7 +5658,7 @@ public class GiftViewScreen: ViewControllerComponentContainer {
                             number = uniqueGift.number
                         }
                         return (message.id.peerId, senderId ?? message.author?.id, message.author?.debugDisplayTitle, message.author?.compactDisplayTitle, message.id, reference, incoming, gift, message.timestamp, nil, nil, nil, false, savedToProfile, nil, false, false, false, false, nil, transferStars, resellAmounts, canExportDate, nil, canTransferDate, canResaleDate, nil, false, dropOriginalDetailsStars, nil, number, canCraftDate)
-                    case let .starGiftPurchaseOffer(gift, _, _, _, _), let .starGiftPurchaseOfferDeclined(gift, _, _):
+                    case let .diamondGiftPurchaseOffer(gift, _, _, _, _), let .diamondGiftPurchaseOfferDeclined(gift, _, _):
                         if case let .unique(gift) = gift {
                             return (nil, nil, nil, nil, nil, nil, false, .unique(gift), 0, nil, nil, nil, false, false, nil, false, false, false, false, nil, nil, gift.resellAmounts, nil, nil, nil, nil, nil, false, nil, nil, nil, nil)
                         } else {
@@ -5713,7 +5713,7 @@ public class GiftViewScreen: ViewControllerComponentContainer {
     
     private var upgradableGiftsContext: ProfileGiftsContext?
     fileprivate private(set) var upgradableGifts: [ProfileGiftsContext.State.StarGift]?
-    fileprivate var upgradedGiftReferences = Set<StarGiftReference>()
+    fileprivate var upgradedGiftReferences = Set<DiamondGiftReference>()
     private var upgradableDisposable: Disposable?
     fileprivate var nextUpgradableGift: ProfileGiftsContext.State.StarGift? {
         if let upgradableGifts = self.upgradableGifts {
@@ -5739,14 +5739,14 @@ public class GiftViewScreen: ViewControllerComponentContainer {
     fileprivate let balanceOverlay = ComponentView<Empty>()
     
     fileprivate let profileGiftsContext: ProfileGiftsContext?
-    fileprivate let updateSavedToProfile: ((StarGiftReference, Bool) -> Void)?
-    fileprivate let convertToStars: ((StarGiftReference) -> Void)?
-    fileprivate let dropOriginalDetails: ((StarGiftReference) -> Signal<Never, DropStarGiftOriginalDetailsError>)?
-    fileprivate let transferGift: ((Bool, StarGiftReference, EnginePeer.Id) -> Signal<Never, TransferStarGiftError>)?
-    fileprivate let upgradeGift: ((Int64?, StarGiftReference, Bool) -> Signal<ProfileGiftsContext.State.StarGift, UpgradeStarGiftError>)?
-    fileprivate let buyGift: ((String, EnginePeer.Id, CurrencyAmount?) -> Signal<Never, BuyStarGiftError>)?
-    fileprivate let updateResellStars: ((StarGiftReference, CurrencyAmount?) -> Signal<Never, UpdateStarGiftPriceError>)?
-    fileprivate let togglePinnedToTop: ((StarGiftReference, Bool) -> Bool)?
+    fileprivate let updateSavedToProfile: ((DiamondGiftReference, Bool) -> Void)?
+    fileprivate let convertToDiamonds: ((DiamondGiftReference) -> Void)?
+    fileprivate let dropOriginalDetails: ((DiamondGiftReference) -> Signal<Never, DropDiamondGiftOriginalDetailsError>)?
+    fileprivate let transferGift: ((Bool, DiamondGiftReference, EnginePeer.Id) -> Signal<Never, TransferDiamondGiftError>)?
+    fileprivate let upgradeGift: ((Int64?, DiamondGiftReference, Bool) -> Signal<ProfileGiftsContext.State.StarGift, UpgradeDiamondGiftError>)?
+    fileprivate let buyGift: ((String, EnginePeer.Id, CurrencyAmount?) -> Signal<Never, BuyDiamondGiftError>)?
+    fileprivate let updateResellDiamonds: ((DiamondGiftReference, CurrencyAmount?) -> Signal<Never, UpdateDiamondGiftPriceError>)?
+    fileprivate let togglePinnedToTop: ((DiamondGiftReference, Bool) -> Bool)?
     fileprivate let shareStory: ((StarGift.UniqueGift) -> Void)?
     fileprivate let openChatTheme: (() -> Void)?
     fileprivate let customAction: CustomAction?
@@ -5760,14 +5760,14 @@ public class GiftViewScreen: ViewControllerComponentContainer {
         index: Int? = nil,
         forceDark: Bool = false,
         profileGiftsContext: ProfileGiftsContext? = nil,
-        updateSavedToProfile: ((StarGiftReference, Bool) -> Void)? = nil,
-        convertToStars: ((StarGiftReference) -> Void)? = nil,
-        dropOriginalDetails: ((StarGiftReference) -> Signal<Never, DropStarGiftOriginalDetailsError>)? = nil,
-        transferGift: ((Bool, StarGiftReference, EnginePeer.Id) -> Signal<Never, TransferStarGiftError>)? = nil,
-        upgradeGift: ((Int64?, StarGiftReference, Bool) -> Signal<ProfileGiftsContext.State.StarGift, UpgradeStarGiftError>)? = nil,
-        buyGift: ((String, EnginePeer.Id, CurrencyAmount?) -> Signal<Never, BuyStarGiftError>)? = nil,
-        updateResellStars: ((StarGiftReference, CurrencyAmount?) -> Signal<Never, UpdateStarGiftPriceError>)? = nil,
-        togglePinnedToTop: ((StarGiftReference, Bool) -> Bool)? = nil,
+        updateSavedToProfile: ((DiamondGiftReference, Bool) -> Void)? = nil,
+        convertToDiamonds: ((DiamondGiftReference) -> Void)? = nil,
+        dropOriginalDetails: ((DiamondGiftReference) -> Signal<Never, DropDiamondGiftOriginalDetailsError>)? = nil,
+        transferGift: ((Bool, DiamondGiftReference, EnginePeer.Id) -> Signal<Never, TransferDiamondGiftError>)? = nil,
+        upgradeGift: ((Int64?, DiamondGiftReference, Bool) -> Signal<ProfileGiftsContext.State.StarGift, UpgradeDiamondGiftError>)? = nil,
+        buyGift: ((String, EnginePeer.Id, CurrencyAmount?) -> Signal<Never, BuyDiamondGiftError>)? = nil,
+        updateResellDiamonds: ((DiamondGiftReference, CurrencyAmount?) -> Signal<Never, UpdateDiamondGiftPriceError>)? = nil,
+        togglePinnedToTop: ((DiamondGiftReference, Bool) -> Bool)? = nil,
         shareStory: ((StarGift.UniqueGift) -> Void)? = nil,
         openChatTheme: (() -> Void)? = nil,
         customAction: CustomAction? = nil
@@ -5777,12 +5777,12 @@ public class GiftViewScreen: ViewControllerComponentContainer {
         
         self.profileGiftsContext = profileGiftsContext
         self.updateSavedToProfile = updateSavedToProfile
-        self.convertToStars = convertToStars
+        self.convertToDiamonds = convertToDiamonds
         self.dropOriginalDetails = dropOriginalDetails
         self.transferGift = transferGift
         self.upgradeGift = upgradeGift
         self.buyGift = buyGift
-        self.updateResellStars = updateResellStars
+        self.updateResellDiamonds = updateResellDiamonds
         self.togglePinnedToTop = togglePinnedToTop
         self.shareStory = shareStory
         self.openChatTheme = openChatTheme
@@ -5980,23 +5980,23 @@ public class GiftViewScreen: ViewControllerComponentContainer {
             let balanceSize = self.balanceOverlay.update(
                 transition: .immediate,
                 component: AnyComponent(
-                    StarsBalanceOverlayComponent(
+                    DiamondsBalanceOverlayComponent(
                         context: context,
                         peerId: context.account.peerId,
                         theme: context.sharedContext.currentPresentationData.with { $0 }.theme,
                         currency: self.balanceCurrency,
                         action: { [weak self] in
-                            guard let self, let starsContext = context.starsContext, let navigationController = self.navigationController as? NavigationController else {
+                            guard let self, let diamondsContext = context.diamondsContext, let navigationController = self.navigationController as? NavigationController else {
                                 return
                             }
                             switch self.balanceCurrency {
                             case .stars:
-                                let _ = (context.engine.payments.starsTopUpOptions()
+                                let _ = (context.engine.payments.diamondsTopUpOptions()
                                 |> take(1)
                                 |> deliverOnMainQueue).startStandalone(next: { options in
-                                    let controller = context.sharedContext.makeStarsPurchaseScreen(
+                                    let controller = context.sharedContext.makeDiamondsPurchaseScreen(
                                         context: context,
-                                        starsContext: starsContext,
+                                        diamondsContext: diamondsContext,
                                         options: options,
                                         purpose: .generic,
                                         targetPeerId: nil,
@@ -6219,22 +6219,22 @@ final class ButtonContentComponent: Component {
 
 private struct GiftConfiguration {
     static var defaultValue: GiftConfiguration {
-        return GiftConfiguration(convertToStarsPeriod: 90 * 86400)
+        return GiftConfiguration(convertToDiamondsPeriod: 90 * 86400)
     }
     
-    let convertToStarsPeriod: Int32
+    let convertToDiamondsPeriod: Int32
     
-    fileprivate init(convertToStarsPeriod: Int32) {
-        self.convertToStarsPeriod = convertToStarsPeriod
+    fileprivate init(convertToDiamondsPeriod: Int32) {
+        self.convertToDiamondsPeriod = convertToDiamondsPeriod
     }
     
     static func with(appConfiguration: AppConfiguration) -> GiftConfiguration {
         if let data = appConfiguration.data {
-            var convertToStarsPeriod: Int32?
+            var convertToDiamondsPeriod: Int32?
             if let value = data["stargifts_convert_period_max"] as? Double {
-                convertToStarsPeriod = Int32(value)
+                convertToDiamondsPeriod = Int32(value)
             }
-            return GiftConfiguration(convertToStarsPeriod: convertToStarsPeriod ?? GiftConfiguration.defaultValue.convertToStarsPeriod)
+            return GiftConfiguration(convertToDiamondsPeriod: convertToDiamondsPeriod ?? GiftConfiguration.defaultValue.convertToDiamondsPeriod)
         } else {
             return .defaultValue
         }
@@ -6439,7 +6439,7 @@ private struct GiftViewConfiguration {
     }
 }
 
-private extension StarGiftReference {
+private extension DiamondGiftReference {
     var stringValue: String {
         switch self {
         case let .message(messageId):

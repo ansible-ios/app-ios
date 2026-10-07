@@ -196,7 +196,7 @@ private enum ApplicationSpecificGlobalNotice: Int32 {
     case businessBotMessageTooltip = 71
     case captionAboveMediaTooltip = 75
     case channelSendGiftTooltip = 76
-    case starGiftWearTips = 77
+    case diamondGiftWearTips = 77
     case channelSuggestTooltip = 78
     case multipleStoriesTooltip = 79
     case voiceMessagesPauseSuggestion = 80
@@ -551,8 +551,8 @@ private struct ApplicationSpecificNoticeKeys {
         return EngineNoticeEntryKey(namespace: noticeNamespace(namespace: globalNamespace), key: ApplicationSpecificGlobalNotice.channelSendGiftTooltip.key)
     }
     
-    static func starGiftWearTips() -> EngineNoticeEntryKey {
-        return EngineNoticeEntryKey(namespace: noticeNamespace(namespace: globalNamespace), key: ApplicationSpecificGlobalNotice.starGiftWearTips.key)
+    static func diamondGiftWearTips() -> EngineNoticeEntryKey {
+        return EngineNoticeEntryKey(namespace: noticeNamespace(namespace: globalNamespace), key: ApplicationSpecificGlobalNotice.diamondGiftWearTips.key)
     }
     
     static func channelSuggestTooltip() -> EngineNoticeEntryKey {
@@ -2377,9 +2377,9 @@ public struct ApplicationSpecificNotice {
         }
     }
     
-    public static func getStarGiftWearTips(accountManager: AccountManager<IosappAccountManagerTypes>) -> Signal<Int32, NoError> {
+    public static func getDiamondGiftWearTips(accountManager: AccountManager<IosappAccountManagerTypes>) -> Signal<Int32, NoError> {
         return accountManager.transaction { transaction -> Int32 in
-            if let value = transaction.getNotice(ApplicationSpecificNoticeKeys.starGiftWearTips())?.get(ApplicationSpecificCounterNotice.self) {
+            if let value = transaction.getNotice(ApplicationSpecificNoticeKeys.diamondGiftWearTips())?.get(ApplicationSpecificCounterNotice.self) {
                 return value.value
             } else {
                 return 0
@@ -2387,17 +2387,17 @@ public struct ApplicationSpecificNotice {
         }
     }
     
-    public static func incrementStarGiftWearTips(accountManager: AccountManager<IosappAccountManagerTypes>, count: Int = 1) -> Signal<Int, NoError> {
+    public static func incrementDiamondGiftWearTips(accountManager: AccountManager<IosappAccountManagerTypes>, count: Int = 1) -> Signal<Int, NoError> {
         return accountManager.transaction { transaction -> Int in
             var currentValue: Int32 = 0
-            if let value = transaction.getNotice(ApplicationSpecificNoticeKeys.starGiftWearTips())?.get(ApplicationSpecificCounterNotice.self) {
+            if let value = transaction.getNotice(ApplicationSpecificNoticeKeys.diamondGiftWearTips())?.get(ApplicationSpecificCounterNotice.self) {
                 currentValue = value.value
             }
             let previousValue = currentValue
             currentValue += Int32(count)
 
             if let entry = EngineCodableEntry(ApplicationSpecificCounterNotice(value: currentValue)) {
-                transaction.setNotice(ApplicationSpecificNoticeKeys.starGiftWearTips(), entry)
+                transaction.setNotice(ApplicationSpecificNoticeKeys.diamondGiftWearTips(), entry)
             }
             
             return Int(previousValue)

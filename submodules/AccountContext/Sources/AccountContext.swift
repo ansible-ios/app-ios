@@ -344,7 +344,7 @@ public enum ResolvedUrl {
     case startAttach(peerId: EnginePeer.Id, payload: String?, choose: ResolvedBotChoosePeerTypes?)
     case invoice(slug: String, invoice: IosappMediaInvoice?)
     case premiumOffer(reference: String?)
-    case starsTopup(amount: Int64?, purpose: String?)
+    case diamondsTopup(amount: Int64?, purpose: String?)
     case chatFolder(slug: String)
     case story(peerId: EnginePeer.Id, id: Int32)
     case boost(peerId: EnginePeer.Id?, status: ChannelBoostStatus?, myBoostStatus: MyBoostStatus?)
@@ -1179,10 +1179,10 @@ public enum JoinAffiliateProgramScreenMode {
 
     public final class Active {
         public let targetPeer: EnginePeer
-        public let bot: EngineConnectedStarRefBotsContext.Item
-        public let copyLink: (EngineConnectedStarRefBotsContext.Item) -> Void
+        public let bot: EngineConnectedDiamondRefBotsContext.Item
+        public let copyLink: (EngineConnectedDiamondRefBotsContext.Item) -> Void
         
-        public init(targetPeer: EnginePeer, bot: EngineConnectedStarRefBotsContext.Item, copyLink: @escaping (EngineConnectedStarRefBotsContext.Item) -> Void) {
+        public init(targetPeer: EnginePeer, bot: EngineConnectedDiamondRefBotsContext.Item, copyLink: @escaping (EngineConnectedDiamondRefBotsContext.Item) -> Void) {
             self.targetPeer = targetPeer
             self.bot = bot
             self.copyLink = copyLink
@@ -1276,7 +1276,7 @@ public enum SendInviteLinkScreenSubject {
     case groupCall(GroupCall)
 }
 
-public enum StarsWithdrawalScreenSubject {
+public enum DiamondsWithdrawalScreenSubject {
     public enum PaidMessageKind {
         case privacy
         case postSuggestion
@@ -1286,7 +1286,7 @@ public enum StarsWithdrawalScreenSubject {
     case enterAmount(current: StarsAmount, minValue: StarsAmount, fractionAfterCommission: Int, kind: PaidMessageKind, completion: (Int64) -> Void)
     case postSuggestion(channel: EnginePeer, isFromAdmin: Bool, current: CurrencyAmount, timestamp: Int32?, completion: (CurrencyAmount, Int32?) -> Void)
     case postSuggestionModification(current: CurrencyAmount, timestamp: Int32?, completion: (CurrencyAmount, Int32?) -> Void)
-    case starGiftOffer(peer: EnginePeer, gift: StarGift.UniqueGift, completion: (CurrencyAmount, Int32) -> Void)
+    case diamondGiftOffer(peer: EnginePeer, gift: StarGift.UniqueGift, completion: (CurrencyAmount, Int32) -> Void)
 }
 
 public enum ChannelMembersSearchControllerMode {
@@ -1441,7 +1441,7 @@ public protocol SharedAccountContext: AnyObject {
     func makeLocalizationListController(context: AccountContext) -> ViewController
     func makeCreateGroupController(context: AccountContext, peerIds: [EnginePeer.Id], initialTitle: String?, mode: CreateGroupMode, completion: ((EnginePeer.Id, @escaping () -> Void) -> Void)?) -> ViewController
     func makeCreateChannelController(context: AccountContext, completion: @escaping (EnginePeer.Id, @escaping () -> Void) -> Void) -> ViewController
-    func makeChatRecentActionsController(context: AccountContext, peer: EnginePeer, adminPeerId: EnginePeer.Id?, starsState: StarsRevenueStats?) -> ViewController
+    func makeChatRecentActionsController(context: AccountContext, peer: EnginePeer, adminPeerId: EnginePeer.Id?, diamondsState: StarsRevenueStats?) -> ViewController
     func makePrivacyAndSecurityController(context: AccountContext) -> ViewController
     func makeBioPrivacyController(context: AccountContext, settings: Promise<AccountPrivacySettings?>, present: @escaping (ViewController) -> Void)
     func makeBirthdayPrivacyController(context: AccountContext, settings: Promise<AccountPrivacySettings?>, openedFromBirthdayScreen: Bool, present: @escaping (ViewController) -> Void)
@@ -1516,8 +1516,8 @@ public protocol SharedAccountContext: AnyObject {
     func makePremiumIntroController(sharedContext: SharedAccountContext, engine: IosappEngineUnauthorized, inAppPurchaseManager: InAppPurchaseManager, source: PremiumIntroSource, proceed: (() -> Void)?) -> ViewController
     func makePremiumDemoController(context: AccountContext, subject: PremiumDemoSubject, forceDark: Bool, action: @escaping () -> Void, dismissed: (() -> Void)?) -> ViewController
     func makePremiumLimitController(context: AccountContext, subject: PremiumLimitSubject, count: Int32, forceDark: Bool, cancel: @escaping () -> Void, action: @escaping () -> Bool) -> ViewController
-    func makeStarsGiftController(context: AccountContext, birthdays: [EnginePeer.Id: IosappBirthday]?, completion: @escaping (([EnginePeer.Id]) -> Void)) -> ViewController
-    func makePremiumGiftController(context: AccountContext, source: PremiumGiftSource, completion: (([EnginePeer.Id]) -> Signal<Never, TransferStarGiftError>)?) -> ViewController
+    func makeDiamondsGiftController(context: AccountContext, birthdays: [EnginePeer.Id: IosappBirthday]?, completion: @escaping (([EnginePeer.Id]) -> Void)) -> ViewController
+    func makePremiumGiftController(context: AccountContext, source: PremiumGiftSource, completion: (([EnginePeer.Id]) -> Signal<Never, TransferDiamondGiftError>)?) -> ViewController
     func makeGiftOptionsController(context: AccountContext, peerId: EnginePeer.Id, premiumOptions: [CachedPremiumGiftOption], hasBirthday: Bool, completion: (() -> Void)?) -> ViewController
     func makeGiftStoreController(context: AccountContext, peerId: EnginePeer.Id, gift: StarGift.Gift) -> ViewController
     func makePremiumPrivacyControllerController(context: AccountContext, subject: PremiumPrivacySubject, peerId: EnginePeer.Id) -> ViewController
@@ -1539,22 +1539,22 @@ public protocol SharedAccountContext: AnyObject {
     func makeMessagesStatsController(context: AccountContext, updatedPresentationData: (initial: PresentationData, signal: Signal<PresentationData, NoError>)?, messageId: EngineMessage.Id) -> ViewController
     func makePollStatsScreen(context: AccountContext, messageId: EngineMessage.Id) -> ViewController
     func makeStoryStatsController(context: AccountContext, updatedPresentationData: (initial: PresentationData, signal: Signal<PresentationData, NoError>)?, peerId: EnginePeer.Id, storyId: Int32, storyItem: EngineStoryItem, fromStory: Bool) -> ViewController
-    func makeStarsTransactionsScreen(context: AccountContext, starsContext: StarsContext) -> ViewController
-    func makeStarsPurchaseScreen(context: AccountContext, starsContext: StarsContext, options: [Any], purpose: StarsPurchasePurpose, targetPeerId: EnginePeer.Id?, customTheme: PresentationTheme?, completion: @escaping (Int64) -> Void) -> ViewController
-    func makeStarsTransferScreen(context: AccountContext, starsContext: StarsContext, invoice: IosappMediaInvoice, source: BotPaymentInvoiceSource, extendedMedia: [IosappExtendedMedia], inputData: Signal<(StarsContext.State, BotPaymentForm, EnginePeer?, EnginePeer?)?, NoError>, completion: @escaping (Bool) -> Void) -> ViewController
-    func makeStarsSubscriptionTransferScreen(context: AccountContext, starsContext: StarsContext, invoice: IosappMediaInvoice, link: String, inputData: Signal<(StarsContext.State, BotPaymentForm, EnginePeer?, EnginePeer?)?, NoError>, navigateToPeer: @escaping (EnginePeer) -> Void) -> ViewController
-    func makeStarsTransactionScreen(context: AccountContext, transaction: StarsContext.State.Transaction, peer: EnginePeer) -> ViewController
-    func makeStarsReceiptScreen(context: AccountContext, receipt: BotPaymentReceipt) -> ViewController
-    func makeStarsSubscriptionScreen(context: AccountContext, subscription: StarsContext.State.Subscription, update: @escaping (Bool) -> Void) -> ViewController
-    func makeStarsSubscriptionScreen(context: AccountContext, peer: EnginePeer, pricing: StarsSubscriptionPricing, importer: PeerInvitationImportersState.Importer, usdRate: Double) -> ViewController
-    func makeStarsStatisticsScreen(context: AccountContext, peerId: EnginePeer.Id, revenueContext: StarsRevenueStatsContext) -> ViewController
-    func makeStarsAmountScreen(context: AccountContext, initialValue: Int64?, completion: @escaping (Int64) -> Void) -> ViewController
-    func makeStarsWithdrawalScreen(context: AccountContext, stats: StarsRevenueStats, completion: @escaping (Int64) -> Void) -> ViewController
-    func makeStarsWithdrawalScreen(context: AccountContext, subject: StarsWithdrawalScreenSubject) -> ViewController
-    func makeStarGiftResellScreen(context: AccountContext, gift: StarGift.UniqueGift, update: Bool, completion: @escaping (CurrencyAmount) -> Void) -> ViewController
-    func makeStarsGiftScreen(context: AccountContext, message: EngineMessage) -> ViewController
-    func makeStarsGiveawayBoostScreen(context: AccountContext, peerId: EnginePeer.Id, boost: ChannelBoostersContext.State.Boost) -> ViewController
-    func makeStarsIntroScreen(context: AccountContext) -> ViewController
+    func makeDiamondsTransactionsScreen(context: AccountContext, diamondsContext: DiamondsContext) -> ViewController
+    func makeDiamondsPurchaseScreen(context: AccountContext, diamondsContext: DiamondsContext, options: [Any], purpose: DiamondsPurchasePurpose, targetPeerId: EnginePeer.Id?, customTheme: PresentationTheme?, completion: @escaping (Int64) -> Void) -> ViewController
+    func makeDiamondsTransferScreen(context: AccountContext, diamondsContext: DiamondsContext, invoice: IosappMediaInvoice, source: BotPaymentInvoiceSource, extendedMedia: [IosappExtendedMedia], inputData: Signal<(DiamondsContext.State, BotPaymentForm, EnginePeer?, EnginePeer?)?, NoError>, completion: @escaping (Bool) -> Void) -> ViewController
+    func makeDiamondsSubscriptionTransferScreen(context: AccountContext, diamondsContext: DiamondsContext, invoice: IosappMediaInvoice, link: String, inputData: Signal<(DiamondsContext.State, BotPaymentForm, EnginePeer?, EnginePeer?)?, NoError>, navigateToPeer: @escaping (EnginePeer) -> Void) -> ViewController
+    func makeDiamondsTransactionScreen(context: AccountContext, transaction: DiamondsContext.State.Transaction, peer: EnginePeer) -> ViewController
+    func makeDiamondsReceiptScreen(context: AccountContext, receipt: BotPaymentReceipt) -> ViewController
+    func makeDiamondsSubscriptionScreen(context: AccountContext, subscription: DiamondsContext.State.Subscription, update: @escaping (Bool) -> Void) -> ViewController
+    func makeDiamondsSubscriptionScreen(context: AccountContext, peer: EnginePeer, pricing: StarsSubscriptionPricing, importer: PeerInvitationImportersState.Importer, usdRate: Double) -> ViewController
+    func makeDiamondsStatisticsScreen(context: AccountContext, peerId: EnginePeer.Id, revenueContext: DiamondsRevenueStatsContext) -> ViewController
+    func makeDiamondsAmountScreen(context: AccountContext, initialValue: Int64?, completion: @escaping (Int64) -> Void) -> ViewController
+    func makeDiamondsWithdrawalScreen(context: AccountContext, stats: StarsRevenueStats, completion: @escaping (Int64) -> Void) -> ViewController
+    func makeDiamondsWithdrawalScreen(context: AccountContext, subject: DiamondsWithdrawalScreenSubject) -> ViewController
+    func makeDiamondGiftResellScreen(context: AccountContext, gift: StarGift.UniqueGift, update: Bool, completion: @escaping (CurrencyAmount) -> Void) -> ViewController
+    func makeDiamondsGiftScreen(context: AccountContext, message: EngineMessage) -> ViewController
+    func makeDiamondsGiveawayBoostScreen(context: AccountContext, peerId: EnginePeer.Id, boost: ChannelBoostersContext.State.Boost) -> ViewController
+    func makeDiamondsIntroScreen(context: AccountContext) -> ViewController
     func makeGiftViewScreen(context: AccountContext, message: EngineMessage, shareStory: ((StarGift.UniqueGift) -> Void)?) -> ViewController
     func makeGiftViewScreen(context: AccountContext, gift: StarGift.UniqueGift, shareStory: ((StarGift.UniqueGift) -> Void)?, openChatTheme: (() -> Void)?, dismissed: (() -> Void)?) -> ViewController
     func makeGiftWearPreviewScreen(context: AccountContext, gift: StarGift, attributes: [StarGift.UniqueGift.Attribute]?) -> ViewController
@@ -1730,8 +1730,8 @@ public protocol AccountContext: AnyObject {
     var peerChannelMemberCategoriesContextsManager: PeerChannelMemberCategoriesContextsManager { get }
     var wallpaperUploadManager: WallpaperUploadManager? { get }
     var inAppPurchaseManager: InAppPurchaseManager? { get }
-    var starsContext: StarsContext? { get }
-    var tonContext: StarsContext? { get }
+    var diamondsContext: DiamondsContext? { get }
+    var tonContext: DiamondsContext? { get }
     var giftAuctionsManager: GiftAuctionsManager? { get }
     
     var currentLimitsConfiguration: Atomic<LimitsConfiguration> { get }
@@ -1900,26 +1900,26 @@ public struct CommunitiesConfiguration {
     }
 }
 
-public struct StarsSubscriptionConfiguration {
-    static var defaultValue: StarsSubscriptionConfiguration {
-        return StarsSubscriptionConfiguration(
+public struct DiamondsSubscriptionConfiguration {
+    static var defaultValue: DiamondsSubscriptionConfiguration {
+        return DiamondsSubscriptionConfiguration(
             maxFee: 2500,
             usdWithdrawRate: 1200,
             tonUsdRate: 1.0,
             paidMessageMaxAmount: 10000,
             paidMessageCommissionPermille: 850,
             paidMessagesAvailable: false,
-            starGiftResaleMinStarsAmount: 125,
-            starGiftResaleMaxStarsAmount: 100000,
-            starGiftCommissionStarsPermille: 800,
-            starGiftResaleMinTonAmount: 10000000,
-            starGiftResaleMaxTonAmount: 1000000000000000,
-            starGiftCommissionTonPermille: 800,
-            channelMessageSuggestionStarsCommissionPermille: 850,
+            diamondGiftResaleMinDiamondsAmount: 125,
+            diamondGiftResaleMaxDiamondsAmount: 100000,
+            diamondGiftCommissionDiamondsPermille: 800,
+            diamondGiftResaleMinTonAmount: 10000000,
+            diamondGiftResaleMaxTonAmount: 1000000000000000,
+            diamondGiftCommissionTonPermille: 800,
+            channelMessageSuggestionDiamondsCommissionPermille: 850,
             channelMessageSuggestionTonCommissionPermille: 850,
-            channelMessageSuggestionMaxStarsAmount: 10000,
+            channelMessageSuggestionMaxDiamondsAmount: 10000,
             channelMessageSuggestionMaxTonAmount: 10000000000000,
-            channelMessageSuggestionMinStarsAmount: 5
+            channelMessageSuggestionMinDiamondsAmount: 5
         )
     }
         
@@ -1929,17 +1929,17 @@ public struct StarsSubscriptionConfiguration {
     public let paidMessageMaxAmount: Int64
     public let paidMessageCommissionPermille: Int32
     public let paidMessagesAvailable: Bool
-    public let starGiftResaleMinStarsAmount: Int64
-    public let starGiftResaleMaxStarsAmount: Int64
-    public let starGiftCommissionStarsPermille: Int32
-    public let starGiftResaleMinTonAmount: Int64
-    public let starGiftResaleMaxTonAmount: Int64
-    public let starGiftCommissionTonPermille: Int32
-    public let channelMessageSuggestionStarsCommissionPermille: Int32
+    public let diamondGiftResaleMinDiamondsAmount: Int64
+    public let diamondGiftResaleMaxDiamondsAmount: Int64
+    public let diamondGiftCommissionDiamondsPermille: Int32
+    public let diamondGiftResaleMinTonAmount: Int64
+    public let diamondGiftResaleMaxTonAmount: Int64
+    public let diamondGiftCommissionTonPermille: Int32
+    public let channelMessageSuggestionDiamondsCommissionPermille: Int32
     public let channelMessageSuggestionTonCommissionPermille: Int32
-    public let channelMessageSuggestionMaxStarsAmount: Int64
+    public let channelMessageSuggestionMaxDiamondsAmount: Int64
     public let channelMessageSuggestionMaxTonAmount: Int64
-    public let channelMessageSuggestionMinStarsAmount: Int64
+    public let channelMessageSuggestionMinDiamondsAmount: Int64
     
     fileprivate init(
         maxFee: Int64,
@@ -1948,17 +1948,17 @@ public struct StarsSubscriptionConfiguration {
         paidMessageMaxAmount: Int64,
         paidMessageCommissionPermille: Int32,
         paidMessagesAvailable: Bool,
-        starGiftResaleMinStarsAmount: Int64,
-        starGiftResaleMaxStarsAmount: Int64,
-        starGiftCommissionStarsPermille: Int32,
-        starGiftResaleMinTonAmount: Int64,
-        starGiftResaleMaxTonAmount: Int64,
-        starGiftCommissionTonPermille: Int32,
-        channelMessageSuggestionStarsCommissionPermille: Int32,
+        diamondGiftResaleMinDiamondsAmount: Int64,
+        diamondGiftResaleMaxDiamondsAmount: Int64,
+        diamondGiftCommissionDiamondsPermille: Int32,
+        diamondGiftResaleMinTonAmount: Int64,
+        diamondGiftResaleMaxTonAmount: Int64,
+        diamondGiftCommissionTonPermille: Int32,
+        channelMessageSuggestionDiamondsCommissionPermille: Int32,
         channelMessageSuggestionTonCommissionPermille: Int32,
-        channelMessageSuggestionMaxStarsAmount: Int64,
+        channelMessageSuggestionMaxDiamondsAmount: Int64,
         channelMessageSuggestionMaxTonAmount: Int64,
-        channelMessageSuggestionMinStarsAmount: Int64
+        channelMessageSuggestionMinDiamondsAmount: Int64
     ) {
         self.maxFee = maxFee
         self.usdWithdrawRate = usdWithdrawRate
@@ -1966,61 +1966,61 @@ public struct StarsSubscriptionConfiguration {
         self.paidMessageMaxAmount = paidMessageMaxAmount
         self.paidMessageCommissionPermille = paidMessageCommissionPermille
         self.paidMessagesAvailable = paidMessagesAvailable
-        self.starGiftResaleMinStarsAmount = starGiftResaleMinStarsAmount
-        self.starGiftResaleMaxStarsAmount = starGiftResaleMaxStarsAmount
-        self.starGiftCommissionStarsPermille = starGiftCommissionStarsPermille
-        self.starGiftResaleMinTonAmount = starGiftResaleMinTonAmount
-        self.starGiftResaleMaxTonAmount = starGiftResaleMaxTonAmount
-        self.starGiftCommissionTonPermille = starGiftCommissionTonPermille
-        self.channelMessageSuggestionStarsCommissionPermille = channelMessageSuggestionStarsCommissionPermille
+        self.diamondGiftResaleMinDiamondsAmount = diamondGiftResaleMinDiamondsAmount
+        self.diamondGiftResaleMaxDiamondsAmount = diamondGiftResaleMaxDiamondsAmount
+        self.diamondGiftCommissionDiamondsPermille = diamondGiftCommissionDiamondsPermille
+        self.diamondGiftResaleMinTonAmount = diamondGiftResaleMinTonAmount
+        self.diamondGiftResaleMaxTonAmount = diamondGiftResaleMaxTonAmount
+        self.diamondGiftCommissionTonPermille = diamondGiftCommissionTonPermille
+        self.channelMessageSuggestionDiamondsCommissionPermille = channelMessageSuggestionDiamondsCommissionPermille
         self.channelMessageSuggestionTonCommissionPermille = channelMessageSuggestionTonCommissionPermille
-        self.channelMessageSuggestionMaxStarsAmount = channelMessageSuggestionMaxStarsAmount
+        self.channelMessageSuggestionMaxDiamondsAmount = channelMessageSuggestionMaxDiamondsAmount
         self.channelMessageSuggestionMaxTonAmount = channelMessageSuggestionMaxTonAmount
-        self.channelMessageSuggestionMinStarsAmount = channelMessageSuggestionMinStarsAmount
+        self.channelMessageSuggestionMinDiamondsAmount = channelMessageSuggestionMinDiamondsAmount
     }
     
-    public static func with(appConfiguration: AppConfiguration) -> StarsSubscriptionConfiguration {
+    public static func with(appConfiguration: AppConfiguration) -> DiamondsSubscriptionConfiguration {
         if let data = appConfiguration.data {
-            let maxFee = (data["stars_subscription_amount_max"] as? Double).flatMap(Int64.init) ?? StarsSubscriptionConfiguration.defaultValue.maxFee
-            let usdWithdrawRate = (data["stars_usd_withdraw_rate_x1000"] as? Double).flatMap(Int64.init) ?? StarsSubscriptionConfiguration.defaultValue.usdWithdrawRate
-            let tonUsdRate = (data["ton_usd_rate"] as? Double) ?? StarsSubscriptionConfiguration.defaultValue.tonUsdRate
-            let paidMessageMaxAmount = (data["stars_paid_message_amount_max"] as? Double).flatMap(Int64.init) ?? StarsSubscriptionConfiguration.defaultValue.paidMessageMaxAmount
-            let paidMessageCommissionPermille = (data["stars_paid_message_commission_permille"] as? Double).flatMap(Int32.init) ?? StarsSubscriptionConfiguration.defaultValue.paidMessageCommissionPermille
-            let paidMessagesAvailable = (data["stars_paid_messages_available"] as? Bool) ?? StarsSubscriptionConfiguration.defaultValue.paidMessagesAvailable
+            let maxFee = (data["stars_subscription_amount_max"] as? Double).flatMap(Int64.init) ?? DiamondsSubscriptionConfiguration.defaultValue.maxFee
+            let usdWithdrawRate = (data["stars_usd_withdraw_rate_x1000"] as? Double).flatMap(Int64.init) ?? DiamondsSubscriptionConfiguration.defaultValue.usdWithdrawRate
+            let tonUsdRate = (data["ton_usd_rate"] as? Double) ?? DiamondsSubscriptionConfiguration.defaultValue.tonUsdRate
+            let paidMessageMaxAmount = (data["stars_paid_message_amount_max"] as? Double).flatMap(Int64.init) ?? DiamondsSubscriptionConfiguration.defaultValue.paidMessageMaxAmount
+            let paidMessageCommissionPermille = (data["stars_paid_message_commission_permille"] as? Double).flatMap(Int32.init) ?? DiamondsSubscriptionConfiguration.defaultValue.paidMessageCommissionPermille
+            let paidMessagesAvailable = (data["stars_paid_messages_available"] as? Bool) ?? DiamondsSubscriptionConfiguration.defaultValue.paidMessagesAvailable
             
-            let starGiftResaleMinStarsAmount = (data["stars_stargift_resale_amount_min"] as? Double).flatMap(Int64.init) ?? StarsSubscriptionConfiguration.defaultValue.starGiftResaleMinStarsAmount
-            let starGiftResaleMaxStarsAmount = (data["stars_stargift_resale_amount_max"] as? Double).flatMap(Int64.init) ?? StarsSubscriptionConfiguration.defaultValue.starGiftResaleMaxStarsAmount
-            let starGiftCommissionStarsPermille = (data["stars_stargift_resale_commission_permille"] as? Double).flatMap(Int32.init) ?? StarsSubscriptionConfiguration.defaultValue.starGiftCommissionStarsPermille
+            let diamondGiftResaleMinDiamondsAmount = (data["stars_stargift_resale_amount_min"] as? Double).flatMap(Int64.init) ?? DiamondsSubscriptionConfiguration.defaultValue.diamondGiftResaleMinDiamondsAmount
+            let diamondGiftResaleMaxDiamondsAmount = (data["stars_stargift_resale_amount_max"] as? Double).flatMap(Int64.init) ?? DiamondsSubscriptionConfiguration.defaultValue.diamondGiftResaleMaxDiamondsAmount
+            let diamondGiftCommissionDiamondsPermille = (data["stars_stargift_resale_commission_permille"] as? Double).flatMap(Int32.init) ?? DiamondsSubscriptionConfiguration.defaultValue.diamondGiftCommissionDiamondsPermille
             
-            let starGiftResaleMinTonAmount = (data["ton_stargift_resale_amount_min"] as? Double).flatMap(Int64.init) ?? StarsSubscriptionConfiguration.defaultValue.starGiftResaleMinTonAmount
-            let starGiftResaleMaxTonAmount = (data["ton_stargift_resale_amount_max"] as? Double).flatMap(Int64.init) ?? StarsSubscriptionConfiguration.defaultValue.starGiftResaleMaxTonAmount
-            let starGiftCommissionTonPermille = (data["ton_stargift_resale_commission_permille"] as? Double).flatMap(Int32.init) ?? StarsSubscriptionConfiguration.defaultValue.starGiftCommissionTonPermille
+            let diamondGiftResaleMinTonAmount = (data["ton_stargift_resale_amount_min"] as? Double).flatMap(Int64.init) ?? DiamondsSubscriptionConfiguration.defaultValue.diamondGiftResaleMinTonAmount
+            let diamondGiftResaleMaxTonAmount = (data["ton_stargift_resale_amount_max"] as? Double).flatMap(Int64.init) ?? DiamondsSubscriptionConfiguration.defaultValue.diamondGiftResaleMaxTonAmount
+            let diamondGiftCommissionTonPermille = (data["ton_stargift_resale_commission_permille"] as? Double).flatMap(Int32.init) ?? DiamondsSubscriptionConfiguration.defaultValue.diamondGiftCommissionTonPermille
             
-            let channelMessageSuggestionStarsCommissionPermille = (data["stars_suggested_post_commission_permille"] as? Double).flatMap(Int32.init) ?? StarsSubscriptionConfiguration.defaultValue.channelMessageSuggestionStarsCommissionPermille
-            let channelMessageSuggestionTonCommissionPermille = (data["ton_suggested_post_commission_permille"] as? Double).flatMap(Int32.init) ?? StarsSubscriptionConfiguration.defaultValue.channelMessageSuggestionTonCommissionPermille
-            let channelMessageSuggestionMaxStarsAmount = (data["stars_suggested_post_amount_max"] as? Double).flatMap(Int64.init) ?? StarsSubscriptionConfiguration.defaultValue.channelMessageSuggestionMaxStarsAmount
-            let channelMessageSuggestionMaxTonAmount = (data["ton_suggested_post_amount_max"] as? Double).flatMap(Int64.init) ?? StarsSubscriptionConfiguration.defaultValue.channelMessageSuggestionMaxTonAmount
+            let channelMessageSuggestionDiamondsCommissionPermille = (data["stars_suggested_post_commission_permille"] as? Double).flatMap(Int32.init) ?? DiamondsSubscriptionConfiguration.defaultValue.channelMessageSuggestionDiamondsCommissionPermille
+            let channelMessageSuggestionTonCommissionPermille = (data["ton_suggested_post_commission_permille"] as? Double).flatMap(Int32.init) ?? DiamondsSubscriptionConfiguration.defaultValue.channelMessageSuggestionTonCommissionPermille
+            let channelMessageSuggestionMaxDiamondsAmount = (data["stars_suggested_post_amount_max"] as? Double).flatMap(Int64.init) ?? DiamondsSubscriptionConfiguration.defaultValue.channelMessageSuggestionMaxDiamondsAmount
+            let channelMessageSuggestionMaxTonAmount = (data["ton_suggested_post_amount_max"] as? Double).flatMap(Int64.init) ?? DiamondsSubscriptionConfiguration.defaultValue.channelMessageSuggestionMaxTonAmount
             
-            let channelMessageSuggestionMinStarsAmount = (data["stars_suggested_post_amount_min"] as? Double).flatMap(Int64.init) ?? StarsSubscriptionConfiguration.defaultValue.channelMessageSuggestionMinStarsAmount
+            let channelMessageSuggestionMinDiamondsAmount = (data["stars_suggested_post_amount_min"] as? Double).flatMap(Int64.init) ?? DiamondsSubscriptionConfiguration.defaultValue.channelMessageSuggestionMinDiamondsAmount
             
-            return StarsSubscriptionConfiguration(
+            return DiamondsSubscriptionConfiguration(
                 maxFee: maxFee,
                 usdWithdrawRate: usdWithdrawRate,
                 tonUsdRate: tonUsdRate,
                 paidMessageMaxAmount: paidMessageMaxAmount,
                 paidMessageCommissionPermille: paidMessageCommissionPermille,
                 paidMessagesAvailable: paidMessagesAvailable,
-                starGiftResaleMinStarsAmount: starGiftResaleMinStarsAmount,
-                starGiftResaleMaxStarsAmount: starGiftResaleMaxStarsAmount,
-                starGiftCommissionStarsPermille: starGiftCommissionStarsPermille,
-                starGiftResaleMinTonAmount: starGiftResaleMinTonAmount,
-                starGiftResaleMaxTonAmount: starGiftResaleMaxTonAmount,
-                starGiftCommissionTonPermille: starGiftCommissionTonPermille,
-                channelMessageSuggestionStarsCommissionPermille: channelMessageSuggestionStarsCommissionPermille,
+                diamondGiftResaleMinDiamondsAmount: diamondGiftResaleMinDiamondsAmount,
+                diamondGiftResaleMaxDiamondsAmount: diamondGiftResaleMaxDiamondsAmount,
+                diamondGiftCommissionDiamondsPermille: diamondGiftCommissionDiamondsPermille,
+                diamondGiftResaleMinTonAmount: diamondGiftResaleMinTonAmount,
+                diamondGiftResaleMaxTonAmount: diamondGiftResaleMaxTonAmount,
+                diamondGiftCommissionTonPermille: diamondGiftCommissionTonPermille,
+                channelMessageSuggestionDiamondsCommissionPermille: channelMessageSuggestionDiamondsCommissionPermille,
                 channelMessageSuggestionTonCommissionPermille: channelMessageSuggestionTonCommissionPermille,
-                channelMessageSuggestionMaxStarsAmount: channelMessageSuggestionMaxStarsAmount,
+                channelMessageSuggestionMaxDiamondsAmount: channelMessageSuggestionMaxDiamondsAmount,
                 channelMessageSuggestionMaxTonAmount: channelMessageSuggestionMaxTonAmount,
-                channelMessageSuggestionMinStarsAmount: channelMessageSuggestionMinStarsAmount
+                channelMessageSuggestionMinDiamondsAmount: channelMessageSuggestionMinDiamondsAmount
             )
         } else {
             return .defaultValue

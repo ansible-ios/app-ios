@@ -29,7 +29,7 @@ public struct MessageSendOptions: Codable, Equatable, Hashable {
     public let onlyPreview: Bool
 
     /// The number of Iosapp Stars the user agreed to pay to send the messages
-    public let paidMessageStarCount: Int64
+    public let paidMessageDiamondCount: Int64
 
     /// Pass true if the content of the message must be protected from forwarding and saving; for bots only
     public let protectContent: Bool
@@ -53,7 +53,7 @@ public struct MessageSendOptions: Codable, Equatable, Hashable {
         effectId: TdInt64,
         fromBackground: Bool,
         onlyPreview: Bool,
-        paidMessageStarCount: Int64,
+        paidMessageDiamondCount: Int64,
         protectContent: Bool,
         schedulingState: MessageSchedulingState?,
         sendingId: Int,
@@ -65,7 +65,7 @@ public struct MessageSendOptions: Codable, Equatable, Hashable {
         self.effectId = effectId
         self.fromBackground = fromBackground
         self.onlyPreview = onlyPreview
-        self.paidMessageStarCount = paidMessageStarCount
+        self.paidMessageDiamondCount = paidMessageDiamondCount
         self.protectContent = protectContent
         self.schedulingState = schedulingState
         self.sendingId = sendingId

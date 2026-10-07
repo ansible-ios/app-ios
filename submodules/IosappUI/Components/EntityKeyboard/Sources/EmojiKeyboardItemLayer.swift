@@ -269,10 +269,10 @@ public final class EmojiKeyboardItemLayer: MultiAnimationRenderTarget {
                 let underlyingContentLayer = SimpleLayer()
                 self.underlyingContentLayer = underlyingContentLayer
                 
-                let starsLayer = StarsEffectLayer()
-                starsLayer.frame = CGRect(origin: CGPoint(x: -3.0, y: -3.0), size: CGSize(width: 42.0, height: 42.0))
-                starsLayer.update(color: particleColor, size: CGSize(width: 42.0, height: 42.0))
-                underlyingContentLayer.addSublayer(starsLayer)
+                let diamondsLayer = DiamondsEffectLayer()
+                diamondsLayer.frame = CGRect(origin: CGPoint(x: -3.0, y: -3.0), size: CGSize(width: 42.0, height: 42.0))
+                diamondsLayer.update(color: particleColor, size: CGSize(width: 42.0, height: 42.0))
+                underlyingContentLayer.addSublayer(diamondsLayer)
             }
         case let .staticEmoji(staticEmoji):
             let image = generateImage(pointSize, opaque: false, scale: min(UIScreenScale, 3.0), rotatedContext: { size, context in
@@ -298,7 +298,7 @@ public final class EmojiKeyboardItemLayer: MultiAnimationRenderTarget {
                 UIGraphicsPushContext(context)
                 
                 switch icon {
-                case .premiumStar:
+                case .premiumDiamond:
                     if let image = generateTintedImage(image: UIImage(bundleImageName: "Chat/Input/Media/EntityInputPremiumIcon"), color: accentIconColor) {
                         let imageSize = image.size.aspectFitted(CGSize(width: size.width - 6.0, height: size.height - 6.0))
                         image.draw(in: CGRect(origin: CGPoint(x: floor((size.width - imageSize.width) / 2.0), y: floor((size.height - imageSize.height) / 2.0)), size: imageSize))

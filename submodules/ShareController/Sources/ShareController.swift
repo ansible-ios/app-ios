@@ -346,7 +346,7 @@ public final class ShareController: ViewController {
     private let fromForeignApp: Bool
     private let collectibleItemInfo: IosappCollectibleItemInfo?
     
-    private let peers = Promise<([(peer: EngineRenderedPeer, presence: EnginePeer.Presence?, requiresPremiumForMessaging: Bool, requiresStars: Int64?)], EnginePeer)>()
+    private let peers = Promise<([(peer: EngineRenderedPeer, presence: EnginePeer.Presence?, requiresPremiumForMessaging: Bool, requiresDiamonds: Int64?)], EnginePeer)>()
     private let peersDisposable = MetaDisposable()
     private let readyDisposable = MetaDisposable()
     private let accountActiveDisposable = MetaDisposable()
@@ -1233,24 +1233,24 @@ public final class ShareController: ViewController {
         |> take(1)
         |> map { views -> ([EnginePeer.Id: EnginePeer?], [EnginePeer.Id: StarsAmount]) in
             var result: [EnginePeer.Id: EnginePeer?] = [:]
-            var requiresStars: [EnginePeer.Id: StarsAmount] = [:]
+            var requiresDiamonds: [EnginePeer.Id: StarsAmount] = [:]
             for peerId in peerIds {
                 if let view = views.views[PostboxViewKey.peer(peerId: peerId, components: [])] as? PeerView, let peer = peerViewMainPeer(view) {
                     result[peerId] = EnginePeer(peer)
                     if peer is IosappUser, let cachedPeerDataView = views.views[PostboxViewKey.cachedPeerData(peerId: peerId)] as? CachedPeerDataView {
                         if let cachedData = cachedPeerDataView.cachedPeerData as? CachedUserData {
-                            requiresStars[peerId] = cachedData.sendPaidMessageStars
+                            requiresDiamonds[peerId] = cachedData.sendPaidMessageDiamonds
                         }
                     } else if let channel = peer as? IosappChannel {
-                        requiresStars[peerId] = channel.sendPaidMessageStars
+                        requiresDiamonds[peerId] = channel.sendPaidMessageDiamonds
                     }
                 }
             }
-            return (result, requiresStars)
+            return (result, requiresDiamonds)
         }
         |> deliverOnMainQueue
         |> castError(ShareControllerError.self)
-        |> mapToSignal { [weak self] peers, requiresStars -> Signal<ShareState, ShareControllerError> in
+        |> mapToSignal { [weak self] peers, requiresDiamonds -> Signal<ShareState, ShareControllerError> in
             guard let strongSelf = self else {
                 return .complete()
             }
@@ -1262,7 +1262,7 @@ public final class ShareController: ViewController {
                 subject = selectedValue.subject
             }
             
-            func transformMessages(_ messages: [StandaloneSendEnqueueMessage], showNames: Bool, silently: Bool, sendPaidMessageStars: StarsAmount?) -> [StandaloneSendEnqueueMessage] {
+            func transformMessages(_ messages: [StandaloneSendEnqueueMessage], showNames: Bool, silently: Bool, sendPaidMessageDiamonds: StarsAmount?) -> [StandaloneSendEnqueueMessage] {
                 return messages.map { message in
                     var message = message
                     if !showNames {
@@ -1274,7 +1274,7 @@ public final class ShareController: ViewController {
                     if silently {
                         message.isSilent = true
                     }
-                    message.sendPaidMessageStars = sendPaidMessageStars
+                    message.sendPaidMessageDiamonds = sendPaidMessageDiamonds
                     return message
                 }
             }
@@ -1322,7 +1322,7 @@ public final class ShareController: ViewController {
                             replyToMessageId: replyToMessageId
                         ))
                     }
-                    messages = transformMessages(messages, showNames: showNames, silently: silently, sendPaidMessageStars: requiresStars[peerId])
+                    messages = transformMessages(messages, showNames: showNames, silently: silently, sendPaidMessageDiamonds: requiresDiamonds[peerId])
                     shareSignals.append(standaloneSendEnqueueMessages(
                         accountPeerId: strongSelf.currentContext.accountPeerId,
                         postbox: strongSelf.currentContext.stateManager.postbox,
@@ -1383,7 +1383,7 @@ public final class ShareController: ViewController {
                         )),
                         replyToMessageId: replyToMessageId
                     ))
-                    messages = transformMessages(messages, showNames: showNames, silently: silently, sendPaidMessageStars: requiresStars[peerId])
+                    messages = transformMessages(messages, showNames: showNames, silently: silently, sendPaidMessageDiamonds: requiresDiamonds[peerId])
                     shareSignals.append(standaloneSendEnqueueMessages(
                         accountPeerId: strongSelf.currentContext.accountPeerId,
                         postbox: strongSelf.currentContext.stateManager.postbox,
@@ -1448,7 +1448,7 @@ public final class ShareController: ViewController {
                         )),
                         replyToMessageId: replyToMessageId
                     ))
-                    messages = transformMessages(messages, showNames: showNames, silently: silently, sendPaidMessageStars: requiresStars[peerId])
+                    messages = transformMessages(messages, showNames: showNames, silently: silently, sendPaidMessageDiamonds: requiresDiamonds[peerId])
                     shareSignals.append(standaloneSendEnqueueMessages(
                         accountPeerId: strongSelf.currentContext.accountPeerId,
                         postbox: strongSelf.currentContext.stateManager.postbox,
@@ -1508,7 +1508,7 @@ public final class ShareController: ViewController {
                             replyToMessageId: replyToMessageId
                         ))
                     }
-                    messages = transformMessages(messages, showNames: showNames, silently: silently, sendPaidMessageStars: requiresStars[peerId])
+                    messages = transformMessages(messages, showNames: showNames, silently: silently, sendPaidMessageDiamonds: requiresDiamonds[peerId])
                     shareSignals.append(standaloneSendEnqueueMessages(
                         accountPeerId: strongSelf.currentContext.accountPeerId,
                         postbox: strongSelf.currentContext.stateManager.postbox,
@@ -1618,7 +1618,7 @@ public final class ShareController: ViewController {
                         ),
                         replyToMessageId: replyToMessageId
                     ))
-                    messages = transformMessages(messages, showNames: showNames, silently: silently, sendPaidMessageStars: requiresStars[peerId])
+                    messages = transformMessages(messages, showNames: showNames, silently: silently, sendPaidMessageDiamonds: requiresDiamonds[peerId])
                     shareSignals.append(standaloneSendEnqueueMessages(
                         accountPeerId: strongSelf.currentContext.accountPeerId,
                         postbox: strongSelf.currentContext.stateManager.postbox,
@@ -1677,7 +1677,7 @@ public final class ShareController: ViewController {
                         content: .map(map: media),
                         replyToMessageId: replyToMessageId
                     ))
-                    messages = transformMessages(messages, showNames: showNames, silently: silently, sendPaidMessageStars: requiresStars[peerId])
+                    messages = transformMessages(messages, showNames: showNames, silently: silently, sendPaidMessageDiamonds: requiresDiamonds[peerId])
                     shareSignals.append(standaloneSendEnqueueMessages(
                         accountPeerId: strongSelf.currentContext.accountPeerId,
                         postbox: strongSelf.currentContext.stateManager.postbox,
@@ -1797,7 +1797,7 @@ public final class ShareController: ViewController {
                             replyToMessageId: replyToMessageId
                         ))
                     }
-                    messagesToEnqueue = transformMessages(messagesToEnqueue, showNames: showNames, silently: silently, sendPaidMessageStars: requiresStars[peerId])
+                    messagesToEnqueue = transformMessages(messagesToEnqueue, showNames: showNames, silently: silently, sendPaidMessageDiamonds: requiresDiamonds[peerId])
                     shareSignals.append(standaloneSendEnqueueMessages(
                         accountPeerId: strongSelf.currentContext.accountPeerId,
                         postbox: strongSelf.currentContext.stateManager.postbox,
@@ -1818,7 +1818,7 @@ public final class ShareController: ViewController {
                     ))
                 }
             case let .fromExternal(_, f):
-                return f(peerIds, topicIds, requiresStars, text, strongSelf.currentContext, silently)
+                return f(peerIds, topicIds, requiresDiamonds, text, strongSelf.currentContext, silently)
                 |> map { state -> ShareState in
                     switch state {
                     case let .preparing(long):
@@ -1887,24 +1887,24 @@ public final class ShareController: ViewController {
         |> take(1)
         |> map { views -> ([EnginePeer.Id: EnginePeer?], [EnginePeer.Id: StarsAmount]) in
             var result: [EnginePeer.Id: EnginePeer?] = [:]
-            var requiresStars: [EnginePeer.Id: StarsAmount] = [:]
+            var requiresDiamonds: [EnginePeer.Id: StarsAmount] = [:]
             for peerId in peerIds {
                 if let view = views.views[PostboxViewKey.peer(peerId: peerId, components: [])] as? PeerView, let peer = peerViewMainPeer(view) {
                     result[peerId] = EnginePeer(peer)
                     if peer is IosappUser, let cachedPeerDataView = views.views[PostboxViewKey.cachedPeerData(peerId: peerId)] as? CachedPeerDataView {
                         if let cachedData = cachedPeerDataView.cachedPeerData as? CachedUserData {
-                            requiresStars[peerId] = cachedData.sendPaidMessageStars
+                            requiresDiamonds[peerId] = cachedData.sendPaidMessageDiamonds
                         }
                     } else if let channel = peer as? IosappChannel {
-                        requiresStars[peerId] = channel.sendPaidMessageStars
+                        requiresDiamonds[peerId] = channel.sendPaidMessageDiamonds
                     }
                 }
             }
-            return (result, requiresStars)
+            return (result, requiresDiamonds)
         }
         |> deliverOnMainQueue
         |> castError(ShareControllerError.self)
-        |> mapToSignal { [weak self] peers, requiresStars -> Signal<ShareState, ShareControllerError> in
+        |> mapToSignal { [weak self] peers, requiresDiamonds -> Signal<ShareState, ShareControllerError> in
             guard let strongSelf = self, let currentContext = strongSelf.currentContext as? ShareControllerAppAccountContext else {
                 return .complete()
             }
@@ -1916,7 +1916,7 @@ public final class ShareController: ViewController {
                 subject = selectedValue.subject
             }
             
-            func transformMessages(_ messages: [EnqueueMessage], showNames: Bool, silently: Bool, sendPaidMessageStars: StarsAmount?) -> [EnqueueMessage] {
+            func transformMessages(_ messages: [EnqueueMessage], showNames: Bool, silently: Bool, sendPaidMessageDiamonds: StarsAmount?) -> [EnqueueMessage] {
                 return messages.map { message in
                     return message.withUpdatedAttributes({ attributes in
                         var attributes = attributes
@@ -1926,8 +1926,8 @@ public final class ShareController: ViewController {
                         if silently {
                             attributes.append(NotificationInfoMessageAttribute(flags: .muted))
                         }
-                        if let sendPaidMessageStars {
-                            attributes.append(PaidStarsMessageAttribute(stars: sendPaidMessageStars, postponeSending: false))
+                        if let sendPaidMessageDiamonds {
+                            attributes.append(PaidDiamondsMessageAttribute(stars: sendPaidMessageDiamonds, postponeSending: false))
                         }
                         return attributes
                     })
@@ -1971,7 +1971,7 @@ public final class ShareController: ViewController {
                     } else {
                         messages.append(.message(text: url, attributes: [], inlineStickers: [:], mediaReference: nil, threadId: threadId, replyToMessageId: replyToMessageId.flatMap { EngineMessageReplySubject(messageId: $0, quote: nil, innerSubject: nil) }, replyToStoryId: nil, localGroupingKey: nil, correlationId: nil, bubbleUpEmojiOrStickersets: []))
                     }
-                    messages = transformMessages(messages, showNames: showNames, silently: silently, sendPaidMessageStars: requiresStars[peerId])
+                    messages = transformMessages(messages, showNames: showNames, silently: silently, sendPaidMessageDiamonds: requiresDiamonds[peerId])
                     shareSignals.append(enqueueMessages(account: currentContext.context.account, peerId: peerId, messages: messages))
                 }
             case let .text(string):
@@ -2005,7 +2005,7 @@ public final class ShareController: ViewController {
                         messages.append(.message(text: text, attributes: [], inlineStickers: [:], mediaReference: nil, threadId: threadId, replyToMessageId: replyToMessageId.flatMap { EngineMessageReplySubject(messageId: $0, quote: nil, innerSubject: nil) }, replyToStoryId: nil, localGroupingKey: nil, correlationId: nil, bubbleUpEmojiOrStickersets: []))
                     }
                     messages.append(.message(text: string, attributes: [], inlineStickers: [:], mediaReference: nil, threadId: threadId, replyToMessageId: replyToMessageId.flatMap { EngineMessageReplySubject(messageId: $0, quote: nil, innerSubject: nil) }, replyToStoryId: nil, localGroupingKey: nil, correlationId: nil, bubbleUpEmojiOrStickersets: []))
-                    messages = transformMessages(messages, showNames: showNames, silently: silently, sendPaidMessageStars: requiresStars[peerId])
+                    messages = transformMessages(messages, showNames: showNames, silently: silently, sendPaidMessageDiamonds: requiresDiamonds[peerId])
                     shareSignals.append(enqueueMessages(account: currentContext.context.account, peerId: peerId, messages: messages))
                 }
             case let .quote(string, url):
@@ -2042,7 +2042,7 @@ public final class ShareController: ViewController {
                     attributedText.append(NSAttributedString(string: "\n\n\(url)"))
                     let entities = generateChatInputTextEntities(attributedText)
                     messages.append(.message(text: attributedText.string, attributes: [TextEntitiesMessageAttribute(entities: entities)], inlineStickers: [:], mediaReference: nil, threadId: threadId, replyToMessageId: replyToMessageId.flatMap { EngineMessageReplySubject(messageId: $0, quote: nil, innerSubject: nil) }, replyToStoryId: nil, localGroupingKey: nil, correlationId: nil, bubbleUpEmojiOrStickersets: []))
-                    messages = transformMessages(messages, showNames: showNames, silently: silently, sendPaidMessageStars: requiresStars[peerId])
+                    messages = transformMessages(messages, showNames: showNames, silently: silently, sendPaidMessageDiamonds: requiresDiamonds[peerId])
                     shareSignals.append(enqueueMessages(account: currentContext.context.account, peerId: peerId, messages: messages))
                 }
             case let .image(representations):
@@ -2073,7 +2073,7 @@ public final class ShareController: ViewController {
                     
                     var messages: [EnqueueMessage] = []
                     messages.append(.message(text: text, attributes: [], inlineStickers: [:], mediaReference: .standalone(media: IosappMediaImage(imageId: MediaId(namespace: Namespaces.Media.LocalImage, id: Int64.random(in: Int64.min ... Int64.max)), representations: representations.map({ $0.representation }), immediateThumbnailData: nil, reference: nil, partialReference: nil, flags: [])), threadId: threadId, replyToMessageId: replyToMessageId.flatMap { EngineMessageReplySubject(messageId: $0, quote: nil, innerSubject: nil) }, replyToStoryId: nil, localGroupingKey: nil, correlationId: nil, bubbleUpEmojiOrStickersets: []))
-                    messages = transformMessages(messages, showNames: showNames, silently: silently, sendPaidMessageStars: requiresStars[peerId])
+                    messages = transformMessages(messages, showNames: showNames, silently: silently, sendPaidMessageDiamonds: requiresDiamonds[peerId])
                     shareSignals.append(enqueueMessages(account: currentContext.context.account, peerId: peerId, messages: messages))
                 }
             case let .media(mediaReference, mediaParameters):
@@ -2167,7 +2167,7 @@ public final class ShareController: ViewController {
                     } else {
                         messages.append(.message(text: sendTextAsCaption ? text : "", attributes: attributes, inlineStickers: [:], mediaReference: mediaReference, threadId: threadId, replyToMessageId: replyToMessageId.flatMap { EngineMessageReplySubject(messageId: $0, quote: nil, innerSubject: nil) }, replyToStoryId: nil, localGroupingKey: nil, correlationId: nil, bubbleUpEmojiOrStickersets: []))
                     }
-                    messages = transformMessages(messages, showNames: showNames, silently: silently, sendPaidMessageStars: requiresStars[peerId])
+                    messages = transformMessages(messages, showNames: showNames, silently: silently, sendPaidMessageDiamonds: requiresDiamonds[peerId])
                     shareSignals.append(enqueueMessages(account: currentContext.context.account, peerId: peerId, messages: messages))
                 }
             case let .mapMedia(media):
@@ -2201,7 +2201,7 @@ public final class ShareController: ViewController {
                         messages.append(.message(text: text, attributes: [], inlineStickers: [:], mediaReference: nil, threadId: threadId, replyToMessageId: replyToMessageId.flatMap { EngineMessageReplySubject(messageId: $0, quote: nil, innerSubject: nil) }, replyToStoryId: nil, localGroupingKey: nil, correlationId: nil, bubbleUpEmojiOrStickersets: []))
                     }
                     messages.append(.message(text: "", attributes: [], inlineStickers: [:], mediaReference: .standalone(media: media), threadId: threadId, replyToMessageId: replyToMessageId.flatMap { EngineMessageReplySubject(messageId: $0, quote: nil, innerSubject: nil) }, replyToStoryId: nil, localGroupingKey: nil, correlationId: nil, bubbleUpEmojiOrStickersets: []))
-                    messages = transformMessages(messages, showNames: showNames, silently: silently, sendPaidMessageStars: requiresStars[peerId])
+                    messages = transformMessages(messages, showNames: showNames, silently: silently, sendPaidMessageDiamonds: requiresDiamonds[peerId])
                     shareSignals.append(enqueueMessages(account: currentContext.context.account, peerId: peerId, messages: messages))
                 }
             case let .messages(messages):
@@ -2296,11 +2296,11 @@ public final class ShareController: ViewController {
                         correlationIds.append(correlationId)
                         messagesToEnqueue.append(.forward(source: message.id, threadId: threadId, grouping: .auto, attributes: [], correlationId: correlationId))
                     }
-                    messagesToEnqueue = transformMessages(messagesToEnqueue, showNames: showNames, silently: silently, sendPaidMessageStars: requiresStars[peerId])
+                    messagesToEnqueue = transformMessages(messagesToEnqueue, showNames: showNames, silently: silently, sendPaidMessageDiamonds: requiresDiamonds[peerId])
                     shareSignals.append(enqueueMessages(account: currentContext.context.account, peerId: peerId, messages: messagesToEnqueue))
                 }
             case let .fromExternal(_, f):
-                return f(peerIds, topicIds, requiresStars, text, currentContext, silently)
+                return f(peerIds, topicIds, requiresDiamonds, text, currentContext, silently)
                 |> map { state -> ShareState in
                     switch state {
                     case let .preparing(long):
@@ -2486,7 +2486,7 @@ public final class ShareController: ViewController {
             peer,
             tailChatList |> take(1)
         )
-        |> mapToSignal { maybeAccountPeer, view -> Signal<([(peer: EngineRenderedPeer, presence: EnginePeer.Presence?, requiresPremiumForMessaging: Bool, requiresStars: Int64?)], EnginePeer), NoError> in
+        |> mapToSignal { maybeAccountPeer, view -> Signal<([(peer: EngineRenderedPeer, presence: EnginePeer.Presence?, requiresPremiumForMessaging: Bool, requiresDiamonds: Int64?)], EnginePeer), NoError> in
             let accountPeer = maybeAccountPeer!
             
             var peers: [EngineRenderedPeer] = []
@@ -2496,9 +2496,9 @@ public final class ShareController: ViewController {
                 case let .MessageEntry(entryData):
                     if let peer = entryData.renderedPeer.peers[entryData.renderedPeer.peerId], peer.id != accountPeer.id, canSendMessagesToPeer(EnginePeer(peer)) {
                         peers.append(EngineRenderedPeer(entryData.renderedPeer))
-                        if let user = peer as? IosappUser, user.flags.contains(.requirePremium) || user.flags.contains(.requireStars) {
+                        if let user = peer as? IosappUser, user.flags.contains(.requirePremium) || user.flags.contains(.requireDiamonds) {
                             possiblePremiumRequiredPeers.insert(user.id)
-                        } else if let channel = peer as? IosappChannel, let _ = channel.sendPaidMessageStars {
+                        } else if let channel = peer as? IosappChannel, let _ = channel.sendPaidMessageDiamonds {
                             possiblePremiumRequiredPeers.insert(channel.id)
                         }
                     }
@@ -2526,23 +2526,23 @@ public final class ShareController: ViewController {
                     }
                 }
                 var requiresPremiumForMessaging: [EnginePeer.Id: Bool] = [:]
-                var requiresStars: [EnginePeer.Id: Int64] = [:]
+                var requiresDiamonds: [EnginePeer.Id: Int64] = [:]
                 for id in possiblePremiumRequiredPeers {
                     if let view = views.views[.cachedPeerData(peerId: id)] as? CachedPeerDataView, let data = view.cachedPeerData as? CachedUserData {
                         requiresPremiumForMessaging[id] = data.flags.contains(.premiumRequired)
-                        requiresStars[id] = data.sendPaidMessageStars?.value
+                        requiresDiamonds[id] = data.sendPaidMessageDiamonds?.value
                     } else if let view = views.views[.peer(peerId: id, components: [])] as? PeerView, let channel = peerViewMainPeer(view) as? IosappChannel {
-                        requiresStars[id] = channel.sendPaidMessageStars?.value
+                        requiresDiamonds[id] = channel.sendPaidMessageDiamonds?.value
                     } else {
                         requiresPremiumForMessaging[id] = false
                     }
                 }
-                return (result, requiresPremiumForMessaging, requiresStars)
+                return (result, requiresPremiumForMessaging, requiresDiamonds)
             }
-            |> map { presenceMap, requiresPremiumForMessaging, requiresStars -> ([(peer: EngineRenderedPeer, presence: EnginePeer.Presence?, requiresPremiumForMessaging: Bool, requiresStars: Int64?)], EnginePeer) in
-                var resultPeers: [(peer: EngineRenderedPeer, presence: EnginePeer.Presence?, requiresPremiumForMessaging: Bool, requiresStars: Int64?)] = []
+            |> map { presenceMap, requiresPremiumForMessaging, requiresDiamonds -> ([(peer: EngineRenderedPeer, presence: EnginePeer.Presence?, requiresPremiumForMessaging: Bool, requiresDiamonds: Int64?)], EnginePeer) in
+                var resultPeers: [(peer: EngineRenderedPeer, presence: EnginePeer.Presence?, requiresPremiumForMessaging: Bool, requiresDiamonds: Int64?)] = []
                 for peer in peers {
-                    resultPeers.append((peer, presenceMap[peer.peerId].flatMap { $0 }, requiresPremiumForMessaging[peer.peerId] ?? false, requiresStars[peer.peerId]))
+                    resultPeers.append((peer, presenceMap[peer.peerId].flatMap { $0 }, requiresPremiumForMessaging[peer.peerId] ?? false, requiresDiamonds[peer.peerId]))
                 }
                 return (resultPeers, accountPeer)
             }

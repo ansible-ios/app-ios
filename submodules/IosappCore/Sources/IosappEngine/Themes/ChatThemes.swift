@@ -172,7 +172,7 @@ extension ChatTheme {
             self = .emoticon(emoticon)
         case let .chatThemeUniqueGift(chatThemeUniqueGiftData):
             let (gift, themeSettings) = (chatThemeUniqueGiftData.gift, chatThemeUniqueGiftData.themeSettings)
-            guard let gift = StarGift(apiStarGift: gift) else {
+            guard let gift = StarGift(apiDiamondGift: gift) else {
                 return nil
             }
             self = .gift(gift, themeSettings.compactMap { IosappThemeSettings(apiThemeSettings: $0) })

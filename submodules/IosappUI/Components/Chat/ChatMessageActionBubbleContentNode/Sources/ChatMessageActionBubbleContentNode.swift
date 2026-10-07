@@ -40,9 +40,9 @@ public class ChatMessageActionBubbleContentNode: ChatMessageBubbleContentNode {
     public let backgroundMaskNode: ASImageNode
     public var linkHighlightingNode: LinkHighlightingNode?
     
-    private var buyStarsTitle: TextNode?
-    private var buyStarsButton: HighlightTrackingButton?
-    private var buttonStarsNode: PremiumStarsNode?
+    private var buyDiamondsTitle: TextNode?
+    private var buyDiamondsButton: HighlightTrackingButton?
+    private var buttonDiamondsNode: PremiumDiamondsNode?
     
     private let mediaBackgroundNode: ASImageNode
     fileprivate var imageNode: TransformImageNode?
@@ -166,22 +166,22 @@ public class ChatMessageActionBubbleContentNode: ChatMessageBubbleContentNode {
         return mediaHidden
     }
     
-    @objc private func buyStarsPressed() {
+    @objc private func buyDiamondsPressed() {
         if let item = self.item {
-            item.controllerInteraction.openStarsPurchase(nil)
+            item.controllerInteraction.openDiamondsPurchase(nil)
         }
     }
     
     override public func asyncLayoutContent() -> (_ item: ChatMessageBubbleContentItem, _ layoutConstants: ChatMessageItemLayoutConstants, _ preparePosition: ChatMessageBubblePreparePosition, _ messageSelection: Bool?, _ constrainedSize: CGSize, _ avatarInset: CGFloat) -> (ChatMessageBubbleContentProperties, unboundSize: CGSize?, maxWidth: CGFloat, layout: (CGSize, ChatMessageBubbleContentPosition) -> (CGFloat, (CGFloat) -> (CGSize, (ListViewItemUpdateAnimation, Bool, ListViewItemApply?) -> Void))) {
         let makeTitleLayout = TextNode.asyncLayout(self.titleNode)
         let makeLabelLayout = TextNodeWithEntities.asyncLayout(self.labelNode)
-        let makeBuyStarsTitleLayout = TextNode.asyncLayout(self.buyStarsTitle)
+        let makeBuyDiamondsTitleLayout = TextNode.asyncLayout(self.buyDiamondsTitle)
 
         let cachedMaskBackgroundImage = self.cachedMaskBackgroundImage
         
         return { item, layoutConstants, _, _, _, _ in
             var isDetached = false
-            if let _ = item.message.paidStarsAttribute {
+            if let _ = item.message.paidDiamondsAttribute {
                 isDetached = true
             }
             
@@ -492,23 +492,23 @@ public class ChatMessageActionBubbleContentNode: ChatMessageBubbleContentNode {
                     backgroundSize.height += 4.0
                 }
                 
-                var hasBuyStarsButton = false
+                var hasBuyDiamondsButton = false
                 if item.message.effectivelyIncoming(item.context.account.peerId), let suggestedPost, case let .rejected(reason, _) = suggestedPost, case .lowBalance = reason {
-                    hasBuyStarsButton = true
+                    hasBuyDiamondsButton = true
                 }
                 
-                var buyStarsTitleLayoutAndApply: (TextNodeLayout, () -> TextNode)?
-                var buyStarsButtonSize: CGSize?
-                if hasBuyStarsButton {
+                var buyDiamondsTitleLayoutAndApply: (TextNodeLayout, () -> TextNode)?
+                var buyDiamondsButtonSize: CGSize?
+                if hasBuyDiamondsButton {
                     let serviceColor = serviceMessageColorComponents(theme: item.presentationData.theme.theme, wallpaper: item.presentationData.theme.wallpaper)
-                    let buyStarsTitleLayoutAndApplyValue = makeBuyStarsTitleLayout(TextNodeLayoutArguments(attributedString:  NSAttributedString(string: item.presentationData.strings.Chat_PostApproval_Message_BuyDiamonds, font: Font.semibold(15.0), textColor: serviceColor.primaryText), backgroundColor: nil, maximumNumberOfLines: 0, truncationType: .end, constrainedSize: CGSize(width: constrainedSize.width - 32.0, height: CGFloat.greatestFiniteMagnitude), alignment: textAlignment, cutout: nil, insets: UIEdgeInsets()))
-                    buyStarsTitleLayoutAndApply = buyStarsTitleLayoutAndApplyValue
+                    let buyDiamondsTitleLayoutAndApplyValue = makeBuyDiamondsTitleLayout(TextNodeLayoutArguments(attributedString:  NSAttributedString(string: item.presentationData.strings.Chat_PostApproval_Message_BuyDiamonds, font: Font.semibold(15.0), textColor: serviceColor.primaryText), backgroundColor: nil, maximumNumberOfLines: 0, truncationType: .end, constrainedSize: CGSize(width: constrainedSize.width - 32.0, height: CGFloat.greatestFiniteMagnitude), alignment: textAlignment, cutout: nil, insets: UIEdgeInsets()))
+                    buyDiamondsTitleLayoutAndApply = buyDiamondsTitleLayoutAndApplyValue
                     
-                    let buyStarsButtonSizeValue = CGSize(width: buyStarsTitleLayoutAndApplyValue.0.size.width + 20.0 * 2.0, height: buyStarsTitleLayoutAndApplyValue.0.size.height + 8.0 * 2.0)
-                    buyStarsButtonSize = buyStarsButtonSizeValue
+                    let buyDiamondsButtonSizeValue = CGSize(width: buyDiamondsTitleLayoutAndApplyValue.0.size.width + 20.0 * 2.0, height: buyDiamondsTitleLayoutAndApplyValue.0.size.height + 8.0 * 2.0)
+                    buyDiamondsButtonSize = buyDiamondsButtonSizeValue
                     
-                    backgroundSize.width = max(backgroundSize.width, buyStarsButtonSizeValue.width + 8.0 * 2.0)
-                    backgroundSize.height += 15.0 + buyStarsButtonSizeValue.height
+                    backgroundSize.width = max(backgroundSize.width, buyDiamondsButtonSizeValue.width + 8.0 * 2.0)
+                    backgroundSize.height += 15.0 + buyDiamondsButtonSizeValue.height
                 }
                 
                 return (backgroundSize.width, { boundingWidth in
@@ -627,69 +627,69 @@ public class ChatMessageActionBubbleContentNode: ChatMessageBubbleContentNode {
                                 contentFrame = labelFrame
                             }
                             
-                            if hasBuyStarsButton, let (buyStarsTitleLayout, buyStarsTitleApply) = buyStarsTitleLayoutAndApply, let buyStarsButtonSize {
-                                let buyStarsButton: HighlightTrackingButton
-                                if let current = strongSelf.buyStarsButton {
-                                    buyStarsButton = current
+                            if hasBuyDiamondsButton, let (buyDiamondsTitleLayout, buyDiamondsTitleApply) = buyDiamondsTitleLayoutAndApply, let buyDiamondsButtonSize {
+                                let buyDiamondsButton: HighlightTrackingButton
+                                if let current = strongSelf.buyDiamondsButton {
+                                    buyDiamondsButton = current
                                 } else {
-                                    buyStarsButton = HighlightTrackingButton()
-                                    buyStarsButton.clipsToBounds = true
-                                    strongSelf.buyStarsButton = buyStarsButton
-                                    strongSelf.view.addSubview(buyStarsButton)
-                                    buyStarsButton.highligthedChanged = { [weak buyStarsButton] highlighted in
-                                        guard let buyStarsButton else {
+                                    buyDiamondsButton = HighlightTrackingButton()
+                                    buyDiamondsButton.clipsToBounds = true
+                                    strongSelf.buyDiamondsButton = buyDiamondsButton
+                                    strongSelf.view.addSubview(buyDiamondsButton)
+                                    buyDiamondsButton.highligthedChanged = { [weak buyDiamondsButton] highlighted in
+                                        guard let buyDiamondsButton else {
                                             return
                                         }
                                         if highlighted {
-                                            buyStarsButton.layer.removeAnimation(forKey: "opacity")
-                                            buyStarsButton.alpha = 0.6
+                                            buyDiamondsButton.layer.removeAnimation(forKey: "opacity")
+                                            buyDiamondsButton.alpha = 0.6
                                         } else {
-                                            buyStarsButton.alpha = 1.0
-                                            buyStarsButton.layer.animateAlpha(from: 0.4, to: 1.0, duration: 0.2)
+                                            buyDiamondsButton.alpha = 1.0
+                                            buyDiamondsButton.layer.animateAlpha(from: 0.4, to: 1.0, duration: 0.2)
                                         }
                                     }
-                                    buyStarsButton.addTarget(strongSelf, action: #selector(strongSelf.buyStarsPressed), for: .touchUpInside)
+                                    buyDiamondsButton.addTarget(strongSelf, action: #selector(strongSelf.buyDiamondsPressed), for: .touchUpInside)
                                 }
                                 
-                                let buttonStarsNode: PremiumStarsNode
-                                if let current = strongSelf.buttonStarsNode {
-                                    buttonStarsNode = current
+                                let buttonDiamondsNode: PremiumDiamondsNode
+                                if let current = strongSelf.buttonDiamondsNode {
+                                    buttonDiamondsNode = current
                                 } else {
-                                    buttonStarsNode = PremiumStarsNode()
-                                    buttonStarsNode.isUserInteractionEnabled = false
-                                    strongSelf.buttonStarsNode = buttonStarsNode
-                                    buyStarsButton.addSubview(buttonStarsNode.view)
+                                    buttonDiamondsNode = PremiumDiamondsNode()
+                                    buttonDiamondsNode.isUserInteractionEnabled = false
+                                    strongSelf.buttonDiamondsNode = buttonDiamondsNode
+                                    buyDiamondsButton.addSubview(buttonDiamondsNode.view)
                                 }
                                 
-                                let buyStarsTitle = buyStarsTitleApply()
-                                if buyStarsTitle !== strongSelf.buyStarsTitle {
-                                    buyStarsTitle.isUserInteractionEnabled = false
-                                    strongSelf.buyStarsTitle?.view.removeFromSuperview()
+                                let buyDiamondsTitle = buyDiamondsTitleApply()
+                                if buyDiamondsTitle !== strongSelf.buyDiamondsTitle {
+                                    buyDiamondsTitle.isUserInteractionEnabled = false
+                                    strongSelf.buyDiamondsTitle?.view.removeFromSuperview()
                                 }
-                                strongSelf.buyStarsTitle = buyStarsTitle
-                                buyStarsButton.addSubview(buyStarsTitle.view)
+                                strongSelf.buyDiamondsTitle = buyDiamondsTitle
+                                buyDiamondsButton.addSubview(buyDiamondsTitle.view)
                                 
-                                let buttonTitleSize = buyStarsTitleLayout.size
+                                let buttonTitleSize = buyDiamondsTitleLayout.size
                                 
-                                let buttonFrame = CGRect(origin: CGPoint(x: contentFrame.minX + floor((contentFrame.width - buyStarsButtonSize.width) * 0.5), y: labelFrame.minY - 2.0), size: buyStarsButtonSize)
-                                buyStarsButton.frame = buttonFrame
-                                buyStarsButton.layer.cornerRadius = buttonFrame.height * 0.5
-                                buyStarsTitle.frame = CGRect(origin: CGPoint(x: floor((buyStarsButtonSize.width - buttonTitleSize.width) * 0.5), y: floor((buyStarsButtonSize.height - buttonTitleSize.height) * 0.5)), size: buttonTitleSize)
+                                let buttonFrame = CGRect(origin: CGPoint(x: contentFrame.minX + floor((contentFrame.width - buyDiamondsButtonSize.width) * 0.5), y: labelFrame.minY - 2.0), size: buyDiamondsButtonSize)
+                                buyDiamondsButton.frame = buttonFrame
+                                buyDiamondsButton.layer.cornerRadius = buttonFrame.height * 0.5
+                                buyDiamondsTitle.frame = CGRect(origin: CGPoint(x: floor((buyDiamondsButtonSize.width - buttonTitleSize.width) * 0.5), y: floor((buyDiamondsButtonSize.height - buttonTitleSize.height) * 0.5)), size: buttonTitleSize)
                                 
-                                buyStarsButton.backgroundColor = item.presentationData.theme.theme.overallDarkAppearance ? UIColor(rgb: 0xffffff, alpha: 0.12) : UIColor(rgb: 0x000000, alpha: 0.12)
-                                buttonStarsNode.frame = CGRect(origin: CGPoint(), size: buyStarsButtonSize)
+                                buyDiamondsButton.backgroundColor = item.presentationData.theme.theme.overallDarkAppearance ? UIColor(rgb: 0xffffff, alpha: 0.12) : UIColor(rgb: 0x000000, alpha: 0.12)
+                                buttonDiamondsNode.frame = CGRect(origin: CGPoint(), size: buyDiamondsButtonSize)
                             } else {
-                                if let buyStarsTitle = strongSelf.buyStarsTitle {
-                                    strongSelf.buyStarsTitle = nil
-                                    buyStarsTitle.view.removeFromSuperview()
+                                if let buyDiamondsTitle = strongSelf.buyDiamondsTitle {
+                                    strongSelf.buyDiamondsTitle = nil
+                                    buyDiamondsTitle.view.removeFromSuperview()
                                 }
-                                if let buyStarsButton = strongSelf.buyStarsButton {
-                                    strongSelf.buyStarsButton = nil
-                                    buyStarsButton.removeFromSuperview()
+                                if let buyDiamondsButton = strongSelf.buyDiamondsButton {
+                                    strongSelf.buyDiamondsButton = nil
+                                    buyDiamondsButton.removeFromSuperview()
                                 }
-                                if let buttonStarsNode = strongSelf.buttonStarsNode {
-                                    strongSelf.buttonStarsNode = nil
-                                    buttonStarsNode.view.removeFromSuperview()
+                                if let buttonDiamondsNode = strongSelf.buttonDiamondsNode {
+                                    strongSelf.buttonDiamondsNode = nil
+                                    buttonDiamondsNode.view.removeFromSuperview()
                                 }
                             }
                             
@@ -974,7 +974,7 @@ public class ChatMessageActionBubbleContentNode: ChatMessageBubbleContentNode {
         if let imageNode = self.imageNode, imageNode.frame.contains(point) {
             return ChatMessageBubbleContentTapAction(content: .openMessage)
         }
-        if let buyStarsButton = self.buyStarsButton, buyStarsButton.frame.contains(point) {
+        if let buyDiamondsButton = self.buyDiamondsButton, buyDiamondsButton.frame.contains(point) {
             return ChatMessageBubbleContentTapAction(content: .ignore)
         }
         

@@ -969,20 +969,20 @@ public extension IosappEngine {
             return _internal_updatePeerEmojiStatus(account: self.account, peerId: peerId, fileId: fileId, expirationDate: expirationDate)
         }
         
-        public func updatePeerStarGiftStatus(peerId: EnginePeer.Id, starGift: StarGift.UniqueGift, expirationDate: Int32?) -> Signal<Never, UpdatePeerEmojiStatusError> {
-            return _internal_updatePeerStarGiftStatus(account: self.account, peerId: peerId, starGift: starGift, expirationDate: expirationDate)
+        public func updatePeerDiamondGiftStatus(peerId: EnginePeer.Id, starGift: StarGift.UniqueGift, expirationDate: Int32?) -> Signal<Never, UpdatePeerEmojiStatusError> {
+            return _internal_updatePeerDiamondGiftStatus(account: self.account, peerId: peerId, starGift: starGift, expirationDate: expirationDate)
         }
                 
-        public func checkStarsRevenueWithdrawalAvailability() -> Signal<Never, RequestStarsRevenueWithdrawalError> {
-            return _internal_checkStarsRevenueWithdrawalAvailability(account: self.account)
+        public func checkDiamondsRevenueWithdrawalAvailability() -> Signal<Never, RequestDiamondsRevenueWithdrawalError> {
+            return _internal_checkDiamondsRevenueWithdrawalAvailability(account: self.account)
         }
         
-        public func requestStarsRevenueWithdrawalUrl(peerId: EnginePeer.Id, ton: Bool, amount: Int64?, password: String) -> Signal<String, RequestStarsRevenueWithdrawalError> {
-            return _internal_requestStarsRevenueWithdrawalUrl(account: self.account, ton: ton, peerId: peerId, amount: amount, password: password)
+        public func requestDiamondsRevenueWithdrawalUrl(peerId: EnginePeer.Id, ton: Bool, amount: Int64?, password: String) -> Signal<String, RequestDiamondsRevenueWithdrawalError> {
+            return _internal_requestDiamondsRevenueWithdrawalUrl(account: self.account, ton: ton, peerId: peerId, amount: amount, password: password)
         }
         
-        public func requestStarsRevenueAdsAccountlUrl(peerId: EnginePeer.Id) -> Signal<String?, NoError> {
-            return _internal_requestStarsRevenueAdsAccountlUrl(account: self.account, peerId: peerId)
+        public func requestDiamondsRevenueAdsAccountlUrl(peerId: EnginePeer.Id) -> Signal<String?, NoError> {
+            return _internal_requestDiamondsRevenueAdsAccountlUrl(account: self.account, peerId: peerId)
         }
         
         public func getChatListPeers(filterPredicate: ChatListFilterPredicate) -> Signal<[EnginePeer], NoError> {
@@ -1606,8 +1606,8 @@ public extension IosappEngine {
             return _internal_reinstateNoPaidMessagesException(account: self.account, scopePeerId: scopePeerId, peerId: peerId)
         }
         
-        public func updateChannelPaidMessagesStars(peerId: EnginePeer.Id, stars: StarsAmount?, broadcastMessagesAllowed: Bool) -> Signal<Never, NoError> {
-            return _internal_updateChannelPaidMessagesStars(account: self.account, peerId: peerId, stars: stars, broadcastMessagesAllowed: broadcastMessagesAllowed)
+        public func updateChannelPaidMessagesDiamonds(peerId: EnginePeer.Id, stars: StarsAmount?, broadcastMessagesAllowed: Bool) -> Signal<Never, NoError> {
+            return _internal_updateChannelPaidMessagesDiamonds(account: self.account, peerId: peerId, stars: stars, broadcastMessagesAllowed: broadcastMessagesAllowed)
         }
         
         public func recommendedChannels(peerId: EnginePeer.Id?) -> Signal<RecommendedChannels?, NoError> {
@@ -1845,34 +1845,34 @@ public extension IosappEngine {
             }
         }
         
-        public func setStarsReactionDefaultPrivacy(privacy: IosappPaidReactionPrivacy) {
+        public func setDiamondsReactionDefaultPrivacy(privacy: IosappPaidReactionPrivacy) {
             let _ = self.account.postbox.transaction({ transaction in
-                _internal_setStarsReactionDefaultPrivacy(privacy: privacy, transaction: transaction)
+                _internal_setDiamondsReactionDefaultPrivacy(privacy: privacy, transaction: transaction)
             }).startStandalone()
         }
         
         public func updateStarRefProgram(id: EnginePeer.Id, program: (commissionPermille: Int32, durationMonths: Int32?)?) -> Signal<Never, NoError> {
-            return _internal_updateStarRefProgram(account: self.account, id: id, program: program)
+            return _internal_updateDiamondRefProgram(account: self.account, id: id, program: program)
         }
         
-        public func connectedStarRefBots(id: EnginePeer.Id) -> EngineConnectedStarRefBotsContext {
-            return EngineConnectedStarRefBotsContext(account: self.account, peerId: id)
+        public func connectedStarRefBots(id: EnginePeer.Id) -> EngineConnectedDiamondRefBotsContext {
+            return EngineConnectedDiamondRefBotsContext(account: self.account, peerId: id)
         }
         
-        public func suggestedStarRefBots(id: EnginePeer.Id, sortMode: EngineSuggestedStarRefBotsContext.SortMode) -> EngineSuggestedStarRefBotsContext {
-            return EngineSuggestedStarRefBotsContext(account: self.account, peerId: id, sortMode: sortMode)
+        public func suggestedStarRefBots(id: EnginePeer.Id, sortMode: EngineSuggestedDiamondRefBotsContext.SortMode) -> EngineSuggestedDiamondRefBotsContext {
+            return EngineSuggestedDiamondRefBotsContext(account: self.account, peerId: id, sortMode: sortMode)
         }
         
-        public func connectStarRefBot(id: EnginePeer.Id, botId: EnginePeer.Id) -> Signal<EngineConnectedStarRefBotsContext.Item, ConnectStarRefBotError> {
-            return _internal_connectStarRefBot(account: self.account, id: id, botId: botId)
+        public func connectStarRefBot(id: EnginePeer.Id, botId: EnginePeer.Id) -> Signal<EngineConnectedDiamondRefBotsContext.Item, ConnectDiamondRefBotError> {
+            return _internal_connectDiamondRefBot(account: self.account, id: id, botId: botId)
         }
         
-        public func getStarRefBotConnection(id: EnginePeer.Id, targetId: EnginePeer.Id) -> Signal<EngineConnectedStarRefBotsContext.Item?, NoError> {
-            return _internal_getStarRefBotConnection(account: self.account, id: id, targetId: targetId)
+        public func getDiamondRefBotConnection(id: EnginePeer.Id, targetId: EnginePeer.Id) -> Signal<EngineConnectedDiamondRefBotsContext.Item?, NoError> {
+            return _internal_getDiamondRefBotConnection(account: self.account, id: id, targetId: targetId)
         }
         
-        public func getPossibleStarRefBotTargets() -> Signal<[EnginePeer], NoError> {
-            return _internal_getPossibleStarRefBotTargets(account: self.account)
+        public func getPossibleDiamondRefBotTargets() -> Signal<[EnginePeer], NoError> {
+            return _internal_getPossibleDiamondRefBotTargets(account: self.account)
         }
     }
 }

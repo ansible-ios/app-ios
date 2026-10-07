@@ -355,8 +355,8 @@ func apiMessagePeerIds(_ message: Api.Message) -> [PeerId] {
                     if let boostPeer = boostPeer {
                         result.append(boostPeer.peerId)
                     }
-                case let .messageActionPrizeStars(messageActionPrizeStarsData):
-                    let boostPeer = messageActionPrizeStarsData.boostPeer
+                case let .messageActionPrizeStars(messageActionPrizeDiamondsData):
+                    let boostPeer = messageActionPrizeDiamondsData.boostPeer
                     result.append(boostPeer.peerId)
                 case let .messageActionPaymentRefunded(messageActionPaymentRefundedData):
                     let peer = messageActionPaymentRefundedData.peer
@@ -600,7 +600,7 @@ func textMediaAndExpirationTimerFromApiMedia(_ media: Api.MessageMedia?, _ peerI
         case let .messageMediaPhoto(messageMediaPhotoData):
             let (flags, photo, ttlSeconds) = (messageMediaPhotoData.flags, messageMediaPhotoData.photo, messageMediaPhotoData.ttlSeconds)
             if let photo = photo {
-                if let mediaImage = telegramMediaImageFromApiPhoto(photo, video: messageMediaPhotoData.video) {
+                if let mediaImage = ansibleMediaImageFromApiPhoto(photo, video: messageMediaPhotoData.video) {
                     return (mediaImage, ttlSeconds, nil, (flags & (1 << 3)) != 0, nil, nil)
                 }
             } else {
@@ -613,20 +613,20 @@ func textMediaAndExpirationTimerFromApiMedia(_ media: Api.MessageMedia?, _ peerI
             return (mediaContact, nil, nil, nil, nil, nil)
         case let .messageMediaGeo(messageMediaGeoData):
             let geo = messageMediaGeoData.geo
-            let mediaMap = telegramMediaMapFromApiGeoPoint(geo, title: nil, address: nil, provider: nil, venueId: nil, venueType: nil, liveBroadcastingTimeout: nil, liveProximityNotificationRadius: nil, heading: nil)
+            let mediaMap = ansibleMediaMapFromApiGeoPoint(geo, title: nil, address: nil, provider: nil, venueId: nil, venueType: nil, liveBroadcastingTimeout: nil, liveProximityNotificationRadius: nil, heading: nil)
             return (mediaMap, nil, nil, nil, nil, nil)
         case let .messageMediaVenue(messageMediaVenueData):
             let (geo, title, address, provider, venueId, venueType) = (messageMediaVenueData.geo, messageMediaVenueData.title, messageMediaVenueData.address, messageMediaVenueData.provider, messageMediaVenueData.venueId, messageMediaVenueData.venueType)
-            let mediaMap = telegramMediaMapFromApiGeoPoint(geo, title: title, address: address, provider: provider, venueId: venueId, venueType: venueType, liveBroadcastingTimeout: nil, liveProximityNotificationRadius: nil, heading: nil)
+            let mediaMap = ansibleMediaMapFromApiGeoPoint(geo, title: title, address: address, provider: provider, venueId: venueId, venueType: venueType, liveBroadcastingTimeout: nil, liveProximityNotificationRadius: nil, heading: nil)
             return (mediaMap, nil, nil, nil, nil, nil)
         case let .messageMediaGeoLive(messageMediaGeoLiveData):
             let (geo, heading, period, proximityNotificationRadius) = (messageMediaGeoLiveData.geo, messageMediaGeoLiveData.heading, messageMediaGeoLiveData.period, messageMediaGeoLiveData.proximityNotificationRadius)
-            let mediaMap = telegramMediaMapFromApiGeoPoint(geo, title: nil, address: nil, provider: nil, venueId: nil, venueType: nil, liveBroadcastingTimeout: period, liveProximityNotificationRadius: proximityNotificationRadius, heading: heading)
+            let mediaMap = ansibleMediaMapFromApiGeoPoint(geo, title: nil, address: nil, provider: nil, venueId: nil, venueType: nil, liveBroadcastingTimeout: period, liveProximityNotificationRadius: proximityNotificationRadius, heading: heading)
             return (mediaMap, nil, nil, nil, nil, nil)
         case let .messageMediaDocument(messageMediaDocumentData):
             let (flags, document, altDocuments, coverPhoto, videoTimestamp, ttlSeconds) = (messageMediaDocumentData.flags, messageMediaDocumentData.document, messageMediaDocumentData.altDocuments, messageMediaDocumentData.videoCover, messageMediaDocumentData.videoTimestamp, messageMediaDocumentData.ttlSeconds)
             if let document = document {
-                if let mediaFile = telegramMediaFileFromApiDocument(document, altDocuments: altDocuments, videoCover: coverPhoto) {
+                if let mediaFile = ansibleMediaFileFromApiDocument(document, altDocuments: altDocuments, videoCover: coverPhoto) {
                     return (mediaFile, ttlSeconds, (flags & (1 << 3)) != 0, (flags & (1 << 4)) != 0, nil, videoTimestamp)
                 }
             } else {
@@ -642,7 +642,7 @@ func textMediaAndExpirationTimerFromApiMedia(_ media: Api.MessageMedia?, _ peerI
             }
         case let .messageMediaWebPage(messageMediaWebPageData):
             let (flags, webpage) = (messageMediaWebPageData.flags, messageMediaWebPageData.webpage)
-            if let mediaWebpage = telegramMediaWebpageFromApiWebpage(webpage) {
+            if let mediaWebpage = ansibleMediaWebpageFromApiWebpage(webpage) {
                 var webpageForceLargeMedia: Bool?
                 if (flags & (1 << 0)) != 0 {
                     webpageForceLargeMedia = true
@@ -896,8 +896,8 @@ func mediaAreaFromApiMediaArea(_ mediaArea: Api.MediaArea) -> MediaArea? {
     case let .mediaAreaWeather(mediaAreaWeatherData):
         let (coordinates, emoji, temperatureC, color) = (mediaAreaWeatherData.coordinates, mediaAreaWeatherData.emoji, mediaAreaWeatherData.temperatureC, mediaAreaWeatherData.color)
         return .weather(coordinates: coodinatesFromApiMediaAreaCoordinates(coordinates), emoji: emoji, temperature: temperatureC, color: color)
-    case let .mediaAreaStarGift(mediaAreaStarGiftData):
-        let (coordinates, slug) = (mediaAreaStarGiftData.coordinates, mediaAreaStarGiftData.slug)
+    case let .mediaAreaStarGift(mediaAreaDiamondGiftData):
+        let (coordinates, slug) = (mediaAreaDiamondGiftData.coordinates, mediaAreaDiamondGiftData.slug)
         return .starGift(coordinates: coodinatesFromApiMediaAreaCoordinates(coordinates), slug: slug)
     }
 }
@@ -1335,7 +1335,7 @@ extension StoreMessage {
                 }
             
                 if let paidMessageStars {
-                    attributes.append(PaidStarsMessageAttribute(stars: StarsAmount(value: paidMessageStars, nanos: 0), postponeSending: false))
+                    attributes.append(PaidDiamondsMessageAttribute(stars: StarsAmount(value: paidMessageStars, nanos: 0), postponeSending: false))
                 }
             
                 if let scheduledRepeatPeriod {
@@ -1614,7 +1614,7 @@ extension StoreMessage {
                 }
                 
                 var media: [Media] = []
-                if let action = telegramMediaActionFromApiAction(action) {
+                if let action = ansibleMediaActionFromApiAction(action) {
                     media.append(action)
                 }
                 

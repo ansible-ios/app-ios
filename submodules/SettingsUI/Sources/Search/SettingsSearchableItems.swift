@@ -777,10 +777,10 @@ private func premiumSearchableItems(context: AccountContext) -> [SettingsSearcha
             icon: .stars,
             breadcrumbs: [],
             present: { context, _, present in
-                guard let starsContext = context.starsContext else {
+                guard let diamondsContext = context.diamondsContext else {
                     return
                 }
-                let controller = context.sharedContext.makeStarsTransactionsScreen(context: context, starsContext: starsContext)
+                let controller = context.sharedContext.makeDiamondsTransactionsScreen(context: context, diamondsContext: diamondsContext)
                 present(.push, controller)
             }
         )
@@ -792,7 +792,7 @@ private func premiumSearchableItems(context: AccountContext) -> [SettingsSearcha
             icon: .stars,
             isVisible: false,
             present: { context, navigationController, present in
-                openResolvedUrl(.starsTopup(amount: nil, purpose: nil), navigationController, present)
+                openResolvedUrl(.diamondsTopup(amount: nil, purpose: nil), navigationController, present)
             }
         )
     )
@@ -802,8 +802,8 @@ private func premiumSearchableItems(context: AccountContext) -> [SettingsSearcha
             icon: .stars,
             isVisible: false,
             present: { context, navigationController, present in
-                let starsRevenueStatsContext = StarsRevenueStatsContext(account: context.account, peerId: context.account.peerId, ton: false)
-                let controller = context.sharedContext.makeStarsStatisticsScreen(context: context, peerId: context.account.peerId, revenueContext: starsRevenueStatsContext)
+                let diamondsRevenueStatsContext = DiamondsRevenueStatsContext(account: context.account, peerId: context.account.peerId, ton: false)
+                let controller = context.sharedContext.makeDiamondsStatisticsScreen(context: context, peerId: context.account.peerId, revenueContext: diamondsRevenueStatsContext)
                 present(.push, controller)
             }
         )
@@ -817,19 +817,19 @@ private func premiumSearchableItems(context: AccountContext) -> [SettingsSearcha
                 let presentationData = context.sharedContext.currentPresentationData.with { $0 }
                 
                 let _ = combineLatest(queue: Queue.mainQueue(),
-                    context.engine.payments.starsTopUpOptions(),
+                    context.engine.payments.diamondsTopUpOptions(),
                     context.account.stateManager.contactBirthdays |> take(1)
                 ).start(next: { [weak navigationController] options, birthdays in
-                    guard let starsContext = context.starsContext else {
+                    guard let diamondsContext = context.diamondsContext else {
                         return
                     }
-                    let controller = context.sharedContext.makeStarsGiftController(context: context, birthdays: birthdays, completion: { [weak navigationController] peerIds in
+                    let controller = context.sharedContext.makeDiamondsGiftController(context: context, birthdays: birthdays, completion: { [weak navigationController] peerIds in
                         guard let peerId = peerIds.first else {
                             return
                         }
-                        let purchaseController = context.sharedContext.makeStarsPurchaseScreen(
+                        let purchaseController = context.sharedContext.makeDiamondsPurchaseScreen(
                             context: context,
-                            starsContext: starsContext,
+                            diamondsContext: diamondsContext,
                             options: options,
                             purpose: .gift(peerId: peerId),
                             targetPeerId: nil,

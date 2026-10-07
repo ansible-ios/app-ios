@@ -65,7 +65,7 @@ swift_library(
         "//submodules/IosappUI/Components/Chat/ChatInputContextPanelNode",
         "//submodules/IosappUI/Components/AnimatedTextComponent",
         "//submodules/IosappUI/Components/RasterizedCompositionComponent",
-        "//submodules/IosappUI/Components/StarsParticleEffect",
+        "//submodules/IosappUI/Components/DiamondsParticleEffect",
         "//submodules/IosappUI/Components/Calls/VideoChatMicButtonComponent",
         "//submodules/IosappUI/Components/RichTextEditor:RichTextEditorUIKit",
     ],

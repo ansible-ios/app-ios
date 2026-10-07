@@ -1102,7 +1102,7 @@ public extension Api {
 }
 public extension Api {
     indirect enum InputInvoice: TypeConstructorDescription {
-        public class Cons_inputInvoiceBusinessBotTransferStars: TypeConstructorDescription {
+        public class Cons_inputInvoiceBusinessBotTransferDiamonds: TypeConstructorDescription {
             public var bot: Api.InputUser
             public var stars: Int64
             public init(bot: Api.InputUser, stars: Int64) {
@@ -1153,7 +1153,7 @@ public extension Api {
                 return ("inputInvoicePremiumGiftCode", [("purpose", ConstructorParameterDescription(self.purpose)), ("option", ConstructorParameterDescription(self.option))])
             }
         }
-        public class Cons_inputInvoicePremiumGiftStars: TypeConstructorDescription {
+        public class Cons_inputInvoicePremiumGiftDiamonds: TypeConstructorDescription {
             public var flags: Int32
             public var userId: Api.InputUser
             public var months: Int32
@@ -1177,7 +1177,7 @@ public extension Api {
                 return ("inputInvoiceSlug", [("slug", ConstructorParameterDescription(self.slug))])
             }
         }
-        public class Cons_inputInvoiceStarGift: TypeConstructorDescription {
+        public class Cons_inputInvoiceDiamondGift: TypeConstructorDescription {
             public var flags: Int32
             public var peer: Api.InputPeer
             public var giftId: Int64
@@ -1192,7 +1192,7 @@ public extension Api {
                 return ("inputInvoiceStarGift", [("flags", ConstructorParameterDescription(self.flags)), ("peer", ConstructorParameterDescription(self.peer)), ("giftId", ConstructorParameterDescription(self.giftId)), ("message", ConstructorParameterDescription(self.message))])
             }
         }
-        public class Cons_inputInvoiceStarGiftAuctionBid: TypeConstructorDescription {
+        public class Cons_inputInvoiceDiamondGiftAuctionBid: TypeConstructorDescription {
             public var flags: Int32
             public var peer: Api.InputPeer?
             public var giftId: Int64
@@ -1209,7 +1209,7 @@ public extension Api {
                 return ("inputInvoiceStarGiftAuctionBid", [("flags", ConstructorParameterDescription(self.flags)), ("peer", ConstructorParameterDescription(self.peer)), ("giftId", ConstructorParameterDescription(self.giftId)), ("bidAmount", ConstructorParameterDescription(self.bidAmount)), ("message", ConstructorParameterDescription(self.message))])
             }
         }
-        public class Cons_inputInvoiceStarGiftDropOriginalDetails: TypeConstructorDescription {
+        public class Cons_inputInvoiceDiamondGiftDropOriginalDetails: TypeConstructorDescription {
             public var stargift: Api.InputSavedStarGift
             public init(stargift: Api.InputSavedStarGift) {
                 self.stargift = stargift
@@ -1218,7 +1218,7 @@ public extension Api {
                 return ("inputInvoiceStarGiftDropOriginalDetails", [("stargift", ConstructorParameterDescription(self.stargift))])
             }
         }
-        public class Cons_inputInvoiceStarGiftPrepaidUpgrade: TypeConstructorDescription {
+        public class Cons_inputInvoiceDiamondGiftPrepaidUpgrade: TypeConstructorDescription {
             public var peer: Api.InputPeer
             public var hash: String
             public init(peer: Api.InputPeer, hash: String) {
@@ -1229,7 +1229,7 @@ public extension Api {
                 return ("inputInvoiceStarGiftPrepaidUpgrade", [("peer", ConstructorParameterDescription(self.peer)), ("hash", ConstructorParameterDescription(self.hash))])
             }
         }
-        public class Cons_inputInvoiceStarGiftResale: TypeConstructorDescription {
+        public class Cons_inputInvoiceDiamondGiftResale: TypeConstructorDescription {
             public var flags: Int32
             public var slug: String
             public var toId: Api.InputPeer
@@ -1242,7 +1242,7 @@ public extension Api {
                 return ("inputInvoiceStarGiftResale", [("flags", ConstructorParameterDescription(self.flags)), ("slug", ConstructorParameterDescription(self.slug)), ("toId", ConstructorParameterDescription(self.toId))])
             }
         }
-        public class Cons_inputInvoiceStarGiftTransfer: TypeConstructorDescription {
+        public class Cons_inputInvoiceDiamondGiftTransfer: TypeConstructorDescription {
             public var stargift: Api.InputSavedStarGift
             public var toId: Api.InputPeer
             public init(stargift: Api.InputSavedStarGift, toId: Api.InputPeer) {
@@ -1253,7 +1253,7 @@ public extension Api {
                 return ("inputInvoiceStarGiftTransfer", [("stargift", ConstructorParameterDescription(self.stargift)), ("toId", ConstructorParameterDescription(self.toId))])
             }
         }
-        public class Cons_inputInvoiceStarGiftUpgrade: TypeConstructorDescription {
+        public class Cons_inputInvoiceDiamondGiftUpgrade: TypeConstructorDescription {
             public var flags: Int32
             public var stargift: Api.InputSavedStarGift
             public init(flags: Int32, stargift: Api.InputSavedStarGift) {
@@ -1264,7 +1264,7 @@ public extension Api {
                 return ("inputInvoiceStarGiftUpgrade", [("flags", ConstructorParameterDescription(self.flags)), ("stargift", ConstructorParameterDescription(self.stargift))])
             }
         }
-        public class Cons_inputInvoiceStars: TypeConstructorDescription {
+        public class Cons_inputInvoiceDiamonds: TypeConstructorDescription {
             public var purpose: Api.InputStorePaymentPurpose
             public init(purpose: Api.InputStorePaymentPurpose) {
                 self.purpose = purpose
@@ -1273,21 +1273,21 @@ public extension Api {
                 return ("inputInvoiceStars", [("purpose", ConstructorParameterDescription(self.purpose))])
             }
         }
-        case inputInvoiceBusinessBotTransferStars(Cons_inputInvoiceBusinessBotTransferStars)
+        case inputInvoiceBusinessBotTransferStars(Cons_inputInvoiceBusinessBotTransferDiamonds)
         case inputInvoiceChatInviteSubscription(Cons_inputInvoiceChatInviteSubscription)
         case inputInvoiceMessage(Cons_inputInvoiceMessage)
         case inputInvoicePremiumAuthCode(Cons_inputInvoicePremiumAuthCode)
         case inputInvoicePremiumGiftCode(Cons_inputInvoicePremiumGiftCode)
-        case inputInvoicePremiumGiftStars(Cons_inputInvoicePremiumGiftStars)
+        case inputInvoicePremiumGiftStars(Cons_inputInvoicePremiumGiftDiamonds)
         case inputInvoiceSlug(Cons_inputInvoiceSlug)
-        case inputInvoiceStarGift(Cons_inputInvoiceStarGift)
-        case inputInvoiceStarGiftAuctionBid(Cons_inputInvoiceStarGiftAuctionBid)
-        case inputInvoiceStarGiftDropOriginalDetails(Cons_inputInvoiceStarGiftDropOriginalDetails)
-        case inputInvoiceStarGiftPrepaidUpgrade(Cons_inputInvoiceStarGiftPrepaidUpgrade)
-        case inputInvoiceStarGiftResale(Cons_inputInvoiceStarGiftResale)
-        case inputInvoiceStarGiftTransfer(Cons_inputInvoiceStarGiftTransfer)
-        case inputInvoiceStarGiftUpgrade(Cons_inputInvoiceStarGiftUpgrade)
-        case inputInvoiceStars(Cons_inputInvoiceStars)
+        case inputInvoiceStarGift(Cons_inputInvoiceDiamondGift)
+        case inputInvoiceStarGiftAuctionBid(Cons_inputInvoiceDiamondGiftAuctionBid)
+        case inputInvoiceStarGiftDropOriginalDetails(Cons_inputInvoiceDiamondGiftDropOriginalDetails)
+        case inputInvoiceStarGiftPrepaidUpgrade(Cons_inputInvoiceDiamondGiftPrepaidUpgrade)
+        case inputInvoiceStarGiftResale(Cons_inputInvoiceDiamondGiftResale)
+        case inputInvoiceStarGiftTransfer(Cons_inputInvoiceDiamondGiftTransfer)
+        case inputInvoiceStarGiftUpgrade(Cons_inputInvoiceDiamondGiftUpgrade)
+        case inputInvoiceStars(Cons_inputInvoiceDiamonds)
 
         public func serialize(_ buffer: Buffer, _ boxed: Swift.Bool) {
             switch self {
@@ -1445,7 +1445,7 @@ public extension Api {
             }
         }
 
-        public static func parse_inputInvoiceBusinessBotTransferStars(_ reader: BufferReader) -> InputInvoice? {
+        public static func parse_inputInvoiceBusinessBotTransferDiamonds(_ reader: BufferReader) -> InputInvoice? {
             var _1: Api.InputUser?
             if let signature = reader.readInt32() {
                 _1 = Api.parse(reader, signature: signature) as? Api.InputUser
@@ -1455,7 +1455,7 @@ public extension Api {
             let _c1 = _1 != nil
             let _c2 = _2 != nil
             if _c1 && _c2 {
-                return Api.InputInvoice.inputInvoiceBusinessBotTransferStars(Cons_inputInvoiceBusinessBotTransferStars(bot: _1!, stars: _2!))
+                return Api.InputInvoice.inputInvoiceBusinessBotTransferStars(Cons_inputInvoiceBusinessBotTransferDiamonds(bot: _1!, stars: _2!))
             }
             else {
                 return nil
@@ -1519,7 +1519,7 @@ public extension Api {
                 return nil
             }
         }
-        public static func parse_inputInvoicePremiumGiftStars(_ reader: BufferReader) -> InputInvoice? {
+        public static func parse_inputInvoicePremiumGiftDiamonds(_ reader: BufferReader) -> InputInvoice? {
             var _1: Int32?
             _1 = reader.readInt32()
             var _2: Api.InputUser?
@@ -1539,7 +1539,7 @@ public extension Api {
             let _c3 = _3 != nil
             let _c4 = (Int(_1 ?? 0) & Int(1 << 0) == 0) || _4 != nil
             if _c1 && _c2 && _c3 && _c4 {
-                return Api.InputInvoice.inputInvoicePremiumGiftStars(Cons_inputInvoicePremiumGiftStars(flags: _1!, userId: _2!, months: _3!, message: _4))
+                return Api.InputInvoice.inputInvoicePremiumGiftStars(Cons_inputInvoicePremiumGiftDiamonds(flags: _1!, userId: _2!, months: _3!, message: _4))
             }
             else {
                 return nil
@@ -1556,7 +1556,7 @@ public extension Api {
                 return nil
             }
         }
-        public static func parse_inputInvoiceStarGift(_ reader: BufferReader) -> InputInvoice? {
+        public static func parse_inputInvoiceDiamondGift(_ reader: BufferReader) -> InputInvoice? {
             var _1: Int32?
             _1 = reader.readInt32()
             var _2: Api.InputPeer?
@@ -1576,13 +1576,13 @@ public extension Api {
             let _c3 = _3 != nil
             let _c4 = (Int(_1 ?? 0) & Int(1 << 1) == 0) || _4 != nil
             if _c1 && _c2 && _c3 && _c4 {
-                return Api.InputInvoice.inputInvoiceStarGift(Cons_inputInvoiceStarGift(flags: _1!, peer: _2!, giftId: _3!, message: _4))
+                return Api.InputInvoice.inputInvoiceStarGift(Cons_inputInvoiceDiamondGift(flags: _1!, peer: _2!, giftId: _3!, message: _4))
             }
             else {
                 return nil
             }
         }
-        public static func parse_inputInvoiceStarGiftAuctionBid(_ reader: BufferReader) -> InputInvoice? {
+        public static func parse_inputInvoiceDiamondGiftAuctionBid(_ reader: BufferReader) -> InputInvoice? {
             var _1: Int32?
             _1 = reader.readInt32()
             var _2: Api.InputPeer?
@@ -1607,26 +1607,26 @@ public extension Api {
             let _c4 = _4 != nil
             let _c5 = (Int(_1 ?? 0) & Int(1 << 1) == 0) || _5 != nil
             if _c1 && _c2 && _c3 && _c4 && _c5 {
-                return Api.InputInvoice.inputInvoiceStarGiftAuctionBid(Cons_inputInvoiceStarGiftAuctionBid(flags: _1!, peer: _2, giftId: _3!, bidAmount: _4!, message: _5))
+                return Api.InputInvoice.inputInvoiceStarGiftAuctionBid(Cons_inputInvoiceDiamondGiftAuctionBid(flags: _1!, peer: _2, giftId: _3!, bidAmount: _4!, message: _5))
             }
             else {
                 return nil
             }
         }
-        public static func parse_inputInvoiceStarGiftDropOriginalDetails(_ reader: BufferReader) -> InputInvoice? {
+        public static func parse_inputInvoiceDiamondGiftDropOriginalDetails(_ reader: BufferReader) -> InputInvoice? {
             var _1: Api.InputSavedStarGift?
             if let signature = reader.readInt32() {
                 _1 = Api.parse(reader, signature: signature) as? Api.InputSavedStarGift
             }
             let _c1 = _1 != nil
             if _c1 {
-                return Api.InputInvoice.inputInvoiceStarGiftDropOriginalDetails(Cons_inputInvoiceStarGiftDropOriginalDetails(stargift: _1!))
+                return Api.InputInvoice.inputInvoiceStarGiftDropOriginalDetails(Cons_inputInvoiceDiamondGiftDropOriginalDetails(stargift: _1!))
             }
             else {
                 return nil
             }
         }
-        public static func parse_inputInvoiceStarGiftPrepaidUpgrade(_ reader: BufferReader) -> InputInvoice? {
+        public static func parse_inputInvoiceDiamondGiftPrepaidUpgrade(_ reader: BufferReader) -> InputInvoice? {
             var _1: Api.InputPeer?
             if let signature = reader.readInt32() {
                 _1 = Api.parse(reader, signature: signature) as? Api.InputPeer
@@ -1636,13 +1636,13 @@ public extension Api {
             let _c1 = _1 != nil
             let _c2 = _2 != nil
             if _c1 && _c2 {
-                return Api.InputInvoice.inputInvoiceStarGiftPrepaidUpgrade(Cons_inputInvoiceStarGiftPrepaidUpgrade(peer: _1!, hash: _2!))
+                return Api.InputInvoice.inputInvoiceStarGiftPrepaidUpgrade(Cons_inputInvoiceDiamondGiftPrepaidUpgrade(peer: _1!, hash: _2!))
             }
             else {
                 return nil
             }
         }
-        public static func parse_inputInvoiceStarGiftResale(_ reader: BufferReader) -> InputInvoice? {
+        public static func parse_inputInvoiceDiamondGiftResale(_ reader: BufferReader) -> InputInvoice? {
             var _1: Int32?
             _1 = reader.readInt32()
             var _2: String?
@@ -1655,13 +1655,13 @@ public extension Api {
             let _c2 = _2 != nil
             let _c3 = _3 != nil
             if _c1 && _c2 && _c3 {
-                return Api.InputInvoice.inputInvoiceStarGiftResale(Cons_inputInvoiceStarGiftResale(flags: _1!, slug: _2!, toId: _3!))
+                return Api.InputInvoice.inputInvoiceStarGiftResale(Cons_inputInvoiceDiamondGiftResale(flags: _1!, slug: _2!, toId: _3!))
             }
             else {
                 return nil
             }
         }
-        public static func parse_inputInvoiceStarGiftTransfer(_ reader: BufferReader) -> InputInvoice? {
+        public static func parse_inputInvoiceDiamondGiftTransfer(_ reader: BufferReader) -> InputInvoice? {
             var _1: Api.InputSavedStarGift?
             if let signature = reader.readInt32() {
                 _1 = Api.parse(reader, signature: signature) as? Api.InputSavedStarGift
@@ -1673,13 +1673,13 @@ public extension Api {
             let _c1 = _1 != nil
             let _c2 = _2 != nil
             if _c1 && _c2 {
-                return Api.InputInvoice.inputInvoiceStarGiftTransfer(Cons_inputInvoiceStarGiftTransfer(stargift: _1!, toId: _2!))
+                return Api.InputInvoice.inputInvoiceStarGiftTransfer(Cons_inputInvoiceDiamondGiftTransfer(stargift: _1!, toId: _2!))
             }
             else {
                 return nil
             }
         }
-        public static func parse_inputInvoiceStarGiftUpgrade(_ reader: BufferReader) -> InputInvoice? {
+        public static func parse_inputInvoiceDiamondGiftUpgrade(_ reader: BufferReader) -> InputInvoice? {
             var _1: Int32?
             _1 = reader.readInt32()
             var _2: Api.InputSavedStarGift?
@@ -1689,20 +1689,20 @@ public extension Api {
             let _c1 = _1 != nil
             let _c2 = _2 != nil
             if _c1 && _c2 {
-                return Api.InputInvoice.inputInvoiceStarGiftUpgrade(Cons_inputInvoiceStarGiftUpgrade(flags: _1!, stargift: _2!))
+                return Api.InputInvoice.inputInvoiceStarGiftUpgrade(Cons_inputInvoiceDiamondGiftUpgrade(flags: _1!, stargift: _2!))
             }
             else {
                 return nil
             }
         }
-        public static func parse_inputInvoiceStars(_ reader: BufferReader) -> InputInvoice? {
+        public static func parse_inputInvoiceDiamonds(_ reader: BufferReader) -> InputInvoice? {
             var _1: Api.InputStorePaymentPurpose?
             if let signature = reader.readInt32() {
                 _1 = Api.parse(reader, signature: signature) as? Api.InputStorePaymentPurpose
             }
             let _c1 = _1 != nil
             if _c1 {
-                return Api.InputInvoice.inputInvoiceStars(Cons_inputInvoiceStars(purpose: _1!))
+                return Api.InputInvoice.inputInvoiceStars(Cons_inputInvoiceDiamonds(purpose: _1!))
             }
             else {
                 return nil

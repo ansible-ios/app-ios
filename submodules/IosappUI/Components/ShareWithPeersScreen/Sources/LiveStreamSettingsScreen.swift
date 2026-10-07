@@ -781,7 +781,7 @@ final class LiveStreamSettingsScreenComponent: Component {
                 ListItemSliderSelectorComponent(
                     theme: theme,
                     content: .continuous(ListItemSliderSelectorComponent.Continuous(
-                        value: Double(screenState.paidMessageStars) / Double(screenState.maxPaidMessageStars),
+                        value: Double(screenState.paidMessageStars) / Double(screenState.maxPaidMessageDiamonds),
                         minValue: 0,
                         lowerBoundTitle: "0",
                         upperBoundTitle: "\(presentationStringsFormattedNumber(Int32(clamping: screenState.maxPaidMessageStars), environment.dateTimeFormat.groupingSeparator))",
@@ -790,7 +790,7 @@ final class LiveStreamSettingsScreenComponent: Component {
                             guard let self, let component = self.component else {
                                 return
                             }
-                            component.stateContext.paidMessageStars = Int64(Double(screenState.maxPaidMessageStars) * value)
+                            component.stateContext.paidMessageStars = Int64(Double(screenState.maxPaidMessageDiamonds) * value)
                             self.state?.updated(transition: .immediate)
                         }
                     )),
@@ -1102,7 +1102,7 @@ public class LiveStreamSettingsScreen: ViewControllerComponentContainer {
         var call: PresentationGroupCall?
         var isEdit: Bool
         var callIsStream: Bool
-        var maxPaidMessageStars: Int64
+        var maxPaidMessageDiamonds: Int64
         var sendAsPeerId: EnginePeer.Id?
         var isCustomTarget: Bool
         var privacy: EngineStoryPrivacy
@@ -1121,7 +1121,7 @@ public class LiveStreamSettingsScreen: ViewControllerComponentContainer {
             call: PresentationGroupCall?,
             isEdit: Bool,
             callIsStream: Bool,
-            maxPaidMessageStars: Int64,
+            maxPaidMessageDiamonds: Int64,
             sendAsPeerId: EnginePeer.Id?,
             isCustomTarget: Bool,
             privacy: EngineStoryPrivacy,
@@ -1139,7 +1139,7 @@ public class LiveStreamSettingsScreen: ViewControllerComponentContainer {
             self.call = call
             self.isEdit = isEdit
             self.callIsStream = callIsStream
-            self.maxPaidMessageStars = maxPaidMessageStars
+            self.maxPaidMessageDiamonds = maxPaidMessageDiamonds
             self.sendAsPeerId = sendAsPeerId
             self.isCustomTarget = isCustomTarget
             self.privacy = privacy
@@ -1358,7 +1358,7 @@ public class LiveStreamSettingsScreen: ViewControllerComponentContainer {
                 
                 let call: PresentationGroupCall?
                 let isEdit: Bool
-                let maxPaidMessageStars: Int64 = 10000
+                let maxPaidMessageDiamonds: Int64 = 10000
                 let sendAsPeerId: EnginePeer.Id?
                 let isCustomTarget: Bool
                 let privacy: EngineStoryPrivacy
@@ -1380,7 +1380,7 @@ public class LiveStreamSettingsScreen: ViewControllerComponentContainer {
                     paidMessageStars = current.paidMessageStars
                 } else {
                     switch mode {
-                    case let .create(sendAsPeerIdValue, isCustomTargetValue, privacyValue, allowCommentsValue, isForwardingDisabledValue, pinValue, paidMessageStarsValue):
+                    case let .create(sendAsPeerIdValue, isCustomTargetValue, privacyValue, allowCommentsValue, isForwardingDisabledValue, pinValue, paidMessageDiamondsValue):
                         call = nil
                         isEdit = false
                         sendAsPeerId = sendAsPeerIdValue
@@ -1389,8 +1389,8 @@ public class LiveStreamSettingsScreen: ViewControllerComponentContainer {
                         allowComments = allowCommentsValue
                         isForwardingDisabled = isForwardingDisabledValue
                         pin = pinValue
-                        paidMessageStars = paidMessageStarsValue
-                    case let .edit(callValue, callIsStreamValue, allowCommentsValue, paidMessageStarsValue):
+                        paidMessageStars = paidMessageDiamondsValue
+                    case let .edit(callValue, callIsStreamValue, allowCommentsValue, paidMessageDiamondsValue):
                         call = callValue
                         isEdit = true
                         sendAsPeerId = nil
@@ -1399,7 +1399,7 @@ public class LiveStreamSettingsScreen: ViewControllerComponentContainer {
                         allowComments = allowCommentsValue
                         isForwardingDisabled = false
                         pin = true
-                        paidMessageStars = paidMessageStarsValue
+                        paidMessageStars = paidMessageDiamondsValue
                         callIsStream = callIsStreamValue
                     }
                 }
@@ -1408,7 +1408,7 @@ public class LiveStreamSettingsScreen: ViewControllerComponentContainer {
                     call: call,
                     isEdit: isEdit,
                     callIsStream: callIsStream,
-                    maxPaidMessageStars: maxPaidMessageStars,
+                    maxPaidMessageDiamonds: maxPaidMessageDiamonds,
                     sendAsPeerId: sendAsPeerId,
                     isCustomTarget: isCustomTarget,
                     privacy: privacy,

@@ -1449,7 +1449,7 @@ static CGPoint TGCameraControllerClampPointToScreenSize(__unused id self, __unus
     if (editingContext == nil)
     {
         editingContext = [[TGMediaEditingContext alloc] init];
-        editingContext.sendPaidMessageStars = self.sendPaidMessageStars;
+        editingContext.sendPaidMessageDiamonds = self.sendPaidMessageDiamonds;
         if (self.forcedCaption != nil)
             [editingContext setForcedCaption:self.forcedCaption];
         _editingContext = editingContext;

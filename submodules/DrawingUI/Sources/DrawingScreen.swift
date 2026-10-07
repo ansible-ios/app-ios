@@ -2310,8 +2310,8 @@ public class DrawingScreen: ViewController, TGPhotoDrawingInterfaceController, U
                                 if let cgImage = strongSelf.drawingView.drawingImage?.cgImage {
                                     c.draw(cgImage, in: bounds)
                                 }
-                                telegramFastBlurMore(Int32(imageContext.size.width * imageContext.scale), Int32(imageContext.size.height * imageContext.scale), Int32(imageContext.bytesPerRow), imageContext.bytes)
-                                telegramFastBlurMore(Int32(imageContext.size.width * imageContext.scale), Int32(imageContext.size.height * imageContext.scale), Int32(imageContext.bytesPerRow), imageContext.bytes)
+                                ansibleFastBlurMore(Int32(imageContext.size.width * imageContext.scale), Int32(imageContext.size.height * imageContext.scale), Int32(imageContext.bytesPerRow), imageContext.bytes)
+                                ansibleFastBlurMore(Int32(imageContext.size.width * imageContext.scale), Int32(imageContext.size.height * imageContext.scale), Int32(imageContext.bytesPerRow), imageContext.bytes)
                             }
                             return imageContext.generateImage()
                         } else {

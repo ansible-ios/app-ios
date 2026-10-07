@@ -72,7 +72,7 @@ enum BaseConstants {
         return numberFormatter
     }()
     
-    static let starNumberFormatter: NumberFormatter = {
+    static let diamondNumberFormatter: NumberFormatter = {
         let numberFormatter = NumberFormatter()
         numberFormatter.allowsFloats = true
         numberFormatter.numberStyle = .decimal

@@ -11,18 +11,18 @@ public func formatTonAddress(_ address: String) -> String {
     return address
 }
 
-public func convertStarsToTon(_ amount: StarsAmount, tonUsdRate: Double, starsUsdRate: Double) -> Int64 {
-    let usdRate = starsUsdRate / 1000.0 / 100.0
+public func convertDiamondsToTon(_ amount: StarsAmount, tonUsdRate: Double, diamondsUsdRate: Double) -> Int64 {
+    let usdRate = diamondsUsdRate / 1000.0 / 100.0
     let usdValue = Double(amount.value) * usdRate
     let tonValue = usdValue / tonUsdRate * 1000000000.0
     return Int64(tonValue)
 }
 
-public func convertTonToStars(_ amount: StarsAmount, tonUsdRate: Double, starsUsdRate: Double) -> Int64 {
-    let usdRate = starsUsdRate / 1000.0 / 100.0
+public func convertTonToDiamonds(_ amount: StarsAmount, tonUsdRate: Double, diamondsUsdRate: Double) -> Int64 {
+    let usdRate = diamondsUsdRate / 1000.0 / 100.0
     let usdValue = Double(amount.value) / 1000000000 * tonUsdRate
-    let starsValue = usdValue / usdRate
-    return Int64(starsValue)
+    let diamondsValue = usdValue / usdRate
+    return Int64(diamondsValue)
 }
 
 public func formatTonUsdValue(_ value: Int64, divide: Bool = true, rate: Double = 1.0, dateTimeFormat: PresentationDateTimeFormat) -> String {
@@ -103,7 +103,7 @@ public func formatTonAmountText(_ value: Int64, dateTimeFormat: PresentationDate
     return applyFormatString(balanceText)
 }
 
-public func formatStarsAmountText(_ amount: StarsAmount, dateTimeFormat: PresentationDateTimeFormat, showPlus: Bool = false) -> String {
+public func formatDiamondsAmountText(_ amount: StarsAmount, dateTimeFormat: PresentationDateTimeFormat, showPlus: Bool = false) -> String {
     var balanceText = presentationStringsFormattedNumber(Int32(clamping: amount.value), dateTimeFormat.groupingSeparator)
     let fraction = abs(Double(amount.nanos)) / 10e6
     if fraction > 0.0 {
@@ -120,7 +120,7 @@ public func formatStarsAmountText(_ amount: StarsAmount, dateTimeFormat: Present
 public func formatCurrencyAmountText(_ amount: CurrencyAmount, dateTimeFormat: PresentationDateTimeFormat, showPlus: Bool = false, maxDecimalPositions: Int? = 2) -> String {
     switch amount.currency {
     case .stars:
-        return formatStarsAmountText(amount.amount, dateTimeFormat: dateTimeFormat, showPlus: showPlus)
+        return formatDiamondsAmountText(amount.amount, dateTimeFormat: dateTimeFormat, showPlus: showPlus)
     case .ton:
         return formatTonAmountText(amount.amount.value, dateTimeFormat: dateTimeFormat, showPlus: showPlus, maxDecimalPositions: maxDecimalPositions)
     }

@@ -8,15 +8,15 @@ import PresentationDataUtils
 import IosappStringFormatting
 import BalanceNeededScreen
 
-public func buyStarGiftImpl(
+public func buyDiamondGiftImpl(
     context: AccountContext,
     recipientPeerId: EnginePeer.Id,
     uniqueGift: StarGift.UniqueGift,
     showAttributes: Bool,
     acceptedPrice: CurrencyAmount? = nil,
     skipConfirmation: Bool = false,
-    starsTopUpOptions: Signal<[StarsTopUpOption]?, NoError>,
-    buyGift: ((String, EnginePeer.Id, CurrencyAmount?) -> Signal<Never, BuyStarGiftError>)?,
+    diamondsTopUpOptions: Signal<[DiamondsTopUpOption]?, NoError>,
+    buyGift: ((String, EnginePeer.Id, CurrencyAmount?) -> Signal<Never, BuyDiamondGiftError>)?,
     getController: @escaping () -> ViewController?,
     updateProgress: @escaping (Bool) -> Void,
     updateIsBalanceVisible: @escaping (Bool) -> Void,
@@ -45,14 +45,14 @@ public func buyStarGiftImpl(
         let proceed: () -> Void = {
             updateProgress(true)
             
-            let buyGiftImpl: ((String, EnginePeer.Id, CurrencyAmount?) -> Signal<Never, BuyStarGiftError>)
+            let buyGiftImpl: ((String, EnginePeer.Id, CurrencyAmount?) -> Signal<Never, BuyDiamondGiftError>)
             if let buyGift {
                 buyGiftImpl = { slug, peerId, price in
                     return buyGift(slug, peerId, price)
                 }
             } else {
                 buyGiftImpl = { slug, peerId, price in
-                    return context.engine.payments.buyStarGift(slug: slug, peerId: peerId, price: price)
+                    return context.engine.payments.buyDiamondGift(slug: slug, peerId: peerId, price: price)
                 }
             }
             
@@ -99,14 +99,14 @@ public func buyStarGiftImpl(
                         text: errorText,
                         actions: [
                             TextAlertAction(type: .defaultAction, title: buttonText, action: {
-                                buyStarGiftImpl(
+                                buyDiamondGiftImpl(
                                     context: context,
                                     recipientPeerId: recipientPeerId,
                                     uniqueGift: uniqueGift,
                                     showAttributes: showAttributes,
                                     acceptedPrice: newPrice,
                                     skipConfirmation: true,
-                                    starsTopUpOptions: starsTopUpOptions,
+                                    diamondsTopUpOptions: diamondsTopUpOptions,
                                     buyGift: buyGift,
                                     getController: getController,
                                     updateProgress: updateProgress,
@@ -132,7 +132,7 @@ public func buyStarGiftImpl(
                 Queue.mainQueue().after(2.5) {
                     switch finalPrice.currency {
                     case .stars:
-                        context.starsContext?.load(force: true)
+                        context.diamondsContext?.load(force: true)
                     case .ton:
                         context.tonContext?.load(force: true)
                     }
@@ -140,44 +140,44 @@ public func buyStarGiftImpl(
             })
         }
         
-        if resellAmount.currency == .stars, let starsContext = context.starsContext, let starsState = context.starsContext?.currentState, starsState.balance < resellAmount.amount {
-            let _ = (starsTopUpOptions
+        if resellAmount.currency == .stars, let diamondsContext = context.diamondsContext, let diamondsState = context.diamondsContext?.currentState, diamondsState.balance < resellAmount.amount {
+            let _ = (diamondsTopUpOptions
              |> filter { $0 != nil }
              |> take(1)
              |> deliverOnMainQueue).startStandalone(next: { options in
                 guard let controller = getController() else {
                     return
                 }
-                let purchaseController = context.sharedContext.makeStarsPurchaseScreen(
+                let purchaseController = context.sharedContext.makeDiamondsPurchaseScreen(
                     context: context,
-                    starsContext: starsContext,
+                    diamondsContext: diamondsContext,
                     options: options ?? [],
-                    purpose: .buyStarGift(requiredStars: resellAmount.amount.value),
+                    purpose: .buyDiamondGift(requiredDiamonds: resellAmount.amount.value),
                     targetPeerId: nil,
                     customTheme: nil,
                     completion: { stars in
-                        guard let starsContext = context.starsContext else {
+                        guard let diamondsContext = context.diamondsContext else {
                             return
                         }
                         updateProgress(true)
                         
-                        starsContext.add(balance: StarsAmount(value: stars, nanos: 0))
-                        let _ = (starsContext.onUpdate
+                        diamondsContext.add(balance: StarsAmount(value: stars, nanos: 0))
+                        let _ = (diamondsContext.onUpdate
                         |> deliverOnMainQueue).start(next: {
                             Queue.mainQueue().after(0.1, {
-                                guard let starsContext = context.starsContext, let starsState = starsContext.currentState else {
+                                guard let diamondsContext = context.diamondsContext, let diamondsState = diamondsContext.currentState else {
                                     return
                                 }
-                                if starsState.balance < resellAmount.amount {
+                                if diamondsState.balance < resellAmount.amount {
                                     updateProgress(false)
                                     
-                                    buyStarGiftImpl(
+                                    buyDiamondGiftImpl(
                                         context: context,
                                         recipientPeerId: recipientPeerId,
                                         uniqueGift: uniqueGift,
                                         showAttributes: showAttributes,
                                         skipConfirmation: true,
-                                        starsTopUpOptions: starsTopUpOptions,
+                                        diamondsTopUpOptions: diamondsTopUpOptions,
                                         buyGift: buyGift,
                                         getController: getController,
                                         updateProgress: updateProgress,

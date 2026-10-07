@@ -2,7 +2,7 @@ import Foundation
 import IosappPresentationData
 import IosappStringFormatting
 
-private let telegramReleaseDate = Date(timeIntervalSince1970: 1376438400.0)
+private let ansibleReleaseDate = Date(timeIntervalSince1970: 1376438400.0)
 
 func suggestDates(for string: String, strings: PresentationStrings, dateTimeFormat: PresentationDateTimeFormat) -> [(minDate: Date?, maxDate: Date, string: String?)] {
     let string = string.folding(options: .diacriticInsensitive, locale: .current).trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
@@ -89,7 +89,7 @@ func suggestDates(for string: String, strings: PresentationStrings, dateTimeForm
         if string.count == 4, let value = Int(string), value <= year {
             let minDate = getLowerMonthDate(month: 1, year: value)
             let maxDate = getUpperMonthDate(month: 12, year: value)
-            if maxDate > telegramReleaseDate {
+            if maxDate > ansibleReleaseDate {
                 result.append((minDate, maxDate, "\(value)"))
             }
         } else {
@@ -105,20 +105,20 @@ func suggestDates(for string: String, strings: PresentationStrings, dateTimeForm
                     let stringComponents = string.components(separatedBy: dateSeparator)
                     if stringComponents.count < 3 {
                         for i in 0..<8 {
-                            if let date = calendar.date(byAdding: .year, value: -i, to: resultDate), date < now, date > telegramReleaseDate {
+                            if let date = calendar.date(byAdding: .year, value: -i, to: resultDate), date < now, date > ansibleReleaseDate {
                                 let lowerDate = getLowerDate(for: resultDate)
                                 result.append((lowerDate, date, nil))
                             }
                         }
-                    } else if resultDate < now, date > telegramReleaseDate {
+                    } else if resultDate < now, date > ansibleReleaseDate {
                         let lowerDate = getLowerDate(for: resultDate)
                         result.append((lowerDate, resultDate, nil))
                     }
                 }
                 let dd = try NSDataDetector(types: NSTextCheckingResult.CheckingType.date.rawValue)
-                if let match = dd.firstMatch(in: string, options: [], range: NSMakeRange(0, string.utf16.count)), let date = match.date, date > telegramReleaseDate {
+                if let match = dd.firstMatch(in: string, options: [], range: NSMakeRange(0, string.utf16.count)), let date = match.date, date > ansibleReleaseDate {
                     process(date)
-                } else if let match = dd.firstMatch(in: string.replacingOccurrences(of: ".", with: "/"), options: [], range: NSMakeRange(0, string.utf16.count)), let date = match.date, date > telegramReleaseDate {
+                } else if let match = dd.firstMatch(in: string.replacingOccurrences(of: ".", with: "/"), options: [], range: NSMakeRange(0, string.utf16.count)), let date = match.date, date > ansibleReleaseDate {
                     process(date)
                 }
             } catch {
@@ -159,14 +159,14 @@ func suggestDates(for string: String, strings: PresentationStrings, dateTimeForm
             if cleanDigits.count == 4, let year = Int(cleanDigits) {
                 let lowerDate = getLowerMonthDate(month: month, year: year)
                 let upperDate = getUpperMonthDate(month: month, year: year)
-                if upperDate <= now && upperDate > telegramReleaseDate {
+                if upperDate <= now && upperDate > ansibleReleaseDate {
                     result.append((lowerDate, upperDate, stringForMonth(strings: strings, month: Int32(month - 1), ofYear: Int32(year - 1900))))
                 }
             } else if cleanDigits.isEmpty {
                 for i in (year - 7 ... year).reversed() {
                     let lowerDate = getUpperMonthDate(month: month, year: i)
                     let upperDate = getUpperMonthDate(month: month, year: i)
-                    if upperDate <= now && upperDate > telegramReleaseDate {
+                    if upperDate <= now && upperDate > ansibleReleaseDate {
                         result.append((lowerDate, upperDate, stringForMonth(strings: strings, month: Int32(month - 1), ofYear: Int32(i - 1900))))
                     }
                 }

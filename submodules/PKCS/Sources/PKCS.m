@@ -38,7 +38,7 @@ static NSData * _Nullable readPublicKey(EVP_PKEY *subject) {
 
 + (MTPKCS * _Nullable)parse:(const unsigned char *)buffer size:(int)size {
 #if TARGET_OS_IOS
-#ifdef TELEGRAM_USE_BORINGSSL
+#ifdef ANSIBLE_USE_BORINGSSL
     BIO *pkcsBio = BIO_new(BIO_s_mem());
     BIO_write(pkcsBio, buffer, size);
     STACK_OF(X509) *signers = NULL;

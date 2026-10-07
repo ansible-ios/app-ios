@@ -230,7 +230,7 @@ private func makeInternalUrlHandler(
 }
 
 private let internetSchemes: [String] = ["http", "https"]
-private let telegramMeHosts: [String] = ["asme.su", "www.asme.su"]
+private let ansibleMeHosts: [String] = ["asme.su", "www.asme.su"]
 
 private func handleInternetUrl(
     parsedUrl: URL,
@@ -250,7 +250,7 @@ private func handleInternetUrl(
     }
     
     if isInternetUrl {
-        if let host = parsedUrl.host, telegramMeHosts.contains(host) {
+        if let host = parsedUrl.host, ansibleMeHosts.contains(host) {
             handleInternalUrl(parsedUrl.absoluteString)
         } else {
             let settings = combineLatest(
@@ -631,9 +631,9 @@ func openExternalUrlImpl(context: AccountContext, urlContext: OpenURLContext, ur
                     let amount = params["balance"].flatMap(Int64.init)
                     let purpose = params["purpose"]
                     if let amount, amount > 0 && amount < Int64(Int32.max) {
-                        handleResolvedUrl(.starsTopup(amount: amount, purpose: purpose))
+                        handleResolvedUrl(.diamondsTopup(amount: amount, purpose: purpose))
                     } else {
-                        handleResolvedUrl(.starsTopup(amount: nil, purpose: purpose))
+                        handleResolvedUrl(.diamondsTopup(amount: nil, purpose: purpose))
                     }
                 case "addlist":
                     if let slug = params["slug"] {
@@ -1002,7 +1002,7 @@ func openExternalUrlImpl(context: AccountContext, urlContext: OpenURLContext, ur
     }
     
     if let scheme = parsedUrl.scheme, internetSchemes.contains(scheme) {
-        if let host = parsedUrl.host, telegramMeHosts.contains(host) {
+        if let host = parsedUrl.host, ansibleMeHosts.contains(host) {
             continueHandling()
         } else {
             if isIosappWebShortLink(parsedUrl.absoluteString) {

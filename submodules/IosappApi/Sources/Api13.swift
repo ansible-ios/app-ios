@@ -605,7 +605,7 @@ public extension Api {
 }
 public extension Api {
     indirect enum InputSavedStarGift: TypeConstructorDescription {
-        public class Cons_inputSavedStarGiftChat: TypeConstructorDescription {
+        public class Cons_inputSavedDiamondGiftChat: TypeConstructorDescription {
             public var peer: Api.InputPeer
             public var savedId: Int64
             public init(peer: Api.InputPeer, savedId: Int64) {
@@ -616,7 +616,7 @@ public extension Api {
                 return ("inputSavedStarGiftChat", [("peer", ConstructorParameterDescription(self.peer)), ("savedId", ConstructorParameterDescription(self.savedId))])
             }
         }
-        public class Cons_inputSavedStarGiftSlug: TypeConstructorDescription {
+        public class Cons_inputSavedDiamondGiftSlug: TypeConstructorDescription {
             public var slug: String
             public init(slug: String) {
                 self.slug = slug
@@ -625,7 +625,7 @@ public extension Api {
                 return ("inputSavedStarGiftSlug", [("slug", ConstructorParameterDescription(self.slug))])
             }
         }
-        public class Cons_inputSavedStarGiftUser: TypeConstructorDescription {
+        public class Cons_inputSavedDiamondGiftUser: TypeConstructorDescription {
             public var msgId: Int32
             public init(msgId: Int32) {
                 self.msgId = msgId
@@ -634,9 +634,9 @@ public extension Api {
                 return ("inputSavedStarGiftUser", [("msgId", ConstructorParameterDescription(self.msgId))])
             }
         }
-        case inputSavedStarGiftChat(Cons_inputSavedStarGiftChat)
-        case inputSavedStarGiftSlug(Cons_inputSavedStarGiftSlug)
-        case inputSavedStarGiftUser(Cons_inputSavedStarGiftUser)
+        case inputSavedStarGiftChat(Cons_inputSavedDiamondGiftChat)
+        case inputSavedStarGiftSlug(Cons_inputSavedDiamondGiftSlug)
+        case inputSavedStarGiftUser(Cons_inputSavedDiamondGiftUser)
 
         public func serialize(_ buffer: Buffer, _ boxed: Swift.Bool) {
             switch self {
@@ -673,7 +673,7 @@ public extension Api {
             }
         }
 
-        public static func parse_inputSavedStarGiftChat(_ reader: BufferReader) -> InputSavedStarGift? {
+        public static func parse_inputSavedDiamondGiftChat(_ reader: BufferReader) -> InputSavedStarGift? {
             var _1: Api.InputPeer?
             if let signature = reader.readInt32() {
                 _1 = Api.parse(reader, signature: signature) as? Api.InputPeer
@@ -683,29 +683,29 @@ public extension Api {
             let _c1 = _1 != nil
             let _c2 = _2 != nil
             if _c1 && _c2 {
-                return Api.InputSavedStarGift.inputSavedStarGiftChat(Cons_inputSavedStarGiftChat(peer: _1!, savedId: _2!))
+                return Api.InputSavedStarGift.inputSavedStarGiftChat(Cons_inputSavedDiamondGiftChat(peer: _1!, savedId: _2!))
             }
             else {
                 return nil
             }
         }
-        public static func parse_inputSavedStarGiftSlug(_ reader: BufferReader) -> InputSavedStarGift? {
+        public static func parse_inputSavedDiamondGiftSlug(_ reader: BufferReader) -> InputSavedStarGift? {
             var _1: String?
             _1 = parseString(reader)
             let _c1 = _1 != nil
             if _c1 {
-                return Api.InputSavedStarGift.inputSavedStarGiftSlug(Cons_inputSavedStarGiftSlug(slug: _1!))
+                return Api.InputSavedStarGift.inputSavedStarGiftSlug(Cons_inputSavedDiamondGiftSlug(slug: _1!))
             }
             else {
                 return nil
             }
         }
-        public static func parse_inputSavedStarGiftUser(_ reader: BufferReader) -> InputSavedStarGift? {
+        public static func parse_inputSavedDiamondGiftUser(_ reader: BufferReader) -> InputSavedStarGift? {
             var _1: Int32?
             _1 = reader.readInt32()
             let _c1 = _1 != nil
             if _c1 {
-                return Api.InputSavedStarGift.inputSavedStarGiftUser(Cons_inputSavedStarGiftUser(msgId: _1!))
+                return Api.InputSavedStarGift.inputSavedStarGiftUser(Cons_inputSavedDiamondGiftUser(msgId: _1!))
             }
             else {
                 return nil
@@ -1042,7 +1042,7 @@ public extension Api {
 }
 public extension Api {
     enum InputStarGiftAuction: TypeConstructorDescription {
-        public class Cons_inputStarGiftAuction: TypeConstructorDescription {
+        public class Cons_inputDiamondGiftAuction: TypeConstructorDescription {
             public var giftId: Int64
             public init(giftId: Int64) {
                 self.giftId = giftId
@@ -1051,7 +1051,7 @@ public extension Api {
                 return ("inputStarGiftAuction", [("giftId", ConstructorParameterDescription(self.giftId))])
             }
         }
-        public class Cons_inputStarGiftAuctionSlug: TypeConstructorDescription {
+        public class Cons_inputDiamondGiftAuctionSlug: TypeConstructorDescription {
             public var slug: String
             public init(slug: String) {
                 self.slug = slug
@@ -1060,8 +1060,8 @@ public extension Api {
                 return ("inputStarGiftAuctionSlug", [("slug", ConstructorParameterDescription(self.slug))])
             }
         }
-        case inputStarGiftAuction(Cons_inputStarGiftAuction)
-        case inputStarGiftAuctionSlug(Cons_inputStarGiftAuctionSlug)
+        case inputStarGiftAuction(Cons_inputDiamondGiftAuction)
+        case inputStarGiftAuctionSlug(Cons_inputDiamondGiftAuctionSlug)
 
         public func serialize(_ buffer: Buffer, _ boxed: Swift.Bool) {
             switch self {
@@ -1089,23 +1089,23 @@ public extension Api {
             }
         }
 
-        public static func parse_inputStarGiftAuction(_ reader: BufferReader) -> InputStarGiftAuction? {
+        public static func parse_inputDiamondGiftAuction(_ reader: BufferReader) -> InputStarGiftAuction? {
             var _1: Int64?
             _1 = reader.readInt64()
             let _c1 = _1 != nil
             if _c1 {
-                return Api.InputStarGiftAuction.inputStarGiftAuction(Cons_inputStarGiftAuction(giftId: _1!))
+                return Api.InputStarGiftAuction.inputStarGiftAuction(Cons_inputDiamondGiftAuction(giftId: _1!))
             }
             else {
                 return nil
             }
         }
-        public static func parse_inputStarGiftAuctionSlug(_ reader: BufferReader) -> InputStarGiftAuction? {
+        public static func parse_inputDiamondGiftAuctionSlug(_ reader: BufferReader) -> InputStarGiftAuction? {
             var _1: String?
             _1 = parseString(reader)
             let _c1 = _1 != nil
             if _c1 {
-                return Api.InputStarGiftAuction.inputStarGiftAuctionSlug(Cons_inputStarGiftAuctionSlug(slug: _1!))
+                return Api.InputStarGiftAuction.inputStarGiftAuctionSlug(Cons_inputDiamondGiftAuctionSlug(slug: _1!))
             }
             else {
                 return nil
@@ -1115,7 +1115,7 @@ public extension Api {
 }
 public extension Api {
     enum InputStarsTransaction: TypeConstructorDescription {
-        public class Cons_inputStarsTransaction: TypeConstructorDescription {
+        public class Cons_inputDiamondsTransaction: TypeConstructorDescription {
             public var flags: Int32
             public var id: String
             public init(flags: Int32, id: String) {
@@ -1126,7 +1126,7 @@ public extension Api {
                 return ("inputStarsTransaction", [("flags", ConstructorParameterDescription(self.flags)), ("id", ConstructorParameterDescription(self.id))])
             }
         }
-        case inputStarsTransaction(Cons_inputStarsTransaction)
+        case inputStarsTransaction(Cons_inputDiamondsTransaction)
 
         public func serialize(_ buffer: Buffer, _ boxed: Swift.Bool) {
             switch self {
@@ -1147,7 +1147,7 @@ public extension Api {
             }
         }
 
-        public static func parse_inputStarsTransaction(_ reader: BufferReader) -> InputStarsTransaction? {
+        public static func parse_inputDiamondsTransaction(_ reader: BufferReader) -> InputStarsTransaction? {
             var _1: Int32?
             _1 = reader.readInt32()
             var _2: String?
@@ -1155,7 +1155,7 @@ public extension Api {
             let _c1 = _1 != nil
             let _c2 = _2 != nil
             if _c1 && _c2 {
-                return Api.InputStarsTransaction.inputStarsTransaction(Cons_inputStarsTransaction(flags: _1!, id: _2!))
+                return Api.InputStarsTransaction.inputStarsTransaction(Cons_inputDiamondsTransaction(flags: _1!, id: _2!))
             }
             else {
                 return nil

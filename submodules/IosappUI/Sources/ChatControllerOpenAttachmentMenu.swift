@@ -256,7 +256,7 @@ extension ChatControllerImpl {
             }
             
             var isPaidMessages = false
-            if let _ = self.presentationInterfaceState.sendPaidMessageStars {
+            if let _ = self.presentationInterfaceState.sendPaidMessageDiamonds {
                 isPaidMessages = true
             }
             
@@ -861,10 +861,10 @@ extension ChatControllerImpl {
                             return false
                         }
                     case .gift:
-                        if let peer = strongSelf.presentationInterfaceState.renderedPeer?.peer, let starsContext = context.starsContext {
+                        if let peer = strongSelf.presentationInterfaceState.renderedPeer?.peer, let diamondsContext = context.diamondsContext {
                             let premiumGiftOptions = strongSelf.presentationInterfaceState.premiumGiftOptions
                             if !premiumGiftOptions.isEmpty {
-                                let controller = PremiumGiftAttachmentScreen(context: context, starsContext: starsContext, peerId: peer.id, premiumOptions: premiumGiftOptions, hasBirthday: strongSelf.presentationInterfaceState.hasBirthdayToday, completion: { [weak self] in
+                                let controller = PremiumGiftAttachmentScreen(context: context, diamondsContext: diamondsContext, peerId: peer.id, premiumOptions: premiumGiftOptions, hasBirthday: strongSelf.presentationInterfaceState.hasBirthdayToday, completion: { [weak self] in
                                     guard let self else {
                                         return
                                     }
@@ -1222,7 +1222,7 @@ extension ChatControllerImpl {
                 if let channel = peer as? IosappChannel, channel.isRestrictedBySlowmode {
                     slowModeEnabled = true
                 }
-                hasSchedule = strongSelf.presentationInterfaceState.subject != .scheduledMessages && peer.id.namespace != Namespaces.Peer.SecretChat && strongSelf.presentationInterfaceState.sendPaidMessageStars == nil
+                hasSchedule = strongSelf.presentationInterfaceState.subject != .scheduledMessages && peer.id.namespace != Namespaces.Peer.SecretChat && strongSelf.presentationInterfaceState.sendPaidMessageDiamonds == nil
             }
 
             let controller = legacyAttachmentMenu(
@@ -1288,7 +1288,7 @@ extension ChatControllerImpl {
                         if let peer = strongSelf.presentationInterfaceState.renderedPeer?.peer {
                             storeCapturedPhotos = peer.id.namespace != Namespaces.Peer.SecretChat
 
-                            hasSchedule = strongSelf.presentationInterfaceState.subject != .scheduledMessages && peer.id.namespace != Namespaces.Peer.SecretChat && strongSelf.presentationInterfaceState.sendPaidMessageStars == nil
+                            hasSchedule = strongSelf.presentationInterfaceState.subject != .scheduledMessages && peer.id.namespace != Namespaces.Peer.SecretChat && strongSelf.presentationInterfaceState.sendPaidMessageDiamonds == nil
                         }
 
                         let cameraPeer: EnginePeer? = strongSelf.presentationInterfaceState.renderedPeer?.peer.map { EnginePeer($0) }
@@ -1325,8 +1325,8 @@ extension ChatControllerImpl {
                             }
                         }, getCaptionPanelView: { [weak self] in
                             return self?.getCaptionPanelView(isFile: false)
-                        }, photoToolbarView: { [context = strongSelf.context] backButton, doneButton, solidBackground, hasSendStarsButton in
-                            return makeMediaPickerPhotoToolbarView(context: context, backButton: backButton, doneButton: doneButton, solidBackground: solidBackground, hasSendStarsButton: hasSendStarsButton)
+                        }, photoToolbarView: { [context = strongSelf.context] backButton, doneButton, solidBackground, hasSendDiamondsButton in
+                            return makeMediaPickerPhotoToolbarView(context: context, backButton: backButton, doneButton: doneButton, solidBackground: solidBackground, hasSendDiamondsButton: hasSendDiamondsButton)
                         })
                     }
                 }, openFileGallery: {
@@ -1598,7 +1598,7 @@ extension ChatControllerImpl {
             canBoostToUnrestrict: (self.presentationInterfaceState.boostsToUnrestrict ?? 0) > 0 && bannedSendPhotos?.1 != true && bannedSendVideos?.1 != true,
             paidMediaAllowed: paidMediaAllowed,
             subject: subject,
-            sendPaidMessageStars: self.presentationInterfaceState.sendPaidMessageStars?.value,
+            sendPaidMessageDiamonds: self.presentationInterfaceState.sendPaidMessageDiamonds?.value,
             saveEditedPhotos: saveEditedPhotos
         )
         controller.openBoost = { [weak self, weak controller] in
@@ -2059,12 +2059,12 @@ extension ChatControllerImpl {
             var hasSchedule = false
             if let peer = strongSelf.presentationInterfaceState.renderedPeer?.peer {
                 storeCapturedMedia = peer.id.namespace != Namespaces.Peer.SecretChat
-                hasSchedule = strongSelf.presentationInterfaceState.subject != .scheduledMessages && peer.id.namespace != Namespaces.Peer.SecretChat && strongSelf.presentationInterfaceState.sendPaidMessageStars == nil
+                hasSchedule = strongSelf.presentationInterfaceState.subject != .scheduledMessages && peer.id.namespace != Namespaces.Peer.SecretChat && strongSelf.presentationInterfaceState.sendPaidMessageDiamonds == nil
             }
             let inputText = strongSelf.presentationInterfaceState.interfaceState.effectiveInputState.inputText
 
             let cameraPeer: EnginePeer? = strongSelf.presentationInterfaceState.renderedPeer?.peer.map { EnginePeer($0) }
-            presentedLegacyCamera(context: strongSelf.context, peer: cameraPeer, chatLocation: strongSelf.chatLocation, cameraView: cameraView, menuController: nil, parentController: strongSelf, attachmentController: self?.attachmentController, editingMedia: false, saveCapturedPhotos: storeCapturedMedia, mediaGrouping: true, initialCaption: inputText, hasSchedule: hasSchedule, enablePhoto: enablePhoto, enableVideo: enableVideo, sendPaidMessageStars: strongSelf.presentationInterfaceState.sendPaidMessageStars?.value ?? 0, sendMessagesWithSignals: { [weak self] signals, silentPosting, scheduleTime, parameters in
+            presentedLegacyCamera(context: strongSelf.context, peer: cameraPeer, chatLocation: strongSelf.chatLocation, cameraView: cameraView, menuController: nil, parentController: strongSelf, attachmentController: self?.attachmentController, editingMedia: false, saveCapturedPhotos: storeCapturedMedia, mediaGrouping: true, initialCaption: inputText, hasSchedule: hasSchedule, enablePhoto: enablePhoto, enableVideo: enableVideo, sendPaidMessageDiamonds: strongSelf.presentationInterfaceState.sendPaidMessageDiamonds?.value ?? 0, sendMessagesWithSignals: { [weak self] signals, silentPosting, scheduleTime, parameters in
                 if let strongSelf = self {
                     strongSelf.enqueueMediaMessages(signals: signals, silentPosting: silentPosting, scheduleTime: scheduleTime > 0 ? scheduleTime : nil, parameters: parameters)
                     if !inputText.string.isEmpty {
@@ -2096,8 +2096,8 @@ extension ChatControllerImpl {
                 }
             }, getCaptionPanelView: { [weak self] in
                 return self?.getCaptionPanelView(isFile: false)
-            }, photoToolbarView: { [context = strongSelf.context] backButton, doneButton, solidBackground, hasSendStarsButton in
-                return makeMediaPickerPhotoToolbarView(context: context, backButton: backButton, doneButton: doneButton, solidBackground: solidBackground, hasSendStarsButton: hasSendStarsButton)
+            }, photoToolbarView: { [context = strongSelf.context] backButton, doneButton, solidBackground, hasSendDiamondsButton in
+                return makeMediaPickerPhotoToolbarView(context: context, backButton: backButton, doneButton: doneButton, solidBackground: solidBackground, hasSendDiamondsButton: hasSendDiamondsButton)
             }, dismissedWithResult: { [weak self] in
                 self?.attachmentController?.dismiss(animated: false, completion: nil)
             }, finishedTransitionIn: { [weak self] in

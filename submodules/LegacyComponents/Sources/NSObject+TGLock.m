@@ -9,8 +9,8 @@ static const char *lockPropertyKey = "TGObjectLock::lock";
     TG_SYNCHRONIZED_DEFINE(objectLock);
 }
 
-- (void)tgTakeLock;
-- (void)tgFreeLock;
+- (void)asTakeLock;
+- (void)asFreeLock;
 
 @end
 
@@ -26,12 +26,12 @@ static const char *lockPropertyKey = "TGObjectLock::lock";
     return self;
 }
 
-- (void)tgTakeLock
+- (void)asTakeLock
 {
     TG_SYNCHRONIZED_BEGIN(objectLock);
 }
 
-- (void)tgFreeLock
+- (void)asFreeLock
 {
     TG_SYNCHRONIZED_END(objectLock);
 }
@@ -40,7 +40,7 @@ static const char *lockPropertyKey = "TGObjectLock::lock";
 
 @implementation NSObject (TGLock)
 
-- (void)tgLockObject
+- (void)asLockObject
 {
     TGObjectLockImpl *lock = (TGObjectLockImpl *)objc_getAssociatedObject(self, lockPropertyKey);
     if (lock == nil)
@@ -52,10 +52,10 @@ static const char *lockPropertyKey = "TGObjectLock::lock";
         }
     }
     
-    [lock tgTakeLock];
+    [lock asTakeLock];
 }
 
-- (void)tgUnlockObject
+- (void)asUnlockObject
 {
     TGObjectLockImpl *lock = (TGObjectLockImpl *)objc_getAssociatedObject(self, lockPropertyKey);
     if (lock == nil)
@@ -67,7 +67,7 @@ static const char *lockPropertyKey = "TGObjectLock::lock";
         }
     }
     
-    [lock tgFreeLock];
+    [lock asFreeLock];
 }
 
 @end

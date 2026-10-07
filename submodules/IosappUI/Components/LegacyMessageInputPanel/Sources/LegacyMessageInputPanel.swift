@@ -381,7 +381,7 @@ public class LegacyMessageInputPanelNode: ASDisplayNode, TGCaptionPanelView {
                     strings: presentationData.strings,
                     style: .media,
                     placeholder: .plain(presentationData.strings.MediaPicker_AddCaption),
-                    sendPaidMessageStars: nil,
+                    sendPaidMessageDiamonds: nil,
                     maxLength: Int(self.context.userLimits.maxCaptionLength),
                     queryTypes: [.mention, .hashtag],
                     alwaysDarkWhenHasText: false,

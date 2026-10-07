@@ -128,72 +128,72 @@ public class ChatMessageMediaBubbleContentNode: ChatMessageBubbleContentNode {
             }
             if selectedMedia == nil {
                 for media in item.message.media {
-                    if let telegramImage = media as? IosappMediaImage {
-                        selectedMedia = telegramImage
-                        if shouldDownloadMediaAutomatically(settings: item.controllerInteraction.automaticMediaDownloadSettings, peerType: item.associatedData.automaticDownloadPeerType, networkType: item.associatedData.automaticDownloadNetworkType, authorPeerId: item.message.author?.id, contactsPeerIds: item.associatedData.contactsPeerIds, media: telegramImage) {
+                    if let ansibleImage = media as? IosappMediaImage {
+                        selectedMedia = ansibleImage
+                        if shouldDownloadMediaAutomatically(settings: item.controllerInteraction.automaticMediaDownloadSettings, peerType: item.associatedData.automaticDownloadPeerType, networkType: item.associatedData.automaticDownloadNetworkType, authorPeerId: item.message.author?.id, contactsPeerIds: item.associatedData.contactsPeerIds, media: ansibleImage) {
                             automaticDownload = .full
                         }
                         
-                        if let _ = telegramImage.video {
+                        if let _ = ansibleImage.video {
                             automaticPlayback = true
                             isLivePhoto = true
                         }
-                    } else if let telegramStory = media as? IosappMediaStory {
-                        selectedMedia = telegramStory
-                        if let storyMedia = item.message.associatedStories[telegramStory.storyId], case let .item(storyItem) = storyMedia.get(Stories.StoredItem.self), let media = storyItem.media {
-                            if let telegramImage = media as? IosappMediaImage {
-                                if shouldDownloadMediaAutomatically(settings: item.controllerInteraction.automaticMediaDownloadSettings, peerType: item.associatedData.automaticDownloadPeerType, networkType: item.associatedData.automaticDownloadNetworkType, authorPeerId: item.message.author?.id, contactsPeerIds: item.associatedData.contactsPeerIds, media: telegramImage) {
+                    } else if let ansibleStory = media as? IosappMediaStory {
+                        selectedMedia = ansibleStory
+                        if let storyMedia = item.message.associatedStories[ansibleStory.storyId], case let .item(storyItem) = storyMedia.get(Stories.StoredItem.self), let media = storyItem.media {
+                            if let ansibleImage = media as? IosappMediaImage {
+                                if shouldDownloadMediaAutomatically(settings: item.controllerInteraction.automaticMediaDownloadSettings, peerType: item.associatedData.automaticDownloadPeerType, networkType: item.associatedData.automaticDownloadNetworkType, authorPeerId: item.message.author?.id, contactsPeerIds: item.associatedData.contactsPeerIds, media: ansibleImage) {
                                     automaticDownload = .full
                                 }
-                            } else if let telegramFile = media as? IosappMediaFile {
-                                if shouldDownloadMediaAutomatically(settings: item.controllerInteraction.automaticMediaDownloadSettings, peerType: item.associatedData.automaticDownloadPeerType, networkType: item.associatedData.automaticDownloadNetworkType, authorPeerId: item.message.author?.id, contactsPeerIds: item.associatedData.contactsPeerIds, media: telegramFile) {
+                            } else if let ansibleFile = media as? IosappMediaFile {
+                                if shouldDownloadMediaAutomatically(settings: item.controllerInteraction.automaticMediaDownloadSettings, peerType: item.associatedData.automaticDownloadPeerType, networkType: item.associatedData.automaticDownloadNetworkType, authorPeerId: item.message.author?.id, contactsPeerIds: item.associatedData.contactsPeerIds, media: ansibleFile) {
                                     automaticDownload = .full
-                                } else if shouldPredownloadMedia(settings: item.controllerInteraction.automaticMediaDownloadSettings, peerType: item.associatedData.automaticDownloadPeerType, networkType: item.associatedData.automaticDownloadNetworkType, media: telegramFile) {
+                                } else if shouldPredownloadMedia(settings: item.controllerInteraction.automaticMediaDownloadSettings, peerType: item.associatedData.automaticDownloadPeerType, networkType: item.associatedData.automaticDownloadNetworkType, media: ansibleFile) {
                                     automaticDownload = .prefetch
                                 }
                                 
                                 if !item.message.containsSecretMedia {
-                                    if telegramFile.isAnimated && item.context.sharedContext.energyUsageSettings.autoplayGif {
+                                    if ansibleFile.isAnimated && item.context.sharedContext.energyUsageSettings.autoplayGif {
                                         if case .full = automaticDownload {
                                             automaticPlayback = true
                                         } else {
-                                            automaticPlayback = item.context.engine.resources.completedResourcePath(id: EngineMediaResource.Id(telegramFile.resource.id)) != nil
+                                            automaticPlayback = item.context.engine.resources.completedResourcePath(id: EngineMediaResource.Id(ansibleFile.resource.id)) != nil
                                         }
-                                    } else if (telegramFile.isVideo && !telegramFile.isAnimated) && item.context.sharedContext.energyUsageSettings.autoplayVideo {
+                                    } else if (ansibleFile.isVideo && !ansibleFile.isAnimated) && item.context.sharedContext.energyUsageSettings.autoplayVideo {
                                         if case .full = automaticDownload {
                                             automaticPlayback = true
                                         } else {
-                                            automaticPlayback = item.context.engine.resources.completedResourcePath(id: EngineMediaResource.Id(telegramFile.resource.id)) != nil
+                                            automaticPlayback = item.context.engine.resources.completedResourcePath(id: EngineMediaResource.Id(ansibleFile.resource.id)) != nil
                                         }
                                     }
                                 }
                                 contentMode = .aspectFill
                             }
                         }
-                    } else if let telegramFile = media as? IosappMediaFile {
-                        selectedMedia = telegramFile
-                        if shouldDownloadMediaAutomatically(settings: item.controllerInteraction.automaticMediaDownloadSettings, peerType: item.associatedData.automaticDownloadPeerType, networkType: item.associatedData.automaticDownloadNetworkType, authorPeerId: item.message.author?.id, contactsPeerIds: item.associatedData.contactsPeerIds, media: telegramFile) {
+                    } else if let ansibleFile = media as? IosappMediaFile {
+                        selectedMedia = ansibleFile
+                        if shouldDownloadMediaAutomatically(settings: item.controllerInteraction.automaticMediaDownloadSettings, peerType: item.associatedData.automaticDownloadPeerType, networkType: item.associatedData.automaticDownloadNetworkType, authorPeerId: item.message.author?.id, contactsPeerIds: item.associatedData.contactsPeerIds, media: ansibleFile) {
                             automaticDownload = .full
-                        } else if shouldPredownloadMedia(settings: item.controllerInteraction.automaticMediaDownloadSettings, peerType: item.associatedData.automaticDownloadPeerType, networkType: item.associatedData.automaticDownloadNetworkType, media: telegramFile) {
+                        } else if shouldPredownloadMedia(settings: item.controllerInteraction.automaticMediaDownloadSettings, peerType: item.associatedData.automaticDownloadPeerType, networkType: item.associatedData.automaticDownloadNetworkType, media: ansibleFile) {
                             automaticDownload = .prefetch
                         }
                         
                         if !item.message.containsSecretMedia {
-                            if telegramFile.isAnimated && item.context.sharedContext.energyUsageSettings.autoplayGif {
+                            if ansibleFile.isAnimated && item.context.sharedContext.energyUsageSettings.autoplayGif {
                                 if case .full = automaticDownload {
                                     automaticPlayback = true
                                 } else {
-                                    automaticPlayback = item.context.engine.resources.completedResourcePath(id: EngineMediaResource.Id(telegramFile.resource.id)) != nil
+                                    automaticPlayback = item.context.engine.resources.completedResourcePath(id: EngineMediaResource.Id(ansibleFile.resource.id)) != nil
                                 }
-                            } else if (telegramFile.isVideo && !telegramFile.isAnimated) && item.context.sharedContext.energyUsageSettings.autoplayVideo {
-                                if let _ = telegramFile.videoCover {
+                            } else if (ansibleFile.isVideo && !ansibleFile.isAnimated) && item.context.sharedContext.energyUsageSettings.autoplayVideo {
+                                if let _ = ansibleFile.videoCover {
                                     automaticPlayback = false
-                                } else if NativeVideoContent.isHLSVideo(file: telegramFile) {
+                                } else if NativeVideoContent.isHLSVideo(file: ansibleFile) {
                                     automaticPlayback = true
                                 } else if case .full = automaticDownload {
                                     automaticPlayback = true
                                 } else {
-                                    automaticPlayback = item.context.engine.resources.completedResourcePath(id: EngineMediaResource.Id(telegramFile.resource.id)) != nil
+                                    automaticPlayback = item.context.engine.resources.completedResourcePath(id: EngineMediaResource.Id(ansibleFile.resource.id)) != nil
                                 }
                             }
                         }
@@ -215,31 +215,31 @@ public class ChatMessageMediaBubbleContentNode: ChatMessageBubbleContentNode {
                             automaticDownload = .full
                         }
                     } else if let poll = media as? IosappMediaPoll {
-                        if let telegramImage = poll.attachedMedia as? IosappMediaImage {
-                            selectedMedia = telegramImage
-                            if shouldDownloadMediaAutomatically(settings: item.controllerInteraction.automaticMediaDownloadSettings, peerType: item.associatedData.automaticDownloadPeerType, networkType: item.associatedData.automaticDownloadNetworkType, authorPeerId: item.message.author?.id, contactsPeerIds: item.associatedData.contactsPeerIds, media: telegramImage) {
+                        if let ansibleImage = poll.attachedMedia as? IosappMediaImage {
+                            selectedMedia = ansibleImage
+                            if shouldDownloadMediaAutomatically(settings: item.controllerInteraction.automaticMediaDownloadSettings, peerType: item.associatedData.automaticDownloadPeerType, networkType: item.associatedData.automaticDownloadNetworkType, authorPeerId: item.message.author?.id, contactsPeerIds: item.associatedData.contactsPeerIds, media: ansibleImage) {
                                 automaticDownload = .full
                             }
                             
-                            if let _ = telegramImage.video {
+                            if let _ = ansibleImage.video {
                                 automaticPlayback = true
                             }
-                        } else if let telegramFile = poll.attachedMedia as? IosappMediaFile {
-                            selectedMedia = telegramFile
-                            if shouldDownloadMediaAutomatically(settings: item.controllerInteraction.automaticMediaDownloadSettings, peerType: item.associatedData.automaticDownloadPeerType, networkType: item.associatedData.automaticDownloadNetworkType, authorPeerId: item.message.author?.id, contactsPeerIds: item.associatedData.contactsPeerIds, media: telegramFile) {
+                        } else if let ansibleFile = poll.attachedMedia as? IosappMediaFile {
+                            selectedMedia = ansibleFile
+                            if shouldDownloadMediaAutomatically(settings: item.controllerInteraction.automaticMediaDownloadSettings, peerType: item.associatedData.automaticDownloadPeerType, networkType: item.associatedData.automaticDownloadNetworkType, authorPeerId: item.message.author?.id, contactsPeerIds: item.associatedData.contactsPeerIds, media: ansibleFile) {
                                 automaticDownload = .full
-                            } else if shouldPredownloadMedia(settings: item.controllerInteraction.automaticMediaDownloadSettings, peerType: item.associatedData.automaticDownloadPeerType, networkType: item.associatedData.automaticDownloadNetworkType, media: telegramFile) {
+                            } else if shouldPredownloadMedia(settings: item.controllerInteraction.automaticMediaDownloadSettings, peerType: item.associatedData.automaticDownloadPeerType, networkType: item.associatedData.automaticDownloadNetworkType, media: ansibleFile) {
                                 automaticDownload = .prefetch
                             }
-                            if (telegramFile.isVideo && !telegramFile.isAnimated) && item.context.sharedContext.energyUsageSettings.autoplayVideo {
-                                if let _ = telegramFile.videoCover {
+                            if (ansibleFile.isVideo && !ansibleFile.isAnimated) && item.context.sharedContext.energyUsageSettings.autoplayVideo {
+                                if let _ = ansibleFile.videoCover {
                                     automaticPlayback = false
-                                } else if NativeVideoContent.isHLSVideo(file: telegramFile) {
+                                } else if NativeVideoContent.isHLSVideo(file: ansibleFile) {
                                     automaticPlayback = true
                                 } else if case .full = automaticDownload {
                                     automaticPlayback = true
                                 } else {
-                                    automaticPlayback = item.context.engine.resources.completedResourcePath(id: EngineMediaResource.Id(telegramFile.resource.id)) != nil
+                                    automaticPlayback = item.context.engine.resources.completedResourcePath(id: EngineMediaResource.Id(ansibleFile.resource.id)) != nil
                                 }
                             }
                         }
@@ -248,33 +248,33 @@ public class ChatMessageMediaBubbleContentNode: ChatMessageBubbleContentNode {
             }
                         
             if let extendedMedia, case let .full(media) = extendedMedia {
-                if let telegramImage = media as? IosappMediaImage {
-                    if shouldDownloadMediaAutomatically(settings: item.controllerInteraction.automaticMediaDownloadSettings, peerType: item.associatedData.automaticDownloadPeerType, networkType: item.associatedData.automaticDownloadNetworkType, authorPeerId: item.message.author?.id, contactsPeerIds: item.associatedData.contactsPeerIds, media: telegramImage) {
+                if let ansibleImage = media as? IosappMediaImage {
+                    if shouldDownloadMediaAutomatically(settings: item.controllerInteraction.automaticMediaDownloadSettings, peerType: item.associatedData.automaticDownloadPeerType, networkType: item.associatedData.automaticDownloadNetworkType, authorPeerId: item.message.author?.id, contactsPeerIds: item.associatedData.contactsPeerIds, media: ansibleImage) {
                         automaticDownload = .full
                     }
-                } else if let telegramFile = media as? IosappMediaFile {
-                    if shouldDownloadMediaAutomatically(settings: item.controllerInteraction.automaticMediaDownloadSettings, peerType: item.associatedData.automaticDownloadPeerType, networkType: item.associatedData.automaticDownloadNetworkType, authorPeerId: item.message.author?.id, contactsPeerIds: item.associatedData.contactsPeerIds, media: telegramFile) {
+                } else if let ansibleFile = media as? IosappMediaFile {
+                    if shouldDownloadMediaAutomatically(settings: item.controllerInteraction.automaticMediaDownloadSettings, peerType: item.associatedData.automaticDownloadPeerType, networkType: item.associatedData.automaticDownloadNetworkType, authorPeerId: item.message.author?.id, contactsPeerIds: item.associatedData.contactsPeerIds, media: ansibleFile) {
                         automaticDownload = .full
-                    } else if shouldPredownloadMedia(settings: item.controllerInteraction.automaticMediaDownloadSettings, peerType: item.associatedData.automaticDownloadPeerType, networkType: item.associatedData.automaticDownloadNetworkType, media: telegramFile) {
+                    } else if shouldPredownloadMedia(settings: item.controllerInteraction.automaticMediaDownloadSettings, peerType: item.associatedData.automaticDownloadPeerType, networkType: item.associatedData.automaticDownloadNetworkType, media: ansibleFile) {
                         automaticDownload = .prefetch
                     }
                     
                     if !item.message.containsSecretMedia {
-                        if telegramFile.isAnimated && item.context.sharedContext.energyUsageSettings.autoplayGif {
+                        if ansibleFile.isAnimated && item.context.sharedContext.energyUsageSettings.autoplayGif {
                             if case .full = automaticDownload {
                                 automaticPlayback = true
                             } else {
-                                automaticPlayback = item.context.engine.resources.completedResourcePath(id: EngineMediaResource.Id(telegramFile.resource.id)) != nil
+                                automaticPlayback = item.context.engine.resources.completedResourcePath(id: EngineMediaResource.Id(ansibleFile.resource.id)) != nil
                             }
-                        } else if (telegramFile.isVideo && !telegramFile.isAnimated) && item.context.sharedContext.energyUsageSettings.autoplayVideo {
-                            if let _ = telegramFile.videoCover {
+                        } else if (ansibleFile.isVideo && !ansibleFile.isAnimated) && item.context.sharedContext.energyUsageSettings.autoplayVideo {
+                            if let _ = ansibleFile.videoCover {
                                 automaticPlayback = false
-                            } else if NativeVideoContent.isHLSVideo(file: telegramFile) {
+                            } else if NativeVideoContent.isHLSVideo(file: ansibleFile) {
                                 automaticPlayback = true
                             } else if case .full = automaticDownload {
                                 automaticPlayback = true
                             } else {
-                                automaticPlayback = item.context.engine.resources.completedResourcePath(id: EngineMediaResource.Id(telegramFile.resource.id)) != nil
+                                automaticPlayback = item.context.engine.resources.completedResourcePath(id: EngineMediaResource.Id(ansibleFile.resource.id)) != nil
                             }
                         }
                     }
@@ -349,7 +349,7 @@ public class ChatMessageMediaBubbleContentNode: ChatMessageBubbleContentNode {
             }
             var viewCount: Int?
             var dateReplies = 0
-            var starsCount: Int64?
+            var diamondsCount: Int64?
             var dateReactionsAndPeers = mergedMessageReactionsAndPeers(accountPeerId: item.context.account.peerId, accountPeer: item.associatedData.accountPeer, message: item.message)
             if item.message.isRestricted(platform: "ios", contentSettings: item.context.currentContentSettings.with { $0 }) {
                 dateReactionsAndPeers = ([], [])
@@ -366,8 +366,8 @@ public class ChatMessageMediaBubbleContentNode: ChatMessageBubbleContentNode {
                     if let channel = item.message.peers[item.message.id.peerId] as? IosappChannel, case .group = channel.info {
                         dateReplies = Int(attribute.count)
                     }
-                } else if let attribute = attribute as? PaidStarsMessageAttribute, item.message.id.peerId.namespace == Namespaces.Peer.CloudChannel {
-                    starsCount = attribute.stars.value
+                } else if let attribute = attribute as? PaidDiamondsMessageAttribute, item.message.id.peerId.namespace == Namespaces.Peer.CloudChannel {
+                    diamondsCount = attribute.stars.value
                 }
             }
             
@@ -418,7 +418,7 @@ public class ChatMessageMediaBubbleContentNode: ChatMessageBubbleContentNode {
                     dateReactions: dateReactionsAndPeers.reactions,
                     dateReactionPeers: dateReactionsAndPeers.peers,
                     dateReplies: dateReplies,
-                    starsCount: starsCount,
+                    diamondsCount: diamondsCount,
                     isPinned: item.message.tags.contains(.pinned) && !item.associatedData.isInPinnedListMode && !isReplyThread,
                     dateText: dateText
                 )

@@ -68,7 +68,7 @@ public extension DatePickerTheme {
     }
 }
 
-private let telegramReleaseDate = Date(timeIntervalSince1970: 1376438400.0)
+private let ansibleReleaseDate = Date(timeIntervalSince1970: 1376438400.0)
 private let upperLimitDate = Date(timeIntervalSince1970: Double(Int32.max - 1))
 
 private let controlFont = Font.semibold(17.0)
@@ -399,7 +399,7 @@ public final class DatePickerNode: ASDisplayNode {
         self.dateTimeFormat = dateTimeFormat
         self.hasValueRow = hasValueRow
         
-        self.state = State(minDate: telegramReleaseDate, maxDate: upperLimitDate, date: nil, displayingMonthSelection: false, displayingDateSelection: false, displayingTimeSelection: false, selectedMonth: monthForDate(Date()))
+        self.state = State(minDate: ansibleReleaseDate, maxDate: upperLimitDate, date: nil, displayingMonthSelection: false, displayingDateSelection: false, displayingTimeSelection: false, selectedMonth: monthForDate(Date()))
         self.title = title
         
         let initialDate: Date

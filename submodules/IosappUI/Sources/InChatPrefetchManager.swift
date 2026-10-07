@@ -79,16 +79,16 @@ final class InChatPrefetchManager {
             
             var automaticDownload: InteractiveMediaNodeAutodownloadMode = .none
             
-            if let telegramImage = media as? IosappMediaImage {
-                mediaResource = largestRepresentationForPhoto(telegramImage)?.resource
-                if shouldDownloadMediaAutomatically(settings: self.settings, peerType: options.peerType, networkType: options.networkType, authorPeerId: nil, contactsPeerIds: [], media: telegramImage) {
+            if let ansibleImage = media as? IosappMediaImage {
+                mediaResource = largestRepresentationForPhoto(ansibleImage)?.resource
+                if shouldDownloadMediaAutomatically(settings: self.settings, peerType: options.peerType, networkType: options.networkType, authorPeerId: nil, contactsPeerIds: [], media: ansibleImage) {
                     automaticDownload = .full
                 }
-            } else if let telegramFile = media as? IosappMediaFile {
-                mediaResource = telegramFile.resource
-                if shouldDownloadMediaAutomatically(settings: self.settings, peerType: options.peerType, networkType: options.networkType, authorPeerId: nil, contactsPeerIds: [], media: telegramFile) {
+            } else if let ansibleFile = media as? IosappMediaFile {
+                mediaResource = ansibleFile.resource
+                if shouldDownloadMediaAutomatically(settings: self.settings, peerType: options.peerType, networkType: options.networkType, authorPeerId: nil, contactsPeerIds: [], media: ansibleFile) {
                     automaticDownload = .full
-                } else if shouldPredownloadMedia(settings: self.settings, peerType: options.peerType, networkType: options.networkType, media: telegramFile) {
+                } else if shouldPredownloadMedia(settings: self.settings, peerType: options.peerType, networkType: options.networkType, media: ansibleFile) {
                     automaticDownload = .prefetch
                 }
             }

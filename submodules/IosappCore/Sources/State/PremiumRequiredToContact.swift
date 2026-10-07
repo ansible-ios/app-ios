@@ -18,14 +18,14 @@ internal func _internal_updateIsPremiumRequiredToContact(account: Account, peerI
             if let peer = transaction.getPeer(id), let inputUser = apiInputUser(peer) {
                 if peer.isPremium {
                     if let cachedData = transaction.getPeerCachedData(peerId: id) as? CachedUserData {
-                        if let _ = cachedData.sendPaidMessageStars {
+                        if let _ = cachedData.sendPaidMessageDiamonds {
                             inputUsers.append(inputUser)
                             ids.append(id)
                         } else if cachedData.flags.contains(.premiumRequired) {
                             inputUsers.append(inputUser)
                             ids.append(id)
                         }
-                    } else if let peer = peer as? IosappUser, peer.flags.contains(.requirePremium) || peer.flags.contains(.requireStars), !peer.flags.contains(.mutualContact) {
+                    } else if let peer = peer as? IosappUser, peer.flags.contains(.requirePremium) || peer.flags.contains(.requireDiamonds), !peer.flags.contains(.mutualContact) {
                         inputUsers.append(inputUser)
                         ids.append(id)
                     }
@@ -45,22 +45,22 @@ internal func _internal_updateIsPremiumRequiredToContact(account: Account, peerI
                         transaction.updatePeerCachedData(peerIds: Set([peerId]), update: { _, cachedData in
                             let data = cachedData as? CachedUserData ?? CachedUserData()
                             var flags = data.flags
-                            var sendPaidMessageStars = data.sendPaidMessageStars
+                            var sendPaidMessageDiamonds = data.sendPaidMessageDiamonds
                             switch req {
                             case .requirementToContactEmpty:
                                 flags.remove(.premiumRequired)
-                                sendPaidMessageStars = nil
+                                sendPaidMessageDiamonds = nil
                             case .requirementToContactPremium:
                                 flags.insert(.premiumRequired)
-                                sendPaidMessageStars = nil
+                                sendPaidMessageDiamonds = nil
                                 requirements[peerId] = .premium
                             case let .requirementToContactPaidMessages(requirementToContactPaidMessagesData):
                                 let starsAmount = requirementToContactPaidMessagesData.starsAmount
                                 flags.remove(.premiumRequired)
-                                sendPaidMessageStars = StarsAmount(value: starsAmount, nanos: 0)
+                                sendPaidMessageDiamonds = StarsAmount(value: starsAmount, nanos: 0)
                                 requirements[peerId] = .stars(StarsAmount(value: starsAmount, nanos: 0))
                             }
-                            return data.withUpdatedFlags(flags).withUpdatedSendPaidMessageStars(sendPaidMessageStars)
+                            return data.withUpdatedFlags(flags).withUpdatedSendPaidMessageDiamonds(sendPaidMessageDiamonds)
                         })
                     }
                     return requirements

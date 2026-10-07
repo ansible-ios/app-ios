@@ -17,7 +17,7 @@ import Markdown
 import BalancedTextComponent
 import TextFormat
 import IosappStringFormatting
-import StarsAvatarComponent
+import DiamondsAvatarComponent
 import PlainButtonComponent
 import TooltipUI
 import GiftAnimationComponent
@@ -74,11 +74,11 @@ private final class GiftValueSheetContent: CombinedComponent {
         private var disposable: Disposable?
         var initialized = false
         
-        var starGiftsMap: [Int64: StarGift.Gift] = [:]
+        var diamondGiftsMap: [Int64: StarGift.Gift] = [:]
         
-        var cachedStarImage: (UIImage, PresentationTheme)?
-        var cachedSmallStarImage: (UIImage, PresentationTheme)?
-        var cachedSubtitleStarImage: (UIImage, PresentationTheme)?
+        var cachedDiamondImage: (UIImage, PresentationTheme)?
+        var cachedSmallDiamondImage: (UIImage, PresentationTheme)?
+        var cachedSubtitleDiamondImage: (UIImage, PresentationTheme)?
         var cachedTonImage: (UIImage, PresentationTheme)?
         
         var cachedChevronImage: (UIImage, PresentationTheme)?
@@ -95,18 +95,18 @@ private final class GiftValueSheetContent: CombinedComponent {
             
             super.init()
             
-            self.disposable = (context.engine.payments.cachedStarGifts()
+            self.disposable = (context.engine.payments.cachedDiamondGifts()
             |> deliverOnMainQueue).startStrict(next: { [weak self] starGifts in
                 if let strongSelf = self {
-                    var starGiftsMap: [Int64: StarGift.Gift] = [:]
+                    var diamondGiftsMap: [Int64: StarGift.Gift] = [:]
                     if let starGifts {
                         for gift in starGifts {
                             if case let .generic(gift) = gift {
-                                starGiftsMap[gift.id] = gift
+                                diamondGiftsMap[gift.id] = gift
                             }
                         }
                     }
-                    strongSelf.starGiftsMap = starGiftsMap
+                    strongSelf.diamondGiftsMap = diamondGiftsMap
                     strongSelf.updated(transition: .immediate)
                 }
             })
@@ -183,7 +183,7 @@ private final class GiftValueSheetContent: CombinedComponent {
         
         let table = Child(TableComponent.self)
         
-        let telegramSaleButton = Child(PlainButtonComponent.self)
+        let ansibleSaleButton = Child(PlainButtonComponent.self)
         let fragmentSaleButton = Child(PlainButtonComponent.self)
         
         let giftCompositionExternalState = GiftCompositionComponent.ExternalState()
@@ -220,7 +220,7 @@ private final class GiftValueSheetContent: CombinedComponent {
                 giftCollectionTitle = gift.title
                 giftTitle = "\(gift.title) #\(formatCollectibleNumber(gift.number, dateTimeFormat: dateTimeFormat))"
                 
-                if let gift = state.starGiftsMap[gift.giftId] {
+                if let gift = state.diamondGiftsMap[gift.giftId] {
                     giftIconSubject = .starGift(gift: gift, price: "")
                     genericGift = gift
                 }
@@ -244,7 +244,7 @@ private final class GiftValueSheetContent: CombinedComponent {
                         subject: headerSubject,
                         animationOffset: nil,
                         animationScale: nil,
-                        displayAnimationStars: false,
+                        displayAnimationDiamonds: false,
                         externalState: giftCompositionExternalState,
                         requestUpdate: { [weak state] _ in
                             state?.updated()
@@ -299,8 +299,8 @@ private final class GiftValueSheetContent: CombinedComponent {
             }
             if !descriptionText.isEmpty {
                 let linkColor = theme.actionSheet.controlAccentColor
-                if state.cachedSmallStarImage == nil || state.cachedSmallStarImage?.1 !== environment.theme {
-                    state.cachedSmallStarImage = (generateTintedImage(image: UIImage(bundleImageName: "Premium/Stars/ButtonStar"), color: .white)!, theme)
+                if state.cachedSmallDiamondImage == nil || state.cachedSmallDiamondImage?.1 !== environment.theme {
+                    state.cachedSmallDiamondImage = (generateTintedImage(image: UIImage(bundleImageName: "Premium/Stars/ButtonStar"), color: .white)!, theme)
                 }
                 if state.cachedChevronImage == nil || state.cachedChevronImage?.1 !== environment.theme {
                     state.cachedChevronImage = (generateTintedImage(image: UIImage(bundleImageName: "Settings/TextArrowRight"), color: linkColor)!, theme)
@@ -316,9 +316,9 @@ private final class GiftValueSheetContent: CombinedComponent {
                 
                 descriptionText = descriptionText.replacingOccurrences(of: " >]", with: "\u{00A0}>]")
                 let attributedString = parseMarkdownIntoAttributedString(descriptionText, attributes: markdownAttributes, textAlignment: .center).mutableCopy() as! NSMutableAttributedString
-                if let range = attributedString.string.range(of: "*"), let starImage = state.cachedSmallStarImage?.0 {
+                if let range = attributedString.string.range(of: "*"), let diamondImage = state.cachedSmallDiamondImage?.0 {
                     attributedString.addAttribute(.font, value: Font.regular(13.0), range: NSRange(range, in: attributedString.string))
-                    attributedString.addAttribute(.attachment, value: starImage, range: NSRange(range, in: attributedString.string))
+                    attributedString.addAttribute(.attachment, value: diamondImage, range: NSRange(range, in: attributedString.string))
                     attributedString.addAttribute(.baselineOffset, value: 1.0, range: NSRange(range, in: attributedString.string))
                 }
                 if let range = attributedString.string.range(of: ">"), let chevronImage = state.cachedChevronImage?.0 {
@@ -535,7 +535,7 @@ private final class GiftValueSheetContent: CombinedComponent {
             }
                                       
             if let listedCount = component.valueInfo.listedCount, let giftIconSubject {
-                let telegramSaleButton = telegramSaleButton.update(
+                let ansibleSaleButton = ansibleSaleButton.update(
                     component: PlainButtonComponent(
                         content: AnyComponent(
                             HStack([
@@ -575,10 +575,10 @@ private final class GiftValueSheetContent: CombinedComponent {
                     availableSize: context.availableSize,
                     transition: .immediate
                 )
-                context.add(telegramSaleButton
-                    .position(CGPoint(x: context.availableSize.width / 2.0, y: originY + telegramSaleButton.size.height / 2.0))
+                context.add(ansibleSaleButton
+                    .position(CGPoint(x: context.availableSize.width / 2.0, y: originY + ansibleSaleButton.size.height / 2.0))
                 )
-                originY += telegramSaleButton.size.height
+                originY += ansibleSaleButton.size.height
                 originY += 12.0
             }
             

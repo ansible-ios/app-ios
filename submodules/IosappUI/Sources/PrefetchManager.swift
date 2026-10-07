@@ -140,16 +140,16 @@ private final class PrefetchManagerInnerImpl {
                     }
                     var mediaResource: EngineMediaResource?
                     
-                    if let telegramImage = mediaItem.media.media as? IosappMediaImage {
-                        mediaResource = (largestRepresentationForPhoto(telegramImage)?.resource).flatMap(EngineMediaResource.init)
-                        if shouldDownloadMediaAutomatically(settings: automaticDownloadSettings, peerType: peerType, networkType: networkType, authorPeerId: nil, contactsPeerIds: [], media: telegramImage) {
+                    if let ansibleImage = mediaItem.media.media as? IosappMediaImage {
+                        mediaResource = (largestRepresentationForPhoto(ansibleImage)?.resource).flatMap(EngineMediaResource.init)
+                        if shouldDownloadMediaAutomatically(settings: automaticDownloadSettings, peerType: peerType, networkType: networkType, authorPeerId: nil, contactsPeerIds: [], media: ansibleImage) {
                             automaticDownload = .full
                         }
-                    } else if let telegramFile = mediaItem.media.media as? IosappMediaFile {
-                        mediaResource = EngineMediaResource(telegramFile.resource)
-                        if shouldDownloadMediaAutomatically(settings: automaticDownloadSettings, peerType: peerType, networkType: networkType, authorPeerId: nil, contactsPeerIds: [], media: telegramFile) {
+                    } else if let ansibleFile = mediaItem.media.media as? IosappMediaFile {
+                        mediaResource = EngineMediaResource(ansibleFile.resource)
+                        if shouldDownloadMediaAutomatically(settings: automaticDownloadSettings, peerType: peerType, networkType: networkType, authorPeerId: nil, contactsPeerIds: [], media: ansibleFile) {
                             automaticDownload = .full
-                        } else if shouldPredownloadMedia(settings: automaticDownloadSettings, peerType: peerType, networkType: networkType, media: telegramFile) {
+                        } else if shouldPredownloadMedia(settings: automaticDownloadSettings, peerType: peerType, networkType: networkType, media: ansibleFile) {
                             automaticDownload = .prefetch
                         }
                     }

@@ -14,7 +14,7 @@ import Foundation
 public indirect enum SuggestedPostPrice: Codable, Equatable, Hashable {
 
     /// Describes price of a suggested post in Iosapp Stars
-    case suggestedPostPriceStar(SuggestedPostPriceStar)
+    case suggestedPostPriceDiamond(SuggestedPostPriceDiamond)
 
     /// Describes price of a suggested post in Toncoins
     case suggestedPostPriceTon(SuggestedPostPriceTon)
@@ -23,7 +23,7 @@ public indirect enum SuggestedPostPrice: Codable, Equatable, Hashable {
     case unsupported
 
     private enum Kind: String, Codable {
-        case suggestedPostPriceStar
+        case suggestedPostPriceDiamond
         case suggestedPostPriceTon
     }
 
@@ -35,9 +35,9 @@ public indirect enum SuggestedPostPrice: Codable, Equatable, Hashable {
             return
         }
         switch type {
-        case .suggestedPostPriceStar:
-            let value = try SuggestedPostPriceStar(from: decoder)
-            self = .suggestedPostPriceStar(value)
+        case .suggestedPostPriceDiamond:
+            let value = try SuggestedPostPriceDiamond(from: decoder)
+            self = .suggestedPostPriceDiamond(value)
         case .suggestedPostPriceTon:
             let value = try SuggestedPostPriceTon(from: decoder)
             self = .suggestedPostPriceTon(value)
@@ -47,8 +47,8 @@ public indirect enum SuggestedPostPrice: Codable, Equatable, Hashable {
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: DtoCodingKeys.self)
         switch self {
-        case .suggestedPostPriceStar(let value):
-            try container.encode(Kind.suggestedPostPriceStar, forKey: .type)
+        case .suggestedPostPriceDiamond(let value):
+            try container.encode(Kind.suggestedPostPriceDiamond, forKey: .type)
             try value.encode(to: encoder)
         case .suggestedPostPriceTon(let value):
             try container.encode(Kind.suggestedPostPriceTon, forKey: .type)
@@ -60,14 +60,14 @@ public indirect enum SuggestedPostPrice: Codable, Equatable, Hashable {
 }
 
 /// Describes price of a suggested post in Iosapp Stars
-public struct SuggestedPostPriceStar: Codable, Equatable, Hashable {
+public struct SuggestedPostPriceDiamond: Codable, Equatable, Hashable {
 
     /// The Iosapp Star amount expected to be paid for the post; getOption("suggested_post_star_count_min")-getOption("suggested_post_star_count_max")
-    public let starCount: Int64
+    public let diamondCount: Int64
 
 
-    public init(starCount: Int64) {
-        self.starCount = starCount
+    public init(diamondCount: Int64) {
+        self.diamondCount = diamondCount
     }
 }
 

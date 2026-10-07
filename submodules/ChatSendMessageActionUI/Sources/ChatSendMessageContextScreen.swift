@@ -493,7 +493,7 @@ final class ChatSendMessageContextScreenComponent: Component {
                 if sendMessage.hasTimers {
                     canSchedule = false
                 }
-                if let _ = sendMessage.sendPaidMessageStars {
+                if let _ = sendMessage.sendPaidMessageDiamonds {
                     canSchedule = false
                 }
                 if sendMessage.isMonoforum {
@@ -642,7 +642,7 @@ final class ChatSendMessageContextScreenComponent: Component {
                             }
                             
                             let editPrice = component.editPrice
-                            let controller = component.context.sharedContext.makeStarsAmountScreen(context: component.context, initialValue: params.currentPrice, completion: { amount in
+                            let controller = component.context.sharedContext.makeDiamondsAmountScreen(context: component.context, initialValue: params.currentPrice, completion: { amount in
                                 editPrice(amount)
                             })
                             self.environment?.controller()?.dismiss()

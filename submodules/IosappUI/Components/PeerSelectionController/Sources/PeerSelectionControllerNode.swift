@@ -790,7 +790,7 @@ final class PeerSelectionControllerNode: ASDisplayNode {
                         canMakePaidContent: false,
                         currentPrice: nil,
                         hasTimers: false,
-                        sendPaidMessageStars: nil,
+                        sendPaidMessageDiamonds: nil,
                         isMonoforum: false
                     )),
                     hasEntityKeyboard: hasEntityKeyboard,
@@ -852,7 +852,7 @@ final class PeerSelectionControllerNode: ASDisplayNode {
         }, openPremiumGift: {
         }, openSuggestPost: { _, _ in
         }, openPremiumRequiredForMessaging: {
-        }, openStarsPurchase: { _ in
+        }, openDiamondsPurchase: { _ in
         }, openMessagePayment: {
         }, openBoostToUnrestrict: {
         }, updateRecordingTrimRange: { _, _, _, _ in

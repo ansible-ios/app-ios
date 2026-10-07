@@ -1389,7 +1389,7 @@ final class AttachmentPanel: ASDisplayNode, ASScrollViewDelegate, ASGestureRecog
                             canMakePaidContent: canMakePaidContent,
                             currentPrice: currentPrice,
                             hasTimers: hasTimers,
-                            sendPaidMessageStars: strongSelf.presentationInterfaceState.sendPaidMessageStars,
+                            sendPaidMessageDiamonds: strongSelf.presentationInterfaceState.sendPaidMessageDiamonds,
                             isMonoforum: strongSelf.presentationInterfaceState.renderedPeer?.peer?.isMonoForum ?? false
                         )),
                         hasEntityKeyboard: hasEntityKeyboard,
@@ -1460,7 +1460,7 @@ final class AttachmentPanel: ASDisplayNode, ASScrollViewDelegate, ASGestureRecog
         }, openPremiumGift: {
         }, openSuggestPost: { _, _ in
         }, openPremiumRequiredForMessaging: {
-        }, openStarsPurchase: { _ in
+        }, openDiamondsPurchase: { _ in
         }, openMessagePayment: {
         }, openBoostToUnrestrict: {
         }, updateRecordingTrimRange: { _, _, _, _ in
@@ -1571,23 +1571,23 @@ final class AttachmentPanel: ASDisplayNode, ASScrollViewDelegate, ASGestureRecog
             self.peerDisposable = ((self.context.account.viewTracker.peerView(peerId)
             |> map { view -> StarsAmount? in
                 if let data = view.cachedData as? CachedUserData {
-                    return data.sendPaidMessageStars
+                    return data.sendPaidMessageDiamonds
                 } else if let channel = peerViewMainPeer(view) as? IosappChannel {
                     if channel.isMonoForum {
                         if let linkedMonoforumId = channel.linkedMonoforumId, let mainChannel = view.peers[linkedMonoforumId] as? IosappChannel, mainChannel.hasPermission(.manageDirect) {
                             return nil
-                        } else if let cachedData = view.cachedData as? CachedChannelData, let value = cachedData.sendPaidMessageStars, value == .zero {
+                        } else if let cachedData = view.cachedData as? CachedChannelData, let value = cachedData.sendPaidMessageDiamonds, value == .zero {
                             return nil
                         } else {
-                            return channel.sendPaidMessageStars
+                            return channel.sendPaidMessageDiamonds
                         }
                     } else {
                         if channel.flags.contains(.isCreator) || channel.adminRights != nil {
                             return nil
-                        } else if let cachedData = view.cachedData as? CachedChannelData, let value = cachedData.sendPaidMessageStars {
+                        } else if let cachedData = view.cachedData as? CachedChannelData, let value = cachedData.sendPaidMessageDiamonds {
                             return value == .zero ? nil : value
                         } else {
-                            return channel.sendPaidMessageStars
+                            return channel.sendPaidMessageDiamonds
                         }
                     }
                 } else {
@@ -1599,7 +1599,7 @@ final class AttachmentPanel: ASDisplayNode, ASScrollViewDelegate, ASGestureRecog
                 guard let self else {
                     return
                 }
-                self.updateChatPresentationInterfaceState({ $0.updatedSendPaidMessageStars(amount) })
+                self.updateChatPresentationInterfaceState({ $0.updatedSendPaidMessageDiamonds(amount) })
             }))
         }
     }

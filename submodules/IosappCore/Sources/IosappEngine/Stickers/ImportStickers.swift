@@ -89,7 +89,7 @@ func _internal_uploadSticker(account: Account, peer: Peer, resource: MediaResour
                                 switch media {
                                 case let .messageMediaDocument(messageMediaDocumentData):
                                     let (document, altDocuments) = (messageMediaDocumentData.document, messageMediaDocumentData.altDocuments)
-                                    if let document = document, let file = telegramMediaFileFromApiDocument(document, altDocuments: altDocuments), let uploadedResource = file.resource as? CloudDocumentMediaResource {
+                                    if let document = document, let file = ansibleMediaFileFromApiDocument(document, altDocuments: altDocuments), let uploadedResource = file.resource as? CloudDocumentMediaResource {
                                         account.postbox.mediaBox.copyResourceData(from: resource.id, to: uploadedResource.id, synchronous: true)
                                         if let thumbnail, let previewRepresentation = file.previewRepresentations.first(where: { $0.dimensions == PixelDimensions(width: 320, height: 320) }) {
                                             account.postbox.mediaBox.copyResourceData(from: thumbnail.id, to: previewRepresentation.resource.id, synchronous: true)
@@ -564,7 +564,7 @@ func _internal_getMyStickerSets(account: Account) -> Signal<[(StickerPackCollect
                     }
                     let info = StickerPackCollectionInfo(apiSet: set, namespace: namespace)
                     var firstItem: StickerPackItem?
-                    if let file = telegramMediaFileFromApiDocument(cover, altDocuments: []), let id = file.id {
+                    if let file = ansibleMediaFileFromApiDocument(cover, altDocuments: []), let id = file.id {
                         firstItem = StickerPackItem(index: ItemCollectionItemIndex(index: 0, id: id.id), file: file, indexKeys: [])
                     }
                     infos.append((info, firstItem))
@@ -585,7 +585,7 @@ func _internal_getMyStickerSets(account: Account) -> Signal<[(StickerPackCollect
                     let info = StickerPackCollectionInfo(apiSet: set, namespace: namespace)
                     var firstItem: StickerPackItem?
                     if let apiDocument = documents.first {
-                        if let file = telegramMediaFileFromApiDocument(apiDocument, altDocuments: []), let id = file.id {
+                        if let file = ansibleMediaFileFromApiDocument(apiDocument, altDocuments: []), let id = file.id {
                             firstItem = StickerPackItem(index: ItemCollectionItemIndex(index: 0, id: id.id), file: file, indexKeys: [])
                         }
                     }
@@ -652,7 +652,7 @@ private func parseStickerSetInfoAndItems(apiStickerSet: Api.messages.StickerSet)
         
         var items: [StickerPackItem] = []
         for apiDocument in documents {
-            if let file = telegramMediaFileFromApiDocument(apiDocument, altDocuments: []), let id = file.id {
+            if let file = ansibleMediaFileFromApiDocument(apiDocument, altDocuments: []), let id = file.id {
                 let fileIndexKeys: [MemoryBuffer]
                 if let indexKeys = indexKeysByFile[id] {
                     fileIndexKeys = indexKeys

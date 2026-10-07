@@ -48,7 +48,7 @@ public class ChatMessageStickerItemNode: ChatMessageItemView {
     private var deliveryFailedNode: ChatMessageDeliveryFailedNode?
     private var shareButtonNode: ChatMessageShareButton?
 
-    public var telegramFile: IosappMediaFile?
+    public var ansibleFile: IosappMediaFile?
     private let fetchDisposable = MetaDisposable()
     
     private var suggestedPostInfoNode: ChatMessageSuggestedPostInfoNode?
@@ -302,12 +302,12 @@ public class ChatMessageStickerItemNode: ChatMessageItemView {
         }
         
         for media in item.message.media {
-            if let telegramFile = media as? IosappMediaFile {
-                if self.telegramFile != telegramFile {
-                    let signal = chatMessageSticker(account: item.context.account, userLocation: .peer(item.message.id.peerId), file: telegramFile, small: false, onlyFullSize: self.telegramFile != nil, synchronousLoad: synchronousLoad)
-                    self.telegramFile = telegramFile
+            if let ansibleFile = media as? IosappMediaFile {
+                if self.ansibleFile != ansibleFile {
+                    let signal = chatMessageSticker(account: item.context.account, userLocation: .peer(item.message.id.peerId), file: ansibleFile, small: false, onlyFullSize: self.ansibleFile != nil, synchronousLoad: synchronousLoad)
+                    self.ansibleFile = ansibleFile
                     self.imageNode.setSignal(signal, attemptSynchronously: synchronousLoad)
-                    self.fetchDisposable.set(freeMediaFileInteractiveFetched(account: item.context.account, userLocation: .peer(item.message.id.peerId), fileReference: .message(message: MessageReference(item.message), media: telegramFile)).startStrict())
+                    self.fetchDisposable.set(freeMediaFileInteractiveFetched(account: item.context.account, userLocation: .peer(item.message.id.peerId), fileReference: .message(message: MessageReference(item.message), media: ansibleFile)).startStrict())
                 }
                 
                 break
@@ -421,7 +421,7 @@ public class ChatMessageStickerItemNode: ChatMessageItemView {
     
     override public func asyncLayout() -> (_ item: ChatMessageItem, _ params: ListViewItemLayoutParams, _ mergedTop: ChatMessageMerge, _ mergedBottom: ChatMessageMerge, _ dateHeaderAtBottom: ChatMessageHeaderSpec) -> (ListViewItemNodeLayout, (ListViewItemUpdateAnimation, ListViewItemApply, Bool) -> Void) {
         let displaySize = CGSize(width: 184.0, height: 184.0)
-        let telegramFile = self.telegramFile
+        let ansibleFile = self.ansibleFile
         let layoutConstants = self.layoutConstants
         let imageLayout = self.imageNode.asyncLayout()
         let makeDateAndStatusLayout = self.dateAndStatusNode.asyncLayout()
@@ -445,10 +445,10 @@ public class ChatMessageStickerItemNode: ChatMessageItemView {
             let layoutConstants = chatMessageItemLayoutConstants(layoutConstants, params: params, presentationData: item.presentationData)
             let incoming = item.content.effectivelyIncoming(item.context.account.peerId, associatedData: item.associatedData)
             var imageSize: CGSize = CGSize(width: 100.0, height: 100.0)
-            if let telegramFile = telegramFile {
-                if let dimensions = telegramFile.dimensions {
+            if let ansibleFile = ansibleFile {
+                if let dimensions = ansibleFile.dimensions {
                     imageSize = dimensions.cgSize.aspectFitted(displaySize)
-                } else if let thumbnailSize = telegramFile.previewRepresentations.first?.dimensions {
+                } else if let thumbnailSize = ansibleFile.previewRepresentations.first?.dimensions {
                     imageSize = thumbnailSize.cgSize.aspectFitted(displaySize)
                 }
             }
@@ -617,7 +617,7 @@ public class ChatMessageStickerItemNode: ChatMessageItemView {
             var edited = false
             var viewCount: Int? = nil
             var dateReplies = 0
-            var starsCount: Int64?
+            var diamondsCount: Int64?
             var dateReactionsAndPeers = mergedMessageReactionsAndPeers(accountPeerId: item.context.account.peerId, accountPeer: item.associatedData.accountPeer, message: item.message)
             if item.message.isRestricted(platform: "ios", contentSettings: item.context.currentContentSettings.with { $0 }) {
                 dateReactionsAndPeers = ([], [])
@@ -631,8 +631,8 @@ public class ChatMessageStickerItemNode: ChatMessageItemView {
                     if let channel = item.message.peers[item.message.id.peerId] as? IosappChannel, case .group = channel.info {
                         dateReplies = Int(attribute.count)
                     }
-                } else if let attribute = attribute as? PaidStarsMessageAttribute, item.message.id.peerId.namespace == Namespaces.Peer.CloudChannel {
-                    starsCount = attribute.stars.value
+                } else if let attribute = attribute as? PaidDiamondsMessageAttribute, item.message.id.peerId.namespace == Namespaces.Peer.CloudChannel {
+                    diamondsCount = attribute.stars.value
                 }
             }
             
@@ -664,10 +664,10 @@ public class ChatMessageStickerItemNode: ChatMessageItemView {
                 reactionPeers: dateReactionsAndPeers.peers,
                 displayAllReactionPeers: item.message.id.peerId.namespace == Namespaces.Peer.CloudUser,
                 areReactionsTags: item.message.areReactionsTags(accountPeerId: item.context.account.peerId),
-                areStarReactionsEnabled: item.associatedData.areStarReactionsEnabled,
+                areDiamondReactionsEnabled: item.associatedData.areDiamondReactionsEnabled,
                 messageEffect: item.message.messageEffect(availableMessageEffects: item.associatedData.availableMessageEffects),
                 replyCount: dateReplies,
-                starsCount: starsCount,
+                diamondsCount: diamondsCount,
                 isPinned: item.message.tags.contains(.pinned) && !item.associatedData.isInPinnedListMode && !isReplyThread,
                 hasAutoremove: item.message.isSelfExpiring,
                 canViewReactionList: canViewMessageReactionList(message: EngineMessage(item.message)),
@@ -1057,7 +1057,7 @@ public class ChatMessageStickerItemNode: ChatMessageItemView {
                     imageApply()
                     strongSelf.enableSynchronousImageApply = false
                     
-                    if let immediateThumbnailData = telegramFile?.immediateThumbnailData {
+                    if let immediateThumbnailData = ansibleFile?.immediateThumbnailData {
                         if strongSelf.backgroundNode == nil {
                             if let backgroundNode = item.controllerInteraction.presentationContext.backgroundNode?.makeBubbleBackground(for: .free) {
                                 strongSelf.backgroundNode = backgroundNode

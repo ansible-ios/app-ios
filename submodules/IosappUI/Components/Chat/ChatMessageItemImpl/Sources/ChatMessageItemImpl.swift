@@ -100,7 +100,7 @@ private func messagesShouldBeMerged(accountPeerId: EnginePeer.Id, _ lhs: EngineR
     }
     
     var isPaid = false
-    if let _ = lhs.paidStarsAttribute, let _ = rhs.paidStarsAttribute {
+    if let _ = lhs.paidDiamondsAttribute, let _ = rhs.paidDiamondsAttribute {
         isPaid = true
     }
     
@@ -494,23 +494,23 @@ public final class ChatMessageItemImpl: ChatMessageItem, CustomStringConvertible
         var viewClassName: AnyClass = ChatMessageBubbleItemNode.self
         
         loop: for media in self.message.media {
-            if let telegramFile = media as? IosappMediaFile {
-                if telegramFile.isVideoSticker {
+            if let ansibleFile = media as? IosappMediaFile {
+                if ansibleFile.isVideoSticker {
                     viewClassName = ChatMessageAnimatedStickerItemNode.self
                     break loop
                 }
-                if telegramFile.isAnimatedSticker, let size = telegramFile.size, size > 0 && size <= 128 * 1024 {
+                if ansibleFile.isAnimatedSticker, let size = ansibleFile.size, size > 0 && size <= 128 * 1024 {
                     if self.message.id.peerId.namespace == Namespaces.Peer.SecretChat {
-                        if telegramFile.fileId.namespace == Namespaces.Media.CloudFile {
+                        if ansibleFile.fileId.namespace == Namespaces.Media.CloudFile {
                             var isValidated = false
-                            for attribute in telegramFile.attributes {
+                            for attribute in ansibleFile.attributes {
                                 if case .hintIsValidated = attribute {
                                     isValidated = true
                                     break
                                 }
                             }
                             
-                            inner: for attribute in telegramFile.attributes {
+                            inner: for attribute in ansibleFile.attributes {
                                 if case let .Sticker(_, packReference, _) = attribute {
                                     if case .name = packReference {
                                         viewClassName = ChatMessageAnimatedStickerItemNode.self
@@ -526,10 +526,10 @@ public final class ChatMessageItemImpl: ChatMessageItem, CustomStringConvertible
                     }
                     break loop
                 }
-                for attribute in telegramFile.attributes {
+                for attribute in ansibleFile.attributes {
                     switch attribute {
                         case .Sticker:
-                            if let size = telegramFile.size, size > 0 && size <= 512 * 1024 {
+                            if let size = ansibleFile.size, size > 0 && size <= 512 * 1024 {
                                 viewClassName = ChatMessageStickerItemNode.self
                             }
                             break loop

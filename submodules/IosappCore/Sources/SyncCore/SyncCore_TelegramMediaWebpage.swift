@@ -16,7 +16,7 @@ public enum IosappMediaWebpageAttribute: PostboxCoding, Equatable {
     case unsupported
     case theme(TelegraMediaWebpageThemeAttribute)
     case stickerPack(IosappMediaWebpageStickerPackAttribute)
-    case starGift(IosappMediaWebpageStarGiftAttribute)
+    case starGift(IosappMediaWebpageDiamondGiftAttribute)
     case giftCollection(IosappMediaWebpageGiftCollectionAttribute)
     case giftAuction(IosappMediaWebpageGiftAuctionAttribute)
     case aiTextStyle(IosappMediaWebpageAITextStyleAttribute)
@@ -28,7 +28,7 @@ public enum IosappMediaWebpageAttribute: PostboxCoding, Equatable {
         case IosappMediaWebpageAttributeTypes.stickerPack.rawValue:
             self = .stickerPack(decoder.decodeObjectForKey("a", decoder: { IosappMediaWebpageStickerPackAttribute(decoder: $0) }) as! IosappMediaWebpageStickerPackAttribute)
         case IosappMediaWebpageAttributeTypes.starGift.rawValue:
-            self = .starGift(decoder.decodeObjectForKey("a", decoder: { IosappMediaWebpageStarGiftAttribute(decoder: $0) }) as! IosappMediaWebpageStarGiftAttribute)
+            self = .starGift(decoder.decodeObjectForKey("a", decoder: { IosappMediaWebpageDiamondGiftAttribute(decoder: $0) }) as! IosappMediaWebpageDiamondGiftAttribute)
         case IosappMediaWebpageAttributeTypes.giftCollection.rawValue:
             self = .giftCollection(decoder.decodeObjectForKey("a", decoder: { IosappMediaWebpageGiftCollectionAttribute(decoder: $0) }) as! IosappMediaWebpageGiftCollectionAttribute)
         case IosappMediaWebpageAttributeTypes.giftAuction.rawValue:
@@ -165,8 +165,8 @@ public final class IosappMediaWebpageStickerPackAttribute: PostboxCoding, Equata
     }
 }
 
-public final class IosappMediaWebpageStarGiftAttribute: PostboxCoding, Equatable {
-    public static func == (lhs: IosappMediaWebpageStarGiftAttribute, rhs: IosappMediaWebpageStarGiftAttribute) -> Bool {
+public final class IosappMediaWebpageDiamondGiftAttribute: PostboxCoding, Equatable {
+    public static func == (lhs: IosappMediaWebpageDiamondGiftAttribute, rhs: IosappMediaWebpageDiamondGiftAttribute) -> Bool {
         if lhs.gift != rhs.gift {
             return false
         }

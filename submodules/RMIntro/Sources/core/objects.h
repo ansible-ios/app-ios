@@ -66,7 +66,7 @@ typedef struct {
     int datasize;
     int round_count;
     GLenum triangle_mode;
-    int is_star;
+    int is_diamond;
 } ConstParams;
 
 typedef struct {

@@ -514,7 +514,7 @@ public final class ChatSendGroupMediaMessageContextPreview: UIView, ChatSendMess
         }, updateChatLocationThread: { _, _ in
         }, requestToggleTodoMessageItem: { _, _, _ in
         }, displayTodoToggleUnavailable: { _ in
-        }, openStarsPurchase: { _ in
+        }, openDiamondsPurchase: { _ in
         }, openRankInfo: { _, _, _ in
         }, openSetPeerAvatar: {
         }, displayPollRestrictedToast: { _ in
@@ -530,7 +530,7 @@ public final class ChatSendGroupMediaMessageContextPreview: UIView, ChatSendMess
             availableMessageEffects: nil,
             savedMessageTags: nil,
             defaultReaction: nil,
-            areStarReactionsEnabled: false,
+            areDiamondReactionsEnabled: false,
             isPremium: false,
             accountPeer: nil
         )

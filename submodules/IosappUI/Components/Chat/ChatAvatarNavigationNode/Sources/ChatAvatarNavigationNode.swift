@@ -33,7 +33,7 @@ public final class ChatAvatarNavigationNode: ASDisplayNode {
     public var storyData: (hasUnseen: Bool, hasUnseenCloseFriends: Bool, hasLiveItems: Bool)?
     
     public var statusView: ComponentView<Empty>
-    private var starView: StarView?
+    private var diamondView: DiamondView?
     private weak var communityAvatarBadgeReferenceContainerView: UIView?
     private weak var communityAvatarBadgeReferenceView: UIView?
     private var communityAvatarBadgeBackgroundView: GlassBackgroundView?
@@ -203,22 +203,22 @@ public final class ChatAvatarNavigationNode: ASDisplayNode {
         }
 
         if let peer, peer.isSubscription {
-            let starView: StarView
-            if let current = self.starView {
-                starView = current
+            let diamondView: DiamondView
+            if let current = self.diamondView {
+                diamondView = current
             } else {
-                starView = StarView()
-                self.starView = starView
-                self.containerNode.view.addSubview(starView)
+                diamondView = DiamondView()
+                self.diamondView = diamondView
+                self.containerNode.view.addSubview(diamondView)
             }
-            starView.outlineColor = theme.rootController.navigationBar.opaqueBackgroundColor
+            diamondView.outlineColor = theme.rootController.navigationBar.opaqueBackgroundColor
             
-            let starSize = CGSize(width: 15.0, height: 15.0)
-            let starFrame = CGRect(origin: CGPoint(x: self.containerNode.bounds.width - starSize.width + 1.0, y: self.containerNode.bounds.height - starSize.height + 1.0), size: starSize)
-            starView.frame = starFrame
-        } else if let starView = self.starView {
-            self.starView = nil
-            starView.removeFromSuperview()
+            let diamondSize = CGSize(width: 15.0, height: 15.0)
+            let diamondFrame = CGRect(origin: CGPoint(x: self.containerNode.bounds.width - diamondSize.width + 1.0, y: self.containerNode.bounds.height - diamondSize.height + 1.0), size: diamondSize)
+            diamondView.frame = diamondFrame
+        } else if let diamondView = self.diamondView {
+            self.diamondView = nil
+            diamondView.removeFromSuperview()
         }
         if let communityAvatarBadgeBackgroundView = self.communityAvatarBadgeBackgroundView, !communityAvatarBadgeBackgroundView.isHidden {
             self.containerNode.view.bringSubviewToFront(communityAvatarBadgeBackgroundView)
@@ -409,7 +409,7 @@ public final class ChatAvatarNavigationNode: ASDisplayNode {
     }
 }
 
-private class StarView: UIView {
+private class DiamondView: UIView {
     let outline = SimpleLayer()
     let foreground = SimpleLayer()
     

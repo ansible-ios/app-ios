@@ -254,7 +254,7 @@ private final class DemoSheetContent: CombinedComponent {
                     position: .top,
                     model: .island,
                     videoFile: state.promoConfiguration?.videos["gifts"],
-                    decoration: .badgeStars
+                    decoration: .badgeDiamonds
                 ),
                 environment: { DemoPageEnvironment(isDisplaying: true, isCentral: true, position: 0.0) },
                 availableSize: CGSize(width: context.availableSize.width, height: context.availableSize.width),

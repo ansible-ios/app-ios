@@ -164,7 +164,7 @@ extension VideoChatCall {
     func setMessagesEnabled(isEnabled: Bool) {
         switch self {
         case let .group(group):
-            group.updateMessagesEnabled(isEnabled: isEnabled, sendPaidMessageStars: nil)
+            group.updateMessagesEnabled(isEnabled: isEnabled, sendPaidMessageDiamonds: nil)
         case .conferenceSource:
             break
         }
@@ -1221,7 +1221,7 @@ final class VideoChatScreenComponent: Component {
                     defaultParticipantMuteState: nil,
                     messagesAreEnabled: true,
                     canEnableMessages: false,
-                    sendPaidMessageStars: nil,
+                    sendPaidMessageDiamonds: nil,
                     recordingStartTimestamp: nil,
                     title: nil,
                     raisedHand: false,
@@ -1431,7 +1431,7 @@ final class VideoChatScreenComponent: Component {
                     return
                 }
                 let entities = generateTextEntities(text.string, enabledTypes: [.mention, .hashtag], currentEntities: generateChatInputTextEntities(text))
-                call.sendMessage(fromId: nil, isAdmin: false, randomId: randomId, text: text.string, entities: entities, paidStars: nil)
+                call.sendMessage(fromId: nil, isAdmin: false, randomId: randomId, text: text.string, entities: entities, paidDiamonds: nil)
             }
             
             inputPanelView.clearSendMessageInput(updateState: true)
@@ -3546,7 +3546,7 @@ final class VideoChatScreenComponent: Component {
                         strings: environment.strings,
                         style: .videoChat,
                         placeholder: .plain(environment.strings.VoiceChat_MessagePlaceholder),
-                        sendPaidMessageStars: nil,
+                        sendPaidMessageDiamonds: nil,
                         maxLength: characterLimit,
                         queryTypes: [],
                         alwaysDarkWhenHasText: false,
@@ -3861,7 +3861,7 @@ final class VideoChatScreenComponent: Component {
                             guard case let .group(groupCall) = self.currentCall, let call = groupCall as? PresentationGroupCallImpl else {
                                 return
                             }
-                            call.sendMessage(fromId: nil, isAdmin: false, text: text, entities: entities, paidStars: nil)
+                            call.sendMessage(fromId: nil, isAdmin: false, text: text, entities: entities, paidDiamonds: nil)
                         })
                     }
                     

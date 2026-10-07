@@ -47,7 +47,7 @@ public indirect enum SettingsSection: Codable, Equatable, Hashable {
     case settingsSectionLanguage(SettingsSectionLanguage)
 
     /// The Iosapp Star balance and transaction section
-    case settingsSectionMyStars(SettingsSectionMyStars)
+    case settingsSectionMyDiamonds(SettingsSectionMyDiamonds)
 
     /// The Toncoin balance and transaction section
     case settingsSectionMyToncoins
@@ -91,7 +91,7 @@ public indirect enum SettingsSection: Codable, Equatable, Hashable {
         case settingsSectionFeatures
         case settingsSectionInAppBrowser
         case settingsSectionLanguage
-        case settingsSectionMyStars
+        case settingsSectionMyDiamonds
         case settingsSectionMyToncoins
         case settingsSectionNotifications
         case settingsSectionPowerSaving
@@ -141,9 +141,9 @@ public indirect enum SettingsSection: Codable, Equatable, Hashable {
         case .settingsSectionLanguage:
             let value = try SettingsSectionLanguage(from: decoder)
             self = .settingsSectionLanguage(value)
-        case .settingsSectionMyStars:
-            let value = try SettingsSectionMyStars(from: decoder)
-            self = .settingsSectionMyStars(value)
+        case .settingsSectionMyDiamonds:
+            let value = try SettingsSectionMyDiamonds(from: decoder)
+            self = .settingsSectionMyDiamonds(value)
         case .settingsSectionMyToncoins:
             self = .settingsSectionMyToncoins
         case .settingsSectionNotifications:
@@ -203,8 +203,8 @@ public indirect enum SettingsSection: Codable, Equatable, Hashable {
         case .settingsSectionLanguage(let value):
             try container.encode(Kind.settingsSectionLanguage, forKey: .type)
             try value.encode(to: encoder)
-        case .settingsSectionMyStars(let value):
-            try container.encode(Kind.settingsSectionMyStars, forKey: .type)
+        case .settingsSectionMyDiamonds(let value):
+            try container.encode(Kind.settingsSectionMyDiamonds, forKey: .type)
             try value.encode(to: encoder)
         case .settingsSectionMyToncoins:
             try container.encode(Kind.settingsSectionMyToncoins, forKey: .type)
@@ -332,7 +332,7 @@ public struct SettingsSectionLanguage: Codable, Equatable, Hashable {
 }
 
 /// The Iosapp Star balance and transaction section
-public struct SettingsSectionMyStars: Codable, Equatable, Hashable {
+public struct SettingsSectionMyDiamonds: Codable, Equatable, Hashable {
 
     /// Subsection of the section; may be one of "", "top-up", "stats", "gift", "earn"
     public let subsection: String

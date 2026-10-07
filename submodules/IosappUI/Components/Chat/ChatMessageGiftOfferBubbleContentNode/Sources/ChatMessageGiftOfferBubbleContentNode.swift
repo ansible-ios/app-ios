@@ -123,7 +123,7 @@ public class ChatMessageGiftOfferBubbleContentNode: ChatMessageBubbleContentNode
                 let additionalText: String
                 
                 var hasActionButtons = false
-                if let action = item.message.media.first(where: { $0 is IosappMediaAction }) as? IosappMediaAction, case let .starGiftPurchaseOffer(gift, amount, expireDate, isAccepted, isDeclined) = action.action {
+                if let action = item.message.media.first(where: { $0 is IosappMediaAction }) as? IosappMediaAction, case let .diamondGiftPurchaseOffer(gift, amount, expireDate, isAccepted, isDeclined) = action.action {
                     let currentTimestamp = Int32(CFAbsoluteTimeGetCurrent() + NSTimeIntervalSince1970)
                     
                     let priceString: String

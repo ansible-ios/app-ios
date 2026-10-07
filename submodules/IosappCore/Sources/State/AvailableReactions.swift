@@ -5,7 +5,7 @@ import SwiftSignalKit
 import FlatBuffers
 import FlatSerialization
 
-private func generateStarsReactionFile(kind: Int, isAnimatedSticker: Bool) -> IosappMediaFile {
+private func generateDiamondsReactionFile(kind: Int, isAnimatedSticker: Bool) -> IosappMediaFile {
     let baseId: Int64 = 52343278047832950 + 10
     let fileId = baseId + Int64(kind)
     
@@ -29,19 +29,19 @@ private func generateStarsReactionFile(kind: Int, isAnimatedSticker: Bool) -> Io
     )
 }
 
-private let sharedStarsReaction: AvailableReactions.Reaction = {
+private let sharedDiamondsReaction: AvailableReactions.Reaction = {
     return AvailableReactions.Reaction(
         isEnabled: false,
         isPremium: false,
         value: .stars,
         title: "Star",
-        staticIcon: generateStarsReactionFile(kind: 0, isAnimatedSticker: true),
-        appearAnimation: generateStarsReactionFile(kind: 1, isAnimatedSticker: true),
-        selectAnimation: generateStarsReactionFile(kind: 2, isAnimatedSticker: true),
-        activateAnimation: generateStarsReactionFile(kind: 3, isAnimatedSticker: true),
-        effectAnimation: generateStarsReactionFile(kind: 4, isAnimatedSticker: true),
-        aroundAnimation: generateStarsReactionFile(kind: 5, isAnimatedSticker: true),
-        centerAnimation: generateStarsReactionFile(kind: 6, isAnimatedSticker: true)
+        staticIcon: generateDiamondsReactionFile(kind: 0, isAnimatedSticker: true),
+        appearAnimation: generateDiamondsReactionFile(kind: 1, isAnimatedSticker: true),
+        selectAnimation: generateDiamondsReactionFile(kind: 2, isAnimatedSticker: true),
+        activateAnimation: generateDiamondsReactionFile(kind: 3, isAnimatedSticker: true),
+        effectAnimation: generateDiamondsReactionFile(kind: 4, isAnimatedSticker: true),
+        aroundAnimation: generateDiamondsReactionFile(kind: 5, isAnimatedSticker: true),
+        centerAnimation: generateDiamondsReactionFile(kind: 6, isAnimatedSticker: true)
     )
 }()
 
@@ -66,7 +66,7 @@ public final class AvailableReactions: Equatable, Codable {
             case aroundAnimationData
             case centerAnimation
             case centerAnimationData
-            case isStars
+            case isDiamonds
         }
         
         public let isEnabled: Bool
@@ -150,8 +150,8 @@ public final class AvailableReactions: Equatable, Codable {
             self.isEnabled = try container.decode(Bool.self, forKey: .isEnabled)
             self.isPremium = try container.decodeIfPresent(Bool.self, forKey: .isPremium) ?? false
             
-            let isStars = try container.decodeIfPresent(Bool.self, forKey: .isStars) ?? false
-            if isStars {
+            let isDiamonds = try container.decodeIfPresent(Bool.self, forKey: .isDiamonds) ?? false
+            if isDiamonds {
                 self.value = .stars
             } else {
                 self.value = .builtin(try container.decode(String.self, forKey: .value))
@@ -229,7 +229,7 @@ public final class AvailableReactions: Equatable, Codable {
             case .custom:
                 break
             case .stars:
-                try container.encode(true, forKey: .isStars)
+                try container.encode(true, forKey: .isDiamonds)
             }
             try container.encode(self.title, forKey: .title)
             
@@ -278,7 +278,7 @@ public final class AvailableReactions: Equatable, Codable {
         
         var reactions = reactions
         reactions.removeAll(where: { if case .stars = $0.value { return true } else { return false } })
-        reactions.append(sharedStarsReaction)
+        reactions.append(sharedDiamondsReaction)
         self.reactions = reactions
     }
     
@@ -299,7 +299,7 @@ public final class AvailableReactions: Equatable, Codable {
         
         var reactions = try container.decode([Reaction].self, forKey: .reactions)
         reactions.removeAll(where: { if case .stars = $0.value { return true } else { return false } })
-        reactions.append(sharedStarsReaction)
+        reactions.append(sharedDiamondsReaction)
         self.reactions = reactions
     }
     
@@ -316,23 +316,23 @@ private extension AvailableReactions.Reaction {
         switch apiReaction {
         case let .availableReaction(availableReactionData):
             let (flags, reaction, title, staticIcon, appearAnimation, selectAnimation, activateAnimation, effectAnimation, aroundAnimation, centerIcon) = (availableReactionData.flags, availableReactionData.reaction, availableReactionData.title, availableReactionData.staticIcon, availableReactionData.appearAnimation, availableReactionData.selectAnimation, availableReactionData.activateAnimation, availableReactionData.effectAnimation, availableReactionData.aroundAnimation, availableReactionData.centerIcon)
-            guard let staticIconFile = telegramMediaFileFromApiDocument(staticIcon, altDocuments: []) else {
+            guard let staticIconFile = ansibleMediaFileFromApiDocument(staticIcon, altDocuments: []) else {
                 return nil
             }
-            guard let appearAnimationFile = telegramMediaFileFromApiDocument(appearAnimation, altDocuments: []) else {
+            guard let appearAnimationFile = ansibleMediaFileFromApiDocument(appearAnimation, altDocuments: []) else {
                 return nil
             }
-            guard let selectAnimationFile = telegramMediaFileFromApiDocument(selectAnimation, altDocuments: []) else {
+            guard let selectAnimationFile = ansibleMediaFileFromApiDocument(selectAnimation, altDocuments: []) else {
                 return nil
             }
-            guard let activateAnimationFile = telegramMediaFileFromApiDocument(activateAnimation, altDocuments: []) else {
+            guard let activateAnimationFile = ansibleMediaFileFromApiDocument(activateAnimation, altDocuments: []) else {
                 return nil
             }
-            guard let effectAnimationFile = telegramMediaFileFromApiDocument(effectAnimation, altDocuments: []) else {
+            guard let effectAnimationFile = ansibleMediaFileFromApiDocument(effectAnimation, altDocuments: []) else {
                 return nil
             }
-            let aroundAnimationFile = aroundAnimation.flatMap { telegramMediaFileFromApiDocument($0, altDocuments: []) }
-            let centerAnimationFile = centerIcon.flatMap { telegramMediaFileFromApiDocument($0, altDocuments: []) }
+            let aroundAnimationFile = aroundAnimation.flatMap { ansibleMediaFileFromApiDocument($0, altDocuments: []) }
+            let centerAnimationFile = centerIcon.flatMap { ansibleMediaFileFromApiDocument($0, altDocuments: []) }
             let isEnabled = (flags & (1 << 0)) == 0
             let isPremium = (flags & (1 << 2)) != 0
             self.init(
@@ -380,7 +380,7 @@ func _internal_setCachedAvailableReactions(transaction: Transaction, availableRe
 }
 
 func managedSynchronizeAvailableReactions(postbox: Postbox, network: Network) -> Signal<Never, NoError> {
-    let starsReaction = sharedStarsReaction
+    let diamondsReaction = sharedDiamondsReaction
     let mapping: [String: KeyPath<AvailableReactions.Reaction, IosappMediaFile.Accessor>] = [
         "star_reaction_activate.ass": \.activateAnimation,
         "star_reaction_appear.ass": \.appearAnimation,
@@ -394,12 +394,12 @@ func managedSynchronizeAvailableReactions(postbox: Postbox, network: Network) ->
     ]
     for (key, path) in mapping {
         if let filePath = Bundle.main.path(forResource: key, ofType: nil), let data = try? Data(contentsOf: URL(fileURLWithPath: filePath)) {
-            postbox.mediaBox.storeResourceData(starsReaction[keyPath: path]._parse().resource.id, data: data)
+            postbox.mediaBox.storeResourceData(diamondsReaction[keyPath: path]._parse().resource.id, data: data)
         }
     }
     for (key, path) in optionalMapping {
         if let filePath = Bundle.main.path(forResource: key, ofType: nil), let data = try? Data(contentsOf: URL(fileURLWithPath: filePath)) {
-            if let file = starsReaction[keyPath: path] {
+            if let file = diamondsReaction[keyPath: path] {
                 postbox.mediaBox.storeResourceData(file._parse().resource.id, data: data)
             }
         }

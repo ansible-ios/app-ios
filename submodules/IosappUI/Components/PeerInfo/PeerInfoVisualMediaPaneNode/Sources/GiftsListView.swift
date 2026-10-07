@@ -67,8 +67,8 @@ final class GiftsListView: UIView {
         self.statusPromise.get()
     }
             
-    private var starsProducts: [ProfileGiftsContext.State.StarGift]?
-    private var starsItems: [AnyHashable: (StarGiftReference?, ComponentView<Empty>)] = [:]
+    private var diamondsProducts: [ProfileGiftsContext.State.StarGift]?
+    private var diamondsItems: [AnyHashable: (DiamondGiftReference?, ComponentView<Empty>)] = [:]
 
     private(set) var resultsAreEmpty = false
     private var filteredResultsAreEmpty = false
@@ -102,22 +102,22 @@ final class GiftsListView: UIView {
         return gifts
     }
     
-    private(set) var pinnedReferences: [StarGiftReference] = []
+    private(set) var pinnedReferences: [DiamondGiftReference] = []
     private var isReordering: Bool = false
     private var reorderingItem: (id: AnyHashable, initialPosition: CGPoint, position: CGPoint)?
-    private var reorderedReferences: [StarGiftReference]? {
+    private var reorderedReferences: [DiamondGiftReference]? {
         didSet {
             self.reorderedReferencesPromise.set(self.reorderedReferences)
         }
     }
-    private var reorderedReferencesPromise = ValuePromise<[StarGiftReference]?>(nil)
+    private var reorderedReferencesPromise = ValuePromise<[DiamondGiftReference]?>(nil)
     
-    private var reorderedPinnedReferences: Set<StarGiftReference>? {
+    private var reorderedPinnedReferences: Set<DiamondGiftReference>? {
         didSet {
             self.reorderedPinnedReferencesPromise.set(self.reorderedPinnedReferences)
         }
     }
-    private var reorderedPinnedReferencesPromise = ValuePromise<Set<StarGiftReference>?>(nil)
+    private var reorderedPinnedReferencesPromise = ValuePromise<Set<DiamondGiftReference>?>(nil)
     
     private var reorderRecognizer: ReorderGestureRecognizer?
     
@@ -151,7 +151,7 @@ final class GiftsListView: UIView {
             guard let self else {
                 return
             }
-            let isFirstTime = self.starsProducts == nil
+            let isFirstTime = self.diamondsProducts == nil
             let presentationData = self.context.sharedContext.currentPresentationData.with { $0 }
             self.statusPromise.set(.single(PeerInfoStatusData(text: presentationData.strings.SharedMedia_GiftCount(state.count ?? 0), isActivity: true, key: .gifts)))
             
@@ -160,7 +160,7 @@ final class GiftsListView: UIView {
                 if let reorderedReferences {
                     var fixedStateItems: [ProfileGiftsContext.State.StarGift] = []
                     
-                    var seenIds = Set<StarGiftReference>()
+                    var seenIds = Set<DiamondGiftReference>()
                     for reference in reorderedReferences {
                         if let index = stateItems.firstIndex(where: { $0.reference == reference }) {
                             seenIds.insert(reference)
@@ -183,10 +183,10 @@ final class GiftsListView: UIView {
                     }
                     stateItems = fixedStateItems
                 }
-                self.starsProducts = stateItems
+                self.diamondsProducts = stateItems
                 self.pinnedReferences = Array(stateItems.filter { $0.pinnedToTop }.compactMap { $0.reference })
             } else {
-                self.starsProducts = state.filteredGifts
+                self.diamondsProducts = state.filteredGifts
                 self.pinnedReferences = Array(state.gifts.filter { $0.pinnedToTop }.compactMap { $0.reference })
             }
             
@@ -253,7 +253,7 @@ final class GiftsListView: UIView {
     }
         
     func item(at point: CGPoint) -> (AnyHashable, ComponentView<Empty>)? {
-        for (id, visibleItem) in self.starsItems {
+        for (id, visibleItem) in self.diamondsItems {
             if let view = visibleItem.1.view, view.frame.contains(point), let reference = visibleItem.0, self.isCollection || self.pinnedReferences.contains(reference) {
                 return (id, visibleItem.1)
             }
@@ -286,23 +286,23 @@ final class GiftsListView: UIView {
             
             self.reorderRecognizer?.isEnabled = isReordering
             
-            if !isReordering, let _ = self.reorderedReferences, let starsProducts = self.starsProducts {
+            if !isReordering, let _ = self.reorderedReferences, let diamondsProducts = self.diamondsProducts {
                 if let collectionId = self.profileGifts.collectionId {
-                    var orderedReferences: [StarGiftReference] = []
-                    for gift in starsProducts {
+                    var orderedReferences: [DiamondGiftReference] = []
+                    for gift in diamondsProducts {
                         if let reference = gift.reference {
                             orderedReferences.append(reference)
                         }
                     }
                     let _ = self.giftsCollections?.reorderGifts(id: collectionId, gifts: orderedReferences).start()
                 } else {
-                    var pinnedReferences: [StarGiftReference] = []
-                    for gift in starsProducts.prefix(self.maxPinnedCount) {
+                    var pinnedReferences: [DiamondGiftReference] = []
+                    for gift in diamondsProducts.prefix(self.maxPinnedCount) {
                         if gift.pinnedToTop, let reference = gift.reference {
                             pinnedReferences.append(reference)
                         }
                     }
-                    self.profileGifts.updatePinnedToTopStarGifts(references: pinnedReferences)
+                    self.profileGifts.updatePinnedToTopDiamondGifts(references: pinnedReferences)
                 }
                 
                 Queue.mainQueue().after(1.0) {
@@ -317,7 +317,7 @@ final class GiftsListView: UIView {
     
     func setReorderingItem(item: AnyHashable?) {
         var mappedItem: (AnyHashable, ComponentView<Empty>)?
-        for (id, visibleItem) in self.starsItems {
+        for (id, visibleItem) in self.diamondsItems {
             if id == item {
                 mappedItem = (id, visibleItem.1)
                 break
@@ -341,13 +341,13 @@ final class GiftsListView: UIView {
             self.reorderingItem = (id, initialPosition, targetPosition)
             self.updateScrolling(transition: .immediate)
             
-            if let starsProducts = self.starsProducts, let visibleReorderingItem = self.starsItems[id] {
-                for (_, visibleItem) in self.starsItems {
+            if let diamondsProducts = self.diamondsProducts, let visibleReorderingItem = self.diamondsItems[id] {
+                for (_, visibleItem) in self.diamondsItems {
                     if visibleItem.1 === visibleReorderingItem.1 {
                         continue
                     }
-                    if let view = visibleItem.1.view, view.frame.contains(targetPosition), let reorderItemReference = self.starsItems[id]?.0 {
-                        if let targetIndex = starsProducts.firstIndex(where: { $0.reference == visibleItem.0 }) {
+                    if let view = visibleItem.1.view, view.frame.contains(targetPosition), let reorderItemReference = self.diamondsItems[id]?.0 {
+                        if let targetIndex = diamondsProducts.firstIndex(where: { $0.reference == visibleItem.0 }) {
                             self.reorderIfPossible(reference: reorderItemReference, toIndex: targetIndex)
                         }
                         break
@@ -361,8 +361,8 @@ final class GiftsListView: UIView {
         return self.profileGifts.collectionId != nil
     }
     
-    private func reorderIfPossible(reference: StarGiftReference, toIndex: Int) {
-        if let items = self.starsProducts {
+    private func reorderIfPossible(reference: DiamondGiftReference, toIndex: Int) {
+        if let items = self.diamondsProducts {
             var toIndex = toIndex
             
             let maxPinnedIndex: Int?
@@ -377,7 +377,7 @@ final class GiftsListView: UIView {
                 return
             }
             
-            var ids = items.compactMap { item -> StarGiftReference? in
+            var ids = items.compactMap { item -> DiamondGiftReference? in
                 return item.reference
             }
             
@@ -421,7 +421,7 @@ final class GiftsListView: UIView {
         self.topInset = topInset
         self.visibleBounds = visibleBounds
         
-        guard let starsProducts = self.starsProducts, let params = self.currentParams else {
+        guard let diamondsProducts = self.diamondsProducts, let params = self.currentParams else {
             return 0.0
         }
         
@@ -438,17 +438,17 @@ final class GiftsListView: UIView {
         } else {
             defaultItemsInRow = 3
         }
-        let itemsInRow = max(1, min(starsProducts.count, defaultItemsInRow))
+        let itemsInRow = max(1, min(diamondsProducts.count, defaultItemsInRow))
         let defaultOptionWidth = (params.size.width - itemsSideInset * 2.0 - optionSpacing * CGFloat(defaultItemsInRow - 1)) / CGFloat(defaultItemsInRow)
         let optionWidth = (params.size.width - itemsSideInset * 2.0 - optionSpacing * CGFloat(itemsInRow - 1)) / CGFloat(itemsInRow)
         
-        let starsOptionSize = CGSize(width: optionWidth, height: defaultOptionWidth)
+        let diamondsOptionSize = CGSize(width: optionWidth, height: defaultOptionWidth)
                     
         var validIds: [AnyHashable] = []
-        var itemFrame = CGRect(origin: CGPoint(x: itemsSideInset, y: topInset), size: starsOptionSize)
+        var itemFrame = CGRect(origin: CGPoint(x: itemsSideInset, y: topInset), size: diamondsOptionSize)
         
         var index: Int32 = 0
-        for product in starsProducts {
+        for product in diamondsProducts {
             var isVisible = false
             if visibleBounds.intersects(itemFrame) {
                 isVisible = true
@@ -469,11 +469,11 @@ final class GiftsListView: UIView {
                 
                 var itemTransition = transition
                 let visibleItem: ComponentView<Empty>
-                if let (_, current) = self.starsItems[itemId] {
+                if let (_, current) = self.diamondsItems[itemId] {
                     visibleItem = current
                 } else {
                     visibleItem = ComponentView()
-                    self.starsItems[itemId] = (product.reference, visibleItem)
+                    self.diamondsItems[itemId] = (product.reference, visibleItem)
                     itemTransition = .immediate
                 }
                 
@@ -563,13 +563,13 @@ final class GiftsListView: UIView {
                                     self.selectionUpdated()
                                     self.updateScrolling(transition: .easeInOut(duration: 0.25))
                                 } else if self.isReordering {
-                                    if case .unique = product.gift, !product.pinnedToTop, let reference = product.reference, let items = self.starsProducts {
+                                    if case .unique = product.gift, !product.pinnedToTop, let reference = product.reference, let items = self.diamondsProducts {
                                         if self.pinnedReferences.count >= self.maxPinnedCount {
                                             self.parentController?.present(UndoOverlayController(presentationData: presentationData, content: .info(title: nil, text: presentationData.strings.PeerInfo_Gifts_ToastPinLimit_Text(Int32(self.maxPinnedCount)), timeout: nil, customUndoText: nil), elevatedLayout: true, animateInAsReplacement: false, action: { _ in return false }), in: .window(.root))
                                             return
                                         }
                                         
-                                        var reorderedPinnedReferences = Set<StarGiftReference>()
+                                        var reorderedPinnedReferences = Set<DiamondGiftReference>()
                                         if let current = self.reorderedPinnedReferences {
                                             reorderedPinnedReferences = current
                                         }
@@ -577,11 +577,11 @@ final class GiftsListView: UIView {
                                         self.reorderedPinnedReferences = reorderedPinnedReferences
                                                                                     
                                         if let maxPinnedIndex = items.lastIndex(where: { $0.pinnedToTop }) {
-                                            var reorderedReferences: [StarGiftReference]
+                                            var reorderedReferences: [DiamondGiftReference]
                                             if let current = self.reorderedReferences {
                                                 reorderedReferences = current
                                             } else {
-                                                let ids = items.compactMap { item -> StarGiftReference? in
+                                                let ids = items.compactMap { item -> DiamondGiftReference? in
                                                     return item.reference
                                                 }
                                                 reorderedReferences = ids
@@ -592,8 +592,8 @@ final class GiftsListView: UIView {
                                         }
                                     }
                                 } else {
-                                    let allSubjects: [GiftViewScreen.Subject] = (self.starsProducts ?? []).map { .profileGift(self.peerId, $0) }
-                                    let index = self.starsProducts?.firstIndex(where: { $0 == product }) ?? 0
+                                    let allSubjects: [GiftViewScreen.Subject] = (self.diamondsProducts ?? []).map { .profileGift(self.peerId, $0) }
+                                    let index = self.diamondsProducts?.firstIndex(where: { $0 == product }) ?? 0
                                     
                                     var dismissImpl: (() -> Void)?
                                     let controller = GiftViewScreen(
@@ -606,9 +606,9 @@ final class GiftsListView: UIView {
                                             guard let self else {
                                                 return
                                             }
-                                            self.profileGifts.updateStarGiftAddedToProfile(reference: reference, added: added)
+                                            self.profileGifts.updateDiamondGiftAddedToProfile(reference: reference, added: added)
                                         },
-                                        convertToStars: { [weak self] reference in
+                                        convertToDiamonds: { [weak self] reference in
                                             guard let self else {
                                                 return
                                             }
@@ -636,13 +636,13 @@ final class GiftsListView: UIView {
                                             guard let self else {
                                                 return .never()
                                             }
-                                            return self.profileGifts.buyStarGift(slug: slug, peerId: peerId, price: price)
+                                            return self.profileGifts.buyDiamondGift(slug: slug, peerId: peerId, price: price)
                                         },
-                                        updateResellStars: { [weak self] reference, price in
+                                        updateResellDiamonds: { [weak self] reference, price in
                                             guard let self else {
                                                 return .never()
                                             }
-                                            return self.profileGifts.updateStarGiftResellPrice(reference: reference, price: price)
+                                            return self.profileGifts.updateDiamondGiftResellPrice(reference: reference, price: price)
                                         },
                                         togglePinnedToTop: { [weak self] reference, pinnedToTop in
                                             guard let self else {
@@ -654,7 +654,7 @@ final class GiftsListView: UIView {
                                                 })
                                                 return false
                                             }
-                                            self.profileGifts.updateStarGiftPinnedToTop(reference: reference, pinnedToTop: pinnedToTop)
+                                            self.profileGifts.updateDiamondGiftPinnedToTop(reference: reference, pinnedToTop: pinnedToTop)
                                             
                                             var title = ""
                                             if case let .unique(uniqueGift) = product.gift {
@@ -695,7 +695,7 @@ final class GiftsListView: UIView {
                         )
                     ),
                     environment: {},
-                    containerSize: starsOptionSize
+                    containerSize: diamondsOptionSize
                 )
                 if let itemView = visibleItem.view {
                     if itemView.superview == nil {
@@ -737,13 +737,13 @@ final class GiftsListView: UIView {
             itemFrame.origin.x += itemFrame.width + optionSpacing
             if itemFrame.maxX > params.size.width {
                 itemFrame.origin.x = itemsSideInset
-                itemFrame.origin.y += starsOptionSize.height + optionSpacing
+                itemFrame.origin.y += diamondsOptionSize.height + optionSpacing
             }
             index += 1
         }
         
         var removeIds: [AnyHashable] = []
-        for (id, item) in self.starsItems {
+        for (id, item) in self.diamondsItems {
             if !validIds.contains(id) {
                 removeIds.append(id)
                 if let itemView = item.1.view {
@@ -759,10 +759,10 @@ final class GiftsListView: UIView {
             }
         }
         for id in removeIds {
-            self.starsItems.removeValue(forKey: id)
+            self.diamondsItems.removeValue(forKey: id)
         }
         
-        var contentHeight = ceil(CGFloat(starsProducts.count) / CGFloat(defaultItemsInRow)) * (starsOptionSize.height + optionSpacing) - optionSpacing + topInset + 16.0
+        var contentHeight = ceil(CGFloat(diamondsProducts.count) / CGFloat(defaultItemsInRow)) * (diamondsOptionSize.height + optionSpacing) - optionSpacing + topInset + 16.0
         
         let size = params.size
         let sideInset = params.sideInset
@@ -1046,7 +1046,7 @@ final class GiftsListView: UIView {
     }
 }
 
-private extension StarGiftReference {
+private extension DiamondGiftReference {
     var stringValue: String {
         switch self {
         case let .message(messageId):

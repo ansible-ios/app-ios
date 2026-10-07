@@ -80,7 +80,7 @@ public enum PremiumGiveawayInfo: Equatable {
     public enum ResultStatus: Equatable {
         case notWon
         case wonPremium(slug: String)
-        case wonStars(stars: Int64)
+        case wonDiamonds(stars: Int64)
         case refunded
     }
     
@@ -135,7 +135,7 @@ func _internal_getPremiumGiveawayInfo(account: Account, peerId: EnginePeer.Id, m
                     if (flags & (1 << 1)) != 0 {
                         status = .refunded
                     } else if let stars {
-                        status = .wonStars(stars: stars)
+                        status = .wonDiamonds(stars: stars)
                     } else if let giftCodeSlug = giftCodeSlug {
                         status = .wonPremium(slug: giftCodeSlug)
                     } else {
@@ -416,8 +416,8 @@ extension PrepaidGiveaway {
             self.prize = .premium(months: months)
             self.quantity = quantity
             self.date = date
-        case let .prepaidStarsGiveaway(prepaidStarsGiveawayData):
-            let (id, stars, quantity, boosts, date) = (prepaidStarsGiveawayData.id, prepaidStarsGiveawayData.stars, prepaidStarsGiveawayData.quantity, prepaidStarsGiveawayData.boosts, prepaidStarsGiveawayData.date)
+        case let .prepaidStarsGiveaway(prepaidDiamondsGiveawayData):
+            let (id, stars, quantity, boosts, date) = (prepaidDiamondsGiveawayData.id, prepaidDiamondsGiveawayData.stars, prepaidDiamondsGiveawayData.quantity, prepaidDiamondsGiveawayData.boosts, prepaidDiamondsGiveawayData.date)
             self.id = id
             self.prize = .stars(stars: stars, boosts: boosts)
             self.quantity = quantity

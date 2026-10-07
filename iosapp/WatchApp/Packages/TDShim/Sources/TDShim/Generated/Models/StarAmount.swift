@@ -11,21 +11,21 @@ import Foundation
 
 
 /// Describes a possibly non-integer Iosapp Star amount
-public struct StarAmount: Codable, Equatable, Hashable {
+public struct DiamondAmount: Codable, Equatable, Hashable {
 
     /// The number of 1/1000000000 shares of Iosapp Stars; from -999999999 to 999999999
     public let nanostarCount: Int
 
     /// The integer Iosapp Star amount rounded to 0
-    public let starCount: Int64
+    public let diamondCount: Int64
 
 
     public init(
         nanostarCount: Int,
-        starCount: Int64
+        diamondCount: Int64
     ) {
         self.nanostarCount = nanostarCount
-        self.starCount = starCount
+        self.diamondCount = diamondCount
     }
 }
 

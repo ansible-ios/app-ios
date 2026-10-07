@@ -312,7 +312,7 @@ func managedSynchronizeAttachMenuBots(accountPeerId: PeerId, postbox: Postbox, n
                                             switch icon {
                                                 case let .attachMenuBotIcon(attachMenuBotIconData):
                                                     let (_, name, icon, _) = (attachMenuBotIconData.flags, attachMenuBotIconData.name, attachMenuBotIconData.icon, attachMenuBotIconData.colors)
-                                                    if let iconName = AttachMenuBots.Bot.IconName(string: name), let icon = telegramMediaFileFromApiDocument(icon, altDocuments: []) {
+                                                    if let iconName = AttachMenuBots.Bot.IconName(string: name), let icon = ansibleMediaFileFromApiDocument(icon, altDocuments: []) {
                                                         icons[iconName] = icon
                                                     }
                                             }
@@ -531,9 +531,9 @@ func _internal_getAttachMenuBot(accountPeerId: PeerId, postbox: Postbox, network
                         let (bot, users) = (attachMenuBotsBotData.bot, attachMenuBotsBotData.users)
                         var peer: Peer?
                         for user in users {
-                            let telegramUser = IosappUser(user: user)
-                            if telegramUser.id == botId {
-                                peer = telegramUser
+                            let ansibleUser = IosappUser(user: user)
+                            if ansibleUser.id == botId {
+                                peer = ansibleUser
                             }
                         }
                         updatePeers(transaction: transaction, accountPeerId: accountPeerId, peers: AccumulatedPeers(users: users))
@@ -550,7 +550,7 @@ func _internal_getAttachMenuBot(accountPeerId: PeerId, postbox: Postbox, network
                                     switch icon {
                                         case let .attachMenuBotIcon(attachMenuBotIconData):
                                             let (_, name, icon, _) = (attachMenuBotIconData.flags, attachMenuBotIconData.name, attachMenuBotIconData.icon, attachMenuBotIconData.colors)
-                                            if let iconName = AttachMenuBots.Bot.IconName(string: name), let icon = telegramMediaFileFromApiDocument(icon, altDocuments: []) {
+                                            if let iconName = AttachMenuBots.Bot.IconName(string: name), let icon = ansibleMediaFileFromApiDocument(icon, altDocuments: []) {
                                                 icons[iconName] = icon
                                             }
                                     }
@@ -763,7 +763,7 @@ func _internal_getBotApp(account: Account, reference: BotAppReference) -> Signal
                     if (botAppFlags & (1 << 2)) != 0 {
                         appFlags.insert(.hasSettings)
                     }
-                    return .single(BotApp(id: id, accessHash: accessHash, shortName: shortName, title: title, description: description, photo: telegramMediaImageFromApiPhoto(photo), document: document.flatMap { telegramMediaFileFromApiDocument($0, altDocuments: []) }, hash: hash, flags: appFlags))
+                    return .single(BotApp(id: id, accessHash: accessHash, shortName: shortName, title: title, description: description, photo: ansibleMediaImageFromApiPhoto(photo), document: document.flatMap { ansibleMediaFileFromApiDocument($0, altDocuments: []) }, hash: hash, flags: appFlags))
                 case .botAppNotModified:
                     return .complete()
                 }
@@ -779,7 +779,7 @@ extension BotApp {
         switch apiBotApp {
         case let .botApp(botAppData):
             let (id, accessHash, shortName, title, description, photo, document, hash) = (botAppData.id, botAppData.accessHash, botAppData.shortName, botAppData.title, botAppData.description, botAppData.photo, botAppData.document, botAppData.hash)
-            self.init(id: id, accessHash: accessHash, shortName: shortName, title: title, description: description, photo: telegramMediaImageFromApiPhoto(photo), document: document.flatMap { telegramMediaFileFromApiDocument($0, altDocuments: []) }, hash: hash, flags: [])
+            self.init(id: id, accessHash: accessHash, shortName: shortName, title: title, description: description, photo: ansibleMediaImageFromApiPhoto(photo), document: document.flatMap { ansibleMediaFileFromApiDocument($0, altDocuments: []) }, hash: hash, flags: [])
         case .botAppNotModified:
             return nil
         }

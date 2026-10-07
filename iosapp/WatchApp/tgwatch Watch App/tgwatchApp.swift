@@ -2,7 +2,7 @@ import SwiftUI
 import TDShim
 
 @main
-struct TgwatchApp: App {
+struct AswatchApp: App {
     @State private var manager: AccountManager
     /// True when running inside an XCTest process. Computed once and stored so
     /// both `init()` and `body` can reference the same value without repeating
@@ -11,7 +11,7 @@ struct TgwatchApp: App {
 
     @MainActor
     init() {
-        TgwatchApp.wipeMessageDatabaseIfRequested()
+        AswatchApp.wipeMessageDatabaseIfRequested()
         // Under XCTest the app's `@main` `init()` still runs inside the test
         // process. Instantiating a `TDLibClientManager` here would conflict
         // with the one tests create via `SharedTestTDLibManager` (TDLib's

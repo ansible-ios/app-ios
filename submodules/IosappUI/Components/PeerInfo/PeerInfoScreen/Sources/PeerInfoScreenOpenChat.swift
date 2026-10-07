@@ -155,7 +155,7 @@ extension PeerInfoScreenNode {
         guard let peer = self.data?.peer else {
             return
         }
-        let controller = self.context.sharedContext.makeChatRecentActionsController(context: self.context, peer: peer, adminPeerId: nil, starsState: self.data?.starsRevenueStatsState)
+        let controller = self.context.sharedContext.makeChatRecentActionsController(context: self.context, peer: peer, adminPeerId: nil, diamondsState: self.data?.diamondsRevenueStatsState)
         self.controller?.push(controller)
     }
 }

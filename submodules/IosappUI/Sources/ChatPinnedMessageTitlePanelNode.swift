@@ -313,14 +313,14 @@ final class ChatPinnedMessageTitlePanelNode: ChatTitleAccessoryPanelNode {
             messageUpdated = true
         }
         
-        var isStarsPayment = false
+        var isDiamondsPayment = false
         if let message = interfaceState.pinnedMessage, !message.message.isRestricted(platform: "ios", contentSettings: self.context.currentContentSettings.with { $0 }) {
             for attribute in message.message.attributes {
                 if let attribute = attribute as? ReplyMarkupMessageAttribute, attribute.flags.contains(.inline), attribute.rows.count == 1, attribute.rows[0].buttons.count == 1 {
                     let title = attribute.rows[0].buttons[0].title
                     actionTitle = title
                     if case .payment = attribute.rows[0].buttons[0].action, title.contains("⭐️") {
-                        isStarsPayment = true
+                        isDiamondsPayment = true
                     }
                 }
             }
@@ -435,11 +435,11 @@ final class ChatPinnedMessageTitlePanelNode: ChatTitleAccessoryPanelNode {
             self.actionButtonTitleNode.isHidden = false
             
             let attributedTitle: NSAttributedString
-            if isStarsPayment {
+            if isDiamondsPayment {
                 let updatedTitle = actionTitle.replacingOccurrences(of: "⭐️", with: " # ")
                 let buttonAttributedString = NSMutableAttributedString(string: updatedTitle, font: Font.with(size: 15.0, design: .round, weight: .semibold, traits: [.monospacedNumbers]), textColor:  interfaceState.theme.list.itemCheckColors.foregroundColor)
-                if let range = buttonAttributedString.string.range(of: "#"), let starImage = UIImage(bundleImageName: "Item List/PremiumIcon") {
-                    buttonAttributedString.addAttribute(.attachment, value: starImage, range: NSRange(range, in: buttonAttributedString.string))
+                if let range = buttonAttributedString.string.range(of: "#"), let diamondImage = UIImage(bundleImageName: "Item List/PremiumIcon") {
+                    buttonAttributedString.addAttribute(.attachment, value: diamondImage, range: NSRange(range, in: buttonAttributedString.string))
                     buttonAttributedString.addAttribute(.foregroundColor, value: interfaceState.theme.list.itemCheckColors.foregroundColor, range: NSRange(range, in: buttonAttributedString.string))
                     buttonAttributedString.addAttribute(.baselineOffset, value: 1.0, range: NSRange(range, in: buttonAttributedString.string))
                 }

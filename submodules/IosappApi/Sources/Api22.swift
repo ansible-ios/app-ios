@@ -103,7 +103,7 @@ public extension Api {
                 return ("prepaidGiveaway", [("id", ConstructorParameterDescription(self.id)), ("months", ConstructorParameterDescription(self.months)), ("quantity", ConstructorParameterDescription(self.quantity)), ("date", ConstructorParameterDescription(self.date))])
             }
         }
-        public class Cons_prepaidStarsGiveaway: TypeConstructorDescription {
+        public class Cons_prepaidDiamondsGiveaway: TypeConstructorDescription {
             public var id: Int64
             public var stars: Int64
             public var quantity: Int32
@@ -121,7 +121,7 @@ public extension Api {
             }
         }
         case prepaidGiveaway(Cons_prepaidGiveaway)
-        case prepaidStarsGiveaway(Cons_prepaidStarsGiveaway)
+        case prepaidStarsGiveaway(Cons_prepaidDiamondsGiveaway)
 
         public func serialize(_ buffer: Buffer, _ boxed: Swift.Bool) {
             switch self {
@@ -176,7 +176,7 @@ public extension Api {
                 return nil
             }
         }
-        public static func parse_prepaidStarsGiveaway(_ reader: BufferReader) -> PrepaidGiveaway? {
+        public static func parse_prepaidDiamondsGiveaway(_ reader: BufferReader) -> PrepaidGiveaway? {
             var _1: Int64?
             _1 = reader.readInt64()
             var _2: Int64?
@@ -193,7 +193,7 @@ public extension Api {
             let _c4 = _4 != nil
             let _c5 = _5 != nil
             if _c1 && _c2 && _c3 && _c4 && _c5 {
-                return Api.PrepaidGiveaway.prepaidStarsGiveaway(Cons_prepaidStarsGiveaway(id: _1!, stars: _2!, quantity: _3!, boosts: _4!, date: _5!))
+                return Api.PrepaidGiveaway.prepaidStarsGiveaway(Cons_prepaidDiamondsGiveaway(id: _1!, stars: _2!, quantity: _3!, boosts: _4!, date: _5!))
             }
             else {
                 return nil
@@ -359,7 +359,7 @@ public extension Api {
         public static func parse_privacyKeySavedMusic(_ reader: BufferReader) -> PrivacyKey? {
             return Api.PrivacyKey.privacyKeySavedMusic
         }
-        public static func parse_privacyKeyStarGiftsAutoSave(_ reader: BufferReader) -> PrivacyKey? {
+        public static func parse_privacyKeyDiamondGiftsAutoSave(_ reader: BufferReader) -> PrivacyKey? {
             return Api.PrivacyKey.privacyKeyStarGiftsAutoSave
         }
         public static func parse_privacyKeyStatusTimestamp(_ reader: BufferReader) -> PrivacyKey? {

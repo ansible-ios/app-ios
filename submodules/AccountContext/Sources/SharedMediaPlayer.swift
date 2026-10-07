@@ -12,12 +12,12 @@ public enum SharedMediaPlaybackDataType {
 }
 
 public enum SharedMediaPlaybackDataSource: Equatable {
-    case telegramFile(reference: FileMediaReference, isCopyProtected: Bool, isViewOnce: Bool)
+    case ansibleFile(reference: FileMediaReference, isCopyProtected: Bool, isViewOnce: Bool)
     
     public static func ==(lhs: SharedMediaPlaybackDataSource, rhs: SharedMediaPlaybackDataSource) -> Bool {
         switch lhs {
-        case let .telegramFile(lhsFileReference, lhsIsCopyProtected, lhsIsViewOnce):
-            if case let .telegramFile(rhsFileReference, rhsIsCopyProtected, rhsIsViewOnce) = rhs {
+        case let .ansibleFile(lhsFileReference, lhsIsCopyProtected, lhsIsViewOnce):
+            if case let .ansibleFile(rhsFileReference, rhsIsCopyProtected, rhsIsViewOnce) = rhs {
                 if !lhsFileReference.media.isEqual(to: rhsFileReference.media) {
                     return false
                 }

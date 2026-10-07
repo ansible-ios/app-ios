@@ -3,7 +3,7 @@ import Postbox
 import IosappApi
 
 
-func telegramMediaActionFromApiAction(_ action: Api.MessageAction) -> IosappMediaAction? {
+func ansibleMediaActionFromApiAction(_ action: Api.MessageAction) -> IosappMediaAction? {
     switch action {
     case let .messageActionChannelCreate(messageActionChannelCreateData):
         let title = messageActionChannelCreateData.title
@@ -24,7 +24,7 @@ func telegramMediaActionFromApiAction(_ action: Api.MessageAction) -> IosappMedi
         return IosappMediaAction(action: .removedMembers(peerIds: [PeerId(namespace: Namespaces.Peer.CloudUser, id: PeerId.Id._internalFromInt64Value(userId))]))
     case let .messageActionChatEditPhoto(messageActionChatEditPhotoData):
         let photo = messageActionChatEditPhotoData.photo
-        return IosappMediaAction(action: .photoUpdated(image: telegramMediaImageFromApiPhoto(photo)))
+        return IosappMediaAction(action: .photoUpdated(image: ansibleMediaImageFromApiPhoto(photo)))
     case let .messageActionChatEditTitle(messageActionChatEditTitleData):
         let title = messageActionChatEditTitleData.title
         return IosappMediaAction(action: .titleUpdated(title: title))
@@ -154,9 +154,9 @@ func telegramMediaActionFromApiAction(_ action: Api.MessageAction) -> IosappMedi
             entities = nil
         }
         return IosappMediaAction(action: .giftPremium(currency: currency, amount: amount, days: days, cryptoCurrency: cryptoCurrency, cryptoAmount: cryptoAmount, text: text, entities: entities))
-    case let .messageActionGiftStars(messageActionGiftStarsData):
-        let (currency, amount, stars, cryptoCurrency, cryptoAmount, transactionId) = (messageActionGiftStarsData.currency, messageActionGiftStarsData.amount, messageActionGiftStarsData.stars, messageActionGiftStarsData.cryptoCurrency, messageActionGiftStarsData.cryptoAmount, messageActionGiftStarsData.transactionId)
-        return IosappMediaAction(action: .giftStars(currency: currency, amount: amount, count: stars, cryptoCurrency: cryptoCurrency, cryptoAmount: cryptoAmount, transactionId: transactionId))
+    case let .messageActionGiftStars(messageActionGiftDiamondsData):
+        let (currency, amount, stars, cryptoCurrency, cryptoAmount, transactionId) = (messageActionGiftDiamondsData.currency, messageActionGiftDiamondsData.amount, messageActionGiftDiamondsData.stars, messageActionGiftDiamondsData.cryptoCurrency, messageActionGiftDiamondsData.cryptoAmount, messageActionGiftDiamondsData.transactionId)
+        return IosappMediaAction(action: .giftDiamonds(currency: currency, amount: amount, count: stars, cryptoCurrency: cryptoCurrency, cryptoAmount: cryptoAmount, transactionId: transactionId))
     case let .messageActionTopicCreate(messageActionTopicCreateData):
         let (title, iconColor, iconEmojiId) = (messageActionTopicCreateData.title, messageActionTopicCreateData.iconColor, messageActionTopicCreateData.iconEmojiId)
         return IosappMediaAction(action: .topicCreated(title: title, iconColor: iconColor, iconFileId: iconEmojiId))
@@ -178,7 +178,7 @@ func telegramMediaActionFromApiAction(_ action: Api.MessageAction) -> IosappMedi
         return IosappMediaAction(action: .topicEdited(components: components))
     case let .messageActionSuggestProfilePhoto(messageActionSuggestProfilePhotoData):
         let photo = messageActionSuggestProfilePhotoData.photo
-        return IosappMediaAction(action: .suggestedProfilePhoto(image: telegramMediaImageFromApiPhoto(photo)))
+        return IosappMediaAction(action: .suggestedProfilePhoto(image: ansibleMediaImageFromApiPhoto(photo)))
     case let .messageActionRequestedPeer(messageActionRequestedPeerData):
         let (buttonId, peers) = (messageActionRequestedPeerData.buttonId, messageActionRequestedPeerData.peers)
         return IosappMediaAction(action: .requestedPeer(buttonId: buttonId, peerIds: peers.map { $0.peerId }))
@@ -223,11 +223,11 @@ func telegramMediaActionFromApiAction(_ action: Api.MessageAction) -> IosappMedi
             transactionId = id
         }
         return IosappMediaAction(action: .paymentRefunded(peerId: peer.peerId, currency: currency, totalAmount: totalAmount, payload: payload?.makeData(), transactionId: transactionId))
-    case let .messageActionPrizeStars(messageActionPrizeStarsData):
-        let (flags, stars, transactionId, boostPeer, giveawayMsgId) = (messageActionPrizeStarsData.flags, messageActionPrizeStarsData.stars, messageActionPrizeStarsData.transactionId, messageActionPrizeStarsData.boostPeer, messageActionPrizeStarsData.giveawayMsgId)
-        return IosappMediaAction(action: .prizeStars(amount: stars, isUnclaimed: (flags & (1 << 2)) != 0, boostPeerId: boostPeer.peerId, transactionId: transactionId, giveawayMessageId: MessageId(peerId: boostPeer.peerId, namespace: Namespaces.Message.Cloud, id: giveawayMsgId)))
-    case let .messageActionStarGift(messageActionStarGiftData):
-        let (flags, apiGift, message, convertStars, upgradeMessageId, upgradeStars, fromId, peer, savedId, prepaidUpgradeHash, giftMessageId, toId, number) = (messageActionStarGiftData.flags, messageActionStarGiftData.gift, messageActionStarGiftData.message, messageActionStarGiftData.convertStars, messageActionStarGiftData.upgradeMsgId, messageActionStarGiftData.upgradeStars, messageActionStarGiftData.fromId, messageActionStarGiftData.peer, messageActionStarGiftData.savedId, messageActionStarGiftData.prepaidUpgradeHash, messageActionStarGiftData.giftMsgId, messageActionStarGiftData.toId, messageActionStarGiftData.giftNum)
+    case let .messageActionPrizeStars(messageActionPrizeDiamondsData):
+        let (flags, stars, transactionId, boostPeer, giveawayMsgId) = (messageActionPrizeDiamondsData.flags, messageActionPrizeDiamondsData.stars, messageActionPrizeDiamondsData.transactionId, messageActionPrizeDiamondsData.boostPeer, messageActionPrizeDiamondsData.giveawayMsgId)
+        return IosappMediaAction(action: .prizeDiamonds(amount: stars, isUnclaimed: (flags & (1 << 2)) != 0, boostPeerId: boostPeer.peerId, transactionId: transactionId, giveawayMessageId: MessageId(peerId: boostPeer.peerId, namespace: Namespaces.Message.Cloud, id: giveawayMsgId)))
+    case let .messageActionStarGift(messageActionDiamondGiftData):
+        let (flags, apiGift, message, convertStars, upgradeMessageId, upgradeStars, fromId, peer, savedId, prepaidUpgradeHash, giftMessageId, toId, number) = (messageActionDiamondGiftData.flags, messageActionDiamondGiftData.gift, messageActionDiamondGiftData.message, messageActionDiamondGiftData.convertStars, messageActionDiamondGiftData.upgradeMsgId, messageActionDiamondGiftData.upgradeStars, messageActionDiamondGiftData.fromId, messageActionDiamondGiftData.peer, messageActionDiamondGiftData.savedId, messageActionDiamondGiftData.prepaidUpgradeHash, messageActionDiamondGiftData.giftMsgId, messageActionDiamondGiftData.toId, messageActionDiamondGiftData.giftNum)
         let text: String?
         let entities: [MessageTextEntity]?
         switch message {
@@ -239,13 +239,13 @@ func telegramMediaActionFromApiAction(_ action: Api.MessageAction) -> IosappMedi
             text = nil
             entities = nil
         }
-        guard let gift = StarGift(apiStarGift: apiGift) else {
+        guard let gift = StarGift(apiDiamondGift: apiGift) else {
             return nil
         }
         return IosappMediaAction(action: .starGift(gift: gift, convertStars: convertStars, text: text, entities: entities, nameHidden: (flags & (1 << 0)) != 0, savedToProfile: (flags & (1 << 2)) != 0, converted: (flags & (1 << 3)) != 0, upgraded: (flags & (1 << 5)) != 0, canUpgrade: (flags & (1 << 10)) != 0, upgradeStars: upgradeStars, isRefunded: (flags & (1 << 9)) != 0, isPrepaidUpgrade: (flags & (1 << 13)) != 0, upgradeMessageId: upgradeMessageId, peerId: peer?.peerId, senderId: fromId?.peerId, savedId: savedId, prepaidUpgradeHash: prepaidUpgradeHash, giftMessageId: giftMessageId, upgradeSeparate: (flags & (1 << 16)) != 0, isAuctionAcquired: (flags & (1 << 17)) != 0, toPeerId: toId?.peerId, number: number))
-    case let .messageActionStarGiftUnique(messageActionStarGiftUniqueData):
-        let (flags, apiGift, canExportAt, transferStars, fromId, peer, savedId, resaleAmount, canTransferDate, canResaleDate, dropOriginalDetailsStars, canCraftAt) = (messageActionStarGiftUniqueData.flags, messageActionStarGiftUniqueData.gift, messageActionStarGiftUniqueData.canExportAt, messageActionStarGiftUniqueData.transferStars, messageActionStarGiftUniqueData.fromId, messageActionStarGiftUniqueData.peer, messageActionStarGiftUniqueData.savedId, messageActionStarGiftUniqueData.resaleAmount, messageActionStarGiftUniqueData.canTransferAt, messageActionStarGiftUniqueData.canResellAt, messageActionStarGiftUniqueData.dropOriginalDetailsStars, messageActionStarGiftUniqueData.canCraftAt)
-        guard let gift = StarGift(apiStarGift: apiGift) else {
+    case let .messageActionStarGiftUnique(messageActionDiamondGiftUniqueData):
+        let (flags, apiGift, canExportAt, transferStars, fromId, peer, savedId, resaleAmount, canTransferDate, canResaleDate, dropOriginalDetailsStars, canCraftAt) = (messageActionDiamondGiftUniqueData.flags, messageActionDiamondGiftUniqueData.gift, messageActionDiamondGiftUniqueData.canExportAt, messageActionDiamondGiftUniqueData.transferStars, messageActionDiamondGiftUniqueData.fromId, messageActionDiamondGiftUniqueData.peer, messageActionDiamondGiftUniqueData.savedId, messageActionDiamondGiftUniqueData.resaleAmount, messageActionDiamondGiftUniqueData.canTransferAt, messageActionDiamondGiftUniqueData.canResellAt, messageActionDiamondGiftUniqueData.dropOriginalDetailsStars, messageActionDiamondGiftUniqueData.canCraftAt)
+        guard let gift = StarGift(apiDiamondGift: apiGift) else {
             return nil
         }
         return IosappMediaAction(action: .starGiftUnique(gift: gift, isUpgrade: (flags & (1 << 0)) != 0, isTransferred: (flags & (1 << 1)) != 0, savedToProfile: (flags & (1 << 2)) != 0, canExportDate: canExportAt, transferStars: transferStars, isRefunded: (flags & (1 << 5)) != 0, isPrepaidUpgrade: (flags & (1 << 11)) != 0, peerId: peer?.peerId, senderId: fromId?.peerId, savedId: savedId, resaleAmount: resaleAmount.flatMap { CurrencyAmount(apiAmount: $0) }, canTransferDate: canTransferDate, canResaleDate: canResaleDate, dropOriginalDetailsStars: dropOriginalDetailsStars, assigned: (flags & (1 << 13)) != 0, fromOffer: (flags & (1 << 14)) != 0, canCraftAt: canCraftAt, isCrafted: (flags & (1 << 16)) != 0))
@@ -295,11 +295,11 @@ func telegramMediaActionFromApiAction(_ action: Api.MessageAction) -> IosappMedi
                 switch starsAmount {
                 case .none:
                     balanceNeeded = CurrencyAmount(amount: .zero, currency: .stars)
-                case let .starsAmount(starsAmountData):
-                    let (amount, nanos) = (starsAmountData.amount, starsAmountData.nanos)
+                case let .starsAmount(diamondsAmountData):
+                    let (amount, nanos) = (diamondsAmountData.amount, diamondsAmountData.nanos)
                     balanceNeeded = CurrencyAmount(amount: StarsAmount(value: amount, nanos: nanos), currency: .stars)
-                case let .starsTonAmount(starsTonAmountData):
-                    let amount = starsTonAmountData.amount
+                case let .starsTonAmount(diamondsTonAmountData):
+                    let amount = diamondsTonAmountData.amount
                     balanceNeeded = CurrencyAmount(amount: StarsAmount(value: amount, nanos: 0), currency: .ton)
                 }
                 reason = .lowBalance(balanceNeeded: balanceNeeded)
@@ -312,11 +312,11 @@ func telegramMediaActionFromApiAction(_ action: Api.MessageAction) -> IosappMedi
             switch starsAmount {
             case .none:
                 amountValue = CurrencyAmount(amount: .zero, currency: .stars)
-            case let .starsAmount(starsAmountData):
-                let (amount, nanos) = (starsAmountData.amount, starsAmountData.nanos)
+            case let .starsAmount(diamondsAmountData):
+                let (amount, nanos) = (diamondsAmountData.amount, diamondsAmountData.nanos)
                 amountValue = CurrencyAmount(amount: StarsAmount(value: amount, nanos: nanos), currency: .stars)
-            case let .starsTonAmount(starsTonAmountData):
-                let amount = starsTonAmountData.amount
+            case let .starsTonAmount(diamondsTonAmountData):
+                let amount = diamondsTonAmountData.amount
                 amountValue = CurrencyAmount(amount: StarsAmount(value: amount, nanos: 0), currency: .ton)
             }
             status = .rejected(reason: .lowBalance(balanceNeeded: amountValue), comment: nil)
@@ -337,18 +337,18 @@ func telegramMediaActionFromApiAction(_ action: Api.MessageAction) -> IosappMedi
         let birthday = messageActionSuggestBirthdayData.birthday
         return IosappMediaAction(action: .suggestedBirthday(IosappBirthday(apiBirthday: birthday)))
         
-    case let .messageActionStarGiftPurchaseOffer(messageActionStarGiftPurchaseOfferData):
-        let (flags, apiGift, price, expiresAt) = (messageActionStarGiftPurchaseOfferData.flags, messageActionStarGiftPurchaseOfferData.gift, messageActionStarGiftPurchaseOfferData.price, messageActionStarGiftPurchaseOfferData.expiresAt)
-        guard let gift = StarGift(apiStarGift: apiGift) else {
+    case let .messageActionStarGiftPurchaseOffer(messageActionDiamondGiftPurchaseOfferData):
+        let (flags, apiGift, price, expiresAt) = (messageActionDiamondGiftPurchaseOfferData.flags, messageActionDiamondGiftPurchaseOfferData.gift, messageActionDiamondGiftPurchaseOfferData.price, messageActionDiamondGiftPurchaseOfferData.expiresAt)
+        guard let gift = StarGift(apiDiamondGift: apiGift) else {
             return nil
         }
-        return IosappMediaAction(action: .starGiftPurchaseOffer(gift: gift, amount: CurrencyAmount(apiAmount: price), expireDate: expiresAt, isAccepted: (flags & (1 << 0)) != 0, isDeclined: (flags & (1 << 1)) != 0))
-    case let .messageActionStarGiftPurchaseOfferDeclined(messageActionStarGiftPurchaseOfferDeclinedData):
-        let (flags, apiGift, price) = (messageActionStarGiftPurchaseOfferDeclinedData.flags, messageActionStarGiftPurchaseOfferDeclinedData.gift, messageActionStarGiftPurchaseOfferDeclinedData.price)
-        guard let gift = StarGift(apiStarGift: apiGift) else {
+        return IosappMediaAction(action: .diamondGiftPurchaseOffer(gift: gift, amount: CurrencyAmount(apiAmount: price), expireDate: expiresAt, isAccepted: (flags & (1 << 0)) != 0, isDeclined: (flags & (1 << 1)) != 0))
+    case let .messageActionStarGiftPurchaseOfferDeclined(messageActionDiamondGiftPurchaseOfferDeclinedData):
+        let (flags, apiGift, price) = (messageActionDiamondGiftPurchaseOfferDeclinedData.flags, messageActionDiamondGiftPurchaseOfferDeclinedData.gift, messageActionDiamondGiftPurchaseOfferDeclinedData.price)
+        guard let gift = StarGift(apiDiamondGift: apiGift) else {
             return nil
         }
-        return IosappMediaAction(action: .starGiftPurchaseOfferDeclined(gift: gift, amount: CurrencyAmount(apiAmount: price), hasExpired: (flags & (1 << 0)) != 0))
+        return IosappMediaAction(action: .diamondGiftPurchaseOfferDeclined(gift: gift, amount: CurrencyAmount(apiAmount: price), hasExpired: (flags & (1 << 0)) != 0))
     case let .messageActionNewCreatorPending(messageActionNewCreatorPendingData):
         return IosappMediaAction(action: .groupCreatorChange(IosappMediaActionType.GroupCreatorChange(
             kind: .pending,

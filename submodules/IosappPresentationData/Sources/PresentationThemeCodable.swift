@@ -1206,10 +1206,10 @@ extension PresentationThemeBubbleColorComponents: Codable {
             reactionInactiveForeground: reactionInactiveForeground,
             reactionActiveBackground: reactionActiveBackground,
             reactionActiveForeground: reactionActiveForeground,
-            reactionStarsInactiveBackground: reactionInactiveBackground,
-            reactionStarsInactiveForeground: reactionInactiveForeground,
-            reactionStarsActiveBackground: reactionActiveBackground,
-            reactionStarsActiveForeground: reactionActiveForeground,
+            reactionDiamondsInactiveBackground: reactionInactiveBackground,
+            reactionDiamondsInactiveForeground: reactionInactiveForeground,
+            reactionDiamondsActiveBackground: reactionActiveBackground,
+            reactionDiamondsActiveForeground: reactionActiveForeground,
             reactionInactiveMediaPlaceholder: reactionInactiveMediaPlaceholder,
             reactionActiveMediaPlaceholder: reactionActiveMediaPlaceholder
         )

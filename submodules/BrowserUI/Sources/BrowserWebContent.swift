@@ -1895,41 +1895,41 @@ let setupFontFunctions = """
 
 private let videoSource = """
 document.addEventListener('DOMContentLoaded', () => {
-function tgBrowserDisableWebkitEnterFullscreen(videoElement) {
+function asBrowserDisableWebkitEnterFullscreen(videoElement) {
   if (videoElement && videoElement.webkitEnterFullscreen) {
     videoElement.setAttribute('playsinline', '');
   }
 }
 
-function tgBrowserDisableFullscreenOnExistingVideos() {
-  document.querySelectorAll('video').forEach(tgBrowserDisableWebkitEnterFullscreen);
+function asBrowserDisableFullscreenOnExistingVideos() {
+  document.querySelectorAll('video').forEach(asBrowserDisableWebkitEnterFullscreen);
 }
 
-function tgBrowserHandleMutations(mutations) {
+function asBrowserHandleMutations(mutations) {
   mutations.forEach((mutation) => {
     if (mutation.addedNodes && mutation.addedNodes.length > 0) {
       mutation.addedNodes.forEach((newNode) => {
         if (newNode.tagName === 'VIDEO') {
-          tgBrowserDisableWebkitEnterFullscreen(newNode);
+          asBrowserDisableWebkitEnterFullscreen(newNode);
         }
         if (newNode.querySelectorAll) {
-          newNode.querySelectorAll('video').forEach(tgBrowserDisableWebkitEnterFullscreen);
+          newNode.querySelectorAll('video').forEach(asBrowserDisableWebkitEnterFullscreen);
         }
       });
     }
   });
 }
 
-tgBrowserDisableFullscreenOnExistingVideos();
+asBrowserDisableFullscreenOnExistingVideos();
 
-const _tgbrowser_observer = new MutationObserver(tgBrowserHandleMutations);
+const _tgbrowser_observer = new MutationObserver(asBrowserHandleMutations);
 
 _tgbrowser_observer.observe(document.body, {
   childList: true,
   subtree: true
 });
 
-function tgBrowserDisconnectObserver() {
+function asBrowserDisconnectObserver() {
   _tgbrowser_observer.disconnect();
 }
 });

@@ -92,7 +92,7 @@ extension IosappUser {
                 userFlags.insert(.requirePremium)
             }
             if (flags2 & (1 << 15)) != 0 {
-                userFlags.insert(.requireStars)
+                userFlags.insert(.requireDiamonds)
             }
             var storiesHidden: Bool?
             if !isMin {
@@ -200,13 +200,13 @@ extension IosappUser {
                 } else {
                     let applyMinPhoto = (flags & (1 << 25)) != 0
                     
-                    let telegramPhoto: [IosappMediaImageRepresentation]
+                    let ansiblePhoto: [IosappMediaImageRepresentation]
                     if let photo = photo, applyMinPhoto {
-                        telegramPhoto = parsedIosappProfilePhoto(photo)
+                        ansiblePhoto = parsedIosappProfilePhoto(photo)
                     } else if let currentPhoto = lhs?.photo {
-                        telegramPhoto = currentPhoto
+                        ansiblePhoto = currentPhoto
                     } else {
-                        telegramPhoto = []
+                        ansiblePhoto = []
                     }
 
                     if let lhs = lhs {
@@ -316,7 +316,7 @@ extension IosappUser {
 
                         let linkedCommunityId = linkedCommunityIdValue.flatMap { PeerId(namespace: Namespaces.Peer.CloudChannel, id: PeerId.Id._internalFromInt64Value($0)) } ?? lhs.linkedCommunityId
 
-                        return IosappUser(id: lhs.id, accessHash: accessHash, firstName: lhs.firstName, lastName: lhs.lastName, username: lhs.username, phone: lhs.phone, photo: telegramPhoto, botInfo: botInfo, restrictionInfo: restrictionInfo, flags: userFlags, emojiStatus: emojiStatus.flatMap(PeerEmojiStatus.init(apiStatus:)), usernames: lhs.usernames, storiesHidden: lhs.storiesHidden, nameColor: nameColor, backgroundEmojiId: backgroundEmojiId, profileColor: profileColorIndex.flatMap { PeerNameColor(rawValue: $0) }, profileBackgroundEmojiId: profileBackgroundEmojiId, subscriberCount: subscriberCount, verificationIconFileId: lhs.verificationIconFileId, linkedCommunityId: linkedCommunityId)
+                        return IosappUser(id: lhs.id, accessHash: accessHash, firstName: lhs.firstName, lastName: lhs.lastName, username: lhs.username, phone: lhs.phone, photo: ansiblePhoto, botInfo: botInfo, restrictionInfo: restrictionInfo, flags: userFlags, emojiStatus: emojiStatus.flatMap(PeerEmojiStatus.init(apiStatus:)), usernames: lhs.usernames, storiesHidden: lhs.storiesHidden, nameColor: nameColor, backgroundEmojiId: backgroundEmojiId, profileColor: profileColorIndex.flatMap { PeerNameColor(rawValue: $0) }, profileBackgroundEmojiId: profileBackgroundEmojiId, subscriberCount: subscriberCount, verificationIconFileId: lhs.verificationIconFileId, linkedCommunityId: linkedCommunityId)
                     } else {
                         return IosappUser(user: rhs)
                     }

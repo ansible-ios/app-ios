@@ -800,7 +800,7 @@ class StatsOverviewItemNode: ListViewItemNode {
                         item.context,
                         params.width,
                         item.presentationData,
-                        formatStarsAmountText(additionalStats.balances.availableBalance.amount, dateTimeFormat: item.presentationData.dateTimeFormat),
+                        formatDiamondsAmountText(additionalStats.balances.availableBalance.amount, dateTimeFormat: item.presentationData.dateTimeFormat),
                         " ",
                         (additionalStats.balances.availableBalance.amount == StarsAmount.zero ? "" : "~\(formatTonUsdValue(additionalStats.balances.availableBalance.amount.value, divide: false, rate: additionalStats.usdRate, dateTimeFormat: item.presentationData.dateTimeFormat))", .generic),
                         .stars
@@ -810,7 +810,7 @@ class StatsOverviewItemNode: ListViewItemNode {
                         item.context,
                         params.width,
                         item.presentationData,
-                        formatStarsAmountText(additionalStats.balances.currentBalance.amount, dateTimeFormat: item.presentationData.dateTimeFormat),
+                        formatDiamondsAmountText(additionalStats.balances.currentBalance.amount, dateTimeFormat: item.presentationData.dateTimeFormat),
                         " ",
                         (additionalStats.balances.currentBalance.amount == StarsAmount.zero ? "" : "~\(formatTonUsdValue(additionalStats.balances.currentBalance.amount.value, divide: false, rate: additionalStats.usdRate, dateTimeFormat: item.presentationData.dateTimeFormat))", .generic),
                         .stars
@@ -820,7 +820,7 @@ class StatsOverviewItemNode: ListViewItemNode {
                         item.context,
                         params.width,
                         item.presentationData,
-                        formatStarsAmountText(additionalStats.balances.overallRevenue.amount, dateTimeFormat: item.presentationData.dateTimeFormat),
+                        formatDiamondsAmountText(additionalStats.balances.overallRevenue.amount, dateTimeFormat: item.presentationData.dateTimeFormat),
                         " ",
                         (additionalStats.balances.overallRevenue.amount == StarsAmount.zero ? "" : "~\(formatTonUsdValue(additionalStats.balances.overallRevenue.amount.value, divide: false, rate: additionalStats.usdRate, dateTimeFormat: item.presentationData.dateTimeFormat))", .generic),
                         .stars
@@ -869,7 +869,7 @@ class StatsOverviewItemNode: ListViewItemNode {
                     item.context,
                     params.width,
                     item.presentationData,
-                    formatStarsAmountText(stats.balances.availableBalance.amount, dateTimeFormat: item.presentationData.dateTimeFormat),
+                    formatDiamondsAmountText(stats.balances.availableBalance.amount, dateTimeFormat: item.presentationData.dateTimeFormat),
                     item.presentationData.strings.Monetization_DiamondsProceeds_Available,
                     (stats.balances.availableBalance.amount == StarsAmount.zero ? "" : "~\(formatTonUsdValue(stats.balances.availableBalance.amount.value, divide: false, rate: stats.usdRate, dateTimeFormat: item.presentationData.dateTimeFormat))", .generic),
                     .stars
@@ -879,7 +879,7 @@ class StatsOverviewItemNode: ListViewItemNode {
                     item.context,
                     params.width,
                     item.presentationData,
-                    formatStarsAmountText(stats.balances.currentBalance.amount, dateTimeFormat: item.presentationData.dateTimeFormat),
+                    formatDiamondsAmountText(stats.balances.currentBalance.amount, dateTimeFormat: item.presentationData.dateTimeFormat),
                     item.presentationData.strings.Monetization_DiamondsProceeds_Current,
                     (stats.balances.currentBalance.amount == StarsAmount.zero ? "" : "~\(formatTonUsdValue(stats.balances.currentBalance.amount.value, divide: false, rate: stats.usdRate, dateTimeFormat: item.presentationData.dateTimeFormat))", .generic),
                     .stars
@@ -889,7 +889,7 @@ class StatsOverviewItemNode: ListViewItemNode {
                     item.context,
                     params.width,
                     item.presentationData,
-                    formatStarsAmountText(stats.balances.overallRevenue.amount, dateTimeFormat: item.presentationData.dateTimeFormat),
+                    formatDiamondsAmountText(stats.balances.overallRevenue.amount, dateTimeFormat: item.presentationData.dateTimeFormat),
                     item.presentationData.strings.Monetization_DiamondsProceeds_Total,
                     (stats.balances.overallRevenue.amount == StarsAmount.zero ? "" : "~\(formatTonUsdValue(stats.balances.overallRevenue.amount.value, divide: false, rate: stats.usdRate, dateTimeFormat: item.presentationData.dateTimeFormat))", .generic),
                     .stars

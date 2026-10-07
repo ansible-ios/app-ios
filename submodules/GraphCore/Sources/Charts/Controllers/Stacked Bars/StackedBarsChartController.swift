@@ -20,7 +20,7 @@ public enum GraphCurrency : String {
     var formatter: NumberFormatter {
         switch self {
         case .xtr:
-            return BaseConstants.starNumberFormatter
+            return BaseConstants.diamondNumberFormatter
         case .ton:
             return BaseConstants.tonNumberFormatter
         }

@@ -18,7 +18,7 @@
 
 @end
 
-@protocol TGPhotoSendStarsButtonView <NSObject>
+@protocol TGPhotoSendDiamondsButtonView <NSObject>
 
 - (void)updateFrame:(CGRect)frame;
 - (CGSize)updateCount:(int64_t)count;
@@ -143,12 +143,12 @@
 
 @property (nonatomic, copy) id<TGCaptionPanelView> _Nullable(^ _Nullable captionPanelView)(void);
 @property (nonatomic, copy) id<TGLivePhotoButton> _Nullable(^ _Nullable livePhotoButton)(void);
-@property (nonatomic, copy) UIView<TGPhotoToolbarViewProtocol> *_Nullable(^ _Nullable photoToolbarView)(TGPhotoEditorBackButton backButton, TGPhotoEditorDoneButton doneButton, bool solidBackground, bool hasSendStarsButton);
+@property (nonatomic, copy) UIView<TGPhotoToolbarViewProtocol> *_Nullable(^ _Nullable photoToolbarView)(TGPhotoEditorBackButton backButton, TGPhotoEditorDoneButton doneButton, bool solidBackground, bool hasSendDiamondsButton);
 @property (nonatomic, copy) bool (^ _Nullable presentMediaPickerSendActionMenu)(UIView * _Nonnull sourceView, bool canSendSilently, bool canSendWhenOnline, bool canSchedule, bool reminder, bool hasTimer, void (^ _Nonnull sendSilently)(void), void (^ _Nonnull sendWhenOnline)(void), void (^ _Nonnull schedule)(void), void (^ _Nonnull sendWithTimer)(void));
 
 @property (nonatomic, copy) void (^ _Nullable editCover)(CGSize dimensions, void(^_Nonnull completion)(UIImage * _Nonnull));
 
-- (UIView<TGPhotoSendStarsButtonView> *_Nonnull)sendStarsButtonAction:(void(^_Nonnull)(void))action;
+- (UIView<TGPhotoSendDiamondsButtonView> *_Nonnull)sendDiamondsButtonAction:(void(^_Nonnull)(void))action;
 - (UIView<TGPhotoSolidRoundedButtonView> *_Nonnull)solidRoundedButton:(NSString *_Nonnull)title action:(void(^_Nonnull)(void))action;
 - (id<TGPhotoDrawingAdapter> _Nonnull)drawingAdapter:(CGSize)size originalSize:(CGSize)originalSize isVideo:(bool)isVideo isAvatar:(bool)isAvatar entitiesView:(UIView<TGPhotoDrawingEntitiesView> * _Nullable)entitiesView;
 

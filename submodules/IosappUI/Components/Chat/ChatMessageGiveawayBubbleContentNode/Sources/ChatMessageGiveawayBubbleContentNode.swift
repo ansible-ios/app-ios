@@ -261,7 +261,7 @@ public class ChatMessageGiveawayBubbleContentNode: ChatMessageBubbleContentNode,
                 badgeTextColor = incoming ? item.presentationData.theme.theme.chat.message.incoming.bubble.withoutWallpaper.fill.first! : item.presentationData.theme.theme.chat.message.outgoing.bubble.withoutWallpaper.fill.first!
             }
                        
-            var isStars = false
+            var isDiamonds = false
             let badgeText: String
             if let giveaway {
                 switch giveaway.prize {
@@ -269,7 +269,7 @@ public class ChatMessageGiveawayBubbleContentNode: ChatMessageBubbleContentNode,
                     badgeText = "X\(giveaway.quantity)"
                 case let .stars(amount):
                     badgeText = "⭐️\(presentationStringsFormattedNumber(Int32(amount), item.presentationData.dateTimeFormat.groupingSeparator)) "
-                    isStars = true
+                    isDiamonds = true
                 }
             } else if let giveawayResults {
                 switch giveawayResults.prize {
@@ -277,7 +277,7 @@ public class ChatMessageGiveawayBubbleContentNode: ChatMessageBubbleContentNode,
                     badgeText = "X\(giveawayResults.winnersCount)"
                 case let .stars(amount):
                     badgeText = "⭐️\(presentationStringsFormattedNumber(Int32(amount), item.presentationData.dateTimeFormat.groupingSeparator)) "
-                    isStars = true
+                    isDiamonds = true
                 }
             } else {
                 badgeText = ""
@@ -288,7 +288,7 @@ public class ChatMessageGiveawayBubbleContentNode: ChatMessageBubbleContentNode,
                 badgeString.addAttribute(.baselineOffset, value: 1.5, range: NSRange(range, in: badgeString.string))
             }
             
-            let badgeBackgroundColor = !incoming || !isStars ? accentColor : UIColor(rgb: 0xffaf0a)
+            let badgeBackgroundColor = !incoming || !isDiamonds ? accentColor : UIColor(rgb: 0xffaf0a)
             var updatedBadgeImage: UIImage?
             if themeUpdated {
                 updatedBadgeImage = generateStretchableFilledCircleImage(diameter: 21.0, color: badgeBackgroundColor, strokeColor: backgroundColor, strokeWidth: 1.0 + UIScreenPixel, backgroundColor: nil)
@@ -349,9 +349,9 @@ public class ChatMessageGiveawayBubbleContentNode: ChatMessageBubbleContentNode,
                         }
                     ), textAlignment: .center)
                 case let .stars(amount):
-                    let starsString = item.presentationData.strings.Chat_Giveaway_Message_Diamonds_Diamonds(Int32(clamping: amount))
+                    let diamondsString = item.presentationData.strings.Chat_Giveaway_Message_Diamonds_Diamonds(Int32(clamping: amount))
                     prizeTextString = parseMarkdownIntoAttributedString(item.presentationData.strings.Chat_Giveaway_Message_Diamonds_PrizeText(
-                        starsString,
+                        diamondsString,
                         item.presentationData.strings.Chat_Giveaway_Message_Diamonds_Winners(giveaway.quantity)
                     ).string, attributes: MarkdownAttributes(
                         body: MarkdownAttributeSet(font: textFont, textColor: textColor),
@@ -467,8 +467,8 @@ public class ChatMessageGiveawayBubbleContentNode: ChatMessageBubbleContentNode,
                 dateTextString = NSAttributedString(string: stringForFullDate(timestamp: giveaway.untilDate, strings: item.presentationData.strings, dateTimeFormat: item.presentationData.dateTimeFormat), font: textFont, textColor: textColor)
             } else if let giveawayResults {
                 if case let .stars(stars) = giveawayResults.prize {
-                    let starsString = item.presentationData.strings.Chat_Giveaway_Message_WinnersInfo_Diamonds(Int32(clamping: stars))
-                    dateTextString = parseMarkdownIntoAttributedString(giveawayResults.winnersCount > 1 ? item.presentationData.strings.Chat_Giveaway_Message_WinnersInfo_Diamonds_Many(starsString).string : item.presentationData.strings.Chat_Giveaway_Message_WinnersInfo_Diamonds_One(starsString).string, attributes: MarkdownAttributes(
+                    let diamondsString = item.presentationData.strings.Chat_Giveaway_Message_WinnersInfo_Diamonds(Int32(clamping: stars))
+                    dateTextString = parseMarkdownIntoAttributedString(giveawayResults.winnersCount > 1 ? item.presentationData.strings.Chat_Giveaway_Message_WinnersInfo_Diamonds_Many(diamondsString).string : item.presentationData.strings.Chat_Giveaway_Message_WinnersInfo_Diamonds_One(diamondsString).string, attributes: MarkdownAttributes(
                         body: MarkdownAttributeSet(font: textFont, textColor: textColor),
                         bold: MarkdownAttributeSet(font: boldTextFont, textColor: textColor),
                         link: MarkdownAttributeSet(font: textFont, textColor: accentColor),
@@ -575,10 +575,10 @@ public class ChatMessageGiveawayBubbleContentNode: ChatMessageBubbleContentNode,
                         reactionPeers: dateReactionsAndPeers.peers,
                         displayAllReactionPeers: item.message.id.peerId.namespace == Namespaces.Peer.CloudUser,
                         areReactionsTags: item.topMessage.areReactionsTags(accountPeerId: item.context.account.peerId),
-                        areStarReactionsEnabled: item.associatedData.areStarReactionsEnabled,
+                        areDiamondReactionsEnabled: item.associatedData.areDiamondReactionsEnabled,
                         messageEffect: item.topMessage.messageEffect(availableMessageEffects: item.associatedData.availableMessageEffects),
                         replyCount: dateReplies,
-                        starsCount: nil,
+                        diamondsCount: nil,
                         isPinned: item.message.tags.contains(.pinned) && !item.associatedData.isInPinnedListMode && isReplyThread,
                         hasAutoremove: item.message.isSelfExpiring,
                         canViewReactionList: canViewMessageReactionList(message: EngineMessage(item.topMessage)),

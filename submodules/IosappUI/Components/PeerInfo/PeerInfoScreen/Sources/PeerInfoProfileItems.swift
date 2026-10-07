@@ -98,7 +98,7 @@ func infoItems(
         let ItemBlock = 6003
         let ItemEncryptionKey = 6004
         let ItemBalanceHeader = 7000
-        let ItemBalanceStars = 7002
+        let ItemBalanceDiamonds = 7002
         let ItemBotPermissionsHeader = 8000
         let ItemBotPermissionsEmojiStatus = 8001
         let ItemBotPermissionsLocation = 8002
@@ -424,15 +424,15 @@ func infoItems(
                     }))
                 }
                                 
-                let starsBalance = data.starsRevenueStatsState?.balances.currentBalance.amount ?? StarsAmount.zero
-                let overallStarsBalance = data.starsRevenueStatsState?.balances.overallRevenue.amount ?? StarsAmount.zero
+                let diamondsBalance = data.diamondsRevenueStatsState?.balances.currentBalance.amount ?? StarsAmount.zero
+                let overallDiamondsBalance = data.diamondsRevenueStatsState?.balances.overallRevenue.amount ?? StarsAmount.zero
                 
                 // Ansible: TON removed — bot balance shows the crystal (Stars) balance only.
-                if overallStarsBalance > StarsAmount.zero {
+                if overallDiamondsBalance > StarsAmount.zero {
                     items[.balances]!.append(PeerInfoScreenHeaderItem(id: ItemBalanceHeader, text: presentationData.strings.PeerInfo_BotBalance_Title))
 
-                    if overallStarsBalance > StarsAmount.zero {
-                        let formattedLabel = formatStarsAmountText(starsBalance, dateTimeFormat: presentationData.dateTimeFormat)
+                    if overallDiamondsBalance > StarsAmount.zero {
+                        let formattedLabel = formatDiamondsAmountText(diamondsBalance, dateTimeFormat: presentationData.dateTimeFormat)
                         let smallLabelFont = Font.regular(floor(presentationData.listsFontSize.itemListBaseFontSize / 17.0 * 13.0))
                         let labelFont = Font.regular(presentationData.listsFontSize.itemListBaseFontSize)
                         let labelColor = presentationData.theme.list.itemSecondaryTextColor
@@ -443,8 +443,8 @@ func infoItems(
                             attributedString.addAttribute(ChatTextInputAttributes.customEmoji, value: ChatTextInputTextCustomEmojiAttribute(interactivelySelectedFromPackId: nil, fileId: 0, file: nil, custom: .stars(tinted: false)), range: NSRange(range, in: attributedString.string))
                             attributedString.addAttribute(.baselineOffset, value: 1.5, range: NSRange(range, in: attributedString.string))
                         }
-                        items[.balances]!.append(PeerInfoScreenDisclosureItem(id: ItemBalanceStars, label: .attributedText(attributedString), text: presentationData.strings.PeerInfo_BotBalance_Diamonds, icon: PresentationResourcesSettings.stars, action: {
-                            interaction.editingOpenStars()
+                        items[.balances]!.append(PeerInfoScreenDisclosureItem(id: ItemBalanceDiamonds, label: .attributedText(attributedString), text: presentationData.strings.PeerInfo_BotBalance_Diamonds, icon: PresentationResourcesSettings.stars, action: {
+                            interaction.editingOpenDiamonds()
                         }))
                     }
                 }
@@ -743,22 +743,22 @@ func infoItems(
                         section = .peerMembers
                     }
                     if cachedData.flags.contains(.canViewRevenue) || cachedData.flags.contains(.canViewStarsRevenue) {
-                        let starsBalance = data.starsRevenueStatsState?.balances.currentBalance.amount ?? StarsAmount.zero
-                        let overallStarsBalance = data.starsRevenueStatsState?.balances.overallRevenue.amount ?? StarsAmount.zero
+                        let diamondsBalance = data.diamondsRevenueStatsState?.balances.currentBalance.amount ?? StarsAmount.zero
+                        let overallDiamondsBalance = data.diamondsRevenueStatsState?.balances.overallRevenue.amount ?? StarsAmount.zero
                         
                         // Ansible: TON removed — channel balance chip shows the crystal (Stars) balance only.
-                        if overallStarsBalance > StarsAmount.zero {
+                        if overallDiamondsBalance > StarsAmount.zero {
                             let smallLabelFont = Font.regular(floor(presentationData.listsFontSize.itemListBaseFontSize / 17.0 * 13.0))
                             let labelFont = Font.regular(presentationData.listsFontSize.itemListBaseFontSize)
                             let labelColor = presentationData.theme.list.itemSecondaryTextColor
 
                             let attributedString = NSMutableAttributedString()
-                            if overallStarsBalance > StarsAmount.zero {
+                            if overallDiamondsBalance > StarsAmount.zero {
                                 attributedString.append(NSAttributedString(string: "*", font: labelFont, textColor: labelColor))
 
-                                let formattedLabel = formatStarsAmountText(starsBalance, dateTimeFormat: presentationData.dateTimeFormat)
-                                let starsAttributedString = tonAmountAttributedString(formattedLabel, integralFont: labelFont, fractionalFont: smallLabelFont, color: labelColor, decimalSeparator: presentationData.dateTimeFormat.decimalSeparator).mutableCopy() as! NSMutableAttributedString
-                                attributedString.append(starsAttributedString)
+                                let formattedLabel = formatDiamondsAmountText(diamondsBalance, dateTimeFormat: presentationData.dateTimeFormat)
+                                let diamondsAttributedString = tonAmountAttributedString(formattedLabel, integralFont: labelFont, fractionalFont: smallLabelFont, color: labelColor, decimalSeparator: presentationData.dateTimeFormat.decimalSeparator).mutableCopy() as! NSMutableAttributedString
+                                attributedString.append(diamondsAttributedString)
                             }
                             if let range = attributedString.string.range(of: "*") {
                                 attributedString.addAttribute(ChatTextInputAttributes.customEmoji, value: ChatTextInputTextCustomEmojiAttribute(interactivelySelectedFromPackId: nil, fileId: 1, file: nil, custom: .stars(tinted: false)), range: NSRange(range, in: attributedString.string))
@@ -1022,7 +1022,7 @@ func editingItems(data: PeerInfoScreenData?, boostStatus: ChannelBoostStatus?, s
                     
                     items[.peerNote]!.append(PeerInfoScreenCommentItem(id: ItemNoteInfo, text: presentationData.strings.PeerInfo_AddNotesInfo))
                     
-                    if let _ = cachedData.sendPaidMessageStars {
+                    if let _ = cachedData.sendPaidMessageDiamonds {
                         
                     } else {
                         if cachedData.birthday == nil {
@@ -1162,14 +1162,14 @@ func editingItems(data: PeerInfoScreenData?, boostStatus: ChannelBoostStatus?, s
                         case .all:
                             label = presentationData.strings.PeerInfo_LabelAllReactions
                         case .empty:
-                            if let starsAllowed = reactionSettings.starsAllowed, starsAllowed {
+                            if let diamondsAllowed = reactionSettings.diamondsAllowed, diamondsAllowed {
                                 label = "1"
                             } else {
                                 label = presentationData.strings.PeerInfo_ReactionsDisabled
                             }
                         case let .limited(reactions):
                             var countValue = reactions.count
-                            if let starsAllowed = reactionSettings.starsAllowed, starsAllowed {
+                            if let diamondsAllowed = reactionSettings.diamondsAllowed, diamondsAllowed {
                                 countValue += 1
                             }
                             label = "\(countValue)"
@@ -1219,8 +1219,8 @@ func editingItems(data: PeerInfoScreenData?, boostStatus: ChannelBoostStatus?, s
                     let labelString: NSAttributedString
                     if channel.linkedMonoforumId != nil {
                         if case let .channel(monoforumPeer) = data.linkedMonoforumPeer {
-                            if let sendPaidMessageStars = monoforumPeer.sendPaidMessageStars {
-                                let formattedLabel = formatStarsAmountText(sendPaidMessageStars, dateTimeFormat: presentationData.dateTimeFormat)
+                            if let sendPaidMessageDiamonds = monoforumPeer.sendPaidMessageDiamonds {
+                                let formattedLabel = formatDiamondsAmountText(sendPaidMessageDiamonds, dateTimeFormat: presentationData.dateTimeFormat)
                                 let smallLabelFont = Font.regular(floor(presentationData.listsFontSize.itemListBaseFontSize / 17.0 * 13.0))
                                 let labelFont = Font.regular(presentationData.listsFontSize.itemListBaseFontSize)
                                 let labelColor = presentationData.theme.list.itemSecondaryTextColor

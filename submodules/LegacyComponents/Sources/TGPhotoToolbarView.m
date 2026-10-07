@@ -21,7 +21,7 @@
     UIView *_buttonsWrapperView;
     TGModernButton *_cancelButton;
     TGModernButton *_doneButton;
-    UIView<TGPhotoSendStarsButtonView> *_starsDoneButton;
+    UIView<TGPhotoSendDiamondsButtonView> *_starsDoneButton;
     
     UILabel *_infoLabel;
     
@@ -62,7 +62,7 @@
         
         if (stickersContext != nil) {
             __weak TGPhotoToolbarView *weakSelf = self;
-            _starsDoneButton = [stickersContext sendStarsButtonAction:^{
+            _starsDoneButton = [stickersContext sendDiamondsButtonAction:^{
                 __strong TGPhotoToolbarView *strongSelf = weakSelf;
                 if (strongSelf == nil)
                     return;
@@ -708,7 +708,7 @@
         CGFloat rightEdge = 0.0f;
 
         if (_starsDoneButton != nil) {
-            CGSize buttonSize = [_starsDoneButton updateCount:_sendPaidMessageStars];
+            CGSize buttonSize = [_starsDoneButton updateCount:_sendPaidMessageDiamonds];
             rightEdge = buttonSize.width + 2.0f;
             [_starsDoneButton updateFrame:CGRectMake(self.frame.size.width - rightEdge, 2.0f, buttonSize.width, buttonSize.height)];
         } else {

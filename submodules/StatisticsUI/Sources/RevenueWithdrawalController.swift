@@ -82,7 +82,7 @@ func confirmRevenueWithdrawalController(
     applyImpl = {
         doneInProgressPromise.set(true)
 
-        let _ = (context.engine.peers.requestStarsRevenueWithdrawalUrl(peerId: peerId, ton: true, amount: nil, password: inputState.value)
+        let _ = (context.engine.peers.requestDiamondsRevenueWithdrawalUrl(peerId: peerId, ton: true, amount: nil, password: inputState.value)
         |> deliverOnMainQueue).start(next: { url in
             dismissImpl?()
             completion(url)
@@ -111,7 +111,7 @@ func confirmRevenueWithdrawalController(
 }
 
 
-public func revenueWithdrawalController(context: AccountContext, updatedPresentationData: (initial: PresentationData, signal: Signal<PresentationData, NoError>)? = nil, peerId: EnginePeer.Id, initialError: RequestStarsRevenueWithdrawalError, present: @escaping (ViewController, Any?) -> Void, completion: @escaping (String) -> Void) -> ViewController {
+public func revenueWithdrawalController(context: AccountContext, updatedPresentationData: (initial: PresentationData, signal: Signal<PresentationData, NoError>)? = nil, peerId: EnginePeer.Id, initialError: RequestDiamondsRevenueWithdrawalError, present: @escaping (ViewController, Any?) -> Void, completion: @escaping (String) -> Void) -> ViewController {
     let presentationData = updatedPresentationData?.initial ?? context.sharedContext.currentPresentationData.with { $0 }
     let strings = presentationData.strings
     

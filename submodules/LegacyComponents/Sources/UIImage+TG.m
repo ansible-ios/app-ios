@@ -1,6 +1,6 @@
 
 
-#import <LegacyComponents/UIImage+TG.h>
+#import <LegacyComponents/UIImage+AS.h>
 
 #import <objc/runtime.h>
 
@@ -10,7 +10,7 @@ static const void *degradedKey = &degradedKey;
 static const void *editedKey = &editedKey;
 static const void *fromCloudKey = &fromCloudKey;
 
-@implementation UIImage (TG)
+@implementation UIImage (AS)
 
 - (NSDictionary *)attachmentsDictionary
 {

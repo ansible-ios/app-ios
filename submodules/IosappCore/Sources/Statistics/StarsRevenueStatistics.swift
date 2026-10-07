@@ -27,9 +27,9 @@ public struct StarsRevenueStats: Equatable, Codable {
             case withdrawEnabled
             case nextWithdrawalTimestamp
             
-            case currentBalanceStars
-            case availableBalanceStars
-            case overallRevenueStars
+            case currentBalanceDiamonds
+            case availableBalanceDiamonds
+            case overallRevenueDiamonds
         }
         
         public let currentBalance: CurrencyAmount
@@ -55,19 +55,19 @@ public struct StarsRevenueStats: Equatable, Codable {
         public init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             
-            if let legacyCurrentBalance = try container.decodeIfPresent(StarsAmount.self, forKey: .currentBalanceStars) {
+            if let legacyCurrentBalance = try container.decodeIfPresent(StarsAmount.self, forKey: .currentBalanceDiamonds) {
                 self.currentBalance = CurrencyAmount(amount: legacyCurrentBalance, currency: .stars)
             } else {
                 self.currentBalance = try container.decode(CurrencyAmount.self, forKey: .currentBalance)
             }
             
-            if let legacyAvailableBalance = try container.decodeIfPresent(StarsAmount.self, forKey: .availableBalanceStars) {
+            if let legacyAvailableBalance = try container.decodeIfPresent(StarsAmount.self, forKey: .availableBalanceDiamonds) {
                 self.availableBalance = CurrencyAmount(amount: legacyAvailableBalance, currency: .stars)
             } else {
                 self.availableBalance = try container.decode(CurrencyAmount.self, forKey: .availableBalance)
             }
             
-            if let legacyOverallRevenue = try container.decodeIfPresent(StarsAmount.self, forKey: .overallRevenueStars) {
+            if let legacyOverallRevenue = try container.decodeIfPresent(StarsAmount.self, forKey: .overallRevenueDiamonds) {
                 self.overallRevenue = CurrencyAmount(amount: legacyOverallRevenue, currency: .stars)
             } else {
                 self.overallRevenue = try container.decode(CurrencyAmount.self, forKey: .overallRevenue)
@@ -144,34 +144,34 @@ public extension StarsRevenueStats {
 }
 
 extension StarsRevenueStats {
-    init(apiStarsRevenueStats: Api.payments.StarsRevenueStats, peerId: PeerId) {
-        switch apiStarsRevenueStats {
-        case let .starsRevenueStats(starsRevenueStatsData):
-            let (topHoursGraph, revenueGraph, balances, usdRate) = (starsRevenueStatsData.topHoursGraph, starsRevenueStatsData.revenueGraph, starsRevenueStatsData.status, starsRevenueStatsData.usdRate)
-            self.init(topHoursGraph: topHoursGraph.flatMap { StatsGraph(apiStatsGraph: $0) }, revenueGraph: StatsGraph(apiStatsGraph: revenueGraph), balances: StarsRevenueStats.Balances(apiStarsRevenueStatus: balances), usdRate: usdRate)
+    init(apiDiamondsRevenueStats: Api.payments.StarsRevenueStats, peerId: PeerId) {
+        switch apiDiamondsRevenueStats {
+        case let .starsRevenueStats(diamondsRevenueStatsData):
+            let (topHoursGraph, revenueGraph, balances, usdRate) = (diamondsRevenueStatsData.topHoursGraph, diamondsRevenueStatsData.revenueGraph, diamondsRevenueStatsData.status, diamondsRevenueStatsData.usdRate)
+            self.init(topHoursGraph: topHoursGraph.flatMap { StatsGraph(apiStatsGraph: $0) }, revenueGraph: StatsGraph(apiStatsGraph: revenueGraph), balances: StarsRevenueStats.Balances(apiDiamondsRevenueStatus: balances), usdRate: usdRate)
         }
     }
 }
 
 extension StarsRevenueStats.Balances {
-    init(apiStarsRevenueStatus: Api.StarsRevenueStatus) {
-        switch apiStarsRevenueStatus {
-        case let .starsRevenueStatus(starsRevenueStatusData):
-            let flags = starsRevenueStatusData.flags
-            let currentBalance = starsRevenueStatusData.currentBalance
-            let availableBalance = starsRevenueStatusData.availableBalance
-            let overallRevenue = starsRevenueStatusData.overallRevenue
-            let nextWithdrawalAt = starsRevenueStatusData.nextWithdrawalAt
+    init(apiDiamondsRevenueStatus: Api.StarsRevenueStatus) {
+        switch apiDiamondsRevenueStatus {
+        case let .starsRevenueStatus(diamondsRevenueStatusData):
+            let flags = diamondsRevenueStatusData.flags
+            let currentBalance = diamondsRevenueStatusData.currentBalance
+            let availableBalance = diamondsRevenueStatusData.availableBalance
+            let overallRevenue = diamondsRevenueStatusData.overallRevenue
+            let nextWithdrawalAt = diamondsRevenueStatusData.nextWithdrawalAt
             self.init(currentBalance: CurrencyAmount(apiAmount: currentBalance), availableBalance: CurrencyAmount(apiAmount: availableBalance), overallRevenue: CurrencyAmount(apiAmount: overallRevenue), withdrawEnabled: ((flags & (1 << 0)) != 0), nextWithdrawalTimestamp: nextWithdrawalAt)
         }
     }
 }
 
-public struct StarsRevenueStatsContextState: Equatable {
+public struct DiamondsRevenueStatsContextState: Equatable {
     public var stats: StarsRevenueStats?
 }
 
-private func requestStarsRevenueStats(postbox: Postbox, network: Network, peerId: PeerId, ton: Bool, dark: Bool = false) -> Signal<StarsRevenueStats?, NoError> {
+private func requestDiamondsRevenueStats(postbox: Postbox, network: Network, peerId: PeerId, ton: Bool, dark: Bool = false) -> Signal<StarsRevenueStats?, NoError> {
     return postbox.transaction { transaction -> Peer? in
         if let peer = transaction.getPeer(peerId) {
             return peer
@@ -196,26 +196,26 @@ private func requestStarsRevenueStats(postbox: Postbox, network: Network, peerId
             guard let result else {
                 return nil
             }
-            return StarsRevenueStats(apiStarsRevenueStats: result, peerId: peerId)
+            return StarsRevenueStats(apiDiamondsRevenueStats: result, peerId: peerId)
         }
         
     }
 }
 
-private final class StarsRevenueStatsContextImpl {
+private final class DiamondsRevenueStatsContextImpl {
     private let account: Account
     private let peerId: PeerId
     private let ton: Bool
     
-    private var _state: StarsRevenueStatsContextState {
+    private var _state: DiamondsRevenueStatsContextState {
         didSet {
             if self._state != oldValue {
                 self._statePromise.set(.single(self._state))
             }
         }
     }
-    private let _statePromise = Promise<StarsRevenueStatsContextState>()
-    var state: Signal<StarsRevenueStatsContextState, NoError> {
+    private let _statePromise = Promise<DiamondsRevenueStatsContextState>()
+    var state: Signal<DiamondsRevenueStatsContextState, NoError> {
         return self._statePromise.get()
     }
     
@@ -228,19 +228,19 @@ private final class StarsRevenueStatsContextImpl {
         self.account = account
         self.peerId = peerId
         self.ton = ton
-        self._state = StarsRevenueStatsContextState(stats: nil)
+        self._state = DiamondsRevenueStatsContextState(stats: nil)
         self._statePromise.set(.single(self._state))
         
         self.load()
         
         let _ = (account.postbox.transaction { transaction -> StarsRevenueStats? in
-            return transaction.retrieveItemCacheEntry(id: ItemCacheEntryId(collectionId: Namespaces.CachedItemCollection.cachedStarsRevenueStats, key: StarsRevenueStats.key(peerId: peerId, ton: ton)))?.get(StarsRevenueStats.self)
+            return transaction.retrieveItemCacheEntry(id: ItemCacheEntryId(collectionId: Namespaces.CachedItemCollection.cachedDiamondsRevenueStats, key: StarsRevenueStats.key(peerId: peerId, ton: ton)))?.get(StarsRevenueStats.self)
         }
         |> deliverOnMainQueue).start(next: { [weak self] cachedResult in
             guard let self, let cachedResult else {
                 return
             }
-            self._state = StarsRevenueStatsContextState(stats: cachedResult)
+            self._state = DiamondsRevenueStatsContextState(stats: cachedResult)
             self._statePromise.set(.single(self._state))
         })
     }
@@ -253,7 +253,7 @@ private final class StarsRevenueStatsContextImpl {
     
     public func setUpdated(_ f: @escaping () -> Void) {
         let peerId = self.peerId
-        self.updateDisposable.set((account.stateManager.updatedStarsRevenueStatus()
+        self.updateDisposable.set((account.stateManager.updatedDiamondsRevenueStatus()
         |> deliverOnMainQueue).startStrict(next: { updates in
             if let _ = updates[peerId] {
                 f()
@@ -267,14 +267,14 @@ private final class StarsRevenueStatsContextImpl {
         let account = self.account
         let peerId = self.peerId
         let ton = self.ton
-        let signal = requestStarsRevenueStats(postbox: self.account.postbox, network: self.account.network, peerId: self.peerId, ton: self.ton)
+        let signal = requestDiamondsRevenueStats(postbox: self.account.postbox, network: self.account.network, peerId: self.peerId, ton: self.ton)
         |> mapToSignal { initial -> Signal<StarsRevenueStats?, NoError> in
             guard let initial else {
                 return .single(nil)
             }
             return .single(initial)
             |> then(
-                account.stateManager.updatedStarsRevenueStatus()
+                account.stateManager.updatedDiamondsRevenueStatus()
                 |> mapToSignal { updates in
                     if let balances = updates[peerId] {
                         return .single(initial.withUpdated(balances: balances))
@@ -287,13 +287,13 @@ private final class StarsRevenueStatsContextImpl {
         self.disposable.set((signal
         |> deliverOnMainQueue).start(next: { [weak self] stats in
             if let self {
-                self._state = StarsRevenueStatsContextState(stats: stats)
+                self._state = DiamondsRevenueStatsContextState(stats: stats)
                 self._statePromise.set(.single(self._state))
                 
                 if let stats {
                     let _ = (self.account.postbox.transaction { transaction in
                         if let entry = CodableEntry(stats) {
-                            transaction.putItemCacheEntry(id: ItemCacheEntryId(collectionId: Namespaces.CachedItemCollection.cachedStarsRevenueStats, key: StarsRevenueStats.key(peerId: peerId, ton: ton)), entry: entry)
+                            transaction.putItemCacheEntry(id: ItemCacheEntryId(collectionId: Namespaces.CachedItemCollection.cachedDiamondsRevenueStats, key: StarsRevenueStats.key(peerId: peerId, ton: ton)), entry: entry)
                         }
                     }).start()
                 }
@@ -310,10 +310,10 @@ private final class StarsRevenueStatsContextImpl {
     }
 }
 
-public final class StarsRevenueStatsContext {
-    private let impl: QueueLocalObject<StarsRevenueStatsContextImpl>
+public final class DiamondsRevenueStatsContext {
+    private let impl: QueueLocalObject<DiamondsRevenueStatsContextImpl>
     
-    public var state: Signal<StarsRevenueStatsContextState, NoError> {
+    public var state: Signal<DiamondsRevenueStatsContextState, NoError> {
         return Signal { subscriber in
             let disposable = MetaDisposable()
             self.impl.with { impl in
@@ -327,7 +327,7 @@ public final class StarsRevenueStatsContext {
     
     public init(account: Account, peerId: PeerId, ton: Bool) {
         self.impl = QueueLocalObject(queue: Queue.mainQueue(), generate: {
-            return StarsRevenueStatsContextImpl(account: account, peerId: peerId, ton: ton)
+            return DiamondsRevenueStatsContextImpl(account: account, peerId: peerId, ton: ton)
         })
     }
     
@@ -357,7 +357,7 @@ public final class StarsRevenueStatsContext {
     }
 }
 
-public enum RequestStarsRevenueWithdrawalError : Equatable {
+public enum RequestDiamondsRevenueWithdrawalError : Equatable {
     case generic
     case twoStepAuthMissing
     case twoStepAuthTooFresh(Int32)
@@ -368,9 +368,9 @@ public enum RequestStarsRevenueWithdrawalError : Equatable {
     case serverProvided(text: String)
 }
 
-func _internal_checkStarsRevenueWithdrawalAvailability(account: Account) -> Signal<Never, RequestStarsRevenueWithdrawalError> {
+func _internal_checkDiamondsRevenueWithdrawalAvailability(account: Account) -> Signal<Never, RequestDiamondsRevenueWithdrawalError> {
     return account.network.request(Api.functions.payments.getStarsRevenueWithdrawalUrl(flags: 0, peer: .inputPeerEmpty, amount: nil, password: .inputCheckPasswordEmpty))
-    |> mapError { error -> RequestStarsRevenueWithdrawalError in
+    |> mapError { error -> RequestDiamondsRevenueWithdrawalError in
         if error.errorDescription == "PASSWORD_HASH_INVALID" {
             return .requestPassword
         } else if error.errorDescription == "PASSWORD_MISSING" {
@@ -391,25 +391,25 @@ func _internal_checkStarsRevenueWithdrawalAvailability(account: Account) -> Sign
     |> ignoreValues
 }
 
-func _internal_requestStarsRevenueWithdrawalUrl(account: Account, ton: Bool, peerId: PeerId, amount: Int64?, password: String) -> Signal<String, RequestStarsRevenueWithdrawalError> {
+func _internal_requestDiamondsRevenueWithdrawalUrl(account: Account, ton: Bool, peerId: PeerId, amount: Int64?, password: String) -> Signal<String, RequestDiamondsRevenueWithdrawalError> {
     guard !password.isEmpty else {
         return .fail(.invalidPassword)
     }
     
-    return account.postbox.transaction { transaction -> Signal<String, RequestStarsRevenueWithdrawalError> in
+    return account.postbox.transaction { transaction -> Signal<String, RequestDiamondsRevenueWithdrawalError> in
         guard let peer = transaction.getPeer(peerId), let inputPeer = apiInputPeer(peer) else {
             return .fail(.generic)
         }
             
         let checkPassword = _internal_twoStepAuthData(account.network)
-        |> mapError { error -> RequestStarsRevenueWithdrawalError in
+        |> mapError { error -> RequestDiamondsRevenueWithdrawalError in
             if error.errorDescription.hasPrefix("FLOOD_WAIT") {
                 return .limitExceeded
             } else {
                 return .generic
             }
         }
-        |> mapToSignal { authData -> Signal<Api.InputCheckPasswordSRP, RequestStarsRevenueWithdrawalError> in
+        |> mapToSignal { authData -> Signal<Api.InputCheckPasswordSRP, RequestDiamondsRevenueWithdrawalError> in
             if let currentPasswordDerivation = authData.currentPasswordDerivation, let srpSessionData = authData.srpSessionData {
                 guard let kdfResult = passwordKDF(encryptionProvider: account.network.encryptionProvider, password: password, derivation: currentPasswordDerivation, srpSessionData: srpSessionData) else {
                     return .fail(.generic)
@@ -421,7 +421,7 @@ func _internal_requestStarsRevenueWithdrawalUrl(account: Account, ton: Bool, pee
         }
         
         return checkPassword
-        |> mapToSignal { password -> Signal<String, RequestStarsRevenueWithdrawalError> in
+        |> mapToSignal { password -> Signal<String, RequestDiamondsRevenueWithdrawalError> in
             var flags: Int32 = 0
             if ton {
                 flags |= 1 << 0
@@ -429,7 +429,7 @@ func _internal_requestStarsRevenueWithdrawalUrl(account: Account, ton: Bool, pee
                 flags |= 1 << 1
             }
             return account.network.request(Api.functions.payments.getStarsRevenueWithdrawalUrl(flags: flags, peer: inputPeer, amount: amount, password: password), automaticFloodWait: false)
-            |> mapError { error -> RequestStarsRevenueWithdrawalError in
+            |> mapError { error -> RequestDiamondsRevenueWithdrawalError in
                 if error.errorCode == 406 {
                     return .serverProvided(text: error.errorDescription)
                 } else if error.errorDescription.hasPrefix("FLOOD_WAIT") {
@@ -453,18 +453,18 @@ func _internal_requestStarsRevenueWithdrawalUrl(account: Account, ton: Bool, pee
             }
             |> map { result -> String in
                 switch result {
-                case let .starsRevenueWithdrawalUrl(starsRevenueWithdrawalUrlData):
-                    let url = starsRevenueWithdrawalUrlData.url
+                case let .starsRevenueWithdrawalUrl(diamondsRevenueWithdrawalUrlData):
+                    let url = diamondsRevenueWithdrawalUrlData.url
                     return url
                 }
             }
         }
     }
-    |> mapError { _ -> RequestStarsRevenueWithdrawalError in }
+    |> mapError { _ -> RequestDiamondsRevenueWithdrawalError in }
     |> switchToLatest
 }
 
-func _internal_requestStarsRevenueAdsAccountlUrl(account: Account, peerId: EnginePeer.Id) -> Signal<String?, NoError> {
+func _internal_requestDiamondsRevenueAdsAccountlUrl(account: Account, peerId: EnginePeer.Id) -> Signal<String?, NoError> {
     return account.postbox.transaction { transaction -> Signal<String?, NoError> in
         guard let peer = transaction.getPeer(peerId), let inputPeer = apiInputPeer(peer) else {
             return .single(nil)
@@ -479,8 +479,8 @@ func _internal_requestStarsRevenueAdsAccountlUrl(account: Account, peerId: Engin
                 return nil
             }
             switch result {
-            case let .starsRevenueAdsAccountUrl(starsRevenueAdsAccountUrlData):
-                let url = starsRevenueAdsAccountUrlData.url
+            case let .starsRevenueAdsAccountUrl(diamondsRevenueAdsAccountUrlData):
+                let url = diamondsRevenueAdsAccountUrlData.url
                 return url
             }
         }

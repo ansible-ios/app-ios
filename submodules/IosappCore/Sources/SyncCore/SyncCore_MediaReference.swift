@@ -276,7 +276,7 @@ public enum AnyMediaReference: Equatable {
     case attachBot(peer: PeerReference, media: Media)
     case customEmoji(media: Media)
     case story(peer: PeerReference, id: Int32, media: Media)
-    case starsTransaction(transaction: StarsTransactionReference, media: Media)
+    case starsTransaction(transaction: DiamondsTransactionReference, media: Media)
     case savedMusic(peer: PeerReference, media: Media)
     
     public static func ==(lhs: AnyMediaReference, rhs: AnyMediaReference) -> Bool {
@@ -634,7 +634,7 @@ public enum MediaReference<T: Media> {
     case attachBot(peer: PeerReference, media: T)
     case customEmoji(media: T)
     case story(peer: PeerReference, id: Int32, media: T)
-    case starsTransaction(transaction: StarsTransactionReference, media: T)
+    case starsTransaction(transaction: DiamondsTransactionReference, media: T)
     case savedMusic(peer: PeerReference, media: T)
     
     public init?(decoder: PostboxDecoder) {
@@ -705,7 +705,7 @@ public enum MediaReference<T: Media> {
                 let id = decoder.decodeInt32ForKey("sid", orElse: 0)
                 self = .story(peer: peer, id: id, media: media)
             case .starsTransaction:
-                let transaction = decoder.decodeObjectForKey("tr", decoder: { StarsTransactionReference(decoder: $0) }) as! StarsTransactionReference
+                let transaction = decoder.decodeObjectForKey("tr", decoder: { DiamondsTransactionReference(decoder: $0) }) as! DiamondsTransactionReference
                 guard let media = decoder.decodeObjectForKey("m") as? T else {
                     return nil
                 }

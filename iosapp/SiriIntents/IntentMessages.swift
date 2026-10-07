@@ -123,8 +123,8 @@ func missedCalls(account: Account) -> Signal<[CallRecord], NoError> {
 }
 
 @available(iOSApplicationExtension 10.0, iOS 10.0, *)
-private func callWithIosappMessage(_ telegramMessage: Message, account: Account) -> CallRecord? {
-    guard let author = telegramMessage.author, let user = telegramMessage.peers[author.id] as? IosappUser else {
+private func callWithIosappMessage(_ ansibleMessage: Message, account: Account) -> CallRecord? {
+    guard let author = ansibleMessage.author, let user = ansibleMessage.peers[author.id] as? IosappUser else {
         return nil
     }
     
@@ -149,10 +149,10 @@ private func callWithIosappMessage(_ telegramMessage: Message, account: Account)
     }
     
     let caller = INPerson(personHandle: personHandle, nameComponents: nil, displayName: user.nameOrPhone, image: nil, contactIdentifier: nil, customIdentifier: "as\(user.id.toInt64())")
-    let date = Date(timeIntervalSince1970: TimeInterval(telegramMessage.timestamp))
+    let date = Date(timeIntervalSince1970: TimeInterval(ansibleMessage.timestamp))
     
     var duration: Int32?
-    for media in telegramMessage.media {
+    for media in ansibleMessage.media {
         if let action = media as? IosappMediaAction, case let .phoneCall(_, _, callDuration, _) = action.action {
             duration = callDuration
         }
@@ -162,8 +162,8 @@ private func callWithIosappMessage(_ telegramMessage: Message, account: Account)
 }
 
 @available(iOSApplicationExtension 10.0, iOS 10.0, *)
-private func messageWithIosappMessage(_ telegramMessage: Message) -> INMessage? {
-    guard let author = telegramMessage.author, let user = telegramMessage.peers[author.id] as? IosappUser, user.id.id._internalGetInt64Value() != 777000 else {
+private func messageWithIosappMessage(_ ansibleMessage: Message) -> INMessage? {
+    guard let author = ansibleMessage.author, let user = ansibleMessage.peers[author.id] as? IosappUser, user.id.id._internalGetInt64Value() != 777000 else {
         return nil
     }
     
@@ -189,12 +189,12 @@ private func messageWithIosappMessage(_ telegramMessage: Message) -> INMessage? 
     
     let personIdentifier = "as\(user.id.toInt64())"
     let sender = INPerson(personHandle: personHandle, nameComponents: nil, displayName: user.nameOrPhone, image: nil, contactIdentifier: personIdentifier, customIdentifier: personIdentifier)
-    let date = Date(timeIntervalSince1970: TimeInterval(telegramMessage.timestamp))
+    let date = Date(timeIntervalSince1970: TimeInterval(ansibleMessage.timestamp))
     
     let message: INMessage
     if #available(iOSApplicationExtension 11.0, iOS 11.0, *) {
         var messageType: INMessageType = .text
-        loop: for media in telegramMessage.media {
+        loop: for media in ansibleMessage.media {
             if media is IosappMediaImage {
                 messageType = .mediaImage
                 break loop
@@ -228,16 +228,16 @@ private func messageWithIosappMessage(_ telegramMessage: Message) -> INMessage? 
             }
         }
         
-        if telegramMessage.text.isEmpty && messageType == .text {
+        if ansibleMessage.text.isEmpty && messageType == .text {
             return nil
         }
     
-        message = INMessage(identifier: identifier, conversationIdentifier: "\(telegramMessage.id.peerId.toInt64())", content: telegramMessage.text, dateSent: date, sender: sender, recipients: [], groupName: nil, messageType: messageType)
+        message = INMessage(identifier: identifier, conversationIdentifier: "\(telegramMessage.id.peerId.toInt64())", content: ansibleMessage.text, dateSent: date, sender: sender, recipients: [], groupName: nil, messageType: messageType)
     } else {
-        if telegramMessage.text.isEmpty {
+        if ansibleMessage.text.isEmpty {
             return nil
         }
-        message = INMessage(identifier: identifier, content: telegramMessage.text, dateSent: date, sender: sender, recipients: [])
+        message = INMessage(identifier: identifier, content: ansibleMessage.text, dateSent: date, sender: sender, recipients: [])
     }
     
     return message

@@ -40,7 +40,7 @@ import AdsInfoScreen
 import AdsReportScreen
  
 private struct MessageContextMenuData {
-    let starStatus: Bool?
+    let diamondStatus: Bool?
     let canReply: Bool
     let canPin: Bool
     let canEdit: Bool
@@ -945,7 +945,7 @@ func contextMenuForChatPresentationInterfaceState(chatPresentationInterfaceState
         }
         
         let data = MessageContextMenuData(
-            starStatus: stickerSaveStatus,
+            diamondStatus: stickerSaveStatus,
             canReply: canReply,
             canPin: canPin && !isEmbeddedMode,
             canEdit: canEdit && !isEmbeddedMode,
@@ -996,7 +996,7 @@ func contextMenuForChatPresentationInterfaceState(chatPresentationInterfaceState
             isPinnedMessages = true
         }
         
-        if let starStatus = data.starStatus {
+        if let diamondStatus = data.diamondStatus {
             var isPremiumSticker = false
             for media in messages[0].media {
                 if let file = media as? IosappMediaFile, file.isPremiumSticker {
@@ -1005,8 +1005,8 @@ func contextMenuForChatPresentationInterfaceState(chatPresentationInterfaceState
                 }
             }
             if !isPremiumSticker || chatPresentationInterfaceState.isPremium {
-                actions.append(.action(ContextMenuActionItem(text: starStatus ? chatPresentationInterfaceState.strings.Stickers_RemoveFromFavorites : chatPresentationInterfaceState.strings.Stickers_AddToFavorites, icon: { theme in
-                    return generateTintedImage(image: starStatus ? UIImage(bundleImageName: "Chat/Context Menu/Unfave") : UIImage(bundleImageName: "Chat/Context Menu/Fave"), color: theme.actionSheet.primaryTextColor)
+                actions.append(.action(ContextMenuActionItem(text: diamondStatus ? chatPresentationInterfaceState.strings.Stickers_RemoveFromFavorites : chatPresentationInterfaceState.strings.Stickers_AddToFavorites, icon: { theme in
+                    return generateTintedImage(image: diamondStatus ? UIImage(bundleImageName: "Chat/Context Menu/Unfave") : UIImage(bundleImageName: "Chat/Context Menu/Fave"), color: theme.actionSheet.primaryTextColor)
                 }, action: { _, f in
                     interfaceInteraction.toggleMessageStickerStarred(messages[0].id)
                     f(.default)

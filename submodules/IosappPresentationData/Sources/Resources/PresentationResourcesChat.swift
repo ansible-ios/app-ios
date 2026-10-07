@@ -1444,8 +1444,8 @@ public struct PresentationResourcesChat {
         })
     }
     
-    public static func chatEmptyStateStarIcon(_ theme: PresentationTheme) -> UIImage? {
-        return theme.image(PresentationResourceKey.chatEmptyStateStarIcon.rawValue, { theme in
+    public static func chatEmptyStateDiamondIcon(_ theme: PresentationTheme) -> UIImage? {
+        return theme.image(PresentationResourceKey.chatEmptyStateDiamondIcon.rawValue, { theme in
             if let image = UIImage(bundleImageName: "Item List/PremiumIcon") {
                 return generateImage(image.size, contextGenerator: { size, context in
                     let bounds = CGRect(origin: .zero, size: size)
@@ -1478,8 +1478,8 @@ public struct PresentationResourcesChat {
         })
     }
     
-    public static func chatPlaceholderStarIcon(_ theme: PresentationTheme) -> UIImage? {
-        return theme.image(PresentationResourceKey.chatPlaceholderStarIcon.rawValue, { theme in
+    public static func chatPlaceholderDiamondIcon(_ theme: PresentationTheme) -> UIImage? {
+        return theme.image(PresentationResourceKey.chatPlaceholderDiamondIcon.rawValue, { theme in
             if let image = UIImage(bundleImageName: "Premium/Stars/ButtonStar") {
                 return generateImage(image.size, contextGenerator: { size, context in
                     let bounds = CGRect(origin: .zero, size: size)

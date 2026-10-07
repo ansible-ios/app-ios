@@ -355,8 +355,8 @@ public enum PresentationResourceKey: Int32 {
     case chatAttachedContentCloseIcon
     case chatPollAddIcon
     
-    case chatEmptyStateStarIcon
-    case chatPlaceholderStarIcon
+    case chatEmptyStateDiamondIcon
+    case chatPlaceholderDiamondIcon
     case chatUserInfoWarningIcon
     
     case avatarPremiumLockBadgeBackground
@@ -364,8 +364,8 @@ public enum PresentationResourceKey: Int32 {
     case shareAvatarPremiumLockBadgeBackground
     case shareAvatarPremiumLockBadge
     
-    case shareAvatarStarsLockBadgeBackground
-    case shareAvatarStarsLockBadgeInnerBackground
+    case shareAvatarDiamondsLockBadgeBackground
+    case shareAvatarDiamondsLockBadgeInnerBackground
     
     case sharedLinkIcon
     

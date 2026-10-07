@@ -80,7 +80,7 @@ final class PostSuggestionsSettingsScreenComponent: Component {
         private var environment: EnvironmentType?
         
         private var areSuggestionsEnabled: Bool = false
-        private var starCount: Int = 0
+        private var diamondCount: Int = 0
         
         override init(frame: CGRect) {
             self.scrollView = ScrollView()
@@ -124,13 +124,13 @@ final class PostSuggestionsSettingsScreenComponent: Component {
 
             let currentAmount: StarsAmount?
             if self.areSuggestionsEnabled {
-                currentAmount = StarsAmount(value: Int64(self.starCount), nanos: 0)
+                currentAmount = StarsAmount(value: Int64(self.diamondCount), nanos: 0)
             } else {
                 currentAmount = nil
             }
             
             if component.initialPrice != currentAmount {
-                let _ = component.context.engine.peers.updateChannelPaidMessagesStars(peerId: peer.id, stars: currentAmount, broadcastMessagesAllowed: currentAmount != nil).startStandalone()
+                let _ = component.context.engine.peers.updateChannelPaidMessagesDiamonds(peerId: peer.id, stars: currentAmount, broadcastMessagesAllowed: currentAmount != nil).startStandalone()
             }
             
             return true
@@ -261,12 +261,12 @@ final class PostSuggestionsSettingsScreenComponent: Component {
             
             if self.component == nil {
                 if let initialPrice = component.initialPrice {
-                    self.starCount = Int(initialPrice.value)
+                    self.diamondCount = Int(initialPrice.value)
                     self.areSuggestionsEnabled = true
                 } else {
-                    self.starCount = 20
+                    self.diamondCount = 20
                     if let data = component.context.currentAppConfiguration.with({ $0 }).data, let value = data["stars_paid_messages_channel_amount_default"] as? Double {
-                        self.starCount = Int(value)
+                        self.diamondCount = Int(value)
                     }
                     self.areSuggestionsEnabled = false
                 }
@@ -435,14 +435,14 @@ final class PostSuggestionsSettingsScreenComponent: Component {
             var contentSectionItems: [AnyComponentWithIdentity<Empty>] = []
             
             let usdRate = Double(component.usdWithdrawRate) / 1000.0 / 100.0
-            let price = self.starCount == 0 ? "" : "~\(formatTonUsdValue(Int64(self.starCount), divide: false, rate: usdRate, dateTimeFormat: presentationData.dateTimeFormat))"
+            let price = self.diamondCount == 0 ? "" : "~\(formatTonUsdValue(Int64(self.starCount), divide: false, rate: usdRate, dateTimeFormat: presentationData.dateTimeFormat))"
             
             contentSectionItems.append(AnyComponentWithIdentity(id: 0, component: AnyComponent(ListItemComponentAdaptor(
                 itemGenerator: MessagePriceItem(
                     theme: environment.theme,
                     strings: environment.strings,
                     isEnabled: true, minValue: 0, maxValue: 10000,
-                    value: Int64(self.starCount),
+                    value: Int64(self.diamondCount),
                     price: price,
                     sectionId: 0,
                     updated: { [weak self] value, _ in
@@ -450,7 +450,7 @@ final class PostSuggestionsSettingsScreenComponent: Component {
                             return
                         }
                         
-                        self.starCount = Int(value)
+                        self.diamondCount = Int(value)
                         if !self.isUpdating {
                             self.state?.updated(transition: .immediate)
                         }
@@ -460,18 +460,18 @@ final class PostSuggestionsSettingsScreenComponent: Component {
                             return
                         }
                         
-                        let currentAmount: StarsAmount = StarsAmount(value: Int64(self.starCount), nanos: 0)
-                        let starsScreen = component.context.sharedContext.makeStarsWithdrawalScreen(context: component.context, subject: .enterAmount(current: currentAmount, minValue: StarsAmount(value: 0, nanos: 0), fractionAfterCommission: component.channelMessageSuggestionCommissionPermille / 10, kind: .postSuggestion, completion: { [weak self] amount in
+                        let currentAmount: StarsAmount = StarsAmount(value: Int64(self.diamondCount), nanos: 0)
+                        let diamondsScreen = component.context.sharedContext.makeDiamondsWithdrawalScreen(context: component.context, subject: .enterAmount(current: currentAmount, minValue: StarsAmount(value: 0, nanos: 0), fractionAfterCommission: component.channelMessageSuggestionCommissionPermille / 10, kind: .postSuggestion, completion: { [weak self] amount in
                             guard let self else {
                                 return
                             }
                             
-                            self.starCount = Int(amount)
+                            self.diamondCount = Int(amount)
                             if !self.isUpdating {
                                 self.state?.updated(transition: .immediate)
                             }
                         }))
-                        environment.controller()?.push(starsScreen)
+                        environment.controller()?.push(diamondsScreen)
                     },
                     openPremiumInfo: nil
                 ),
@@ -495,7 +495,7 @@ final class PostSuggestionsSettingsScreenComponent: Component {
                         text: .plain(NSAttributedString(
                             string: environment.strings.ChannelMessages_PriceSectionFooterValue("\(component.channelMessageSuggestionCommissionPermille / 10)").string,
                             font: Font.regular(13.0),
-                            textColor: self.starCount == 0 ? .clear : environment.theme.list.freeTextColor
+                            textColor: self.diamondCount == 0 ? .clear : environment.theme.list.freeTextColor
                         )),
                         maximumNumberOfLines: 0
                     )),
@@ -624,7 +624,7 @@ public final class PostSuggestionsSettingsScreen: ViewControllerComponentContain
     ) async {
         self.context = context
         
-        let configuration = StarsSubscriptionConfiguration.with(appConfiguration: context.currentAppConfiguration.with({ $0 }))
+        let configuration = DiamondsSubscriptionConfiguration.with(appConfiguration: context.currentAppConfiguration.with({ $0 }))
         
         let peer = await context.engine.data.get(
             IosappEngine.EngineData.Item.Peer.Peer(id: peerId)

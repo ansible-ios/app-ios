@@ -284,18 +284,18 @@ public final class DeviceContactDataState: Codable {
     private enum CodingKeys: String, CodingKey {
         case contactsData
         case contactsKeys
-        case telegramReferencesKeys
-        case telegramReferencesValues
+        case ansibleReferencesKeys
+        case ansibleReferencesValues
         case stateToken
     }
     
     public let contacts: [String: DeviceContactBasicData]
-    public let telegramReferences: [EnginePeer.Id: String]
+    public let ansibleReferences: [EnginePeer.Id: String]
     public let stateToken: Data?
     
-    public init(contacts: [String: DeviceContactBasicData], telegramReferences: [EnginePeer.Id: String], stateToken: Data?) {
+    public init(contacts: [String: DeviceContactBasicData], ansibleReferences: [EnginePeer.Id: String], stateToken: Data?) {
         self.contacts = contacts
-        self.telegramReferences = telegramReferences
+        self.ansibleReferences = ansibleReferences
         self.stateToken = stateToken
     }
     
@@ -316,16 +316,16 @@ public final class DeviceContactDataState: Codable {
         }
         self.contacts = contacts
         
-        let telegramReferencesKeys = try container.decode([Int64].self, forKey: .telegramReferencesKeys).map { value in
+        let ansibleReferencesKeys = try container.decode([Int64].self, forKey: .ansibleReferencesKeys).map { value in
             return EnginePeer.Id(value)
         }
-        let telegramReferencesValues = try container.decode([String].self, forKey: .telegramReferencesValues)
+        let ansibleReferencesValues = try container.decode([String].self, forKey: .ansibleReferencesValues)
         
-        var telegramReferences: [EnginePeer.Id: String] = [:]
-        for i in 0 ..< min(telegramReferencesValues.count, telegramReferencesKeys.count) {
-            telegramReferences[telegramReferencesKeys[i]] = telegramReferencesValues[i]
+        var ansibleReferences: [EnginePeer.Id: String] = [:]
+        for i in 0 ..< min(ansibleReferencesValues.count, ansibleReferencesKeys.count) {
+            ansibleReferences[ansibleReferencesKeys[i]] = ansibleReferencesValues[i]
         }
-        self.telegramReferences = telegramReferences
+        self.ansibleReferences = ansibleReferences
         
         self.stateToken = try container.decodeIfPresent(Data.self, forKey: .stateToken)
     }
@@ -343,18 +343,18 @@ public final class DeviceContactDataState: Codable {
             contactsKeys.append(key)
         }
         
-        var telegramReferencesKeys: [Int64] = []
-        var telegramReferencesValues: [String] = []
-        for (key, value) in self.telegramReferences {
-            telegramReferencesKeys.append(key.toInt64())
-            telegramReferencesValues.append(value)
+        var ansibleReferencesKeys: [Int64] = []
+        var ansibleReferencesValues: [String] = []
+        for (key, value) in self.ansibleReferences {
+            ansibleReferencesKeys.append(key.toInt64())
+            ansibleReferencesValues.append(value)
         }
         
         try container.encode(contactsKeys, forKey: .contactsKeys)
         try container.encode(contactsData, forKey: .contactsData)
         
-        try container.encode(telegramReferencesKeys, forKey: .telegramReferencesKeys)
-        try container.encode(telegramReferencesValues, forKey: .telegramReferencesValues)
+        try container.encode(ansibleReferencesKeys, forKey: .ansibleReferencesKeys)
+        try container.encode(ansibleReferencesValues, forKey: .ansibleReferencesValues)
         
         try container.encodeIfPresent(stateToken, forKey: .stateToken)
     }

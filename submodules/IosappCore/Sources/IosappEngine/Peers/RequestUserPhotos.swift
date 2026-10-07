@@ -52,7 +52,7 @@ func _internal_requestPeerPhotos(accountPeerId: PeerId, postbox: Postbox, networ
                     
                     var images: [IosappPeerPhoto] = []
                     for i in 0 ..< photos.count {
-                        if let image = telegramMediaImageFromApiPhoto(photos[i]), let reference = image.reference {
+                        if let image = ansibleMediaImageFromApiPhoto(photos[i]), let reference = image.reference {
                             var date: Int32 = 0
                             switch photos[i] {
                                 case let .photo(photoData):

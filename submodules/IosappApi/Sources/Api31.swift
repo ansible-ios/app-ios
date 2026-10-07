@@ -364,7 +364,7 @@ public extension Api {
                 return ("webPageAttributeAiComposeTone", [("emojiId", ConstructorParameterDescription(self.emojiId))])
             }
         }
-        public class Cons_webPageAttributeStarGiftAuction: TypeConstructorDescription {
+        public class Cons_webPageAttributeDiamondGiftAuction: TypeConstructorDescription {
             public var gift: Api.StarGift
             public var endDate: Int32
             public init(gift: Api.StarGift, endDate: Int32) {
@@ -375,7 +375,7 @@ public extension Api {
                 return ("webPageAttributeStarGiftAuction", [("gift", ConstructorParameterDescription(self.gift)), ("endDate", ConstructorParameterDescription(self.endDate))])
             }
         }
-        public class Cons_webPageAttributeStarGiftCollection: TypeConstructorDescription {
+        public class Cons_webPageAttributeDiamondGiftCollection: TypeConstructorDescription {
             public var icons: [Api.Document]
             public init(icons: [Api.Document]) {
                 self.icons = icons
@@ -423,7 +423,7 @@ public extension Api {
                 return ("webPageAttributeTheme", [("flags", ConstructorParameterDescription(self.flags)), ("documents", ConstructorParameterDescription(self.documents)), ("settings", ConstructorParameterDescription(self.settings))])
             }
         }
-        public class Cons_webPageAttributeUniqueStarGift: TypeConstructorDescription {
+        public class Cons_webPageAttributeUniqueDiamondGift: TypeConstructorDescription {
             public var gift: Api.StarGift
             public init(gift: Api.StarGift) {
                 self.gift = gift
@@ -433,12 +433,12 @@ public extension Api {
             }
         }
         case webPageAttributeAiComposeTone(Cons_webPageAttributeAiComposeTone)
-        case webPageAttributeStarGiftAuction(Cons_webPageAttributeStarGiftAuction)
-        case webPageAttributeStarGiftCollection(Cons_webPageAttributeStarGiftCollection)
+        case webPageAttributeStarGiftAuction(Cons_webPageAttributeDiamondGiftAuction)
+        case webPageAttributeStarGiftCollection(Cons_webPageAttributeDiamondGiftCollection)
         case webPageAttributeStickerSet(Cons_webPageAttributeStickerSet)
         case webPageAttributeStory(Cons_webPageAttributeStory)
         case webPageAttributeTheme(Cons_webPageAttributeTheme)
-        case webPageAttributeUniqueStarGift(Cons_webPageAttributeUniqueStarGift)
+        case webPageAttributeUniqueStarGift(Cons_webPageAttributeUniqueDiamondGift)
 
         public func serialize(_ buffer: Buffer, _ boxed: Swift.Bool) {
             switch self {
@@ -542,7 +542,7 @@ public extension Api {
                 return nil
             }
         }
-        public static func parse_webPageAttributeStarGiftAuction(_ reader: BufferReader) -> WebPageAttribute? {
+        public static func parse_webPageAttributeDiamondGiftAuction(_ reader: BufferReader) -> WebPageAttribute? {
             var _1: Api.StarGift?
             if let signature = reader.readInt32() {
                 _1 = Api.parse(reader, signature: signature) as? Api.StarGift
@@ -552,20 +552,20 @@ public extension Api {
             let _c1 = _1 != nil
             let _c2 = _2 != nil
             if _c1 && _c2 {
-                return Api.WebPageAttribute.webPageAttributeStarGiftAuction(Cons_webPageAttributeStarGiftAuction(gift: _1!, endDate: _2!))
+                return Api.WebPageAttribute.webPageAttributeStarGiftAuction(Cons_webPageAttributeDiamondGiftAuction(gift: _1!, endDate: _2!))
             }
             else {
                 return nil
             }
         }
-        public static func parse_webPageAttributeStarGiftCollection(_ reader: BufferReader) -> WebPageAttribute? {
+        public static func parse_webPageAttributeDiamondGiftCollection(_ reader: BufferReader) -> WebPageAttribute? {
             var _1: [Api.Document]?
             if let _ = reader.readInt32() {
                 _1 = Api.parseVector(reader, elementSignature: 0, elementType: Api.Document.self)
             }
             let _c1 = _1 != nil
             if _c1 {
-                return Api.WebPageAttribute.webPageAttributeStarGiftCollection(Cons_webPageAttributeStarGiftCollection(icons: _1!))
+                return Api.WebPageAttribute.webPageAttributeStarGiftCollection(Cons_webPageAttributeDiamondGiftCollection(icons: _1!))
             }
             else {
                 return nil
@@ -638,14 +638,14 @@ public extension Api {
                 return nil
             }
         }
-        public static func parse_webPageAttributeUniqueStarGift(_ reader: BufferReader) -> WebPageAttribute? {
+        public static func parse_webPageAttributeUniqueDiamondGift(_ reader: BufferReader) -> WebPageAttribute? {
             var _1: Api.StarGift?
             if let signature = reader.readInt32() {
                 _1 = Api.parse(reader, signature: signature) as? Api.StarGift
             }
             let _c1 = _1 != nil
             if _c1 {
-                return Api.WebPageAttribute.webPageAttributeUniqueStarGift(Cons_webPageAttributeUniqueStarGift(gift: _1!))
+                return Api.WebPageAttribute.webPageAttributeUniqueStarGift(Cons_webPageAttributeUniqueDiamondGift(gift: _1!))
             }
             else {
                 return nil

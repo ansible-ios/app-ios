@@ -98,10 +98,10 @@ final class ImageBasedPasscodeBackground: PasscodeBackground {
             c.interpolationQuality = .medium
             c.draw(image.cgImage!, in: filledImageRect)
         }
-        telegramFastBlurMore(Int32(contextSize.width), Int32(contextSize.height), Int32(foregroundContext.bytesPerRow), foregroundContext.bytes)
-        telegramFastBlurMore(Int32(contextSize.width), Int32(contextSize.height), Int32(foregroundContext.bytesPerRow), foregroundContext.bytes)
-        telegramFastBlurMore(Int32(contextSize.width), Int32(contextSize.height), Int32(foregroundContext.bytesPerRow), foregroundContext.bytes)
-        telegramBrightenImage(Int32(contextSize.width), Int32(contextSize.height), Int32(foregroundContext.bytesPerRow), foregroundContext.bytes)
+        ansibleFastBlurMore(Int32(contextSize.width), Int32(contextSize.height), Int32(foregroundContext.bytesPerRow), foregroundContext.bytes)
+        ansibleFastBlurMore(Int32(contextSize.width), Int32(contextSize.height), Int32(foregroundContext.bytesPerRow), foregroundContext.bytes)
+        ansibleFastBlurMore(Int32(contextSize.width), Int32(contextSize.height), Int32(foregroundContext.bytesPerRow), foregroundContext.bytes)
+        ansibleBrightenImage(Int32(contextSize.width), Int32(contextSize.height), Int32(foregroundContext.bytesPerRow), foregroundContext.bytes)
         
         foregroundContext.withFlippedContext { c in
             c.setFillColor(UIColor(white: 1.0, alpha: 0.1).cgColor)
@@ -114,9 +114,9 @@ final class ImageBasedPasscodeBackground: PasscodeBackground {
             c.interpolationQuality = .medium
             c.draw(image.cgImage!, in: filledImageRect)
         }
-        telegramFastBlurMore(Int32(contextSize.width), Int32(contextSize.height), Int32(backgroundContext.bytesPerRow), backgroundContext.bytes)
-        telegramFastBlurMore(Int32(contextSize.width), Int32(contextSize.height), Int32(backgroundContext.bytesPerRow), backgroundContext.bytes)
-        telegramFastBlurMore(Int32(contextSize.width), Int32(contextSize.height), Int32(foregroundContext.bytesPerRow), backgroundContext.bytes)
+        ansibleFastBlurMore(Int32(contextSize.width), Int32(contextSize.height), Int32(backgroundContext.bytesPerRow), backgroundContext.bytes)
+        ansibleFastBlurMore(Int32(contextSize.width), Int32(contextSize.height), Int32(backgroundContext.bytesPerRow), backgroundContext.bytes)
+        ansibleFastBlurMore(Int32(contextSize.width), Int32(contextSize.height), Int32(foregroundContext.bytesPerRow), backgroundContext.bytes)
         
         backgroundContext.withFlippedContext { context in
             context.setFillColor(UIColor(white: 0.0, alpha: 0.35).cgColor)

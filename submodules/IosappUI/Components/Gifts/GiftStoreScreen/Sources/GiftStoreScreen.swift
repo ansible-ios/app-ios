@@ -46,7 +46,7 @@ public final class GiftStoreContentComponent: Component {
     let gift: StarGift.Gift
     let isPlain: Bool
     let confirmPurchaseImmediately: Bool
-    let starsTopUpOptions: Signal<[StarsTopUpOption]?, NoError>?
+    let diamondsTopUpOptions: Signal<[DiamondsTopUpOption]?, NoError>?
     let scrollToTop: () -> Void
     let controller: () -> ViewController?
     let completion: ((StarGift.UniqueGift) -> Void)?
@@ -65,7 +65,7 @@ public final class GiftStoreContentComponent: Component {
         gift: StarGift.Gift,
         isPlain: Bool,
         confirmPurchaseImmediately: Bool,
-        starsTopUpOptions: Signal<[StarsTopUpOption]?, NoError>?,
+        diamondsTopUpOptions: Signal<[DiamondsTopUpOption]?, NoError>?,
         scrollToTop: @escaping () -> Void,
         controller: @escaping () -> ViewController?,
         completion: ((StarGift.UniqueGift) -> Void)?
@@ -83,7 +83,7 @@ public final class GiftStoreContentComponent: Component {
         self.gift = gift
         self.isPlain = isPlain
         self.confirmPurchaseImmediately = confirmPurchaseImmediately
-        self.starsTopUpOptions = starsTopUpOptions
+        self.diamondsTopUpOptions = diamondsTopUpOptions
         self.scrollToTop = scrollToTop
         self.controller = controller
         self.completion = completion
@@ -125,9 +125,9 @@ public final class GiftStoreContentComponent: Component {
         
         private var selectedFilterId: AnyHashable?
         
-        private var starGiftsDisposable: Disposable?
-        fileprivate var starGiftsContext: ResaleGiftsContext?
-        fileprivate var starGiftsState: ResaleGiftsContext.State?
+        private var diamondGiftsDisposable: Disposable?
+        fileprivate var diamondGiftsContext: ResaleGiftsContext?
+        fileprivate var diamondGiftsState: ResaleGiftsContext.State?
         
         private var component: GiftStoreContentComponent?
         private(set) weak var state: EmptyComponentState?
@@ -145,12 +145,12 @@ public final class GiftStoreContentComponent: Component {
         }
         
         deinit {
-            self.starGiftsDisposable?.dispose()
+            self.diamondGiftsDisposable?.dispose()
         }
         
         private var currentGifts: ([StarGift], Set<String>, Set<String>, Set<String>)?
         private var effectiveGifts: [StarGift]? {
-            if let gifts = self.starGiftsState?.gifts {
+            if let gifts = self.diamondGiftsState?.gifts {
                 return gifts
             } else {
                 return nil
@@ -158,7 +158,7 @@ public final class GiftStoreContentComponent: Component {
         }
         
         private var effectiveIsLoading: Bool {
-            if self.starGiftsState?.gifts == nil || self.starGiftsState?.dataState == .loading {
+            if self.diamondGiftsState?.gifts == nil || self.diamondGiftsState?.dataState == .loading {
                 return true
             }
             return false
@@ -186,10 +186,10 @@ public final class GiftStoreContentComponent: Component {
                 
                 let optionSpacing: CGFloat = 10.0
                 let optionWidth = (availableWidth - sideInset * 2.0 - optionSpacing * 2.0) / 3.0
-                let starsOptionSize = CGSize(width: optionWidth, height: 154.0)
+                let diamondsOptionSize = CGSize(width: optionWidth, height: 154.0)
                 
                 var validIds: [AnyHashable] = []
-                var itemFrame = CGRect(origin: CGPoint(x: sideInset, y: topInset + 9.0), size: starsOptionSize)
+                var itemFrame = CGRect(origin: CGPoint(x: sideInset, y: topInset + 9.0), size: diamondsOptionSize)
                 
                 let controller = component.controller
                 
@@ -256,17 +256,17 @@ public final class GiftStoreContentComponent: Component {
                                         guard let self, let component = self.component else {
                                             return
                                         }
-                                        if component.confirmPurchaseImmediately, let starsTopUpOptions = component.starsTopUpOptions {
-                                            buyStarGiftImpl(
+                                        if component.confirmPurchaseImmediately, let diamondsTopUpOptions = component.diamondsTopUpOptions {
+                                            buyDiamondGiftImpl(
                                                 context: component.context,
                                                 recipientPeerId: component.context.account.peerId,
                                                 uniqueGift: uniqueGift,
                                                 showAttributes: true,
                                                 acceptedPrice: nil,
                                                 skipConfirmation: false,
-                                                starsTopUpOptions: starsTopUpOptions,
+                                                diamondsTopUpOptions: diamondsTopUpOptions,
                                                 buyGift: { [weak self] slug, peerId, price in
-                                                    return self?.starGiftsContext?.buyStarGift(slug: slug, peerId: peerId, price: price) ?? .complete()
+                                                    return self?.diamondGiftsContext?.buyDiamondGift(slug: slug, peerId: peerId, price: price) ?? .complete()
                                                 },
                                                 getController: controller,
                                                 updateProgress: { _ in },
@@ -301,10 +301,10 @@ public final class GiftStoreContentComponent: Component {
                                                     allSubjects: allSubjects,
                                                     index: index,
                                                     buyGift: { slug, peerId, price in
-                                                        return self.starGiftsContext?.buyStarGift(slug: slug, peerId: peerId, price: price) ?? .complete()
+                                                        return self.diamondGiftsContext?.buyDiamondGift(slug: slug, peerId: peerId, price: price) ?? .complete()
                                                     },
-                                                    updateResellStars: { _, price in
-                                                        return self.starGiftsContext?.updateStarGiftResellPrice(slug: uniqueGift.slug, price: price) ?? .complete()
+                                                    updateResellDiamonds: { _, price in
+                                                        return self.diamondGiftsContext?.updateDiamondGiftResellPrice(slug: uniqueGift.slug, price: price) ?? .complete()
                                                     }
                                                 )
                                                 mainController.push(giftController)
@@ -316,7 +316,7 @@ public final class GiftStoreContentComponent: Component {
                             ),
                             environment: {
                             },
-                            containerSize: starsOptionSize
+                            containerSize: diamondsOptionSize
                         )
                         if let itemView = visibleItem.view {
                             if itemView.superview == nil {
@@ -332,7 +332,7 @@ public final class GiftStoreContentComponent: Component {
                     itemFrame.origin.x += itemFrame.width + optionSpacing
                     if itemFrame.maxX > availableWidth {
                         itemFrame.origin.x = sideInset
-                        itemFrame.origin.y += starsOptionSize.height + optionSpacing
+                        itemFrame.origin.y += diamondsOptionSize.height + optionSpacing
                     }
                 }
                 
@@ -375,7 +375,7 @@ public final class GiftStoreContentComponent: Component {
                                 return
                             }
                             self.showLoading = true
-                            self.starGiftsContext?.updateFilterAttributes([])
+                            self.diamondGiftsContext?.updateFilterAttributes([])
                             component.scrollToTop()
                         },
                         animateScale: false
@@ -386,7 +386,7 @@ public final class GiftStoreContentComponent: Component {
             )
             
             var showClearFilters = false
-            if let filterAttributes = self.starGiftsState?.filterAttributes, !filterAttributes.isEmpty {
+            if let filterAttributes = self.diamondGiftsState?.filterAttributes, !filterAttributes.isEmpty {
                 showClearFilters = true
             }
             
@@ -400,7 +400,7 @@ public final class GiftStoreContentComponent: Component {
                 size: emptyResultsActionSize
             )
             
-            if let effectiveGifts = self.effectiveGifts, effectiveGifts.isEmpty && self.starGiftsState?.dataState != .loading {
+            if let effectiveGifts = self.effectiveGifts, effectiveGifts.isEmpty && self.diamondGiftsState?.dataState != .loading {
                 let emptyAnimationHeight = 148.0
                 let visibleHeight = availableHeight
                 let emptyAnimationSpacing: CGFloat = 20.0
@@ -478,7 +478,7 @@ public final class GiftStoreContentComponent: Component {
                     view.bounds = CGRect(origin: .zero, size: emptyResultsActionFrame.size)
                     ComponentTransition.immediate.setPosition(view: view, position: emptyResultsActionFrame.center)
                     
-                    view.alpha = self.starGiftsState?.attributes.isEmpty == true ? 0.0 : 1.0
+                    view.alpha = self.diamondGiftsState?.attributes.isEmpty == true ? 0.0 : 1.0
                 }
             } else {
                 if let view = self.clearFilters.view {
@@ -490,16 +490,16 @@ public final class GiftStoreContentComponent: Component {
             
             let bottomContentOffset = max(0.0, self.contentHeight - bounds.origin.y - bounds.height)
             if interactive, bottomContentOffset < 800.0 {
-                self.starGiftsContext?.loadMore()
+                self.diamondGiftsContext?.loadMore()
             }
         }
         
-        func updateStarsOnly(_ starsOnly: Bool) {
+        func updateDiamondsOnly(_ starsOnly: Bool) {
             guard let component = self.component else {
                 return
             }
             self.showLoading = true
-            component.resaleGiftsContext.updateStarsOnly(starsOnly)
+            component.resaleGiftsContext.updateDiamondsOnly(starsOnly)
             component.scrollToTop()
         }
         
@@ -519,7 +519,7 @@ public final class GiftStoreContentComponent: Component {
                     return
                 }
                 self.showLoading = true
-                self.starGiftsContext?.updateSorting(.value)
+                self.diamondGiftsContext?.updateSorting(.value)
                 component.scrollToTop()
             })))
             items.append(.action(ContextMenuActionItem(text: presentationData.strings.Gift_Store_SortByDate, icon: { theme in
@@ -530,7 +530,7 @@ public final class GiftStoreContentComponent: Component {
                     return
                 }
                 self.showLoading = true
-                self.starGiftsContext?.updateSorting(.date)
+                self.diamondGiftsContext?.updateSorting(.date)
                 component.scrollToTop()
             })))
             items.append(.action(ContextMenuActionItem(text: presentationData.strings.Gift_Store_SortByNumber, icon: { theme in
@@ -541,7 +541,7 @@ public final class GiftStoreContentComponent: Component {
                     return
                 }
                 self.showLoading = true
-                self.starGiftsContext?.updateSorting(.number)
+                self.diamondGiftsContext?.updateSorting(.number)
                 component.scrollToTop()
             })))
             
@@ -550,13 +550,13 @@ public final class GiftStoreContentComponent: Component {
                 return component.resaleGiftsContext.currentState?.starsOnly == false ? generateTintedImage(image: UIImage(bundleImageName: "Chat/Context Menu/Check"), color: theme.contextMenu.primaryColor) : UIImage()
             }, action: { [weak self] _, f in
                 f(.default)
-                self?.updateStarsOnly(false)
+                self?.updateDiamondsOnly(false)
             })))
             items.append(.action(ContextMenuActionItem(text: presentationData.strings.Gift_Store_DiamondsOnlyListings, icon: { theme in
                 return component.resaleGiftsContext.currentState?.starsOnly == true ? generateTintedImage(image: UIImage(bundleImageName: "Chat/Context Menu/Check"), color: theme.contextMenu.primaryColor) : UIImage()
             }, action: { [weak self] _, f in
                 f(.default)
-                self?.updateStarsOnly(true)
+                self?.updateDiamondsOnly(true)
             })))
             
             let contextController = makeContextController(presentationData: presentationData, source: .reference(GiftStoreReferenceContentSource(controller: controller, sourceView: sourceView)), items: .single(ContextController.Items(content: .list(items))), gesture: nil)
@@ -578,7 +578,7 @@ public final class GiftStoreContentComponent: Component {
             let presentationData = component.context.sharedContext.currentPresentationData.with { $0 }
             let searchQueryPromise = ValuePromise<String>("")
             
-            let attributes = self.starGiftsState?.attributes ?? []
+            let attributes = self.diamondGiftsState?.attributes ?? []
             let modelAttributes = attributes.filter { attribute in
                 if case let .model(_, _, _, crafted) = attribute {
                     if component.resaleGiftsContext.forCrafting && crafted {
@@ -589,14 +589,14 @@ public final class GiftStoreContentComponent: Component {
                     return false
                 }
             }.sorted(by: { lhs, rhs in
-                if case let .model(_, lhsFile, _, _) = lhs, case let .model(_, rhsFile, _, _) = rhs, let lhsCount = self.starGiftsState?.attributeCount[.model(lhsFile.fileId.id)], let rhsCount = self.starGiftsState?.attributeCount[.model(rhsFile.fileId.id)] {
+                if case let .model(_, lhsFile, _, _) = lhs, case let .model(_, rhsFile, _, _) = rhs, let lhsCount = self.diamondGiftsState?.attributeCount[.model(lhsFile.fileId.id)], let rhsCount = self.diamondGiftsState?.attributeCount[.model(rhsFile.fileId.id)] {
                     return lhsCount > rhsCount
                 } else {
                     return false
                 }
             })
             
-            let currentFilterAttributes = self.starGiftsState?.filterAttributes ?? []
+            let currentFilterAttributes = self.diamondGiftsState?.filterAttributes ?? []
             let selectedModelAttributes = currentFilterAttributes.filter { attribute in
                 if case .model = attribute {
                     return true
@@ -621,7 +621,7 @@ public final class GiftStoreContentComponent: Component {
                 context: component.context,
                 attributes: modelAttributes,
                 selectedAttributes: selectedModelAttributes,
-                attributeCount: self.starGiftsState?.attributeCount ?? [:],
+                attributeCount: self.diamondGiftsState?.attributeCount ?? [:],
                 searchQuery: searchQueryPromise.get(),
                 attributeSelected: { [weak self] attribute, exclusive in
                     guard let self else {
@@ -645,7 +645,7 @@ public final class GiftStoreContentComponent: Component {
                         }
                     }
                     self.showLoading = true
-                    self.starGiftsContext?.updateFilterAttributes(updatedFilterAttributes)
+                    self.diamondGiftsContext?.updateFilterAttributes(updatedFilterAttributes)
                     component.scrollToTop()
                 },
                 selectAll: { [weak self] in
@@ -659,7 +659,7 @@ public final class GiftStoreContentComponent: Component {
                         return true
                     }
                     self.showLoading = true
-                    self.starGiftsContext?.updateFilterAttributes(updatedFilterAttributes)
+                    self.diamondGiftsContext?.updateFilterAttributes(updatedFilterAttributes)
                     component.scrollToTop()
                 }
             ), false))
@@ -689,7 +689,7 @@ public final class GiftStoreContentComponent: Component {
             let presentationData = component.context.sharedContext.currentPresentationData.with { $0 }
             let searchQueryPromise = ValuePromise<String>("")
             
-            let attributes = self.starGiftsState?.attributes ?? []
+            let attributes = self.diamondGiftsState?.attributes ?? []
             let backdropAttributes = attributes.filter { attribute in
                 if case .backdrop = attribute {
                     return true
@@ -697,14 +697,14 @@ public final class GiftStoreContentComponent: Component {
                     return false
                 }
             }.sorted(by: { lhs, rhs in
-                if case let .backdrop(_, lhsId, _, _, _, _, _) = lhs, case let .backdrop(_, rhsId, _, _, _, _, _) = rhs, let lhsCount = self.starGiftsState?.attributeCount[.backdrop(lhsId)], let rhsCount = self.starGiftsState?.attributeCount[.backdrop(rhsId)] {
+                if case let .backdrop(_, lhsId, _, _, _, _, _) = lhs, case let .backdrop(_, rhsId, _, _, _, _, _) = rhs, let lhsCount = self.diamondGiftsState?.attributeCount[.backdrop(lhsId)], let rhsCount = self.diamondGiftsState?.attributeCount[.backdrop(rhsId)] {
                     return lhsCount > rhsCount
                 } else {
                     return false
                 }
             })
             
-            let currentFilterAttributes = self.starGiftsState?.filterAttributes ?? []
+            let currentFilterAttributes = self.diamondGiftsState?.filterAttributes ?? []
             let selectedBackdropAttributes = currentFilterAttributes.filter { attribute in
                 if case .backdrop = attribute {
                     return true
@@ -729,7 +729,7 @@ public final class GiftStoreContentComponent: Component {
                 context: component.context,
                 attributes: backdropAttributes,
                 selectedAttributes: selectedBackdropAttributes,
-                attributeCount: self.starGiftsState?.attributeCount ?? [:],
+                attributeCount: self.diamondGiftsState?.attributeCount ?? [:],
                 searchQuery: searchQueryPromise.get(),
                 attributeSelected: { [weak self] attribute, exclusive in
                     guard let self else {
@@ -753,7 +753,7 @@ public final class GiftStoreContentComponent: Component {
                         }
                     }
                     self.showLoading = true
-                    self.starGiftsContext?.updateFilterAttributes(updatedFilterAttributes)
+                    self.diamondGiftsContext?.updateFilterAttributes(updatedFilterAttributes)
                     component.scrollToTop()
                 },
                 selectAll: { [weak self] in
@@ -767,7 +767,7 @@ public final class GiftStoreContentComponent: Component {
                         return true
                     }
                     self.showLoading = true
-                    self.starGiftsContext?.updateFilterAttributes(updatedFilterAttributes)
+                    self.diamondGiftsContext?.updateFilterAttributes(updatedFilterAttributes)
                     component.scrollToTop()
                 }
             ), false))
@@ -797,7 +797,7 @@ public final class GiftStoreContentComponent: Component {
             let presentationData = component.context.sharedContext.currentPresentationData.with { $0 }
             let searchQueryPromise = ValuePromise<String>("")
             
-            let attributes = self.starGiftsState?.attributes ?? []
+            let attributes = self.diamondGiftsState?.attributes ?? []
             let patternAttributes = attributes.filter { attribute in
                 if case .pattern = attribute {
                     return true
@@ -805,14 +805,14 @@ public final class GiftStoreContentComponent: Component {
                     return false
                 }
             }.sorted(by: { lhs, rhs in
-                if case let .pattern(_, lhsFile, _) = lhs, case let .pattern(_, rhsFile, _) = rhs, let lhsCount = self.starGiftsState?.attributeCount[.pattern(lhsFile.fileId.id)], let rhsCount = self.starGiftsState?.attributeCount[.pattern(rhsFile.fileId.id)] {
+                if case let .pattern(_, lhsFile, _) = lhs, case let .pattern(_, rhsFile, _) = rhs, let lhsCount = self.diamondGiftsState?.attributeCount[.pattern(lhsFile.fileId.id)], let rhsCount = self.diamondGiftsState?.attributeCount[.pattern(rhsFile.fileId.id)] {
                     return lhsCount > rhsCount
                 } else {
                     return false
                 }
             })
             
-            let currentFilterAttributes = self.starGiftsState?.filterAttributes ?? []
+            let currentFilterAttributes = self.diamondGiftsState?.filterAttributes ?? []
             let selectedPatternAttributes = currentFilterAttributes.filter { attribute in
                 if case .pattern = attribute {
                     return true
@@ -837,7 +837,7 @@ public final class GiftStoreContentComponent: Component {
                 context: component.context,
                 attributes: patternAttributes,
                 selectedAttributes: selectedPatternAttributes,
-                attributeCount: self.starGiftsState?.attributeCount ?? [:],
+                attributeCount: self.diamondGiftsState?.attributeCount ?? [:],
                 searchQuery: searchQueryPromise.get(),
                 attributeSelected: { [weak self] attribute, exclusive in
                     guard let self else {
@@ -861,7 +861,7 @@ public final class GiftStoreContentComponent: Component {
                         }
                     }
                     self.showLoading = true
-                    self.starGiftsContext?.updateFilterAttributes(updatedFilterAttributes)
+                    self.diamondGiftsContext?.updateFilterAttributes(updatedFilterAttributes)
                     component.scrollToTop()
                 },
                 selectAll: { [weak self] in
@@ -875,7 +875,7 @@ public final class GiftStoreContentComponent: Component {
                         return true
                     }
                     self.showLoading = true
-                    self.starGiftsContext?.updateFilterAttributes(updatedFilterAttributes)
+                    self.diamondGiftsContext?.updateFilterAttributes(updatedFilterAttributes)
                     component.scrollToTop()
                 }
             ), false))
@@ -905,17 +905,17 @@ public final class GiftStoreContentComponent: Component {
             self.state = state
             
             if self.component == nil {
-                self.starGiftsContext = component.resaleGiftsContext
-                self.starGiftsDisposable = (self.starGiftsContext!.state
+                self.diamondGiftsContext = component.resaleGiftsContext
+                self.diamondGiftsDisposable = (self.diamondGiftsContext!.state
                 |> deliverOnMainQueue).start(next: { [weak self] state in
                     guard let self else {
                         return
                     }
-                    let previousFilterAttributes = self.starGiftsState?.filterAttributes
-                    let previousSorting = self.starGiftsState?.sorting
-                    let previousDataState = self.starGiftsState?.dataState
-                    let previousItems = self.starGiftsState?.gifts
-                    self.starGiftsState = state
+                    let previousFilterAttributes = self.diamondGiftsState?.filterAttributes
+                    let previousSorting = self.diamondGiftsState?.sorting
+                    let previousDataState = self.diamondGiftsState?.dataState
+                    let previousItems = self.diamondGiftsState?.gifts
+                    self.diamondGiftsState = state
                     
                     var transition: ComponentTransition = .immediate
                     if let previousFilterAttributes, previousFilterAttributes != state.filterAttributes {
@@ -935,14 +935,14 @@ public final class GiftStoreContentComponent: Component {
             }
             self.component = component
             
-            if let count = self.starGiftsState?.count, count > 0 {
+            if let count = self.diamondGiftsState?.count, count > 0 {
                 if self.initialCount == nil {
                     self.initialCount = count
                 }
             }
             
             let isLoading = self.effectiveIsLoading
-            if case let .ready(loadMore, nextOffset) = self.starGiftsState?.dataState {
+            if case let .ready(loadMore, nextOffset) = self.diamondGiftsState?.dataState {
                 if loadMore && nextOffset == nil {
                 } else {
                     self.showLoading = false
@@ -969,7 +969,7 @@ public final class GiftStoreContentComponent: Component {
             var sortingTitle = strings.Gift_Store_Sort_Date
             var sortingIcon: String = "GiftFilterDate"
             var sortingIndex: Int = 0
-            if let sorting = self.starGiftsState?.sorting {
+            if let sorting = self.diamondGiftsState?.sorting {
                 switch sorting {
                 case .value:
                     sortingTitle = component.strings.Gift_Store_Sort_Price
@@ -1014,7 +1014,7 @@ public final class GiftStoreContentComponent: Component {
             var modelCount: Int32 = 0
             var backdropCount: Int32 = 0
             var symbolCount: Int32 = 0
-            if let filterAttributes = self.starGiftsState?.filterAttributes {
+            if let filterAttributes = self.diamondGiftsState?.filterAttributes {
                 for attribute in filterAttributes {
                     switch attribute {
                     case .model:
@@ -1101,10 +1101,10 @@ public final class GiftStoreContentComponent: Component {
                 }
             }
             
-            if let starGifts = self.starGiftsState?.gifts {
-                let starsOptionSize = CGSize(width: optionWidth, height: 154.0)
+            if let starGifts = self.diamondGiftsState?.gifts {
+                let diamondsOptionSize = CGSize(width: optionWidth, height: 154.0)
                 let optionSpacing: CGFloat = 10.0
-                contentHeight += ceil(CGFloat(starGifts.count) / 3.0) * (starsOptionSize.height + optionSpacing)
+                contentHeight += ceil(CGFloat(starGifts.count) / 3.0) * (diamondsOptionSize.height + optionSpacing)
                 contentHeight += -optionSpacing + 66.0
             }
             
@@ -1190,10 +1190,10 @@ final class GiftStoreScreenComponent: Component {
         private let title = ComponentView<Empty>()
         private let subtitle = ComponentView<Empty>()
         private let content = ComponentView<Empty>()
-        private let starsFilter = ComponentView<Empty>()
+        private let diamondsFilter = ComponentView<Empty>()
                 
-        private var starsStateDisposable: Disposable?
-        private var starsState: StarsContext.State?
+        private var diamondsStateDisposable: Disposable?
+        private var diamondsState: DiamondsContext.State?
         
         private var initialCount: Int32?
         
@@ -1232,14 +1232,14 @@ final class GiftStoreScreenComponent: Component {
         }
         
         deinit {
-            self.starsStateDisposable?.dispose()
+            self.diamondsStateDisposable?.dispose()
         }
 
         func scrollToTop() {
             self.scrollView.setContentOffset(CGPoint(), animated: true)
         }
         
-        var starsFilterIsHidden = false
+        var diamondsFilterIsHidden = false
         
         var nextScrollTransition: ComponentTransition?
         func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -1251,9 +1251,9 @@ final class GiftStoreScreenComponent: Component {
                 contentView.updateScrolling(bounds: bounds, interactive: interactive, transition: transition)
             }
             
-            let starsFilterIsHidden = bounds.origin.y > 100.0
-            if starsFilterIsHidden != self.starsFilterIsHidden {
-                self.starsFilterIsHidden = starsFilterIsHidden
+            let diamondsFilterIsHidden = bounds.origin.y > 100.0
+            if diamondsFilterIsHidden != self.diamondsFilterIsHidden {
+                self.diamondsFilterIsHidden = diamondsFilterIsHidden
                 self.state?.updated(transition: .spring(duration: 0.4))
             }
         }
@@ -1261,11 +1261,11 @@ final class GiftStoreScreenComponent: Component {
         func presentBalanceMenu() {
             // Ansible: TON removed — tapping the balance opens the crystal balance
             // directly; there is no longer a Stars/TON two-item context menu.
-            guard let component = self.component, let starsContext = component.context.starsContext, let controller = self.environment?.controller() else {
+            guard let component = self.component, let diamondsContext = component.context.diamondsContext, let controller = self.environment?.controller() else {
                 return
             }
-            let starsController = component.context.sharedContext.makeStarsTransactionsScreen(context: component.context, starsContext: starsContext)
-            controller.push(starsController)
+            let diamondsController = component.context.sharedContext.makeDiamondsTransactionsScreen(context: component.context, diamondsContext: diamondsContext)
+            controller.push(diamondsController)
         }
                 
         func update(component: GiftStoreScreenComponent, availableSize: CGSize, state: State, environment: Environment<EnvironmentType>, transition: ComponentTransition) -> CGSize {
@@ -1280,12 +1280,12 @@ final class GiftStoreScreenComponent: Component {
             self.state = state
             
             if self.component == nil, let tonContext = component.context.tonContext {
-                self.starsStateDisposable = (tonContext.state
+                self.diamondsStateDisposable = (tonContext.state
                 |> deliverOnMainQueue).start(next: { [weak self] state in
                     guard let self else {
                         return
                     }
-                    self.starsState = state
+                    self.diamondsState = state
                     if !self.isUpdating {
                         self.state?.updated()
                     }
@@ -1386,7 +1386,7 @@ final class GiftStoreScreenComponent: Component {
                         gift: component.gift,
                         isPlain: false,
                         confirmPurchaseImmediately: false,
-                        starsTopUpOptions: nil,
+                        diamondsTopUpOptions: nil,
                         scrollToTop: { [weak self] in
                             self?.scrollToTop()
                         },
@@ -1410,7 +1410,7 @@ final class GiftStoreScreenComponent: Component {
             
 
             let effectiveCount: Int32
-            if let contentView = self.content.view as? GiftStoreContentComponent.View, let starGiftsState = contentView.starGiftsState, let count = starGiftsState.count, count > 0 || self.initialCount != nil {
+            if let contentView = self.content.view as? GiftStoreContentComponent.View, let diamondGiftsState = contentView.diamondGiftsState, let count = diamondGiftsState.count, count > 0 || self.initialCount != nil {
                 if self.initialCount == nil {
                     self.initialCount = count
                 }
@@ -1439,28 +1439,28 @@ final class GiftStoreScreenComponent: Component {
                 transition.setFrame(view: subtitleView, frame: subtitleFrame)
             }
             
-            if let tonState = self.starsState, tonState.balance.value == 0 {
-                let starsFilterSize = self.starsFilter.update(
+            if let tonState = self.diamondsState, tonState.balance.value == 0 {
+                let diamondsFilterSize = self.diamondsFilter.update(
                     transition: transition,
                     component: AnyComponent(
-                        StarsFilterComponent(theme: theme, text: environment.strings.Gift_Store_ShowDiamondsListings, isSelected: component.resaleGiftsContext.currentState?.starsOnly ?? false, selectionUpdated: { [weak self] starsOnly in
+                        DiamondsFilterComponent(theme: theme, text: environment.strings.Gift_Store_ShowDiamondsListings, isSelected: component.resaleGiftsContext.currentState?.starsOnly ?? false, selectionUpdated: { [weak self] starsOnly in
                             guard let self else {
                                 return
                             }
                             if let contentView = self.content.view as? GiftStoreContentComponent.View {
-                                contentView.updateStarsOnly(starsOnly)
+                                contentView.updateDiamondsOnly(starsOnly)
                             }
                         })
                     ),
                     environment: {},
                     containerSize: CGSize(width: availableSize.width - headerSideInset * 2.0, height: 100.0)
                 )
-                let starsFilterFrame = CGRect(origin: CGPoint(x: floor((availableSize.width - starsFilterSize.width) / 2.0), y: self.starsFilterIsHidden ? availableSize.height + 64.0 : availableSize.height - starsFilterSize.height - environment.safeInsets.bottom - 16.0), size: starsFilterSize)
-                if let starsFilterView = self.starsFilter.view {
-                    if starsFilterView.superview == nil {
-                        self.addSubview(starsFilterView)
+                let diamondsFilterFrame = CGRect(origin: CGPoint(x: floor((availableSize.width - diamondsFilterSize.width) / 2.0), y: self.diamondsFilterIsHidden ? availableSize.height + 64.0 : availableSize.height - diamondsFilterSize.height - environment.safeInsets.bottom - 16.0), size: diamondsFilterSize)
+                if let diamondsFilterView = self.diamondsFilter.view {
+                    if diamondsFilterView.superview == nil {
+                        self.addSubview(diamondsFilterView)
                     }
-                    transition.setFrame(view: starsFilterView, frame: starsFilterFrame)
+                    transition.setFrame(view: diamondsFilterView, frame: diamondsFilterFrame)
                 }
             }
             

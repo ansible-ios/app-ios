@@ -321,15 +321,15 @@ final class ChatListNoticeItemNode: ItemListRevealOptionsItemNode {
                 
                 okButtonLayout = makeOkButtonTextLayout(TextNodeLayoutArguments(attributedString: NSAttributedString(string: item.strings.ChatList_SessionReview_PanelConfirm, font: titleFont, textColor: item.theme.list.itemAccentColor), maximumNumberOfLines: 1, truncationType: .end, constrainedSize: CGSize(width: params.width - sideInset - rightInset, height: 100.0)))
                 cancelButtonLayout = makeCancelButtonTextLayout(TextNodeLayoutArguments(attributedString: NSAttributedString(string: item.strings.ChatList_SessionReview_PanelReject, font: titleFont, textColor: item.theme.list.itemDestructiveColor), maximumNumberOfLines: 1, truncationType: .end, constrainedSize: CGSize(width: params.width - sideInset - rightInset, height: 100.0)))
-            case let .starsSubscriptionLowBalance(amount, peers):
+            case let .diamondsSubscriptionLowBalance(amount, peers):
                 let title: String
                 let text: String
-                let starsValue = item.strings.ChatList_SubscriptionsLowBalance_Diamonds(Int32(clamping: amount.value))
+                let diamondsValue = item.strings.ChatList_SubscriptionsLowBalance_Diamonds(Int32(clamping: amount.value))
                 if let peer = peers.first, peers.count == 1 {
-                    title = item.strings.ChatList_SubscriptionsLowBalance_Single_Title(starsValue, peer.compactDisplayTitle).string
+                    title = item.strings.ChatList_SubscriptionsLowBalance_Single_Title(diamondsValue, peer.compactDisplayTitle).string
                     text = item.strings.ChatList_SubscriptionsLowBalance_Single_Text
                 } else {
-                    title = item.strings.ChatList_SubscriptionsLowBalance_Multiple_Title(starsValue).string
+                    title = item.strings.ChatList_SubscriptionsLowBalance_Multiple_Title(diamondsValue).string
                     text = item.strings.ChatList_SubscriptionsLowBalance_Multiple_Text
                 }
                 let attributedTitle = NSMutableAttributedString(string: "⭐️\(title)", font: titleFont, textColor: item.theme.rootController.navigationBar.primaryTextColor)
@@ -445,7 +445,7 @@ final class ChatListNoticeItemNode: ItemListRevealOptionsItemNode {
                     
                     let hasCloseButton: Bool
                     switch item.notice {
-                    case .xmasPremiumGift, .setupBirthday, .birthdayPremiumGift, .premiumGrace, .starsSubscriptionLowBalance, .setupPhoto, .link:
+                    case .xmasPremiumGift, .setupBirthday, .birthdayPremiumGift, .premiumGrace, .diamondsSubscriptionLowBalance, .setupPhoto, .link:
                         hasCloseButton = true
                     default:
                         hasCloseButton = false

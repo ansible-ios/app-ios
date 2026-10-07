@@ -352,7 +352,7 @@ private func extractAssociatedData(
     availableMessageEffects: AvailableMessageEffects?,
     savedMessageTags: SavedMessageTags?,
     defaultReaction: MessageReaction.Reaction?,
-    areStarReactionsEnabled: Bool,
+    areDiamondReactionsEnabled: Bool,
     isPremium: Bool,
     alwaysDisplayTranscribeButton: ChatMessageItemAssociatedData.DisplayTranscribeButton,
     accountPeer: EnginePeer?,
@@ -428,7 +428,7 @@ private func extractAssociatedData(
         automaticDownloadPeerId = message.peerId
     }
     
-    return ChatMessageItemAssociatedData(automaticDownloadPeerType: automaticMediaDownloadPeerType, automaticDownloadPeerId: automaticDownloadPeerId, automaticDownloadNetworkType: automaticDownloadNetworkType, preferredStoryHighQuality: preferredStoryHighQuality, isRecentActions: false, subject: subject, contactsPeerIds: contactsPeerIds, channelDiscussionGroup: channelDiscussionGroup, animatedEmojiStickers: animatedEmojiStickers, additionalAnimatedEmojiStickers: additionalAnimatedEmojiStickers, currentlyPlayingMessageId: currentlyPlayingMessageId, isCopyProtectionEnabled: isCopyProtectionEnabled, availableReactions: availableReactions, availableMessageEffects: availableMessageEffects, savedMessageTags: savedMessageTags, defaultReaction: defaultReaction, areStarReactionsEnabled: areStarReactionsEnabled, isPremium: isPremium, accountPeer: accountPeer, alwaysDisplayTranscribeButton: alwaysDisplayTranscribeButton, topicAuthorId: topicAuthorId, hasBots: hasBots, translateToLanguage: translateToLanguage, maxReadStoryId: maxReadStoryId, recommendedChannels: recommendedChannels, audioTranscriptionTrial: audioTranscriptionTrial, chatThemes: chatThemes, deviceContactsNumbers: deviceContactsNumbers, isInline: isInline, showSensitiveContent: showSensitiveContent, isSuspiciousPeer: isSuspiciousPeer, accountCountry: accountCountry, isParticipant: isParticipant, invitedOn: invitedOn)
+    return ChatMessageItemAssociatedData(automaticDownloadPeerType: automaticMediaDownloadPeerType, automaticDownloadPeerId: automaticDownloadPeerId, automaticDownloadNetworkType: automaticDownloadNetworkType, preferredStoryHighQuality: preferredStoryHighQuality, isRecentActions: false, subject: subject, contactsPeerIds: contactsPeerIds, channelDiscussionGroup: channelDiscussionGroup, animatedEmojiStickers: animatedEmojiStickers, additionalAnimatedEmojiStickers: additionalAnimatedEmojiStickers, currentlyPlayingMessageId: currentlyPlayingMessageId, isCopyProtectionEnabled: isCopyProtectionEnabled, availableReactions: availableReactions, availableMessageEffects: availableMessageEffects, savedMessageTags: savedMessageTags, defaultReaction: defaultReaction, areDiamondReactionsEnabled: areDiamondReactionsEnabled, isPremium: isPremium, accountPeer: accountPeer, alwaysDisplayTranscribeButton: alwaysDisplayTranscribeButton, topicAuthorId: topicAuthorId, hasBots: hasBots, translateToLanguage: translateToLanguage, maxReadStoryId: maxReadStoryId, recommendedChannels: recommendedChannels, audioTranscriptionTrial: audioTranscriptionTrial, chatThemes: chatThemes, deviceContactsNumbers: deviceContactsNumbers, isInline: isInline, showSensitiveContent: showSensitiveContent, isSuspiciousPeer: isSuspiciousPeer, accountCountry: accountCountry, isParticipant: isParticipant, invitedOn: invitedOn)
 }
 
 private extension ChatHistoryLocationInput {
@@ -877,7 +877,7 @@ public final class ChatHistoryListNodeImpl: ASDisplayNode, ChatHistoryNode, Chat
                                 approximateBoostLevel: nil,
                                 subscriptionUntilDate: nil,
                                 verificationIconFileId: nil,
-                                sendPaidMessageStars: nil,
+                                sendPaidMessageDiamonds: nil,
                                 linkedMonoforumId: nil
                             )
                             messagePeers[author.id] = author
@@ -1729,9 +1729,9 @@ public final class ChatHistoryListNodeImpl: ASDisplayNode, ChatHistoryNode, Chat
             self.context.engine.data.subscribe(IosappEngine.EngineData.Item.Configuration.ApplicationSpecificPreference(key: PreferencesKeys.reactionSettings))
         )
         |> map { peer, peerReactionSettings, preferencesView -> (MessageReaction.Reaction?, Bool) in
-            var areStarsEnabled: Bool = false
-            if let peerReactionSettings, let value = peerReactionSettings.knownValue?.starsAllowed {
-                areStarsEnabled = value
+            var areDiamondsEnabled: Bool = false
+            if let peerReactionSettings, let value = peerReactionSettings.knownValue?.diamondsAllowed {
+                areDiamondsEnabled = value
             }
 
             let reactionSettings: ReactionSettings
@@ -1744,7 +1744,7 @@ public final class ChatHistoryListNodeImpl: ASDisplayNode, ChatHistoryNode, Chat
             if case let .user(user) = peer {
                 hasPremium = user.isPremium
             }
-            return (reactionSettings.effectiveQuickReaction(hasPremium: hasPremium), areStarsEnabled)
+            return (reactionSettings.effectiveQuickReaction(hasPremium: hasPremium), areDiamondsEnabled)
         }
         |> distinctUntilChanged(isEqual: { lhs, rhs in
             return lhs.0 == rhs.0 && lhs.1 == rhs.1
@@ -2179,7 +2179,7 @@ public final class ChatHistoryListNodeImpl: ASDisplayNode, ChatHistoryNode, Chat
                     isSuspiciousPeer = true
                 }
                 
-                let associatedData = extractAssociatedData(chatLocation: chatLocation, view: view, automaticDownloadNetworkType: networkType, preferredStoryHighQuality: preferredStoryHighQuality, animatedEmojiStickers: animatedEmojiStickers, additionalAnimatedEmojiStickers: additionalAnimatedEmojiStickers, subject: subject, currentlyPlayingMessageId: currentlyPlayingMessageIdAndType?.0, isCopyProtectionEnabled: isCopyProtectionEnabled, availableReactions: availableReactions, availableMessageEffects: availableMessageEffects, savedMessageTags: savedMessageTags, defaultReaction: defaultReaction.0, areStarReactionsEnabled: defaultReaction.1, isPremium: isPremium, alwaysDisplayTranscribeButton: alwaysDisplayTranscribeButton, accountPeer: accountPeer, topicAuthorId: topicAuthorId, hasBots: chatHasBots, translateToLanguage: translateToLanguage?.toLang, maxReadStoryId: maxReadStoryId, recommendedChannels: recommendedChannels, audioTranscriptionTrial: audioTranscriptionTrial, chatThemes: chatThemes, deviceContactsNumbers: deviceContactsNumbers, isInline: !rotated, showSensitiveContent: contentSettings.ignoreContentRestrictionReasons.contains("sensitive"), isSuspiciousPeer: isSuspiciousPeer, accountCountry: accountCountry)
+                let associatedData = extractAssociatedData(chatLocation: chatLocation, view: view, automaticDownloadNetworkType: networkType, preferredStoryHighQuality: preferredStoryHighQuality, animatedEmojiStickers: animatedEmojiStickers, additionalAnimatedEmojiStickers: additionalAnimatedEmojiStickers, subject: subject, currentlyPlayingMessageId: currentlyPlayingMessageIdAndType?.0, isCopyProtectionEnabled: isCopyProtectionEnabled, availableReactions: availableReactions, availableMessageEffects: availableMessageEffects, savedMessageTags: savedMessageTags, defaultReaction: defaultReaction.0, areDiamondReactionsEnabled: defaultReaction.1, isPremium: isPremium, alwaysDisplayTranscribeButton: alwaysDisplayTranscribeButton, accountPeer: accountPeer, topicAuthorId: topicAuthorId, hasBots: chatHasBots, translateToLanguage: translateToLanguage?.toLang, maxReadStoryId: maxReadStoryId, recommendedChannels: recommendedChannels, audioTranscriptionTrial: audioTranscriptionTrial, chatThemes: chatThemes, deviceContactsNumbers: deviceContactsNumbers, isInline: !rotated, showSensitiveContent: contentSettings.ignoreContentRestrictionReasons.contains("sensitive"), isSuspiciousPeer: isSuspiciousPeer, accountCountry: accountCountry)
                 
                 var includeEmbeddedSavedChatInfo = false
                 if case let .replyThread(message) = chatLocation, message.peerId == context.account.peerId, !rotated {
@@ -3001,12 +3001,12 @@ public final class ChatHistoryListNodeImpl: ASDisplayNode, ChatHistoryNode, Chat
                                 if liveBroadcastingTimeout == liveLocationIndefinitePeriod || message.timestamp + liveBroadcastingTimeout > timestamp {
                                     messageIdsWithLiveLocation.append(message.id)
                                 }
-                            } else if let telegramFile = media as? IosappMediaFile {
-                                if telegramFile.isAnimatedSticker, (message.id.peerId.namespace == Namespaces.Peer.SecretChat || !telegramFile.previewRepresentations.isEmpty), let size = telegramFile.size, size > 0 && size <= 128 * 1024 {
+                            } else if let ansibleFile = media as? IosappMediaFile {
+                                if ansibleFile.isAnimatedSticker, (message.id.peerId.namespace == Namespaces.Peer.SecretChat || !ansibleFile.previewRepresentations.isEmpty), let size = ansibleFile.size, size > 0 && size <= 128 * 1024 {
                                     if message.id.peerId.namespace == Namespaces.Peer.SecretChat {
-                                        if telegramFile.fileId.namespace == Namespaces.Media.CloudFile {
+                                        if ansibleFile.fileId.namespace == Namespaces.Media.CloudFile {
                                             var isValidated = false
-                                            attributes: for attribute in telegramFile.attributes {
+                                            attributes: for attribute in ansibleFile.attributes {
                                                 if case .hintIsValidated = attribute {
                                                     isValidated = true
                                                     break attributes
@@ -3019,7 +3019,7 @@ public final class ChatHistoryListNodeImpl: ASDisplayNode, ChatHistoryNode, Chat
                                         }
                                     }
                                 }
-                                downloadableResourceIds.append((message.id, telegramFile.resource.id.stringRepresentation))
+                                downloadableResourceIds.append((message.id, ansibleFile.resource.id.stringRepresentation))
                             } else if let image = media as? IosappMediaImage {
                                 if let representation = image.representations.last {
                                     downloadableResourceIds.append((message.id, representation.resource.id.stringRepresentation))
@@ -3089,8 +3089,8 @@ public final class ChatHistoryListNodeImpl: ASDisplayNode, ChatHistoryNode, Chat
                                 }
                             }
                             for media in message.media {
-                                if let telegramFile = media as? IosappMediaFile {
-                                    downloadableResourceIds.append((message.id, telegramFile.resource.id.stringRepresentation))
+                                if let ansibleFile = media as? IosappMediaFile {
+                                    downloadableResourceIds.append((message.id, ansibleFile.resource.id.stringRepresentation))
                                 } else if let image = media as? IosappMediaImage {
                                     if let representation = image.representations.last {
                                         downloadableResourceIds.append((message.id, representation.resource.id.stringRepresentation))
@@ -5129,7 +5129,7 @@ public final class ChatHistoryListNodeImpl: ASDisplayNode, ChatHistoryNode, Chat
     
     func voicePlaylistItemChanged(_ previousItem: SharedMediaPlaylistItem?, _ currentItem: SharedMediaPlaylistItem?) -> Void {
         if let currentItemId = currentItem?.id as? PeerMessagesMediaPlaylistItemId {
-            if let source = currentItem?.playbackData?.source, case let .telegramFile(_, _, isViewOnce) = source, isViewOnce {
+            if let source = currentItem?.playbackData?.source, case let .ansibleFile(_, _, isViewOnce) = source, isViewOnce {
                 self.currentlyPlayingMessageIdPromise.set(.single(nil))
             } else {
                 let isVideo = currentItem?.playbackData?.type == .instantVideo

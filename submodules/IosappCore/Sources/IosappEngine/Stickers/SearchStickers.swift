@@ -152,7 +152,7 @@ private func stickerSearchCombinedItems(localItems: [FoundStickerItem], files: [
 private func stickerSearchApiFiles(_ stickers: [Api.Document]) -> [IosappMediaFile] {
     var files: [IosappMediaFile] = []
     for sticker in stickers {
-        if let file = telegramMediaFileFromApiDocument(sticker, altDocuments: []), let _ = file.id {
+        if let file = ansibleMediaFileFromApiDocument(sticker, altDocuments: []), let _ = file.id {
             files.append(file)
         }
     }
@@ -982,7 +982,7 @@ func _internal_searchStickers(account: Account, query: String?, emoticon: [Strin
 
                         var files: [IosappMediaFile] = []
                         for sticker in stickers {
-                            if let file = telegramMediaFileFromApiDocument(sticker, altDocuments: []), let id = file.id {
+                            if let file = ansibleMediaFileFromApiDocument(sticker, altDocuments: []), let id = file.id {
                                 files.append(file)
                                 if !currentItemIds.contains(id) {
                                     if file.isPremiumSticker {
@@ -1072,7 +1072,7 @@ func _internal_searchStickers(account: Account, query: String?, emoticon: [Strin
                         
                             var files: [IosappMediaFile] = []
                             for sticker in stickers {
-                                if let file = telegramMediaFileFromApiDocument(sticker, altDocuments: []), let id = file.id {
+                                if let file = ansibleMediaFileFromApiDocument(sticker, altDocuments: []), let id = file.id {
                                     files.append(file)
                                     if !currentItemIds.contains(id) {
                                         if file.isPremiumSticker {
@@ -1461,7 +1461,7 @@ func _internal_searchStickers(account: Account, category: EmojiSearchCategories.
 
                         var files: [IosappMediaFile] = []
                         for sticker in stickers {
-                            if let file = telegramMediaFileFromApiDocument(sticker, altDocuments: []), let id = file.id {
+                            if let file = ansibleMediaFileFromApiDocument(sticker, altDocuments: []), let id = file.id {
                                 files.append(file)
                                 if !currentItemIds.contains(id) {
                                     if file.isPremiumSticker {
@@ -1618,7 +1618,7 @@ func _internal_searchEmoji(account: Account, query: String?, emoticon: [String],
 
                         var files: [IosappMediaFile] = []
                         for sticker in stickers {
-                            guard let file = telegramMediaFileFromApiDocument(sticker, altDocuments: nil) else {
+                            guard let file = ansibleMediaFileFromApiDocument(sticker, altDocuments: nil) else {
                                 continue
                             }
                             files.append(file)

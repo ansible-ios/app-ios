@@ -135,7 +135,7 @@ public class ChatMessageReplyInfoNode: ASDisplayNode {
     }
     
     private let backgroundView: MessageInlineBlockBackgroundView
-    private var starsView: StarsView?
+    private var diamondsView: DiamondsView?
     private var quoteIconView: UIImageView?
     private let contentNode: ASDisplayNode
     private var titleNode: TextNode?
@@ -1000,19 +1000,19 @@ public class ChatMessageReplyInfoNode: ASDisplayNode {
                 }
                 
                 if arguments.isSummarized {
-                    let starsView: StarsView
-                    if let current = node.starsView {
-                        starsView = current
+                    let diamondsView: DiamondsView
+                    if let current = node.diamondsView {
+                        diamondsView = current
                     } else {
-                        starsView = StarsView()
-                        node.starsView = starsView
-                        node.contentNode.view.insertSubview(starsView, at: 1)
+                        diamondsView = DiamondsView()
+                        node.diamondsView = diamondsView
+                        node.contentNode.view.insertSubview(diamondsView, at: 1)
                     }
-                    starsView.frame = CGRect(origin: CGPoint(), size: backgroundFrame.size)
-                    starsView.update(size: backgroundFrame.size, color: mainColor)
-                } else if let starsView = node.starsView {
-                    node.starsView = nil
-                    starsView.removeFromSuperview()
+                    diamondsView.frame = CGRect(origin: CGPoint(), size: backgroundFrame.size)
+                    diamondsView.update(size: backgroundFrame.size, color: mainColor)
+                } else if let diamondsView = node.diamondsView {
+                    node.diamondsView = nil
+                    diamondsView.removeFromSuperview()
                 }
                 
                 node.contentNode.frame = CGRect(origin: CGPoint(), size: size)
@@ -1156,7 +1156,7 @@ public class ChatMessageReplyInfoNode: ASDisplayNode {
     }
 }
 
-private final class StarsView: UIView {
+private final class DiamondsView: UIView {
     private let staticEmitterLayer = CAEmitterLayer()
     
     private var currentColor: UIColor?

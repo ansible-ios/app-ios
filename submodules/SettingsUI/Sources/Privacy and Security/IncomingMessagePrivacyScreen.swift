@@ -20,7 +20,7 @@ private final class IncomingMessagePrivacyScreenArguments {
     let infoLinkAction: () -> Void
     let openExceptions: () -> Void
     let openPremiumInfo: () -> Void
-    let openSetCustomStarsAmount: () -> Void
+    let openSetCustomDiamondsAmount: () -> Void
     
     init(
         context: AccountContext,
@@ -29,7 +29,7 @@ private final class IncomingMessagePrivacyScreenArguments {
         infoLinkAction: @escaping () -> Void,
         openExceptions: @escaping () -> Void,
         openPremiumInfo: @escaping () -> Void,
-        openSetCustomStarsAmount: @escaping () -> Void
+        openSetCustomDiamondsAmount: @escaping () -> Void
     ) {
         self.context = context
         self.updateValue = updateValue
@@ -37,7 +37,7 @@ private final class IncomingMessagePrivacyScreenArguments {
         self.infoLinkAction = infoLinkAction
         self.openExceptions = openExceptions
         self.openPremiumInfo = openPremiumInfo
-        self.openSetCustomStarsAmount = openSetCustomStarsAmount
+        self.openSetCustomDiamondsAmount = openSetCustomDiamondsAmount
     }
 }
 
@@ -168,7 +168,7 @@ private enum GlobalAutoremoveEntry: ItemListNodeEntry {
             return MessagePriceItem(theme: presentationData.theme, strings: presentationData.strings, systemStyle: .glass, isEnabled: isEnabled, minValue: 1, maxValue: maxValue, value: value, price: price, sectionId: self.section, updated: { value, _ in
                 arguments.updateValue(.paidMessages(StarsAmount(value: value, nanos: 0)))
             }, openSetCustom: {
-                arguments.openSetCustomStarsAmount()
+                arguments.openSetCustomDiamondsAmount()
             }, openPremiumInfo: {
                 arguments.openPremiumInfo()
             })
@@ -191,7 +191,7 @@ private struct IncomingMessagePrivacyScreenState: Equatable {
     var disableFor: [EnginePeer.Id: SelectivePrivacyPeer]
 }
 
-private func incomingMessagePrivacyScreenEntries(presentationData: PresentationData, state: IncomingMessagePrivacyScreenState, enableSetting: Bool, isPremium: Bool, configuration: StarsSubscriptionConfiguration) -> [GlobalAutoremoveEntry] {
+private func incomingMessagePrivacyScreenEntries(presentationData: PresentationData, state: IncomingMessagePrivacyScreenState, enableSetting: Bool, isPremium: Bool, configuration: DiamondsSubscriptionConfiguration) -> [GlobalAutoremoveEntry] {
     var entries: [GlobalAutoremoveEntry] = []
     
     entries.append(.header)
@@ -240,7 +240,7 @@ public func incomingMessagePrivacyScreen(context: AccountContext, value: GlobalP
         statePromise.set(stateValue.modify { f($0) })
     }
     
-    let configuration = StarsSubscriptionConfiguration.with(appConfiguration: context.currentAppConfiguration.with { $0 })
+    let configuration = DiamondsSubscriptionConfiguration.with(appConfiguration: context.currentAppConfiguration.with { $0 })
     
     var presentControllerImpl: ((ViewController, ViewControllerPresentationArguments?) -> Void)?
     var presentInCurrentControllerImpl: ((ViewController) -> Void)?
@@ -384,13 +384,13 @@ public func incomingMessagePrivacyScreen(context: AccountContext, value: GlobalP
             }
             pushControllerImpl?(controller)
         },
-        openSetCustomStarsAmount: {
+        openSetCustomDiamondsAmount: {
             var currentAmount: StarsAmount = StarsAmount(value: 1, nanos: 0)
             if case let .paidMessages(value) = stateValue.with({ $0 }).updatedValue {
                 currentAmount = value
             }
             let fractionAfterCommission = configuration.paidMessageCommissionPermille / 10
-            let starsScreen = context.sharedContext.makeStarsWithdrawalScreen(context: context, subject: .enterAmount(
+            let diamondsScreen = context.sharedContext.makeDiamondsWithdrawalScreen(context: context, subject: .enterAmount(
                 current: currentAmount,
                 minValue: StarsAmount(value: 1, nanos: 0),
                 fractionAfterCommission: Int(fractionAfterCommission), kind: .privacy,
@@ -402,7 +402,7 @@ public func incomingMessagePrivacyScreen(context: AccountContext, value: GlobalP
                     }
                 }
             ))
-            pushControllerImpl?(starsScreen)
+            pushControllerImpl?(diamondsScreen)
         }
     )
     

@@ -6,7 +6,7 @@ import IosappApi
 import FlatBuffers
 import FlatSerialization
 
-public struct StarsTopUpOption: Equatable, Codable {
+public struct DiamondsTopUpOption: Equatable, Codable {
     enum CodingKeys: String, CodingKey {
         case count
         case storeProductId
@@ -48,25 +48,25 @@ public struct StarsTopUpOption: Equatable, Codable {
     }
 }
 
-extension StarsTopUpOption {
-    init(apiStarsTopupOption: Api.StarsTopupOption) {
-        switch apiStarsTopupOption {
-        case let .starsTopupOption(starsTopupOptionData):
-            let (flags, stars, storeProduct, currency, amount) = (starsTopupOptionData.flags, starsTopupOptionData.stars, starsTopupOptionData.storeProduct, starsTopupOptionData.currency, starsTopupOptionData.amount)
+extension DiamondsTopUpOption {
+    init(apiDiamondsTopupOption: Api.StarsTopupOption) {
+        switch apiDiamondsTopupOption {
+        case let .starsTopupOption(diamondsTopupOptionData):
+            let (flags, stars, storeProduct, currency, amount) = (diamondsTopupOptionData.flags, diamondsTopupOptionData.stars, diamondsTopupOptionData.storeProduct, diamondsTopupOptionData.currency, diamondsTopupOptionData.amount)
             self.init(count: stars, storeProductId: storeProduct, currency: currency, amount: amount, isExtended: (flags & (1 << 1)) != 0)
         }
     }
 }
 
-func _internal_starsTopUpOptions(account: Account) -> Signal<[StarsTopUpOption], NoError> {
+func _internal_starsTopUpOptions(account: Account) -> Signal<[DiamondsTopUpOption], NoError> {
     return account.network.request(Api.functions.payments.getStarsTopupOptions())
     |> map(Optional.init)
     |> `catch` { _ -> Signal<[Api.StarsTopupOption]?, NoError> in
         return .single(nil)
     }
-    |> mapToSignal { results -> Signal<[StarsTopUpOption], NoError> in
+    |> mapToSignal { results -> Signal<[DiamondsTopUpOption], NoError> in
         if let results = results {
-            return .single(results.map { StarsTopUpOption(apiStarsTopupOption: $0) })
+            return .single(results.map { DiamondsTopUpOption(apiDiamondsTopupOption: $0) })
         } else {
             return .single([])
         }
@@ -116,10 +116,10 @@ public struct StarsGiftOption: Equatable, Codable {
 }
 
 extension StarsGiftOption {
-    init(apiStarsGiftOption: Api.StarsGiftOption) {
-        switch apiStarsGiftOption {
-        case let .starsGiftOption(starsGiftOptionData):
-            let (flags, stars, storeProduct, currency, amount) = (starsGiftOptionData.flags, starsGiftOptionData.stars, starsGiftOptionData.storeProduct, starsGiftOptionData.currency, starsGiftOptionData.amount)
+    init(apiDiamondsGiftOption: Api.StarsGiftOption) {
+        switch apiDiamondsGiftOption {
+        case let .starsGiftOption(diamondsGiftOptionData):
+            let (flags, stars, storeProduct, currency, amount) = (diamondsGiftOptionData.flags, diamondsGiftOptionData.stars, diamondsGiftOptionData.storeProduct, diamondsGiftOptionData.currency, diamondsGiftOptionData.amount)
             self.init(count: stars, storeProductId: storeProduct, currency: currency, amount: amount, isExtended: (flags & (1 << 1)) != 0)
         }
     }
@@ -141,7 +141,7 @@ func _internal_starsGiftOptions(account: Account, peerId: EnginePeer.Id?) -> Sig
         }
         |> mapToSignal { results -> Signal<[StarsGiftOption], NoError> in
             if let results = results {
-                return .single(results.map { StarsGiftOption(apiStarsGiftOption: $0) })
+                return .single(results.map { StarsGiftOption(apiDiamondsGiftOption: $0) })
             } else {
                 return .single([])
             }
@@ -166,31 +166,31 @@ public struct StarsGiveawayOption: Equatable, Codable {
     public struct Winners: Equatable, Codable {
         enum CodingKeys: String, CodingKey {
             case users
-            case starsPerUser
+            case diamondsPerUser
             case isDefault
         }
         
         public let users: Int32
-        public let starsPerUser: Int64
+        public let diamondsPerUser: Int64
         public let isDefault: Bool
         
-        public init(users: Int32, starsPerUser: Int64, isDefault: Bool) {
+        public init(users: Int32, diamondsPerUser: Int64, isDefault: Bool) {
             self.users = users
-            self.starsPerUser = starsPerUser
+            self.diamondsPerUser = diamondsPerUser
             self.isDefault = isDefault
         }
         
         public init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             self.users = try container.decode(Int32.self, forKey: .users)
-            self.starsPerUser = try container.decode(Int64.self, forKey: .starsPerUser)
+            self.diamondsPerUser = try container.decode(Int64.self, forKey: .diamondsPerUser)
             self.isDefault = try container.decodeIfPresent(Bool.self, forKey: .isDefault) ?? false
         }
         
         public func encode(to encoder: Encoder) throws {
             var container = encoder.container(keyedBy: CodingKeys.self)
             try container.encode(self.users, forKey: .users)
-            try container.encode(self.starsPerUser, forKey: .starsPerUser)
+            try container.encode(self.diamondsPerUser, forKey: .diamondsPerUser)
             try container.encode(self.isDefault, forKey: .isDefault)
         }
     }
@@ -241,21 +241,21 @@ public struct StarsGiveawayOption: Equatable, Codable {
 }
 
 extension StarsGiveawayOption.Winners {
-    init(apiStarsGiveawayWinnersOption: Api.StarsGiveawayWinnersOption) {
-        switch apiStarsGiveawayWinnersOption {
-        case let .starsGiveawayWinnersOption(starsGiveawayWinnersOptionData):
-            let (flags, users, starsPerUser) = (starsGiveawayWinnersOptionData.flags, starsGiveawayWinnersOptionData.users, starsGiveawayWinnersOptionData.perUserStars)
-            self.init(users: users, starsPerUser: starsPerUser, isDefault: (flags & (1 << 0)) != 0)
+    init(apiDiamondsGiveawayWinnersOption: Api.StarsGiveawayWinnersOption) {
+        switch apiDiamondsGiveawayWinnersOption {
+        case let .starsGiveawayWinnersOption(diamondsGiveawayWinnersOptionData):
+            let (flags, users, diamondsPerUser) = (diamondsGiveawayWinnersOptionData.flags, diamondsGiveawayWinnersOptionData.users, diamondsGiveawayWinnersOptionData.perUserStars)
+            self.init(users: users, diamondsPerUser: diamondsPerUser, isDefault: (flags & (1 << 0)) != 0)
         }
     }
 }
 
 extension StarsGiveawayOption {
-    init(apiStarsGiveawayOption: Api.StarsGiveawayOption) {
-        switch apiStarsGiveawayOption {
-        case let .starsGiveawayOption(starsGiveawayOptionData):
-            let (flags, stars, yearlyBoosts, storeProduct, currency, amount, winners) = (starsGiveawayOptionData.flags, starsGiveawayOptionData.stars, starsGiveawayOptionData.yearlyBoosts, starsGiveawayOptionData.storeProduct, starsGiveawayOptionData.currency, starsGiveawayOptionData.amount, starsGiveawayOptionData.winners)
-            self.init(count: stars, yearlyBoosts: yearlyBoosts, storeProductId: storeProduct, currency: currency, amount: amount, winners: winners.map { StarsGiveawayOption.Winners(apiStarsGiveawayWinnersOption: $0) }, isExtended: (flags & (1 << 0)) != 0, isDefault: (flags & (1 << 1)) != 0)
+    init(apiDiamondsGiveawayOption: Api.StarsGiveawayOption) {
+        switch apiDiamondsGiveawayOption {
+        case let .starsGiveawayOption(diamondsGiveawayOptionData):
+            let (flags, stars, yearlyBoosts, storeProduct, currency, amount, winners) = (diamondsGiveawayOptionData.flags, diamondsGiveawayOptionData.stars, diamondsGiveawayOptionData.yearlyBoosts, diamondsGiveawayOptionData.storeProduct, diamondsGiveawayOptionData.currency, diamondsGiveawayOptionData.amount, diamondsGiveawayOptionData.winners)
+            self.init(count: stars, yearlyBoosts: yearlyBoosts, storeProductId: storeProduct, currency: currency, amount: amount, winners: winners.map { StarsGiveawayOption.Winners(apiDiamondsGiveawayWinnersOption: $0) }, isExtended: (flags & (1 << 0)) != 0, isDefault: (flags & (1 << 1)) != 0)
         }
     }
 }
@@ -268,7 +268,7 @@ func _internal_starsGiveawayOptions(account: Account) -> Signal<[StarsGiveawayOp
     }
     |> mapToSignal { results -> Signal<[StarsGiveawayOption], NoError> in
         if let results = results {
-            return .single(results.map { StarsGiveawayOption(apiStarsGiveawayOption: $0) })
+            return .single(results.map { StarsGiveawayOption(apiDiamondsGiveawayOption: $0) })
         } else {
             return .single([])
         }
@@ -292,10 +292,10 @@ public struct StarsAmount: Equatable, Comparable, Hashable, Codable, CustomStrin
     }
     
     public func encodeToFlatBuffers(builder: inout FlatBufferBuilder) -> Offset {
-        let start = IosappCore_StarsAmount.startStarsAmount(&builder)
+        let start = IosappCore_StarsAmount.startDiamondsAmount(&builder)
         IosappCore_StarsAmount.add(value: self.value, &builder)
         IosappCore_StarsAmount.add(nanos: self.nanos, &builder)
-        return IosappCore_StarsAmount.endStarsAmount(&builder, start: start)
+        return IosappCore_StarsAmount.endDiamondsAmount(&builder, start: start)
     }
     
     public var stringValue: String {
@@ -350,11 +350,11 @@ public struct StarsAmount: Equatable, Comparable, Hashable, Codable, CustomStrin
 extension StarsAmount {
     init(apiAmount: Api.StarsAmount) {
         switch apiAmount {
-        case let .starsAmount(starsAmountData):
-            let (amount, nanos) = (starsAmountData.amount, starsAmountData.nanos)
+        case let .starsAmount(diamondsAmountData):
+            let (amount, nanos) = (diamondsAmountData.amount, diamondsAmountData.nanos)
             self.init(value: amount, nanos: nanos)
-        case let .starsTonAmount(starsTonAmountData):
-            let amount = starsTonAmountData.amount
+        case let .starsTonAmount(diamondsTonAmountData):
+            let amount = diamondsTonAmountData.amount
             self.init(value: amount, nanos: 0)
         }
     }
@@ -395,11 +395,11 @@ public struct CurrencyAmount: Equatable, Hashable, Codable {
 extension CurrencyAmount {
     init(apiAmount: Api.StarsAmount) {
         switch apiAmount {
-        case let .starsAmount(starsAmountData):
-            let (amount, nanos) = (starsAmountData.amount, starsAmountData.nanos)
+        case let .starsAmount(diamondsAmountData):
+            let (amount, nanos) = (diamondsAmountData.amount, diamondsAmountData.nanos)
             self.init(amount: StarsAmount(value: amount, nanos: nanos), currency: .stars)
-        case let .starsTonAmount(starsTonAmountData):
-            let amount = starsTonAmountData.amount
+        case let .starsTonAmount(diamondsTonAmountData):
+            let amount = diamondsTonAmountData.amount
             self.init(amount: StarsAmount(value: amount, nanos: 0), currency: .ton)
         }
     }
@@ -415,25 +415,25 @@ extension CurrencyAmount {
     }
 }
 
-struct InternalStarsStatus {
+struct InternalDiamondsStatus {
     let balance: StarsAmount
     let subscriptionsMissingBalance: StarsAmount?
-    let subscriptions: [StarsContext.State.Subscription]
+    let subscriptions: [DiamondsContext.State.Subscription]
     let nextSubscriptionsOffset: String?
-    let transactions: [StarsContext.State.Transaction]
+    let transactions: [DiamondsContext.State.Transaction]
     let nextTransactionsOffset: String?
 }
 
-private enum RequestStarsStateError {
+private enum RequestDiamondsStateError {
     case generic
 }
 
-private func _internal_requestStarsState(account: Account, peerId: EnginePeer.Id, ton: Bool, mode: StarsTransactionsContext.Mode, subscriptionId: String?, offset: String?, limit: Int32) -> Signal<InternalStarsStatus, RequestStarsStateError> {
+private func _internal_requestDiamondsState(account: Account, peerId: EnginePeer.Id, ton: Bool, mode: DiamondsTransactionsContext.Mode, subscriptionId: String?, offset: String?, limit: Int32) -> Signal<InternalDiamondsStatus, RequestDiamondsStateError> {
     return account.postbox.transaction { transaction -> Peer? in
         return transaction.getPeer(peerId)
     } 
-    |> castError(RequestStarsStateError.self)
-    |> mapToSignal { peer -> Signal<InternalStarsStatus, RequestStarsStateError> in
+    |> castError(RequestDiamondsStateError.self)
+    |> mapToSignal { peer -> Signal<InternalDiamondsStatus, RequestDiamondsStateError> in
         guard let peer, let inputPeer = apiInputPeer(peer) else {
             return .fail(.generic)
         }
@@ -466,24 +466,24 @@ private func _internal_requestStarsState(account: Account, peerId: EnginePeer.Id
         
         return signal
         |> retryRequest
-        |> castError(RequestStarsStateError.self)
-        |> mapToSignal { result -> Signal<InternalStarsStatus, RequestStarsStateError> in
-            return account.postbox.transaction { transaction -> InternalStarsStatus in
+        |> castError(RequestDiamondsStateError.self)
+        |> mapToSignal { result -> Signal<InternalDiamondsStatus, RequestDiamondsStateError> in
+            return account.postbox.transaction { transaction -> InternalDiamondsStatus in
                 switch result {
-                case let .starsStatus(starsStatusData):
-                    let (_, balance, _, _, subscriptionsMissingBalance, transactions, nextTransactionsOffset, chats, users) = (starsStatusData.flags, starsStatusData.balance, starsStatusData.subscriptions, starsStatusData.subscriptionsNextOffset, starsStatusData.subscriptionsMissingBalance, starsStatusData.history, starsStatusData.nextOffset, starsStatusData.chats, starsStatusData.users)
+                case let .starsStatus(diamondsStatusData):
+                    let (_, balance, _, _, subscriptionsMissingBalance, transactions, nextTransactionsOffset, chats, users) = (diamondsStatusData.flags, diamondsStatusData.balance, diamondsStatusData.subscriptions, diamondsStatusData.subscriptionsNextOffset, diamondsStatusData.subscriptionsMissingBalance, diamondsStatusData.history, diamondsStatusData.nextOffset, diamondsStatusData.chats, diamondsStatusData.users)
                     let peers = AccumulatedPeers(chats: chats, users: users)
                     updatePeers(transaction: transaction, accountPeerId: account.peerId, peers: peers)
                 
-                    var parsedTransactions: [StarsContext.State.Transaction] = []
+                    var parsedTransactions: [DiamondsContext.State.Transaction] = []
                     if let transactions {
                         for entry in transactions {
-                            if let parsedTransaction = StarsContext.State.Transaction(apiTransaction: entry, peerId: peerId != account.peerId ? peerId : nil, transaction: transaction) {
+                            if let parsedTransaction = DiamondsContext.State.Transaction(apiTransaction: entry, peerId: peerId != account.peerId ? peerId : nil, transaction: transaction) {
                                 parsedTransactions.append(parsedTransaction)
                             }
                         }
                     }
-                    return InternalStarsStatus(
+                    return InternalDiamondsStatus(
                         balance: StarsAmount(apiAmount: balance),
                         subscriptionsMissingBalance: subscriptionsMissingBalance.flatMap { StarsAmount(value: $0, nanos: 0) },
                         subscriptions: [],
@@ -493,21 +493,21 @@ private func _internal_requestStarsState(account: Account, peerId: EnginePeer.Id
                     )
                 }
             }
-            |> castError(RequestStarsStateError.self)
+            |> castError(RequestDiamondsStateError.self)
         }
     }
 }
 
-private enum RequestStarsSubscriptionsError {
+private enum RequestDiamondsSubscriptionsError {
     case generic
 }
 
-private func _internal_requestStarsSubscriptions(account: Account, peerId: EnginePeer.Id, offset: String, missingBalance: Bool) -> Signal<InternalStarsStatus, RequestStarsSubscriptionsError> {
+private func _internal_requestDiamondsSubscriptions(account: Account, peerId: EnginePeer.Id, offset: String, missingBalance: Bool) -> Signal<InternalDiamondsStatus, RequestDiamondsSubscriptionsError> {
     return account.postbox.transaction { transaction -> Peer? in
         return transaction.getPeer(peerId)
     }
-    |> castError(RequestStarsSubscriptionsError.self)
-    |> mapToSignal { peer -> Signal<InternalStarsStatus, RequestStarsSubscriptionsError> in
+    |> castError(RequestDiamondsSubscriptionsError.self)
+    |> mapToSignal { peer -> Signal<InternalDiamondsStatus, RequestDiamondsSubscriptionsError> in
         guard let peer, let inputPeer = apiInputPeerOrSelf(peer, accountPeerId: peerId) else {
             return .fail(.generic)
         }
@@ -517,29 +517,29 @@ private func _internal_requestStarsSubscriptions(account: Account, peerId: Engin
         }
         return account.network.request(Api.functions.payments.getStarsSubscriptions(flags: flags, peer: inputPeer, offset: offset))
         |> retryRequestIfNotFrozen
-        |> castError(RequestStarsSubscriptionsError.self)
-        |> mapToSignal { result -> Signal<InternalStarsStatus, RequestStarsSubscriptionsError> in
+        |> castError(RequestDiamondsSubscriptionsError.self)
+        |> mapToSignal { result -> Signal<InternalDiamondsStatus, RequestDiamondsSubscriptionsError> in
             guard let result else {
-                return .single(InternalStarsStatus(balance: .zero, subscriptionsMissingBalance: nil, subscriptions: [], nextSubscriptionsOffset: nil, transactions: [], nextTransactionsOffset: nil))
+                return .single(InternalDiamondsStatus(balance: .zero, subscriptionsMissingBalance: nil, subscriptions: [], nextSubscriptionsOffset: nil, transactions: [], nextTransactionsOffset: nil))
             }
-            return account.postbox.transaction { transaction -> InternalStarsStatus in
+            return account.postbox.transaction { transaction -> InternalDiamondsStatus in
                 switch result {
-                case let .starsStatus(starsStatusData):
-                    let (_, balance, subscriptions, subscriptionsNextOffset, subscriptionsMissingBalance, _, _, chats, users) = (starsStatusData.flags, starsStatusData.balance, starsStatusData.subscriptions, starsStatusData.subscriptionsNextOffset, starsStatusData.subscriptionsMissingBalance, starsStatusData.history, starsStatusData.nextOffset, starsStatusData.chats, starsStatusData.users)
+                case let .starsStatus(diamondsStatusData):
+                    let (_, balance, subscriptions, subscriptionsNextOffset, subscriptionsMissingBalance, _, _, chats, users) = (diamondsStatusData.flags, diamondsStatusData.balance, diamondsStatusData.subscriptions, diamondsStatusData.subscriptionsNextOffset, diamondsStatusData.subscriptionsMissingBalance, diamondsStatusData.history, diamondsStatusData.nextOffset, diamondsStatusData.chats, diamondsStatusData.users)
                     let peers = AccumulatedPeers(chats: chats, users: users)
                     updatePeers(transaction: transaction, accountPeerId: account.peerId, peers: peers)
 
-                    var parsedSubscriptions: [StarsContext.State.Subscription] = []
+                    var parsedSubscriptions: [DiamondsContext.State.Subscription] = []
                     if let subscriptions {
                         for entry in subscriptions {
-                            if let parsedSubscription = StarsContext.State.Subscription(apiSubscription: entry, transaction: transaction) {
+                            if let parsedSubscription = DiamondsContext.State.Subscription(apiSubscription: entry, transaction: transaction) {
                                 if !missingBalance || parsedSubscription.flags.contains(.missingBalance) {
                                     parsedSubscriptions.append(parsedSubscription)
                                 }
                             }
                         }
                     }
-                    return InternalStarsStatus(
+                    return InternalDiamondsStatus(
                         balance: StarsAmount(apiAmount: balance),
                         subscriptionsMissingBalance: subscriptionsMissingBalance.flatMap { StarsAmount(value: $0, nanos: 0) },
                         subscriptions: parsedSubscriptions,
@@ -549,19 +549,19 @@ private func _internal_requestStarsSubscriptions(account: Account, peerId: Engin
                     )
                 }
             }
-            |> castError(RequestStarsSubscriptionsError.self)
+            |> castError(RequestDiamondsSubscriptionsError.self)
         }
     }
 }
 
-private final class StarsContextImpl {
+private final class DiamondsContextImpl {
     private let account: Account
     fileprivate let peerId: EnginePeer.Id
     fileprivate let ton: Bool
     
-    fileprivate var _state: StarsContext.State?
-    private let _statePromise = Promise<StarsContext.State?>()
-    var state: Signal<StarsContext.State?, NoError> {
+    fileprivate var _state: DiamondsContext.State?
+    private let _statePromise = Promise<DiamondsContext.State?>()
+    var state: Signal<DiamondsContext.State?, NoError> {
         return self._statePromise.get()
     }
     
@@ -580,12 +580,12 @@ private final class StarsContextImpl {
         
         self.load(force: true)
         
-        self.updateDisposable = ((ton ? account.stateManager.updatedTonBalance() : account.stateManager.updatedStarsBalance())
+        self.updateDisposable = ((ton ? account.stateManager.updatedTonBalance() : account.stateManager.updatedDiamondsBalance())
         |> deliverOnMainQueue).startStrict(next: { [weak self] balances in
             guard let self, let state = self._state, let balance = balances[self.peerId] else {
                 return
             }
-            self.updateState(StarsContext.State(flags: [], balance: balance, subscriptions: state.subscriptions, canLoadMoreSubscriptions: state.canLoadMoreSubscriptions, transactions: state.transactions, canLoadMoreTransactions: state.canLoadMoreTransactions, isLoading: false))
+            self.updateState(DiamondsContext.State(flags: [], balance: balance, subscriptions: state.subscriptions, canLoadMoreSubscriptions: state.canLoadMoreSubscriptions, transactions: state.transactions, canLoadMoreTransactions: state.canLoadMoreTransactions, isLoading: false))
             self.load(force: true)
         })
     }
@@ -606,12 +606,12 @@ private final class StarsContextImpl {
         }
         self.previousLoadTimestamp = currentTimestamp
         
-        self.disposable.set((_internal_requestStarsState(account: self.account, peerId: self.peerId, ton: self.ton, mode: .all, subscriptionId: nil, offset: nil, limit: 5)
+        self.disposable.set((_internal_requestDiamondsState(account: self.account, peerId: self.peerId, ton: self.ton, mode: .all, subscriptionId: nil, offset: nil, limit: 5)
         |> deliverOnMainQueue).start(next: { [weak self] status in
             guard let self else {
                 return
             }
-            self.updateState(StarsContext.State(flags: [], balance: status.balance, subscriptions: status.subscriptions, canLoadMoreSubscriptions: status.nextSubscriptionsOffset != nil, transactions: status.transactions, canLoadMoreTransactions: status.nextTransactionsOffset != nil, isLoading: false))
+            self.updateState(DiamondsContext.State(flags: [], balance: status.balance, subscriptions: status.subscriptions, canLoadMoreSubscriptions: status.nextSubscriptionsOffset != nil, transactions: status.transactions, canLoadMoreTransactions: status.nextTransactionsOffset != nil, isLoading: false))
         }, error: { [weak self] _ in
             guard let self else {
                 return
@@ -631,17 +631,17 @@ private final class StarsContextImpl {
             let count =  CurrencyAmount(amount: balance, currency: self.ton ? .ton : .stars)
             transactions.insert(.init(flags: [.isLocal], id: "\(arc4random())", count: count, date: Int32(Date().timeIntervalSince1970), peer: .appStore, title: nil, description: nil, photo: nil, transactionDate: nil, transactionUrl: nil, paidMessageId: nil, giveawayMessageId: nil, media: [], subscriptionPeriod: nil, starGift: nil, floodskipNumber: nil, starrefCommissionPermille: nil, starrefPeerId: nil, starrefAmount: nil, paidMessageCount: nil, premiumGiftMonths: nil, adsProceedsFromDate: nil, adsProceedsToDate: nil), at: 0)
         }
-        self.updateState(StarsContext.State(flags: [.isPendingBalance], balance: max(StarsAmount(value: 0, nanos: 0), state.balance + balance), subscriptions: state.subscriptions, canLoadMoreSubscriptions: state.canLoadMoreSubscriptions, transactions: transactions, canLoadMoreTransactions: state.canLoadMoreTransactions, isLoading: state.isLoading))
+        self.updateState(DiamondsContext.State(flags: [.isPendingBalance], balance: max(StarsAmount(value: 0, nanos: 0), state.balance + balance), subscriptions: state.subscriptions, canLoadMoreSubscriptions: state.canLoadMoreSubscriptions, transactions: transactions, canLoadMoreTransactions: state.canLoadMoreTransactions, isLoading: state.isLoading))
     }
     
-    fileprivate func updateBalance(_ balance: StarsAmount, transactions: [StarsContext.State.Transaction]?) {
+    fileprivate func updateBalance(_ balance: StarsAmount, transactions: [DiamondsContext.State.Transaction]?) {
         guard let state = self._state else {
             return
         }
-        self.updateState(StarsContext.State(flags: [], balance: balance, subscriptions: state.subscriptions, canLoadMoreSubscriptions: state.canLoadMoreSubscriptions, transactions: transactions ?? state.transactions, canLoadMoreTransactions: state.canLoadMoreTransactions, isLoading: state.isLoading))
+        self.updateState(DiamondsContext.State(flags: [], balance: balance, subscriptions: state.subscriptions, canLoadMoreSubscriptions: state.canLoadMoreSubscriptions, transactions: transactions ?? state.transactions, canLoadMoreTransactions: state.canLoadMoreTransactions, isLoading: state.isLoading))
     }
     
-    private func updateState(_ state: StarsContext.State) {
+    private func updateState(_ state: DiamondsContext.State) {
         self._state = state
         self._statePromise.set(.single(state))
     }
@@ -662,12 +662,12 @@ private final class StarsContextImpl {
     }
 }
 
-private extension StarsContext.State.Transaction {
+private extension DiamondsContext.State.Transaction {
     init?(apiTransaction: Api.StarsTransaction, peerId: EnginePeer.Id?, transaction: Transaction) {
         switch apiTransaction {
-        case let .starsTransaction(starsTransactionData):
-            let (apiFlags, id, stars, date, transactionPeer, title, description, photo, transactionDate, transactionUrl, _, messageId, extendedMedia, subscriptionPeriod, giveawayPostId, starGift, floodskipNumber, starrefCommissionPermille, starrefPeer, starrefAmount, paidMessageCount, premiumGiftMonths, adsProceedsFromDate, adsProceedsToDate) = (starsTransactionData.flags, starsTransactionData.id, starsTransactionData.amount, starsTransactionData.date, starsTransactionData.peer, starsTransactionData.title, starsTransactionData.description, starsTransactionData.photo, starsTransactionData.transactionDate, starsTransactionData.transactionUrl, starsTransactionData.botPayload, starsTransactionData.msgId, starsTransactionData.extendedMedia, starsTransactionData.subscriptionPeriod, starsTransactionData.giveawayPostId, starsTransactionData.stargift, starsTransactionData.floodskipNumber, starsTransactionData.starrefCommissionPermille, starsTransactionData.starrefPeer, starsTransactionData.starrefAmount, starsTransactionData.paidMessages, starsTransactionData.premiumGiftMonths, starsTransactionData.adsProceedsFromDate, starsTransactionData.adsProceedsToDate)
-            let parsedPeer: StarsContext.State.Transaction.Peer
+        case let .starsTransaction(diamondsTransactionData):
+            let (apiFlags, id, stars, date, transactionPeer, title, description, photo, transactionDate, transactionUrl, _, messageId, extendedMedia, subscriptionPeriod, giveawayPostId, starGift, floodskipNumber, starrefCommissionPermille, starrefPeer, starrefAmount, paidMessageCount, premiumGiftMonths, adsProceedsFromDate, adsProceedsToDate) = (diamondsTransactionData.flags, diamondsTransactionData.id, diamondsTransactionData.amount, diamondsTransactionData.date, diamondsTransactionData.peer, diamondsTransactionData.title, diamondsTransactionData.description, diamondsTransactionData.photo, diamondsTransactionData.transactionDate, diamondsTransactionData.transactionUrl, diamondsTransactionData.botPayload, diamondsTransactionData.msgId, diamondsTransactionData.extendedMedia, diamondsTransactionData.subscriptionPeriod, diamondsTransactionData.giveawayPostId, diamondsTransactionData.stargift, diamondsTransactionData.floodskipNumber, diamondsTransactionData.starrefCommissionPermille, diamondsTransactionData.starrefPeer, diamondsTransactionData.starrefAmount, diamondsTransactionData.paidMessages, diamondsTransactionData.premiumGiftMonths, diamondsTransactionData.adsProceedsFromDate, diamondsTransactionData.adsProceedsToDate)
+            let parsedPeer: DiamondsContext.State.Transaction.Peer
             var paidMessageId: MessageId?
             var giveawayMessageId: MessageId?
 
@@ -686,8 +686,8 @@ private extension StarsContext.State.Transaction {
                 parsedPeer = .apiLimitExtension
             case .starsTransactionPeerUnsupported:
                 parsedPeer = .unsupported
-            case let .starsTransactionPeer(starsTransactionPeerData):
-                let apiPeer = starsTransactionPeerData.peer
+            case let .starsTransactionPeer(diamondsTransactionPeerData):
+                let apiPeer = diamondsTransactionPeerData.peer
                 guard let peer = transaction.getPeer(apiPeer.peerId) else {
                     return nil
                 }
@@ -721,7 +721,7 @@ private extension StarsContext.State.Transaction {
                 flags.insert(.isReaction)
             }
             if (apiFlags & (1 << 18)) != 0 {
-                flags.insert(.isStarGiftUpgrade)
+                flags.insert(.isDiamondGiftUpgrade)
             }
             if (apiFlags & (1 << 19)) != 0 {
                 flags.insert(.isPaidMessage)
@@ -730,39 +730,39 @@ private extension StarsContext.State.Transaction {
                 flags.insert(.isBusinessTransfer)
             }
             if (apiFlags & (1 << 22)) != 0 {
-                flags.insert(.isStarGiftResale)
+                flags.insert(.isDiamondGiftResale)
             }
             if (apiFlags & (1 << 24)) != 0 {
                 flags.insert(.isPostsSearch)
             }
             if (apiFlags & (1 << 25)) != 0 {
-                flags.insert(.isStarGiftPrepaidUpgrade)
+                flags.insert(.isDiamondGiftPrepaidUpgrade)
             }
             if (apiFlags & (1 << 26)) != 0 {
-                flags.insert(.isStarGiftDropOriginalDetails)
+                flags.insert(.isDiamondGiftDropOriginalDetails)
             }
             if (apiFlags & (1 << 27)) != 0 {
                 flags.insert(.isLiveStreamPaidMessage)
             }
             if (apiFlags & (1 << 28)) != 0 {
-                flags.insert(.isStarGiftAuctionBid)
+                flags.insert(.isDiamondGiftAuctionBid)
             }
             if (apiFlags & (1 << 29)) != 0 {
-                flags.insert(.isStarGiftOffer)
+                flags.insert(.isDiamondGiftOffer)
             }
             
             let media = extendedMedia.flatMap({ $0.compactMap { textMediaAndExpirationTimerFromApiMedia($0, PeerId(0)).media } }) ?? []
                         
-            self.init(flags: flags, id: id, count: CurrencyAmount(apiAmount: stars), date: date, peer: parsedPeer, title: title, description: description, photo: photo.flatMap(IosappMediaWebFile.init), transactionDate: transactionDate, transactionUrl: transactionUrl, paidMessageId: paidMessageId, giveawayMessageId: giveawayMessageId, media: media, subscriptionPeriod: subscriptionPeriod, starGift: starGift.flatMap { StarGift(apiStarGift: $0) }, floodskipNumber: floodskipNumber, starrefCommissionPermille: starrefCommissionPermille, starrefPeerId: starrefPeer?.peerId, starrefAmount: starrefAmount.flatMap(StarsAmount.init(apiAmount:)), paidMessageCount: paidMessageCount, premiumGiftMonths: premiumGiftMonths, adsProceedsFromDate: adsProceedsFromDate, adsProceedsToDate: adsProceedsToDate)
+            self.init(flags: flags, id: id, count: CurrencyAmount(apiAmount: stars), date: date, peer: parsedPeer, title: title, description: description, photo: photo.flatMap(IosappMediaWebFile.init), transactionDate: transactionDate, transactionUrl: transactionUrl, paidMessageId: paidMessageId, giveawayMessageId: giveawayMessageId, media: media, subscriptionPeriod: subscriptionPeriod, starGift: starGift.flatMap { StarGift(apiDiamondGift: $0) }, floodskipNumber: floodskipNumber, starrefCommissionPermille: starrefCommissionPermille, starrefPeerId: starrefPeer?.peerId, starrefAmount: starrefAmount.flatMap(StarsAmount.init(apiAmount:)), paidMessageCount: paidMessageCount, premiumGiftMonths: premiumGiftMonths, adsProceedsFromDate: adsProceedsFromDate, adsProceedsToDate: adsProceedsToDate)
         }
     }
 }
 
-private extension StarsContext.State.Subscription {
+private extension DiamondsContext.State.Subscription {
     init?(apiSubscription: Api.StarsSubscription, transaction: Transaction) {
         switch apiSubscription {
-        case let .starsSubscription(starsSubscriptionData):
-            let (apiFlags, id, apiPeer, untilDate, pricing, inviteHash, title, photo, invoiceSlug) = (starsSubscriptionData.flags, starsSubscriptionData.id, starsSubscriptionData.peer, starsSubscriptionData.untilDate, starsSubscriptionData.pricing, starsSubscriptionData.chatInviteHash, starsSubscriptionData.title, starsSubscriptionData.photo, starsSubscriptionData.invoiceSlug)
+        case let .starsSubscription(diamondsSubscriptionData):
+            let (apiFlags, id, apiPeer, untilDate, pricing, inviteHash, title, photo, invoiceSlug) = (diamondsSubscriptionData.flags, diamondsSubscriptionData.id, diamondsSubscriptionData.peer, diamondsSubscriptionData.untilDate, diamondsSubscriptionData.pricing, diamondsSubscriptionData.chatInviteHash, diamondsSubscriptionData.title, diamondsSubscriptionData.photo, diamondsSubscriptionData.invoiceSlug)
             guard let peer = transaction.getPeer(apiPeer.peerId) else {
                 return nil
             }
@@ -779,12 +779,12 @@ private extension StarsContext.State.Subscription {
             if (apiFlags & (1 << 7)) != 0 {
                 flags.insert(.isCancelledByBot)
             }
-            self.init(flags: flags, id: id, peer: EnginePeer(peer), untilDate: untilDate, pricing: StarsSubscriptionPricing(apiStarsSubscriptionPricing: pricing), inviteHash: inviteHash, title: title, photo: photo.flatMap(IosappMediaWebFile.init), invoiceSlug: invoiceSlug)
+            self.init(flags: flags, id: id, peer: EnginePeer(peer), untilDate: untilDate, pricing: StarsSubscriptionPricing(apiDiamondsSubscriptionPricing: pricing), inviteHash: inviteHash, title: title, photo: photo.flatMap(IosappMediaWebFile.init), invoiceSlug: invoiceSlug)
         }
     }
 }
 
-public final class StarsContext {
+public final class DiamondsContext {
     public struct State: Equatable {
         public struct Transaction: Equatable {
             public struct Flags: OptionSet {
@@ -800,16 +800,16 @@ public final class StarsContext {
                 public static let isFailed = Flags(rawValue: 1 << 3)
                 public static let isGift = Flags(rawValue: 1 << 4)
                 public static let isReaction = Flags(rawValue: 1 << 5)
-                public static let isStarGiftUpgrade = Flags(rawValue: 1 << 6)
+                public static let isDiamondGiftUpgrade = Flags(rawValue: 1 << 6)
                 public static let isPaidMessage = Flags(rawValue: 1 << 7)
                 public static let isBusinessTransfer = Flags(rawValue: 1 << 8)
-                public static let isStarGiftResale = Flags(rawValue: 1 << 9)
+                public static let isDiamondGiftResale = Flags(rawValue: 1 << 9)
                 public static let isPostsSearch = Flags(rawValue: 1 << 10)
-                public static let isStarGiftPrepaidUpgrade = Flags(rawValue: 1 << 11)
-                public static let isStarGiftDropOriginalDetails = Flags(rawValue: 1 << 12)
-                public static let isStarGiftAuctionBid = Flags(rawValue: 1 << 13)
+                public static let isDiamondGiftPrepaidUpgrade = Flags(rawValue: 1 << 11)
+                public static let isDiamondGiftDropOriginalDetails = Flags(rawValue: 1 << 12)
+                public static let isDiamondGiftAuctionBid = Flags(rawValue: 1 << 13)
                 public static let isLiveStreamPaidMessage = Flags(rawValue: 1 << 14)
-                public static let isStarGiftOffer = Flags(rawValue: 1 << 15)
+                public static let isDiamondGiftOffer = Flags(rawValue: 1 << 15)
             }
             
             public enum Peer: Equatable {
@@ -1100,9 +1100,9 @@ public final class StarsContext {
         }
     }
     
-    private let impl: QueueLocalObject<StarsContextImpl>
+    private let impl: QueueLocalObject<DiamondsContextImpl>
     
-    public var state: Signal<StarsContext.State?, NoError> {
+    public var state: Signal<DiamondsContext.State?, NoError> {
         return Signal { subscriber in
             let disposable = MetaDisposable()
             self.impl.with { impl in
@@ -1124,8 +1124,8 @@ public final class StarsContext {
     
     public let ton: Bool
     
-    public var currentState: StarsContext.State? {
-        var state: StarsContext.State?
+    public var currentState: DiamondsContext.State? {
+        var state: DiamondsContext.State?
         self.impl.syncWith { impl in
             state = impl._state
         }
@@ -1138,7 +1138,7 @@ public final class StarsContext {
         }
     }
     
-    fileprivate func updateBalance(_ balance: StarsAmount, transactions: [StarsContext.State.Transaction]?) {
+    fileprivate func updateBalance(_ balance: StarsAmount, transactions: [DiamondsContext.State.Transaction]?) {
         self.impl.with {
             $0.updateBalance(balance, transactions: transactions)
         }
@@ -1166,21 +1166,21 @@ public final class StarsContext {
     init(account: Account, ton: Bool) {
         self.ton = ton
         self.impl = QueueLocalObject(queue: Queue.mainQueue(), generate: {
-            return StarsContextImpl(account: account, ton: ton)
+            return DiamondsContextImpl(account: account, ton: ton)
         })
     }
 }
 
-private final class StarsTransactionsContextImpl {
+private final class DiamondsTransactionsContextImpl {
     private let account: Account
-    private weak var starsContext: StarsContext?
+    private weak var diamondsContext: DiamondsContext?
     fileprivate let peerId: EnginePeer.Id
     fileprivate let ton: Bool
-    private let mode: StarsTransactionsContext.Mode
+    private let mode: DiamondsTransactionsContext.Mode
     
-    fileprivate var _state: StarsTransactionsContext.State
-    private let _statePromise = Promise<StarsTransactionsContext.State>()
-    var state: Signal<StarsTransactionsContext.State, NoError> {
+    fileprivate var _state: DiamondsTransactionsContext.State
+    private let _statePromise = Promise<DiamondsTransactionsContext.State>()
+    var state: Signal<DiamondsTransactionsContext.State, NoError> {
         return self._statePromise.get()
     }
     private var nextOffset: String? = ""
@@ -1188,22 +1188,22 @@ private final class StarsTransactionsContextImpl {
     private let disposable = MetaDisposable()
     private var stateDisposable: Disposable?
     
-    init(account: Account, subject: StarsTransactionsContext.Subject, mode: StarsTransactionsContext.Mode) {
+    init(account: Account, subject: DiamondsTransactionsContext.Subject, mode: DiamondsTransactionsContext.Mode) {
         assert(Queue.mainQueue().isCurrent())
         
-        let currentTransactions: [StarsContext.State.Transaction]
+        let currentTransactions: [DiamondsContext.State.Transaction]
         
         self.account = account
         switch subject {
-        case let .starsTransactionsContext(transactionsContext):
+        case let .diamondsTransactionsContext(transactionsContext):
             self.peerId = transactionsContext.peerId
             self.ton = transactionsContext.ton
             currentTransactions = transactionsContext.currentState?.transactions ?? []
-        case let .starsContext(starsContext):
-            self.starsContext = starsContext
-            self.peerId = starsContext.peerId
-            self.ton = starsContext.ton
-            currentTransactions = starsContext.currentState?.transactions ?? []
+        case let .diamondsContext(diamondsContext):
+            self.diamondsContext = diamondsContext
+            self.peerId = diamondsContext.peerId
+            self.ton = diamondsContext.ton
+            currentTransactions = diamondsContext.currentState?.transactions ?? []
         case let .peer(peerId, ton):
             self.peerId = peerId
             self.ton = ton
@@ -1211,7 +1211,7 @@ private final class StarsTransactionsContextImpl {
         }
         self.mode = mode
         
-        let initialTransactions: [StarsContext.State.Transaction]
+        let initialTransactions: [DiamondsContext.State.Transaction]
         switch mode {
         case .all:
             initialTransactions = currentTransactions
@@ -1221,17 +1221,17 @@ private final class StarsTransactionsContextImpl {
             initialTransactions = currentTransactions.filter { $0.count.amount < StarsAmount.zero }
         }
         
-        self._state = StarsTransactionsContext.State(transactions: initialTransactions, canLoadMore: true, isLoading: false)
+        self._state = DiamondsTransactionsContext.State(transactions: initialTransactions, canLoadMore: true, isLoading: false)
         self._statePromise.set(.single(self._state))
         
-        if case let .starsTransactionsContext(transactionsContext) = subject {
+        if case let .diamondsTransactionsContext(transactionsContext) = subject {
             self.stateDisposable = (transactionsContext.state
             |> deliverOnMainQueue).start(next: { [weak self] state in
                 guard let self else {
                     return
                 }
                 let currentTransactions = state.transactions
-                let filteredTransactions: [StarsContext.State.Transaction]
+                let filteredTransactions: [DiamondsContext.State.Transaction]
                 switch mode {
                 case .all:
                     filteredTransactions = currentTransactions
@@ -1250,15 +1250,15 @@ private final class StarsTransactionsContextImpl {
                     self.updateState(updatedState)
                 }
             })
-        } else if case let .starsContext(starsContext) = subject {
-            self.stateDisposable = (starsContext.state
+        } else if case let .diamondsContext(diamondsContext) = subject {
+            self.stateDisposable = (diamondsContext.state
             |> deliverOnMainQueue).start(next: { [weak self] state in
                 guard let self, let state else {
                     return
                 }
                 
                 let currentTransactions = state.transactions
-                let filteredTransactions: [StarsContext.State.Transaction]
+                let filteredTransactions: [DiamondsContext.State.Transaction]
                 switch mode {
                 case .all:
                     filteredTransactions = currentTransactions
@@ -1310,7 +1310,7 @@ private final class StarsTransactionsContextImpl {
         updatedState.isLoading = true
         self.updateState(updatedState)
                 
-        self.disposable.set((_internal_requestStarsState(account: self.account, peerId: self.peerId, ton: self.ton, mode: self.mode, subscriptionId: nil, offset: nextOffset, limit: self.nextOffset == "" ? 25 : 50)
+        self.disposable.set((_internal_requestDiamondsState(account: self.account, peerId: self.peerId, ton: self.ton, mode: self.mode, subscriptionId: nil, offset: nextOffset, limit: self.nextOffset == "" ? 25 : 50)
         |> deliverOnMainQueue).start(next: { [weak self] status in
             guard let self else {
                 return
@@ -1324,37 +1324,37 @@ private final class StarsTransactionsContextImpl {
             self.updateState(updatedState)
             
             if case .all = self.mode, nextOffset.isEmpty {
-                self.starsContext?.updateBalance(status.balance, transactions: status.transactions)
+                self.diamondsContext?.updateBalance(status.balance, transactions: status.transactions)
             } else {
-                self.starsContext?.updateBalance(status.balance, transactions: nil)
+                self.diamondsContext?.updateBalance(status.balance, transactions: nil)
             }
         }))
     }
     
-    private func updateState(_ state: StarsTransactionsContext.State) {
+    private func updateState(_ state: DiamondsTransactionsContext.State) {
         self._state = state
         self._statePromise.set(.single(state))
     }
 }
     
-public final class StarsTransactionsContext {
+public final class DiamondsTransactionsContext {
     public struct State: Equatable {
-        public var transactions: [StarsContext.State.Transaction]
+        public var transactions: [DiamondsContext.State.Transaction]
         public var canLoadMore: Bool
         public var isLoading: Bool
         
-        init(transactions: [StarsContext.State.Transaction], canLoadMore: Bool, isLoading: Bool) {
+        init(transactions: [DiamondsContext.State.Transaction], canLoadMore: Bool, isLoading: Bool) {
             self.transactions = transactions
             self.canLoadMore = canLoadMore
             self.isLoading = isLoading
         }
     }
     
-    fileprivate let impl: QueueLocalObject<StarsTransactionsContextImpl>
+    fileprivate let impl: QueueLocalObject<DiamondsTransactionsContextImpl>
     
     public enum Subject {
-        case starsTransactionsContext(StarsTransactionsContext)
-        case starsContext(StarsContext)
+        case diamondsTransactionsContext(DiamondsTransactionsContext)
+        case diamondsContext(DiamondsContext)
         case peer(peerId: EnginePeer.Id, ton: Bool)
     }
     
@@ -1364,7 +1364,7 @@ public final class StarsTransactionsContext {
         case outgoing
     }
     
-    public var state: Signal<StarsTransactionsContext.State, NoError> {
+    public var state: Signal<DiamondsTransactionsContext.State, NoError> {
         return Signal { subscriber in
             let disposable = MetaDisposable()
             self.impl.with { impl in
@@ -1376,8 +1376,8 @@ public final class StarsTransactionsContext {
         }
     }
     
-    public var currentState: StarsTransactionsContext.State? {
-        var state: StarsTransactionsContext.State?
+    public var currentState: DiamondsTransactionsContext.State? {
+        var state: DiamondsTransactionsContext.State?
         self.impl.syncWith { impl in
             state = impl._state
         }
@@ -1398,7 +1398,7 @@ public final class StarsTransactionsContext {
     
     init(account: Account, subject: Subject, mode: Mode) {
         self.impl = QueueLocalObject(queue: Queue.mainQueue(), generate: {
-            return StarsTransactionsContextImpl(account: account, subject: subject, mode: mode)
+            return DiamondsTransactionsContextImpl(account: account, subject: subject, mode: mode)
         })
     }
     
@@ -1419,13 +1419,13 @@ public final class StarsTransactionsContext {
     }
 }
 
-private final class StarsSubscriptionsContextImpl {
+private final class DiamondsSubscriptionsContextImpl {
     private let account: Account
     private let missingBalance: Bool
     
-    private var _state: StarsSubscriptionsContext.State
-    private let _statePromise = Promise<StarsSubscriptionsContext.State>()
-    var state: Signal<StarsSubscriptionsContext.State, NoError> {
+    private var _state: DiamondsSubscriptionsContext.State
+    private let _statePromise = Promise<DiamondsSubscriptionsContext.State>()
+    var state: Signal<DiamondsSubscriptionsContext.State, NoError> {
         return self._statePromise.get()
     }
     private var nextOffset: String? = ""
@@ -1434,16 +1434,16 @@ private final class StarsSubscriptionsContextImpl {
     private var stateDisposable: Disposable?
     private let updateDisposable = MetaDisposable()
     
-    init(account: Account, starsContext: StarsContext?, missingBalance: Bool) {
+    init(account: Account, diamondsContext: DiamondsContext?, missingBalance: Bool) {
         assert(Queue.mainQueue().isCurrent())
         
         self.account = account
         self.missingBalance = missingBalance
         
-        let currentSubscriptions = starsContext?.currentState?.subscriptions ?? []
-        let canLoadMore = starsContext?.currentState?.canLoadMoreSubscriptions ?? true
+        let currentSubscriptions = diamondsContext?.currentState?.subscriptions ?? []
+        let canLoadMore = diamondsContext?.currentState?.canLoadMoreSubscriptions ?? true
         
-        self._state = StarsSubscriptionsContext.State(balance: StarsAmount.zero, subscriptions: currentSubscriptions, canLoadMore: canLoadMore, isLoading: false)
+        self._state = DiamondsSubscriptionsContext.State(balance: StarsAmount.zero, subscriptions: currentSubscriptions, canLoadMore: canLoadMore, isLoading: false)
         self._statePromise.set(.single(self._state))
         
         self.loadMore()
@@ -1467,7 +1467,7 @@ private final class StarsSubscriptionsContextImpl {
         updatedState.isLoading = true
         self.updateState(updatedState)
                 
-        self.disposable.set((_internal_requestStarsSubscriptions(account: self.account, peerId: self.account.peerId, offset: nextOffset, missingBalance: self.missingBalance)
+        self.disposable.set((_internal_requestDiamondsSubscriptions(account: self.account, peerId: self.account.peerId, offset: nextOffset, missingBalance: self.missingBalance)
         |> deliverOnMainQueue).start(next: { [weak self] status in
             guard let self else {
                 return
@@ -1484,7 +1484,7 @@ private final class StarsSubscriptionsContextImpl {
         }))
     }
     
-    private func updateState(_ state: StarsSubscriptionsContext.State) {
+    private func updateState(_ state: DiamondsSubscriptionsContext.State) {
         self._state = state
         self._statePromise.set(.single(state))
     }
@@ -1499,11 +1499,11 @@ private final class StarsSubscriptionsContextImpl {
             } else {
                 updatedFlags.remove(.isCancelled)
             }
-            let updatedSubscription = StarsContext.State.Subscription(flags: updatedFlags, id: subscription.id, peer: subscription.peer, untilDate: subscription.untilDate, pricing: subscription.pricing, inviteHash: subscription.inviteHash, title: subscription.title, photo: subscription.photo, invoiceSlug: subscription.invoiceSlug)
+            let updatedSubscription = DiamondsContext.State.Subscription(flags: updatedFlags, id: subscription.id, peer: subscription.peer, untilDate: subscription.untilDate, pricing: subscription.pricing, inviteHash: subscription.inviteHash, title: subscription.title, photo: subscription.photo, invoiceSlug: subscription.invoiceSlug)
             updatedState.subscriptions[index] = updatedSubscription
         }
         self.updateState(updatedState)
-        self.updateDisposable.set(_internal_updateStarsSubscription(account: self.account, peerId: self.account.peerId, subscriptionId: id, cancel: cancel).startStrict())
+        self.updateDisposable.set(_internal_updateDiamondsSubscription(account: self.account, peerId: self.account.peerId, subscriptionId: id, cancel: cancel).startStrict())
     }
     
     private var previousLoadTimestamp: Double?
@@ -1521,7 +1521,7 @@ private final class StarsSubscriptionsContextImpl {
         self.previousLoadTimestamp = currentTimestamp
         self._state.isLoading = true
         
-        self.disposable.set((_internal_requestStarsSubscriptions(account: self.account, peerId: self.account.peerId, offset: "", missingBalance: self.missingBalance)
+        self.disposable.set((_internal_requestDiamondsSubscriptions(account: self.account, peerId: self.account.peerId, offset: "", missingBalance: self.missingBalance)
         |> deliverOnMainQueue).start(next: { [weak self] status in
             guard let self else {
                 return
@@ -1537,14 +1537,14 @@ private final class StarsSubscriptionsContextImpl {
     }
 }
     
-public final class StarsSubscriptionsContext {
+public final class DiamondsSubscriptionsContext {
     public struct State: Equatable {
         public var balance: StarsAmount
-        public var subscriptions: [StarsContext.State.Subscription]
+        public var subscriptions: [DiamondsContext.State.Subscription]
         public var canLoadMore: Bool
         public var isLoading: Bool
         
-        init(balance: StarsAmount, subscriptions: [StarsContext.State.Subscription], canLoadMore: Bool, isLoading: Bool) {
+        init(balance: StarsAmount, subscriptions: [DiamondsContext.State.Subscription], canLoadMore: Bool, isLoading: Bool) {
             self.balance = balance
             self.subscriptions = subscriptions
             self.canLoadMore = canLoadMore
@@ -1552,9 +1552,9 @@ public final class StarsSubscriptionsContext {
         }
     }
     
-    fileprivate let impl: QueueLocalObject<StarsSubscriptionsContextImpl>
+    fileprivate let impl: QueueLocalObject<DiamondsSubscriptionsContextImpl>
         
-    public var state: Signal<StarsSubscriptionsContext.State, NoError> {
+    public var state: Signal<DiamondsSubscriptionsContext.State, NoError> {
         return Signal { subscriber in
             let disposable = MetaDisposable()
             self.impl.with { impl in
@@ -1572,9 +1572,9 @@ public final class StarsSubscriptionsContext {
         }
     }
     
-    init(account: Account, starsContext: StarsContext?, missingBalance: Bool) {
+    init(account: Account, diamondsContext: DiamondsContext?, missingBalance: Bool) {
         self.impl = QueueLocalObject(queue: Queue.mainQueue(), generate: {
-            return StarsSubscriptionsContextImpl(account: account, starsContext: starsContext, missingBalance: missingBalance)
+            return DiamondsSubscriptionsContextImpl(account: account, diamondsContext: diamondsContext, missingBalance: missingBalance)
         })
     }
     
@@ -1592,7 +1592,7 @@ public final class StarsSubscriptionsContext {
 }
 
 
-func _internal_sendStarsPaymentForm(account: Account, formId: Int64, source: BotPaymentInvoiceSource) -> Signal<SendBotPaymentResult, SendBotPaymentFormError> {
+func _internal_sendDiamondsPaymentForm(account: Account, formId: Int64, source: BotPaymentInvoiceSource) -> Signal<SendBotPaymentResult, SendBotPaymentFormError> {
     return account.postbox.transaction { transaction -> Api.InputInvoice? in
         return _internal_parseInputInvoice(transaction: transaction, source: source)
     }
@@ -1609,7 +1609,7 @@ func _internal_sendStarsPaymentForm(account: Account, formId: Int64, source: Bot
                     account.stateManager.addUpdates(updates)
                 
                     switch source {
-                    case .starsChatSubscription:
+                    case .diamondsChatSubscription:
                         let chats = updates.chats.compactMap { parseIosappGroupOrChannel(chat: $0) }
                         if let first = chats.first {
                             return .done(receiptMessageId: nil, subscriptionPeerId: first.id, uniqueStarGift: nil)
@@ -1649,17 +1649,17 @@ func _internal_sendStarsPaymentForm(account: Account, formId: Int64, source: Bot
                                                     receiptMessageId = id
                                                 }
                                             }
-                                        case let .starsGiveaway(_, _, _, _, _, _, _, randomId, _, _, _, _):
+                                        case let .diamondsGiveaway(_, _, _, _, _, _, _, randomId, _, _, _, _):
                                             if message.globallyUniqueId == randomId {
                                                 if case let .Id(id) = message.id {
                                                     receiptMessageId = id
                                                 }
                                             }
-                                        case .giftCode, .stars, .starsGift, .starsChatSubscription, .starGift, .starGiftUpgrade, .starGiftTransfer, .premiumGift, .starGiftResale, .starGiftPrepaidUpgrade, .starGiftDropOriginalDetails, .starGiftAuctionBid:
+                                        case .giftCode, .stars, .diamondsGift, .diamondsChatSubscription, .starGift, .diamondGiftUpgrade, .diamondGiftTransfer, .premiumGift, .diamondGiftResale, .diamondGiftPrepaidUpgrade, .diamondGiftDropOriginalDetails, .diamondGiftAuctionBid:
                                             receiptMessageId = nil
                                         }
                                     } else if case let .starGiftUnique(gift, _, _, savedToProfile, canExportDate, transferStars, isRefunded, _, peerId, _, savedId, _, canTransferDate, canResaleDate, dropOriginalDetailsStars, _, _, canCraftAt, _) = action.action, case let .Id(messageId) = message.id {
-                                        let reference: StarGiftReference
+                                        let reference: DiamondGiftReference
                                         if let peerId, let savedId {
                                             reference = .peer(peerId: peerId, id: savedId)
                                         } else {
@@ -1713,16 +1713,16 @@ func _internal_sendStarsPaymentForm(account: Account, formId: Int64, source: Bot
             } else if error.errorDescription == "MEDIA_ALREADY_PAID" {
                 return .fail(.alreadyPaid)
             } else if error.errorDescription == "STARGIFT_USAGE_LIMITED" {
-                return .fail(.starGiftOutOfStock)
+                return .fail(.diamondGiftOutOfStock)
             } else if error.errorDescription == "STARGIFT_USER_USAGE_LIMITED" {
-                return .fail(.starGiftUserLimit)
+                return .fail(.diamondGiftUserLimit)
             }
             return .fail(.generic)
         }
     }
 }
 
-public struct StarsTransactionReference: PostboxCoding, Hashable, Equatable {
+public struct DiamondsTransactionReference: PostboxCoding, Hashable, Equatable {
     public let peerId: EnginePeer.Id
     public let ton: Bool
     public let id: String
@@ -1750,11 +1750,11 @@ public struct StarsTransactionReference: PostboxCoding, Hashable, Equatable {
     }
 }
 
-func _internal_getStarsTransaction(accountPeerId: PeerId, postbox: Postbox, network: Network, transactionReference: StarsTransactionReference) -> Signal<StarsContext.State.Transaction?, NoError> {
+func _internal_getDiamondsTransaction(accountPeerId: PeerId, postbox: Postbox, network: Network, transactionReference: DiamondsTransactionReference) -> Signal<DiamondsContext.State.Transaction?, NoError> {
     return postbox.transaction { transaction -> Api.InputPeer? in
         return transaction.getPeer(transactionReference.peerId).flatMap(apiInputPeer)
     }
-    |> mapToSignal { inputPeer -> Signal<StarsContext.State.Transaction?, NoError> in
+    |> mapToSignal { inputPeer -> Signal<DiamondsContext.State.Transaction?, NoError> in
         guard let inputPeer else {
             return .single(nil)
         }
@@ -1769,17 +1769,17 @@ func _internal_getStarsTransaction(accountPeerId: PeerId, postbox: Postbox, netw
         |> `catch` { _ -> Signal<Api.payments.StarsStatus?, NoError> in
             return .single(nil)
         }
-        |> mapToSignal { result -> Signal<StarsContext.State.Transaction?, NoError> in
-            return postbox.transaction { transaction -> StarsContext.State.Transaction? in
-                guard let result, case let .starsStatus(starsStatusData) = result, let matchingTransaction = starsStatusData.history?.first else {
+        |> mapToSignal { result -> Signal<DiamondsContext.State.Transaction?, NoError> in
+            return postbox.transaction { transaction -> DiamondsContext.State.Transaction? in
+                guard let result, case let .starsStatus(diamondsStatusData) = result, let matchingTransaction = diamondsStatusData.history?.first else {
                     return nil
                 }
-                let (_, _, _, _, _, transactions, _, chats, users) = (starsStatusData.flags, starsStatusData.balance, starsStatusData.subscriptions, starsStatusData.subscriptionsNextOffset, starsStatusData.subscriptionsMissingBalance, starsStatusData.history, starsStatusData.nextOffset, starsStatusData.chats, starsStatusData.users)
+                let (_, _, _, _, _, transactions, _, chats, users) = (diamondsStatusData.flags, diamondsStatusData.balance, diamondsStatusData.subscriptions, diamondsStatusData.subscriptionsNextOffset, diamondsStatusData.subscriptionsMissingBalance, diamondsStatusData.history, diamondsStatusData.nextOffset, diamondsStatusData.chats, diamondsStatusData.users)
                 let _ = transactions
                 let peers = AccumulatedPeers(chats: chats, users: users)
                 updatePeers(transaction: transaction, accountPeerId: accountPeerId, peers: peers)
                 
-                return StarsContext.State.Transaction(apiTransaction: matchingTransaction, peerId: transactionReference.peerId, transaction: transaction)
+                return DiamondsContext.State.Transaction(apiTransaction: matchingTransaction, peerId: transactionReference.peerId, transaction: transaction)
             }
         }
     }
@@ -1824,56 +1824,56 @@ public struct StarsSubscriptionPricing: Codable, Equatable {
 }
 
 extension StarsSubscriptionPricing {
-    init(apiStarsSubscriptionPricing: Api.StarsSubscriptionPricing) {
-        switch apiStarsSubscriptionPricing {
-        case let .starsSubscriptionPricing(starsSubscriptionPricingData):
-            let (period, amount) = (starsSubscriptionPricingData.period, starsSubscriptionPricingData.amount)
+    init(apiDiamondsSubscriptionPricing: Api.StarsSubscriptionPricing) {
+        switch apiDiamondsSubscriptionPricing {
+        case let .starsSubscriptionPricing(diamondsSubscriptionPricingData):
+            let (period, amount) = (diamondsSubscriptionPricingData.period, diamondsSubscriptionPricingData.amount)
             self = .init(period: period, amount: StarsAmount(value: amount, nanos: 0))
         }
     }
 
-    var apiStarsSubscriptionPricing: Api.StarsSubscriptionPricing {
+    var apiDiamondsSubscriptionPricing: Api.StarsSubscriptionPricing {
         return .starsSubscriptionPricing(.init(period: self.period, amount: self.amount.value))
     }
 }
 
-public enum UpdateStarsSubsciptionError {
+public enum UpdateDiamondsSubsciptionError {
     case generic
 }
 
-func _internal_updateStarsSubscription(account: Account, peerId: EnginePeer.Id, subscriptionId: String, cancel: Bool) -> Signal<Never, UpdateStarsSubsciptionError> {
+func _internal_updateDiamondsSubscription(account: Account, peerId: EnginePeer.Id, subscriptionId: String, cancel: Bool) -> Signal<Never, UpdateDiamondsSubsciptionError> {
     return account.postbox.transaction { transaction -> Api.InputPeer? in
         return transaction.getPeer(peerId).flatMap(apiInputPeer)
     }
-    |> castError(UpdateStarsSubsciptionError.self)
-    |> mapToSignal { inputPeer -> Signal<Never, UpdateStarsSubsciptionError> in
+    |> castError(UpdateDiamondsSubsciptionError.self)
+    |> mapToSignal { inputPeer -> Signal<Never, UpdateDiamondsSubsciptionError> in
         guard let inputPeer else {
             return .complete()
         }
         let flags: Int32 = (1 << 0)
         return account.network.request(Api.functions.payments.changeStarsSubscription(flags: flags, peer: inputPeer, subscriptionId: subscriptionId, canceled: cancel ? .boolTrue : .boolFalse))
-        |> mapError { _ -> UpdateStarsSubsciptionError in
+        |> mapError { _ -> UpdateDiamondsSubsciptionError in
             return .generic
         }
         |> ignoreValues
     }
 }
 
-public enum FulfillStarsSubsciptionError {
+public enum FulfillDiamondsSubsciptionError {
     case generic
 }
 
-func _internal_fulfillStarsSubscription(account: Account, peerId: EnginePeer.Id, subscriptionId: String) -> Signal<Never, FulfillStarsSubsciptionError> {
+func _internal_fulfillDiamondsSubscription(account: Account, peerId: EnginePeer.Id, subscriptionId: String) -> Signal<Never, FulfillDiamondsSubsciptionError> {
     return account.postbox.transaction { transaction -> Api.InputPeer? in
         return transaction.getPeer(peerId).flatMap(apiInputPeer)
     }
-    |> castError(FulfillStarsSubsciptionError.self)
-    |> mapToSignal { inputPeer -> Signal<Never, FulfillStarsSubsciptionError> in
+    |> castError(FulfillDiamondsSubsciptionError.self)
+    |> mapToSignal { inputPeer -> Signal<Never, FulfillDiamondsSubsciptionError> in
         guard let inputPeer else {
             return .complete()
         }
         return account.network.request(Api.functions.payments.fulfillStarsSubscription(peer: inputPeer, subscriptionId: subscriptionId))
-        |> mapError { _ -> FulfillStarsSubsciptionError in
+        |> mapError { _ -> FulfillDiamondsSubsciptionError in
             return .generic
         }
         |> ignoreValues

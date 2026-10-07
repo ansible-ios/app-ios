@@ -40,19 +40,19 @@ private final class UpdatedWebpageSubscriberContext {
     let subscribers = Bag<(IosappMediaWebpage) -> Void>()
 }
 
-private final class UpdatedStarsBalanceSubscriberContext {
+private final class UpdatedDiamondsBalanceSubscriberContext {
     let subscribers = Bag<([PeerId: StarsAmount]) -> Void>()
 }
 
-private final class UpdatedStarsRevenueStatusSubscriberContext {
+private final class UpdatedDiamondsRevenueStatusSubscriberContext {
     let subscribers = Bag<([PeerId: StarsRevenueStats.Balances]) -> Void>()
 }
 
-private final class UpdatedStarGiftAuctionStateSubscriberContext {
+private final class UpdatedDiamondGiftAuctionStateSubscriberContext {
     let subscribers = Bag<([Int64: GiftAuctionContext.State.AuctionState]) -> Void>()
 }
 
-private final class UpdatedStarGiftAuctionMyStateSubscriberContext {
+private final class UpdatedDiamondGiftAuctionMyStateSubscriberContext {
     let subscribers = Bag<([Int64: GiftAuctionContext.State.MyState]) -> Void>()
 }
 
@@ -336,9 +336,9 @@ public final class AccountStateManager {
             return self.botPreviewUpdatesPipe.signal()
         }
         
-        fileprivate let forceSendPendingStarsReactionPipe = ValuePipe<MessageId>()
-        public var forceSendPendingStarsReaction: Signal<MessageId, NoError> {
-            return self.forceSendPendingStarsReactionPipe.signal()
+        fileprivate let forceSendPendingDiamondsReactionPipe = ValuePipe<MessageId>()
+        public var forceSendPendingDiamondsReaction: Signal<MessageId, NoError> {
+            return self.forceSendPendingDiamondsReactionPipe.signal()
         }
         
         fileprivate let forceSendPendingPaidMessagePipe = ValuePipe<PeerId>()
@@ -356,9 +356,9 @@ public final class AccountStateManager {
             return self.sentScheduledMessageIdsPipe.signal()
         }
         
-        fileprivate let starRefBotConnectionEventsPipe = ValuePipe<StarRefBotConnectionEvent>()
-        public var starRefBotConnectionEvents: Signal<StarRefBotConnectionEvent, NoError> {
-            return self.starRefBotConnectionEventsPipe.signal()
+        fileprivate let diamondRefBotConnectionEventsPipe = ValuePipe<DiamondRefBotConnectionEvent>()
+        public var diamondRefBotConnectionEvents: Signal<DiamondRefBotConnectionEvent, NoError> {
+            return self.diamondRefBotConnectionEventsPipe.signal()
         }
         
         fileprivate let installedStickerPacksArchivedEventsPipe = ValuePipe<Int>()
@@ -367,11 +367,11 @@ public final class AccountStateManager {
         }
         
         private var updatedWebpageContexts: [MediaId: UpdatedWebpageSubscriberContext] = [:]
-        private var updatedStarsBalanceContext = UpdatedStarsBalanceSubscriberContext()
-        private var updatedTonBalanceContext = UpdatedStarsBalanceSubscriberContext()
-        private var updatedStarsRevenueStatusContext = UpdatedStarsRevenueStatusSubscriberContext()
-        private var updatedStarGiftAuctionStateContext = UpdatedStarGiftAuctionStateSubscriberContext()
-        private var updatedStarGiftAuctionMyStateContext = UpdatedStarGiftAuctionMyStateSubscriberContext()
+        private var updatedDiamondsBalanceContext = UpdatedDiamondsBalanceSubscriberContext()
+        private var updatedTonBalanceContext = UpdatedDiamondsBalanceSubscriberContext()
+        private var updatedDiamondsRevenueStatusContext = UpdatedDiamondsRevenueStatusSubscriberContext()
+        private var updatedDiamondGiftAuctionStateContext = UpdatedDiamondGiftAuctionStateSubscriberContext()
+        private var updatedDiamondGiftAuctionMyStateContext = UpdatedDiamondGiftAuctionMyStateSubscriberContext()
         
         private let delayNotificatonsUntil = Atomic<Int32?>(value: nil)
         private let appliedMaxMessageIdPromise = Promise<Int32?>(nil)
@@ -1127,20 +1127,20 @@ public final class AccountStateManager {
                             if !events.updatedWebpages.isEmpty {
                                 strongSelf.notifyUpdatedWebpages(events.updatedWebpages)
                             }
-                            if !events.updatedStarsBalance.isEmpty {
-                                strongSelf.notifyUpdatedStarsBalance(events.updatedStarsBalance)
+                            if !events.updatedDiamondsBalance.isEmpty {
+                                strongSelf.notifyUpdatedDiamondsBalance(events.updatedDiamondsBalance)
                             }
                             if !events.updatedTonBalance.isEmpty {
                                 strongSelf.notifyUpdatedTonBalance(events.updatedTonBalance)
                             }
-                            if !events.updatedStarsRevenueStatus.isEmpty {
-                                strongSelf.notifyUpdatedStarsRevenueStatus(events.updatedStarsRevenueStatus)
+                            if !events.updatedDiamondsRevenueStatus.isEmpty {
+                                strongSelf.notifyUpdatedDiamondsRevenueStatus(events.updatedDiamondsRevenueStatus)
                             }
-                            if !events.updatedStarGiftAuctionState.isEmpty {
-                                strongSelf.notifyUpdatedStarGiftAuctionState(events.updatedStarGiftAuctionState)
+                            if !events.updatedDiamondGiftAuctionState.isEmpty {
+                                strongSelf.notifyUpdatedDiamondGiftAuctionState(events.updatedDiamondGiftAuctionState)
                             }
-                            if !events.updatedStarGiftAuctionMyState.isEmpty {
-                                strongSelf.notifyUpdatedStarGiftAuctionMyState(events.updatedStarGiftAuctionMyState)
+                            if !events.updatedDiamondGiftAuctionMyState.isEmpty {
+                                strongSelf.notifyUpdatedDiamondGiftAuctionMyState(events.updatedDiamondGiftAuctionMyState)
                             }
                             if let updatedEmojiGameInfo = events.updatedEmojiGameInfo {
                                 strongSelf.updateEmojiGameInfoDisposable.set(strongSelf.postbox.transaction({ transaction in
@@ -1711,19 +1711,19 @@ public final class AccountStateManager {
             }
         }
                 
-        public func updatedStarsBalance() -> Signal<[PeerId: StarsAmount], NoError> {
+        public func updatedDiamondsBalance() -> Signal<[PeerId: StarsAmount], NoError> {
             let queue = self.queue
             return Signal { [weak self] subscriber in
                 let disposable = MetaDisposable()
                 queue.async {
                     if let strongSelf = self {
-                        let index = strongSelf.updatedStarsBalanceContext.subscribers.add({ starsBalance in
-                            subscriber.putNext(starsBalance)
+                        let index = strongSelf.updatedDiamondsBalanceContext.subscribers.add({ diamondsBalance in
+                            subscriber.putNext(diamondsBalance)
                         })
                         
                         disposable.set(ActionDisposable {
                             if let strongSelf = self {
-                                strongSelf.updatedStarsBalanceContext.subscribers.remove(index)
+                                strongSelf.updatedDiamondsBalanceContext.subscribers.remove(index)
                             }
                         })
                     }
@@ -1732,9 +1732,9 @@ public final class AccountStateManager {
             }
         }
                 
-        private func notifyUpdatedStarsBalance(_ updatedStarsBalance: [PeerId: StarsAmount]) {
-            for subscriber in self.updatedStarsBalanceContext.subscribers.copyItems() {
-                subscriber(updatedStarsBalance)
+        private func notifyUpdatedDiamondsBalance(_ updatedDiamondsBalance: [PeerId: StarsAmount]) {
+            for subscriber in self.updatedDiamondsBalanceContext.subscribers.copyItems() {
+                subscriber(updatedDiamondsBalance)
             }
         }
                 
@@ -1744,8 +1744,8 @@ public final class AccountStateManager {
                 let disposable = MetaDisposable()
                 queue.async {
                     if let strongSelf = self {
-                        let index = strongSelf.updatedTonBalanceContext.subscribers.add({ starsBalance in
-                            subscriber.putNext(starsBalance)
+                        let index = strongSelf.updatedTonBalanceContext.subscribers.add({ diamondsBalance in
+                            subscriber.putNext(diamondsBalance)
                         })
                         
                         disposable.set(ActionDisposable {
@@ -1765,19 +1765,19 @@ public final class AccountStateManager {
             }
         }
         
-        public func updatedStarsRevenueStatus() -> Signal<[PeerId: StarsRevenueStats.Balances], NoError> {
+        public func updatedDiamondsRevenueStatus() -> Signal<[PeerId: StarsRevenueStats.Balances], NoError> {
             let queue = self.queue
             return Signal { [weak self] subscriber in
                 let disposable = MetaDisposable()
                 queue.async {
                     if let strongSelf = self {
-                        let index = strongSelf.updatedStarsRevenueStatusContext.subscribers.add({ revenueBalances in
+                        let index = strongSelf.updatedDiamondsRevenueStatusContext.subscribers.add({ revenueBalances in
                             subscriber.putNext(revenueBalances)
                         })
                         
                         disposable.set(ActionDisposable {
                             if let strongSelf = self {
-                                strongSelf.updatedStarsRevenueStatusContext.subscribers.remove(index)
+                                strongSelf.updatedDiamondsRevenueStatusContext.subscribers.remove(index)
                             }
                         })
                     }
@@ -1786,25 +1786,25 @@ public final class AccountStateManager {
             }
         }
         
-        private func notifyUpdatedStarsRevenueStatus(_ updatedStarsRevenueStatus: [PeerId: StarsRevenueStats.Balances]) {
-            for subscriber in self.updatedStarsRevenueStatusContext.subscribers.copyItems() {
-                subscriber(updatedStarsRevenueStatus)
+        private func notifyUpdatedDiamondsRevenueStatus(_ updatedDiamondsRevenueStatus: [PeerId: StarsRevenueStats.Balances]) {
+            for subscriber in self.updatedDiamondsRevenueStatusContext.subscribers.copyItems() {
+                subscriber(updatedDiamondsRevenueStatus)
             }
         }
         
-        public func updatedStarGiftAuctionState() -> Signal<[Int64: GiftAuctionContext.State.AuctionState], NoError> {
+        public func updatedDiamondGiftAuctionState() -> Signal<[Int64: GiftAuctionContext.State.AuctionState], NoError> {
             let queue = self.queue
             return Signal { [weak self] subscriber in
                 let disposable = MetaDisposable()
                 queue.async {
                     if let strongSelf = self {
-                        let index = strongSelf.updatedStarGiftAuctionStateContext.subscribers.add({ starsBalance in
-                            subscriber.putNext(starsBalance)
+                        let index = strongSelf.updatedDiamondGiftAuctionStateContext.subscribers.add({ diamondsBalance in
+                            subscriber.putNext(diamondsBalance)
                         })
                         
                         disposable.set(ActionDisposable {
                             if let strongSelf = self {
-                                strongSelf.updatedStarGiftAuctionStateContext.subscribers.remove(index)
+                                strongSelf.updatedDiamondGiftAuctionStateContext.subscribers.remove(index)
                             }
                         })
                     }
@@ -1813,25 +1813,25 @@ public final class AccountStateManager {
             }
         }
                 
-        private func notifyUpdatedStarGiftAuctionState(_ updatedStarGiftAuctionState: [Int64: GiftAuctionContext.State.AuctionState]) {
-            for subscriber in self.updatedStarGiftAuctionStateContext.subscribers.copyItems() {
-                subscriber(updatedStarGiftAuctionState)
+        private func notifyUpdatedDiamondGiftAuctionState(_ updatedDiamondGiftAuctionState: [Int64: GiftAuctionContext.State.AuctionState]) {
+            for subscriber in self.updatedDiamondGiftAuctionStateContext.subscribers.copyItems() {
+                subscriber(updatedDiamondGiftAuctionState)
             }
         }
         
-        public func updatedStarGiftAuctionMyState() -> Signal<[Int64: GiftAuctionContext.State.MyState], NoError> {
+        public func updatedDiamondGiftAuctionMyState() -> Signal<[Int64: GiftAuctionContext.State.MyState], NoError> {
             let queue = self.queue
             return Signal { [weak self] subscriber in
                 let disposable = MetaDisposable()
                 queue.async {
                     if let strongSelf = self {
-                        let index = strongSelf.updatedStarGiftAuctionMyStateContext.subscribers.add({ starsBalance in
-                            subscriber.putNext(starsBalance)
+                        let index = strongSelf.updatedDiamondGiftAuctionMyStateContext.subscribers.add({ diamondsBalance in
+                            subscriber.putNext(diamondsBalance)
                         })
                         
                         disposable.set(ActionDisposable {
                             if let strongSelf = self {
-                                strongSelf.updatedStarGiftAuctionMyStateContext.subscribers.remove(index)
+                                strongSelf.updatedDiamondGiftAuctionMyStateContext.subscribers.remove(index)
                             }
                         })
                     }
@@ -1840,9 +1840,9 @@ public final class AccountStateManager {
             }
         }
                 
-        private func notifyUpdatedStarGiftAuctionMyState(_ updatedStarGiftAuctionMyState: [Int64: GiftAuctionContext.State.MyState]) {
-            for subscriber in self.updatedStarGiftAuctionMyStateContext.subscribers.copyItems() {
-                subscriber(updatedStarGiftAuctionMyState)
+        private func notifyUpdatedDiamondGiftAuctionMyState(_ updatedDiamondGiftAuctionMyState: [Int64: GiftAuctionContext.State.MyState]) {
+            for subscriber in self.updatedDiamondGiftAuctionMyStateContext.subscribers.copyItems() {
+                subscriber(updatedDiamondGiftAuctionMyState)
             }
         }
                 
@@ -1894,8 +1894,8 @@ public final class AccountStateManager {
             }
         }
         
-        func addStarRefBotConnectionEvent(event: StarRefBotConnectionEvent) {
-            self.starRefBotConnectionEventsPipe.putNext(event)
+        func addDiamondRefBotConnectionEvent(event: DiamondRefBotConnectionEvent) {
+            self.diamondRefBotConnectionEventsPipe.putNext(event)
         }
     }
     
@@ -2045,9 +2045,9 @@ public final class AccountStateManager {
         }
     }
     
-    var forceSendPendingStarsReaction: Signal<MessageId, NoError> {
+    var forceSendPendingDiamondsReaction: Signal<MessageId, NoError> {
         return self.impl.signalWith { impl, subscriber in
-            return impl.forceSendPendingStarsReaction.start(next: subscriber.putNext, error: subscriber.putError, completed: subscriber.putCompletion)
+            return impl.forceSendPendingDiamondsReaction.start(next: subscriber.putNext, error: subscriber.putError, completed: subscriber.putCompletion)
         }
     }
     
@@ -2069,9 +2069,9 @@ public final class AccountStateManager {
         }
     }
     
-    func forceSendPendingStarsReaction(messageId: MessageId) {
+    func forceSendPendingDiamondsReaction(messageId: MessageId) {
         self.impl.with { impl in
-            impl.forceSendPendingStarsReactionPipe.putNext(messageId)
+            impl.forceSendPendingDiamondsReactionPipe.putNext(messageId)
         }
     }
     
@@ -2093,8 +2093,8 @@ public final class AccountStateManager {
     
     let messagesRemovedContext = MessagesRemovedContext()
     
-    public weak var starsContext: StarsContext?
-    public weak var tonContext: StarsContext?
+    public weak var diamondsContext: DiamondsContext?
+    public weak var tonContext: DiamondsContext?
     
     init(
         accountPeerId: PeerId,
@@ -2215,9 +2215,9 @@ public final class AccountStateManager {
         }
     }
     
-    public func updatedStarsBalance() -> Signal<[PeerId: StarsAmount], NoError> {
+    public func updatedDiamondsBalance() -> Signal<[PeerId: StarsAmount], NoError> {
         return self.impl.signalWith { impl, subscriber in
-            return impl.updatedStarsBalance().start(next: subscriber.putNext, error: subscriber.putError, completed: subscriber.putCompletion)
+            return impl.updatedDiamondsBalance().start(next: subscriber.putNext, error: subscriber.putError, completed: subscriber.putCompletion)
         }
     }
     
@@ -2227,22 +2227,22 @@ public final class AccountStateManager {
         }
     }
     
-    public func updatedStarsRevenueStatus() -> Signal<[PeerId: StarsRevenueStats.Balances], NoError> {
+    public func updatedDiamondsRevenueStatus() -> Signal<[PeerId: StarsRevenueStats.Balances], NoError> {
         return self.impl.signalWith { impl, subscriber in
-            return impl.updatedStarsRevenueStatus().start(next: subscriber.putNext, error: subscriber.putError, completed: subscriber.putCompletion)
+            return impl.updatedDiamondsRevenueStatus().start(next: subscriber.putNext, error: subscriber.putError, completed: subscriber.putCompletion)
         }
     }
     
     
-    public func updatedStarGiftAuctionState() -> Signal<[Int64: GiftAuctionContext.State.AuctionState], NoError> {
+    public func updatedDiamondGiftAuctionState() -> Signal<[Int64: GiftAuctionContext.State.AuctionState], NoError> {
         return self.impl.signalWith { impl, subscriber in
-            return impl.updatedStarGiftAuctionState().start(next: subscriber.putNext, error: subscriber.putError, completed: subscriber.putCompletion)
+            return impl.updatedDiamondGiftAuctionState().start(next: subscriber.putNext, error: subscriber.putError, completed: subscriber.putCompletion)
         }
     }
     
-    public func updatedStarGiftAuctionMyState() -> Signal<[Int64: GiftAuctionContext.State.MyState], NoError> {
+    public func updatedDiamondGiftAuctionMyState() -> Signal<[Int64: GiftAuctionContext.State.MyState], NoError> {
         return self.impl.signalWith { impl, subscriber in
-            return impl.updatedStarGiftAuctionMyState().start(next: subscriber.putNext, error: subscriber.putError, completed: subscriber.putCompletion)
+            return impl.updatedDiamondGiftAuctionMyState().start(next: subscriber.putNext, error: subscriber.putError, completed: subscriber.putCompletion)
         }
     }
     
@@ -2338,15 +2338,15 @@ public final class AccountStateManager {
         return self.messagesRemovedContext.synchronouslyIsMessageDeletedRemotely(ids: ids)
     }
     
-    func starRefBotConnectionEvents() -> Signal<StarRefBotConnectionEvent, NoError> {
+    func diamondRefBotConnectionEvents() -> Signal<DiamondRefBotConnectionEvent, NoError> {
         return self.impl.signalWith { impl, subscriber in
-            return impl.starRefBotConnectionEventsPipe.signal().start(next: subscriber.putNext)
+            return impl.diamondRefBotConnectionEventsPipe.signal().start(next: subscriber.putNext)
         }
     }
     
-    func addStarRefBotConnectionEvent(event: StarRefBotConnectionEvent) {
+    func addDiamondRefBotConnectionEvent(event: DiamondRefBotConnectionEvent) {
         self.impl.with { impl in
-            impl.addStarRefBotConnectionEvent(event: event)
+            impl.addDiamondRefBotConnectionEvent(event: event)
         }
     }
 }

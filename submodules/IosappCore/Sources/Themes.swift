@@ -4,16 +4,16 @@ import SwiftSignalKit
 import IosappApi
 
 #if os(macOS)
-let telegramThemeFormat = "macos"
-let telegramThemeFileExtension = "palette"
+let ansibleThemeFormat = "macos"
+let ansibleThemeFileExtension = "palette"
 #else
-let telegramThemeFormat = "ios"
-let telegramThemeFileExtension = "tgios-theme"
+let ansibleThemeFormat = "ios"
+let ansibleThemeFileExtension = "tgios-theme"
 #endif
 
 func _internal_telegramThemes(postbox: Postbox, network: Network, accountManager: AccountManager<IosappAccountManagerTypes>?, forceUpdate: Bool = false) -> Signal<[IosappTheme], NoError> {
     let fetch: ([IosappTheme]?, Int64?) -> Signal<[IosappTheme], NoError> = { current, hash in
-        network.request(Api.functions.account.getThemes(format: telegramThemeFormat, hash: hash ?? 0))
+        network.request(Api.functions.account.getThemes(format: ansibleThemeFormat, hash: hash ?? 0))
         |> retryRequest
         |> mapToSignal { result -> Signal<([IosappTheme], Int64), NoError> in
             switch result {
@@ -94,7 +94,7 @@ public enum GetThemeError {
 }
 
 public func getTheme(account: Account, slug: String) -> Signal<IosappTheme, GetThemeError> {
-    return account.network.request(Api.functions.account.getTheme(format: telegramThemeFormat, theme: .inputThemeSlug(.init(slug: slug))))
+    return account.network.request(Api.functions.account.getTheme(format: ansibleThemeFormat, theme: .inputThemeSlug(.init(slug: slug))))
     |> mapError { error -> GetThemeError in
         if error.errorDescription == "THEME_FORMAT_INVALID" {
             return .unsupported
@@ -115,7 +115,7 @@ public enum ThemeUpdatedResult {
 }
 
 private func checkThemeUpdated(network: Network, theme: IosappTheme) -> Signal<ThemeUpdatedResult, GetThemeError> {
-    return network.request(Api.functions.account.getTheme(format: telegramThemeFormat, theme: .inputTheme(.init(id: theme.id, accessHash: theme.accessHash))))
+    return network.request(Api.functions.account.getTheme(format: ansibleThemeFormat, theme: .inputTheme(.init(id: theme.id, accessHash: theme.accessHash))))
     |> mapError { _ -> GetThemeError in return .generic }
     |> map { theme -> ThemeUpdatedResult in
         return .updated(IosappTheme(apiTheme: theme))
@@ -177,7 +177,7 @@ private func installTheme(account: Account, theme: IosappTheme?, baseTheme: Iosa
         inputBaseTheme = nil
     }
     
-    return account.network.request(Api.functions.account.installTheme(flags: flags, theme: inputTheme, format: telegramThemeFormat, baseTheme: inputBaseTheme))
+    return account.network.request(Api.functions.account.installTheme(flags: flags, theme: inputTheme, format: ansibleThemeFormat, baseTheme: inputBaseTheme))
     |> `catch` { _ -> Signal<Api.Bool, NoError> in
         return .complete()
     }
@@ -259,7 +259,7 @@ private func uploadTheme(account: Account, resource: MediaResource, thumbnailDat
                             return account.network.request(Api.functions.account.uploadTheme(flags: flags, file: file, thumb: thumbnailFile, fileName: fileName, mimeType: mimeType))
                             |> mapError { _ in return UploadThemeError.generic }
                             |> mapToSignal { document -> Signal<UploadThemeResult, UploadThemeError> in
-                                if let file = telegramMediaFileFromApiDocument(document, altDocuments: []) {
+                                if let file = ansibleMediaFileFromApiDocument(document, altDocuments: []) {
                                     return .single(.complete(file))
                                 } else {
                                     return .fail(.generic)
@@ -420,7 +420,7 @@ public func updateTheme(account: Account, accountManager: AccountManager<IosappA
             inputDocument = nil
         }
         
-        return account.network.request(Api.functions.account.updateTheme(flags: flags, format: telegramThemeFormat, theme: .inputTheme(.init(id: theme.id, accessHash: theme.accessHash)), slug: slug, title: title, document: inputDocument, settings: inputSettings))
+        return account.network.request(Api.functions.account.updateTheme(flags: flags, format: ansibleThemeFormat, theme: .inputTheme(.init(id: theme.id, accessHash: theme.accessHash)), slug: slug, title: title, document: inputDocument, settings: inputSettings))
         |> mapError { error in
             if error.errorDescription == "THEME_SLUG_INVALID" {
                 return .slugInvalid

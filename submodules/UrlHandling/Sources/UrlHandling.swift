@@ -12,7 +12,7 @@ private let baseIosappMePaths = ["www.asme.su", "asme.su"]
 // Upstream lists the t.me web-client short-link hosts (a./k./z.t.me) here.
 // Ansible runs no web-client short-link hosts, so the list is empty and
 // isIosappWebShortLink() never matches.
-private let telegramWebShortLinkHosts: [String] = []
+private let ansibleWebShortLinkHosts: [String] = []
 private let baseTelegraPhPaths = [
     "telegra.ph/",
     "te.legra.ph/",
@@ -33,7 +33,7 @@ public func isIosappWebShortLink(_ url: String) -> Bool {
     if let scheme = parsedUrl.scheme?.lowercased(), scheme != "http" && scheme != "https" {
         return false
     }
-    return telegramWebShortLinkHosts.contains(host)
+    return ansibleWebShortLinkHosts.contains(host)
 }
 
 extension ResolvedBotAdminRights {

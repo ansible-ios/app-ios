@@ -203,8 +203,8 @@ final class PeerInfoHeaderNode: ASDisplayNode {
     
     private var validLayout: (width: CGFloat, statusBarHeight: CGFloat, deviceMetrics: DeviceMetrics)?
     
-    private var currentStarRating: IosappStarRating?
-    private var currentPendingStarRating: IosappStarPendingRating?
+    private var currentDiamondRating: IosappDiamondRating?
+    private var currentPendingDiamondRating: IosappDiamondPendingRating?
     
     init(context: AccountContext, controller: PeerInfoScreenImpl, avatarInitiallyExpanded: Bool, isOpenedFromChat: Bool, isMediaOnly: Bool, isSettings: Bool, isMyProfile: Bool, forumTopicThreadId: Int64?, chatLocation: ChatLocation) {
         self.context = context
@@ -804,7 +804,7 @@ final class PeerInfoHeaderNode: ASDisplayNode {
         }
         
         let accentRatingBackgroundColor: UIColor
-        if let currentStarRating = self.currentStarRating, currentStarRating.level < 0 {
+        if let currentDiamondRating = self.currentDiamondRating, currentDiamondRating.level < 0 {
             accentRatingBackgroundColor = UIColor(rgb: 0xFF3B30)
         } else {
             accentRatingBackgroundColor = presentationData.theme.list.itemCheckColors.fillColor
@@ -2027,33 +2027,33 @@ final class PeerInfoHeaderNode: ASDisplayNode {
         
         var subtitleRatingSize: CGSize?
         
-        if let cachedData = cachedData as? CachedUserData, let starRating = cachedData.starRating {
-            self.currentStarRating = starRating
-            self.currentPendingStarRating = cachedData.pendingStarRating
+        if let cachedData = cachedData as? CachedUserData, let diamondRating = cachedData.diamondRating {
+            self.currentDiamondRating = diamondRating
+            self.currentPendingDiamondRating = cachedData.pendingDiamondRating
         } else {
-            self.currentStarRating = nil
-            self.currentPendingStarRating = nil
+            self.currentDiamondRating = nil
+            self.currentPendingDiamondRating = nil
         }
         
         #if DEBUG && false
         if "".isEmpty {
-            let starRating: IosappStarRating
+            let diamondRating: IosappDiamondRating
             
             if self.context.account.peerId.id._internalGetInt64Value() == 654152421 {
-                starRating = IosappStarRating(level: -1, currentLevelStars: -1, stars: -100, nextLevelStars: 0)
+                diamondRating = IosappDiamondRating(level: -1, currentLevelStars: -1, stars: -100, nextLevelStars: 0)
             } else {
-                starRating = IosappStarRating(level: 2, currentLevelStars: 1000, stars: 2000, nextLevelStars: 3000)
+                diamondRating = IosappDiamondRating(level: 2, currentLevelStars: 1000, stars: 2000, nextLevelStars: 3000)
             }
-            self.currentStarRating = starRating
+            self.currentDiamondRating = diamondRating
             
-            if let _ = starRating.nextLevelStars {
+            if let _ = diamondRating.nextLevelStars {
                 //self.currentPendingStarRating = IosappStarPendingRating(rating: IosappStarRating(level: starRating.level, currentLevelStars: starRating.currentLevelStars, stars: starRating.stars + 234, nextLevelStars: starRating.nextLevelStars), timestamp: Int32(Date().timeIntervalSince1970) + 60 * 60 * 24 * 3)
-                self.currentPendingStarRating = IosappStarPendingRating(rating: IosappStarRating(level: starRating.level + 2, currentLevelStars: starRating.nextLevelStars!, stars: max(500, starRating.nextLevelStars! + starRating.nextLevelStars! / 2 - starRating.nextLevelStars! / 4), nextLevelStars: max(1000, starRating.nextLevelStars! * 2)), timestamp: Int32(Date().timeIntervalSince1970) + 60 * 60 * 24 * 3)
+                self.currentPendingDiamondRating = IosappDiamondPendingRating(rating: IosappDiamondRating(level: diamondRating.level + 2, currentLevelStars: diamondRating.nextLevelStars!, stars: max(500, diamondRating.nextLevelStars! + diamondRating.nextLevelStars! / 2 - diamondRating.nextLevelStars! / 4), nextLevelStars: max(1000, diamondRating.nextLevelStars! * 2)), timestamp: Int32(Date().timeIntervalSince1970) + 60 * 60 * 24 * 3)
             }
         }
         #endif
         
-        if let starRating = self.currentStarRating {
+        if let diamondRating = self.currentDiamondRating {
             let subtitleRating: ComponentView<Empty>
             var subtitleRatingTransition = ComponentTransition(transition)
             if let current = self.subtitleRating {
@@ -2070,16 +2070,16 @@ final class PeerInfoHeaderNode: ASDisplayNode {
                     backgroundColor: ratingBackgroundColor,
                     borderColor: ratingBorderColor,
                     foregroundColor: ratingForegroundColor,
-                    level: Int(starRating.level),
+                    level: Int(diamondRating.level),
                     action: { [weak self] in
-                        guard let self, let peer = self.peer, let currentStarRating = self.currentStarRating else {
+                        guard let self, let peer = self.peer, let currentDiamondRating = self.currentDiamondRating else {
                             return
                         }
                         self.controller?.push(ProfileLevelInfoScreen(
                             context: self.context,
                             peer: peer,
-                            starRating: currentStarRating,
-                            pendingStarRating: self.currentPendingStarRating,
+                            diamondRating: currentDiamondRating,
+                            pendingDiamondRating: self.currentPendingDiamondRating,
                             customTheme: self.presentationData?.theme
                         ))
                     },

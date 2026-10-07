@@ -401,7 +401,7 @@ private var shadowImage: UIImage? = {
     })
 }()
 
-private final class StarsEffectLayer: SimpleLayer {
+private final class DiamondsEffectLayer: SimpleLayer {
     private let emitterLayer = CAEmitterLayer()
     
     override init() {
@@ -477,14 +477,14 @@ private class GiftIconLayer: SimpleLayer {
             }
             
             let side = floor(self.size.width * 1.25)
-            let starsFrame = CGSize(width: side, height: side).centered(in: CGRect(origin: .zero, size: self.size))
-            self.starsLayer.frame = starsFrame
-            self.starsLayer.update(color: color, size: starsFrame.size)
+            let diamondsFrame = CGSize(width: side, height: side).centered(in: CGRect(origin: .zero, size: self.size))
+            self.diamondsLayer.frame = diamondsFrame
+            self.diamondsLayer.update(color: color, size: diamondsFrame.size)
         }
     }
     
     let shadowLayer = SimpleLayer()
-    let starsLayer = StarsEffectLayer()
+    let diamondsLayer = DiamondsEffectLayer()
     let animationLayer: InlineStickerItemLayer
     
     override init(layer: Any) {
@@ -543,12 +543,12 @@ private class GiftIconLayer: SimpleLayer {
         super.init()
         
         let side = floor(size.width * 1.25)
-        let starsFrame = CGSize(width: side, height: side).centered(in: CGRect(origin: .zero, size: size))
-        self.starsLayer.frame = starsFrame
-        self.starsLayer.update(color: glowing ? .white : color, size: starsFrame.size)
+        let diamondsFrame = CGSize(width: side, height: side).centered(in: CGRect(origin: .zero, size: size))
+        self.diamondsLayer.frame = diamondsFrame
+        self.diamondsLayer.update(color: glowing ? .white : color, size: diamondsFrame.size)
         
         self.addSublayer(self.shadowLayer)
-        self.addSublayer(self.starsLayer)
+        self.addSublayer(self.diamondsLayer)
         self.addSublayer(self.animationLayer)
     }
     
@@ -604,12 +604,12 @@ private class GiftIconLayer: SimpleLayer {
         super.init()
         
         let side = floor(size.width * 1.25)
-        let starsFrame = CGSize(width: side, height: side).centered(in: CGRect(origin: .zero, size: size))
-        self.starsLayer.frame = starsFrame
-        self.starsLayer.update(color: glowing ? .white : color, size: starsFrame.size)
+        let diamondsFrame = CGSize(width: side, height: side).centered(in: CGRect(origin: .zero, size: size))
+        self.diamondsLayer.frame = diamondsFrame
+        self.diamondsLayer.update(color: glowing ? .white : color, size: diamondsFrame.size)
         
         self.addSublayer(self.shadowLayer)
-        self.addSublayer(self.starsLayer)
+        self.addSublayer(self.diamondsLayer)
         self.addSublayer(self.animationLayer)
     }
     

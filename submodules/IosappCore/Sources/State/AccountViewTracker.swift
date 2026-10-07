@@ -1220,7 +1220,7 @@ public final class AccountViewTracker {
                                         case let .stickerSet(stickerSetData)?:
                                             let documents = stickerSetData.documents
                                             for document in documents {
-                                                if let file = telegramMediaFileFromApiDocument(document, altDocuments: []) {
+                                                if let file = ansibleMediaFileFromApiDocument(document, altDocuments: []) {
                                                     if transaction.getMedia(file.fileId) != nil {
                                                         let _ = transaction.updateMedia(file.fileId, update: file)
                                                     }
@@ -1565,22 +1565,22 @@ public final class AccountViewTracker {
                                             let peerId = slice[i].0
                                             let value = result[i]
                                             transaction.updatePeerCachedData(peerIds: Set([peerId]), update: { _, cachedData in
-                                                var cachedData = cachedData as? CachedUserData ?? CachedUserData(about: nil, botInfo: nil, editableBotInfo: nil, peerStatusSettings: nil, pinnedMessageId: nil, isBlocked: false, commonGroupCount: 0, voiceCallsAvailable: true, videoCallsAvailable: true, callsPrivate: true, canPinMessages: true, hasScheduledMessages: true, autoremoveTimeout: .unknown, chatTheme: nil, photo: .unknown, personalPhoto: .unknown, fallbackPhoto: .unknown, voiceMessagesAvailable: true, wallpaper: nil, flags: [], businessHours: nil, businessLocation: nil, greetingMessage: nil, awayMessage: nil, connectedBot: nil, businessIntro: .unknown, birthday: nil, personalChannel: .unknown, botPreview: nil, starGiftsCount: nil, starRefProgram: nil, verification: nil, sendPaidMessageStars: nil, disallowedGifts: [], botGroupAdminRights: nil, botChannelAdminRights: nil, starRating: nil, pendingStarRating: nil, mainProfileTab: nil, savedMusic: nil, note: nil, myCopyProtectionEnableDate: nil, botManagerId: nil)
+                                                var cachedData = cachedData as? CachedUserData ?? CachedUserData(about: nil, botInfo: nil, editableBotInfo: nil, peerStatusSettings: nil, pinnedMessageId: nil, isBlocked: false, commonGroupCount: 0, voiceCallsAvailable: true, videoCallsAvailable: true, callsPrivate: true, canPinMessages: true, hasScheduledMessages: true, autoremoveTimeout: .unknown, chatTheme: nil, photo: .unknown, personalPhoto: .unknown, fallbackPhoto: .unknown, voiceMessagesAvailable: true, wallpaper: nil, flags: [], businessHours: nil, businessLocation: nil, greetingMessage: nil, awayMessage: nil, connectedBot: nil, businessIntro: .unknown, birthday: nil, personalChannel: .unknown, botPreview: nil, diamondGiftsCount: nil, starRefProgram: nil, verification: nil, sendPaidMessageDiamonds: nil, disallowedGifts: [], botGroupAdminRights: nil, botChannelAdminRights: nil, diamondRating: nil, pendingDiamondRating: nil, mainProfileTab: nil, savedMusic: nil, note: nil, myCopyProtectionEnableDate: nil, botManagerId: nil)
                                                 var flags = cachedData.flags
-                                                var sendPaidMessageStars = cachedData.sendPaidMessageStars
+                                                var sendPaidMessageDiamonds = cachedData.sendPaidMessageDiamonds
                                                 switch value {
                                                 case .requirementToContactEmpty:
                                                     flags.remove(.premiumRequired)
-                                                    sendPaidMessageStars = nil
+                                                    sendPaidMessageDiamonds = nil
                                                 case .requirementToContactPremium:
                                                     flags.insert(.premiumRequired)
-                                                    sendPaidMessageStars = nil
+                                                    sendPaidMessageDiamonds = nil
                                                 case let .requirementToContactPaidMessages(requirementToContactPaidMessagesData):
                                                     let starsAmount = requirementToContactPaidMessagesData.starsAmount
                                                     flags.remove(.premiumRequired)
-                                                    sendPaidMessageStars = StarsAmount(value: starsAmount, nanos: 0)
+                                                    sendPaidMessageDiamonds = StarsAmount(value: starsAmount, nanos: 0)
                                                 }
-                                                cachedData = cachedData.withUpdatedFlags(flags).withUpdatedSendPaidMessageStars(sendPaidMessageStars)
+                                                cachedData = cachedData.withUpdatedFlags(flags).withUpdatedSendPaidMessageDiamonds(sendPaidMessageDiamonds)
                                                 return cachedData
                                             })
                                         }

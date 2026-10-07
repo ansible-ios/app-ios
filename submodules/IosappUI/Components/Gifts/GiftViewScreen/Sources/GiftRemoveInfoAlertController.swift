@@ -17,7 +17,7 @@ public func giftRemoveInfoAlertController(
     context: AccountContext,
     gift: StarGift.UniqueGift,
     peers: [EnginePeer.Id: EnginePeer],
-    removeInfoStars: Int64,
+    removeInfoDiamonds: Int64,
     navigationController: NavigationController?,
     commit: @escaping () -> Void
 ) -> ViewController {
@@ -102,7 +102,7 @@ public func giftRemoveInfoAlertController(
         ],
         navigationController: navigationController,
         chatPeerId: context.account.peerId,
-        showBalance: removeInfoStars > 0
+        showBalance: removeInfoDiamonds > 0
     )
     return alertController
 }

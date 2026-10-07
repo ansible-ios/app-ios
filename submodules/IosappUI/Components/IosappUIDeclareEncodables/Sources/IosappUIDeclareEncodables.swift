@@ -13,7 +13,7 @@ import LocationUI
 import ChatInterfaceState
 import ICloudResources
 
-private var telegramUIDeclaredEncodables: Void = {
+private var ansibleUIDeclaredEncodables: Void = {
     engineDeclareEncodable(VideoLibraryMediaResource.self, f: { VideoLibraryMediaResource(decoder: $0) })
     engineDeclareEncodable(LocalFileVideoMediaResource.self, f: { LocalFileVideoMediaResource(decoder: $0) })
     engineDeclareEncodable(LocalFileAudioMediaResource.self, f: { LocalFileAudioMediaResource(decoder: $0) })
@@ -23,6 +23,6 @@ private var telegramUIDeclaredEncodables: Void = {
     return
 }()
 
-public func telegramUIDeclareEncodables() {
-    let _ = telegramUIDeclaredEncodables
+public func ansibleUIDeclareEncodables() {
+    let _ = ansibleUIDeclaredEncodables
 }

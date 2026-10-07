@@ -56,7 +56,7 @@ protocol ReactionItemNode: ASDisplayNode {
 private let lockedBackgroundImage: UIImage = generateFilledCircleImage(diameter: 16.0, color: .white)!.withRenderingMode(.alwaysTemplate)
 private let lockedBadgeIcon: UIImage? = generateTintedImage(image: UIImage(bundleImageName: "Chat/Input/Media/PanelBadgeLock"), color: .white)
 
-private final class StarsButtonEffectLayer: SimpleLayer {
+private final class DiamondsButtonEffectLayer: SimpleLayer {
     let gradientLayer = SimpleGradientLayer()
     let emitterLayer = CAEmitterLayer()
     
@@ -144,7 +144,7 @@ public final class ReactionNode: ASDisplayNode, ReactionItemNode {
     let selectionTintView: UIView?
     let selectionView: UIView?
     
-    private var starsEffectLayer: StarsButtonEffectLayer?
+    private var diamondsEffectLayer: DiamondsButtonEffectLayer?
     
     private var animateInAnimationNode: AnimatedStickerNode?
     private var staticAnimationPlaceholderView: UIImageView?
@@ -207,9 +207,9 @@ public final class ReactionNode: ASDisplayNode, ReactionItemNode {
         super.init()
         
         if case .stars = item.reaction.rawValue {
-            let starsEffectLayer = StarsButtonEffectLayer()
-            self.starsEffectLayer = starsEffectLayer
-            self.layer.addSublayer(starsEffectLayer)
+            let diamondsEffectLayer = DiamondsButtonEffectLayer()
+            self.diamondsEffectLayer = diamondsEffectLayer
+            self.layer.addSublayer(diamondsEffectLayer)
         }
         
         if item.stillAnimation.isCustomTemplateEmoji {
@@ -313,17 +313,17 @@ public final class ReactionNode: ASDisplayNode, ReactionItemNode {
     }
     
     public func animateHideEffects() {
-        if let starsEffectLayer = self.starsEffectLayer {
-            starsEffectLayer.animateAlpha(from: 1.0, to: 0.0, duration: 0.2, removeOnCompletion: false)
+        if let diamondsEffectLayer = self.diamondsEffectLayer {
+            diamondsEffectLayer.animateAlpha(from: 1.0, to: 0.0, duration: 0.2, removeOnCompletion: false)
         }
     }
     
     public func updateLayout(size: CGSize, isExpanded: Bool, largeExpanded: Bool, isPreviewing: Bool, transition: ContainedViewLayoutTransition) {
         let intrinsicSize = size
         
-        if let starsEffectLayer = self.starsEffectLayer {
-            transition.updateFrame(layer: starsEffectLayer, frame: CGRect(origin: CGPoint(), size: size))
-            starsEffectLayer.update(theme: self.theme, size: size, transition: transition)
+        if let diamondsEffectLayer = self.diamondsEffectLayer {
+            transition.updateFrame(layer: diamondsEffectLayer, frame: CGRect(origin: CGPoint(), size: size))
+            diamondsEffectLayer.update(theme: self.theme, size: size, transition: transition)
         }
         
         let animationSize = self.item.stillAnimation.dimensions?.cgSize ?? CGSize(width: 512.0, height: 512.0)
@@ -591,7 +591,7 @@ final class PremiumReactionsNode: ASDisplayNode, ReactionItemNode {
     private let backgroundMaskNode: ASImageNode
     private let backgroundOverlayNode: ASImageNode
     private let imageNode: ASImageNode
-    private var starsNode: PremiumStarsNode?
+    private var diamondsNode: PremiumDiamondsNode?
     
     private let maskContainerNode: ASDisplayNode
     private let maskImageNode: ASImageNode
@@ -658,10 +658,10 @@ final class PremiumReactionsNode: ASDisplayNode, ReactionItemNode {
         self.view.insertSubview(backgroundView, at: 0)
         self.backgroundView = backgroundView
         
-        let starsNode = PremiumStarsNode()
-        starsNode.frame = CGRect(origin: .zero, size: CGSize(width: 32.0, height: 32.0))
-        self.backgroundView?.contentView.addSubview(starsNode.view)
-        self.starsNode = starsNode
+        let diamondsNode = PremiumDiamondsNode()
+        diamondsNode.frame = CGRect(origin: .zero, size: CGSize(width: 32.0, height: 32.0))
+        self.backgroundView?.contentView.addSubview(diamondsNode.view)
+        self.diamondsNode = diamondsNode
     }
     
     func willAppear(animated: Bool) {

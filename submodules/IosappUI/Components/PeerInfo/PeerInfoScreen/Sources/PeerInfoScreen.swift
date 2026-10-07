@@ -361,8 +361,8 @@ final class PeerInfoScreenNode: ViewControllerTracingNode, PeerInfoScreenNodePro
         hintGroupInCommon: PeerId?,
         requestsContext: PeerInvitationImportersContext?,
         profileGiftsContext: ProfileGiftsContext?,
-        starsContext: StarsContext?,
-        tonContext: StarsContext?,
+        diamondsContext: DiamondsContext?,
+        tonContext: DiamondsContext?,
         chatLocation: ChatLocation,
         chatLocationContextHolder: Atomic<ChatLocationContextHolder?>,
         switchToGiftsTarget: PeerInfoSwitchToGiftsTarget?,
@@ -496,8 +496,8 @@ final class PeerInfoScreenNode: ViewControllerTracingNode, PeerInfoScreenNodePro
             editingOpenRevenue: { [weak self] in
                 self?.editingOpenRevenue()
             },
-            editingOpenStars: { [weak self] in
-                self?.editingOpenStars()
+            editingOpenDiamonds: { [weak self] in
+                self?.editingOpenDiamonds()
             },
             openParticipantsSection: { [weak self] section in
                 self?.openParticipantsSection(section: section)
@@ -1287,7 +1287,7 @@ final class PeerInfoScreenNode: ViewControllerTracingNode, PeerInfoScreenNodePro
         }, updateChatLocationThread: { _, _ in
         }, requestToggleTodoMessageItem: { _, _, _ in
         }, displayTodoToggleUnavailable: { _ in
-        }, openStarsPurchase: { _ in
+        }, openDiamondsPurchase: { _ in
         }, openRankInfo: { _, _, _ in
         }, openSetPeerAvatar: {
         }, displayPollRestrictedToast: { _ in
@@ -2136,7 +2136,7 @@ final class PeerInfoScreenNode: ViewControllerTracingNode, PeerInfoScreenNodePro
                 return data?.hasSecretValues ?? false
             }
                         
-            screenData = peerInfoScreenSettingsData(context: context, peerId: peerId, accountsAndPeers: self.accountsAndPeers.get(), activeSessionsContextAndCount: self.activeSessionsContextAndCount.get(), notificationExceptions: self.notificationExceptions.get(), privacySettings: self.privacySettings.get(), archivedStickerPacks: self.archivedPacks.get(), hasPassport: hasPassport, starsContext: starsContext, tonContext: tonContext)
+            screenData = peerInfoScreenSettingsData(context: context, peerId: peerId, accountsAndPeers: self.accountsAndPeers.get(), activeSessionsContextAndCount: self.activeSessionsContextAndCount.get(), notificationExceptions: self.notificationExceptions.get(), privacySettings: self.privacySettings.get(), archivedStickerPacks: self.archivedPacks.get(), hasPassport: hasPassport, diamondsContext: diamondsContext, tonContext: tonContext)
             
             
             self.headerNode.displayCopyContextMenu = { [weak self] node, copyPhone, copyUsername in
@@ -2439,9 +2439,9 @@ final class PeerInfoScreenNode: ViewControllerTracingNode, PeerInfoScreenNodePro
                                 guard let profileGifts else {
                                     return
                                 }
-                                profileGifts.updateStarGiftAddedToProfile(reference: reference, added: added)
+                                profileGifts.updateDiamondGiftAddedToProfile(reference: reference, added: added)
                             },
-                            convertToStars: { [weak profileGifts] reference in
+                            convertToDiamonds: { [weak profileGifts] reference in
                                 guard let profileGifts else {
                                     return
                                 }
@@ -2469,7 +2469,7 @@ final class PeerInfoScreenNode: ViewControllerTracingNode, PeerInfoScreenNodePro
                                 guard let profileGifts else {
                                     return .never()
                                 }
-                                return profileGifts.buyStarGift(slug: slug, peerId: peerId, price: price)
+                                return profileGifts.buyDiamondGift(slug: slug, peerId: peerId, price: price)
                             },
                             shareStory: { [weak self] uniqueGift in
                                 guard let self, let controller = self.controller else {
@@ -3557,7 +3557,7 @@ final class PeerInfoScreenNode: ViewControllerTracingNode, PeerInfoScreenNodePro
         let statsController: ViewController
         if case let .channel(channel) = peer, case .group = channel.info {
             if case .monetization = section {
-                statsController = channelStatsController(context: self.context, updatedPresentationData: self.controller?.updatedPresentationData, peerId: peer.id, section: section, existingStarsRevenueContext: data.starsRevenueStatsContext, boostStatus: boostStatus)
+                statsController = channelStatsController(context: self.context, updatedPresentationData: self.controller?.updatedPresentationData, peerId: peer.id, section: section, existingDiamondsRevenueContext: data.diamondsRevenueStatsContext, boostStatus: boostStatus)
             } else {
                 statsController = groupStatsController(context: self.context, updatedPresentationData: self.controller?.updatedPresentationData, peerId: peer.id)
             }
@@ -3833,7 +3833,7 @@ final class PeerInfoScreenNode: ViewControllerTracingNode, PeerInfoScreenNodePro
                     self.controller?.push(controller)
                 })
             } else if let starRefProgram = (self.data?.cachedData as? CachedUserData)?.starRefProgram, starRefProgram.endDate == nil {
-                self.activeActionDisposable.set((self.context.engine.peers.getStarRefBotConnection(id: peer.id, targetId: self.context.account.peerId)
+                self.activeActionDisposable.set((self.context.engine.peers.getDiamondRefBotConnection(id: peer.id, targetId: self.context.account.peerId)
                 |> deliverOnMainQueue).startStrict(next: { [weak self] result in
                     guard let self else {
                         return
@@ -4163,11 +4163,11 @@ final class PeerInfoScreenNode: ViewControllerTracingNode, PeerInfoScreenNodePro
         self.controller?.push(controller)
     }
     
-    private func editingOpenStars() {
-        guard let revenueContext = self.data?.starsRevenueStatsContext else {
+    private func editingOpenDiamonds() {
+        guard let revenueContext = self.data?.diamondsRevenueStatsContext else {
             return
         }
-        self.controller?.push(self.context.sharedContext.makeStarsStatisticsScreen(context: self.context, peerId: self.peerId, revenueContext: revenueContext))
+        self.controller?.push(self.context.sharedContext.makeDiamondsStatisticsScreen(context: self.context, peerId: self.peerId, revenueContext: revenueContext))
     }
     
     private func editingOpenReactionsSetup() {
@@ -6404,8 +6404,8 @@ public final class PeerInfoScreenImpl: ViewController, PeerInfoScreen, KeyShortc
     private let hintGroupInCommon: PeerId?
     private weak var requestsContext: PeerInvitationImportersContext?
     private weak var profileGiftsContext: ProfileGiftsContext?
-    let starsContext: StarsContext?
-    let tonContext: StarsContext?
+    let diamondsContext: DiamondsContext?
+    let tonContext: DiamondsContext?
     private let switchToRecommendedChannels: Bool
     private let switchToGiftsTarget: PeerInfoSwitchToGiftsTarget?
     private let switchToGroupsInCommon: Bool
@@ -6527,11 +6527,11 @@ public final class PeerInfoScreenImpl: ViewController, PeerInfoScreen, KeyShortc
         }
         
         if isSettings {
-            if let starsContext = context.starsContext {
-                self.starsContext = starsContext
-                starsContext.load(force: true)
+            if let diamondsContext = context.diamondsContext {
+                self.diamondsContext = diamondsContext
+                diamondsContext.load(force: true)
             } else {
-                self.starsContext = nil
+                self.diamondsContext = nil
             }
             if let tonContext = context.tonContext {
                 self.tonContext = tonContext
@@ -6540,7 +6540,7 @@ public final class PeerInfoScreenImpl: ViewController, PeerInfoScreen, KeyShortc
                 self.tonContext = nil
             }
         } else {
-            self.starsContext = nil
+            self.diamondsContext = nil
             self.tonContext = nil
         }
         
@@ -6887,7 +6887,7 @@ public final class PeerInfoScreenImpl: ViewController, PeerInfoScreen, KeyShortc
                 initialPaneKey = .files
             }
         }
-        self.displayNode = PeerInfoScreenNode(controller: self, context: self.context, peerId: self.peerId, avatarInitiallyExpanded: self.avatarInitiallyExpanded, isOpenedFromChat: self.isOpenedFromChat, reactionSourceMessageId: self.reactionSourceMessageId, sourceMessageId: self.sourceMessageId, callMessages: self.callMessages, isSettings: self.isSettings, isMyProfile: self.isMyProfile, hintGroupInCommon: self.hintGroupInCommon, requestsContext: self.requestsContext, profileGiftsContext: self.profileGiftsContext, starsContext: self.starsContext, tonContext: self.tonContext, chatLocation: self.chatLocation, chatLocationContextHolder: self.chatLocationContextHolder, switchToGiftsTarget: self.switchToGiftsTarget, switchToStoryFolder: self.switchToStoryFolder, switchToMediaTarget: self.switchToMediaTarget, initialPaneKey: initialPaneKey, sharedMediaFromForumTopic: self.sharedMediaFromForumTopic)
+        self.displayNode = PeerInfoScreenNode(controller: self, context: self.context, peerId: self.peerId, avatarInitiallyExpanded: self.avatarInitiallyExpanded, isOpenedFromChat: self.isOpenedFromChat, reactionSourceMessageId: self.reactionSourceMessageId, sourceMessageId: self.sourceMessageId, callMessages: self.callMessages, isSettings: self.isSettings, isMyProfile: self.isMyProfile, hintGroupInCommon: self.hintGroupInCommon, requestsContext: self.requestsContext, profileGiftsContext: self.profileGiftsContext, diamondsContext: self.diamondsContext, tonContext: self.tonContext, chatLocation: self.chatLocation, chatLocationContextHolder: self.chatLocationContextHolder, switchToGiftsTarget: self.switchToGiftsTarget, switchToStoryFolder: self.switchToStoryFolder, switchToMediaTarget: self.switchToMediaTarget, initialPaneKey: initialPaneKey, sharedMediaFromForumTopic: self.sharedMediaFromForumTopic)
         self.controllerNode.accountsAndPeers.set(self.accountsAndPeers.get() |> map { $0.1 })
         self.controllerNode.activeSessionsContextAndCount.set(self.activeSessionsContextAndCount.get())
         self.cachedDataPromise.set(self.controllerNode.cachedDataPromise.get())

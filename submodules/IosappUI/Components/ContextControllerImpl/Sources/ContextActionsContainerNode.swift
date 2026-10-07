@@ -407,7 +407,7 @@ final class InnerTextSelectionTipContainerNode: ASDisplayNode {
             self.targetSelectionIndex = nil
             icon = nil
             isUserInteractionEnabled = action != nil
-        case let .starsReactions(topCount):
+        case let .diamondsReactions(topCount):
             self.action = nil
             self.text = self.presentationData.strings.Chat_SendDiamondsToBecomeTopInfo("\(topCount)").string
             self.targetSelectionIndex = nil

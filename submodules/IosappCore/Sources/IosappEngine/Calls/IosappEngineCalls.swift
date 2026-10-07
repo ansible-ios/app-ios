@@ -22,8 +22,8 @@ public extension IosappEngine {
             self.account = account
         }
 
-        public func rateCall(callId: CallId, starsCount: Int32, comment: String = "", userInitiated: Bool) -> Signal<Void, NoError> {
-            return _internal_rateCall(account: self.account, callId: callId, starsCount: starsCount, comment: comment, userInitiated: userInitiated)
+        public func rateCall(callId: CallId, diamondsCount: Int32, comment: String = "", userInitiated: Bool) -> Signal<Void, NoError> {
+            return _internal_rateCall(account: self.account, callId: callId, diamondsCount: diamondsCount, comment: comment, userInitiated: userInitiated)
         }
 
         public func saveCallDebugLog(callId: CallId, log: String) -> Signal<SaveCallDebugLogResult, NoError> {

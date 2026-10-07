@@ -26,7 +26,7 @@ swift_library(
         "//submodules/AvatarNode",
         "//submodules/CheckNode",
         "//submodules/IosappUI/Components/EmojiTextAttachmentView",
-        "//submodules/IosappUI/Components/Stars/ItemShimmeringLoadingComponent",
+        "//submodules/IosappUI/Components/Diamonds/ItemShimmeringLoadingComponent",
         "//submodules/IosappUI/Components/PeerInfo/PeerInfoCoverComponent",
         "//submodules/Components/BundleIconComponent",
     ],

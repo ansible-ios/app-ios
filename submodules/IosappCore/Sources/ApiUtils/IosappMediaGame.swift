@@ -10,9 +10,9 @@ extension IosappMediaGame {
                 let (id, accessHash, shortName, title, description, photo, document) = (gameData.id, gameData.accessHash, gameData.shortName, gameData.title, gameData.description, gameData.photo, gameData.document)
                 var file: IosappMediaFile?
                 if let document = document {
-                    file = telegramMediaFileFromApiDocument(document, altDocuments: [])
+                    file = ansibleMediaFileFromApiDocument(document, altDocuments: [])
                 }
-                self.init(gameId: id, accessHash: accessHash, name: shortName, title: title, description: description, image: telegramMediaImageFromApiPhoto(photo), file: file)
+                self.init(gameId: id, accessHash: accessHash, name: shortName, title: title, description: description, image: ansibleMediaImageFromApiPhoto(photo), file: file)
         }
     }
 }

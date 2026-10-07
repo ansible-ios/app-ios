@@ -726,7 +726,7 @@ private final class DemoSheetContent: CombinedComponent {
                                     context: component.context,
                                     position: .top,
                                     videoFile: configuration.videos["faster_download"],
-                                    decoration: .fasterStars
+                                    decoration: .fasterDiamonds
                                 )),
                                 title: strings.Premium_FasterSpeed,
                                 text: isStandalone ? strings.Premium_FasterSpeedStandaloneInfo : strings.Premium_FasterSpeedInfo,
@@ -744,7 +744,7 @@ private final class DemoSheetContent: CombinedComponent {
                                     context: component.context,
                                     position: .top,
                                     videoFile: configuration.videos["voice_to_text"],
-                                    decoration: .badgeStars
+                                    decoration: .badgeDiamonds
                                 )),
                                 title: strings.Premium_VoiceToText,
                                 text: isStandalone ? strings.Premium_VoiceToTextStandaloneInfo : strings.Premium_VoiceToTextInfo,
@@ -762,7 +762,7 @@ private final class DemoSheetContent: CombinedComponent {
                                     context: component.context,
                                     position: .bottom,
                                     videoFile: configuration.videos["no_ads"],
-                                    decoration: .swirlStars
+                                    decoration: .swirlDiamonds
                                 )),
                                 title: strings.Premium_NoAds,
                                 text: isStandalone ? strings.Premium_NoAdsStandaloneInfo : strings.Premium_NoAdsInfo,
@@ -780,7 +780,7 @@ private final class DemoSheetContent: CombinedComponent {
                                     context: component.context,
                                     position: .top,
                                     videoFile: configuration.videos["infinite_reactions"],
-                                    decoration: .swirlStars
+                                    decoration: .swirlDiamonds
                                 )),
                                 title: strings.Premium_InfiniteReactions,
                                 text: strings.Premium_InfiniteReactionsInfo,
@@ -817,7 +817,7 @@ private final class DemoSheetContent: CombinedComponent {
                                     context: component.context,
                                     position: .top,
                                     videoFile: configuration.videos["emoji_status"],
-                                    decoration: .badgeStars
+                                    decoration: .badgeDiamonds
                                 )),
                                 title: strings.Premium_EmojiStatus,
                                 text: strings.Premium_EmojiStatusInfo,
@@ -835,7 +835,7 @@ private final class DemoSheetContent: CombinedComponent {
                                     context: component.context,
                                     position: .top,
                                     videoFile: configuration.videos["advanced_chat_management"],
-                                    decoration: .swirlStars
+                                    decoration: .swirlDiamonds
                                 )),
                                 title: strings.Premium_ChatManagement,
                                 text: isStandalone ? strings.Premium_ChatManagementStandaloneInfo : strings.Premium_ChatManagementInfo,
@@ -853,7 +853,7 @@ private final class DemoSheetContent: CombinedComponent {
                                     context: component.context,
                                     position: .top,
                                     videoFile: configuration.videos["profile_badge"],
-                                    decoration: .badgeStars
+                                    decoration: .badgeDiamonds
                                 )),
                                 title: strings.Premium_Badge,
                                 text: strings.Premium_BadgeInfo,
@@ -871,7 +871,7 @@ private final class DemoSheetContent: CombinedComponent {
                                     context: component.context,
                                     position: .top,
                                     videoFile: configuration.videos["animated_userpics"],
-                                    decoration: .swirlStars
+                                    decoration: .swirlDiamonds
                                 )),
                                 title: strings.Premium_Avatar,
                                 text: strings.Premium_AvatarInfo,
@@ -942,7 +942,7 @@ private final class DemoSheetContent: CombinedComponent {
                                     context: component.context,
                                     position: .top,
                                     videoFile: configuration.videos["peer_colors"],
-                                    decoration: .badgeStars
+                                    decoration: .badgeDiamonds
                                 )),
                                 title: strings.Premium_Colors,
                                 text: strings.Premium_ColorsInfo,
@@ -961,7 +961,7 @@ private final class DemoSheetContent: CombinedComponent {
                                     position: .top,
                                     model: .island,
                                     videoFile: configuration.videos["wallpapers"],
-                                    decoration: .swirlStars
+                                    decoration: .swirlDiamonds
                                 )),
                                 title: strings.Premium_Wallpapers,
                                 text: strings.Premium_WallpapersInfo,
@@ -999,7 +999,7 @@ private final class DemoSheetContent: CombinedComponent {
                                     position: .top,
                                     model: .island,
                                     videoFile: configuration.videos["last_seen"],
-                                    decoration: .badgeStars
+                                    decoration: .badgeDiamonds
                                 )),
                                 title: strings.Premium_LastSeen,
                                 text: strings.Premium_LastSeenInfo,
@@ -1018,7 +1018,7 @@ private final class DemoSheetContent: CombinedComponent {
                                     position: .top,
                                     model: .island,
                                     videoFile: configuration.videos["message_privacy"],
-                                    decoration: .swirlStars
+                                    decoration: .swirlDiamonds
                                 )),
                                 title: strings.Premium_MessagePrivacy,
                                 text: strings.Premium_MessagePrivacyInfo,
@@ -1058,7 +1058,7 @@ private final class DemoSheetContent: CombinedComponent {
                                     position: .top,
                                     model: .island,
                                     videoFile: configuration.videos["effects"],
-                                    decoration: .swirlStars
+                                    decoration: .swirlDiamonds
                                 )),
                                 title: strings.Premium_MessageEffects,
                                 text: strings.Premium_MessageEffectsInfo,
@@ -1098,7 +1098,7 @@ private final class DemoSheetContent: CombinedComponent {
                                     position: .top,
                                     model: .island,
                                     videoFile: configuration.videos["pm_noforwards"],
-                                    decoration: .badgeStars
+                                    decoration: .badgeDiamonds
                                 )),
                                 title: strings.Premium_CopyProtection,
                                 text: strings.Premium_CopyProtectionInfo,
@@ -1118,7 +1118,7 @@ private final class DemoSheetContent: CombinedComponent {
                                     position: .top,
                                     model: .island,
                                     videoFile: configuration.videos["ai_compose"],
-                                    decoration: .badgeStars
+                                    decoration: .badgeDiamonds
                                 )),
                                 title: strings.Premium_AiTools,
                                 text: strings.Premium_AiToolsInfo,
@@ -1138,7 +1138,7 @@ private final class DemoSheetContent: CombinedComponent {
                                     position: .top,
                                     model: .island,
                                     videoFile: configuration.videos["rich_formatting"],
-                                    decoration: .badgeStars
+                                    decoration: .badgeDiamonds
                                 )),
                                 title: strings.Premium_RichText,
                                 text: strings.Premium_RichTextInfo,

@@ -1007,7 +1007,7 @@ private func extractAccountManagerState(records: AccountRecordsView<IosappAccoun
         let accountManager = AccountManager<IosappAccountManagerTypes>(basePath: rootPath + "/accounts-metadata", isTemporary: false, isReadOnly: false, useCaches: true, removeDatabaseOnError: true)
         self.accountManager = accountManager
 
-        telegramUIDeclareEncodables()
+        ansibleUIDeclareEncodables()
         initializeAccountManagement()
 
         if isUITest,

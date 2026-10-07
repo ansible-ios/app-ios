@@ -432,7 +432,7 @@ public extension IosappEngine.EngineData.Item {
             }
         }
         
-        public struct SendPaidMessageStars: IosappEngineDataItem, IosappEngineMapKeyDataItem, PostboxViewDataItem {
+        public struct SendPaidMessageDiamonds: IosappEngineDataItem, IosappEngineMapKeyDataItem, PostboxViewDataItem {
             public typealias Result = Optional<StarsAmount>
 
             fileprivate var id: EnginePeer.Id
@@ -453,9 +453,9 @@ public extension IosappEngine.EngineData.Item {
                     preconditionFailure()
                 }
                 if let cachedPeerData = view.cachedData as? CachedUserData {
-                    return cachedPeerData.sendPaidMessageStars
+                    return cachedPeerData.sendPaidMessageDiamonds
                 } else if let channel = peerViewMainPeer(view) as? IosappChannel {
-                    return channel.sendPaidMessageStars
+                    return channel.sendPaidMessageDiamonds
                 } else {
                     return nil
                 }
@@ -483,7 +483,7 @@ public extension IosappEngine.EngineData.Item {
                     preconditionFailure()
                 }
                 if let channel = peerViewMainPeer(view) as? IosappChannel {
-                    return channel.sendPaidMessageStars
+                    return channel.sendPaidMessageDiamonds
                 } else {
                     return nil
                 }
@@ -859,7 +859,7 @@ public extension IosappEngine.EngineData.Item {
             }
         }
         
-        public struct StarGiftsCount: IosappEngineDataItem, IosappEngineMapKeyDataItem, PostboxViewDataItem {
+        public struct DiamondGiftsCount: IosappEngineDataItem, IosappEngineMapKeyDataItem, PostboxViewDataItem {
             public typealias Result = Int32?
 
             fileprivate var id: EnginePeer.Id
@@ -880,10 +880,10 @@ public extension IosappEngine.EngineData.Item {
                     preconditionFailure()
                 }
                 if let cachedData = view.cachedPeerData as? CachedUserData {
-                    return cachedData.starGiftsCount
+                    return cachedData.diamondGiftsCount
                 }
                 if let cachedData = view.cachedPeerData as? CachedChannelData {
-                    return cachedData.starGiftsCount
+                    return cachedData.diamondGiftsCount
                 }
                 return nil
                 
@@ -1346,7 +1346,7 @@ public extension IosappEngine.EngineData.Item {
         }
         
         
-        public struct StarGiftsAvailable: IosappEngineDataItem, IosappEngineMapKeyDataItem, PostboxViewDataItem {
+        public struct DiamondGiftsAvailable: IosappEngineDataItem, IosappEngineMapKeyDataItem, PostboxViewDataItem {
             public typealias Result = Bool
 
             fileprivate var id: EnginePeer.Id
@@ -1367,7 +1367,7 @@ public extension IosappEngine.EngineData.Item {
                     preconditionFailure()
                 }
                 if let cachedData = view.cachedPeerData as? CachedChannelData {
-                    return cachedData.flags.contains(.starGiftsAvailable)
+                    return cachedData.flags.contains(.diamondGiftsAvailable)
                 } else {
                     return false
                 }
@@ -2622,18 +2622,18 @@ public extension IosappEngine.EngineData.Item {
             }
         }
         
-        public struct StarsReactionDefaultPrivacy: IosappEngineDataItem, PostboxViewDataItem {
+        public struct DiamondsReactionDefaultPrivacy: IosappEngineDataItem, PostboxViewDataItem {
             public typealias Result = IosappPaidReactionPrivacy
             
             public init() {
             }
             
             var key: PostboxViewKey {
-                return .cachedItem(ItemCacheEntryId(collectionId: Namespaces.CachedItemCollection.starsReactionDefaultToPrivate, key: StarsReactionDefaultToPrivateData.key()))
+                return .cachedItem(ItemCacheEntryId(collectionId: Namespaces.CachedItemCollection.diamondsReactionDefaultToPrivate, key: DiamondsReactionDefaultToPrivateData.key()))
             }
             
             func extract(view: PostboxView) -> Result {
-                if let value = (view as? CachedItemView)?.value?.get(StarsReactionDefaultToPrivateData.self) {
+                if let value = (view as? CachedItemView)?.value?.get(DiamondsReactionDefaultToPrivateData.self) {
                     return value.privacy
                 } else {
                     return .default
@@ -2642,7 +2642,7 @@ public extension IosappEngine.EngineData.Item {
         }
         
         public struct StarRefProgram: IosappEngineDataItem, PostboxViewDataItem {
-            public typealias Result = IosappStarRefProgram?
+            public typealias Result = IosappDiamondRefProgram?
             
             public let id: EnginePeer.Id
             

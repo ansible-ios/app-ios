@@ -338,7 +338,7 @@ private enum MediaReferenceRevalidationKey: Hashable {
     case notificationSoundList
     case customEmoji(fileId: Int64)
     case story(peer: PeerReference, id: Int32)
-    case starsTransaction(transaction: StarsTransactionReference)
+    case starsTransaction(transaction: DiamondsTransactionReference)
     case savedMusic(peer: PeerReference, fileId: Int64)
 }
 
@@ -516,7 +516,7 @@ final class MediaReferenceRevalidationContext {
                 return .fail(.generic)
             }
             for document in result {
-                if let file = telegramMediaFileFromApiDocument(document, altDocuments: []) {
+                if let file = ansibleMediaFileFromApiDocument(document, altDocuments: []) {
                     return .single(file)
                 }
             }
@@ -776,11 +776,11 @@ final class MediaReferenceRevalidationContext {
         }
     }
     
-    func starsTransaction(accountPeerId: PeerId, postbox: Postbox, network: Network, background: Bool, transaction: StarsTransactionReference) -> Signal<StarsContext.State.Transaction, RevalidateMediaReferenceError> {
+    func starsTransaction(accountPeerId: PeerId, postbox: Postbox, network: Network, background: Bool, transaction: DiamondsTransactionReference) -> Signal<DiamondsContext.State.Transaction, RevalidateMediaReferenceError> {
         return self.genericItem(key: .starsTransaction(transaction: transaction), background: background, request: { next, error in
-            return (_internal_getStarsTransaction(accountPeerId: accountPeerId, postbox: postbox, network: network, transactionReference: transaction)
+            return (_internal_getDiamondsTransaction(accountPeerId: accountPeerId, postbox: postbox, network: network, transactionReference: transaction)
             |> castError(RevalidateMediaReferenceError.self)
-            |> mapToSignal { result -> Signal<StarsContext.State.Transaction, RevalidateMediaReferenceError> in
+            |> mapToSignal { result -> Signal<DiamondsContext.State.Transaction, RevalidateMediaReferenceError> in
                 if let result {
                     return .single(result)
                 } else {
@@ -791,8 +791,8 @@ final class MediaReferenceRevalidationContext {
             }, error: { _ in
                 error(.generic)
             })
-        }) |> mapToSignal { next -> Signal<StarsContext.State.Transaction, RevalidateMediaReferenceError> in
-            if let next = next as? StarsContext.State.Transaction {
+        }) |> mapToSignal { next -> Signal<DiamondsContext.State.Transaction, RevalidateMediaReferenceError> in
+            if let next = next as? DiamondsContext.State.Transaction {
                 return .single(next)
             } else {
                 return .fail(.generic)

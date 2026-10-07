@@ -66,8 +66,8 @@ public final class LiveLocationManagerImpl: LiveLocationManager {
                         if message.flags.intersection([.Failed, .Unsent]).isEmpty {
                             var activeLiveBroadcastingTimeout: Int32?
                             for media in message.media {
-                                if let telegramMap = media as? IosappMediaMap {
-                                    if let liveBroadcastingTimeout = telegramMap.liveBroadcastingTimeout {
+                                if let ansibleMap = media as? IosappMediaMap {
+                                    if let liveBroadcastingTimeout = ansibleMap.liveBroadcastingTimeout {
                                         if liveBroadcastingTimeout == liveLocationIndefinitePeriod || message.timestamp + liveBroadcastingTimeout > timestamp {
                                             activeLiveBroadcastingTimeout = liveBroadcastingTimeout
                                         }

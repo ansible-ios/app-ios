@@ -8,12 +8,12 @@ import IosappPresentationData
 import IosappCore
 import AvatarNode
 import AccountContext
-import StarsParticleEffect
+import DiamondsParticleEffect
 import AppBundle
 import TextFormat
 import PeerNameTextComponent
 
-private func generateStarsAmountImage() -> UIImage {
+private func generateDiamondsAmountImage() -> UIImage {
     return UIImage(bundleImageName: "Chat/Message/StarsCount")!.precomposed().withRenderingMode(.alwaysTemplate)
 }
 
@@ -95,16 +95,16 @@ public final class StoryLiveChatMessageComponent: Component {
         private let text = ComponentView<Empty>()
         private var crownIcon: UIImageView?
         private var backgroundView: UIImageView?
-        private var effectLayer: StarsParticleEffectLayer?
-        private var starsAmountBackgroundView: UIImageView?
-        private var starsAmountIcon: UIImageView?
-        private var starsAmountText: ComponentView<Empty>?
+        private var effectLayer: DiamondsParticleEffectLayer?
+        private var diamondsAmountBackgroundView: UIImageView?
+        private var diamondsAmountIcon: UIImageView?
+        private var diamondsAmountText: ComponentView<Empty>?
 
         private var component: StoryLiveChatMessageComponent?
         private weak var state: EmptyComponentState?
         private var isUpdating: Bool = false
         
-        static let starsAmountImage: UIImage = generateStarsAmountImage()
+        static let diamondsAmountImage: UIImage = generateDiamondsAmountImage()
         
         override public init(frame: CGRect) {
             self.contentContainer = UIView()
@@ -181,69 +181,69 @@ public final class StoryLiveChatMessageComponent: Component {
             let primaryTextColor = UIColor(white: 1.0, alpha: 1.0)
             let secondaryTextColor = UIColor(white: 1.0, alpha: 0.8)
             
-            var displayStarsAmountBackground = false
-            var starsAmountTextSize: CGSize?
-            if let paidStars = component.message.paidStars {
-                displayStarsAmountBackground = component.message.text.isEmpty
+            var displayDiamondsAmountBackground = false
+            var diamondsAmountTextSize: CGSize?
+            if let paidDiamonds = component.message.paidDiamonds {
+                displayDiamondsAmountBackground = component.message.text.isEmpty
                 
-                let starsAmountIcon: UIImageView
-                if let current = self.starsAmountIcon {
-                    starsAmountIcon = current
+                let diamondsAmountIcon: UIImageView
+                if let current = self.diamondsAmountIcon {
+                    diamondsAmountIcon = current
                 } else {
-                    starsAmountIcon = UIImageView()
-                    self.starsAmountIcon = starsAmountIcon
-                    self.extractedContainerNode.contentNode.view.addSubview(starsAmountIcon)
-                    starsAmountIcon.image = View.starsAmountImage
+                    diamondsAmountIcon = UIImageView()
+                    self.diamondsAmountIcon = diamondsAmountIcon
+                    self.extractedContainerNode.contentNode.view.addSubview(diamondsAmountIcon)
+                    diamondsAmountIcon.image = View.diamondsAmountImage
                 }
-                starsAmountIcon.tintColor = secondaryTextColor
+                diamondsAmountIcon.tintColor = secondaryTextColor
                 
-                let starsAmountText: ComponentView<Empty>
-                if let current = self.starsAmountText {
-                    starsAmountText = current
+                let diamondsAmountText: ComponentView<Empty>
+                if let current = self.diamondsAmountText {
+                    diamondsAmountText = current
                 } else {
-                    starsAmountText = ComponentView()
-                    self.starsAmountText = starsAmountText
+                    diamondsAmountText = ComponentView()
+                    self.diamondsAmountText = diamondsAmountText
                 }
                 
-                starsAmountTextSize = starsAmountText.update(
+                diamondsAmountTextSize = diamondsAmountText.update(
                     transition: .immediate,
                     component: AnyComponent(MultilineTextComponent(
-                        text: .plain(NSAttributedString(string: "\(paidStars)", font: Font.semibold(11.0), textColor: displayStarsAmountBackground ? primaryTextColor : secondaryTextColor))
+                        text: .plain(NSAttributedString(string: "\(paidStars)", font: Font.semibold(11.0), textColor: displayDiamondsAmountBackground ? primaryTextColor : secondaryTextColor))
                     )),
                     environment: {},
                     containerSize: CGSize(width: 100.0, height: 100.0)
                 )
             } else {
-                if let starsAmountIcon = self.starsAmountIcon {
-                    self.starsAmountIcon = nil
-                    starsAmountIcon.removeFromSuperview()
+                if let diamondsAmountIcon = self.diamondsAmountIcon {
+                    self.diamondsAmountIcon = nil
+                    diamondsAmountIcon.removeFromSuperview()
                 }
-                if let starsAmountText = self.starsAmountText {
-                    self.starsAmountText = nil
-                    starsAmountText.view?.removeFromSuperview()
+                if let diamondsAmountText = self.diamondsAmountText {
+                    self.diamondsAmountText = nil
+                    diamondsAmountText.view?.removeFromSuperview()
                 }
             }
             
-            if displayStarsAmountBackground, let paidStars = component.message.paidStars, let baseColor = GroupCallMessagesContext.getStarAmountParamMapping(params: LiveChatMessageParams(appConfig: component.context.currentAppConfiguration.with({ $0 })), value: paidStars).color {
-                let starsAmountBackgroundView: UIImageView
-                if let current = self.starsAmountBackgroundView {
-                    starsAmountBackgroundView = current
+            if displayDiamondsAmountBackground, let paidDiamonds = component.message.paidDiamonds, let baseColor = GroupCallMessagesContext.getDiamondAmountParamMapping(params: LiveChatMessageParams(appConfig: component.context.currentAppConfiguration.with({ $0 })), value: paidDiamonds).color {
+                let diamondsAmountBackgroundView: UIImageView
+                if let current = self.diamondsAmountBackgroundView {
+                    diamondsAmountBackgroundView = current
                 } else {
-                    starsAmountBackgroundView = UIImageView()
-                    starsAmountBackgroundView.image = generateStretchableFilledCircleImage(diameter: 20.0, color: .white)?.withRenderingMode(.alwaysTemplate)
-                    self.starsAmountBackgroundView = starsAmountBackgroundView
+                    diamondsAmountBackgroundView = UIImageView()
+                    diamondsAmountBackgroundView.image = generateStretchableFilledCircleImage(diameter: 20.0, color: .white)?.withRenderingMode(.alwaysTemplate)
+                    self.diamondsAmountBackgroundView = diamondsAmountBackgroundView
                     
-                    if let starsAmountIconView = self.starsAmountIcon {
-                        self.extractedContainerNode.contentNode.view.insertSubview(starsAmountBackgroundView, belowSubview: starsAmountIconView)
+                    if let diamondsAmountIconView = self.diamondsAmountIcon {
+                        self.extractedContainerNode.contentNode.view.insertSubview(diamondsAmountBackgroundView, belowSubview: diamondsAmountIconView)
                     } else {
-                        self.extractedContainerNode.contentNode.view.addSubview(starsAmountBackgroundView)
+                        self.extractedContainerNode.contentNode.view.addSubview(diamondsAmountBackgroundView)
                     }
                 }
-                starsAmountBackgroundView.tintColor = StoryLiveChatMessageComponent.getMessageColor(color: baseColor).withMultipliedBrightnessBy(0.7).withMultipliedAlpha(0.5)
+                diamondsAmountBackgroundView.tintColor = StoryLiveChatMessageComponent.getMessageColor(color: baseColor).withMultipliedBrightnessBy(0.7).withMultipliedAlpha(0.5)
             } else {
-                if let starsAmountBackgroundView = self.starsAmountBackgroundView {
-                    self.starsAmountBackgroundView = nil
-                    starsAmountBackgroundView.removeFromSuperview()
+                if let diamondsAmountBackgroundView = self.diamondsAmountBackgroundView {
+                    self.diamondsAmountBackgroundView = nil
+                    diamondsAmountBackgroundView.removeFromSuperview()
                 }
             }
             
@@ -307,19 +307,19 @@ public final class StoryLiveChatMessageComponent: Component {
             }
             
             var textBottomRightCutout: CGFloat?
-            if let starsAmountTextSize, !displayStarsAmountBackground {
-                textBottomRightCutout = starsAmountTextSize.width + 20.0
+            if let diamondsAmountTextSize, !displayDiamondsAmountBackground {
+                textBottomRightCutout = diamondsAmountTextSize.width + 20.0
             }
             
             var maxTextWidth: CGFloat = availableSize.width - insets.left - insets.right - avatarSize - avatarSpacing
-            if let starsAmountTextSize, displayStarsAmountBackground {
-                var cutoutWidth: CGFloat = starsAmountTextSize.width + 20.0
+            if let diamondsAmountTextSize, displayDiamondsAmountBackground {
+                var cutoutWidth: CGFloat = diamondsAmountTextSize.width + 20.0
                 cutoutWidth += 30.0
                 maxTextWidth -= cutoutWidth
             }
             
             let textIconsForegroundColor: UIColor
-            if let paidStars = component.message.paidStars, let baseColor = GroupCallMessagesContext.getStarAmountParamMapping(params: LiveChatMessageParams(appConfig: component.context.currentAppConfiguration.with({ $0 })), value: paidStars).color {
+            if let paidDiamonds = component.message.paidDiamonds, let baseColor = GroupCallMessagesContext.getDiamondAmountParamMapping(params: LiveChatMessageParams(appConfig: component.context.currentAppConfiguration.with({ $0 })), value: paidDiamonds).color {
                 textIconsForegroundColor = StoryLiveChatMessageComponent.getMessageColor(color: baseColor).withAlphaComponent(component.layout.transparentBackground ? 0.7 : 1.0)
             } else {
                 textIconsForegroundColor = .black
@@ -346,7 +346,7 @@ public final class StoryLiveChatMessageComponent: Component {
             }
             
             var adminBadgeTextSize: CGSize?
-            if component.message.isFromAdmin && !displayStarsAmountBackground {
+            if component.message.isFromAdmin && !displayDiamondsAmountBackground {
                 let adminBadgeText: ComponentView<Empty>
                 if let current = self.adminBadgeText {
                     adminBadgeText = current
@@ -391,7 +391,7 @@ public final class StoryLiveChatMessageComponent: Component {
             )
             
             var avatarFrame = CGRect(origin: CGPoint(x: insets.left, y: insets.top), size: CGSize(width: avatarSize, height: avatarSize))
-            if component.message.paidStars != nil {
+            if component.message.paidDiamonds != nil {
                 avatarFrame.origin.y += avatarBackgroundInset
                 if component.layout.fitToWidth {
                     avatarFrame.origin.x += avatarBackgroundInset
@@ -468,45 +468,45 @@ public final class StoryLiveChatMessageComponent: Component {
             
             let backgroundOrigin = CGPoint(x: avatarFrame.minX - avatarBackgroundInset, y: avatarFrame.minY - avatarBackgroundInset)
             var backgroundFrame = CGRect(origin: backgroundOrigin, size: CGSize(width: textFrame.maxX + 8.0 - backgroundOrigin.x, height: avatarFrame.maxY + avatarBackgroundInset - backgroundOrigin.y))
-            if let starsAmountTextSize, displayStarsAmountBackground {
-                backgroundFrame.size.width += starsAmountTextSize.width + 30.0
+            if let diamondsAmountTextSize, displayDiamondsAmountBackground {
+                backgroundFrame.size.width += diamondsAmountTextSize.width + 30.0
             }
             if let adminBadgeTextSize {
                 backgroundFrame.size.width = max(backgroundFrame.width, authorTitleFrame.maxX + 4.0 + adminBadgeTextSize.width + 10.0)
             }
             if let textLayout = self.textExternal.layout {
-                if textLayout.numberOfLines > 1 || (component.message.isFromAdmin && !displayStarsAmountBackground) {
+                if textLayout.numberOfLines > 1 || (component.message.isFromAdmin && !displayDiamondsAmountBackground) {
                     backgroundFrame.size.height = max(backgroundFrame.size.height, textFrame.maxY + 8.0 - backgroundOrigin.y)
                 }
                 
-                if let starsAmountTextSize, !displayStarsAmountBackground, let lastLineRect = textLayout.linesRects().last, textFrame.minX + lastLineRect.maxX > backgroundFrame.width - 8.0 - starsAmountTextSize.width {
-                    backgroundFrame.size.height += starsAmountTextSize.height + 2.0
+                if let diamondsAmountTextSize, !displayDiamondsAmountBackground, let lastLineRect = textLayout.linesRects().last, textFrame.minX + lastLineRect.maxX > backgroundFrame.width - 8.0 - diamondsAmountTextSize.width {
+                    backgroundFrame.size.height += diamondsAmountTextSize.height + 2.0
                 }
             }
             
-            if let starsAmountTextSize, let starsAmountTextView = self.starsAmountText?.view, let starsAmountIcon = self.starsAmountIcon {
-                let starsAmountTextFrame: CGRect
+            if let diamondsAmountTextSize, let diamondsAmountTextView = self.diamondsAmountText?.view, let diamondsAmountIcon = self.diamondsAmountIcon {
+                let diamondsAmountTextFrame: CGRect
                 
-                if displayStarsAmountBackground, let starsAmountBackgroundView = self.starsAmountBackgroundView {
-                    let starsAmountBackgroundSize = CGSize(width: starsAmountTextSize.width + 5.0 + 20.0, height: 20.0)
-                    let starsAmountBackgroundFrame = CGRect(origin: CGPoint(x: backgroundFrame.maxX - 6.0 - starsAmountBackgroundSize.width, y: backgroundFrame.minY + floor((backgroundFrame.height - starsAmountBackgroundSize.height) * 0.5)), size: starsAmountBackgroundSize)
-                    transition.setFrame(view: starsAmountBackgroundView, frame: starsAmountBackgroundFrame)
+                if displayDiamondsAmountBackground, let diamondsAmountBackgroundView = self.diamondsAmountBackgroundView {
+                    let diamondsAmountBackgroundSize = CGSize(width: diamondsAmountTextSize.width + 5.0 + 20.0, height: 20.0)
+                    let diamondsAmountBackgroundFrame = CGRect(origin: CGPoint(x: backgroundFrame.maxX - 6.0 - diamondsAmountBackgroundSize.width, y: backgroundFrame.minY + floor((backgroundFrame.height - diamondsAmountBackgroundSize.height) * 0.5)), size: diamondsAmountBackgroundSize)
+                    transition.setFrame(view: diamondsAmountBackgroundView, frame: diamondsAmountBackgroundFrame)
                     
-                    starsAmountTextFrame = CGRect(origin: CGPoint(x: starsAmountBackgroundFrame.maxX - starsAmountTextSize.width - 5.0, y: starsAmountBackgroundFrame.minY + UIScreenPixel + floor((starsAmountBackgroundFrame.height - starsAmountTextSize.height) * 0.5)), size: starsAmountTextSize)
+                    diamondsAmountTextFrame = CGRect(origin: CGPoint(x: diamondsAmountBackgroundFrame.maxX - diamondsAmountTextSize.width - 5.0, y: diamondsAmountBackgroundFrame.minY + UIScreenPixel + floor((diamondsAmountBackgroundFrame.height - diamondsAmountTextSize.height) * 0.5)), size: diamondsAmountTextSize)
                 } else {
-                    starsAmountTextFrame = CGRect(origin: CGPoint(x: backgroundFrame.maxX - 8.0 - starsAmountTextSize.width, y: backgroundFrame.maxY - starsAmountTextSize.height - 8.0), size: starsAmountTextSize)
+                    diamondsAmountTextFrame = CGRect(origin: CGPoint(x: backgroundFrame.maxX - 8.0 - diamondsAmountTextSize.width, y: backgroundFrame.maxY - diamondsAmountTextSize.height - 8.0), size: diamondsAmountTextSize)
                 }
                 
-                if starsAmountTextView.superview == nil {
-                    starsAmountTextView.layer.anchorPoint = CGPoint(x: 1.0, y: 1.0)
-                    self.extractedContainerNode.contentNode.view.addSubview(starsAmountTextView)
+                if diamondsAmountTextView.superview == nil {
+                    diamondsAmountTextView.layer.anchorPoint = CGPoint(x: 1.0, y: 1.0)
+                    self.extractedContainerNode.contentNode.view.addSubview(diamondsAmountTextView)
                 }
-                transition.setPosition(view: starsAmountTextView, position: CGPoint(x: starsAmountTextFrame.maxX, y: starsAmountTextFrame.maxY))
-                starsAmountTextView.bounds = CGRect(origin: CGPoint(), size: starsAmountTextFrame.size)
+                transition.setPosition(view: diamondsAmountTextView, position: CGPoint(x: diamondsAmountTextFrame.maxX, y: diamondsAmountTextFrame.maxY))
+                diamondsAmountTextView.bounds = CGRect(origin: CGPoint(), size: diamondsAmountTextFrame.size)
                 
-                if let image = starsAmountIcon.image {
-                    let starsAmountIconFrame = CGRect(origin: CGPoint(x: starsAmountTextFrame.minX - 2.0 - image.size.width, y: starsAmountTextFrame.minY + UIScreenPixel), size: image.size)
-                    transition.setFrame(view: starsAmountIcon, frame: starsAmountIconFrame)
+                if let image = diamondsAmountIcon.image {
+                    let diamondsAmountIconFrame = CGRect(origin: CGPoint(x: diamondsAmountTextFrame.minX - 2.0 - image.size.width, y: diamondsAmountTextFrame.minY + UIScreenPixel), size: image.size)
+                    transition.setFrame(view: diamondsAmountIcon, frame: diamondsAmountIconFrame)
                 }
             }
             
@@ -515,7 +515,7 @@ public final class StoryLiveChatMessageComponent: Component {
             let backgroundCornerRadius = (avatarSize + avatarBackgroundInset * 2.0) * 0.5
             
             var displayBackground = false
-            if component.message.paidStars != nil {
+            if component.message.paidDiamonds != nil {
                 displayBackground = true
             } else if component.message.isFromAdmin {
                 displayBackground = true
@@ -533,7 +533,7 @@ public final class StoryLiveChatMessageComponent: Component {
                 }
                 transition.setFrame(view: backgroundView, frame: backgroundFrame)
                 
-                if let paidStars = component.message.paidStars, let baseColor = GroupCallMessagesContext.getStarAmountParamMapping(params: LiveChatMessageParams(appConfig: component.context.currentAppConfiguration.with({ $0 })), value: paidStars).color {
+                if let paidDiamonds = component.message.paidDiamonds, let baseColor = GroupCallMessagesContext.getDiamondAmountParamMapping(params: LiveChatMessageParams(appConfig: component.context.currentAppConfiguration.with({ $0 })), value: paidDiamonds).color {
                     backgroundView.tintColor = StoryLiveChatMessageComponent.getMessageColor(color: baseColor)
                     backgroundView.alpha = component.layout.transparentBackground ? 0.5 : 1.0
                 } else {
@@ -541,12 +541,12 @@ public final class StoryLiveChatMessageComponent: Component {
                     backgroundView.alpha = 1.0
                 }
                 
-                if component.message.paidStars != nil {
-                    let effectLayer: StarsParticleEffectLayer
+                if component.message.paidDiamonds != nil {
+                    let effectLayer: DiamondsParticleEffectLayer
                     if let current = self.effectLayer {
                         effectLayer = current
                     } else {
-                        effectLayer = StarsParticleEffectLayer()
+                        effectLayer = DiamondsParticleEffectLayer()
                         self.effectLayer = effectLayer
                         backgroundView.layer.addSublayer(effectLayer)
                     }

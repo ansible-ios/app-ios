@@ -27,19 +27,19 @@ private final class SheetContent: Component {
     
     let context: AccountContext
     let peer: EnginePeer
-    let starRating: IosappStarRating
-    let pendingStarRating: IosappStarPendingRating?
+    let diamondRating: IosappDiamondRating
+    let pendingDiamondRating: IosappDiamondPendingRating?
     
     init(
         context: AccountContext,
         peer: EnginePeer,
-        starRating: IosappStarRating,
-        pendingStarRating: IosappStarPendingRating?
+        diamondRating: IosappDiamondRating,
+        pendingDiamondRating: IosappDiamondPendingRating?
     ) {
         self.context = context
         self.peer = peer
-        self.starRating = starRating
-        self.pendingStarRating = pendingStarRating
+        self.diamondRating = diamondRating
+        self.pendingDiamondRating = pendingDiamondRating
     }
     
     static func ==(lhs: SheetContent, rhs: SheetContent) -> Bool {
@@ -109,11 +109,11 @@ private final class SheetContent: Component {
                 descriptionTextString = environment.strings.ProfileLevelInfo_MyText
                 
                 let timestamp = Int32(Date().timeIntervalSince1970)
-                if let pendingStarRating = component.pendingStarRating, pendingStarRating.timestamp > timestamp {
-                    if pendingStarRating.rating.stars > component.starRating.stars {
-                        let pendingPoints = pendingStarRating.rating.stars - component.starRating.stars
+                if let pendingDiamondRating = component.pendingDiamondRating, pendingDiamondRating.timestamp > timestamp {
+                    if pendingDiamondRating.rating.stars > component.diamondRating.stars {
+                        let pendingPoints = pendingDiamondRating.rating.stars - component.diamondRating.stars
                         
-                        let dayCount = (pendingStarRating.timestamp - timestamp) / (24 * 60 * 60)
+                        let dayCount = (pendingDiamondRating.timestamp - timestamp) / (24 * 60 * 60)
                         
                         if self.isPreviewingPendingRating {
                             if dayCount == 0 {
@@ -207,29 +207,29 @@ private final class SheetContent: Component {
             let currentLevel: Int32
             let nextLevel: Int32?
             
-            if let pendingStarRating = component.pendingStarRating, pendingStarRating.rating.stars > component.starRating.stars, self.isPreviewingPendingRating {
-                badgeText = starCountString(Int64(pendingStarRating.rating.stars), decimalSeparator: ".")
-                currentLevel = pendingStarRating.rating.level
-                nextLevel = pendingStarRating.rating.nextLevelStars == nil ? nil : currentLevel + 1
-                if let nextLevelStars = pendingStarRating.rating.nextLevelStars {
+            if let pendingDiamondRating = component.pendingDiamondRating, pendingDiamondRating.rating.stars > component.diamondRating.stars, self.isPreviewingPendingRating {
+                badgeText = diamondCountString(Int64(pendingDiamondRating.rating.stars), decimalSeparator: ".")
+                currentLevel = pendingDiamondRating.rating.level
+                nextLevel = pendingDiamondRating.rating.nextLevelStars == nil ? nil : currentLevel + 1
+                if let nextLevelStars = pendingDiamondRating.rating.nextLevelStars {
                     badgeTextSuffix = " / \(starCountString(Int64(nextLevelStars), decimalSeparator: "."))"
                 }
-                if let nextLevelStars = pendingStarRating.rating.nextLevelStars, nextLevelStars > pendingStarRating.rating.stars {
-                    levelFraction = Double(pendingStarRating.rating.stars - pendingStarRating.rating.currentLevelStars) / Double(nextLevelStars - pendingStarRating.rating.currentLevelStars)
+                if let nextLevelStars = pendingDiamondRating.rating.nextLevelStars, nextLevelStars > pendingDiamondRating.rating.stars {
+                    levelFraction = Double(pendingDiamondRating.rating.stars - pendingDiamondRating.rating.currentLevelStars) / Double(nextLevelStars - pendingDiamondRating.rating.currentLevelStars)
                 } else {
                     levelFraction = 1.0
                 }
             } else {
-                badgeText = starCountString(Int64(component.starRating.stars), decimalSeparator: ".")
-                currentLevel = component.starRating.level
-                nextLevel = component.starRating.nextLevelStars == nil ? nil : currentLevel + 1
-                if let nextLevelStars = component.starRating.nextLevelStars {
+                badgeText = diamondCountString(Int64(component.diamondRating.stars), decimalSeparator: ".")
+                currentLevel = component.diamondRating.level
+                nextLevel = component.diamondRating.nextLevelStars == nil ? nil : currentLevel + 1
+                if let nextLevelStars = component.diamondRating.nextLevelStars {
                     badgeTextSuffix = " / \(starCountString(Int64(nextLevelStars), decimalSeparator: "."))"
                 }
-                if component.starRating.stars < 0 {
+                if component.diamondRating.stars < 0 {
                     levelFraction = 0.5
-                } else if let nextLevelStars = component.starRating.nextLevelStars {
-                    levelFraction = Double(component.starRating.stars - component.starRating.currentLevelStars) / Double(nextLevelStars - component.starRating.currentLevelStars)
+                } else if let nextLevelStars = component.diamondRating.nextLevelStars {
+                    levelFraction = Double(component.diamondRating.stars - component.diamondRating.currentLevelStars) / Double(nextLevelStars - component.diamondRating.currentLevelStars)
                 } else {
                     levelFraction = 1.0
                 }
@@ -500,19 +500,19 @@ private final class ProfileLevelInfoSheetComponent: CombinedComponent {
     
     private let context: AccountContext
     private let peer: EnginePeer
-    private let starRating: IosappStarRating
-    private let pendingStarRating: IosappStarPendingRating?
+    private let diamondRating: IosappDiamondRating
+    private let pendingDiamondRating: IosappDiamondPendingRating?
     
     init(
         context: AccountContext,
         peer: EnginePeer,
-        starRating: IosappStarRating,
-        pendingStarRating: IosappStarPendingRating?
+        diamondRating: IosappDiamondRating,
+        pendingDiamondRating: IosappDiamondPendingRating?
     ) {
         self.context = context
         self.peer = peer
-        self.starRating = starRating
-        self.pendingStarRating = pendingStarRating
+        self.diamondRating = diamondRating
+        self.pendingDiamondRating = pendingDiamondRating
     }
     
     static func ==(lhs: ProfileLevelInfoSheetComponent, rhs: ProfileLevelInfoSheetComponent) -> Bool {
@@ -569,8 +569,8 @@ private final class ProfileLevelInfoSheetComponent: CombinedComponent {
                     content: AnyComponent<EnvironmentType>(SheetContent(
                         context: context.component.context,
                         peer: context.component.peer,
-                        starRating: context.component.starRating,
-                        pendingStarRating: context.component.pendingStarRating
+                        diamondRating: context.component.diamondRating,
+                        pendingDiamondRating: context.component.pendingDiamondRating
                     )),
                     titleItem: nil,
                     leftItem: AnyComponent(
@@ -648,8 +648,8 @@ public final class ProfileLevelInfoScreen: ViewControllerComponentContainer {
     public init(
         context: AccountContext,
         peer: EnginePeer,
-        starRating: IosappStarRating,
-        pendingStarRating: IosappStarPendingRating?,
+        diamondRating: IosappDiamondRating,
+        pendingDiamondRating: IosappDiamondPendingRating?,
         customTheme: PresentationTheme?
     ) {
         self.context = context
@@ -665,8 +665,8 @@ public final class ProfileLevelInfoScreen: ViewControllerComponentContainer {
             component: ProfileLevelInfoSheetComponent(
                 context: context,
                 peer: peer,
-                starRating: starRating,
-                pendingStarRating: pendingStarRating
+                diamondRating: diamondRating,
+                pendingDiamondRating: pendingDiamondRating
             ),
             navigationBarAppearance: .none,
             statusBarStyle: .ignore,
@@ -859,7 +859,7 @@ private final class ItemComponent: Component {
     }
 }
 
-private func starCountString(_ size: Int64, forceDecimal: Bool = false, decimalSeparator: String) -> String {
+private func diamondCountString(_ size: Int64, forceDecimal: Bool = false, decimalSeparator: String) -> String {
     if size >= 1000 * 1000 {
         let remainder = Int64((Double(size % (1000 * 1000)) / (1000.0 * 100.0)).rounded(.down))
         if remainder != 0 || forceDecimal {

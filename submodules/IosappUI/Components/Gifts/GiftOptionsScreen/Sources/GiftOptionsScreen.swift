@@ -34,7 +34,7 @@ final class GiftOptionsScreenComponent: Component {
     
     let context: AccountContext
     let overNavigationContainer: UIView
-    let starsContext: StarsContext
+    let diamondsContext: DiamondsContext
     let peerId: EnginePeer.Id
     let premiumOptions: [CachedPremiumGiftOption]
     let hasBirthday: Bool
@@ -43,7 +43,7 @@ final class GiftOptionsScreenComponent: Component {
     init(
         context: AccountContext,
         overNavigationContainer: UIView,
-        starsContext: StarsContext,
+        diamondsContext: DiamondsContext,
         peerId: EnginePeer.Id,
         premiumOptions: [CachedPremiumGiftOption],
         hasBirthday: Bool,
@@ -51,7 +51,7 @@ final class GiftOptionsScreenComponent: Component {
     ) {
         self.context = context
         self.overNavigationContainer = overNavigationContainer
-        self.starsContext = starsContext
+        self.diamondsContext = diamondsContext
         self.peerId = peerId
         self.premiumOptions = premiumOptions
         self.hasBirthday = hasBirthday
@@ -80,7 +80,7 @@ final class GiftOptionsScreenComponent: Component {
         }
     }
     
-    public enum StarsFilter: Equatable {
+    public enum DiamondsFilter: Equatable {
         case all
         case limited
         case inStock
@@ -142,28 +142,28 @@ final class GiftOptionsScreenComponent: Component {
         private let premiumDescription = ComponentView<Empty>()
         private var premiumItems: [AnyHashable: ComponentView<Empty>] = [:]
         
-        private let starsTitle = ComponentView<Empty>()
-        private let starsDescription = ComponentView<Empty>()
-        private var starsItems: [AnyHashable: ComponentView<Empty>] = [:]
+        private let diamondsTitle = ComponentView<Empty>()
+        private let diamondsDescription = ComponentView<Empty>()
+        private var diamondsItems: [AnyHashable: ComponentView<Empty>] = [:]
         private let tabSelector = ComponentView<Empty>()
-        private var starsFilter: StarsFilter = .all
-        private var appliedStarsFilter: StarsFilter = .all
+        private var diamondsFilter: DiamondsFilter = .all
+        private var appliedDiamondsFilter: DiamondsFilter = .all
         
         private var switchingFilter = false
         
         private var loadingGiftId: Int64?
         
-        private var _effectiveStarGifts: ([StarGift], StarsFilter, Int)?
-        private var effectiveStarGifts: [StarGift]? {
+        private var _effectiveDiamondGifts: ([StarGift], DiamondsFilter, Int)?
+        private var effectiveDiamondGifts: [StarGift]? {
             get {
-                if let (currentGifts, currentFilter, currentVersion) = self._effectiveStarGifts, currentFilter == self.starsFilter && currentFilter != .transfer && currentVersion == self.state?.starGiftsVersion {
+                if let (currentGifts, currentFilter, currentVersion) = self._effectiveDiamondGifts, currentFilter == self.diamondsFilter && currentFilter != .transfer && currentVersion == self.state?.diamondGiftsVersion {
                     return currentGifts
                 } else if let state = self.state, let allGifts = state.starGifts {
-                    if case .transfer = self.starsFilter {
-                        let filteredGifts: [StarGift] = self.state?.transferStarGifts?.map { gift in
+                    if case .transfer = self.diamondsFilter {
+                        let filteredGifts: [StarGift] = self.state?.transferDiamondGifts?.map { gift in
                             return gift.gift
                         } ?? []
-                        self._effectiveStarGifts = (filteredGifts, self.starsFilter, state.starGiftsVersion)
+                        self._effectiveDiamondGifts = (filteredGifts, self.diamondsFilter, state.diamondGiftsVersion)
                         return filteredGifts
                     } else {
                         var sortedGifts = allGifts
@@ -186,7 +186,7 @@ final class GiftOptionsScreenComponent: Component {
                             sortedGifts = updatedGifts
                         }
                         let filteredGifts: [StarGift] = sortedGifts.filter {
-                            switch self.starsFilter {
+                            switch self.diamondsFilter {
                             case .all:
                                 return true
                             case .limited:
@@ -218,7 +218,7 @@ final class GiftOptionsScreenComponent: Component {
                             }
                             return false
                         }
-                        self._effectiveStarGifts = (filteredGifts, self.starsFilter, state.starGiftsVersion)
+                        self._effectiveDiamondGifts = (filteredGifts, self.diamondsFilter, state.diamondGiftsVersion)
                         return filteredGifts
                     }
                 } else {
@@ -229,17 +229,17 @@ final class GiftOptionsScreenComponent: Component {
         
         private var isUpdating: Bool = false
         
-        private var starsStateDisposable: Disposable?
-        private var starsState: StarsContext.State?
+        private var diamondsStateDisposable: Disposable?
+        private var diamondsState: DiamondsContext.State?
         
-        private let optionsPromise = Promise<[StarsTopUpOption]?>(nil)
+        private let optionsPromise = Promise<[DiamondsTopUpOption]?>(nil)
         
         private var component: GiftOptionsScreenComponent?
         private(set) weak var state: State?
         private var environment: EnvironmentType?
         
         private var tabSelectorOrigin: CGFloat = 0.0
-        private var starsItemsOrigin: CGFloat = 0.0
+        private var diamondsItemsOrigin: CGFloat = 0.0
         
         private var dismissed = false
         
@@ -247,7 +247,7 @@ final class GiftOptionsScreenComponent: Component {
         
         private var chevronImage: (UIImage, PresentationTheme)?
         
-        private var resaleConfiguration: StarsSubscriptionConfiguration?
+        private var resaleConfiguration: DiamondsSubscriptionConfiguration?
         
         override init(frame: CGRect) {
             self.scrollView = ScrollView()
@@ -278,7 +278,7 @@ final class GiftOptionsScreenComponent: Component {
         }
         
         deinit {
-            self.starsStateDisposable?.dispose()
+            self.diamondsStateDisposable?.dispose()
             self.auctionDisposable.dispose()
         }
 
@@ -316,7 +316,7 @@ final class GiftOptionsScreenComponent: Component {
                             }
                         }
                         
-                        let _ = (component.context.engine.payments.checkCanSendStarGift(giftId: gift.id)
+                        let _ = (component.context.engine.payments.checkCanSendDiamondGift(giftId: gift.id)
                         |> deliverOnMainQueue).start(next: { [weak self, weak controller] result in
                             guard let self, let controller else {
                                 return
@@ -537,28 +537,28 @@ final class GiftOptionsScreenComponent: Component {
             let premiumTitleScale = 1.0 - premiumTitleFraction * 0.36
             var premiumTitleAdditionalOffset: CGFloat = 0.0
             
-            let starsTitleOffsetDelta = (topInset + 100.0) - (environment.statusBarHeight + (environment.navigationHeight - environment.statusBarHeight) / 2.0)
+            let diamondsTitleOffsetDelta = (topInset + 100.0) - (environment.statusBarHeight + (environment.navigationHeight - environment.statusBarHeight) / 2.0)
             
-            let starsTitleOffset: CGFloat
-            let starsTitleFraction: CGFloat
-            if contentOffset > 350, self.starsTitle.view != nil {
-                starsTitleOffset = contentOffset + max(0.0, min(1.0, (contentOffset - 350.0) / starsTitleOffsetDelta)) * 10.0
-                starsTitleFraction = max(0.0, min(1.0, (starsTitleOffset - 350.0) / starsTitleOffsetDelta))
+            let diamondsTitleOffset: CGFloat
+            let diamondsTitleFraction: CGFloat
+            if contentOffset > 350, self.diamondsTitle.view != nil {
+                diamondsTitleOffset = contentOffset + max(0.0, min(1.0, (contentOffset - 350.0) / diamondsTitleOffsetDelta)) * 10.0
+                diamondsTitleFraction = max(0.0, min(1.0, (diamondsTitleOffset - 350.0) / diamondsTitleOffsetDelta))
                 if contentOffset > 380.0 {
                     premiumTitleAdditionalOffset = contentOffset - 380.0
                 }
             } else {
-                starsTitleOffset = contentOffset
-                starsTitleFraction = 0.0
+                diamondsTitleOffset = contentOffset
+                diamondsTitleFraction = 0.0
             }
-            let starsTitleScale = 1.0 - starsTitleFraction * 0.36
-            if let starsTitleView = self.starsTitle.view {
-                var starsTitlePosition: CGFloat = 455.0
-                if let descriptionPosition = self.starsDescription.view?.frame.minY {
-                    starsTitlePosition = descriptionPosition - 28.0
+            let diamondsTitleScale = 1.0 - diamondsTitleFraction * 0.36
+            if let diamondsTitleView = self.diamondsTitle.view {
+                var diamondsTitlePosition: CGFloat = 455.0
+                if let descriptionPosition = self.diamondsDescription.view?.frame.minY {
+                    diamondsTitlePosition = descriptionPosition - 28.0
                 }
-                transition.setPosition(view: starsTitleView, position: CGPoint(x: availableWidth / 2.0, y: max(topInset + starsTitlePosition - starsTitleOffset, environment.statusBarHeight + (environment.navigationHeight - environment.statusBarHeight) / 2.0)))
-                transition.setScale(view: starsTitleView, scale: starsTitleScale)
+                transition.setPosition(view: diamondsTitleView, position: CGPoint(x: availableWidth / 2.0, y: max(topInset + diamondsTitlePosition - diamondsTitleOffset, environment.statusBarHeight + (environment.navigationHeight - environment.statusBarHeight) / 2.0)))
+                transition.setScale(view: diamondsTitleView, scale: diamondsTitleScale)
             }
             
             if let premiumTitleView = self.premiumTitle.view {
@@ -572,15 +572,15 @@ final class GiftOptionsScreenComponent: Component {
             }
             
             let visibleBounds = self.scrollView.bounds.insetBy(dx: 0.0, dy: -10.0)
-            if let starGifts = self.effectiveStarGifts {
+            if let starGifts = self.effectiveDiamondGifts {
                 let sideInset: CGFloat = 16.0 + environment.safeInsets.left
                 
                 let optionSpacing: CGFloat = 10.0
                 let optionWidth = (availableWidth - sideInset * 2.0 - optionSpacing * 2.0) / 3.0
-                let starsOptionSize = CGSize(width: optionWidth, height: 154.0)
+                let diamondsOptionSize = CGSize(width: optionWidth, height: 154.0)
                 
                 var validIds: [AnyHashable] = []
-                var itemFrame = CGRect(origin: CGPoint(x: sideInset, y: self.starsItemsOrigin), size: starsOptionSize)
+                var itemFrame = CGRect(origin: CGPoint(x: sideInset, y: self.diamondsItemsOrigin), size: diamondsOptionSize)
                 
                 for gift in starGifts {
                     var isVisible = false
@@ -594,14 +594,14 @@ final class GiftOptionsScreenComponent: Component {
                         
                         var itemTransition = transition
                         let visibleItem: ComponentView<Empty>
-                        if let current = self.starsItems[itemId] {
+                        if let current = self.diamondsItems[itemId] {
                             visibleItem = current
                         } else {
                             visibleItem = ComponentView()
                             if !transition.animation.isImmediate {
                                 itemTransition = .immediate
                             }
-                            self.starsItems[itemId] = visibleItem
+                            self.diamondsItems[itemId] = visibleItem
                         }
                         
                         let currentTime = Int32(CFAbsoluteTimeGetCurrent() + kCFAbsoluteTimeIntervalSince1970)
@@ -695,9 +695,9 @@ final class GiftOptionsScreenComponent: Component {
                                     action = environment.strings.Gift_Options_Gift_ViewAuction
                                 }
                                 subject = .starGift(gift: gift, price: action)
-                            } else if let availability = gift.availability, availability.remains == 0, availability.resale > 0, let minResaleStars = availability.minResaleStars {
-                                let priceString = presentationStringsFormattedNumber(Int32(minResaleStars), environment.dateTimeFormat.groupingSeparator)
-                                if let resaleConfiguration = self.resaleConfiguration, minResaleStars == resaleConfiguration.starGiftResaleMaxStarsAmount || availability.resale == 1 {
+                            } else if let availability = gift.availability, availability.remains == 0, availability.resale > 0, let minResaleDiamonds = availability.minResaleDiamonds {
+                                let priceString = presentationStringsFormattedNumber(Int32(minResaleDiamonds), environment.dateTimeFormat.groupingSeparator)
+                                if let resaleConfiguration = self.resaleConfiguration, minResaleDiamonds == resaleConfiguration.diamondGiftResaleMaxDiamondsAmount || availability.resale == 1 {
                                     subject = .starGift(gift: gift, price: "# \(priceString)")
                                 } else {
                                     subject = .starGift(gift: gift, price: "# \(priceString)+")
@@ -740,7 +740,7 @@ final class GiftOptionsScreenComponent: Component {
                                 )
                             ),
                             environment: {},
-                            containerSize: starsOptionSize
+                            containerSize: diamondsOptionSize
                         )
                         if let itemView = visibleItem.view {
                             if itemView.superview == nil {
@@ -756,12 +756,12 @@ final class GiftOptionsScreenComponent: Component {
                     itemFrame.origin.x += itemFrame.width + optionSpacing
                     if itemFrame.maxX > availableWidth {
                         itemFrame.origin.x = sideInset
-                        itemFrame.origin.y += starsOptionSize.height + optionSpacing
+                        itemFrame.origin.y += diamondsOptionSize.height + optionSpacing
                     }
                 }
                 
                 var removeIds: [AnyHashable] = []
-                for (id, item) in self.starsItems {
+                for (id, item) in self.diamondsItems {
                     if !validIds.contains(id) {
                         removeIds.append(id)
                         if let itemView = item.view {
@@ -777,7 +777,7 @@ final class GiftOptionsScreenComponent: Component {
                     }
                 }
                 for id in removeIds {
-                    self.starsItems.removeValue(forKey: id)
+                    self.diamondsItems.removeValue(forKey: id)
                 }
             }
             
@@ -806,8 +806,8 @@ final class GiftOptionsScreenComponent: Component {
             self.bottomEdgeEffectView.update(content: theme.list.blocksBackgroundColor, blur: true, alpha: 1.0, rect: bottomEdgeEffectFrame, edge: .bottom, edgeSize: bottomEdgeEffectFrame.height, transition: transition)
                         
             let bottomContentOffset = max(0.0, self.scrollView.contentSize.height - self.scrollView.contentOffset.y - self.scrollView.frame.height)
-            if interactive, bottomContentOffset < 320.0, case .transfer = self.starsFilter {
-                self.state?.starGiftsContext.loadMore()
+            if interactive, bottomContentOffset < 320.0, case .transfer = self.diamondsFilter {
+                self.state?.diamondGiftsContext.loadMore()
             }
         }
         
@@ -816,7 +816,7 @@ final class GiftOptionsScreenComponent: Component {
                 return
             }
             
-            guard let gift = self.state?.transferStarGifts?.first(where: { gift in
+            guard let gift = self.state?.transferDiamondGifts?.first(where: { gift in
                 if case let .unique(gift) = gift.gift, gift.slug == transferGift.slug {
                     return true
                 } else {
@@ -861,11 +861,11 @@ final class GiftOptionsScreenComponent: Component {
                 navigationController: mainController.navigationController as? NavigationController,
                 commit: { [weak self, weak mainController] in
                     let proceed: (Bool) -> Void = { waitForTopUp in
-                        var errorImpl: ((TransferStarGiftError) -> Void)?
+                        var errorImpl: ((TransferDiamondGiftError) -> Void)?
                         var completedImpl: (() -> Void)?
                         
-                        if waitForTopUp, let starsContext = context.starsContext {
-                            let _ = (starsContext.onUpdate
+                        if waitForTopUp, let diamondsContext = context.diamondsContext {
+                            let _ = (diamondsContext.onUpdate
                             |> deliverOnMainQueue).start(next: {
                                 let _ = (context.engine.payments.transferStarGift(prepaid: gift.transferStars == 0, reference: reference, peerId: peer.id)
                                 |> deliverOnMainQueue).start(error: { error in
@@ -895,7 +895,7 @@ final class GiftOptionsScreenComponent: Component {
                             
                             var errorText: String?
                             switch error {
-                            case .disallowedStarGift:
+                            case .disallowedDiamondGift:
                                 errorText = presentationData.strings.Gift_Send_ErrorDisallowed(peer.compactDisplayTitle).string
                             default:
                                 errorText = presentationData.strings.Gift_Send_ErrorUnknown
@@ -960,21 +960,21 @@ final class GiftOptionsScreenComponent: Component {
                         }
                     }
                     
-                    if let self, let transferStars = gift.transferStars, transferStars > 0, let starsContext = context.starsContext, let starsState = self.starsState {
-                        if starsState.balance < StarsAmount(value: transferStars, nanos: 0) {
+                    if let self, let transferStars = gift.transferStars, transferStars > 0, let diamondsContext = context.diamondsContext, let diamondsState = self.diamondsState {
+                        if diamondsState.balance < StarsAmount(value: transferStars, nanos: 0) {
                             let _ = (self.optionsPromise.get()
                             |> filter { $0 != nil }
                             |> take(1)
                             |> deliverOnMainQueue).startStandalone(next: { [weak mainController] options in
-                                let purchaseController = context.sharedContext.makeStarsPurchaseScreen(
+                                let purchaseController = context.sharedContext.makeDiamondsPurchaseScreen(
                                     context: context,
-                                    starsContext: starsContext,
+                                    diamondsContext: diamondsContext,
                                     options: options ?? [],
-                                    purpose: .transferStarGift(requiredStars: transferStars),
+                                    purpose: .transferStarGift(requiredDiamonds: transferStars),
                                     targetPeerId: nil,
                                     customTheme: nil,
                                     completion: { stars in
-                                        starsContext.add(balance: StarsAmount(value: stars, nanos: 0))
+                                        diamondsContext.add(balance: StarsAmount(value: stars, nanos: 0))
                                         proceed(true)
                                     }
                                 )
@@ -1007,27 +1007,27 @@ final class GiftOptionsScreenComponent: Component {
             self.environment = environment
             self.state = state
             
-            let previousStarsFilter = self.appliedStarsFilter
-            self.appliedStarsFilter = self.starsFilter
+            let previousDiamondsFilter = self.appliedDiamondsFilter
+            self.appliedDiamondsFilter = self.diamondsFilter
             
             if self.component == nil {
-                self.starsStateDisposable = (component.starsContext.state
+                self.diamondsStateDisposable = (component.diamondsContext.state
                 |> deliverOnMainQueue).start(next: { [weak self] state in
                     guard let self else {
                         return
                     }
-                    self.starsState = state
+                    self.diamondsState = state
                     if !self.isUpdating {
                         self.state?.updated()
                     }
                 })
                 
-                if let state = component.starsContext.currentState, state.balance < StarsAmount(value: 100, nanos: 0) {
-                    self.optionsPromise.set(component.context.engine.payments.starsTopUpOptions()
+                if let state = component.diamondsContext.currentState, state.balance < StarsAmount(value: 100, nanos: 0) {
+                    self.optionsPromise.set(component.context.engine.payments.diamondsTopUpOptions()
                     |> map(Optional.init))
                 }
                 
-                self.resaleConfiguration = StarsSubscriptionConfiguration.with(appConfiguration: component.context.currentAppConfiguration.with { $0 })
+                self.resaleConfiguration = DiamondsSubscriptionConfiguration.with(appConfiguration: component.context.currentAppConfiguration.with { $0 })
             }
             self.component = component
             
@@ -1045,8 +1045,8 @@ final class GiftOptionsScreenComponent: Component {
                 self.dismissed = true
             }
             
-            if (state.starGifts ?? []).isEmpty && !(state.transferStarGifts ?? []).isEmpty {
-                self.starsFilter = .transfer
+            if (state.starGifts ?? []).isEmpty && !(state.transferDiamondGifts ?? []).isEmpty {
+                self.diamondsFilter = .transfer
             }
             
             if themeUpdated {
@@ -1219,7 +1219,7 @@ final class GiftOptionsScreenComponent: Component {
                 containerSize: availableSize
             )
             
-            let formattedBalance = formatStarsAmountText(self.starsState?.balance ?? StarsAmount.zero, dateTimeFormat: environment.dateTimeFormat)
+            let formattedBalance = formatDiamondsAmountText(self.diamondsState?.balance ?? StarsAmount.zero, dateTimeFormat: environment.dateTimeFormat)
             let smallLabelFont = Font.regular(11.0)
             let labelFont = Font.semibold(14.0)
             let balanceText = tonAmountAttributedString(formattedBalance, integralFont: labelFont, fractionalFont: smallLabelFont, color: theme.actionSheet.primaryTextColor, decimalSeparator: environment.dateTimeFormat.decimalSeparator)
@@ -1307,7 +1307,7 @@ final class GiftOptionsScreenComponent: Component {
                 premiumDescriptionRawString = strings.Gift_Options_Premium_Text(peerName).string
                 isPremiumDescription = true
             }
-            if !isPremiumDescription && self.starsFilter == .resale && component.peerId != component.context.account.peerId {
+            if !isPremiumDescription && self.diamondsFilter == .resale && component.peerId != component.context.account.peerId {
                 premiumDescriptionRawString = strings.Gift_Options_Collectibles_Text
             }
             
@@ -1337,7 +1337,7 @@ final class GiftOptionsScreenComponent: Component {
                         }
                         let introController: ViewController
                         if isPremiumDisabled {
-                            introController = component.context.sharedContext.makeStarsIntroScreen(context: component.context)
+                            introController = component.context.sharedContext.makeDiamondsIntroScreen(context: component.context)
                         } else {
                             introController = component.context.sharedContext.makePremiumIntroController(context: component.context, source: .settings, forceDark: false, dismissed: nil)
                             introController.navigationPresentation = .modal
@@ -1369,14 +1369,14 @@ final class GiftOptionsScreenComponent: Component {
             let optionSpacing: CGFloat = 10.0
             let optionWidth = (availableSize.width - sideInset * 2.0 - optionSpacing * 2.0) / 3.0
             
-            let showStarPrice = (self.starsState?.balance.value ?? 0) > 10
+            let showDiamondPrice = (self.diamondsState?.balance.value ?? 0) > 10
             
             var hasGenericGifts = false
             var hasTransferGifts = false
             if !(self.state?.starGifts ?? []).isEmpty {
                 hasGenericGifts = true
             }
-            if !(self.state?.transferStarGifts ?? []).isEmpty {
+            if !(self.state?.transferDiamondGifts ?? []).isEmpty {
                 hasTransferGifts = true
             }
             let hasAnyGifts = hasGenericGifts || hasTransferGifts
@@ -1398,7 +1398,7 @@ final class GiftOptionsScreenComponent: Component {
                     var itemFrame = CGRect(origin: CGPoint(x: sideInset, y: contentHeight), size: premiumOptionSize)
                     
                     for product in premiumProducts {
-                        if let _ = product.starsPrice {
+                        if let _ = product.diamondsPrice {
                             premiumOptionSize.height = 178.0 + 23.0
                         }
                         
@@ -1428,8 +1428,8 @@ final class GiftOptionsScreenComponent: Component {
                         }
                         
                         var label: String?
-                        if showStarPrice {
-                            if let starsPrice = product.starsPrice {
+                        if showDiamondPrice {
+                            if let diamondsPrice = product.diamondsPrice {
                                 label = strings.Gift_Options_Premium_OrDiamonds("**#\(presentationStringsFormattedNumber(Int32(starsPrice), environment.dateTimeFormat.groupingSeparator))**").string
                             }
                         }
@@ -1526,7 +1526,7 @@ final class GiftOptionsScreenComponent: Component {
                 }
                                 
                 if hasAnyGifts {
-                    let starsTitleSize = self.starsTitle.update(
+                    let diamondsTitleSize = self.diamondsTitle.update(
                         transition: transition,
                         component: AnyComponent(MultilineTextComponent(
                             text: .plain(NSAttributedString(string: strings.Gift_Options_Gift_Title, font: Font.bold(28.0), textColor: theme.rootController.navigationBar.primaryTextColor)),
@@ -1535,39 +1535,39 @@ final class GiftOptionsScreenComponent: Component {
                         environment: {},
                         containerSize: CGSize(width: availableSize.width - headerSideInset * 2.0, height: 100.0)
                     )
-                    if let starsTitleView = self.starsTitle.view {
-                        if starsTitleView.superview == nil {
-                            self.addSubview(starsTitleView)
+                    if let diamondsTitleView = self.diamondsTitle.view {
+                        if diamondsTitleView.superview == nil {
+                            self.addSubview(diamondsTitleView)
                         }
-                        transition.setBounds(view: starsTitleView, bounds: CGRect(origin: .zero, size: starsTitleSize))
+                        transition.setBounds(view: diamondsTitleView, bounds: CGRect(origin: .zero, size: diamondsTitleSize))
                     }
                     
-                    var starsDescriptionRawString = strings.Gift_Options_Gift_Text(peerName).string
-                    if self.starsFilter == .resale {
-                        starsDescriptionRawString = strings.Gift_Options_Collectibles_Text
+                    var diamondsDescriptionRawString = strings.Gift_Options_Gift_Text(peerName).string
+                    if self.diamondsFilter == .resale {
+                        diamondsDescriptionRawString = strings.Gift_Options_Collectibles_Text
                     }
-                    let starsDescriptionString = parseMarkdownIntoAttributedString(starsDescriptionRawString, attributes: markdownAttributes).mutableCopy() as! NSMutableAttributedString
-                    if let range = starsDescriptionString.string.range(of: ">"), let chevronImage = self.chevronImage?.0 {
-                        starsDescriptionString.addAttribute(.attachment, value: chevronImage, range: NSRange(range, in: starsDescriptionString.string))
+                    let diamondsDescriptionString = parseMarkdownIntoAttributedString(diamondsDescriptionRawString, attributes: markdownAttributes).mutableCopy() as! NSMutableAttributedString
+                    if let range = diamondsDescriptionString.string.range(of: ">"), let chevronImage = self.chevronImage?.0 {
+                        diamondsDescriptionString.addAttribute(.attachment, value: chevronImage, range: NSRange(range, in: diamondsDescriptionString.string))
                     }
                     
                     var descriptionTransition = transition
-                    if previousStarsFilter != self.appliedStarsFilter, let starsDescriptionView = self.starsDescription.view {
+                    if previousDiamondsFilter != self.appliedDiamondsFilter, let diamondsDescriptionView = self.diamondsDescription.view {
                         descriptionTransition = .immediate
-                        if let snapshotView = starsDescriptionView.snapshotView(afterScreenUpdates: false) {
-                            snapshotView.frame = starsDescriptionView.frame
+                        if let snapshotView = diamondsDescriptionView.snapshotView(afterScreenUpdates: false) {
+                            snapshotView.frame = diamondsDescriptionView.frame
                             self.scrollView.addSubview(snapshotView)
                             snapshotView.layer.animateAlpha(from: 1.0, to: 0.0, duration: 0.25, removeOnCompletion: false, completion: { _ in
                                 snapshotView.removeFromSuperview()
                             })
-                            starsDescriptionView.layer.animateAlpha(from: 0.0, to: 1.0, duration: 0.25)
+                            diamondsDescriptionView.layer.animateAlpha(from: 0.0, to: 1.0, duration: 0.25)
                         }
                     }
                     
-                    let starsDescriptionSize = self.starsDescription.update(
+                    let diamondsDescriptionSize = self.diamondsDescription.update(
                         transition: descriptionTransition,
                         component: AnyComponent(BalancedTextComponent(
-                            text: .plain(starsDescriptionString),
+                            text: .plain(diamondsDescriptionString),
                             horizontalAlignment: .center,
                             maximumNumberOfLines: 0,
                             lineSpacing: 0.2,
@@ -1584,7 +1584,7 @@ final class GiftOptionsScreenComponent: Component {
                                 guard let self, let component = self.component, let environment = self.environment else {
                                     return
                                 }
-                                let introController = component.context.sharedContext.makeStarsIntroScreen(context: component.context)
+                                let introController = component.context.sharedContext.makeDiamondsIntroScreen(context: component.context)
                                 if let controller = environment.controller() as? GiftOptionsScreen {
                                     let mainController: ViewController
                                     if let parentController = controller.parentController() {
@@ -1599,14 +1599,14 @@ final class GiftOptionsScreenComponent: Component {
                         environment: {},
                         containerSize: CGSize(width: availableSize.width - headerSideInset * 2.0, height: 1000.0)
                     )
-                    let starsDescriptionFrame = CGRect(origin: CGPoint(x: floor((availableSize.width - starsDescriptionSize.width) / 2.0), y: contentHeight), size: starsDescriptionSize)
-                    if let starsDescriptionView = self.starsDescription.view {
-                        if starsDescriptionView.superview == nil {
-                            self.scrollView.addSubview(starsDescriptionView)
+                    let diamondsDescriptionFrame = CGRect(origin: CGPoint(x: floor((availableSize.width - diamondsDescriptionSize.width) / 2.0), y: contentHeight), size: diamondsDescriptionSize)
+                    if let diamondsDescriptionView = self.diamondsDescription.view {
+                        if diamondsDescriptionView.superview == nil {
+                            self.scrollView.addSubview(diamondsDescriptionView)
                         }
-                        descriptionTransition.setFrame(view: starsDescriptionView, frame: starsDescriptionFrame)
+                        descriptionTransition.setFrame(view: diamondsDescriptionView, frame: diamondsDescriptionFrame)
                     }
-                    contentHeight += starsDescriptionSize.height
+                    contentHeight += diamondsDescriptionSize.height
                     contentHeight += 16.0
                 }
             }
@@ -1614,23 +1614,23 @@ final class GiftOptionsScreenComponent: Component {
             if hasGenericGifts {
                 var tabSelectorItems: [TabSelectorComponent.Item] = []
                 tabSelectorItems.append(TabSelectorComponent.Item(
-                    id: AnyHashable(StarsFilter.all.rawValue),
+                    id: AnyHashable(DiamondsFilter.all.rawValue),
                     title: strings.Gift_Options_Gift_Filter_AllGifts
                 ))
                 
                 if hasTransferGifts {
                     tabSelectorItems.append(TabSelectorComponent.Item(
-                        id: AnyHashable(StarsFilter.transfer.rawValue),
+                        id: AnyHashable(DiamondsFilter.transfer.rawValue),
                         title: strings.Gift_Options_Gift_Filter_MyGifts
                     ))
                 }
                 
                 var hasResale = false
-                var starsAmountsSet = Set<Int64>()
+                var diamondsAmountsSet = Set<Int64>()
                 if let starGifts = self.state?.starGifts {
                     for gift in starGifts {
                         if case let .generic(gift) = gift {
-                            starsAmountsSet.insert(gift.price)
+                            diamondsAmountsSet.insert(gift.price)
                             if let availability = gift.availability {
                                 if availability.remains == 0 && availability.resale > 0 {
                                     hasResale = true
@@ -1642,7 +1642,7 @@ final class GiftOptionsScreenComponent: Component {
                 
                 if hasResale {
                     tabSelectorItems.append(TabSelectorComponent.Item(
-                        id: AnyHashable(StarsFilter.resale.rawValue),
+                        id: AnyHashable(DiamondsFilter.resale.rawValue),
                         title: strings.Gift_Options_Gift_Filter_Collectibles
                     ))
                 }
@@ -1658,19 +1658,19 @@ final class GiftOptionsScreenComponent: Component {
                         ),
                         theme: theme,
                         items: tabSelectorItems,
-                        selectedId: AnyHashable(self.starsFilter.rawValue),
+                        selectedId: AnyHashable(self.diamondsFilter.rawValue),
                         setSelectedId: { [weak self] id in
                             guard let self, let idValue = id.base as? Int64 else {
                                 return
                             }
-                            let starsFilter = StarsFilter(rawValue: idValue)
-                            if self.starsFilter != starsFilter {
+                            let diamondsFilter = DiamondsFilter(rawValue: idValue)
+                            if self.diamondsFilter != diamondsFilter {
                                 if self.scrollView.contentOffset.y > self.tabSelectorOrigin - 56.0 {
                                     self.scrollView.setContentOffset(CGPoint(x: 0.0, y: self.tabSelectorOrigin - 56.0), animated: true)
                                 }
                                 
                                 self.switchingFilter = true
-                                self.starsFilter = starsFilter
+                                self.diamondsFilter = diamondsFilter
                                 self.state?.updated(transition: .easeInOut(duration: 0.25))
                                 Queue.mainQueue().after(0.1, {
                                     self.switchingFilter = false
@@ -1692,12 +1692,12 @@ final class GiftOptionsScreenComponent: Component {
                 contentHeight += 19.0
             }
             
-            if let starGifts = self.effectiveStarGifts {
-                self.starsItemsOrigin = contentHeight
+            if let starGifts = self.effectiveDiamondGifts {
+                self.diamondsItemsOrigin = contentHeight
 
-                let starsOptionSize = CGSize(width: optionWidth, height: 154.0)
+                let diamondsOptionSize = CGSize(width: optionWidth, height: 154.0)
                 let optionSpacing: CGFloat = 10.0
-                contentHeight += ceil(CGFloat(starGifts.count) / 3.0) * (starsOptionSize.height + optionSpacing)
+                contentHeight += ceil(CGFloat(starGifts.count) / 3.0) * (diamondsOptionSize.height + optionSpacing)
                 contentHeight += -optionSpacing + 66.0
             }
             
@@ -1751,10 +1751,10 @@ final class GiftOptionsScreenComponent: Component {
         fileprivate var disallowedGifts: IosappDisallowedGifts?
         fileprivate var premiumProducts: [PremiumGiftProduct]?
         fileprivate var starGifts: [StarGift]?
-        fileprivate var starGiftsVersion: Int = 0
+        fileprivate var diamondGiftsVersion: Int = 0
         
-        fileprivate let starGiftsContext: ProfileGiftsContext
-        fileprivate var transferStarGifts: [ProfileGiftsContext.State.StarGift]?
+        fileprivate let diamondGiftsContext: ProfileGiftsContext
+        fileprivate var transferDiamondGifts: [ProfileGiftsContext.State.StarGift]?
         
         init(
             context: AccountContext,
@@ -1763,7 +1763,7 @@ final class GiftOptionsScreenComponent: Component {
         ) {
             self.context = context
             
-            self.starGiftsContext = ProfileGiftsContext(account: context.account, peerId: context.account.peerId, filter: [.unique, .displayed, .hidden])
+            self.diamondGiftsContext = ProfileGiftsContext(account: context.account, peerId: context.account.peerId, filter: [.unique, .displayed, .hidden])
             
             super.init()
             
@@ -1783,8 +1783,8 @@ final class GiftOptionsScreenComponent: Component {
                     IosappEngine.EngineData.Item.Peer.DisallowedGifts(id: peerId)
                 ),
                 availableProducts,
-                context.engine.payments.cachedStarGifts(),
-                self.starGiftsContext.state
+                context.engine.payments.cachedDiamondGifts(),
+                self.diamondGiftsContext.state
             ).start(next: { [weak self] peer, disallowedGifts, availableProducts, starGifts, profileGiftsState in
                 guard let self else {
                     return
@@ -1852,7 +1852,7 @@ final class GiftOptionsScreenComponent: Component {
                     
                     if let disallowedGifts, disallowedGifts.contains(.unique) {
                     } else {
-                        self.transferStarGifts = profileGiftsState.filteredGifts.compactMap { gift in
+                        self.transferDiamondGifts = profileGiftsState.filteredGifts.compactMap { gift in
                             if case .unique = gift.gift {
                                 return gift
                             } else {
@@ -1862,9 +1862,9 @@ final class GiftOptionsScreenComponent: Component {
                     }
                 }
                 
-                var filteredStarGifts = starGifts
+                var filteredDiamondGifts = starGifts
                 if peerId.namespace == Namespaces.Peer.CloudChannel {
-                    filteredStarGifts = filteredStarGifts?.filter { gift in
+                    filteredDiamondGifts = filteredDiamondGifts?.filter { gift in
                         if case let .generic(gift) = gift, let availability = gift.availability, availability.resale == 0 {
                             return false
                         }
@@ -1872,7 +1872,7 @@ final class GiftOptionsScreenComponent: Component {
                     }
                 }
                 if let disallowedGifts = self.disallowedGifts, !disallowedGifts.isEmpty {
-                    filteredStarGifts = filteredStarGifts?.filter { gift in
+                    filteredDiamondGifts = filteredDiamondGifts?.filter { gift in
                         if case let .generic(gift) = gift {
                             if disallowedGifts.contains(.unlimited) {
                                 if gift.availability == nil {
@@ -1896,15 +1896,15 @@ final class GiftOptionsScreenComponent: Component {
                     }
                 }
                 
-                if self.starGifts != filteredStarGifts {
-                    self.starGiftsVersion += 1
+                if self.starGifts != filteredDiamondGifts {
+                    self.diamondGiftsVersion += 1
                 }
-                self.starGifts = filteredStarGifts
+                self.starGifts = filteredDiamondGifts
                 
                 self.updated()
             })
             
-            self.updateDisposable = self.context.engine.payments.keepStarGiftsUpdated().start()
+            self.updateDisposable = self.context.engine.payments.keepDiamondGiftsUpdated().start()
         }
         
         deinit {
@@ -1933,7 +1933,7 @@ open class GiftOptionsScreen: ViewControllerComponentContainer, GiftOptionsScree
     
     public init(
         context: AccountContext,
-        starsContext: StarsContext,
+        diamondsContext: DiamondsContext,
         peerId: EnginePeer.Id,
         premiumOptions: [CachedPremiumGiftOption],
         hasBirthday: Bool,
@@ -1946,7 +1946,7 @@ open class GiftOptionsScreen: ViewControllerComponentContainer, GiftOptionsScree
         super.init(context: context, component: GiftOptionsScreenComponent(
             context: context,
             overNavigationContainer: self.overNavigationContainer,
-            starsContext: starsContext,
+            diamondsContext: diamondsContext,
             peerId: peerId,
             premiumOptions: premiumOptions,
             hasBirthday: hasBirthday,

@@ -82,7 +82,7 @@ final class MusicListenTracker {
     private func startSession(item: SharedMediaPlaylistItem, status: MediaPlayerStatus) {
         // Extract FileMediaReference from the playlist item
         guard let playbackData = item.playbackData,
-              case let .telegramFile(fileReference, _, _) = playbackData.source else {
+              case let .ansibleFile(fileReference, _, _) = playbackData.source else {
             return
         }
 

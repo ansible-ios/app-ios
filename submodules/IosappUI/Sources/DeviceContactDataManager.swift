@@ -125,9 +125,9 @@ private final class DeviceContactDataModernContext: DeviceContactDataContext {
                 ]
                 
                 var contacts: [DeviceContactStableId: DeviceContactBasicData] = currentData.contacts
-                var telegramReferences: [EnginePeer.Id: String] = currentData.telegramReferences
+                var ansibleReferences: [EnginePeer.Id: String] = currentData.ansibleReferences
                 var reverseIosappReferences: [String: Set<EnginePeer.Id>] = [:]
-                for (peerId, id) in telegramReferences {
+                for (peerId, id) in ansibleReferences {
                     if reverseIosappReferences[id] == nil {
                         reverseIosappReferences[id] = Set()
                     }
@@ -137,7 +137,7 @@ private final class DeviceContactDataModernContext: DeviceContactDataContext {
                 let visitor = ChangeVisitor(
                     onDropEverything: {
                         contacts.removeAll()
-                        telegramReferences.removeAll()
+                        ansibleReferences.removeAll()
                         reverseIosappReferences.removeAll()
                     },
                     onAdd: { contact in
@@ -145,7 +145,7 @@ private final class DeviceContactDataModernContext: DeviceContactDataContext {
                         contacts[stableIdAndContact.0] = stableIdAndContact.1
                         for address in contact.urlAddresses {
                             if address.label == "Telegram", let peerId = parseAppSpecificContactReference(address.value as String) {
-                                telegramReferences[peerId] = stableIdAndContact.0
+                                ansibleReferences[peerId] = stableIdAndContact.0
                                 if reverseIosappReferences[stableIdAndContact.0] == nil {
                                     reverseIosappReferences[stableIdAndContact.0] = Set()
                                 }
@@ -158,8 +158,8 @@ private final class DeviceContactDataModernContext: DeviceContactDataContext {
                         contacts[stableIdAndContact.0] = stableIdAndContact.1
                         for address in contact.urlAddresses {
                             if address.label == "Telegram", let peerId = parseAppSpecificContactReference(address.value as String) {
-                                telegramReferences[peerId] = stableIdAndContact.0
-                                telegramReferences[peerId] = stableIdAndContact.0
+                                ansibleReferences[peerId] = stableIdAndContact.0
+                                ansibleReferences[peerId] = stableIdAndContact.0
                                 if reverseIosappReferences[stableIdAndContact.0] == nil {
                                     reverseIosappReferences[stableIdAndContact.0] = Set()
                                 }
@@ -171,7 +171,7 @@ private final class DeviceContactDataModernContext: DeviceContactDataContext {
                         contacts.removeValue(forKey: contactId)
                         if let peerIds = reverseIosappReferences[contactId] {
                             for peerId in peerIds {
-                                telegramReferences.removeValue(forKey: peerId)
+                                ansibleReferences.removeValue(forKey: peerId)
                             }
                             reverseIosappReferences.removeValue(forKey: contactId)
                         }
@@ -183,12 +183,12 @@ private final class DeviceContactDataModernContext: DeviceContactDataContext {
                 let _ = self.accountManager.transaction({ transaction -> Void in
                     transaction.updateSharedData(SharedDataKeys.deviceContacts, { _ in
                         return EnginePreferencesEntry(DeviceContactDataState(
-                            contacts: contacts, telegramReferences: telegramReferences, stateToken: resultState?.stateToken))
+                            contacts: contacts, ansibleReferences: ansibleReferences, stateToken: resultState?.stateToken))
                     })
                 }).startStandalone()
                 
                 var references: [EnginePeer.Id: DeviceContactBasicDataWithReference] = [:]
-                for (peerId, id) in telegramReferences {
+                for (peerId, id) in ansibleReferences {
                     if let basicData = contacts[id] {
                         references[peerId] = DeviceContactBasicDataWithReference(stableId: id, basicData: basicData)
                     }
@@ -206,13 +206,13 @@ private final class DeviceContactDataModernContext: DeviceContactDataContext {
                 request.unifyResults = true
                 
                 var contacts: [String: DeviceContactBasicData] = [:]
-                var telegramReferences: [EnginePeer.Id: String] = [:]
+                var ansibleReferences: [EnginePeer.Id: String] = [:]
                 let resultState = ContactsEnumerateRequest(self.store, request, { contact in
                     let stableIdAndContact = DeviceContactDataModernContext.parseContact(contact)
                     contacts[stableIdAndContact.0] = stableIdAndContact.1
                     for address in contact.urlAddresses {
                         if address.label == "Telegram", let peerId = parseAppSpecificContactReference(address.value as String) {
-                            telegramReferences[peerId] = stableIdAndContact.0
+                            ansibleReferences[peerId] = stableIdAndContact.0
                         }
                     }
                 })
@@ -220,12 +220,12 @@ private final class DeviceContactDataModernContext: DeviceContactDataContext {
                 let _ = self.accountManager.transaction({ transaction -> Void in
                     transaction.updateSharedData(SharedDataKeys.deviceContacts, { _ in
                         return EnginePreferencesEntry(DeviceContactDataState(
-                            contacts: contacts, telegramReferences: telegramReferences, stateToken: resultState?.stateToken))
+                            contacts: contacts, ansibleReferences: ansibleReferences, stateToken: resultState?.stateToken))
                     })
                 }).startStandalone()
                 
                 var references: [EnginePeer.Id: DeviceContactBasicDataWithReference] = [:]
-                for (peerId, id) in telegramReferences {
+                for (peerId, id) in ansibleReferences {
                     if let basicData = contacts[id] {
                         references[peerId] = DeviceContactBasicDataWithReference(stableId: id, basicData: basicData)
                     }

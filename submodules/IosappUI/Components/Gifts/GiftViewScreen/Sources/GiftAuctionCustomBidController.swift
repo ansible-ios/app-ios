@@ -9,7 +9,7 @@ import AccountContext
 import UrlEscaping
 import ComponentFlow
 import AlertComponent
-import StarsWithdrawalScreen
+import DiamondsWithdrawalScreen
 
 func giftAuctionCustomBidController(
     context: AccountContext,

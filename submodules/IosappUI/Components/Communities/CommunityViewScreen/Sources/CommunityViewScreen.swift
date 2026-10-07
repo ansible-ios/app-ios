@@ -1197,7 +1197,7 @@ private final class CommunityViewContentComponent: Component {
                 openChatFolderUpdates: {},
                 hideChatFolderUpdates: {},
                 openStories: { _, _ in },
-                openStarsTopup: { _ in },
+                openDiamondsTopup: { _ in },
                 editPeer: { _ in },
                 openWebApp: { _ in },
                 openPhotoSetup: {},

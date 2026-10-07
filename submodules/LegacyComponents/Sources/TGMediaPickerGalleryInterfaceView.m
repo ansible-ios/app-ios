@@ -44,16 +44,16 @@
 #import <LegacyComponents/TGPhotoCaptionInputMixin.h>
 #import <LegacyComponents/TGPhotoPaintStickersContext.h>
 
-static UIView<TGPhotoToolbarViewProtocol> *TGMediaPickerCreatePhotoToolbarView(id<LegacyComponentsContext> context, TGPhotoEditorBackButton backButton, TGPhotoEditorDoneButton doneButton, bool solidBackground, id<TGPhotoPaintStickersContext> stickersContext, bool hasSendStarsButton)
+static UIView<TGPhotoToolbarViewProtocol> *TGMediaPickerCreatePhotoToolbarView(id<LegacyComponentsContext> context, TGPhotoEditorBackButton backButton, TGPhotoEditorDoneButton doneButton, bool solidBackground, id<TGPhotoPaintStickersContext> stickersContext, bool hasSendDiamondsButton)
 {
     if (stickersContext.photoToolbarView != nil)
     {
-        UIView<TGPhotoToolbarViewProtocol> *toolbarView = stickersContext.photoToolbarView(backButton, doneButton, solidBackground, hasSendStarsButton);
+        UIView<TGPhotoToolbarViewProtocol> *toolbarView = stickersContext.photoToolbarView(backButton, doneButton, solidBackground, hasSendDiamondsButton);
         if (toolbarView != nil)
             return toolbarView;
     }
 
-    return [[TGPhotoToolbarView alloc] initWithContext:context backButton:backButton doneButton:doneButton solidBackground:solidBackground stickersContext:hasSendStarsButton ? stickersContext : nil];
+    return [[TGPhotoToolbarView alloc] initWithContext:context backButton:backButton doneButton:doneButton solidBackground:solidBackground stickersContext:hasSendDiamondsButton ? stickersContext : nil];
 }
 
 static TGMediaAsset *TGMediaPickerGalleryLivePhotoAsset(id<TGMediaEditableItem> editableMediaItem)
@@ -486,7 +486,7 @@ static TGMediaLivePhotoMode TGMediaPickerGalleryResolvedLivePhotoMode(NSNumber *
         
         TGPhotoEditorDoneButton doneButton = isScheduledMessages ? TGPhotoEditorDoneButtonSchedule : TGPhotoEditorDoneButtonSend;
         
-        _portraitToolbarView = TGMediaPickerCreatePhotoToolbarView(_context, TGPhotoEditorBackButtonBack, doneButton, false, stickersContext, editingContext.sendPaidMessageStars > 0);
+        _portraitToolbarView = TGMediaPickerCreatePhotoToolbarView(_context, TGPhotoEditorBackButtonBack, doneButton, false, stickersContext, editingContext.sendPaidMessageDiamonds > 0);
         _portraitToolbarView.cancelPressed = toolbarCancelPressed;
         _portraitToolbarView.donePressed = toolbarDonePressed;
         _portraitToolbarView.doneLongPressed = toolbarDoneLongPressed;
@@ -1353,7 +1353,7 @@ static TGMediaLivePhotoMode TGMediaPickerGalleryResolvedLivePhotoMode(NSNumber *
         return;
     
     NSUInteger finalCount = MAX(1, selectedCount);
-    _portraitToolbarView.sendPaidMessageStars = (_editingContext.sendPaidMessageStars * finalCount);
+    _portraitToolbarView.sendPaidMessageDiamonds = (_editingContext.sendPaidMessageDiamonds * finalCount);
     [_portraitToolbarView setNeedsLayout];
     
     if (counterVisible)

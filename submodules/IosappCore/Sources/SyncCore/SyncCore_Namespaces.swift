@@ -99,7 +99,7 @@ public struct Namespaces {
         public static let CloudFeaturedChannelStatusEmoji: Int32 = 27
         public static let CloudDisabledChannelStatusEmoji: Int32 = 28
         public static let CloudDefaultTagReactions: Int32 = 29
-        public static let CloudUniqueStarGifts: Int32 = 30
+        public static let CloudUniqueDiamondGifts: Int32 = 30
         public static let NewBotConnectionReviews: Int32 = 31
     }
     
@@ -138,10 +138,10 @@ public struct Namespaces {
         public static let savedMessageTags: Int8 = 35
         public static let applicationIcons: Int8 = 36
         public static let availableMessageEffects: Int8 = 37
-        public static let cachedStarsRevenueStats: Int8 = 38
+        public static let cachedDiamondsRevenueStats: Int8 = 38
         public static let cachedRevenueStats: Int8 = 39
         public static let recommendedApps: Int8 = 40
-        public static let starsReactionDefaultToPrivate: Int8 = 41
+        public static let diamondsReactionDefaultToPrivate: Int8 = 41
         public static let cachedPremiumGiftCodeOptions: Int8 = 42
         public static let cachedProfileGifts: Int8 = 43
         public static let recommendedBots: Int8 = 44
@@ -209,7 +209,7 @@ public extension PendingMessageActionType {
     static let updateReaction = PendingMessageActionType(rawValue: 1)
     static let sendScheduledMessageImmediately = PendingMessageActionType(rawValue: 2)
     static let readReactionOrPollVote = PendingMessageActionType(rawValue: 3)
-    static let sendStarsReaction = PendingMessageActionType(rawValue: 4)
+    static let sendDiamondsReaction = PendingMessageActionType(rawValue: 4)
     static let sendPostponedPaidMessage = PendingMessageActionType(rawValue: 5)
 }
 

@@ -1274,7 +1274,7 @@ func applyLoadMessageHistoryThreadsResults(accountPeerId: PeerId, transaction: T
             if let data = item.data {
                 info = StoredMessageHistoryThreadInfo(data)
             } else {
-                info = telegramPostboxSeedConfiguration.automaticThreadIndexInfo(result.peerId, item.threadId)
+                info = ansiblePostboxSeedConfiguration.automaticThreadIndexInfo(result.peerId, item.threadId)
             }
             guard let info else {
                 continue

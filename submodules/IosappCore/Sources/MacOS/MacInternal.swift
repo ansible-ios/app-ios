@@ -39,8 +39,8 @@ public func requestUpdatesXml(account: Account, source: String) -> Signal<Data, 
                                     }
                                 }
                                 for user in apiUsers {
-                                    let telegramUser = IosappUser(user: user)
-                                    peers[telegramUser.id] = telegramUser
+                                    let ansibleUser = IosappUser(user: user)
+                                    peers[ansibleUser.id] = ansibleUser
                                 }
                                 
                                 if let message = locallyRenderedMessage(message: storeMessage, peers: peers), let media = message.media.first as? IosappMediaFile {
@@ -109,8 +109,8 @@ public func downloadAppUpdate(account: Account, source: String, messageId: Int32
                                 }
                             }
                             for user in apiUsers {
-                                let telegramUser = IosappUser(user: user)
-                                peers[telegramUser.id] = telegramUser
+                                let ansibleUser = IosappUser(user: user)
+                                peers[ansibleUser.id] = ansibleUser
                             }
 
                             let messageAndFile:(Message, IosappMediaFile)? = apiMessages.compactMap { value in
@@ -206,8 +206,8 @@ public func requestApplicationIcons(engine: IosappEngine, source: String = "maco
                                     }
                                 }
                                 for user in apiUsers {
-                                    let telegramUser = IosappUser(user: user)
-                                    peers[telegramUser.id] = telegramUser
+                                    let ansibleUser = IosappUser(user: user)
+                                    peers[ansibleUser.id] = ansibleUser
                                 }
                                 
                                 if let message = locallyRenderedMessage(message: storeMessage, peers: peers), let media = message.media.first as? IosappMediaFile {

@@ -804,20 +804,20 @@ final class SendInviteLinkScreenComponent: Component {
     let subject: SendInviteLinkScreenSubject
     let peers: [IosappForbiddenInvitePeer]
     let peerPresences: [EnginePeer.Id: EnginePeer.Presence]
-    let sendPaidMessageStars: [EnginePeer.Id: StarsAmount]
+    let sendPaidMessageDiamonds: [EnginePeer.Id: StarsAmount]
     
     init(
         context: AccountContext,
         subject: SendInviteLinkScreenSubject,
         peers: [IosappForbiddenInvitePeer],
         peerPresences: [EnginePeer.Id: EnginePeer.Presence],
-        sendPaidMessageStars: [EnginePeer.Id: StarsAmount]
+        sendPaidMessageDiamonds: [EnginePeer.Id: StarsAmount]
     ) {
         self.context = context
         self.subject = subject
         self.peers = peers
         self.peerPresences = peerPresences
-        self.sendPaidMessageStars = sendPaidMessageStars
+        self.sendPaidMessageDiamonds = sendPaidMessageDiamonds
     }
     
     static func ==(lhs: SendInviteLinkScreenComponent, rhs: SendInviteLinkScreenComponent) -> Bool {
@@ -830,7 +830,7 @@ final class SendInviteLinkScreenComponent: Component {
         if lhs.peerPresences != rhs.peerPresences {
             return false
         }
-        if lhs.sendPaidMessageStars != rhs.sendPaidMessageStars {
+        if lhs.sendPaidMessageDiamonds != rhs.sendPaidMessageDiamonds {
             return false
         }
         return true
@@ -887,14 +887,14 @@ final class SendInviteLinkScreenComponent: Component {
             }
         }
         
-        private func presentPaidMessageAlertIfNeeded(peers: [EngineRenderedPeer], requiresStars: [EnginePeer.Id: StarsAmount], completion: @escaping () -> Void) {
+        private func presentPaidMessageAlertIfNeeded(peers: [EngineRenderedPeer], requiresDiamonds: [EnginePeer.Id: StarsAmount], completion: @escaping () -> Void) {
             guard let component = self.component else {
                 completion()
                 return
             }
             var totalAmount: StarsAmount = .zero
             for peer in peers {
-                if let amount = requiresStars[peer.peerId] {
+                if let amount = requiresDiamonds[peer.peerId] {
                     totalAmount = totalAmount + amount
                 }
             }
@@ -925,7 +925,7 @@ final class SendInviteLinkScreenComponent: Component {
             }
             self.presentPaidMessageAlertIfNeeded(
                 peers: selectedPeers.map { EngineRenderedPeer(peer: $0.peer) },
-                requiresStars: component.sendPaidMessageStars,
+                requiresDiamonds: component.sendPaidMessageDiamonds,
                 completion: { [weak self] in
                     guard let self, let component = self.component, let controller = self.environment?.controller() else {
                         return
@@ -933,8 +933,8 @@ final class SendInviteLinkScreenComponent: Component {
                     
                     for peerId in Array(self.selectedItems) {
                         var messageAttributes: [EngineMessage.Attribute] = []
-                        if let sendPaidMessageStars = component.sendPaidMessageStars[peerId] {
-                            messageAttributes.append(PaidStarsMessageAttribute(stars: sendPaidMessageStars, postponeSending: false))
+                        if let sendPaidMessageDiamonds = component.sendPaidMessageDiamonds[peerId] {
+                            messageAttributes.append(PaidDiamondsMessageAttribute(stars: sendPaidMessageDiamonds, postponeSending: false))
                         }
                         let _ = enqueueMessages(account: component.context.account, peerId: peerId, messages: [.message(text: link, attributes: messageAttributes, inlineStickers: [:], mediaReference: nil, threadId: nil, replyToMessageId: nil, replyToStoryId: nil, localGroupingKey: nil, correlationId: nil, bubbleUpEmojiOrStickersets: [])]).startStandalone()
                     }
@@ -1188,7 +1188,7 @@ public class SendInviteLinkScreen: ViewControllerComponentContainer {
                 subject: subject,
                 peers: peers,
                 peerPresences: [:],
-                sendPaidMessageStars: [:]
+                sendPaidMessageDiamonds: [:]
             ),
             navigationBarAppearance: .none,
             theme: theme.flatMap { .custom($0) } ?? .default
@@ -1203,10 +1203,10 @@ public class SendInviteLinkScreen: ViewControllerComponentContainer {
                 peers.map(\.peer.id).map(IosappEngine.EngineData.Item.Peer.Presence.init(id:))
             ),
             EngineDataMap(
-                peers.map(\.peer.id).map(IosappEngine.EngineData.Item.Peer.SendPaidMessageStars.init(id:))
+                peers.map(\.peer.id).map(IosappEngine.EngineData.Item.Peer.SendPaidMessageDiamonds.init(id:))
             )
         )
-        |> deliverOnMainQueue).start(next: { [weak self] presences, sendPaidMessageStars in
+        |> deliverOnMainQueue).start(next: { [weak self] presences, sendPaidMessageDiamonds in
             guard let self else {
                 return
             }
@@ -1216,10 +1216,10 @@ public class SendInviteLinkScreen: ViewControllerComponentContainer {
                     parsedPresences[id] = presence
                 }
             }
-            var parsedSendPaidMessageStars: [EnginePeer.Id: StarsAmount] = [:]
-            for (id, sendPaidMessageStars) in sendPaidMessageStars {
-                if let sendPaidMessageStars {
-                    parsedSendPaidMessageStars[id] = sendPaidMessageStars
+            var parsedSendPaidMessageDiamonds: [EnginePeer.Id: StarsAmount] = [:]
+            for (id, sendPaidMessageDiamonds) in sendPaidMessageDiamonds {
+                if let sendPaidMessageDiamonds {
+                    parsedSendPaidMessageDiamonds[id] = sendPaidMessageDiamonds
                 }
             }
             self.updateComponent(
@@ -1228,7 +1228,7 @@ public class SendInviteLinkScreen: ViewControllerComponentContainer {
                     subject: subject,
                     peers: peers,
                     peerPresences: parsedPresences,
-                    sendPaidMessageStars: parsedSendPaidMessageStars
+                    sendPaidMessageDiamonds: parsedSendPaidMessageDiamonds
                 )),
                 transition: .immediate
             )

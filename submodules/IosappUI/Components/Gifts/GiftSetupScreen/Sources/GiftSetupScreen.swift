@@ -110,7 +110,7 @@ private final class GiftSetupScreenComponent: Component {
         private let resaleSection = ComponentView<Empty>()
         private let introContent = ComponentView<Empty>()
         private let introSection = ComponentView<Empty>()
-        private let starsSection = ComponentView<Empty>()
+        private let diamondsSection = ComponentView<Empty>()
         private let upgradeSection = ComponentView<Empty>()
         private let hideSection = ComponentView<Empty>()
         
@@ -144,29 +144,29 @@ private final class GiftSetupScreenComponent: Component {
         
         private var hideName = false
         private var includeUpgrade = false
-        private var payWithStars = false
+        private var payWithDiamonds = false
         
         private var inProgress = false
                         
         private var peerMap: [EnginePeer.Id: EnginePeer] = [:]
-        private var sendPaidMessageStars: StarsAmount?
+        private var sendPaidMessageDiamonds: StarsAmount?
                 
         private var giftAuction: GiftAuctionContext?
         private var giftAuctionState: GiftAuctionContext.State?
         private var giftAuctionDisposable: Disposable?
         private var giftAuctionTimer: SwiftSignalKit.Timer?
 
-        private var cachedStarImage: (UIImage, PresentationTheme)?
+        private var cachedDiamondImage: (UIImage, PresentationTheme)?
         
         private var updateDisposable: Disposable?
         
         private var optionsDisposable: Disposable?
-        private(set) var options: [StarsTopUpOption] = [] {
+        private(set) var options: [DiamondsTopUpOption] = [] {
             didSet {
                 self.optionsPromise.set(self.options)
             }
         }
-        private let optionsPromise = ValuePromise<[StarsTopUpOption]?>(nil)
+        private let optionsPromise = ValuePromise<[DiamondsTopUpOption]?>(nil)
         private let previewPromise = Promise<StarGiftUpgradePreview?>(nil)
         
         private var cachedChevronImage: (UIImage, PresentationTheme)?
@@ -335,22 +335,22 @@ private final class GiftSetupScreenComponent: Component {
                         
             switch component.subject {
             case let .premium(product):
-                if self.payWithStars, let starsPrice = product.starsPrice, let peer = self.peerMap[component.peerId] {
-                    if let balance = component.context.starsContext?.currentState?.balance, balance.value < starsPrice {
-                        self.proceedWithStarGift()
+                if self.payWithDiamonds, let diamondsPrice = product.diamondsPrice, let peer = self.peerMap[component.peerId] {
+                    if let balance = component.context.diamondsContext?.currentState?.balance, balance.value < diamondsPrice {
+                        self.proceedWithDiamondGift()
                     } else {
                         let controller = textAlertController(
                             context: component.context,
                             title: environment.strings.Gift_Send_Premium_Confirmation_Title,
                             text: environment.strings.Gift_Send_Premium_Confirmation_Text(
                                 peer.compactDisplayTitle,
-                                environment.strings.Gift_Send_Premium_Confirmation_Text_Diamonds(Int32(clamping: starsPrice))
+                                environment.strings.Gift_Send_Premium_Confirmation_Text_Diamonds(Int32(clamping: diamondsPrice))
                             ).string,
                             actions: [
                                 TextAlertAction(type: .genericAction, title: environment.strings.Common_Cancel, action: {}),
                                 TextAlertAction(type: .defaultAction, title: environment.strings.Gift_Send_Premium_Confirmation_Confirm, action: { [weak self] in
                                     if let self {
-                                        self.proceedWithStarGift()
+                                        self.proceedWithDiamondGift()
                                     }
                                 })
                             ],
@@ -362,7 +362,7 @@ private final class GiftSetupScreenComponent: Component {
                     self.proceedWithPremiumGift()
                 }
             case .starGift:
-                self.proceedWithStarGift()
+                self.proceedWithDiamondGift()
             }
         }
         
@@ -463,8 +463,8 @@ private final class GiftSetupScreenComponent: Component {
             })
         }
         
-        private func proceedWithStarGift() {
-            guard let component = self.component, let environment = self.environment, let starsContext = component.context.starsContext, let starsState = starsContext.currentState else {
+        private func proceedWithDiamondGift() {
+            guard let component = self.component, let environment = self.environment, let diamondsContext = component.context.diamondsContext, let diamondsState = diamondsContext.currentState else {
                 return
             }
             
@@ -529,16 +529,16 @@ private final class GiftSetupScreenComponent: Component {
                 let signal = BotCheckoutController.InputData.fetch(context: component.context, source: source)
                 |> `catch` { error -> Signal<BotCheckoutController.InputData, SendBotPaymentFormError> in
                     switch error {
-                    case .disallowedStarGifts:
-                        return .fail(.disallowedStarGift)
-                    case .starGiftsUserLimit:
-                        return .fail(.starGiftUserLimit)
+                    case .disallowedDiamondGifts:
+                        return .fail(.disallowedDiamondGift)
+                    case .diamondGiftsUserLimit:
+                        return .fail(.diamondGiftUserLimit)
                     default:
                         return .fail(.generic)
                     }
                 }
                 |> mapToSignal { inputData -> Signal<SendBotPaymentResult, SendBotPaymentFormError> in
-                    return component.context.engine.payments.sendStarsPaymentForm(formId: inputData.form.id, source: source)
+                    return component.context.engine.payments.sendDiamondsPaymentForm(formId: inputData.form.id, source: source)
                 }
                 |> deliverOnMainQueue
                                 
@@ -623,7 +623,7 @@ private final class GiftSetupScreenComponent: Component {
                     }
                     
                     Queue.mainQueue().after(2.5) {
-                        starsContext.load(force: true)
+                        diamondsContext.load(force: true)
                     }
                 }, error: { [weak self] error in
                     guard let self, let controller = self.environment?.controller() else {
@@ -635,7 +635,7 @@ private final class GiftSetupScreenComponent: Component {
                     
                     var errorText: String?
                     switch error {
-                    case .starGiftUserLimit:
+                    case .diamondGiftUserLimit:
                         if let perUserLimit, let giftFile {
                             let text = presentationData.strings.Gift_Options_Gift_BuyLimitReached(perUserLimit)
                             let undoController = UndoOverlayController(
@@ -648,9 +648,9 @@ private final class GiftSetupScreenComponent: Component {
                             return
                         }
                         return
-                    case .starGiftOutOfStock:
+                    case .diamondGiftOutOfStock:
                         errorText = presentationData.strings.Gift_Send_ErrorOutOfStock
-                    case .disallowedStarGift:
+                    case .disallowedDiamondGift:
                         errorText = presentationData.strings.Gift_Send_ErrorDisallowed(self.peerMap[peerId]?.compactDisplayTitle ?? "").string
                     default:
                         errorText = presentationData.strings.Gift_Send_ErrorUnknown
@@ -663,7 +663,7 @@ private final class GiftSetupScreenComponent: Component {
                 })
             }
             
-            if starsState.balance < StarsAmount(value: finalPrice, nanos: 0) {
+            if diamondsState.balance < StarsAmount(value: finalPrice, nanos: 0) {
                 let _ = (self.optionsPromise.get()
                 |> filter { $0 != nil }
                 |> take(1)
@@ -671,22 +671,22 @@ private final class GiftSetupScreenComponent: Component {
                     guard let self, let component = self.component, let controller = self.environment?.controller() else {
                         return
                     }
-                    let purchaseController = component.context.sharedContext.makeStarsPurchaseScreen(
+                    let purchaseController = component.context.sharedContext.makeDiamondsPurchaseScreen(
                         context: component.context,
-                        starsContext: starsContext,
+                        diamondsContext: diamondsContext,
                         options: options ?? [],
-                        purpose: .starGift(peerId: component.peerId, requiredStars: finalPrice),
+                        purpose: .starGift(peerId: component.peerId, requiredDiamonds: finalPrice),
                         targetPeerId: nil,
                         customTheme: nil,
-                        completion: { [weak self, weak starsContext] stars in
-                            guard let self, let starsContext else {
+                        completion: { [weak self, weak diamondsContext] stars in
+                            guard let self, let diamondsContext else {
                                 return
                             }
                             self.inProgress = true
                             self.state?.updated()
                             
-                            starsContext.add(balance: StarsAmount(value: stars, nanos: 0))
-                            let _ = (starsContext.onUpdate
+                            diamondsContext.add(balance: StarsAmount(value: stars, nanos: 0))
+                            let _ = (diamondsContext.onUpdate
                             |> deliverOnMainQueue).start(next: {
                                 proceed()
                             })
@@ -955,9 +955,9 @@ private final class GiftSetupScreenComponent: Component {
                         }
                     )),
                     component.context.engine.data.get(
-                        IosappEngine.EngineData.Item.Peer.SendPaidMessageStars(id: component.peerId)
+                        IosappEngine.EngineData.Item.Peer.SendPaidMessageDiamonds(id: component.peerId)
                     )
-                ).start(next: { [weak self] peers, sendPaidMessageStars in
+                ).start(next: { [weak self] peers, sendPaidMessageDiamonds in
                     guard let self else {
                         return
                     }
@@ -968,7 +968,7 @@ private final class GiftSetupScreenComponent: Component {
                         }
                     }
                     self.peerMap = peersMap
-                    self.sendPaidMessageStars = sendPaidMessageStars
+                    self.sendPaidMessageDiamonds = sendPaidMessageDiamonds
                     
                     self.state?.updated()
                 })
@@ -1070,7 +1070,7 @@ private final class GiftSetupScreenComponent: Component {
                     }
                 )
                 
-                self.optionsDisposable = (component.context.engine.payments.starsTopUpOptions()
+                self.optionsDisposable = (component.context.engine.payments.diamondsTopUpOptions()
                 |> deliverOnMainQueue).start(next: { [weak self] options in
                     guard let self else {
                         return
@@ -1085,7 +1085,7 @@ private final class GiftSetupScreenComponent: Component {
                         )
                     }
                     
-                    self.updateDisposable = component.context.engine.payments.keepStarGiftsUpdated().start()
+                    self.updateDisposable = component.context.engine.payments.keepDiamondGiftsUpdated().start()
                 }
             }
             
@@ -1247,7 +1247,7 @@ private final class GiftSetupScreenComponent: Component {
             if let accountPeer = self.peerMap[component.context.account.peerId] {
                 var inputPanelSize = CGSize()
                 let inputPanelInset: CGFloat = 16.0
-                if self.sendPaidMessageStars == nil {
+                if self.sendPaidMessageDiamonds == nil {
                     let nextInputMode: MessageInputPanelComponent.InputMode
                     switch self.currentInputMode {
                     case .text:
@@ -1268,7 +1268,7 @@ private final class GiftSetupScreenComponent: Component {
                             strings: environment.strings,
                             style: .gift,
                             placeholder: .plain(environment.strings.Gift_Send_Customize_MessagePlaceholder),
-                            sendPaidMessageStars: nil,
+                            sendPaidMessageDiamonds: nil,
                             maxLength: Int(giftConfiguration.maxCaptionLength),
                             queryTypes: [],
                             alwaysDarkWhenHasText: false,
@@ -1358,8 +1358,8 @@ private final class GiftSetupScreenComponent: Component {
                 var releasedBy: EnginePeer.Id?
                 switch component.subject {
                 case let .premium(product):
-                    if self.payWithStars, let starsPrice = product.starsPrice {
-                        subject = .premium(months: product.months, amount: starsPrice, currency: "XTR")
+                    if self.payWithDiamonds, let diamondsPrice = product.diamondsPrice {
+                        subject = .premium(months: product.months, amount: diamondsPrice, currency: "XTR")
                     } else {
                         let (currency, amount) = product.storeProduct?.priceCurrencyAndAmount ?? ("USD", 1)
                         subject = .premium(months: product.months, amount: amount, currency: currency)
@@ -1407,7 +1407,7 @@ private final class GiftSetupScreenComponent: Component {
                                 text: textInputText.string,
                                 entities: generateChatInputTextEntities(textInputText),
                                 upgradeStars: self.includeUpgrade ? upgradeStars : nil,
-                                chargeStars: nil,
+                                chargeDiamonds: nil,
                                 bottomInset: max(0.0, inputBottomInset)
                             ),
                             params: listItemParams
@@ -1505,32 +1505,32 @@ private final class GiftSetupScreenComponent: Component {
             
             switch component.subject {
             case let .premium(product):
-                let balance = component.context.starsContext?.currentState?.balance.value ?? 0
-                if let starsPrice = product.starsPrice { //}, balance >= starsPrice {
+                let balance = component.context.diamondsContext?.currentState?.balance.value ?? 0
+                if let diamondsPrice = product.diamondsPrice { //}, balance >= starsPrice {
                     let balanceString = presentationStringsFormattedNumber(Int32(balance), environment.dateTimeFormat.groupingSeparator)
                     
-                    let starsFooterRawString = environment.strings.Gift_Send_PayWithDiamonds_Info("# \(balanceString)").string
-                    let starsFooterText = NSMutableAttributedString(attributedString: parseMarkdownIntoAttributedString(starsFooterRawString, attributes: footerAttributes))
+                    let diamondsFooterRawString = environment.strings.Gift_Send_PayWithDiamonds_Info("# \(balanceString)").string
+                    let diamondsFooterText = NSMutableAttributedString(attributedString: parseMarkdownIntoAttributedString(diamondsFooterRawString, attributes: footerAttributes))
                     
                     if self.cachedChevronImage == nil || self.cachedChevronImage?.1 !== environment.theme {
                         self.cachedChevronImage = (generateTintedImage(image: UIImage(bundleImageName: "Item List/InlineTextRightArrow"), color: theme.list.itemAccentColor)!, environment.theme)
                     }
-                    if let range = starsFooterText.string.range(of: "#") {
-                        starsFooterText.addAttribute(ChatTextInputAttributes.customEmoji, value: ChatTextInputTextCustomEmojiAttribute(interactivelySelectedFromPackId: nil, fileId: 0, file: nil, custom: .stars(tinted: false)), range: NSRange(range, in: starsFooterText.string))
+                    if let range = diamondsFooterText.string.range(of: "#") {
+                        diamondsFooterText.addAttribute(ChatTextInputAttributes.customEmoji, value: ChatTextInputTextCustomEmojiAttribute(interactivelySelectedFromPackId: nil, fileId: 0, file: nil, custom: .stars(tinted: false)), range: NSRange(range, in: diamondsFooterText.string))
                     }
-                    if let range = starsFooterText.string.range(of: ">"), let chevronImage = self.cachedChevronImage?.0 {
-                        starsFooterText.addAttribute(.attachment, value: chevronImage, range: NSRange(range, in: starsFooterText.string))
+                    if let range = diamondsFooterText.string.range(of: ">"), let chevronImage = self.cachedChevronImage?.0 {
+                        diamondsFooterText.addAttribute(.attachment, value: chevronImage, range: NSRange(range, in: diamondsFooterText.string))
                     }
                     
-                    let priceString = presentationStringsFormattedNumber(Int32(starsPrice), environment.dateTimeFormat.groupingSeparator)
-                    let starsAttributedText = NSMutableAttributedString(string: environment.strings.Gift_Send_PayWithDiamonds("#\(priceString)").string, font: Font.regular(presentationData.listsFontSize.baseDisplaySize), textColor: theme.list.itemPrimaryTextColor)
-                    let range = (starsAttributedText.string as NSString).range(of: "#")
+                    let priceString = presentationStringsFormattedNumber(Int32(diamondsPrice), environment.dateTimeFormat.groupingSeparator)
+                    let diamondsAttributedText = NSMutableAttributedString(string: environment.strings.Gift_Send_PayWithDiamonds("#\(priceString)").string, font: Font.regular(presentationData.listsFontSize.baseDisplaySize), textColor: theme.list.itemPrimaryTextColor)
+                    let range = (diamondsAttributedText.string as NSString).range(of: "#")
                     if range.location != NSNotFound {
-                        starsAttributedText.addAttribute(ChatTextInputAttributes.customEmoji, value: ChatTextInputTextCustomEmojiAttribute(interactivelySelectedFromPackId: nil, fileId: 0, file: nil, custom: .stars(tinted: false)), range: range)
-                        starsAttributedText.addAttribute(.baselineOffset, value: 1.0, range: range)
+                        diamondsAttributedText.addAttribute(ChatTextInputAttributes.customEmoji, value: ChatTextInputTextCustomEmojiAttribute(interactivelySelectedFromPackId: nil, fileId: 0, file: nil, custom: .stars(tinted: false)), range: range)
+                        diamondsAttributedText.addAttribute(.baselineOffset, value: 1.0, range: range)
                     }
                     
-                    let starsSectionSize = self.starsSection.update(
+                    let diamondsSectionSize = self.diamondsSection.update(
                         transition: transition,
                         component: AnyComponent(ListSectionComponent(
                             theme: theme,
@@ -1541,7 +1541,7 @@ private final class GiftSetupScreenComponent: Component {
                                 animationCache: component.context.animationCache,
                                 animationRenderer: component.context.animationRenderer,
                                 placeholderColor: .clear,
-                                text: .plain(starsFooterText),
+                                text: .plain(diamondsFooterText),
                                 maximumNumberOfLines: 0,
                                 highlightColor: theme.list.itemAccentColor.withAlphaComponent(0.1),
                                 highlightInset: UIEdgeInsets(top: 0.0, left: 0.0, bottom: 0.0, right: -8.0),
@@ -1553,15 +1553,15 @@ private final class GiftSetupScreenComponent: Component {
                                     }
                                 },
                                 tapAction: { [weak self] _, _ in
-                                    guard let self, let component = self.component, let controller = self.environment?.controller(), let starsContext = component.context.starsContext else {
+                                    guard let self, let component = self.component, let controller = self.environment?.controller(), let diamondsContext = component.context.diamondsContext else {
                                         return
                                     }
                                     let _ = (self.optionsPromise.get()
                                     |> filter { $0 != nil }
                                     |> take(1)
                                     |> deliverOnMainQueue).startStandalone(next: { options in
-                                        let purchaseController = component.context.sharedContext.makeStarsPurchaseScreen(context: component.context, starsContext: starsContext, options: options ?? [], purpose: .generic, targetPeerId: nil, customTheme: nil, completion: { stars in
-                                            starsContext.add(balance: StarsAmount(value: stars, nanos: 0))
+                                        let purchaseController = component.context.sharedContext.makeDiamondsPurchaseScreen(context: component.context, diamondsContext: diamondsContext, options: options ?? [], purpose: .generic, targetPeerId: nil, customTheme: nil, completion: { stars in
+                                            diamondsContext.add(balance: StarsAmount(value: stars, nanos: 0))
                                         })
                                         controller.push(purchaseController)
                                     })
@@ -1578,15 +1578,15 @@ private final class GiftSetupScreenComponent: Component {
                                                 animationCache: component.context.animationCache,
                                                 animationRenderer: component.context.animationRenderer,
                                                 placeholderColor: theme.list.mediaPlaceholderColor,
-                                                text: .plain(starsAttributedText)
+                                                text: .plain(diamondsAttributedText)
                                             )
                                         )),
                                     ], alignment: .left, spacing: 2.0)),
-                                    accessory: .toggle(ListActionItemComponent.Toggle(style: .regular, isOn: self.payWithStars, action: { [weak self] _ in
+                                    accessory: .toggle(ListActionItemComponent.Toggle(style: .regular, isOn: self.payWithDiamonds, action: { [weak self] _ in
                                         guard let self else {
                                             return
                                         }
-                                        self.payWithStars = !self.payWithStars
+                                        self.payWithDiamonds = !self.payWithDiamonds
                                         self.state?.updated(transition: .spring(duration: 0.4))
                                     })),
                                     action: nil
@@ -1596,14 +1596,14 @@ private final class GiftSetupScreenComponent: Component {
                         environment: {},
                         containerSize: CGSize(width: availableSize.width - sideInset * 2.0, height: 10000.0)
                     )
-                    let starsSectionFrame = CGRect(origin: CGPoint(x: sideInset, y: contentHeight), size: starsSectionSize)
-                    if let starsSectionView = self.starsSection.view {
-                        if starsSectionView.superview == nil {
-                            self.scrollContentView.addSubview(starsSectionView)
+                    let diamondsSectionFrame = CGRect(origin: CGPoint(x: sideInset, y: contentHeight), size: diamondsSectionSize)
+                    if let diamondsSectionView = self.diamondsSection.view {
+                        if diamondsSectionView.superview == nil {
+                            self.scrollContentView.addSubview(diamondsSectionView)
                         }
-                        transition.setFrame(view: starsSectionView, frame: starsSectionFrame)
+                        transition.setFrame(view: diamondsSectionView, frame: diamondsSectionFrame)
                     }
-                    contentHeight += starsSectionSize.height
+                    contentHeight += diamondsSectionSize.height
                     contentHeight += sectionSpacing
                 }
             case let .starGift(gift, forceUnique):
@@ -1868,16 +1868,16 @@ private final class GiftSetupScreenComponent: Component {
             
             initialContentHeight = contentHeight
             
-            if self.cachedStarImage == nil || self.cachedStarImage?.1 !== environment.theme {
-                self.cachedStarImage = (generateTintedImage(image: UIImage(bundleImageName: "Item List/PremiumIcon"), color: .white)!, environment.theme)
+            if self.cachedDiamondImage == nil || self.cachedDiamondImage?.1 !== environment.theme {
+                self.cachedDiamondImage = (generateTintedImage(image: UIImage(bundleImageName: "Item List/PremiumIcon"), color: .white)!, environment.theme)
             }
             
             var buttonIsEnabled = true
             let buttonString: String
             switch component.subject {
             case let .premium(product):
-                if self.payWithStars, let starsPrice = product.starsPrice {
-                    let amountString = presentationStringsFormattedNumber(Int32(starsPrice), presentationData.dateTimeFormat.groupingSeparator)
+                if self.payWithDiamonds, let diamondsPrice = product.diamondsPrice {
+                    let amountString = presentationStringsFormattedNumber(Int32(diamondsPrice), presentationData.dateTimeFormat.groupingSeparator)
                     buttonString = "\(environment.strings.Gift_Send_Send)  # \(amountString)"
                 } else {
                     let amountString = product.price
@@ -1967,8 +1967,8 @@ private final class GiftSetupScreenComponent: Component {
                 )), at: 0)
             } else {
                 let buttonAttributedString = NSMutableAttributedString(string: buttonString, font: Font.semibold(17.0), textColor: theme.list.itemCheckColors.foregroundColor, paragraphAlignment: .center)
-                if let range = buttonAttributedString.string.range(of: "#"), let starImage = self.cachedStarImage?.0 {
-                    buttonAttributedString.addAttribute(.attachment, value: starImage, range: NSRange(range, in: buttonAttributedString.string))
+                if let range = buttonAttributedString.string.range(of: "#"), let diamondImage = self.cachedDiamondImage?.0 {
+                    buttonAttributedString.addAttribute(.attachment, value: diamondImage, range: NSRange(range, in: buttonAttributedString.string))
                     buttonAttributedString.addAttribute(.foregroundColor, value: theme.list.itemCheckColors.foregroundColor, range: NSRange(range, in: buttonAttributedString.string))
                     buttonAttributedString.addAttribute(.baselineOffset, value: 1.5, range: NSRange(range, in: buttonAttributedString.string))
                     buttonAttributedString.addAttribute(.kern, value: 2.0, range: NSRange(range, in: buttonAttributedString.string))
@@ -2212,7 +2212,7 @@ public final class PremiumGiftProduct: Equatable {
         return self.storeProduct?.price ?? formatCurrencyAmount(self.giftOption.amount, currency: self.giftOption.currency)
     }
     
-    public var starsPrice: Int64? {
+    public var diamondsPrice: Int64? {
         return self.starsGiftOption?.amount
     }
     

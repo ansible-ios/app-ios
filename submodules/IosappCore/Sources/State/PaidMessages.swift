@@ -137,7 +137,7 @@ func _internal_reinstateNoPaidMessagesException(account: Account, scopePeerId: P
     }
 }
 
-func _internal_updateChannelPaidMessagesStars(account: Account, peerId: PeerId, stars: StarsAmount?, broadcastMessagesAllowed: Bool) -> Signal<Never, NoError> {
+func _internal_updateChannelPaidMessagesDiamonds(account: Account, peerId: PeerId, stars: StarsAmount?, broadcastMessagesAllowed: Bool) -> Signal<Never, NoError> {
     return account.postbox.transaction { transaction -> Signal<Never, NoError> in
         guard let peer = transaction.getPeer(peerId), let inputChannel = apiInputChannel(peer) else {
             return .complete()
@@ -166,7 +166,7 @@ func _internal_updateChannelPaidMessagesStars(account: Account, peerId: PeerId, 
             
             if let linkedMonoforumId = channel.linkedMonoforumId, let monoforumChannel = transaction.getPeer(linkedMonoforumId) as? IosappChannel {
                 let monoforumChannel = monoforumChannel
-                    .withUpdatedSendPaidMessageStars(stars)
+                    .withUpdatedSendPaidMessageDiamonds(stars)
                 transaction.updatePeersInternal([monoforumChannel], update: { _, channel in
                     return monoforumChannel
                 })
@@ -264,7 +264,7 @@ private final class ManagedApplyPendingPaidMessageActionsHelper {
     }
 }
 
-private func withTakenStarsAction(postbox: Postbox, type: PendingMessageActionType, id: MessageId, _ f: @escaping (Transaction, PendingMessageActionsEntry?) -> Signal<Never, NoError>) -> Signal<Never, NoError> {
+private func withTakenDiamondsAction(postbox: Postbox, type: PendingMessageActionType, id: MessageId, _ f: @escaping (Transaction, PendingMessageActionsEntry?) -> Signal<Never, NoError>) -> Signal<Never, NoError> {
     return postbox.transaction { transaction -> Signal<Never, NoError> in
         var result: PendingMessageActionsEntry?
         
@@ -305,7 +305,7 @@ func managedApplyPendingPaidMessageActions(postbox: Postbox, network: Network, s
             }
             
             for (entry, disposable) in beginOperations {
-                let signal = withTakenStarsAction(postbox: postbox, type: .sendPostponedPaidMessage, id: entry.id, { transaction, entry -> Signal<Never, NoError> in
+                let signal = withTakenDiamondsAction(postbox: postbox, type: .sendPostponedPaidMessage, id: entry.id, { transaction, entry -> Signal<Never, NoError> in
                     if let entry = entry {
                         if let _ = entry.action as? PostponeSendPaidMessageAction {
                             let triggerSignal: Signal<Void, NoError> = stateManager.forceSendPendingPaidMessage

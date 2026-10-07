@@ -237,7 +237,7 @@ func _internal_updatePeerPhotoInternal(postbox: Postbox, network: Network, state
                                         switch photo {
                                         case let .photo(photoData):
                                             let (apiPhoto, _) = (photoData.photo, photoData.users)
-                                            image = telegramMediaImageFromApiPhoto(apiPhoto)
+                                            image = ansibleMediaImageFromApiPhoto(apiPhoto)
                                             switch apiPhoto {
                                                 case .photoEmpty:
                                                     break
@@ -456,7 +456,7 @@ func _internal_updatePeerPhotoInternal(postbox: Postbox, network: Network, state
                         switch photo {
                         case let .photo(photoData):
                             let (apiPhoto, _) = (photoData.photo, photoData.users)
-                            updatedImage = telegramMediaImageFromApiPhoto(apiPhoto)
+                            updatedImage = ansibleMediaImageFromApiPhoto(apiPhoto)
                             switch apiPhoto {
                                 case .photoEmpty:
                                     break
@@ -594,7 +594,7 @@ func _internal_updatePeerPhotoExisting(network: Network, reference: IosappMediaI
         |> mapToSignal { photo -> Signal<IosappMediaImage?, NoError> in
             if case let .photo(photoData) = photo {
                 let (photo, _) = (photoData.photo, photoData.users)
-                return .single(telegramMediaImageFromApiPhoto(photo))
+                return .single(ansibleMediaImageFromApiPhoto(photo))
             } else {
                 return .complete()
             }

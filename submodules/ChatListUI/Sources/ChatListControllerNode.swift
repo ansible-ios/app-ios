@@ -368,8 +368,8 @@ public final class ChatListContainerNode: ASDisplayNode, ASGestureRecognizerDele
         itemNode.listNode.openPremiumManagement = { [weak self] in
             self?.openPremiumManagement?()
         }
-        itemNode.listNode.openStarsTopup = { [weak self] amount in
-            self?.openStarsTopup?(amount)
+        itemNode.listNode.openDiamondsTopup = { [weak self] amount in
+            self?.openDiamondsTopup?(amount)
         }
         itemNode.listNode.openWebApp = { [weak self] amount in
             self?.openWebApp?(amount)
@@ -448,7 +448,7 @@ public final class ChatListContainerNode: ASDisplayNode, ASGestureRecognizerDele
     var openBirthdaySetup: (() -> Void)?
     var openPremiumManagement: (() -> Void)?
     var openStories: ((ChatListNode.OpenStoriesSubject, ASDisplayNode?) -> Void)?
-    var openStarsTopup: ((Int64?) -> Void)?
+    var openDiamondsTopup: ((Int64?) -> Void)?
     var openWebApp: ((IosappUser) -> Void)?
     var openPhotoSetup: (() -> Void)?
     var openAccountFreezeInfo: (() -> Void)?
@@ -1444,8 +1444,8 @@ final class ChatListControllerNode: ASDisplayNode, ASGestureRecognizerDelegate {
                             break
                         case .reviewBotConnection:
                             break
-                        case let .starsSubscriptionLowBalance(amount, _):
-                            self.effectiveContainerNode.currentItemNode.interaction?.openStarsTopup(amount.value)
+                        case let .diamondsSubscriptionLowBalance(amount, _):
+                            self.effectiveContainerNode.currentItemNode.interaction?.openDiamondsTopup(amount.value)
                         case .setupPhoto:
                             self.effectiveContainerNode.currentItemNode.interaction?.openPhotoSetup()
                         case .accountFreeze:

@@ -507,7 +507,7 @@ public class PremiumLimitsListScreen: ViewController {
                                     context: context,
                                     position: .top,
                                     videoFile: videos["faster_download"],
-                                    decoration: .fasterStars
+                                    decoration: .fasterDiamonds
                                 )),
                                 title: strings.Premium_FasterSpeed,
                                 text: strings.Premium_FasterSpeedInfo,
@@ -525,7 +525,7 @@ public class PremiumLimitsListScreen: ViewController {
                                     context: context,
                                     position: .top,
                                     videoFile: videos["voice_to_text"],
-                                    decoration: .badgeStars
+                                    decoration: .badgeDiamonds
                                 )),
                                 title: strings.Premium_VoiceToText,
                                 text: strings.Premium_VoiceToTextInfo,
@@ -543,7 +543,7 @@ public class PremiumLimitsListScreen: ViewController {
                                     context: context,
                                     position: .bottom,
                                     videoFile: videos["no_ads"],
-                                    decoration: .swirlStars
+                                    decoration: .swirlDiamonds
                                 )),
                                 title: strings.Premium_NoAds,
                                 text: isStandalone ? strings.Premium_NoAdsStandaloneInfo : strings.Premium_NoAdsInfo,
@@ -561,7 +561,7 @@ public class PremiumLimitsListScreen: ViewController {
                                     context: context,
                                     position: .top,
                                     videoFile: videos["infinite_reactions"],
-                                    decoration: .swirlStars
+                                    decoration: .swirlDiamonds
                                 )),
                                 title: strings.Premium_InfiniteReactions,
                                 text: strings.Premium_InfiniteReactionsInfo,
@@ -600,7 +600,7 @@ public class PremiumLimitsListScreen: ViewController {
                                     context: context,
                                     position: .top,
                                     videoFile: videos["emoji_status"],
-                                    decoration: .badgeStars
+                                    decoration: .badgeDiamonds
                                 )),
                                 title: strings.Premium_EmojiStatus,
                                 text: strings.Premium_EmojiStatusInfo,
@@ -618,7 +618,7 @@ public class PremiumLimitsListScreen: ViewController {
                                     context: context,
                                     position: .top,
                                     videoFile: videos["advanced_chat_management"],
-                                    decoration: .swirlStars
+                                    decoration: .swirlDiamonds
                                 )),
                                 title: strings.Premium_ChatManagement,
                                 text: strings.Premium_ChatManagementInfo,
@@ -636,7 +636,7 @@ public class PremiumLimitsListScreen: ViewController {
                                     context: context,
                                     position: .top,
                                     videoFile: videos["profile_badge"],
-                                    decoration: .badgeStars
+                                    decoration: .badgeDiamonds
                                 )),
                                 title: strings.Premium_Badge,
                                 text: strings.Premium_BadgeInfo,
@@ -654,7 +654,7 @@ public class PremiumLimitsListScreen: ViewController {
                                     context: context,
                                     position: .top,
                                     videoFile: videos["animated_userpics"],
-                                    decoration: .swirlStars
+                                    decoration: .swirlDiamonds
                                 )),
                                 title: strings.Premium_Avatar,
                                 text: strings.Premium_AvatarInfo,
@@ -725,7 +725,7 @@ public class PremiumLimitsListScreen: ViewController {
                                     context: context,
                                     position: .top,
                                     videoFile: videos["peer_colors"],
-                                    decoration: .badgeStars
+                                    decoration: .badgeDiamonds
                                 )),
                                 title: strings.Premium_Colors,
                                 text: strings.Premium_ColorsInfo,
@@ -744,7 +744,7 @@ public class PremiumLimitsListScreen: ViewController {
                                     position: .top,
                                     model: .island,
                                     videoFile: videos["wallpapers"],
-                                    decoration: .swirlStars
+                                    decoration: .swirlDiamonds
                                 )),
                                 title: strings.Premium_Wallpapers,
                                 text: strings.Premium_WallpapersInfo,
@@ -782,7 +782,7 @@ public class PremiumLimitsListScreen: ViewController {
                                     position: .top,
                                     model: .island,
                                     videoFile: videos["last_seen"],
-                                    decoration: .badgeStars
+                                    decoration: .badgeDiamonds
                                 )),
                                 title: strings.Premium_LastSeen,
                                 text: strings.Premium_LastSeenInfo,
@@ -801,7 +801,7 @@ public class PremiumLimitsListScreen: ViewController {
                                     position: .top,
                                     model: .island,
                                     videoFile: videos["message_privacy"],
-                                    decoration: .swirlStars
+                                    decoration: .swirlDiamonds
                                 )),
                                 title: strings.Premium_MessagePrivacy,
                                 text: strings.Premium_MessagePrivacyInfo,
@@ -820,7 +820,7 @@ public class PremiumLimitsListScreen: ViewController {
                                     position: .top,
                                     model: .island,
                                     videoFile: videos["effects"],
-                                    decoration: .swirlStars
+                                    decoration: .swirlDiamonds
                                 )),
                                 title: strings.Premium_MessageEffects,
                                 text: strings.Premium_MessageEffectsInfo,
@@ -860,7 +860,7 @@ public class PremiumLimitsListScreen: ViewController {
                                     position: .top,
                                     model: .island,
                                     videoFile: videos["pm_noforwards"],
-                                    decoration: .badgeStars
+                                    decoration: .badgeDiamonds
                                 )),
                                 title: strings.Premium_CopyProtection,
                                 text: strings.Premium_CopyProtectionInfo,
@@ -880,7 +880,7 @@ public class PremiumLimitsListScreen: ViewController {
                                     position: .top,
                                     model: .island,
                                     videoFile: videos["ai_compose"],
-                                    decoration: .badgeStars
+                                    decoration: .badgeDiamonds
                                 )),
                                 title: strings.Premium_AiTools,
                                 text: strings.Premium_AiToolsInfo,
@@ -900,7 +900,7 @@ public class PremiumLimitsListScreen: ViewController {
                                     position: .top,
                                     model: .island,
                                     videoFile: videos["rich_formatting"],
-                                    decoration: .badgeStars
+                                    decoration: .badgeDiamonds
                                 )),
                                 title: strings.Premium_RichText,
                                 text: strings.Premium_RichTextInfo,

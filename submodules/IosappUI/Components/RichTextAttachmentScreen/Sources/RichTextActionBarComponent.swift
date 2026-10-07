@@ -376,7 +376,7 @@ class ActionItemComponent: Component {
             guard let baseImage = UIImage(bundleImageName: name) else {
                 return nil
             }
-            guard showsPremiumBadge, let starMaskImage = UIImage(bundleImageName: "RichText/PremiumStarMask") else {
+            guard showsPremiumBadge, let diamondMaskImage = UIImage(bundleImageName: "RichText/PremiumStarMask") else {
                 return baseImage.withRenderingMode(.alwaysTemplate)
             }
 
@@ -390,8 +390,8 @@ class ActionItemComponent: Component {
 
             let badgeOffset = CGPoint(x: 1.0 + UIScreenPixel, y: -5.0)
             let maskOffset = CGPoint(x: badgeOffset.x + 2.0 - UIScreenPixel, y: badgeOffset.y + 2.0 - UIScreenPixel)
-            let maskFrame = CGRect(origin: CGPoint(x: imagePadding + baseImageSize.width - starMaskImage.size.width + maskOffset.x, y: imagePadding + baseImageSize.height - starMaskImage.size.height + maskOffset.y), size: starMaskImage.size)
-            starMaskImage.draw(in: maskFrame, blendMode: .destinationOut, alpha: 1.0)
+            let maskFrame = CGRect(origin: CGPoint(x: imagePadding + baseImageSize.width - diamondMaskImage.size.width + maskOffset.x, y: imagePadding + baseImageSize.height - diamondMaskImage.size.height + maskOffset.y), size: diamondMaskImage.size)
+            diamondMaskImage.draw(in: maskFrame, blendMode: .destinationOut, alpha: 1.0)
 
             let resultImage = UIGraphicsGetImageFromCurrentImageContext()
             UIGraphicsEndImageContext()

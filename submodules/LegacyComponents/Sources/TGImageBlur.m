@@ -6,7 +6,7 @@
 
 #import <Accelerate/Accelerate.h>
 
-#import <LegacyComponents/UIImage+TG.h>
+#import <LegacyComponents/UIImage+AS.h>
 #import <LegacyComponents/TGStaticBackdropImageData.h>
 #import <LegacyComponents/TGStaticBackdropAreaData.h>
 
@@ -403,10 +403,10 @@ static inline uint32_t alphaComposePremultipliedPixels(uint32_t a, uint32_t b)
     
     uint32_t ta = ((a0 * a0) >> 8) + ((a1 * (255 - ((a0 * a0) >> 8))) >> 8);
     uint32_t tr = ((r0 * a0) >> 8) + ((r1 * (255 - ((a0 * a0) >> 8))) >> 8);
-    uint32_t tg = ((g0 * a0) >> 8) + ((g1 * (255 - ((a0 * a0) >> 8))) >> 8);
+    uint32_t as = ((g0 * a0) >> 8) + ((g1 * (255 - ((a0 * a0) >> 8))) >> 8);
     uint32_t tb = ((b0 * a0) >> 8) + ((b1 * (255 - ((a0 * a0) >> 8))) >> 8);
     
-    return (ta << 24) | (tr << 16) | (tg << 8) | tb;
+    return (ta << 24) | (tr << 16) | (as << 8) | tb;
 }
 
 static inline uint32_t premultipliedPixel(uint32_t rgb, uint32_t alpha)
@@ -2413,7 +2413,7 @@ NSArray *TGBlurredBackgroundImages(UIImage *source, CGSize sourceSize)
     return array;
 }
 
-void telegramFastBlur(int imageWidth, int imageHeight, int imageStride, void *pixels)
+void ansibleFastBlur(int imageWidth, int imageHeight, int imageStride, void *pixels)
 {
     uint8_t *pix = (uint8_t *)pixels;
     const int w = imageWidth;

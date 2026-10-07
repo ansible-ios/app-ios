@@ -716,8 +716,8 @@ public final class LegacyPaintStickersContext: NSObject, TGPhotoPaintStickersCon
         return button
     }
     
-    public func sendStarsButtonAction(_ action: @escaping () -> Void) -> any UIView & TGPhotoSendStarsButtonView {
-        let button = SendStarsButtonView()
+    public func sendDiamondsButtonAction(_ action: @escaping () -> Void) -> any UIView & TGPhotoSendDiamondsButtonView {
+        let button = SendDiamondsButtonView()
         button.pressed = action
         return button
     }
@@ -728,7 +728,7 @@ public final class LegacyPaintStickersContext: NSObject, TGPhotoPaintStickersCon
     }
 }
 
-private class SendStarsButtonView: HighlightTrackingButton, TGPhotoSendStarsButtonView {
+private class SendDiamondsButtonView: HighlightTrackingButton, TGPhotoSendDiamondsButtonView {
     private let backgroundView: UIView
     private let textNode: ImmediateAnimatedCountLabelNode
     
@@ -801,7 +801,7 @@ private class SendStarsButtonView: HighlightTrackingButton, TGPhotoSendStarsButt
         let font = Font.with(size: 17.0, design: .round, weight: .semibold, traits: .monospacedNumbers)
         let badgeString = NSMutableAttributedString(string: "⭐️ ", font: font, textColor: .white)
         if let range = badgeString.string.range(of: "⭐️") {
-            badgeString.addAttribute(.attachment, value: PresentationResourcesChat.chatPlaceholderStarIcon(defaultDarkPresentationTheme)!, range: NSRange(range, in: badgeString.string))
+            badgeString.addAttribute(.attachment, value: PresentationResourcesChat.chatPlaceholderDiamondIcon(defaultDarkPresentationTheme)!, range: NSRange(range, in: badgeString.string))
             badgeString.addAttribute(.baselineOffset, value: 1.0, range: NSRange(range, in: badgeString.string))
         }
         segments.append(.text(0, badgeString))

@@ -1077,7 +1077,7 @@ extension ChatControllerImpl {
             return
         }
         
-        let subject: StarsWithdrawalScreenSubject
+        let subject: DiamondsWithdrawalScreenSubject
         if postSuggestionState.editingOriginalMessageId != nil {
             var isFromAdmin = false
             if let channel = self.presentationInterfaceState.renderedPeer?.peer as? IosappChannel, channel.isMonoForum {
@@ -1173,7 +1173,7 @@ extension ChatControllerImpl {
             )
         }
         
-        self.push(self.context.sharedContext.makeStarsWithdrawalScreen(
+        self.push(self.context.sharedContext.makeDiamondsWithdrawalScreen(
             context: self.context,
             subject: subject
         ))

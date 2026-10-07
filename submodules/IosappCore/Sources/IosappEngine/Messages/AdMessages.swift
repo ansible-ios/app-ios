@@ -275,7 +275,7 @@ private class AdMessagesHistoryContextImpl {
                 approximateBoostLevel: nil,
                 subscriptionUntilDate: nil,
                 verificationIconFileId: nil,
-                sendPaidMessageStars: nil,
+                sendPaidMessageDiamonds: nil,
                 linkedMonoforumId: nil
             )
             messagePeers[author.id] = author
@@ -542,7 +542,7 @@ private class AdMessagesHistoryContextImpl {
                                     }
                                 }
                                 
-                                let photo = apiPhoto.flatMap { telegramMediaImageFromApiPhoto($0) }
+                                let photo = apiPhoto.flatMap { ansibleMediaImageFromApiPhoto($0) }
                                 let contentMedia = textMediaAndExpirationTimerFromApiMedia(media, peerId).media
                                 
                                 parsedMessages.append(CachedMessage(

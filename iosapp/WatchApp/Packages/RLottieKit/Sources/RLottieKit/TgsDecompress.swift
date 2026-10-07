@@ -1,7 +1,7 @@
 import Foundation
 import zlib
 
-public enum TgsDecompressError: Error {
+public enum AssDecompressError: Error {
     case inflateFailed(Int32)
     case emptyInput
 }
@@ -10,11 +10,11 @@ public enum TgsDecompressError: Error {
 /// Uses libz with `windowBits = 15 + 32` so the auto-detect path handles both gzip and
 /// plain zlib wrappers (defensive — TGS files in the wild are always gzip).
 public func decompressTgs(_ data: Data) throws -> Data {
-    guard !data.isEmpty else { throw TgsDecompressError.emptyInput }
+    guard !data.isEmpty else { throw AssDecompressError.emptyInput }
 
     var stream = z_stream()
     var status = inflateInit2_(&stream, 15 + 32, ZLIB_VERSION, Int32(MemoryLayout<z_stream>.size))
-    guard status == Z_OK else { throw TgsDecompressError.inflateFailed(status) }
+    guard status == Z_OK else { throw AssDecompressError.inflateFailed(status) }
     defer { inflateEnd(&stream) }
 
     var output = Data()
@@ -32,7 +32,7 @@ public func decompressTgs(_ data: Data) throws -> Data {
                 stream.avail_out = UInt32(bufferSize)
                 status = inflate(&stream, Z_NO_FLUSH)
                 if status != Z_OK && status != Z_STREAM_END {
-                    throw TgsDecompressError.inflateFailed(status)
+                    throw AssDecompressError.inflateFailed(status)
                 }
                 let produced = bufferSize - Int(stream.avail_out)
                 if produced > 0 {

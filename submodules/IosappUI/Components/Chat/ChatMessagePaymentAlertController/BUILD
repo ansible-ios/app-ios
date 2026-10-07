@@ -23,7 +23,7 @@ swift_library(
         "//submodules/AvatarNode",
         "//submodules/CheckNode",
         "//submodules/IosappUIPreferences",
-        "//submodules/IosappUI/Components/Stars/StarsBalanceOverlayComponent",
+        "//submodules/IosappUI/Components/Diamonds/DiamondsBalanceOverlayComponent",
         "//submodules/IosappUI/Components/AlertComponent",
         "//submodules/IosappUI/Components/AlertComponent/AlertCheckComponent",
         "//submodules/Markdown",

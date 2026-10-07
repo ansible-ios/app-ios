@@ -365,7 +365,7 @@ public final class EmojiPagerContentComponent: Component {
         }
         
         public enum Icon: Equatable, Hashable {
-            case premiumStar
+            case premiumDiamond
             case topic(String, Int32)
             case stop
             case add

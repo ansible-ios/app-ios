@@ -18,8 +18,8 @@ public enum AppStoreTransactionPurpose {
     case giftCode(peerIds: [EnginePeer.Id], boostPeer: EnginePeer.Id?, currency: String, amount: Int64, text: String?, entities: [MessageTextEntity]?)
     case giveaway(boostPeer: EnginePeer.Id, additionalPeerIds: [EnginePeer.Id], countries: [String], onlyNewSubscribers: Bool, showWinners: Bool, prizeDescription: String?, randomId: Int64, untilDate: Int32, currency: String, amount: Int64)
     case stars(count: Int64, currency: String, amount: Int64, peerId: EnginePeer.Id?)
-    case starsGift(peerId: EnginePeer.Id, count: Int64, currency: String, amount: Int64)
-    case starsGiveaway(stars: Int64, boostPeer: EnginePeer.Id, additionalPeerIds: [EnginePeer.Id], countries: [String], onlyNewSubscribers: Bool, showWinners: Bool, prizeDescription: String?, randomId: Int64, untilDate: Int32, currency: String, amount: Int64, users: Int32)
+    case diamondsGift(peerId: EnginePeer.Id, count: Int64, currency: String, amount: Int64)
+    case diamondsGiveaway(stars: Int64, boostPeer: EnginePeer.Id, additionalPeerIds: [EnginePeer.Id], countries: [String], onlyNewSubscribers: Bool, showWinners: Bool, prizeDescription: String?, randomId: Int64, untilDate: Int32, currency: String, amount: Int64, users: Int32)
     case authCode(restore: Bool, phoneNumber: String, phoneCodeHash: String, premiumDays: Int32, currency: String, amount: Int64)
 }
 
@@ -117,7 +117,7 @@ private func apiInputStorePaymentPurpose(postbox: Postbox, purpose: AppStoreTran
             }
             return .inputStorePaymentStarsTopup(.init(flags: flags, stars: count, currency: currency, amount: amount, spendPurposePeer: spendPurposePeer))
         }
-    case let .starsGift(peerId, count, currency, amount):
+    case let .diamondsGift(peerId, count, currency, amount):
         return postbox.loadedPeerWithId(peerId)
         |> mapToSignal { peer -> Signal<Api.InputStorePaymentPurpose, NoError> in
             guard let inputUser = apiInputUser(peer) else {
@@ -125,7 +125,7 @@ private func apiInputStorePaymentPurpose(postbox: Postbox, purpose: AppStoreTran
             }
             return .single(.inputStorePaymentStarsGift(.init(userId: inputUser, stars: count, currency: currency, amount: amount)))
         }
-    case let .starsGiveaway(stars, boostPeerId, additionalPeerIds, countries, onlyNewSubscribers, showWinners, prizeDescription, randomId, untilDate, currency, amount, users):
+    case let .diamondsGiveaway(stars, boostPeerId, additionalPeerIds, countries, onlyNewSubscribers, showWinners, prizeDescription, randomId, untilDate, currency, amount, users):
         return postbox.transaction { transaction -> Signal<Api.InputStorePaymentPurpose, NoError> in
             guard let peer = transaction.getPeer(boostPeerId), let apiBoostPeer = apiInputPeer(peer) else {
                 return .complete()

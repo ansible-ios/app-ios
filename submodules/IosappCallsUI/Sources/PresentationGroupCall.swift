@@ -32,7 +32,7 @@ private extension PresentationGroupCallState {
             defaultParticipantMuteState: nil,
             messagesAreEnabled: !isChannel,
             canEnableMessages: false,
-            sendPaidMessageStars: nil,
+            sendPaidMessageDiamonds: nil,
             recordingStartTimestamp: nil,
             title: title,
             raisedHand: false,
@@ -837,7 +837,7 @@ public final class PresentationGroupCallImpl: PresentationGroupCall {
             }
         }
     }
-    private let messagesStatePromise = Promise<GroupCallMessagesContext.State>(GroupCallMessagesContext.State(messages: [], pinnedMessages: [], topStars: [], totalStars: 0, pendingMyStars: 0))
+    private let messagesStatePromise = Promise<GroupCallMessagesContext.State>(GroupCallMessagesContext.State(messages: [], pinnedMessages: [], topDiamonds: [], totalStars: 0, pendingMyDiamonds: 0))
     public var messagesState: Signal<GroupCallMessagesContext.State, NoError> {
         return self.messagesStatePromise.get()
     }
@@ -1567,7 +1567,7 @@ public final class PresentationGroupCallImpl: PresentationGroupCall {
                 adminIds: Set(),
                 isCreator: false,
                 defaultParticipantsAreMuted: callInfo.defaultParticipantsAreMuted ?? GroupCallParticipantsContext.State.DefaultParticipantsAreMuted(isMuted: self.stateValue.defaultParticipantMuteState == .muted, canChange: true),
-                messagesAreEnabled: callInfo.messagesAreEnabled ?? GroupCallParticipantsContext.State.MessagesAreEnabled(isEnabled: self.stateValue.messagesAreEnabled, canChange: self.stateValue.canEnableMessages, sendPaidMessagesStars: self.stateValue.sendPaidMessageStars),
+                messagesAreEnabled: callInfo.messagesAreEnabled ?? GroupCallParticipantsContext.State.MessagesAreEnabled(isEnabled: self.stateValue.messagesAreEnabled, canChange: self.stateValue.canEnableMessages, sendPaidMessagesStars: self.stateValue.sendPaidMessageDiamonds),
                 sortAscending: true,
                 recordingStartTimestamp: nil,
                 title: self.stateValue.title,
@@ -1577,7 +1577,7 @@ public final class PresentationGroupCallImpl: PresentationGroupCall {
                 isVideoEnabled: callInfo.isVideoEnabled,
                 unmutedVideoLimit: callInfo.unmutedVideoLimit,
                 isStream: callInfo.isStream,
-                sendPaidMessagesStars: self.stateValue.sendPaidMessageStars,
+                sendPaidMessagesStars: self.stateValue.sendPaidMessageDiamonds,
                 defaultSendAs: self.stateValue.defaultSendAs,
                 version: 0
             ),
@@ -2700,7 +2700,7 @@ public final class PresentationGroupCallImpl: PresentationGroupCall {
                     }
                     stateValue.messagesAreEnabled = state.messagesAreEnabled.isEnabled
                     stateValue.canEnableMessages = state.messagesAreEnabled.canChange
-                    stateValue.sendPaidMessageStars = state.messagesAreEnabled.sendPaidMessagesStars
+                    stateValue.sendPaidMessageDiamonds = state.messagesAreEnabled.sendPaidMessagesStars
                     stateValue.recordingStartTimestamp = state.recordingStartTimestamp
                     stateValue.title = state.title
                     stateValue.scheduleTimestamp = state.scheduleTimestamp
@@ -2739,7 +2739,7 @@ public final class PresentationGroupCallImpl: PresentationGroupCall {
                         self.invitedPeersValue = updatedInvitedPeers
                     }
                     
-                    self.messagesContext?.updateSettings(minMessagePrice: stateValue.sendPaidMessageStars ?? 0)
+                    self.messagesContext?.updateSettings(minMessagePrice: stateValue.sendPaidMessageDiamonds ?? 0)
                 }))
                 
                 self.isFailedEventDisposable?.dispose()
@@ -4003,8 +4003,8 @@ public final class PresentationGroupCallImpl: PresentationGroupCall {
         self.participantsContext?.updateDefaultParticipantsAreMuted(isMuted: isMuted)
     }
     
-    public func updateMessagesEnabled(isEnabled: Bool, sendPaidMessageStars: Int64?) {
-        self.participantsContext?.updateMessagesEnabled(isEnabled: isEnabled, sendPaidMessageStars: sendPaidMessageStars)
+    public func updateMessagesEnabled(isEnabled: Bool, sendPaidMessageDiamonds: Int64?) {
+        self.participantsContext?.updateMessagesEnabled(isEnabled: isEnabled, sendPaidMessageDiamonds: sendPaidMessageDiamonds)
     }
     
     func video(endpointId: String) -> Signal<OngoingGroupCallContext.VideoFrameData, NoError>? {
@@ -4097,27 +4097,27 @@ public final class PresentationGroupCallImpl: PresentationGroupCall {
         })
     }
     
-    public func sendMessage(fromId: PeerId?, isAdmin: Bool, randomId: Int64? = nil, text: String, entities: [MessageTextEntity], paidStars: Int64?) {
+    public func sendMessage(fromId: PeerId?, isAdmin: Bool, randomId: Int64? = nil, text: String, entities: [MessageTextEntity], paidDiamonds: Int64?) {
         if let messagesContext = self.messagesContext {
-            messagesContext.send(fromId: fromId ?? self.joinAsPeerId, isAdmin: isAdmin, randomId: randomId, text: text, entities: entities, paidStars: paidStars)
+            messagesContext.send(fromId: fromId ?? self.joinAsPeerId, isAdmin: isAdmin, randomId: randomId, text: text, entities: entities, paidDiamonds: paidDiamonds)
         }
     }
     
-    public func sendStars(fromId: PeerId?, isAdmin: Bool, amount: Int64, delay: Bool) {
+    public func sendDiamonds(fromId: PeerId?, isAdmin: Bool, amount: Int64, delay: Bool) {
         if let messagesContext = self.messagesContext {
-            messagesContext.sendStars(fromId: fromId ?? self.joinAsPeerId, isAdmin: isAdmin, amount: amount, delay: delay)
+            messagesContext.sendDiamonds(fromId: fromId ?? self.joinAsPeerId, isAdmin: isAdmin, amount: amount, delay: delay)
         }
     }
     
-    public func cancelSendStars() {
+    public func cancelSendDiamonds() {
         if let messagesContext = self.messagesContext {
-            messagesContext.cancelSendStars()
+            messagesContext.cancelSendDiamonds()
         }
     }
     
-    public func commitSendStars() {
+    public func commitSendDiamonds() {
         if let messagesContext = self.messagesContext {
-            messagesContext.commitSendStars()
+            messagesContext.commitSendDiamonds()
         }
     }
     

@@ -134,7 +134,7 @@ private final class JoinAffiliateProgramScreenComponent: Component {
         private var isChangingTargetPeer: Bool = false
         
         private var cachedCloseImage: UIImage?
-        private var inlineTextStarImage: UIImage?
+        private var inlineTextDiamondImage: UIImage?
         
         override init(frame: CGRect) {
             self.bottomOverscrollLimit = 200.0
@@ -483,7 +483,7 @@ private final class JoinAffiliateProgramScreenComponent: Component {
                 }
                 
                 if loadPossibleTargetPeers {
-                    self.possibleTargetPeersDisposable = (component.context.engine.peers.getPossibleStarRefBotTargets()
+                    self.possibleTargetPeersDisposable = (component.context.engine.peers.getPossibleDiamondRefBotTargets()
                     |> deliverOnMainQueue).startStrict(next: { [weak self] result in
                         guard let self else {
                             return
@@ -950,22 +950,22 @@ private final class JoinAffiliateProgramScreenComponent: Component {
                     self.dailyRevenueText = dailyRevenueText
                 }
                 
-                var inlineTextStarImage: UIImage?
-                if let current = self.inlineTextStarImage {
-                    inlineTextStarImage = current
+                var inlineTextDiamondImage: UIImage?
+                if let current = self.inlineTextDiamondImage {
+                    inlineTextDiamondImage = current
                 } else {
                     if let image = UIImage(bundleImageName: "Premium/Stars/StarSmall") {
-                        let starInsets = UIEdgeInsets(top: 0.0, left: 0.0, bottom: 0.0, right: 0.0)
-                        inlineTextStarImage = generateImage(CGSize(width: starInsets.left + image.size.width + starInsets.right, height: image.size.height), rotatedContext: { size, context in
+                        let diamondInsets = UIEdgeInsets(top: 0.0, left: 0.0, bottom: 0.0, right: 0.0)
+                        inlineTextDiamondImage = generateImage(CGSize(width: diamondInsets.left + image.size.width + diamondInsets.right, height: image.size.height), rotatedContext: { size, context in
                             context.clear(CGRect(origin: CGPoint(), size: size))
                             UIGraphicsPushContext(context)
                             defer {
                                 UIGraphicsPopContext()
                             }
                             
-                            image.draw(at: CGPoint(x: starInsets.left, y: starInsets.top))
+                            image.draw(at: CGPoint(x: diamondInsets.left, y: diamondInsets.top))
                         })?.withRenderingMode(.alwaysOriginal)
-                        self.inlineTextStarImage = inlineTextStarImage
+                        self.inlineTextDiamondImage = inlineTextDiamondImage
                     }
                 }
                 
@@ -977,7 +977,7 @@ private final class JoinAffiliateProgramScreenComponent: Component {
                         return ("URL", url)
                     }
                 ), textAlignment: .center))
-                if let range = attributedDailyRevenueString.string.range(of: "#"), let starImage = inlineTextStarImage {
+                if let range = attributedDailyRevenueString.string.range(of: "#"), let diamondImage = inlineTextDiamondImage {
                     final class RunDelegateData {
                         let ascent: CGFloat
                         let descent: CGFloat
@@ -993,7 +993,7 @@ private final class JoinAffiliateProgramScreenComponent: Component {
                     let runDelegateData = RunDelegateData(
                         ascent: Font.regular(15.0).ascender,
                         descent: Font.regular(15.0).descender,
-                        width: starImage.size.width + 2.0
+                        width: diamondImage.size.width + 2.0
                     )
                     var callbacks = CTRunDelegateCallbacks(
                         version: kCTRunDelegateCurrentVersion,
@@ -1016,7 +1016,7 @@ private final class JoinAffiliateProgramScreenComponent: Component {
                     if let runDelegate = CTRunDelegateCreate(&callbacks, Unmanaged.passRetained(runDelegateData).toOpaque()) {
                         attributedDailyRevenueString.addAttribute(NSAttributedString.Key(kCTRunDelegateAttributeName as String), value: runDelegate, range: NSRange(range, in: attributedDailyRevenueString.string))
                     }
-                    attributedDailyRevenueString.addAttribute(.attachment, value: starImage, range: NSRange(range, in: attributedDailyRevenueString.string))
+                    attributedDailyRevenueString.addAttribute(.attachment, value: diamondImage, range: NSRange(range, in: attributedDailyRevenueString.string))
                     attributedDailyRevenueString.addAttribute(.foregroundColor, value: UIColor(rgb: 0xffffff), range: NSRange(range, in: attributedDailyRevenueString.string))
                     attributedDailyRevenueString.addAttribute(.baselineOffset, value: 1.0, range: NSRange(range, in: attributedDailyRevenueString.string))
                 }
@@ -1959,13 +1959,13 @@ final class AffiliatePeerSubtitleComponent: Component {
 final class BotSectionSortButtonComponent: Component {
     let theme: PresentationTheme
     let strings: PresentationStrings
-    let sortMode: EngineSuggestedStarRefBotsContext.SortMode
+    let sortMode: EngineSuggestedDiamondRefBotsContext.SortMode
     let action: (UIView) -> Void
 
     init(
         theme: PresentationTheme,
         strings: PresentationStrings,
-        sortMode: EngineSuggestedStarRefBotsContext.SortMode,
+        sortMode: EngineSuggestedDiamondRefBotsContext.SortMode,
         action: @escaping (UIView) -> Void
     ) {
         self.theme = theme

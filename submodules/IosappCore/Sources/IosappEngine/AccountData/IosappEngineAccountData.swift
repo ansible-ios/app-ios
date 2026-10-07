@@ -87,7 +87,7 @@ public extension IosappEngine {
             return _internal_removeAccountPhoto(account: self.account, reference: reference, fallback: true)
         }
         
-        public func setStarGiftStatus(starGift: StarGift.UniqueGift, expirationDate: Int32?) -> Signal<Never, NoError> {
+        public func setDiamondGiftStatus(starGift: StarGift.UniqueGift, expirationDate: Int32?) -> Signal<Never, NoError> {
             let peerId = self.account.peerId
             
             var flags: Int32 = 0

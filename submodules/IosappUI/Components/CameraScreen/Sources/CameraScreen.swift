@@ -1156,7 +1156,7 @@ private final class CameraScreenComponent: CombinedComponent {
                     privacy: privacy,
                     isForwardingDisabled: self.isForwardingDisabled,
                     messagesEnabled: self.allowComments,
-                    sendPaidMessageStars: self.paidMessageStars
+                    sendPaidMessageDiamonds: self.paidMessageStars
                 )
                 |> deliverOnMainQueue).start(next: { [weak self, weak controller] story in
                     guard let self else {

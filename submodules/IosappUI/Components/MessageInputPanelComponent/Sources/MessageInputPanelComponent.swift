@@ -189,12 +189,12 @@ public final class MessageInputPanelComponent: Component {
         }
     }
     
-    public struct StarStats: Equatable {
-        public var hasOutgoingStars: Bool
+    public struct DiamondStats: Equatable {
+        public var hasOutgoingDiamonds: Bool
         public var totalStars: Int64
         
-        public init(hasOutgoingStars: Bool, totalStars: Int64) {
-            self.hasOutgoingStars = hasOutgoingStars
+        public init(hasOutgoingDiamonds: Bool, totalStars: Int64) {
+            self.hasOutgoingDiamonds = hasOutgoingDiamonds
             self.totalStars = totalStars
         }
     }
@@ -237,7 +237,7 @@ public final class MessageInputPanelComponent: Component {
     public let strings: PresentationStrings
     public let style: Style
     public let placeholder: Placeholder
-    public let sendPaidMessageStars: StarsAmount?
+    public let sendPaidMessageDiamonds: StarsAmount?
     public let maxLength: Int?
     public let maxEmojiCount: Int?
     public let queryTypes: ContextQueryTypes
@@ -293,8 +293,8 @@ public final class MessageInputPanelComponent: Component {
     public let liveChatState: LiveChatState?
     public let isEmbeddedInCamera: Bool
     public let toggleLiveChatExpanded: (() -> Void)?
-    public let sendStarsAction: ((UIView, Bool) -> Void)?
-    public let starStars: StarStats?
+    public let sendDiamondsAction: ((UIView, Bool) -> Void)?
+    public let diamondDiamonds: DiamondStats?
     public let sendAsConfiguration: SendAsConfiguration?
     public let openSettings: (() -> Void)?
     public let call: AnyObject?
@@ -307,7 +307,7 @@ public final class MessageInputPanelComponent: Component {
         strings: PresentationStrings,
         style: Style,
         placeholder: Placeholder,
-        sendPaidMessageStars: StarsAmount?,
+        sendPaidMessageDiamonds: StarsAmount?,
         maxLength: Int?,
         maxEmojiCount: Int? = nil,
         queryTypes: ContextQueryTypes,
@@ -363,8 +363,8 @@ public final class MessageInputPanelComponent: Component {
         liveChatState: LiveChatState? = nil,
         isEmbeddedInCamera: Bool = false,
         toggleLiveChatExpanded: (() -> Void)? = nil,
-        sendStarsAction: ((UIView, Bool) -> Void)? = nil,
-        starStars: StarStats? = nil,
+        sendDiamondsAction: ((UIView, Bool) -> Void)? = nil,
+        diamondDiamonds: DiamondStats? = nil,
         sendAsConfiguration: SendAsConfiguration? = nil,
         openSettings: (() -> Void)? = nil,
         call: AnyObject? = nil,
@@ -377,7 +377,7 @@ public final class MessageInputPanelComponent: Component {
         self.style = style
         self.nextInputMode = nextInputMode
         self.placeholder = placeholder
-        self.sendPaidMessageStars = sendPaidMessageStars
+        self.sendPaidMessageDiamonds = sendPaidMessageDiamonds
         self.maxLength = maxLength
         self.maxEmojiCount = maxEmojiCount
         self.queryTypes = queryTypes
@@ -432,8 +432,8 @@ public final class MessageInputPanelComponent: Component {
         self.liveChatState = liveChatState
         self.isEmbeddedInCamera = isEmbeddedInCamera
         self.toggleLiveChatExpanded = toggleLiveChatExpanded
-        self.sendStarsAction = sendStarsAction
-        self.starStars = starStars
+        self.sendDiamondsAction = sendDiamondsAction
+        self.diamondDiamonds = diamondDiamonds
         self.sendAsConfiguration = sendAsConfiguration
         self.openSettings = openSettings
         self.call = call
@@ -459,7 +459,7 @@ public final class MessageInputPanelComponent: Component {
         if lhs.placeholder != rhs.placeholder {
             return false
         }
-        if lhs.sendPaidMessageStars != rhs.sendPaidMessageStars {
+        if lhs.sendPaidMessageDiamonds != rhs.sendPaidMessageDiamonds {
             return false
         }
         if lhs.maxLength != rhs.maxLength {
@@ -573,7 +573,7 @@ public final class MessageInputPanelComponent: Component {
         if lhs.isEmbeddedInCamera != rhs.isEmbeddedInCamera {
             return false
         }
-        if lhs.starStars != rhs.starStars {
+        if lhs.diamondDiamonds != rhs.diamondDiamonds {
             return false
         }
         if lhs.sendAsConfiguration != rhs.sendAsConfiguration {
@@ -1058,17 +1058,17 @@ public final class MessageInputPanelComponent: Component {
                 }
                 
                 let rightAction: ChatTextInputPanelComponent.RightAction?
-                if component.sendStarsAction != nil {
-                    rightAction = ChatTextInputPanelComponent.RightAction(kind: .stars(count: Int(component.starStars?.totalStars ?? 0), isFilled: component.starStars?.hasOutgoingStars ?? false), action: { [weak self] sourceView in
+                if component.sendDiamondsAction != nil {
+                    rightAction = ChatTextInputPanelComponent.RightAction(kind: .stars(count: Int(component.diamondDiamonds?.totalStars ?? 0), isFilled: component.diamondDiamonds?.hasOutgoingDiamonds ?? false), action: { [weak self] sourceView in
                         guard let self, let component = self.component else {
                             return
                         }
-                        component.sendStarsAction?(sourceView, false)
+                        component.sendDiamondsAction?(sourceView, false)
                     }, longPressAction: { [weak self] sourceView in
                         guard let self, let component = self.component else {
                             return
                         }
-                        component.sendStarsAction?(sourceView, true)
+                        component.sendDiamondsAction?(sourceView, true)
                     })
                 } else {
                     rightAction = ChatTextInputPanelComponent.RightAction(kind: .empty, action: { _ in })
@@ -1121,10 +1121,10 @@ public final class MessageInputPanelComponent: Component {
                         sendAsConfiguration: component.liveChatState?.isEnabled == true ? sendAsConfiguration : nil,
                         placeholder: (component.liveChatState == nil || component.liveChatState?.isEnabled == true) ? placeholder : component.strings.LiveStream_CommentsDisabledPlaceholder,
                         isEnabled: (component.liveChatState == nil || component.liveChatState?.isEnabled == true),
-                        paidMessagePrice: component.sendPaidMessageStars,
-                        sendColor: component.sendPaidMessageStars.flatMap { value in
+                        paidMessagePrice: component.sendPaidMessageDiamonds,
+                        sendColor: component.sendPaidMessageDiamonds.flatMap { value in
                             let params = LiveChatMessageParams(appConfig: component.context.currentAppConfiguration.with({ $0 }))
-                            let color = GroupCallMessagesContext.getStarAmountParamMapping(params: params, value: value.value).color ?? GroupCallMessagesContext.Message.Color(rawValue: 0x985FDC)
+                            let color = GroupCallMessagesContext.getDiamondAmountParamMapping(params: params, value: value.value).color ?? GroupCallMessagesContext.Message.Color(rawValue: 0x985FDC)
                             return StoryLiveChatMessageComponent.getMessageColor(color: color)
                         },
                         isSendDisabled: isSendDisabled,
@@ -1350,7 +1350,7 @@ public final class MessageInputPanelComponent: Component {
                                 
                 let attributedPlaceholder = NSMutableAttributedString(string: string, font:Font.regular(17.0), textColor: placeholderColor)
                 if let range = attributedPlaceholder.string.range(of: "#") {
-                    attributedPlaceholder.addAttribute(.attachment, value: PresentationResourcesChat.chatPlaceholderStarIcon(component.theme)!, range: NSRange(range, in: attributedPlaceholder.string))
+                    attributedPlaceholder.addAttribute(.attachment, value: PresentationResourcesChat.chatPlaceholderDiamondIcon(component.theme)!, range: NSRange(range, in: attributedPlaceholder.string))
                     attributedPlaceholder.addAttribute(.foregroundColor, value: placeholderColor, range: NSRange(range, in: attributedPlaceholder.string))
                     attributedPlaceholder.addAttribute(.baselineOffset, value: 1.0, range: NSRange(range, in: attributedPlaceholder.string))
                 }
@@ -1364,7 +1364,7 @@ public final class MessageInputPanelComponent: Component {
                 
                 let vibrancyAttributedPlaceholder = NSMutableAttributedString(string: string, font:Font.regular(17.0), textColor: UIColor.black)
                 if let range = vibrancyAttributedPlaceholder.string.range(of: "#") {
-                    vibrancyAttributedPlaceholder.addAttribute(.attachment, value: PresentationResourcesChat.chatPlaceholderStarIcon(component.theme)!, range: NSRange(range, in: vibrancyAttributedPlaceholder.string))
+                    vibrancyAttributedPlaceholder.addAttribute(.attachment, value: PresentationResourcesChat.chatPlaceholderDiamondIcon(component.theme)!, range: NSRange(range, in: vibrancyAttributedPlaceholder.string))
                     vibrancyAttributedPlaceholder.addAttribute(.foregroundColor, value: UIColor.black, range: NSRange(range, in: vibrancyAttributedPlaceholder.string))
                     vibrancyAttributedPlaceholder.addAttribute(.baselineOffset, value: 1.0, range: NSRange(range, in: vibrancyAttributedPlaceholder.string))
                 }
@@ -2057,8 +2057,8 @@ public final class MessageInputPanelComponent: Component {
                     inputActionButtonMode = .send
                 } else {
                     if self.textFieldExternalState.hasText {
-                        if let sendPaidMessageStars = component.sendPaidMessageStars, !"".isEmpty {
-                            inputActionButtonMode = .stars(sendPaidMessageStars.value)
+                        if let sendPaidMessageDiamonds = component.sendPaidMessageDiamonds, !"".isEmpty {
+                            inputActionButtonMode = .stars(sendPaidMessageDiamonds.value)
                         } else {
                             inputActionButtonMode = .send
                         }

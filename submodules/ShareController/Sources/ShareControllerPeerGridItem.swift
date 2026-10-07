@@ -102,7 +102,7 @@ final class ShareControllerPeerGridItem: GridItem {
             case repostMessage
         }
         
-        case peer(peer: EngineRenderedPeer, presence: EnginePeer.Presence?, topicId: Int64?, threadData: MessageHistoryThreadData?, requiresPremiumForMessaging: Bool, requiresStars: Int64?)
+        case peer(peer: EngineRenderedPeer, presence: EnginePeer.Presence?, topicId: Int64?, threadData: MessageHistoryThreadData?, requiresPremiumForMessaging: Bool, requiresDiamonds: Int64?)
         case story(mode: StoryMode)
         
         var peerId: EnginePeer.Id? {
@@ -219,7 +219,7 @@ final class ShareControllerPeerGridItemNode: GridItemNode {
             var effectivePresence: EnginePeer.Presence?
             let timestamp = Int32(CFAbsoluteTimeGetCurrent() + NSTimeIntervalSince1970)
             self.peerNode.theme = itemTheme
-            if let item, case let .peer(renderedPeer, presence, _, threadData, requiresPremiumForMessaging, requiresStars) = item, let peer = renderedPeer.peer {
+            if let item, case let .peer(renderedPeer, presence, _, threadData, requiresPremiumForMessaging, requiresDiamonds) = item, let peer = renderedPeer.peer {
                 effectivePresence = presence
                 var isOnline = false
                 var isSupport = false
@@ -248,7 +248,7 @@ final class ShareControllerPeerGridItemNode: GridItemNode {
                     strings: strings,
                     peer: renderedPeer,
                     requiresPremiumForMessaging: requiresPremiumForMessaging,
-                    requiresStars: requiresStars,
+                    requiresDiamonds: requiresDiamonds,
                     customTitle: threadData?.info.title,
                     iconId: threadData?.info.icon,
                     iconColor: threadData?.info.iconColor ?? 0,

@@ -103,7 +103,7 @@ yi += stride;
     free(rgb);
 }
 
-void telegramFastBlurMore(int imageWidth, int imageHeight, int imageStride, void * _Nonnull pixels)
+void ansibleFastBlurMore(int imageWidth, int imageHeight, int imageStride, void * _Nonnull pixels)
 {
     uint8_t *pix = (uint8_t *)pixels;
     const int w = imageWidth;
@@ -292,7 +292,7 @@ static int16_t *lightBrightenMatrix(int32_t * _Nullable outDivisor)
     return saturationMatrix;
 }
 
-void telegramBrightenImage(int imageWidth, int imageHeight, int imageStride, void * _Nonnull pixels)
+void ansibleBrightenImage(int imageWidth, int imageHeight, int imageStride, void * _Nonnull pixels)
 {
     modifyImage(pixels, imageWidth, imageHeight, imageStride, lightBrightenMatrix(NULL));
 }

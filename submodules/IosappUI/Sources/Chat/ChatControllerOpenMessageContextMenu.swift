@@ -55,12 +55,12 @@ extension ChatControllerImpl {
                 peerMessageSelectedReactions(context: self.context, message: EngineMessage(topMessage)),
                 topMessageReactions(context: self.context, message: topMessage, subPeerId: self.chatLocation.threadId.flatMap(EnginePeer.Id.init), ignoreDefault: canBypassReactionRestrictions),
                 ApplicationSpecificNotice.getChatTextSelectionTips(accountManager: self.context.sharedContext.accountManager)
-            ).startStandalone(next: { [weak self] peer, actions, allowedReactionsAndStars, selectedReactions, topReactions, chatTextSelectionTips in
+            ).startStandalone(next: { [weak self] peer, actions, allowedReactionsAndDiamonds, selectedReactions, topReactions, chatTextSelectionTips in
                 guard let self else {
                     return
                 }
                 
-                var (allowedReactions, _) = allowedReactionsAndStars
+                var (allowedReactions, _) = allowedReactionsAndDiamonds
                 
                 var actions = actions
                 switch actions.content {
@@ -385,7 +385,7 @@ extension ChatControllerImpl {
                                     guard let self else {
                                         return
                                     }
-                                    self.openMessageSendStarsScreen(message: EngineMessage(message))
+                                    self.openMessageSendDiamondsScreen(message: EngineMessage(message))
                                 })
                             }
                             return
@@ -436,11 +436,11 @@ extension ChatControllerImpl {
                             }
                         }
                         
-                        guard let starsContext = self.context.starsContext else {
+                        guard let diamondsContext = self.context.diamondsContext else {
                             return
                         }
                         let _ = (combineLatest(
-                            starsContext.state,
+                            diamondsContext.state,
                             self.context.engine.data.get(IosappEngine.EngineData.Item.Peer.ReactionSettings(id: message.id.peerId))
                         )
                         |> take(1)
@@ -449,7 +449,7 @@ extension ChatControllerImpl {
                                 return
                             }
                             
-                            if case let .known(reactionSettings) = reactionSettings, let starsAllowed = reactionSettings.starsAllowed, !starsAllowed {
+                            if case let .known(reactionSettings) = reactionSettings, let diamondsAllowed = reactionSettings.diamondsAllowed, !diamondsAllowed {
                                 if let peer = strongSelf.presentationInterfaceState.renderedPeer?.chatMainPeer {
                                     let alertController = textAlertController(
                                         context: strongSelf.context,
@@ -470,17 +470,17 @@ extension ChatControllerImpl {
                                         return
                                     }
                                     
-                                    let _ = (strongSelf.context.engine.payments.starsTopUpOptions()
+                                    let _ = (strongSelf.context.engine.payments.diamondsTopUpOptions()
                                     |> take(1)
                                     |> deliverOnMainQueue).startStandalone(next: { [weak strongSelf] options in
                                         guard let strongSelf else {
                                             return
                                         }
-                                        guard let starsContext = strongSelf.context.starsContext else {
+                                        guard let diamondsContext = strongSelf.context.diamondsContext else {
                                             return
                                         }
                                         
-                                        let purchaseScreen = strongSelf.context.sharedContext.makeStarsPurchaseScreen(context: strongSelf.context, starsContext: starsContext, options: options, purpose: .reactions(peerId: message.id.peerId, requiredStars: 1), targetPeerId: nil, customTheme: nil, completion: { result in
+                                        let purchaseScreen = strongSelf.context.sharedContext.makeDiamondsPurchaseScreen(context: strongSelf.context, diamondsContext: diamondsContext, options: options, purpose: .reactions(peerId: message.id.peerId, requiredDiamonds: 1), targetPeerId: nil, customTheme: nil, completion: { result in
                                             let _ = result
                                         })
                                         strongSelf.push(purchaseScreen)
@@ -490,12 +490,12 @@ extension ChatControllerImpl {
                                 return
                             }
                             
-                            let _ = (strongSelf.context.engine.messages.sendStarsReaction(id: message.id, count: 1, privacy: nil)
+                            let _ = (strongSelf.context.engine.messages.sendDiamondsReaction(id: message.id, count: 1, privacy: nil)
                             |> deliverOnMainQueue).startStandalone(next: { privacy in
                                 guard let strongSelf = self else {
                                     return
                                 }
-                                strongSelf.displayOrUpdateSendStarsUndo(messageId: message.id, count: 1, privacy: privacy)
+                                strongSelf.displayOrUpdateSendDiamondsUndo(messageId: message.id, count: 1, privacy: privacy)
                             })
                         })
                     } else {

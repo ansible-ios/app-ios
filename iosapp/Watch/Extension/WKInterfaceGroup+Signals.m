@@ -15,14 +15,14 @@
 
 + (void)load
 {
-    TGSwizzleMethodImplementation(self.class, NSSelectorFromString(@"dealloc"), @selector(tg_dealloc));
+    TGSwizzleMethodImplementation(self.class, NSSelectorFromString(@"dealloc"), @selector(as_dealloc));
 }
 
-- (void)tg_dealloc
+- (void)as_dealloc
 {
     [self.disposable dispose];
     
-    [self tg_dealloc];
+    [self as_dealloc];
 }
 
 - (id)postponedImage

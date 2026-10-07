@@ -12,7 +12,7 @@ import IosappPresentationData
 import GlassBackgroundComponent
 import CheckComponent
 
-final class StarsFilterComponent: Component {
+final class DiamondsFilterComponent: Component {
     let theme: PresentationTheme
     let text: String
     let isSelected: Bool
@@ -30,7 +30,7 @@ final class StarsFilterComponent: Component {
         self.selectionUpdated = selectionUpdated
     }
     
-    static func ==(lhs: StarsFilterComponent, rhs: StarsFilterComponent) -> Bool {
+    static func ==(lhs: DiamondsFilterComponent, rhs: DiamondsFilterComponent) -> Bool {
         if lhs.theme !== rhs.theme {
             return false
         }
@@ -50,7 +50,7 @@ final class StarsFilterComponent: Component {
         private let check = ComponentView<Empty>()
         private let text = ComponentView<Empty>()
         
-        private var component: StarsFilterComponent?
+        private var component: DiamondsFilterComponent?
         private weak var state: EmptyComponentState?
                 
         override init(frame: CGRect) {
@@ -73,7 +73,7 @@ final class StarsFilterComponent: Component {
             component.selectionUpdated(!component.isSelected)
         }
         
-        func update(component: StarsFilterComponent, availableSize: CGSize, state: EmptyComponentState, environment: Environment<Empty>, transition: ComponentTransition) -> CGSize {
+        func update(component: DiamondsFilterComponent, availableSize: CGSize, state: EmptyComponentState, environment: Environment<Empty>, transition: ComponentTransition) -> CGSize {
             self.component = component
             self.state = state
             

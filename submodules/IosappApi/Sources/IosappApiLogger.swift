@@ -1,11 +1,11 @@
 import Foundation
 
-private var telegramApiLogger: (String) -> Void = { _ in }
+private var ansibleApiLogger: (String) -> Void = { _ in }
 
 public func setIosappApiLogger(_ f: @escaping (String) -> Void) {
-    telegramApiLogger = f
+    ansibleApiLogger = f
 }
 
-func telegramApiLog(_ what: @autoclosure () -> String) {
-    telegramApiLogger(what())
+func ansibleApiLog(_ what: @autoclosure () -> String) {
+    ansibleApiLogger(what())
 }

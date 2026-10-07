@@ -879,7 +879,7 @@ public extension Api {
                 return ("messageActionGiftPremium", [("flags", ConstructorParameterDescription(self.flags)), ("currency", ConstructorParameterDescription(self.currency)), ("amount", ConstructorParameterDescription(self.amount)), ("days", ConstructorParameterDescription(self.days)), ("cryptoCurrency", ConstructorParameterDescription(self.cryptoCurrency)), ("cryptoAmount", ConstructorParameterDescription(self.cryptoAmount)), ("message", ConstructorParameterDescription(self.message))])
             }
         }
-        public class Cons_messageActionGiftStars: TypeConstructorDescription {
+        public class Cons_messageActionGiftDiamonds: TypeConstructorDescription {
             public var flags: Int32
             public var currency: String
             public var amount: Int64
@@ -1134,7 +1134,7 @@ public extension Api {
                 return ("messageActionPollDeleteAnswer", [("answer", ConstructorParameterDescription(self.answer))])
             }
         }
-        public class Cons_messageActionPrizeStars: TypeConstructorDescription {
+        public class Cons_messageActionPrizeDiamonds: TypeConstructorDescription {
             public var flags: Int32
             public var stars: Int64
             public var transactionId: String
@@ -1226,7 +1226,7 @@ public extension Api {
                 return ("messageActionSetMessagesTTL", [("flags", ConstructorParameterDescription(self.flags)), ("period", ConstructorParameterDescription(self.period)), ("autoSettingFrom", ConstructorParameterDescription(self.autoSettingFrom))])
             }
         }
-        public class Cons_messageActionStarGift: TypeConstructorDescription {
+        public class Cons_messageActionDiamondGift: TypeConstructorDescription {
             public var flags: Int32
             public var gift: Api.StarGift
             public var message: Api.TextWithEntities?
@@ -1259,7 +1259,7 @@ public extension Api {
                 return ("messageActionStarGift", [("flags", ConstructorParameterDescription(self.flags)), ("gift", ConstructorParameterDescription(self.gift)), ("message", ConstructorParameterDescription(self.message)), ("convertStars", ConstructorParameterDescription(self.convertStars)), ("upgradeMsgId", ConstructorParameterDescription(self.upgradeMsgId)), ("upgradeStars", ConstructorParameterDescription(self.upgradeStars)), ("fromId", ConstructorParameterDescription(self.fromId)), ("peer", ConstructorParameterDescription(self.peer)), ("savedId", ConstructorParameterDescription(self.savedId)), ("prepaidUpgradeHash", ConstructorParameterDescription(self.prepaidUpgradeHash)), ("giftMsgId", ConstructorParameterDescription(self.giftMsgId)), ("toId", ConstructorParameterDescription(self.toId)), ("giftNum", ConstructorParameterDescription(self.giftNum))])
             }
         }
-        public class Cons_messageActionStarGiftPurchaseOffer: TypeConstructorDescription {
+        public class Cons_messageActionDiamondGiftPurchaseOffer: TypeConstructorDescription {
             public var flags: Int32
             public var gift: Api.StarGift
             public var price: Api.StarsAmount
@@ -1274,7 +1274,7 @@ public extension Api {
                 return ("messageActionStarGiftPurchaseOffer", [("flags", ConstructorParameterDescription(self.flags)), ("gift", ConstructorParameterDescription(self.gift)), ("price", ConstructorParameterDescription(self.price)), ("expiresAt", ConstructorParameterDescription(self.expiresAt))])
             }
         }
-        public class Cons_messageActionStarGiftPurchaseOfferDeclined: TypeConstructorDescription {
+        public class Cons_messageActionDiamondGiftPurchaseOfferDeclined: TypeConstructorDescription {
             public var flags: Int32
             public var gift: Api.StarGift
             public var price: Api.StarsAmount
@@ -1287,7 +1287,7 @@ public extension Api {
                 return ("messageActionStarGiftPurchaseOfferDeclined", [("flags", ConstructorParameterDescription(self.flags)), ("gift", ConstructorParameterDescription(self.gift)), ("price", ConstructorParameterDescription(self.price))])
             }
         }
-        public class Cons_messageActionStarGiftUnique: TypeConstructorDescription {
+        public class Cons_messageActionDiamondGiftUnique: TypeConstructorDescription {
             public var flags: Int32
             public var gift: Api.StarGift
             public var canExportAt: Int32?
@@ -1464,7 +1464,7 @@ public extension Api {
         case messageActionGeoProximityReached(Cons_messageActionGeoProximityReached)
         case messageActionGiftCode(Cons_messageActionGiftCode)
         case messageActionGiftPremium(Cons_messageActionGiftPremium)
-        case messageActionGiftStars(Cons_messageActionGiftStars)
+        case messageActionGiftStars(Cons_messageActionGiftDiamonds)
         case messageActionGiftTon(Cons_messageActionGiftTon)
         case messageActionGiveawayLaunch(Cons_messageActionGiveawayLaunch)
         case messageActionGiveawayResults(Cons_messageActionGiveawayResults)
@@ -1485,7 +1485,7 @@ public extension Api {
         case messageActionPinMessage
         case messageActionPollAppendAnswer(Cons_messageActionPollAppendAnswer)
         case messageActionPollDeleteAnswer(Cons_messageActionPollDeleteAnswer)
-        case messageActionPrizeStars(Cons_messageActionPrizeStars)
+        case messageActionPrizeStars(Cons_messageActionPrizeDiamonds)
         case messageActionRequestedPeer(Cons_messageActionRequestedPeer)
         case messageActionRequestedPeerSentMe(Cons_messageActionRequestedPeerSentMe)
         case messageActionScreenshotTaken
@@ -1494,10 +1494,10 @@ public extension Api {
         case messageActionSetChatTheme(Cons_messageActionSetChatTheme)
         case messageActionSetChatWallPaper(Cons_messageActionSetChatWallPaper)
         case messageActionSetMessagesTTL(Cons_messageActionSetMessagesTTL)
-        case messageActionStarGift(Cons_messageActionStarGift)
-        case messageActionStarGiftPurchaseOffer(Cons_messageActionStarGiftPurchaseOffer)
-        case messageActionStarGiftPurchaseOfferDeclined(Cons_messageActionStarGiftPurchaseOfferDeclined)
-        case messageActionStarGiftUnique(Cons_messageActionStarGiftUnique)
+        case messageActionStarGift(Cons_messageActionDiamondGift)
+        case messageActionStarGiftPurchaseOffer(Cons_messageActionDiamondGiftPurchaseOffer)
+        case messageActionStarGiftPurchaseOfferDeclined(Cons_messageActionDiamondGiftPurchaseOfferDeclined)
+        case messageActionStarGiftUnique(Cons_messageActionDiamondGiftUnique)
         case messageActionSuggestBirthday(Cons_messageActionSuggestBirthday)
         case messageActionSuggestProfilePhoto(Cons_messageActionSuggestProfilePhoto)
         case messageActionSuggestedPostApproval(Cons_messageActionSuggestedPostApproval)
@@ -2678,7 +2678,7 @@ public extension Api {
                 return nil
             }
         }
-        public static func parse_messageActionGiftStars(_ reader: BufferReader) -> MessageAction? {
+        public static func parse_messageActionGiftDiamonds(_ reader: BufferReader) -> MessageAction? {
             var _1: Int32?
             _1 = reader.readInt32()
             var _2: String?
@@ -2707,7 +2707,7 @@ public extension Api {
             let _c6 = (Int(_1 ?? 0) & Int(1 << 0) == 0) || _6 != nil
             let _c7 = (Int(_1 ?? 0) & Int(1 << 1) == 0) || _7 != nil
             if _c1 && _c2 && _c3 && _c4 && _c5 && _c6 && _c7 {
-                return Api.MessageAction.messageActionGiftStars(Cons_messageActionGiftStars(flags: _1!, currency: _2!, amount: _3!, stars: _4!, cryptoCurrency: _5, cryptoAmount: _6, transactionId: _7))
+                return Api.MessageAction.messageActionGiftStars(Cons_messageActionGiftDiamonds(flags: _1!, currency: _2!, amount: _3!, stars: _4!, cryptoCurrency: _5, cryptoAmount: _6, transactionId: _7))
             }
             else {
                 return nil
@@ -3077,7 +3077,7 @@ public extension Api {
                 return nil
             }
         }
-        public static func parse_messageActionPrizeStars(_ reader: BufferReader) -> MessageAction? {
+        public static func parse_messageActionPrizeDiamonds(_ reader: BufferReader) -> MessageAction? {
             var _1: Int32?
             _1 = reader.readInt32()
             var _2: Int64?
@@ -3096,7 +3096,7 @@ public extension Api {
             let _c4 = _4 != nil
             let _c5 = _5 != nil
             if _c1 && _c2 && _c3 && _c4 && _c5 {
-                return Api.MessageAction.messageActionPrizeStars(Cons_messageActionPrizeStars(flags: _1!, stars: _2!, transactionId: _3!, boostPeer: _4!, giveawayMsgId: _5!))
+                return Api.MessageAction.messageActionPrizeStars(Cons_messageActionPrizeDiamonds(flags: _1!, stars: _2!, transactionId: _3!, boostPeer: _4!, giveawayMsgId: _5!))
             }
             else {
                 return nil
@@ -3216,7 +3216,7 @@ public extension Api {
                 return nil
             }
         }
-        public static func parse_messageActionStarGift(_ reader: BufferReader) -> MessageAction? {
+        public static func parse_messageActionDiamondGift(_ reader: BufferReader) -> MessageAction? {
             var _1: Int32?
             _1 = reader.readInt32()
             var _2: Api.StarGift?
@@ -3289,13 +3289,13 @@ public extension Api {
             let _c12 = (Int(_1 ?? 0) & Int(1 << 18) == 0) || _12 != nil
             let _c13 = (Int(_1 ?? 0) & Int(1 << 19) == 0) || _13 != nil
             if _c1 && _c2 && _c3 && _c4 && _c5 && _c6 && _c7 && _c8 && _c9 && _c10 && _c11 && _c12 && _c13 {
-                return Api.MessageAction.messageActionStarGift(Cons_messageActionStarGift(flags: _1!, gift: _2!, message: _3, convertStars: _4, upgradeMsgId: _5, upgradeStars: _6, fromId: _7, peer: _8, savedId: _9, prepaidUpgradeHash: _10, giftMsgId: _11, toId: _12, giftNum: _13))
+                return Api.MessageAction.messageActionStarGift(Cons_messageActionDiamondGift(flags: _1!, gift: _2!, message: _3, convertStars: _4, upgradeMsgId: _5, upgradeStars: _6, fromId: _7, peer: _8, savedId: _9, prepaidUpgradeHash: _10, giftMsgId: _11, toId: _12, giftNum: _13))
             }
             else {
                 return nil
             }
         }
-        public static func parse_messageActionStarGiftPurchaseOffer(_ reader: BufferReader) -> MessageAction? {
+        public static func parse_messageActionDiamondGiftPurchaseOffer(_ reader: BufferReader) -> MessageAction? {
             var _1: Int32?
             _1 = reader.readInt32()
             var _2: Api.StarGift?
@@ -3313,13 +3313,13 @@ public extension Api {
             let _c3 = _3 != nil
             let _c4 = _4 != nil
             if _c1 && _c2 && _c3 && _c4 {
-                return Api.MessageAction.messageActionStarGiftPurchaseOffer(Cons_messageActionStarGiftPurchaseOffer(flags: _1!, gift: _2!, price: _3!, expiresAt: _4!))
+                return Api.MessageAction.messageActionStarGiftPurchaseOffer(Cons_messageActionDiamondGiftPurchaseOffer(flags: _1!, gift: _2!, price: _3!, expiresAt: _4!))
             }
             else {
                 return nil
             }
         }
-        public static func parse_messageActionStarGiftPurchaseOfferDeclined(_ reader: BufferReader) -> MessageAction? {
+        public static func parse_messageActionDiamondGiftPurchaseOfferDeclined(_ reader: BufferReader) -> MessageAction? {
             var _1: Int32?
             _1 = reader.readInt32()
             var _2: Api.StarGift?
@@ -3334,13 +3334,13 @@ public extension Api {
             let _c2 = _2 != nil
             let _c3 = _3 != nil
             if _c1 && _c2 && _c3 {
-                return Api.MessageAction.messageActionStarGiftPurchaseOfferDeclined(Cons_messageActionStarGiftPurchaseOfferDeclined(flags: _1!, gift: _2!, price: _3!))
+                return Api.MessageAction.messageActionStarGiftPurchaseOfferDeclined(Cons_messageActionDiamondGiftPurchaseOfferDeclined(flags: _1!, gift: _2!, price: _3!))
             }
             else {
                 return nil
             }
         }
-        public static func parse_messageActionStarGiftUnique(_ reader: BufferReader) -> MessageAction? {
+        public static func parse_messageActionDiamondGiftUnique(_ reader: BufferReader) -> MessageAction? {
             var _1: Int32?
             _1 = reader.readInt32()
             var _2: Api.StarGift?
@@ -3406,7 +3406,7 @@ public extension Api {
             let _c11 = (Int(_1 ?? 0) & Int(1 << 12) == 0) || _11 != nil
             let _c12 = (Int(_1 ?? 0) & Int(1 << 15) == 0) || _12 != nil
             if _c1 && _c2 && _c3 && _c4 && _c5 && _c6 && _c7 && _c8 && _c9 && _c10 && _c11 && _c12 {
-                return Api.MessageAction.messageActionStarGiftUnique(Cons_messageActionStarGiftUnique(flags: _1!, gift: _2!, canExportAt: _3, transferStars: _4, fromId: _5, peer: _6, savedId: _7, resaleAmount: _8, canTransferAt: _9, canResellAt: _10, dropOriginalDetailsStars: _11, canCraftAt: _12))
+                return Api.MessageAction.messageActionStarGiftUnique(Cons_messageActionDiamondGiftUnique(flags: _1!, gift: _2!, canExportAt: _3, transferStars: _4, fromId: _5, peer: _6, savedId: _7, resaleAmount: _8, canTransferAt: _9, canResellAt: _10, dropOriginalDetailsStars: _11, canCraftAt: _12))
             }
             else {
                 return nil

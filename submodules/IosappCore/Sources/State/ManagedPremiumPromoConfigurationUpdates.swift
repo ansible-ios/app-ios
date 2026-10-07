@@ -67,7 +67,7 @@ private extension PremiumPromoConfiguration {
 
                 var videos: [String: IosappMediaFile] = [:]
                 for (key, document) in zip(videoSections, videoFiles) {
-                    if let file = telegramMediaFileFromApiDocument(document, altDocuments: []) {
+                    if let file = ansibleMediaFileFromApiDocument(document, altDocuments: []) {
                         videos[key] = file
                     }
                 }

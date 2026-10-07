@@ -17,14 +17,14 @@ public indirect enum GiveawayPrize: Codable, Equatable, Hashable {
     case giveawayPrizePremium(GiveawayPrizePremium)
 
     /// The giveaway sends Iosapp Stars to the winners
-    case giveawayPrizeStars(GiveawayPrizeStars)
+    case giveawayPrizeDiamonds(GiveawayPrizeDiamonds)
 
     /// Decoded when the @type is not one of the known cases (forward-compatible).
     case unsupported
 
     private enum Kind: String, Codable {
         case giveawayPrizePremium
-        case giveawayPrizeStars
+        case giveawayPrizeDiamonds
     }
 
     public init(from decoder: Decoder) throws {
@@ -38,9 +38,9 @@ public indirect enum GiveawayPrize: Codable, Equatable, Hashable {
         case .giveawayPrizePremium:
             let value = try GiveawayPrizePremium(from: decoder)
             self = .giveawayPrizePremium(value)
-        case .giveawayPrizeStars:
-            let value = try GiveawayPrizeStars(from: decoder)
-            self = .giveawayPrizeStars(value)
+        case .giveawayPrizeDiamonds:
+            let value = try GiveawayPrizeDiamonds(from: decoder)
+            self = .giveawayPrizeDiamonds(value)
         }
     }
 
@@ -50,8 +50,8 @@ public indirect enum GiveawayPrize: Codable, Equatable, Hashable {
         case .giveawayPrizePremium(let value):
             try container.encode(Kind.giveawayPrizePremium, forKey: .type)
             try value.encode(to: encoder)
-        case .giveawayPrizeStars(let value):
-            try container.encode(Kind.giveawayPrizeStars, forKey: .type)
+        case .giveawayPrizeDiamonds(let value):
+            try container.encode(Kind.giveawayPrizeDiamonds, forKey: .type)
             try value.encode(to: encoder)
         case .unsupported:
             try container.encode("unsupported", forKey: .type)
@@ -72,14 +72,14 @@ public struct GiveawayPrizePremium: Codable, Equatable, Hashable {
 }
 
 /// The giveaway sends Iosapp Stars to the winners
-public struct GiveawayPrizeStars: Codable, Equatable, Hashable {
+public struct GiveawayPrizeDiamonds: Codable, Equatable, Hashable {
 
     /// Number of Iosapp Stars that will be shared by all winners
-    public let starCount: Int64
+    public let diamondCount: Int64
 
 
-    public init(starCount: Int64) {
-        self.starCount = starCount
+    public init(diamondCount: Int64) {
+        self.diamondCount = diamondCount
     }
 }
 

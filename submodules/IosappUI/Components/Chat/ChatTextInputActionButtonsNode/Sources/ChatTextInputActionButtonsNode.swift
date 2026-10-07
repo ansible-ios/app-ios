@@ -17,7 +17,7 @@ import ComponentFlow
 import AnimatedCountLabelNode
 import GlassBackgroundComponent
 import ComponentDisplayAdapters
-import StarsParticleEffect
+import DiamondsParticleEffect
 
 private final class EffectBadgeView: UIView {
     private let context: AccountContext
@@ -141,7 +141,7 @@ public final class ChatTextInputActionButtonsNode: ASDisplayNode, ChatSendMessag
     
     public let sendContainerNode: ASDisplayNode
     public let sendButtonBackgroundView: UIImageView
-    private var sendButtonBackgroundEffectLayer: StarsParticleEffectLayer?
+    private var sendButtonBackgroundEffectLayer: DiamondsParticleEffectLayer?
     public let sendButton: HighlightTrackingButtonNode
     public var sendButtonRadialStatusNode: ChatSendButtonRadialStatusNode?
     public var sendButtonHasApplyIcon = false
@@ -317,19 +317,19 @@ public final class ChatTextInputActionButtonsNode: ASDisplayNode, ChatSendMessag
         }
         
         var starsAmount: Int64?
-        if let sendPaidMessageStars = interfaceState.sendPaidMessageStars, interfaceState.interfaceState.editMessage == nil {
+        if let sendPaidMessageDiamonds = interfaceState.sendPaidMessageDiamonds, interfaceState.interfaceState.editMessage == nil {
             var amount: Int64
             if let forwardedCount = interfaceState.interfaceState.forwardMessageIds?.count, forwardedCount > 0 {
-                amount = sendPaidMessageStars.value * Int64(forwardedCount)
+                amount = sendPaidMessageDiamonds.value * Int64(forwardedCount)
                 if !interfaceState.interfaceState.effectiveInputState.isEmpty {
-                    amount += sendPaidMessageStars.value
+                    amount += sendPaidMessageDiamonds.value
                 }
             } else {
                 if interfaceState.interfaceState.effectiveInputState.inputText.length > 4096 {
                     let messageCount = Int32(ceil(CGFloat(interfaceState.interfaceState.effectiveInputState.inputText.length) / 4096.0))
-                    amount = sendPaidMessageStars.value * Int64(messageCount)
+                    amount = sendPaidMessageDiamonds.value * Int64(messageCount)
                 } else {
-                    amount = sendPaidMessageStars.value
+                    amount = sendPaidMessageDiamonds.value
                 }
             }
             starsAmount = amount
@@ -342,7 +342,7 @@ public final class ChatTextInputActionButtonsNode: ASDisplayNode, ChatSendMessag
             let font = Font.with(size: 17.0, design: .round, weight: .semibold, traits: .monospacedNumbers)
             let badgeString = NSMutableAttributedString(string: "⭐️ ", font: font, textColor: interfaceState.theme.chat.inputPanel.actionControlForegroundColor)
             if let range = badgeString.string.range(of: "⭐️") {
-                badgeString.addAttribute(.attachment, value: PresentationResourcesChat.chatPlaceholderStarIcon(interfaceState.theme)!, range: NSRange(range, in: badgeString.string))
+                badgeString.addAttribute(.attachment, value: PresentationResourcesChat.chatPlaceholderDiamondIcon(interfaceState.theme)!, range: NSRange(range, in: badgeString.string))
                 badgeString.addAttribute(.baselineOffset, value: 1.0, range: NSRange(range, in: badgeString.string))
             }
             var segments: [AnimatedCountLabelNode.Segment] = []
@@ -471,13 +471,13 @@ public final class ChatTextInputActionButtonsNode: ASDisplayNode, ChatSendMessag
         }
         
         if let _ = self.customSendColor {
-            let sendButtonBackgroundEffectLayer: StarsParticleEffectLayer
+            let sendButtonBackgroundEffectLayer: DiamondsParticleEffectLayer
             var sendButtonBackgroundEffectLayerTransition = transition
             if let current = self.sendButtonBackgroundEffectLayer {
                 sendButtonBackgroundEffectLayer = current
             } else {
                 sendButtonBackgroundEffectLayerTransition = .immediate
-                sendButtonBackgroundEffectLayer = StarsParticleEffectLayer()
+                sendButtonBackgroundEffectLayer = DiamondsParticleEffectLayer()
                 self.sendButtonBackgroundEffectLayer = sendButtonBackgroundEffectLayer
                 self.sendButtonBackgroundView.layer.addSublayer(sendButtonBackgroundEffectLayer)
                 if transition.isAnimated {

@@ -293,7 +293,7 @@ private func filterMessageAttributesForOutgoingMessage(_ attributes: [MessageAtt
             return true
         case _ as ForwardVideoTimestampAttribute:
             return true
-        case _ as PaidStarsMessageAttribute:
+        case _ as PaidDiamondsMessageAttribute:
             return true
         case _ as SuggestedPostMessageAttribute:
             return true
@@ -498,7 +498,7 @@ private func filterMessageAttributesForForwardedMessage(_ attributes: [MessageAt
                 return true
             case _ as InvertMediaMessageAttribute:
                 return true
-            case _ as PaidStarsMessageAttribute:
+            case _ as PaidDiamondsMessageAttribute:
                 return true
             case let attribute as ReplyMessageAttribute:
                 if attribute.quote != nil {
@@ -619,16 +619,16 @@ public func resendMessages(account: Account, messageIds: [MessageId]) -> Signal<
     return account.postbox.transaction { transaction -> Void in
         var removeMessageIds: [MessageId] = []
         for (peerId, ids) in messagesIdsGroupedByPeerId(messageIds) {
-            var sendPaidMessageStars: StarsAmount?
+            var sendPaidMessageDiamonds: StarsAmount?
             let peer = transaction.getPeer(peerId)
-            if let user = peer as? IosappUser, user.flags.contains(.requireStars) {
+            if let user = peer as? IosappUser, user.flags.contains(.requireDiamonds) {
                 if let cachedUserData = transaction.getPeerCachedData(peerId: user.id) as? CachedUserData {
-                    sendPaidMessageStars = cachedUserData.sendPaidMessageStars
+                    sendPaidMessageDiamonds = cachedUserData.sendPaidMessageDiamonds
                 }
             } else if let channel = peer as? IosappChannel {
                 if channel.flags.contains(.isCreator) || channel.adminRights != nil {
                 } else {
-                    sendPaidMessageStars = channel.sendPaidMessageStars
+                    sendPaidMessageDiamonds = channel.sendPaidMessageDiamonds
                 }
             }
             
@@ -653,15 +653,15 @@ public func resendMessages(account: Account, messageIds: [MessageId]) -> Signal<
                         } else if let attribute = attribute as? ForwardSourceInfoAttribute {
                             forwardSource = attribute.messageId
                         } else {
-                            if attribute is PaidStarsMessageAttribute {
+                            if attribute is PaidDiamondsMessageAttribute {
                             } else {
                                 filteredAttributes.append(attribute)
                             }
                         }
                     }
                     
-                    if let sendPaidMessageStars {
-                        filteredAttributes.append(PaidStarsMessageAttribute(stars: sendPaidMessageStars, postponeSending: false))
+                    if let sendPaidMessageDiamonds {
+                        filteredAttributes.append(PaidDiamondsMessageAttribute(stars: sendPaidMessageDiamonds, postponeSending: false))
                     }
 
                     if let forwardSource = forwardSource {

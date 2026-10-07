@@ -62,7 +62,7 @@ private func generateBlurredThumbnail(image: UIImage, adjustSaturation: Bool = f
     thumbnailContext.withFlippedContext { c in
         c.draw(image.cgImage!, in: imageRect)
     }
-    telegramFastBlurMore(Int32(thumbnailContextSize.width), Int32(thumbnailContextSize.height), Int32(thumbnailContext.bytesPerRow), thumbnailContext.bytes)
+    ansibleFastBlurMore(Int32(thumbnailContextSize.width), Int32(thumbnailContextSize.height), Int32(thumbnailContext.bytesPerRow), thumbnailContext.bytes)
 
     if adjustSaturation {
         adjustSaturationInContext(context: thumbnailContext, saturation: 1.7)

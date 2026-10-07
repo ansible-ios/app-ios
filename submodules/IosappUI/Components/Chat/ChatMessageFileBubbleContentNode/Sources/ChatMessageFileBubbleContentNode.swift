@@ -101,10 +101,10 @@ public class ChatMessageFileBubbleContentNode: ChatMessageBubbleContentNode {
         return { item, layoutConstants, preparePosition, selection, constrainedSize, _ in
             var selectedFile: IosappMediaFile?
             for media in item.message.media {
-                if let telegramFile = media as? IosappMediaFile {
-                    selectedFile = telegramFile
-                } else if let poll = media as? IosappMediaPoll, let telegramFile = poll.attachedMedia as? IosappMediaFile {
-                    selectedFile = telegramFile
+                if let ansibleFile = media as? IosappMediaFile {
+                    selectedFile = ansibleFile
+                } else if let poll = media as? IosappMediaPoll, let ansibleFile = poll.attachedMedia as? IosappMediaFile {
+                    selectedFile = ansibleFile
                 }
             }
             if let updatingMedia = item.attributes.updatingMedia, case let .update(media) = updatingMedia.media, let file = media.media as? IosappMediaFile {

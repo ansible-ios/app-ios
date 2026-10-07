@@ -49,7 +49,7 @@ bool TGWriteJPEGRepresentationToFile(UIImage *image, CGFloat compressionRate, NS
 
 - (UIImage *)preloadedImage;
 - (UIImage *)preloadedImageWithAlpha;
-- (void)tgPreload;
+- (void)asPreload;
 
 - (void)setMediumImage:(UIImage *)image;
 - (UIImage *)mediumImage;

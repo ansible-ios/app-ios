@@ -933,7 +933,7 @@ public func chatMessagePhotoInternal(photoData: Signal<Tuple4<Data?, Data?, Chat
                         thumbnailContext.withFlippedContext { c in
                             c.draw(thumbnailImage, in: CGRect(origin: CGPoint(), size: thumbnailContextSize))
                         }
-                        telegramFastBlurMore(Int32(thumbnailContextSize.width), Int32(thumbnailContextSize.height), Int32(thumbnailContext.bytesPerRow), thumbnailContext.bytes)
+                        ansibleFastBlurMore(Int32(thumbnailContextSize.width), Int32(thumbnailContextSize.height), Int32(thumbnailContext.bytesPerRow), thumbnailContext.bytes)
                         
                         var thumbnailContextFittingSize = CGSize(width: floor(arguments.drawingSize.width * 0.5), height: floor(arguments.drawingSize.width * 0.5))
                         if thumbnailContextFittingSize.width < 150.0 || thumbnailContextFittingSize.height < 150.0 {
@@ -1184,8 +1184,8 @@ public func chatMessagePhotoThumbnail(account: Account, userLocation: MediaResou
                         
                         if blurred {
                             if !thumbnailIsBlurred {
-                                telegramFastBlurMore(Int32(thumbnailContextSize.width), Int32(thumbnailContextSize.height), Int32(thumbnailContext.bytesPerRow), thumbnailContext.bytes)
-                                telegramFastBlurMore(Int32(thumbnailContextSize.width), Int32(thumbnailContextSize.height), Int32(thumbnailContext.bytesPerRow), thumbnailContext.bytes)
+                                ansibleFastBlurMore(Int32(thumbnailContextSize.width), Int32(thumbnailContextSize.height), Int32(thumbnailContext.bytesPerRow), thumbnailContext.bytes)
+                                ansibleFastBlurMore(Int32(thumbnailContextSize.width), Int32(thumbnailContextSize.height), Int32(thumbnailContext.bytesPerRow), thumbnailContext.bytes)
                             }
                             imageFastBlur(Int32(thumbnailContextSize.width), Int32(thumbnailContextSize.height), Int32(thumbnailContext.bytesPerRow), thumbnailContext.bytes)
                             adjustSaturationInContext(context: thumbnailContext, saturation: 1.7)
@@ -1708,11 +1708,11 @@ public func mediaGridMessagePhoto(account: Account, userLocation: MediaResourceU
                             c.draw(thumbnailImage, in: CGRect(origin: CGPoint(), size: thumbnailContextSize))
                         }
                         if !useMiniThumbnailIfAvailable || blurred {
-                            telegramFastBlurMore(Int32(thumbnailContextSize.width), Int32(thumbnailContextSize.height), Int32(thumbnailContext.bytesPerRow), thumbnailContext.bytes)
+                            ansibleFastBlurMore(Int32(thumbnailContextSize.width), Int32(thumbnailContextSize.height), Int32(thumbnailContext.bytesPerRow), thumbnailContext.bytes)
                         }
                         
                         if blurred {
-                            telegramFastBlurMore(Int32(thumbnailContextSize.width), Int32(thumbnailContextSize.height), Int32(thumbnailContext.bytesPerRow), thumbnailContext.bytes)
+                            ansibleFastBlurMore(Int32(thumbnailContextSize.width), Int32(thumbnailContextSize.height), Int32(thumbnailContext.bytesPerRow), thumbnailContext.bytes)
                             adjustSaturationInContext(context: thumbnailContext, saturation: 1.7)
                         }
                         
@@ -1854,10 +1854,10 @@ public func internalMediaGridMessageVideo(postbox: Postbox, userLocation: MediaR
                         thumbnailContext.withFlippedContext { c in
                             c.draw(thumbnailImage, in: CGRect(origin: CGPoint(), size: thumbnailContextSize))
                         }
-                        telegramFastBlurMore(Int32(thumbnailContextSize.width), Int32(thumbnailContextSize.height), Int32(thumbnailContext.bytesPerRow), thumbnailContext.bytes)
+                        ansibleFastBlurMore(Int32(thumbnailContextSize.width), Int32(thumbnailContextSize.height), Int32(thumbnailContext.bytesPerRow), thumbnailContext.bytes)
                         
                         if blurred {
-                            telegramFastBlurMore(Int32(thumbnailContextSize.width), Int32(thumbnailContextSize.height), Int32(thumbnailContext.bytesPerRow), thumbnailContext.bytes)
+                            ansibleFastBlurMore(Int32(thumbnailContextSize.width), Int32(thumbnailContextSize.height), Int32(thumbnailContext.bytesPerRow), thumbnailContext.bytes)
                         }
                         
                         var thumbnailContextFittingSize = CGSize(width: floor(arguments.drawingSize.width * 0.5), height: floor(arguments.drawingSize.width * 0.5))
@@ -2869,7 +2869,7 @@ public func chatAvatarGalleryPhoto(account: Account, representations: [ImageRepr
                         thumbnailContext.withFlippedContext { c in
                             c.draw(thumbnailImage, in: CGRect(origin: CGPoint(), size: thumbnailContextSize))
                         }
-                        telegramFastBlurMore(Int32(thumbnailContextSize.width), Int32(thumbnailContextSize.height), Int32(thumbnailContext.bytesPerRow), thumbnailContext.bytes)
+                        ansibleFastBlurMore(Int32(thumbnailContextSize.width), Int32(thumbnailContextSize.height), Int32(thumbnailContext.bytesPerRow), thumbnailContext.bytes)
                         
                         var thumbnailContextFittingSize = CGSize(width: floor(arguments.drawingSize.width * 0.5), height: floor(arguments.drawingSize.width * 0.5))
                         if thumbnailContextFittingSize.width < 150.0 || thumbnailContextFittingSize.height < 150.0 {

@@ -20,7 +20,7 @@ swift_library(
         "//submodules/Components/MultilineTextWithEntitiesComponent",
         "//submodules/AvatarNode",
         "//submodules/IosappPresentationData",
-        "//submodules/IosappUI/Components/StarsParticleEffect",
+        "//submodules/IosappUI/Components/DiamondsParticleEffect",
         "//submodules/IosappUI/Components/PeerNameTextComponent",
         "//submodules/TextFormat",
     ],

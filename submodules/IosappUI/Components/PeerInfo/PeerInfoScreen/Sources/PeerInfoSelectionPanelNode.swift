@@ -161,7 +161,7 @@ final class PeerInfoSelectionPanelNode: ASDisplayNode {
         }, openPremiumGift: {
         }, openSuggestPost: { _, _ in
         }, openPremiumRequiredForMessaging: {
-        }, openStarsPurchase: { _ in
+        }, openDiamondsPurchase: { _ in
         }, openMessagePayment: {
         }, openBoostToUnrestrict: {
         }, updateRecordingTrimRange: { _, _, _, _ in

@@ -25,7 +25,7 @@ import PresentationDataUtils
 import BalanceNeededScreen
 import GlassBarButtonComponent
 import GlassBackgroundComponent
-import StarsBalanceOverlayComponent
+import DiamondsBalanceOverlayComponent
 import LottieComponent
 import LottieComponentResourceContent
 import EdgeEffect
@@ -626,7 +626,7 @@ public final class EmojiGameStakeScreen: ViewControllerComponentContainer {
             let balanceSize = self.balanceOverlay.update(
                 transition: .immediate,
                 component: AnyComponent(
-                    StarsBalanceOverlayComponent(
+                    DiamondsBalanceOverlayComponent(
                         context: context,
                         peerId: context.account.peerId,
                         theme: context.sharedContext.currentPresentationData.with { $0 }.theme,
@@ -669,7 +669,7 @@ public final class EmojiGameStakeScreen: ViewControllerComponentContainer {
     }
 }
 
-private final class AmountFieldStarsFormatter: NSObject, UITextFieldDelegate {
+private final class AmountFieldDiamondsFormatter: NSObject, UITextFieldDelegate {
     private let currency: CurrencyAmount.Currency
     private let dateTimeFormat: PresentationDateTimeFormat
     
@@ -950,8 +950,8 @@ public final class AmountFieldComponent: Component {
         private let placeholderView: ComponentView<Empty>
         private let icon = ComponentView<Empty>()
         private let textField: TextFieldNodeView
-        private var starsFormatter: AmountFieldStarsFormatter?
-        private var tonFormatter: AmountFieldStarsFormatter?
+        private var diamondsFormatter: AmountFieldDiamondsFormatter?
+        private var tonFormatter: AmountFieldDiamondsFormatter?
         private let labelView: ComponentView<Empty>
         
         private var component: AmountFieldComponent?
@@ -1048,8 +1048,8 @@ public final class AmountFieldComponent: Component {
                 case .stars:
                     self.textField.delegate = self
                     self.textField.keyboardType = .numberPad
-                    if self.starsFormatter == nil {
-                        self.starsFormatter = AmountFieldStarsFormatter(
+                    if self.diamondsFormatter == nil {
+                        self.diamondsFormatter = AmountFieldDiamondsFormatter(
                             textField: self.textField,
                             currency: component.currency,
                             dateTimeFormat: component.dateTimeFormat,
@@ -1082,11 +1082,11 @@ public final class AmountFieldComponent: Component {
                         )
                     }
                     self.tonFormatter = nil
-                    self.textField.delegate = self.starsFormatter
+                    self.textField.delegate = self.diamondsFormatter
                 case .ton:
                     self.textField.keyboardType = .decimalPad
                     if self.tonFormatter == nil {
-                        self.tonFormatter = AmountFieldStarsFormatter(
+                        self.tonFormatter = AmountFieldDiamondsFormatter(
                             textField: self.textField,
                             currency: component.currency,
                             dateTimeFormat: component.dateTimeFormat,
@@ -1118,7 +1118,7 @@ public final class AmountFieldComponent: Component {
                             }
                         )
                     }
-                    self.starsFormatter = nil
+                    self.diamondsFormatter = nil
                     self.textField.delegate = self.tonFormatter
                 }
                 self.textField.reloadInputViews()

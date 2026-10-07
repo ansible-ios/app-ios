@@ -23,7 +23,7 @@ public func premiumAlertController(
     content.append(AnyComponentWithIdentity(
         id: "header",
         component: AnyComponent(
-            AlertPremiumStarComponent()
+            AlertPremiumDiamondComponent()
         )
     ))
     
@@ -55,13 +55,13 @@ public func premiumAlertController(
     return alertController
 }
 
-private final class AlertPremiumStarComponent: Component {
+private final class AlertPremiumDiamondComponent: Component {
     public typealias EnvironmentType = AlertComponentEnvironment
         
     public init() {
     }
     
-    public static func ==(lhs: AlertPremiumStarComponent, rhs: AlertPremiumStarComponent) -> Bool {
+    public static func ==(lhs: AlertPremiumDiamondComponent, rhs: AlertPremiumDiamondComponent) -> Bool {
         return true
     }
     
@@ -69,17 +69,17 @@ private final class AlertPremiumStarComponent: Component {
         private let clippingView = UIView()
         private let icon = ComponentView<Empty>()
         
-        private var component: AlertPremiumStarComponent?
+        private var component: AlertPremiumDiamondComponent?
         private weak var state: EmptyComponentState?
         
-        func update(component: AlertPremiumStarComponent, availableSize: CGSize, state: EmptyComponentState, environment: Environment<AlertComponentEnvironment>, transition: ComponentTransition) -> CGSize {
+        func update(component: AlertPremiumDiamondComponent, availableSize: CGSize, state: EmptyComponentState, environment: Environment<AlertComponentEnvironment>, transition: ComponentTransition) -> CGSize {
             self.component = component
             self.state = state
             
             let environment = environment[AlertComponentEnvironment.self]
             
-            let starHeight: CGFloat = 105.0
-            let starSize = self.icon.update(
+            let diamondHeight: CGFloat = 105.0
+            let diamondSize = self.icon.update(
                 transition: .immediate,
                 component: AnyComponent(
                     PremiumStarComponent(
@@ -102,14 +102,14 @@ private final class AlertPremiumStarComponent: Component {
                     self.addSubview(self.clippingView)
                     self.clippingView.addSubview(view)
                 }
-                view.frame = CGRect(origin: CGPoint(x: 0.0, y: -24.0), size: starSize)
+                view.frame = CGRect(origin: CGPoint(x: 0.0, y: -24.0), size: diamondSize)
             }
             
             self.clippingView.clipsToBounds = true
             self.clippingView.layer.cornerRadius = 35.0
-            self.clippingView.frame = CGRect(origin: CGPoint(x: -30.0, y: -22.0), size: CGSize(width: starSize.width, height: starSize.height))
+            self.clippingView.frame = CGRect(origin: CGPoint(x: -30.0, y: -22.0), size: CGSize(width: diamondSize.width, height: diamondSize.height))
            
-            return CGSize(width: availableSize.width, height: starHeight + 10.0)
+            return CGSize(width: availableSize.width, height: diamondHeight + 10.0)
         }
     }
     

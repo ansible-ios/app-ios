@@ -9,7 +9,7 @@ public enum AllowedReactions {
     case all
 }
 
-public func peerMessageAllowedReactions(context: AccountContext, message: EngineRawMessage, ignoreDefault: Bool = false) -> Signal<(allowedReactions: AllowedReactions?, areStarsEnabled: Bool), NoError> {
+public func peerMessageAllowedReactions(context: AccountContext, message: EngineRawMessage, ignoreDefault: Bool = false) -> Signal<(allowedReactions: AllowedReactions?, areDiamondsEnabled: Bool), NoError> {
     if message.id.peerId == context.account.peerId {
         return .single((.all, false))
     }
@@ -25,7 +25,7 @@ public func peerMessageAllowedReactions(context: AccountContext, message: Engine
         ),
         context.engine.stickers.availableReactions() |> take(1)
     )
-    |> map { data, availableReactions -> (allowedReactions: AllowedReactions?, areStarsEnabled: Bool) in
+    |> map { data, availableReactions -> (allowedReactions: AllowedReactions?, areDiamondsEnabled: Bool) in
         let (peer, reactionSettings) = data
         
         let maxReactionCount: Int
@@ -35,44 +35,44 @@ public func peerMessageAllowedReactions(context: AccountContext, message: Engine
             maxReactionCount = 11
         }
         
-        var areStarsEnabled: Bool = false
-        if let value = reactionSettings.knownValue?.starsAllowed {
-            areStarsEnabled = value
+        var areDiamondsEnabled: Bool = false
+        if let value = reactionSettings.knownValue?.diamondsAllowed {
+            areDiamondsEnabled = value
         }
         
         if let peer, !canSendReactionsToPeer(peer, ignoreDefault: ignoreDefault) {
-            return (nil, areStarsEnabled)
+            return (nil, areDiamondsEnabled)
         }
 
         if let effectiveReactions = message.effectiveReactions(isTags: message.areReactionsTags(accountPeerId: context.account.peerId)), effectiveReactions.count >= maxReactionCount {
-            return (.set(Set(effectiveReactions.map(\.value))), areStarsEnabled)
+            return (.set(Set(effectiveReactions.map(\.value))), areDiamondsEnabled)
         }
         
         switch reactionSettings {
         case .unknown:
             if case let .channel(channel) = peer, case .broadcast = channel.info {
                 if let availableReactions = availableReactions {
-                    return (.set(Set(availableReactions.reactions.map(\.value))), areStarsEnabled)
+                    return (.set(Set(availableReactions.reactions.map(\.value))), areDiamondsEnabled)
                 } else {
-                    return (.set(Set()), areStarsEnabled)
+                    return (.set(Set()), areDiamondsEnabled)
                 }
             }
-            return (.all, areStarsEnabled)
+            return (.all, areDiamondsEnabled)
         case let .known(value):
             switch value.allowedReactions {
             case .all:
                 if case let .channel(channel) = peer, case .broadcast = channel.info {
                     if let availableReactions = availableReactions {
-                        return (.set(Set(availableReactions.reactions.map(\.value))), areStarsEnabled)
+                        return (.set(Set(availableReactions.reactions.map(\.value))), areDiamondsEnabled)
                     } else {
-                        return (.set(Set()), areStarsEnabled)
+                        return (.set(Set()), areDiamondsEnabled)
                     }
                 }
-                return (.all, areStarsEnabled)
+                return (.all, areDiamondsEnabled)
             case let .limited(reactions):
-                return (.set(Set(reactions)), areStarsEnabled)
+                return (.set(Set(reactions)), areDiamondsEnabled)
             case .empty:
-                return (.set(Set()), areStarsEnabled)
+                return (.set(Set()), areDiamondsEnabled)
             }
         }
     }
@@ -278,8 +278,8 @@ public func topMessageReactions(context: AccountContext, message: EngineRawMessa
         }
     }
     
-    let allowedReactionsWithFiles: Signal<(reactions: AllowedReactions, files: [Int64: IosappMediaFile], areStarsEnabled: Bool)?, NoError> = peerMessageAllowedReactions(context: context, message: message, ignoreDefault: ignoreDefault)
-    |> mapToSignal { allowedReactions, areStarsEnabled -> Signal<(reactions: AllowedReactions, files: [Int64: IosappMediaFile], areStarsEnabled: Bool)?, NoError> in
+    let allowedReactionsWithFiles: Signal<(reactions: AllowedReactions, files: [Int64: IosappMediaFile], areDiamondsEnabled: Bool)?, NoError> = peerMessageAllowedReactions(context: context, message: message, ignoreDefault: ignoreDefault)
+    |> mapToSignal { allowedReactions, areDiamondsEnabled -> Signal<(reactions: AllowedReactions, files: [Int64: IosappMediaFile], areDiamondsEnabled: Bool)?, NoError> in
         guard let allowedReactions = allowedReactions else {
             return .single(nil)
         }
@@ -295,11 +295,11 @@ public func topMessageReactions(context: AccountContext, message: EngineRawMessa
                     return nil
                 }
             })
-            |> map { files -> (reactions: AllowedReactions, files: [Int64: IosappMediaFile], areStarsEnabled: Bool) in
-                return (.set(reactions), files, areStarsEnabled)
+            |> map { files -> (reactions: AllowedReactions, files: [Int64: IosappMediaFile], areDiamondsEnabled: Bool) in
+                return (.set(reactions), files, areDiamondsEnabled)
             }
         } else {
-            return .single((allowedReactions, [:], areStarsEnabled))
+            return .single((allowedReactions, [:], areDiamondsEnabled))
         }
     }
 
@@ -452,7 +452,7 @@ public func topMessageReactions(context: AccountContext, message: EngineRawMessa
             }
         }
         
-        if allowedReactionsAndFiles.areStarsEnabled {
+        if allowedReactionsAndFiles.areDiamondsEnabled {
             result.removeAll(where: { $0.reaction.rawValue == .stars })
             if let reaction = availableReactions.reactions.first(where: { $0.value == .stars }) {
                 if let centerAnimation = reaction.centerAnimation, let aroundAnimation = reaction.aroundAnimation {

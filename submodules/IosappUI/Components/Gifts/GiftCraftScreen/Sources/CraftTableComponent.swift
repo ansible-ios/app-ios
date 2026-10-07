@@ -15,7 +15,7 @@ private let cubeSide: CGFloat = 110.0
 
 struct GiftItem: Equatable {
     let gift: StarGift.UniqueGift
-    let reference: StarGiftReference
+    let reference: DiamondGiftReference
 }
 
 final class CraftTableComponent: Component {

@@ -46,8 +46,8 @@ private func jsStringLiteral(_ value: String) -> String {
 private func eventProxySource() -> String {
     return """
     (function() {
-        var TelegramWebviewProxyProto = function() {};
-        TelegramWebviewProxyProto.prototype.postEvent = function(eventName, eventData) {
+        var AnsibleWebviewProxyProto = function() {};
+        AnsibleWebviewProxyProto.prototype.postEvent = function(eventName, eventData) {
             window.webkit.messageHandlers.performAction.postMessage({'eventName': eventName, 'eventData': eventData});
         };
         window.TelegramWebviewProxy = new TelegramWebviewProxyProto();
@@ -61,8 +61,8 @@ private func securedEventProxySource(trustedOrigin: String) -> String {
         if (window.location.origin !== \(jsStringLiteral(trustedOrigin))) {
             return;
         }
-        var TelegramWebviewProxyProto = function() {};
-        TelegramWebviewProxyProto.prototype.postEvent = function(eventName, eventData) {
+        var AnsibleWebviewProxyProto = function() {};
+        AnsibleWebviewProxyProto.prototype.postEvent = function(eventName, eventData) {
             window.webkit.messageHandlers.performAction.postMessage({'eventName': eventName, 'eventData': eventData});
         };
         window.TelegramWebviewProxy = new TelegramWebviewProxyProto();
@@ -77,41 +77,41 @@ private let selectionSource = "var css = '*{-webkit-touch-callout:none;} :not(in
 
 private let videoSource = """
 document.addEventListener('DOMContentLoaded', () => {
-function tgBrowserDisableWebkitEnterFullscreen(videoElement) {
+function asBrowserDisableWebkitEnterFullscreen(videoElement) {
   if (videoElement && videoElement.webkitEnterFullscreen) {
     videoElement.setAttribute('playsinline', '');
   }
 }
 
-function tgBrowserDisableFullscreenOnExistingVideos() {
-  document.querySelectorAll('video').forEach(tgBrowserDisableWebkitEnterFullscreen);
+function asBrowserDisableFullscreenOnExistingVideos() {
+  document.querySelectorAll('video').forEach(asBrowserDisableWebkitEnterFullscreen);
 }
 
-function tgBrowserHandleMutations(mutations) {
+function asBrowserHandleMutations(mutations) {
   mutations.forEach((mutation) => {
     if (mutation.addedNodes && mutation.addedNodes.length > 0) {
       mutation.addedNodes.forEach((newNode) => {
         if (newNode.tagName === 'VIDEO') {
-          tgBrowserDisableWebkitEnterFullscreen(newNode);
+          asBrowserDisableWebkitEnterFullscreen(newNode);
         }
         if (newNode.querySelectorAll) {
-          newNode.querySelectorAll('video').forEach(tgBrowserDisableWebkitEnterFullscreen);
+          newNode.querySelectorAll('video').forEach(asBrowserDisableWebkitEnterFullscreen);
         }
       });
     }
   });
 }
 
-tgBrowserDisableFullscreenOnExistingVideos();
+asBrowserDisableFullscreenOnExistingVideos();
 
-const _tgbrowser_observer = new MutationObserver(tgBrowserHandleMutations);
+const _tgbrowser_observer = new MutationObserver(asBrowserHandleMutations);
 
 _tgbrowser_observer.observe(document.body, {
   childList: true,
   subtree: true
 });
 
-function tgBrowserDisconnectObserver() {
+function asBrowserDisconnectObserver() {
   _tgbrowser_observer.disconnect();
 }
 });

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export TELEGRAM_ENV_SET="1"
+export ANSIBLE_ENV_SET="1"
 
 export DEVELOPMENT_CODE_SIGN_IDENTITY="iPhone Distribution: Digital Fortress LLC (C67CF9S4VU)"
 export DISTRIBUTION_CODE_SIGN_IDENTITY="iPhone Distribution: Digital Fortress LLC (C67CF9S4VU)"

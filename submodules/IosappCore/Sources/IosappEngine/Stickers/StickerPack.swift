@@ -4,7 +4,7 @@ import IosappApi
 import SwiftSignalKit
 import MtProtoKit
 
-func telegramStickerPackThumbnailRepresentationFromApiSizes(datacenterId: Int32, thumbVersion: Int32?, sizes: [Api.PhotoSize]) -> (immediateThumbnail: Data?, representations: [IosappMediaImageRepresentation]) {
+func ansibleStickerPackThumbnailRepresentationFromApiSizes(datacenterId: Int32, thumbVersion: Int32?, sizes: [Api.PhotoSize]) -> (immediateThumbnail: Data?, representations: [IosappMediaImageRepresentation]) {
     func stickerTypeHint(for type: String) -> IosappMediaImageRepresentation.TypeHint {
         switch type {
         case "s":
@@ -73,7 +73,7 @@ extension StickerPackCollectionInfo {
                 var thumbnailRepresentation: IosappMediaImageRepresentation?
                 var immediateThumbnailData: Data?
                 if let thumbs = thumbs, let thumbDcId = thumbDcId {
-                    let (data, representations) = telegramStickerPackThumbnailRepresentationFromApiSizes(datacenterId: thumbDcId, thumbVersion: thumbVersion, sizes: thumbs)
+                    let (data, representations) = ansibleStickerPackThumbnailRepresentationFromApiSizes(datacenterId: thumbDcId, thumbVersion: thumbVersion, sizes: thumbs)
                     thumbnailRepresentation = representations.first
                     immediateThumbnailData = data
                 }

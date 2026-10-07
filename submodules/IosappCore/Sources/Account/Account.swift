@@ -257,7 +257,7 @@ public func accountWithId(accountManager: AccountManager<IosappAccountManagerTyp
     
     let postbox = openPostbox(
         basePath: path + "/postbox",
-        seedConfiguration: telegramPostboxSeedConfiguration,
+        seedConfiguration: ansiblePostboxSeedConfiguration,
         encryptionParameters: encryptionParameters,
         timestampForAbsoluteTimeBasedOperations: Int32(CFAbsoluteTimeGetCurrent() + NSTimeIntervalSince1970),
         isMainProcess: !supplementary,
@@ -1709,7 +1709,7 @@ public func standaloneStateManager(
 
     let postbox = openPostbox(
         basePath: path + "/postbox",
-        seedConfiguration: telegramPostboxSeedConfiguration,
+        seedConfiguration: ansiblePostboxSeedConfiguration,
         encryptionParameters: encryptionParameters,
         timestampForAbsoluteTimeBasedOperations: Int32(CFAbsoluteTimeGetCurrent() + NSTimeIntervalSince1970),
         isMainProcess: false,

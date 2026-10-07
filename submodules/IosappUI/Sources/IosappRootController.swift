@@ -752,7 +752,7 @@ public final class IosappRootController: NavigationController, IosappRootControl
                 if let media {
                     #if DEBUG
                     if !"".isEmpty {
-                        let _ = context.engine.messages.beginStoryLivestream(peerId: context.account.peerId, rtmp: true, privacy: result.options.privacy, isForwardingDisabled: false, messagesEnabled: true, sendPaidMessageStars: 0).startStandalone()
+                        let _ = context.engine.messages.beginStoryLivestream(peerId: context.account.peerId, rtmp: true, privacy: result.options.privacy, isForwardingDisabled: false, messagesEnabled: true, sendPaidMessageDiamonds: 0).startStandalone()
                     }
                     #endif
                     

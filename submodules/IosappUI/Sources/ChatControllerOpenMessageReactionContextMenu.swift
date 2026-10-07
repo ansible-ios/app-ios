@@ -14,7 +14,7 @@ import TextNodeWithEntities
 import ChatPresentationInterfaceState
 import SavedTagNameAlertController
 import PremiumUI
-import ChatSendStarsScreen
+import ChatSendDiamondsScreen
 import ChatMessageItemCommon
 import ChatMessageItemView
 import ReactionSelectionNode
@@ -167,7 +167,7 @@ extension ChatControllerImpl {
             if case .stars = value {
                 gesture?.cancel()
                 cancelParentGestures(view: sourceView)
-                self.openMessageSendStarsScreen(message: message)
+                self.openMessageSendDiamondsScreen(message: message)
                 
                 return
             }
@@ -392,16 +392,16 @@ extension ChatControllerImpl {
         }
     }
     
-    func openMessageSendStarsScreen(message: EngineMessage) {
+    func openMessageSendDiamondsScreen(message: EngineMessage) {
         guard canSendReactionsToChat(self.presentationInterfaceState) else {
             return
         }
 
-        if let current = self.currentSendStarsUndoController {
-            self.currentSendStarsUndoController = nil
+        if let current = self.currentSendDiamondsUndoController {
+            self.currentSendDiamondsUndoController = nil
             current.dismiss()
         }
-        self.context.engine.messages.forceSendPendingSendStarsReaction(id: message.id)
+        self.context.engine.messages.forceSendPendingSendDiamondsReaction(id: message.id)
         
         guard let peerId = self.chatLocation.peerId else {
             return
@@ -413,12 +413,12 @@ extension ChatControllerImpl {
             }
         
             let reactionsAttribute = mergedMessageReactions(attributes: message.attributes, isTags: false)
-            let _ = (ChatSendStarsScreen.initialData(context: self.context, peerId: message.id.peerId, reactSubject: .message(message.id), topPeers: reactionsAttribute?.topPeers ?? [], completion: { [weak self] amount, privacy, isBecomingTop, transitionOut in
+            let _ = (ChatSendDiamondsScreen.initialData(context: self.context, peerId: message.id.peerId, reactSubject: .message(message.id), topPeers: reactionsAttribute?.topPeers ?? [], completion: { [weak self] amount, privacy, isBecomingTop, transitionOut in
                 guard let self, amount > 0 else {
                     return
                 }
                 
-                if case let .known(reactionSettings) = reactionSettings, let starsAllowed = reactionSettings.starsAllowed, !starsAllowed {
+                if case let .known(reactionSettings) = reactionSettings, let diamondsAllowed = reactionSettings.diamondsAllowed, !diamondsAllowed {
                     if let peer = self.presentationInterfaceState.renderedPeer?.chatMainPeer {
                         self.present(textAlertController(context: self.context, updatedPresentationData: self.updatedPresentationData, title: nil, text: self.presentationData.strings.Chat_ToastDiamondsReactionsDisabled(peer.debugDisplayTitle).string, actions: [
                             TextAlertAction(type: .genericAction, title: self.presentationData.strings.Common_OK, action: {})
@@ -507,20 +507,20 @@ extension ChatControllerImpl {
                     }
                 }
                 
-                let _ = self.context.engine.messages.sendStarsReaction(id: message.id, count: Int(amount), privacy: privacy).startStandalone()
-                self.displayOrUpdateSendStarsUndo(messageId: message.id, count: Int(amount), privacy: privacy)
+                let _ = self.context.engine.messages.sendDiamondsReaction(id: message.id, count: Int(amount), privacy: privacy).startStandalone()
+                self.displayOrUpdateSendDiamondsUndo(messageId: message.id, count: Int(amount), privacy: privacy)
             })
             |> deliverOnMainQueue).start(next: { [weak self] initialData in
                 guard let self, let initialData else {
                     return
                 }
                 HapticFeedback().tap()
-                self.push(ChatSendStarsScreen(context: self.context, initialData: initialData))
+                self.push(ChatSendDiamondsScreen(context: self.context, initialData: initialData))
             })
         })
     }
     
-    func displayOrUpdateSendStarsUndo(messageId: EngineMessage.Id, count: Int, privacy: IosappPaidReactionPrivacy) {
+    func displayOrUpdateSendDiamondsUndo(messageId: EngineMessage.Id, count: Int, privacy: IosappPaidReactionPrivacy) {
         var privacyPeer: Signal<EnginePeer?, NoError> = .single(nil)
         if case let .peer(id) = privacy {
             privacyPeer = self.context.engine.data.get(
@@ -533,48 +533,48 @@ extension ChatControllerImpl {
                 return
             }
             
-            if self.currentSendStarsUndoMessageId != messageId {
-                if let current = self.currentSendStarsUndoController {
-                    self.currentSendStarsUndoController = nil
+            if self.currentSendDiamondsUndoMessageId != messageId {
+                if let current = self.currentSendDiamondsUndoController {
+                    self.currentSendDiamondsUndoController = nil
                     current.dismiss()
                 }
             }
             
-            if let _ = self.currentSendStarsUndoController {
-                self.currentSendStarsUndoCount += count
+            if let _ = self.currentSendDiamondsUndoController {
+                self.currentSendDiamondsUndoCount += count
             } else {
-                self.currentSendStarsUndoCount = count
+                self.currentSendDiamondsUndoCount = count
             }
             
             let title: String
             if case .anonymous = privacy {
-                title = self.presentationData.strings.Chat_ToastDiamondsSent_AnonymousTitle(Int32(self.currentSendStarsUndoCount))
+                title = self.presentationData.strings.Chat_ToastDiamondsSent_AnonymousTitle(Int32(self.currentSendDiamondsUndoCount))
             } else if case .peer = privacy, let privacyPeer {
-                let rawTitle = self.presentationData.strings.Chat_ToastDiamondsSent_TitleChannel(Int32(self.currentSendStarsUndoCount))
+                let rawTitle = self.presentationData.strings.Chat_ToastDiamondsSent_TitleChannel(Int32(self.currentSendDiamondsUndoCount))
                 title = rawTitle.replacingOccurrences(of: "{name}", with: privacyPeer.compactDisplayTitle)
             } else {
-                title = self.presentationData.strings.Chat_ToastDiamondsSent_Title(Int32(self.currentSendStarsUndoCount))
+                title = self.presentationData.strings.Chat_ToastDiamondsSent_Title(Int32(self.currentSendDiamondsUndoCount))
             }
             
             let textItems = AnimatedTextComponent.extractAnimatedTextString(string: self.presentationData.strings.Chat_ToastDiamondsSent_Text("", ""), id: "text", mapping: [
-                0: .number(self.currentSendStarsUndoCount, minDigits: 1),
-                1: .text(self.presentationData.strings.Chat_ToastDiamondsSent_TextDiamondAmount(Int32(self.currentSendStarsUndoCount)))
+                0: .number(self.currentSendDiamondsUndoCount, minDigits: 1),
+                1: .text(self.presentationData.strings.Chat_ToastDiamondsSent_TextDiamondAmount(Int32(self.currentSendDiamondsUndoCount)))
             ])
             
-            self.currentSendStarsUndoMessageId = messageId
-            if let current = self.currentSendStarsUndoController {
-                current.content = .starsSent(context: self.context, title: title, text: textItems, hasUndo: true)
+            self.currentSendDiamondsUndoMessageId = messageId
+            if let current = self.currentSendDiamondsUndoController {
+                current.content = .diamondsSent(context: self.context, title: title, text: textItems, hasUndo: true)
             } else {
-                let controller = UndoOverlayController(presentationData: self.presentationData, content: .starsSent(context: self.context, title: title, text: textItems, hasUndo: true), elevatedLayout: false, position: .top, action: { [weak self] action in
+                let controller = UndoOverlayController(presentationData: self.presentationData, content: .diamondsSent(context: self.context, title: title, text: textItems, hasUndo: true), elevatedLayout: false, position: .top, action: { [weak self] action in
                     guard let self else {
                         return false
                     }
                     if case .undo = action {
-                        self.context.engine.messages.cancelPendingSendStarsReaction(id: messageId)
+                        self.context.engine.messages.cancelPendingSendDiamondsReaction(id: messageId)
                     }
                     return false
                 })
-                self.currentSendStarsUndoController = controller
+                self.currentSendDiamondsUndoController = controller
                 self.present(controller, in: .current)
             }
         })

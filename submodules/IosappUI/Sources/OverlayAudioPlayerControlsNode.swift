@@ -449,7 +449,7 @@ final class OverlayAudioPlayerControlsNode: ASDisplayNode {
                           
                 if let (_, valueOrLoading, _) = value, case let .state(value) = valueOrLoading, let source = value.item.playbackData?.source {
                     switch source {
-                        case let .telegramFile(fileReference, _, _):
+                        case let .ansibleFile(fileReference, _, _):
                             strongSelf.currentFileReference = fileReference
                             if let size = fileReference.media.size {
                                 strongSelf.scrubberNode.bufferingStatus = strongSelf.engine.resources.resourceRangesStatus(resource: EngineMediaResource(fileReference.media.resource))
@@ -468,7 +468,7 @@ final class OverlayAudioPlayerControlsNode: ASDisplayNode {
             
             if let (_, valueOrLoading, _) = value, case let .state(value) = valueOrLoading, let source = value.item.playbackData?.source {
                 switch source {
-                case let .telegramFile(_, isCopyProtected, _):
+                case let .ansibleFile(_, isCopyProtected, _):
                     strongSelf.shareNode.isHidden = isCopyProtected || forceCopyProtected
                 }
             }

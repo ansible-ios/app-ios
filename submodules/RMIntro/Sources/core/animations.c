@@ -60,9 +60,9 @@ static TexturedShape telegram_sphere, telegram_plane;
 static Shape cloud_bg;
 
 
-#define starsCount 80
+#define diamondsCount 80
 static TexturedShape star;
-static Params stars[starsCount];
+static Params stars[diamondsCount];
 
 static TexturedShape test[6];
 
@@ -227,10 +227,10 @@ void set_free_textures(int a_knot_up, int a_knot_down)
     free_knot_down_texture = a_knot_down;
 }
 
-void set_powerful_textures(int a_powerful_mask, int a_powerful_star, int a_powerful_infinity, int a_powerful_infinity_white)
+void set_powerful_textures(int a_powerful_mask, int a_powerful_diamond, int a_powerful_infinity, int a_powerful_infinity_white)
 {
     powerful_mask_texture = a_powerful_mask;
-    powerful_star_texture = a_powerful_star;
+    powerful_star_texture = a_powerful_diamond;
     powerful_infinity_texture = a_powerful_infinity;
     powerful_infinity_white_texture = a_powerful_infinity_white;
 }
@@ -287,7 +287,7 @@ float t_local(float start_value, float end_value, float start_time, float durati
 
 
 static int ribbonLength = 86;
-static int starsFar=500;
+static int diamondsFar=500;
 
 static float scroll_offset;
 
@@ -300,7 +300,7 @@ static int star_order=0;
 
 xyz star_create_position(float far)
 {
-    starsFar = 1500;
+    diamondsFar = 1500;
 
     int minR = 100;
     int maxR = 1000;
@@ -314,7 +314,7 @@ xyz star_create_position(float far)
 
 xyz star_initial_position(int randZ, int forward)
 {
-    starsFar=1500;
+    diamondsFar=1500;
 
     int minR=100;
     int maxR=1000;
@@ -322,9 +322,9 @@ xyz star_initial_position(int randZ, int forward)
     float z = 0;
     if (forward == 1) {
         if (randZ == 0) {
-            z = -starsFar;
+            z = -diamondsFar;
         } else {
-            z = frand(0, -starsFar);
+            z = frand(0, -diamondsFar);
         }
     }
 
@@ -340,7 +340,7 @@ void inc_stars_rendered()
 
 
 static int tt;
-void draw_stars()
+void draw_diamonds()
 {
 /*
 set_y_offset_objects(0);
@@ -361,7 +361,7 @@ float k = (float)width/(float)height;
 
 set_y_offset_objects(-100*k*0);
     stars_rendered = 0;
-    for (i = 0; i < starsCount; i++)
+    for (i = 0; i < diamondsCount; i++)
     {
         float stars_scroll_offset = MAXf(0,scroll_offset)*2;
 
@@ -387,10 +387,10 @@ set_y_offset_objects(-100*k*0);
         stars[i].position.z = stars[i].position.z + inc;
 
         star.params.position = stars[i].position;
-        float s = 1 + (-stars[i].position.z)/starsFar*5;
+        float s = 1 + (-stars[i].position.z)/diamondsFar*5;
 
         star.params.scale = xyzMake(s, s, 1);
-        float far = starsFar;
+        float far = diamondsFar;
         float k = 10.;
         star.params.alpha = (1-(-stars[i].position.z)/far)*k;
         star.params.alpha = star.params.alpha*star.params.alpha/k;
@@ -514,10 +514,10 @@ void on_surface_created() {
 
     float star_radius = 5.25;//4.5;
     star = create_textured_rectangle(CSizeMake(star_radius, star_radius), powerful_star_texture);
-    star.params.const_params.is_star=1;
-    for (i=0; i<starsCount; i++) {
+    star.params.const_params.is_diamond=1;
+    for (i=0; i<diamondsCount; i++) {
         stars[i]=default_params();
-        stars[i].position = star_create_position(-(i*1500.)/starsCount);
+        stars[i].position = star_create_position(-(i*1500.)/diamondsCount);
         //stars[i].const_params.is_star = 1;
     }
 
@@ -574,7 +574,7 @@ static inline void mat4x4_plain(mat4x4 M, int width, int height)
 
 
 
-static inline void mat4x4_stars(mat4x4 m, float y_fov_in_degrees, float aspect, float n, float f, int width, int height)
+static inline void mat4x4_diamonds(mat4x4 m, float y_fov_in_degrees, float aspect, float n, float f, int width, int height)
 {
     int is_iOS = 1;
     if (height >= width) {
@@ -661,7 +661,7 @@ void on_surface_changed(int a_width_px, int a_height_px, float a_scale_factor, i
 
     y_offset_absolute = a1;
 
-    mat4x4_stars(stars_matrix, 45, 1, -1000, 0, (int)((float)a_width_px/a_scale_factor), (int)((float)a_height_px/a_scale_factor));
+    mat4x4_diamonds(stars_matrix, 45, 1, -1000, 0, (int)((float)a_width_px/a_scale_factor), (int)((float)a_height_px/a_scale_factor));
 }
 
 void rglNormalDraw()
@@ -1926,7 +1926,7 @@ void on_draw_frame() {
             powerful_bg.params.alpha = t(0, 1, 0, duration_const, Linear);
             draw_shape(&powerful_bg, main_matrix);
 
-            draw_stars();
+            draw_diamonds();
 
         } else {
             glDisable(GL_BLEND);
@@ -1941,7 +1941,7 @@ void on_draw_frame() {
             powerful_bg.params.alpha = a;
             draw_shape(&powerful_bg, main_matrix);
 
-            draw_stars();
+            draw_diamonds();
         }
     }
     else if (current_page == 4)

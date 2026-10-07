@@ -14,7 +14,7 @@
 #import <LegacyComponents/TGFileUtils.h>
 #import <LegacyComponents/TGPhotoEditorUtils.h>
 #import <LegacyComponents/TGPaintUtils.h>
-#import <LegacyComponents/UIImage+TG.h>
+#import <LegacyComponents/UIImage+AS.h>
 #import <LegacyComponents/TGGifConverter.h>
 #import <CommonCrypto/CommonDigest.h>
 

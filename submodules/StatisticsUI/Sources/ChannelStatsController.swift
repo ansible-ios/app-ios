@@ -25,7 +25,7 @@ import StoryContainerScreen
 import IosappNotices
 import ComponentFlow
 import BoostLevelIconComponent
-import StarsWithdrawalScreen
+import DiamondsWithdrawalScreen
 
 private let initialBoostersDisplayedLimit: Int32 = 5
 private let initialTransactionsDisplayedLimit: Int32 = 5
@@ -43,23 +43,23 @@ private final class ChannelStatsControllerArguments {
     let openGifts: () -> Void
     let createPrepaidGiveaway: (PrepaidGiveaway) -> Void
     let updateGiftsSelected: (Bool) -> Void
-    let updateStarsSelected: (Bool) -> Void
+    let updateDiamondsSelected: (Bool) -> Void
     
     let requestTonWithdraw: () -> Void
-    let requestStarsWithdraw: () -> Void
+    let requestDiamondsWithdraw: () -> Void
     let showTimeoutTooltip: (Int32) -> Void
     let buyAds: () -> Void
     let openMonetizationIntro: () -> Void
     let openMonetizationInfo: () -> Void
-    let openTonTransaction: (StarsContext.State.Transaction) -> Void
-    let openStarsTransaction: (StarsContext.State.Transaction) -> Void
+    let openTonTransaction: (DiamondsContext.State.Transaction) -> Void
+    let openDiamondsTransaction: (DiamondsContext.State.Transaction) -> Void
     let expandTransactions: (Bool) -> Void
     let updateCpmEnabled: (Bool) -> Void
     let presentCpmLocked: () -> Void
-    let openEarnStars: () -> Void
+    let openEarnDiamonds: () -> Void
     let dismissInput: () -> Void
     
-    init(context: AccountContext, loadDetailedGraph: @escaping (StatsGraph, Int64) -> Signal<StatsGraph?, NoError>, openPostStats: @escaping (EnginePeer, StatsPostItem) -> Void, openStory: @escaping (EngineStoryItem, UIView) -> Void, contextAction: @escaping (MessageId, ASDisplayNode, ContextGesture?) -> Void, copyBoostLink: @escaping (String) -> Void, shareBoostLink: @escaping (String) -> Void, openBoost: @escaping (ChannelBoostersContext.State.Boost) -> Void, expandBoosters: @escaping () -> Void, openGifts: @escaping () -> Void, createPrepaidGiveaway: @escaping (PrepaidGiveaway) -> Void, updateGiftsSelected: @escaping (Bool) -> Void, updateStarsSelected: @escaping (Bool) -> Void, requestTonWithdraw: @escaping () -> Void, requestStarsWithdraw: @escaping () -> Void, showTimeoutTooltip: @escaping (Int32) -> Void, buyAds: @escaping () -> Void, openMonetizationIntro: @escaping () -> Void, openMonetizationInfo: @escaping () -> Void, openTonTransaction: @escaping (StarsContext.State.Transaction) -> Void, openStarsTransaction: @escaping (StarsContext.State.Transaction) -> Void, expandTransactions: @escaping (Bool) -> Void, updateCpmEnabled: @escaping (Bool) -> Void, presentCpmLocked: @escaping () -> Void, openEarnStars: @escaping () -> Void, dismissInput: @escaping () -> Void) {
+    init(context: AccountContext, loadDetailedGraph: @escaping (StatsGraph, Int64) -> Signal<StatsGraph?, NoError>, openPostStats: @escaping (EnginePeer, StatsPostItem) -> Void, openStory: @escaping (EngineStoryItem, UIView) -> Void, contextAction: @escaping (MessageId, ASDisplayNode, ContextGesture?) -> Void, copyBoostLink: @escaping (String) -> Void, shareBoostLink: @escaping (String) -> Void, openBoost: @escaping (ChannelBoostersContext.State.Boost) -> Void, expandBoosters: @escaping () -> Void, openGifts: @escaping () -> Void, createPrepaidGiveaway: @escaping (PrepaidGiveaway) -> Void, updateGiftsSelected: @escaping (Bool) -> Void, updateDiamondsSelected: @escaping (Bool) -> Void, requestTonWithdraw: @escaping () -> Void, requestDiamondsWithdraw: @escaping () -> Void, showTimeoutTooltip: @escaping (Int32) -> Void, buyAds: @escaping () -> Void, openMonetizationIntro: @escaping () -> Void, openMonetizationInfo: @escaping () -> Void, openTonTransaction: @escaping (DiamondsContext.State.Transaction) -> Void, openDiamondsTransaction: @escaping (DiamondsContext.State.Transaction) -> Void, expandTransactions: @escaping (Bool) -> Void, updateCpmEnabled: @escaping (Bool) -> Void, presentCpmLocked: @escaping () -> Void, openEarnDiamonds: @escaping () -> Void, dismissInput: @escaping () -> Void) {
         self.context = context
         self.loadDetailedGraph = loadDetailedGraph
         self.openPostStats = openPostStats
@@ -72,19 +72,19 @@ private final class ChannelStatsControllerArguments {
         self.openGifts = openGifts
         self.createPrepaidGiveaway = createPrepaidGiveaway
         self.updateGiftsSelected = updateGiftsSelected
-        self.updateStarsSelected = updateStarsSelected
+        self.updateDiamondsSelected = updateDiamondsSelected
         self.requestTonWithdraw = requestTonWithdraw
-        self.requestStarsWithdraw = requestStarsWithdraw
+        self.requestDiamondsWithdraw = requestDiamondsWithdraw
         self.showTimeoutTooltip = showTimeoutTooltip
         self.buyAds = buyAds
         self.openMonetizationIntro = openMonetizationIntro
         self.openMonetizationInfo = openMonetizationInfo
         self.openTonTransaction = openTonTransaction
-        self.openStarsTransaction = openStarsTransaction
+        self.openDiamondsTransaction = openDiamondsTransaction
         self.expandTransactions = expandTransactions
         self.updateCpmEnabled = updateCpmEnabled
         self.presentCpmLocked = presentCpmLocked
-        self.openEarnStars = openEarnStars
+        self.openEarnDiamonds = openEarnDiamonds
         self.dismissInput = dismissInput
     }
 }
@@ -115,14 +115,14 @@ private enum StatsSection: Int32 {
     case adsHeader
     case adsImpressions
     case adsTonRevenue
-    case adsStarsRevenue
+    case adsDiamondsRevenue
     case adsProceeds
     case adsTonBalance
-    case adsStarsBalance
+    case adsDiamondsBalance
     case adsTransactions
     case adsCpm
     
-    case earnStars
+    case earnDiamonds
 }
 
 enum StatsPostItem: Equatable {
@@ -238,8 +238,8 @@ private enum StatsEntry: ItemListNodeEntry {
     case adsTonRevenueTitle(PresentationTheme, String)
     case adsTonRevenueGraph(PresentationTheme, PresentationStrings, PresentationDateTimeFormat, StatsGraph, ChartType, Double)
     
-    case adsStarsRevenueTitle(PresentationTheme, String)
-    case adsStarsRevenueGraph(PresentationTheme, PresentationStrings, PresentationDateTimeFormat, StatsGraph, ChartType, Double)
+    case adsDiamondsRevenueTitle(PresentationTheme, String)
+    case adsDiamondsRevenueGraph(PresentationTheme, PresentationStrings, PresentationDateTimeFormat, StatsGraph, ChartType, Double)
     
     case adsProceedsTitle(PresentationTheme, String)
     case adsProceedsOverview(PresentationTheme, StarsRevenueStats?, StarsRevenueStats?)
@@ -249,15 +249,15 @@ private enum StatsEntry: ItemListNodeEntry {
     case adsTonBalance(PresentationTheme, StarsRevenueStats, Bool, Bool)
     case adsTonBalanceInfo(PresentationTheme, String)
     
-    case adsStarsBalanceTitle(PresentationTheme, String)
-    case adsStarsBalance(PresentationTheme, StarsRevenueStats, Bool, Bool, Bool, Int32?)
-    case adsStarsBalanceInfo(PresentationTheme, String)
+    case adsDiamondsBalanceTitle(PresentationTheme, String)
+    case adsDiamondsBalance(PresentationTheme, StarsRevenueStats, Bool, Bool, Bool, Int32?)
+    case adsDiamondsBalanceInfo(PresentationTheme, String)
     
-    case earnStarsInfo
+    case earnDiamondsInfo
     case adsTransactionsTitle(PresentationTheme, String)
     case adsTransactionsTabs(PresentationTheme, String, String, Bool)
-    case adsTransaction(Int32, PresentationTheme, StarsContext.State.Transaction)
-    case adsStarsTransaction(Int32, PresentationTheme, StarsContext.State.Transaction)
+    case adsTransaction(Int32, PresentationTheme, DiamondsContext.State.Transaction)
+    case adsDiamondsTransaction(Int32, PresentationTheme, DiamondsContext.State.Transaction)
     case adsTransactionsExpand(PresentationTheme, String, Bool)
     
     case adsCpmToggle(PresentationTheme, String, Int32, Bool?)
@@ -311,17 +311,17 @@ private enum StatsEntry: ItemListNodeEntry {
                 return StatsSection.adsImpressions.rawValue
             case .adsTonRevenueTitle, .adsTonRevenueGraph:
                 return StatsSection.adsTonRevenue.rawValue
-            case .adsStarsRevenueTitle, .adsStarsRevenueGraph:
-                return StatsSection.adsStarsRevenue.rawValue
+            case .adsDiamondsRevenueTitle, .adsDiamondsRevenueGraph:
+                return StatsSection.adsDiamondsRevenue.rawValue
             case .adsProceedsTitle, .adsProceedsOverview, .adsProceedsInfo:
                 return StatsSection.adsProceeds.rawValue
             case .adsTonBalanceTitle, .adsTonBalance, .adsTonBalanceInfo:
                 return StatsSection.adsTonBalance.rawValue
-            case .adsStarsBalanceTitle, .adsStarsBalance, .adsStarsBalanceInfo:
-                return StatsSection.adsStarsBalance.rawValue
-            case .earnStarsInfo:
-                return StatsSection.earnStars.rawValue
-            case .adsTransactionsTitle, .adsTransactionsTabs, .adsTransaction, .adsStarsTransaction, .adsTransactionsExpand:
+            case .adsDiamondsBalanceTitle, .adsDiamondsBalance, .adsDiamondsBalanceInfo:
+                return StatsSection.adsDiamondsBalance.rawValue
+            case .earnDiamondsInfo:
+                return StatsSection.earnDiamonds.rawValue
+            case .adsTransactionsTitle, .adsTransactionsTabs, .adsTransaction, .adsDiamondsTransaction, .adsTransactionsExpand:
                 return StatsSection.adsTransactions.rawValue
             case .adsCpmToggle, .adsCpmInfo:
                 return StatsSection.adsCpm.rawValue
@@ -430,9 +430,9 @@ private enum StatsEntry: ItemListNodeEntry {
                 return 20003
             case .adsTonRevenueGraph:
                 return 20004
-            case .adsStarsRevenueTitle:
+            case .adsDiamondsRevenueTitle:
                 return 20005
-            case .adsStarsRevenueGraph:
+            case .adsDiamondsRevenueGraph:
                 return 20006
             case .adsProceedsTitle:
                 return 20007
@@ -446,13 +446,13 @@ private enum StatsEntry: ItemListNodeEntry {
                 return 20011
             case .adsTonBalanceInfo:
                 return 20012
-            case .adsStarsBalanceTitle:
+            case .adsDiamondsBalanceTitle:
                 return 20013
-            case .adsStarsBalance:
+            case .adsDiamondsBalance:
                 return 20014
-            case .adsStarsBalanceInfo:
+            case .adsDiamondsBalanceInfo:
                 return 20015
-            case .earnStarsInfo:
+            case .earnDiamondsInfo:
                 return 20016
             case .adsTransactionsTitle:
                 return 20017
@@ -460,7 +460,7 @@ private enum StatsEntry: ItemListNodeEntry {
                 return 20018
             case let .adsTransaction(index, _, _):
                 return 20019 + index
-            case let .adsStarsTransaction(index, _, _):
+            case let .adsDiamondsTransaction(index, _, _):
                 return 30018 + index
             case .adsTransactionsExpand:
                 return 40000
@@ -773,14 +773,14 @@ private enum StatsEntry: ItemListNodeEntry {
                 } else {
                     return false
                 }
-            case let .adsStarsRevenueTitle(lhsTheme, lhsText):
-                if case let .adsStarsRevenueTitle(rhsTheme, rhsText) = rhs, lhsTheme === rhsTheme, lhsText == rhsText {
+            case let .adsDiamondsRevenueTitle(lhsTheme, lhsText):
+                if case let .adsDiamondsRevenueTitle(rhsTheme, rhsText) = rhs, lhsTheme === rhsTheme, lhsText == rhsText {
                     return true
                 } else {
                     return false
                 }
-            case let .adsStarsRevenueGraph(lhsTheme, lhsStrings, lhsDateTimeFormat, lhsGraph, lhsType, lhsRate):
-                if case let .adsStarsRevenueGraph(rhsTheme, rhsStrings, rhsDateTimeFormat, rhsGraph, rhsType, rhsRate) = rhs, lhsTheme === rhsTheme, lhsStrings === rhsStrings, lhsDateTimeFormat == rhsDateTimeFormat, lhsGraph == rhsGraph, lhsType == rhsType,  lhsRate == rhsRate {
+            case let .adsDiamondsRevenueGraph(lhsTheme, lhsStrings, lhsDateTimeFormat, lhsGraph, lhsType, lhsRate):
+                if case let .adsDiamondsRevenueGraph(rhsTheme, rhsStrings, rhsDateTimeFormat, rhsGraph, rhsType, rhsRate) = rhs, lhsTheme === rhsTheme, lhsStrings === rhsStrings, lhsDateTimeFormat == rhsDateTimeFormat, lhsGraph == rhsGraph, lhsType == rhsType,  lhsRate == rhsRate {
                     return true
                 } else {
                     return false
@@ -791,8 +791,8 @@ private enum StatsEntry: ItemListNodeEntry {
                 } else {
                     return false
                 }
-            case let .adsProceedsOverview(lhsTheme, lhsStatus, lhsStarsStatus):
-                if case let .adsProceedsOverview(rhsTheme, rhsStatus, rhsStarsStatus) = rhs, lhsTheme === rhsTheme, lhsStatus == rhsStatus, lhsStarsStatus == rhsStarsStatus {
+            case let .adsProceedsOverview(lhsTheme, lhsStatus, lhsDiamondsStatus):
+                if case let .adsProceedsOverview(rhsTheme, rhsStatus, rhsDiamondsStatus) = rhs, lhsTheme === rhsTheme, lhsStatus == rhsStatus, lhsDiamondsStatus == rhsDiamondsStatus {
                     return true
                 } else {
                     return false
@@ -821,26 +821,26 @@ private enum StatsEntry: ItemListNodeEntry {
                 } else {
                     return false
                 }
-            case let .adsStarsBalanceTitle(lhsTheme, lhsText):
-                if case let .adsStarsBalanceTitle(rhsTheme, rhsText) = rhs, lhsTheme === rhsTheme, lhsText == rhsText {
+            case let .adsDiamondsBalanceTitle(lhsTheme, lhsText):
+                if case let .adsDiamondsBalanceTitle(rhsTheme, rhsText) = rhs, lhsTheme === rhsTheme, lhsText == rhsText {
                     return true
                 } else {
                     return false
                 }
-            case let .adsStarsBalance(lhsTheme, lhsStats, lhsCanWithdraw, lhsCanBuyAds, lhsIsEnabled, lhsCooldownUntilTimestamp):
-            if case let .adsStarsBalance(rhsTheme, rhsStats, rhsCanWithdraw, rhsCanBuyAds, rhsIsEnabled, rhsCooldownUntilTimestamp) = rhs, lhsTheme === rhsTheme, lhsStats == rhsStats, lhsCanWithdraw == rhsCanWithdraw, lhsCanBuyAds == rhsCanBuyAds, lhsIsEnabled == rhsIsEnabled, lhsCooldownUntilTimestamp == rhsCooldownUntilTimestamp {
+            case let .adsDiamondsBalance(lhsTheme, lhsStats, lhsCanWithdraw, lhsCanBuyAds, lhsIsEnabled, lhsCooldownUntilTimestamp):
+            if case let .adsDiamondsBalance(rhsTheme, rhsStats, rhsCanWithdraw, rhsCanBuyAds, rhsIsEnabled, rhsCooldownUntilTimestamp) = rhs, lhsTheme === rhsTheme, lhsStats == rhsStats, lhsCanWithdraw == rhsCanWithdraw, lhsCanBuyAds == rhsCanBuyAds, lhsIsEnabled == rhsIsEnabled, lhsCooldownUntilTimestamp == rhsCooldownUntilTimestamp {
                     return true
                 } else {
                     return false
                 }
-            case let .adsStarsBalanceInfo(lhsTheme, lhsText):
-                if case let .adsStarsBalanceInfo(rhsTheme, rhsText) = rhs, lhsTheme === rhsTheme, lhsText == rhsText {
+            case let .adsDiamondsBalanceInfo(lhsTheme, lhsText):
+                if case let .adsDiamondsBalanceInfo(rhsTheme, rhsText) = rhs, lhsTheme === rhsTheme, lhsText == rhsText {
                     return true
                 } else {
                     return false
                 }
-        case .earnStarsInfo:
-                if case .earnStarsInfo = rhs {
+        case .earnDiamondsInfo:
+                if case .earnDiamondsInfo = rhs {
                     return true
                 } else {
                     return false
@@ -851,8 +851,8 @@ private enum StatsEntry: ItemListNodeEntry {
                 } else {
                     return false
                 }
-            case let .adsTransactionsTabs(lhsTheme, lhsTonText, lhsStarsText, lhsStarsSelected):
-                if case let .adsTransactionsTabs(rhsTheme, rhsTonText, rhsStarsText, rhsStarsSelected) = rhs, lhsTheme === rhsTheme, lhsTonText == rhsTonText, lhsStarsText == rhsStarsText, lhsStarsSelected == rhsStarsSelected {
+            case let .adsTransactionsTabs(lhsTheme, lhsTonText, lhsDiamondsText, lhsDiamondsSelected):
+                if case let .adsTransactionsTabs(rhsTheme, rhsTonText, rhsDiamondsText, rhsDiamondsSelected) = rhs, lhsTheme === rhsTheme, lhsTonText == rhsTonText, lhsDiamondsText == rhsDiamondsText, lhsDiamondsSelected == rhsDiamondsSelected {
                     return true
                 } else {
                     return false
@@ -863,14 +863,14 @@ private enum StatsEntry: ItemListNodeEntry {
                 } else {
                     return false
                 }
-            case let .adsStarsTransaction(lhsIndex, lhsTheme, lhsTransaction):
-                if case let .adsStarsTransaction(rhsIndex, rhsTheme, rhsTransaction) = rhs, lhsIndex == rhsIndex, lhsTheme === rhsTheme, lhsTransaction == rhsTransaction {
+            case let .adsDiamondsTransaction(lhsIndex, lhsTheme, lhsTransaction):
+                if case let .adsDiamondsTransaction(rhsIndex, rhsTheme, rhsTransaction) = rhs, lhsIndex == rhsIndex, lhsTheme === rhsTheme, lhsTransaction == rhsTransaction {
                     return true
                 } else {
                     return false
                 }
-            case let .adsTransactionsExpand(lhsTheme, lhsText, lhsStars):
-                if case let .adsTransactionsExpand(rhsTheme, rhsText, rhsStars) = rhs, lhsTheme === rhsTheme, lhsText == rhsText, lhsStars == rhsStars {
+            case let .adsTransactionsExpand(lhsTheme, lhsText, lhsDiamonds):
+                if case let .adsTransactionsExpand(rhsTheme, rhsText, rhsDiamonds) = rhs, lhsTheme === rhsTheme, lhsText == rhsText, lhsDiamonds == rhsDiamonds {
                     return true
                 } else {
                     return false
@@ -918,10 +918,10 @@ private enum StatsEntry: ItemListNodeEntry {
                  let .boostLinkTitle(_, text),
                  let .adsImpressionsTitle(_, text),
                  let .adsTonRevenueTitle(_, text),
-                 let .adsStarsRevenueTitle(_, text),
+                 let .adsDiamondsRevenueTitle(_, text),
                  let .adsProceedsTitle(_, text),
                  let .adsTonBalanceTitle(_, text),
-                 let .adsStarsBalanceTitle(_, text),
+                 let .adsDiamondsBalanceTitle(_, text),
                  let .adsTransactionsTitle(_, text):
                 return ItemListSectionHeaderItem(presentationData: presentationData, text: text, sectionId: self.section)
             case let .boostPrepaidInfo(_, text),
@@ -946,7 +946,7 @@ private enum StatsEntry: ItemListNodeEntry {
                 return StatsGraphItem(presentationData: presentationData, systemStyle: .glass, graph: graph, type: type, sectionId: self.section, style: .blocks)
             case let .adsTonRevenueGraph(_, _, _, graph, type, rate):
                 return StatsGraphItem(presentationData: presentationData, systemStyle: .glass, graph: graph, type: type, conversionRate: rate, sectionId: self.section, style: .blocks)
-            case let .adsStarsRevenueGraph(_, _, _, graph, type, rate):
+            case let .adsDiamondsRevenueGraph(_, _, _, graph, type, rate):
                 return StatsGraphItem(presentationData: presentationData, systemStyle: .glass, graph: graph, type: type, conversionRate: rate, sectionId: self.section, style: .blocks)
             case let .postInteractionsGraph(_, _, _, graph, type),
                  let .instantPageInteractionsGraph(_, _, _, graph, type),
@@ -1087,8 +1087,8 @@ private enum StatsEntry: ItemListNodeEntry {
                 return ItemListTextItem(presentationData: presentationData, text: .markdown(text), sectionId: self.section, linkAction: { _ in
                     arguments.openMonetizationIntro()
                 })
-            case let .adsProceedsOverview(_, stats, starsStats):
-                return StatsOverviewItem(context: arguments.context, presentationData: presentationData, isGroup: false, stats: stats ?? starsStats, additionalStats: stats != nil ? starsStats : nil, sectionId: self.section, style: .blocks)
+            case let .adsProceedsOverview(_, stats, diamondsStats):
+                return StatsOverviewItem(context: arguments.context, presentationData: presentationData, isGroup: false, stats: stats ?? diamondsStats, additionalStats: stats != nil ? diamondsStats : nil, sectionId: self.section, style: .blocks)
             case let .adsTonBalance(_, stats, canWithdraw, isEnabled):
                 return MonetizationBalanceItem(
                     context: arguments.context,
@@ -1108,7 +1108,7 @@ private enum StatsEntry: ItemListNodeEntry {
                 return ItemListTextItem(presentationData: presentationData, text: .markdown(text), sectionId: self.section, linkAction: { _ in
                     arguments.openMonetizationInfo()
                 })
-            case let .adsStarsBalance(_, stats, canWithdraw, canBuyAds, isEnabled, cooldownUntilTimestamp):
+            case let .adsDiamondsBalance(_, stats, canWithdraw, canBuyAds, isEnabled, cooldownUntilTimestamp):
                 return MonetizationBalanceItem(
                     context: arguments.context,
                     presentationData: presentationData,
@@ -1125,10 +1125,10 @@ private enum StatsEntry: ItemListNodeEntry {
                             if remainingCooldownSeconds > 0 {
                                 arguments.showTimeoutTooltip(cooldownUntilTimestamp)
                             } else {
-                                arguments.requestStarsWithdraw()
+                                arguments.requestDiamondsWithdraw()
                             }
                         } else {
-                            arguments.requestStarsWithdraw()
+                            arguments.requestDiamondsWithdraw()
                         }
                     },
                     buyAdsAction: canWithdraw && canBuyAds ? {
@@ -1137,13 +1137,13 @@ private enum StatsEntry: ItemListNodeEntry {
                     sectionId: self.section,
                     style: .blocks
                 )
-            case let .adsStarsBalanceInfo(_, text):
+            case let .adsDiamondsBalanceInfo(_, text):
                 return ItemListTextItem(presentationData: presentationData, text: .markdown(text), sectionId: self.section, linkAction: { _ in
                     arguments.openMonetizationInfo()
                 })
-            case let .adsTransactionsTabs(_, tonText, starsText, starsSelected):
-                return BoostsTabsItem(theme: presentationData.theme, boostsText: tonText, giftsText: starsText, selectedTab: starsSelected ? .gifts : .boosts, sectionId: self.section, selectionUpdated: { tab in
-                    arguments.updateStarsSelected(tab == .gifts)
+            case let .adsTransactionsTabs(_, tonText, diamondsText, diamondsSelected):
+                return BoostsTabsItem(theme: presentationData.theme, boostsText: tonText, giftsText: diamondsText, selectedTab: diamondsSelected ? .gifts : .boosts, sectionId: self.section, selectionUpdated: { tab in
+                    arguments.updateDiamondsSelected(tab == .gifts)
                 })
             case let .adsTransaction(_, theme, transaction):
                 let font = Font.with(size: floor(presentationData.fontSize.itemListBaseFontSize))
@@ -1184,8 +1184,8 @@ private enum StatsEntry: ItemListNodeEntry {
                     title = NSAttributedString(string: presentationData.strings.Monetization_Transaction_Refund, font: font, textColor: theme.list.itemPrimaryTextColor)
                     detailText = stringForMediumCompactDate(timestamp: transaction.date, strings: presentationData.strings, dateTimeFormat: presentationData.dateTimeFormat)
                 } else if case .peer = transaction.peer {
-                    return StarsTransactionItem(context: arguments.context, presentationData: presentationData, transaction: transaction, action: {
-                        arguments.openStarsTransaction(transaction)
+                    return DiamondsTransactionItem(context: arguments.context, presentationData: presentationData, transaction: transaction, action: {
+                        arguments.openDiamondsTransaction(transaction)
                     }, sectionId: self.section, style: .blocks)
                 } else {
                     title = NSAttributedString()
@@ -1203,9 +1203,9 @@ private enum StatsEntry: ItemListNodeEntry {
                 return ItemListDisclosureItem(presentationData: presentationData, systemStyle: .glass, title: "", attributedTitle: title, label: "", attributedLabel: label, labelStyle: .coloredText(labelColor), additionalDetailLabel: detailText, additionalDetailLabelColor: detailColor, sectionId: self.section, style: .blocks, disclosureStyle: .none, action: {
                     arguments.openTonTransaction(transaction)
                 })
-            case let .adsStarsTransaction(_, _, transaction):
-                return StarsTransactionItem(context: arguments.context, presentationData: presentationData, transaction: transaction, action: {
-                    arguments.openStarsTransaction(transaction)
+            case let .adsDiamondsTransaction(_, _, transaction):
+                return DiamondsTransactionItem(context: arguments.context, presentationData: presentationData, transaction: transaction, action: {
+                    arguments.openDiamondsTransaction(transaction)
                 }, sectionId: self.section, style: .blocks)
             case let .adsTransactionsExpand(theme, title, stars):
                 return ItemListPeerActionItem(presentationData: presentationData, systemStyle: .glass, icon: PresentationResourcesItemList.downArrowImage(theme), title: title, sectionId: self.section, editing: false, action: {
@@ -1228,9 +1228,9 @@ private enum StatsEntry: ItemListNodeEntry {
                 }, activatedWhileDisabled: {
                     arguments.presentCpmLocked()
                 })
-            case .earnStarsInfo:
-                return ItemListDisclosureItem(presentationData: presentationData, systemStyle: .glass, icon: PresentationResourcesSettings.earnStars, title: presentationData.strings.Monetization_EarnDiamondsInfo_Title, titleBadge: nil, label: presentationData.strings.Monetization_EarnDiamondsInfo_Text, labelStyle: .multilineDetailText, sectionId: self.section, style: .blocks, action: {
-                    arguments.openEarnStars()
+            case .earnDiamondsInfo:
+                return ItemListDisclosureItem(presentationData: presentationData, systemStyle: .glass, icon: PresentationResourcesSettings.earnDiamonds, title: presentationData.strings.Monetization_EarnDiamondsInfo_Title, titleBadge: nil, label: presentationData.strings.Monetization_EarnDiamondsInfo_Text, labelStyle: .multilineDetailText, sectionId: self.section, style: .blocks, action: {
+                    arguments.openEarnDiamonds()
                 })
         }
     }
@@ -1247,7 +1247,7 @@ private struct ChannelStatsControllerState: Equatable {
     let boostersExpanded: Bool
     let moreBoostersDisplayed: Int32
     let giftsSelected: Bool
-    let starsSelected: Bool
+    let diamondsSelected: Bool
     let transactionsExpanded: Bool
     let moreTransactionsDisplayed: Int32
     
@@ -1256,17 +1256,17 @@ private struct ChannelStatsControllerState: Equatable {
         self.boostersExpanded = false
         self.moreBoostersDisplayed = 0
         self.giftsSelected = false
-        self.starsSelected = false
+        self.diamondsSelected = false
         self.transactionsExpanded = false
         self.moreTransactionsDisplayed = 0
     }
     
-    init(section: ChannelStatsSection, boostersExpanded: Bool, moreBoostersDisplayed: Int32, giftsSelected: Bool, starsSelected: Bool, transactionsExpanded: Bool, moreTransactionsDisplayed: Int32) {
+    init(section: ChannelStatsSection, boostersExpanded: Bool, moreBoostersDisplayed: Int32, giftsSelected: Bool, diamondsSelected: Bool, transactionsExpanded: Bool, moreTransactionsDisplayed: Int32) {
         self.section = section
         self.boostersExpanded = boostersExpanded
         self.moreBoostersDisplayed = moreBoostersDisplayed
         self.giftsSelected = giftsSelected
-        self.starsSelected = starsSelected
+        self.diamondsSelected = diamondsSelected
         self.transactionsExpanded = transactionsExpanded
         self.moreTransactionsDisplayed = moreTransactionsDisplayed
     }
@@ -1284,7 +1284,7 @@ private struct ChannelStatsControllerState: Equatable {
         if lhs.giftsSelected != rhs.giftsSelected {
             return false
         }
-        if lhs.starsSelected != rhs.starsSelected {
+        if lhs.diamondsSelected != rhs.diamondsSelected {
             return false
         }
         if lhs.transactionsExpanded != rhs.transactionsExpanded {
@@ -1297,31 +1297,31 @@ private struct ChannelStatsControllerState: Equatable {
     }
     
     func withUpdatedSection(_ section: ChannelStatsSection) -> ChannelStatsControllerState {
-        return ChannelStatsControllerState(section: section, boostersExpanded: self.boostersExpanded, moreBoostersDisplayed: self.moreBoostersDisplayed, giftsSelected: self.giftsSelected, starsSelected: self.starsSelected, transactionsExpanded: self.transactionsExpanded, moreTransactionsDisplayed: self.moreTransactionsDisplayed)
+        return ChannelStatsControllerState(section: section, boostersExpanded: self.boostersExpanded, moreBoostersDisplayed: self.moreBoostersDisplayed, giftsSelected: self.giftsSelected, diamondsSelected: self.diamondsSelected, transactionsExpanded: self.transactionsExpanded, moreTransactionsDisplayed: self.moreTransactionsDisplayed)
     }
     
     func withUpdatedBoostersExpanded(_ boostersExpanded: Bool) -> ChannelStatsControllerState {
-        return ChannelStatsControllerState(section: self.section, boostersExpanded: boostersExpanded, moreBoostersDisplayed: self.moreBoostersDisplayed, giftsSelected: self.giftsSelected, starsSelected: self.starsSelected, transactionsExpanded: self.transactionsExpanded, moreTransactionsDisplayed: self.moreTransactionsDisplayed)
+        return ChannelStatsControllerState(section: self.section, boostersExpanded: boostersExpanded, moreBoostersDisplayed: self.moreBoostersDisplayed, giftsSelected: self.giftsSelected, diamondsSelected: self.diamondsSelected, transactionsExpanded: self.transactionsExpanded, moreTransactionsDisplayed: self.moreTransactionsDisplayed)
     }
     
     func withUpdatedMoreBoostersDisplayed(_ moreBoostersDisplayed: Int32) -> ChannelStatsControllerState {
-        return ChannelStatsControllerState(section: self.section, boostersExpanded: self.boostersExpanded, moreBoostersDisplayed: moreBoostersDisplayed, giftsSelected: self.giftsSelected, starsSelected: self.starsSelected, transactionsExpanded: self.transactionsExpanded, moreTransactionsDisplayed: self.moreTransactionsDisplayed)
+        return ChannelStatsControllerState(section: self.section, boostersExpanded: self.boostersExpanded, moreBoostersDisplayed: moreBoostersDisplayed, giftsSelected: self.giftsSelected, diamondsSelected: self.diamondsSelected, transactionsExpanded: self.transactionsExpanded, moreTransactionsDisplayed: self.moreTransactionsDisplayed)
     }
     
     func withUpdatedGiftsSelected(_ giftsSelected: Bool) -> ChannelStatsControllerState {
-        return ChannelStatsControllerState(section: self.section, boostersExpanded: self.boostersExpanded, moreBoostersDisplayed: self.moreBoostersDisplayed, giftsSelected: giftsSelected, starsSelected: self.starsSelected, transactionsExpanded: self.transactionsExpanded, moreTransactionsDisplayed: self.moreTransactionsDisplayed)
+        return ChannelStatsControllerState(section: self.section, boostersExpanded: self.boostersExpanded, moreBoostersDisplayed: self.moreBoostersDisplayed, giftsSelected: giftsSelected, diamondsSelected: self.diamondsSelected, transactionsExpanded: self.transactionsExpanded, moreTransactionsDisplayed: self.moreTransactionsDisplayed)
     }
     
-    func withUpdatedStarsSelected(_ starsSelected: Bool) -> ChannelStatsControllerState {
-        return ChannelStatsControllerState(section: self.section, boostersExpanded: self.boostersExpanded, moreBoostersDisplayed: self.moreBoostersDisplayed, giftsSelected: self.giftsSelected, starsSelected: starsSelected, transactionsExpanded: self.transactionsExpanded, moreTransactionsDisplayed: self.moreTransactionsDisplayed)
+    func withUpdatedDiamondsSelected(_ diamondsSelected: Bool) -> ChannelStatsControllerState {
+        return ChannelStatsControllerState(section: self.section, boostersExpanded: self.boostersExpanded, moreBoostersDisplayed: self.moreBoostersDisplayed, giftsSelected: self.giftsSelected, diamondsSelected: diamondsSelected, transactionsExpanded: self.transactionsExpanded, moreTransactionsDisplayed: self.moreTransactionsDisplayed)
     }
     
     func withUpdatedTransactionsExpanded(_ transactionsExpanded: Bool) -> ChannelStatsControllerState {
-        return ChannelStatsControllerState(section: self.section, boostersExpanded: self.boostersExpanded, moreBoostersDisplayed: self.moreBoostersDisplayed, giftsSelected: self.giftsSelected, starsSelected: self.starsSelected, transactionsExpanded: transactionsExpanded, moreTransactionsDisplayed: self.moreTransactionsDisplayed)
+        return ChannelStatsControllerState(section: self.section, boostersExpanded: self.boostersExpanded, moreBoostersDisplayed: self.moreBoostersDisplayed, giftsSelected: self.giftsSelected, diamondsSelected: self.diamondsSelected, transactionsExpanded: transactionsExpanded, moreTransactionsDisplayed: self.moreTransactionsDisplayed)
     }
     
     func withUpdatedMoreTransactionsDisplayed(_ moreTransactionsDisplayed: Int32) -> ChannelStatsControllerState {
-        return ChannelStatsControllerState(section: self.section, boostersExpanded: self.boostersExpanded, moreBoostersDisplayed: self.moreBoostersDisplayed, giftsSelected: self.giftsSelected, starsSelected: self.starsSelected, transactionsExpanded: self.transactionsExpanded, moreTransactionsDisplayed: moreTransactionsDisplayed)
+        return ChannelStatsControllerState(section: self.section, boostersExpanded: self.boostersExpanded, moreBoostersDisplayed: self.moreBoostersDisplayed, giftsSelected: self.giftsSelected, diamondsSelected: self.diamondsSelected, transactionsExpanded: self.transactionsExpanded, moreTransactionsDisplayed: moreTransactionsDisplayed)
     }
 }
 
@@ -1577,9 +1577,9 @@ private func monetizationEntries(
     peer: EnginePeer?,
     data: StarsRevenueStats?,
     boostData: ChannelBoostStatus?,
-    transactionsInfo: StarsTransactionsContext.State,
-    starsData: StarsRevenueStats?,
-    starsTransactionsInfo: StarsTransactionsContext.State,
+    transactionsInfo: DiamondsTransactionsContext.State,
+    diamondsData: StarsRevenueStats?,
+    diamondsTransactionsInfo: DiamondsTransactionsContext.State,
     adsRestricted: Bool,
     premiumConfiguration: PremiumConfiguration,
     monetizationConfiguration: MonetizationConfiguration,
@@ -1609,22 +1609,22 @@ private func monetizationEntries(
     }
     
     if canViewStarsRevenue {
-        if let starsData, !starsData.revenueGraph.isEmpty {
-            entries.append(.adsStarsRevenueTitle(presentationData.theme, presentationData.strings.Monetization_DiamondsRevenueTitle))
-            entries.append(.adsStarsRevenueGraph(presentationData.theme, presentationData.strings, presentationData.dateTimeFormat, starsData.revenueGraph, .stars, starsData.usdRate))
+        if let diamondsData, !diamondsData.revenueGraph.isEmpty {
+            entries.append(.adsDiamondsRevenueTitle(presentationData.theme, presentationData.strings.Monetization_DiamondsRevenueTitle))
+            entries.append(.adsDiamondsRevenueGraph(presentationData.theme, presentationData.strings, presentationData.dateTimeFormat, diamondsData.revenueGraph, .stars, diamondsData.usdRate))
         }
     }
         
     entries.append(.adsProceedsTitle(presentationData.theme, presentationData.strings.Monetization_DiamondsProceeds_Title))
-    entries.append(.adsProceedsOverview(presentationData.theme, canViewRevenue ? data : nil, canViewStarsRevenue ? starsData : nil))
+    entries.append(.adsProceedsOverview(presentationData.theme, canViewRevenue ? data : nil, canViewStarsRevenue ? diamondsData : nil))
     
     let hasTonBalance = (data?.balances.overallRevenue.amount ?? StarsAmount.zero) > StarsAmount.zero
-    let hasStarsBalance = (starsData?.balances.overallRevenue.amount ?? StarsAmount.zero) > StarsAmount.zero
+    let hasDiamondsBalance = (diamondsData?.balances.overallRevenue.amount ?? StarsAmount.zero) > StarsAmount.zero
     
     let proceedsInfo: String
-    if (canViewStarsRevenue && hasStarsBalance) && (canViewRevenue && hasTonBalance) {
+    if (canViewStarsRevenue && hasDiamondsBalance) && (canViewRevenue && hasTonBalance) {
         proceedsInfo = presentationData.strings.Monetization_Proceeds_TonAndDiamonds_Info
-    } else if canViewStarsRevenue && hasStarsBalance {
+    } else if canViewStarsRevenue && hasDiamondsBalance {
         proceedsInfo = presentationData.strings.Monetization_Proceeds_Diamonds_Info
     } else {
         proceedsInfo = presentationData.strings.Monetization_Proceeds_Ton_Info
@@ -1657,30 +1657,30 @@ private func monetizationEntries(
         }
     }
     
-    if canViewStarsRevenue, let starsData, starsData.balances.overallRevenue.amount > StarsAmount.zero {
-        entries.append(.adsStarsBalanceTitle(presentationData.theme, presentationData.strings.Monetization_DiamondsBalanceTitle))
-        entries.append(.adsStarsBalance(presentationData.theme, starsData, isCreator && starsData.balances.availableBalance.amount > StarsAmount.zero, !isGroup, starsData.balances.withdrawEnabled, starsData.balances.nextWithdrawalTimestamp))
-        entries.append(.adsStarsBalanceInfo(presentationData.theme, isGroup ? presentationData.strings.Monetization_Balance_DiamondsInfoGroup : presentationData.strings.Monetization_Balance_DiamondsInfo))
+    if canViewStarsRevenue, let diamondsData, diamondsData.balances.overallRevenue.amount > StarsAmount.zero {
+        entries.append(.adsDiamondsBalanceTitle(presentationData.theme, presentationData.strings.Monetization_DiamondsBalanceTitle))
+        entries.append(.adsDiamondsBalance(presentationData.theme, diamondsData, isCreator && diamondsData.balances.availableBalance.amount > StarsAmount.zero, !isGroup, diamondsData.balances.withdrawEnabled, diamondsData.balances.nextWithdrawalTimestamp))
+        entries.append(.adsDiamondsBalanceInfo(presentationData.theme, isGroup ? presentationData.strings.Monetization_Balance_DiamondsInfoGroup : presentationData.strings.Monetization_Balance_DiamondsInfo))
     }
     
     if canJoinRefPrograms && !isGroup {
-        entries.append(.earnStarsInfo)
+        entries.append(.earnDiamondsInfo)
     }
     
     var addedTransactionsTabs = false
-    if !transactionsInfo.transactions.isEmpty && !starsTransactionsInfo.transactions.isEmpty && canViewRevenue && canViewStarsRevenue {
+    if !transactionsInfo.transactions.isEmpty && !diamondsTransactionsInfo.transactions.isEmpty && canViewRevenue && canViewStarsRevenue {
         addedTransactionsTabs = true
-        entries.append(.adsTransactionsTabs(presentationData.theme, presentationData.strings.Monetization_TonTransactions, presentationData.strings.Monetization_DiamondsTransactions, state.starsSelected))
+        entries.append(.adsTransactionsTabs(presentationData.theme, presentationData.strings.Monetization_TonTransactions, presentationData.strings.Monetization_DiamondsTransactions, state.diamondsSelected))
     }
     
     var displayTonTransactions = false
-    if canViewRevenue && !transactionsInfo.transactions.isEmpty && (starsTransactionsInfo.transactions.isEmpty || !state.starsSelected) {
+    if canViewRevenue && !transactionsInfo.transactions.isEmpty && (diamondsTransactionsInfo.transactions.isEmpty || !state.diamondsSelected) {
         displayTonTransactions = true
     }
     
-    var displayStarsTransactions = false
-    if canViewStarsRevenue && !starsTransactionsInfo.transactions.isEmpty && (transactionsInfo.transactions.isEmpty || state.starsSelected) {
-        displayStarsTransactions = true
+    var displayDiamondsTransactions = false
+    if canViewStarsRevenue && !diamondsTransactionsInfo.transactions.isEmpty && (transactionsInfo.transactions.isEmpty || state.diamondsSelected) {
+        displayDiamondsTransactions = true
     }
         
     if displayTonTransactions {
@@ -1714,12 +1714,12 @@ private func monetizationEntries(
         }
     }
     
-    if displayStarsTransactions {
+    if displayDiamondsTransactions {
         if !addedTransactionsTabs {
             entries.append(.adsTransactionsTitle(presentationData.theme, isGroup ? presentationData.strings.Monetization_TransactionsTitle.uppercased() : presentationData.strings.Monetization_DiamondsTransactions.uppercased()))
         }
         
-        var transactions = starsTransactionsInfo.transactions
+        var transactions = diamondsTransactionsInfo.transactions
         var limit: Int32
         if state.transactionsExpanded {
             limit = 25 + state.moreTransactionsDisplayed
@@ -1730,16 +1730,16 @@ private func monetizationEntries(
         
         var i: Int32 = 0
         for transaction in transactions {
-            entries.append(.adsStarsTransaction(i, presentationData.theme, transaction))
+            entries.append(.adsDiamondsTransaction(i, presentationData.theme, transaction))
             i += 1
         }
         
-        if starsTransactionsInfo.canLoadMore || starsTransactionsInfo.transactions.count > transactions.count {
+        if diamondsTransactionsInfo.canLoadMore || diamondsTransactionsInfo.transactions.count > transactions.count {
             let moreCount: Int32
             if !state.transactionsExpanded {
-                moreCount = min(20, Int32(starsTransactionsInfo.transactions.count - transactions.count))
+                moreCount = min(20, Int32(diamondsTransactionsInfo.transactions.count - transactions.count))
             } else {
-                moreCount = min(50, Int32(starsTransactionsInfo.transactions.count - transactions.count))
+                moreCount = min(50, Int32(diamondsTransactionsInfo.transactions.count - transactions.count))
             }
             entries.append(.adsTransactionsExpand(presentationData.theme, presentationData.strings.Monetization_Transaction_ShowMoreTransactions(moreCount), true))
         }
@@ -1773,9 +1773,9 @@ private func channelStatsControllerEntries(
     isGroup: Bool,
     boostsOnly: Bool,
     revenueState: StarsRevenueStats?,
-    revenueTransactions: StarsTransactionsContext.State,
-    starsState: StarsRevenueStats?,
-    starsTransactions: StarsTransactionsContext.State,
+    revenueTransactions: DiamondsTransactionsContext.State,
+    diamondsState: StarsRevenueStats?,
+    diamondsTransactions: DiamondsTransactionsContext.State,
     adsRestricted: Bool,
     premiumConfiguration: PremiumConfiguration,
     monetizationConfiguration: MonetizationConfiguration,
@@ -1809,7 +1809,7 @@ private func channelStatsControllerEntries(
             )
         }
     case .monetization:
-        if revenueState != nil || starsState != nil {
+        if revenueState != nil || diamondsState != nil {
             return monetizationEntries(
                 presentationData: presentationData,
                 state: state,
@@ -1817,8 +1817,8 @@ private func channelStatsControllerEntries(
                 data: revenueState,
                 boostData: boostData,
                 transactionsInfo: revenueTransactions,
-                starsData: starsState,
-                starsTransactionsInfo: starsTransactions,
+                diamondsData: diamondsState,
+                diamondsTransactionsInfo: diamondsTransactions,
                 adsRestricted: adsRestricted,
                 premiumConfiguration: premiumConfiguration,
                 monetizationConfiguration: monetizationConfiguration,
@@ -1836,13 +1836,13 @@ public func channelStatsController(
     updatedPresentationData: (initial: PresentationData, signal: Signal<PresentationData, NoError>)? = nil,
     peerId: PeerId,
     section: ChannelStatsSection = .stats,
-    existingRevenueContext: StarsRevenueStatsContext? = nil,
-    existingStarsRevenueContext: StarsRevenueStatsContext? = nil,
+    existingRevenueContext: DiamondsRevenueStatsContext? = nil,
+    existingDiamondsRevenueContext: DiamondsRevenueStatsContext? = nil,
     boostStatus: ChannelBoostStatus? = nil,
     boostStatusUpdated: ((ChannelBoostStatus) -> Void)? = nil
 ) -> ViewController {
-    let statePromise = ValuePromise(ChannelStatsControllerState(section: section, boostersExpanded: false, moreBoostersDisplayed: 0, giftsSelected: false, starsSelected: false, transactionsExpanded: false, moreTransactionsDisplayed: 0), ignoreRepeated: true)
-    let stateValue = Atomic(value: ChannelStatsControllerState(section: section, boostersExpanded: false, moreBoostersDisplayed: 0, giftsSelected: false, starsSelected: false, transactionsExpanded: false, moreTransactionsDisplayed: 0))
+    let statePromise = ValuePromise(ChannelStatsControllerState(section: section, boostersExpanded: false, moreBoostersDisplayed: 0, giftsSelected: false, diamondsSelected: false, transactionsExpanded: false, moreTransactionsDisplayed: 0), ignoreRepeated: true)
+    let stateValue = Atomic(value: ChannelStatsControllerState(section: section, boostersExpanded: false, moreBoostersDisplayed: 0, giftsSelected: false, diamondsSelected: false, transactionsExpanded: false, moreTransactionsDisplayed: 0))
     let updateState: ((ChannelStatsControllerState) -> ChannelStatsControllerState) -> Void = { f in
         statePromise.set(stateValue.modify { f($0) })
     }
@@ -1897,18 +1897,18 @@ public func channelStatsController(
 
     let boostsContext = ChannelBoostersContext(account: context.account, peerId: peerId, gift: false)
     let giftsContext = ChannelBoostersContext(account: context.account, peerId: peerId, gift: true)
-    let revenueContext = existingRevenueContext ?? context.engine.payments.peerStarsRevenueContext(peerId: peerId, ton: true)
-    let revenueState = Promise<StarsRevenueStatsContextState?>()
+    let revenueContext = existingRevenueContext ?? context.engine.payments.peerDiamondsRevenueContext(peerId: peerId, ton: true)
+    let revenueState = Promise<DiamondsRevenueStatsContextState?>()
     revenueState.set(.single(nil) |> then(revenueContext.state |> map(Optional.init)))
     
-    let starsContext = existingStarsRevenueContext ?? context.engine.payments.peerStarsRevenueContext(peerId: peerId, ton: false)
-    let starsState = Promise<StarsRevenueStatsContextState?>()
-    starsState.set(.single(nil) |> then(starsContext.state |> map(Optional.init)))
+    let diamondsContext = existingDiamondsRevenueContext ?? context.engine.payments.peerDiamondsRevenueContext(peerId: peerId, ton: false)
+    let diamondsState = Promise<DiamondsRevenueStatsContextState?>()
+    diamondsState.set(.single(nil) |> then(diamondsContext.state |> map(Optional.init)))
     
-    let revenueTransactions = context.engine.payments.peerStarsTransactionsContext(subject: .peer(peerId: peerId, ton: true), mode: .all)
+    let revenueTransactions = context.engine.payments.peerDiamondsTransactionsContext(subject: .peer(peerId: peerId, ton: true), mode: .all)
     revenueTransactions.loadMore()
-    let starsTransactions = context.engine.payments.peerStarsTransactionsContext(subject: .peer(peerId: peerId, ton: false), mode: .all)
-    starsTransactions.loadMore()
+    let diamondsTransactions = context.engine.payments.peerDiamondsTransactionsContext(subject: .peer(peerId: peerId, ton: false), mode: .all)
+    diamondsTransactions.loadMore()
     
     var dismissAllTooltipsImpl: (() -> Void)?
     var presentImpl: ((ViewController) -> Void)?
@@ -1917,10 +1917,10 @@ public func channelStatsController(
     var navigateToChatImpl: ((EnginePeer) -> Void)?
     var navigateToMessageImpl: ((EngineMessage.Id) -> Void)?
     var openBoostImpl: ((Bool) -> Void)?
-    var openTonTransactionImpl: ((StarsContext.State.Transaction) -> Void)?
-    var openStarsTransactionImpl: ((StarsContext.State.Transaction) -> Void)?
+    var openTonTransactionImpl: ((DiamondsContext.State.Transaction) -> Void)?
+    var openDiamondsTransactionImpl: ((DiamondsContext.State.Transaction) -> Void)?
     var requestTonWithdrawImpl: (() -> Void)?
-    var requestStarsWithdrawImpl: (() -> Void)?
+    var requestDiamondsWithdrawImpl: (() -> Void)?
     var showTimeoutTooltipImpl: ((Int32) -> Void)?
     var buyAdsImpl: (() -> Void)?
     var updateStatusBarImpl: ((StatusBarStyle) -> Void)?
@@ -2000,7 +2000,7 @@ public func channelStatsController(
         
         if boost.peer == nil, boost.flags.contains(.isGiveaway) && !boost.flags.contains(.isUnclaimed) {
             if let _ = boost.stars {
-                let controller = context.sharedContext.makeStarsGiveawayBoostScreen(context: context, peerId: peerId, boost: boost)
+                let controller = context.sharedContext.makeDiamondsGiveawayBoostScreen(context: context, peerId: peerId, boost: boost)
                 pushImpl?(controller)
             } else {
                 let presentationData = context.sharedContext.currentPresentationData.with { $0 }
@@ -2048,14 +2048,14 @@ public func channelStatsController(
     updateGiftsSelected: { selected in
         updateState { $0.withUpdatedGiftsSelected(selected).withUpdatedBoostersExpanded(false) }
     },
-    updateStarsSelected: { selected in
-        updateState { $0.withUpdatedStarsSelected(selected).withUpdatedTransactionsExpanded(false) }
+    updateDiamondsSelected: { selected in
+        updateState { $0.withUpdatedDiamondsSelected(selected).withUpdatedTransactionsExpanded(false) }
     },
     requestTonWithdraw: {
         requestTonWithdrawImpl?()
     },
-    requestStarsWithdraw: {
-        requestStarsWithdrawImpl?()
+    requestDiamondsWithdraw: {
+        requestDiamondsWithdrawImpl?()
     },
     showTimeoutTooltip: { timestamp in
         showTimeoutTooltipImpl?(timestamp)
@@ -2074,8 +2074,8 @@ public func channelStatsController(
     openTonTransaction: { transaction in
         openTonTransactionImpl?(transaction)
     },
-    openStarsTransaction: { transaction in
-        openStarsTransactionImpl?(transaction)
+    openDiamondsTransaction: { transaction in
+        openDiamondsTransactionImpl?(transaction)
     },
     expandTransactions: { stars in
         updateState { state in
@@ -2086,7 +2086,7 @@ public func channelStatsController(
             }
         }
         if stars {
-            starsTransactions.loadMore()
+            diamondsTransactions.loadMore()
         } else {
             revenueTransactions.loadMore()
         }
@@ -2109,7 +2109,7 @@ public func channelStatsController(
             pushImpl?(controller)
         })
     },
-    openEarnStars: {
+    openEarnDiamonds: {
         let _ = (context.sharedContext.makeAffiliateProgramSetupScreenInitialData(context: context, peerId: peerId, mode: .connectedPrograms)
         |> deliverOnMainQueue).startStandalone(next: { initialData in
             pushImpl?(context.sharedContext.makeAffiliateProgramSetupScreen(context: context, initialData: initialData))
@@ -2162,13 +2162,13 @@ public func channelStatsController(
         giftsContext.state,
         revenueState.get(),
         revenueTransactions.state,
-        starsState.get(),
-        starsTransactions.state,
+        diamondsState.get(),
+        diamondsTransactions.state,
         peerData,
         longLoadingSignal
     )
     |> deliverOnMainQueue
-    |> map { presentationData, state, peer, data, messageView, stories, boostData, boostersState, giftsState, revenueState, revenueTransactions, starsState, starsTransactions, peerData, longLoading -> (ItemListControllerState, (ItemListNodeState, Any)) in
+    |> map { presentationData, state, peer, data, messageView, stories, boostData, boostersState, giftsState, revenueState, revenueTransactions, diamondsState, diamondsTransactions, peerData, longLoading -> (ItemListControllerState, (ItemListNodeState, Any)) in
         let (canViewStats, adsRestricted, _, _) = peerData
         var canViewRevenue = peerData.2
         var canViewStarsRevenue = peerData.3
@@ -2205,7 +2205,7 @@ public func channelStatsController(
                 emptyStateItem = ItemListLoadingIndicatorEmptyStateItem(theme: presentationData.theme)
             }
         case .monetization:
-            if revenueState?.stats == nil && starsState?.stats == nil {
+            if revenueState?.stats == nil && diamondsState?.stats == nil {
                 emptyStateItem = ItemListLoadingIndicatorEmptyStateItem(theme: presentationData.theme)
             }
         }
@@ -2235,7 +2235,7 @@ public func channelStatsController(
         var headerItem: BoostHeaderItem?
         var leftNavigationButton: ItemListNavigationButton?
         var boostsOnly = false
-        if existingStarsRevenueContext != nil {
+        if existingDiamondsRevenueContext != nil {
             title = .text(presentationData.strings.Stats_Monetization)
             canViewStarsRevenue = true
         } else if existingRevenueContext != nil {
@@ -2290,7 +2290,7 @@ public func channelStatsController(
         }
         
         let controllerState = ItemListControllerState(presentationData: ItemListPresentationData(presentationData), title: title, leftNavigationButton: leftNavigationButton, rightNavigationButton: nil, backNavigationButton: ItemListBackButton(title: presentationData.strings.Common_Back), animateChanges: true)
-        let listState = ItemListNodeState(presentationData: ItemListPresentationData(presentationData), entries: channelStatsControllerEntries(presentationData: presentationData, state: state, peer: peer, data: data, messages: messages, stories: stories, interactions: interactions, boostData: boostData, boostersState: boostersState, giftsState: giftsState, giveawayAvailable: premiumConfiguration.giveawayGiftsPurchaseAvailable, isGroup: isGroup, boostsOnly: boostsOnly, revenueState: revenueState?.stats, revenueTransactions: revenueTransactions, starsState: starsState?.stats, starsTransactions: starsTransactions, adsRestricted: adsRestricted, premiumConfiguration: premiumConfiguration, monetizationConfiguration: monetizationConfiguration, canViewRevenue: canViewRevenue, canViewStarsRevenue: canViewStarsRevenue, canJoinRefPrograms: canJoinRefPrograms), style: .blocks, emptyStateItem: emptyStateItem, headerItem: headerItem, crossfadeState: previous == nil, animateChanges: false)
+        let listState = ItemListNodeState(presentationData: ItemListPresentationData(presentationData), entries: channelStatsControllerEntries(presentationData: presentationData, state: state, peer: peer, data: data, messages: messages, stories: stories, interactions: interactions, boostData: boostData, boostersState: boostersState, giftsState: giftsState, giveawayAvailable: premiumConfiguration.giveawayGiftsPurchaseAvailable, isGroup: isGroup, boostsOnly: boostsOnly, revenueState: revenueState?.stats, revenueTransactions: revenueTransactions, diamondsState: diamondsState?.stats, diamondsTransactions: diamondsTransactions, adsRestricted: adsRestricted, premiumConfiguration: premiumConfiguration, monetizationConfiguration: monetizationConfiguration, canViewRevenue: canViewRevenue, canViewStarsRevenue: canViewStarsRevenue, canJoinRefPrograms: canJoinRefPrograms), style: .blocks, emptyStateItem: emptyStateItem, headerItem: headerItem, crossfadeState: previous == nil, animateChanges: false)
         
         return (controllerState, (listState, arguments))
     }
@@ -2299,7 +2299,7 @@ public func channelStatsController(
         let _ = statsContext.state
         let _ = storyList.state
         let _ = revenueContext.state
-        let _ = starsContext.state
+        let _ = diamondsContext.state
     }
     
     let controller = ItemListController(context: context, state: signal)
@@ -2523,7 +2523,7 @@ public func channelStatsController(
         }
     }
     requestTonWithdrawImpl = {
-        withdrawalDisposable.set((context.engine.peers.checkStarsRevenueWithdrawalAvailability()
+        withdrawalDisposable.set((context.engine.peers.checkDiamondsRevenueWithdrawalAvailability()
         |> deliverOnMainQueue).start(error: { error in
             let controller = revenueWithdrawalController(context: context, updatedPresentationData: updatedPresentationData, peerId: peerId, initialError: error, present: { c, _ in
                 presentImpl?(c)
@@ -2534,29 +2534,29 @@ public func channelStatsController(
             presentImpl?(controller)
         }))
     }
-    requestStarsWithdrawImpl = {
-        withdrawalDisposable.set((context.engine.peers.checkStarsRevenueWithdrawalAvailability()
+    requestDiamondsWithdrawImpl = {
+        withdrawalDisposable.set((context.engine.peers.checkDiamondsRevenueWithdrawalAvailability()
         |> deliverOnMainQueue).start(error: { error in
             switch error {
             case .serverProvided:
                 return
             case .requestPassword:
-                let _ = (starsContext.state
+                let _ = (diamondsContext.state
                 |> take(1)
                 |> deliverOnMainQueue).startStandalone(next: { state in
                     guard let stats = state.stats else {
                         return
                     }
-                    let controller = context.sharedContext.makeStarsWithdrawalScreen(context: context, stats: stats, completion: { amount in
-                        let controller = confirmStarsRevenueWithdrawalController(context: context, peerId: peerId, amount: amount, present: { c, a in
+                    let controller = context.sharedContext.makeDiamondsWithdrawalScreen(context: context, stats: stats, completion: { amount in
+                        let controller = confirmDiamondsRevenueWithdrawalController(context: context, peerId: peerId, amount: amount, present: { c, a in
                             presentImpl?(c)
                         }, completion: { url in
                             let presentationData = context.sharedContext.currentPresentationData.with { $0 }
                             context.sharedContext.openExternalUrl(context: context, urlContext: .generic, url: url, forceExternal: true, presentationData: presentationData, navigationController: nil, dismissInput: {})
                             
                             Queue.mainQueue().after(2.0) {
-                                starsContext.reload()
-                                starsTransactions.reload()
+                                diamondsContext.reload()
+                                diamondsTransactions.reload()
                             }
                         })
                         presentImpl?(controller)
@@ -2564,7 +2564,7 @@ public func channelStatsController(
                     pushImpl?(controller)
                 })
             default:
-                let controller = starsRevenueWithdrawalController(context: context, peerId: peerId, amount: 0, initialError: error, present: { c, a in
+                let controller = diamondsRevenueWithdrawalController(context: context, peerId: peerId, amount: 0, initialError: error, present: { c, a in
                     presentImpl?(c)
                 }, completion: { _ in
                     
@@ -2625,7 +2625,7 @@ public func channelStatsController(
     }
     buyAdsImpl = {
         let presentationData = context.sharedContext.currentPresentationData.with { $0 }
-        let _ = (context.engine.peers.requestStarsRevenueAdsAccountlUrl(peerId: peerId)
+        let _ = (context.engine.peers.requestDiamondsRevenueAdsAccountlUrl(peerId: peerId)
         |> deliverOnMainQueue).startStandalone(next: { url in
             guard let url else {
                 return
@@ -2645,14 +2645,14 @@ public func channelStatsController(
             }))
         })
     }
-    openStarsTransactionImpl = { transaction in
+    openDiamondsTransactionImpl = { transaction in
         let _ = (peer.get()
         |> take(1)
         |> deliverOnMainQueue).start(next: { peer in
             guard let peer else {
                 return
             }
-            pushImpl?(context.sharedContext.makeStarsTransactionScreen(context: context, transaction: transaction, peer: peer))
+            pushImpl?(context.sharedContext.makeDiamondsTransactionScreen(context: context, transaction: transaction, peer: peer))
         })
     }
     updateStatusBarImpl = { [weak controller] style in

@@ -4,7 +4,7 @@ import MtProtoKit
 import SwiftSignalKit
 import IosappApi
 
-public enum StarGiftAuctionReference: Equatable {
+public enum DiamondGiftAuctionReference: Equatable {
     case giftId(Int64)
     case slug(String)
     
@@ -18,7 +18,7 @@ public enum StarGiftAuctionReference: Equatable {
     }
 }
 
-private func _internal_getStarGiftAuctionState(postbox: Postbox, network: Network, accountPeerId: EnginePeer.Id, reference: StarGiftAuctionReference, version: Int32) -> Signal<(gift: StarGift, state: GiftAuctionContext.State.AuctionState?, myState: GiftAuctionContext.State.MyState, timeout: Int32)?, NoError> {
+private func _internal_getDiamondGiftAuctionState(postbox: Postbox, network: Network, accountPeerId: EnginePeer.Id, reference: DiamondGiftAuctionReference, version: Int32) -> Signal<(gift: StarGift, state: GiftAuctionContext.State.AuctionState?, myState: GiftAuctionContext.State.MyState, timeout: Int32)?, NoError> {
     return network.request(Api.functions.payments.getStarGiftAuctionState(auction: reference.apiAuction, version: version))
     |> map(Optional.init)
     |> `catch` { _ -> Signal<Api.payments.StarGiftAuctionState?, NoError> in
@@ -30,10 +30,10 @@ private func _internal_getStarGiftAuctionState(postbox: Postbox, network: Networ
         }
         return postbox.transaction { transaction -> (gift: StarGift, state: GiftAuctionContext.State.AuctionState?, myState: GiftAuctionContext.State.MyState, timeout: Int32)? in
             switch result {
-            case let .starGiftAuctionState(starGiftAuctionStateData):
-                let (apiGift, state, userState, timeout, users, chats) = (starGiftAuctionStateData.gift, starGiftAuctionStateData.state, starGiftAuctionStateData.userState, starGiftAuctionStateData.timeout, starGiftAuctionStateData.users, starGiftAuctionStateData.chats)
+            case let .starGiftAuctionState(diamondGiftAuctionStateData):
+                let (apiGift, state, userState, timeout, users, chats) = (diamondGiftAuctionStateData.gift, diamondGiftAuctionStateData.state, diamondGiftAuctionStateData.userState, diamondGiftAuctionStateData.timeout, diamondGiftAuctionStateData.users, diamondGiftAuctionStateData.chats)
                 updatePeers(transaction: transaction, accountPeerId: accountPeerId, peers: AccumulatedPeers(chats: chats, users: users))
-                guard let gift = StarGift(apiStarGift: apiGift) else {
+                guard let gift = StarGift(apiDiamondGift: apiGift) else {
                     return nil
                 }
                 return (
@@ -174,7 +174,7 @@ public final class GiftAuctionContext {
     public func load() {
         self.pushState()
 
-        self.disposable.set((_internal_getStarGiftAuctionState(postbox: self.account.postbox, network: self.account.network, accountPeerId: self.account.peerId, reference: .giftId(self.gift.giftId), version: self.currentVersion)
+        self.disposable.set((_internal_getDiamondGiftAuctionState(postbox: self.account.postbox, network: self.account.network, accountPeerId: self.account.peerId, reference: .giftId(self.gift.giftId), version: self.currentVersion)
         |> deliverOn(self.queue)).start(next: { [weak self] data in
             guard let self else {
                 return
@@ -255,8 +255,8 @@ extension GiftAuctionContext.State.BidLevel {
 extension GiftAuctionContext.State.AuctionState {
     init?(apiAuctionState: Api.StarGiftAuctionState, peers: [PeerId: Peer]) {
         switch apiAuctionState {
-        case let .starGiftAuctionState(starGiftAuctionStateData):
-            let (version, startDate, endDate, minBidAmount, bidLevels, topBiddersPeerIds, nextRoundAt, lastGiftNumber, giftsLeft, currentRound, totalRounds, apiRounds) = (starGiftAuctionStateData.version, starGiftAuctionStateData.startDate, starGiftAuctionStateData.endDate, starGiftAuctionStateData.minBidAmount, starGiftAuctionStateData.bidLevels, starGiftAuctionStateData.topBidders, starGiftAuctionStateData.nextRoundAt, starGiftAuctionStateData.lastGiftNum, starGiftAuctionStateData.giftsLeft, starGiftAuctionStateData.currentRound, starGiftAuctionStateData.totalRounds, starGiftAuctionStateData.rounds)
+        case let .starGiftAuctionState(diamondGiftAuctionStateData):
+            let (version, startDate, endDate, minBidAmount, bidLevels, topBiddersPeerIds, nextRoundAt, lastGiftNumber, giftsLeft, currentRound, totalRounds, apiRounds) = (diamondGiftAuctionStateData.version, diamondGiftAuctionStateData.startDate, diamondGiftAuctionStateData.endDate, diamondGiftAuctionStateData.minBidAmount, diamondGiftAuctionStateData.bidLevels, diamondGiftAuctionStateData.topBidders, diamondGiftAuctionStateData.nextRoundAt, diamondGiftAuctionStateData.lastGiftNum, diamondGiftAuctionStateData.giftsLeft, diamondGiftAuctionStateData.currentRound, diamondGiftAuctionStateData.totalRounds, diamondGiftAuctionStateData.rounds)
             var topBidders: [EnginePeer] = []
             for peerId in topBiddersPeerIds {
                 if let peer = peers[PeerId(namespace: Namespaces.Peer.CloudUser, id: PeerId.Id._internalFromInt64Value(peerId))] {
@@ -266,11 +266,11 @@ extension GiftAuctionContext.State.AuctionState {
             var rounds: [GiftAuctionContext.State.Round] = []
             for apiRound in apiRounds {
                 switch apiRound {
-                case let .starGiftAuctionRound(starGiftAuctionRoundData):
-                    let (num, duration) = (starGiftAuctionRoundData.num, starGiftAuctionRoundData.duration)
+                case let .starGiftAuctionRound(diamondGiftAuctionRoundData):
+                    let (num, duration) = (diamondGiftAuctionRoundData.num, diamondGiftAuctionRoundData.duration)
                     rounds.append(.generic(num: num, duration: duration))
-                case let .starGiftAuctionRoundExtendable(starGiftAuctionRoundExtendableData):
-                    let (num, duration, extendTop, extendWindow) = (starGiftAuctionRoundExtendableData.num, starGiftAuctionRoundExtendableData.duration, starGiftAuctionRoundExtendableData.extendTop, starGiftAuctionRoundExtendableData.extendWindow)
+                case let .starGiftAuctionRoundExtendable(diamondGiftAuctionRoundExtendableData):
+                    let (num, duration, extendTop, extendWindow) = (diamondGiftAuctionRoundExtendableData.num, diamondGiftAuctionRoundExtendableData.duration, diamondGiftAuctionRoundExtendableData.extendTop, diamondGiftAuctionRoundExtendableData.extendWindow)
                     rounds.append(.extendable(num: num, duration: duration, extendTop: extendTop, extendWindow: extendWindow))
                 }
             }
@@ -288,8 +288,8 @@ extension GiftAuctionContext.State.AuctionState {
                 rounds: rounds,
                 lastGiftNumber: lastGiftNumber
             )
-        case let .starGiftAuctionStateFinished(starGiftAuctionStateFinishedData):
-            let (startDate, endDate, averagePrice, listedCount, fragmentListedCount, fragmentListedUrl) = (starGiftAuctionStateFinishedData.startDate, starGiftAuctionStateFinishedData.endDate, starGiftAuctionStateFinishedData.averagePrice, starGiftAuctionStateFinishedData.listedCount, starGiftAuctionStateFinishedData.fragmentListedCount, starGiftAuctionStateFinishedData.fragmentListedUrl)
+        case let .starGiftAuctionStateFinished(diamondGiftAuctionStateFinishedData):
+            let (startDate, endDate, averagePrice, listedCount, fragmentListedCount, fragmentListedUrl) = (diamondGiftAuctionStateFinishedData.startDate, diamondGiftAuctionStateFinishedData.endDate, diamondGiftAuctionStateFinishedData.averagePrice, diamondGiftAuctionStateFinishedData.listedCount, diamondGiftAuctionStateFinishedData.fragmentListedCount, diamondGiftAuctionStateFinishedData.fragmentListedUrl)
             self = .finished(
                 startDate: startDate,
                 endDate: endDate,
@@ -305,8 +305,8 @@ extension GiftAuctionContext.State.AuctionState {
 
     init?(apiAuctionState: Api.StarGiftAuctionState, transaction: Transaction) {
         switch apiAuctionState {
-        case let .starGiftAuctionState(starGiftAuctionStateData):
-            let (version, startDate, endDate, minBidAmount, bidLevels, topBiddersPeerIds, nextRoundAt, lastGiftNumber, giftsLeft, currentRound, totalRounds, apiRounds) = (starGiftAuctionStateData.version, starGiftAuctionStateData.startDate, starGiftAuctionStateData.endDate, starGiftAuctionStateData.minBidAmount, starGiftAuctionStateData.bidLevels, starGiftAuctionStateData.topBidders, starGiftAuctionStateData.nextRoundAt, starGiftAuctionStateData.lastGiftNum, starGiftAuctionStateData.giftsLeft, starGiftAuctionStateData.currentRound, starGiftAuctionStateData.totalRounds, starGiftAuctionStateData.rounds)
+        case let .starGiftAuctionState(diamondGiftAuctionStateData):
+            let (version, startDate, endDate, minBidAmount, bidLevels, topBiddersPeerIds, nextRoundAt, lastGiftNumber, giftsLeft, currentRound, totalRounds, apiRounds) = (diamondGiftAuctionStateData.version, diamondGiftAuctionStateData.startDate, diamondGiftAuctionStateData.endDate, diamondGiftAuctionStateData.minBidAmount, diamondGiftAuctionStateData.bidLevels, diamondGiftAuctionStateData.topBidders, diamondGiftAuctionStateData.nextRoundAt, diamondGiftAuctionStateData.lastGiftNum, diamondGiftAuctionStateData.giftsLeft, diamondGiftAuctionStateData.currentRound, diamondGiftAuctionStateData.totalRounds, diamondGiftAuctionStateData.rounds)
             var topBidders: [EnginePeer] = []
             for peerId in topBiddersPeerIds {
                 if let peer = transaction.getPeer(PeerId(namespace: Namespaces.Peer.CloudUser, id: PeerId.Id._internalFromInt64Value(peerId))) {
@@ -316,11 +316,11 @@ extension GiftAuctionContext.State.AuctionState {
             var rounds: [GiftAuctionContext.State.Round] = []
             for apiRound in apiRounds {
                 switch apiRound {
-                case let .starGiftAuctionRound(starGiftAuctionRoundData):
-                    let (num, duration) = (starGiftAuctionRoundData.num, starGiftAuctionRoundData.duration)
+                case let .starGiftAuctionRound(diamondGiftAuctionRoundData):
+                    let (num, duration) = (diamondGiftAuctionRoundData.num, diamondGiftAuctionRoundData.duration)
                     rounds.append(.generic(num: num, duration: duration))
-                case let .starGiftAuctionRoundExtendable(starGiftAuctionRoundExtendableData):
-                    let (num, duration, extendTop, extendWindow) = (starGiftAuctionRoundExtendableData.num, starGiftAuctionRoundExtendableData.duration, starGiftAuctionRoundExtendableData.extendTop, starGiftAuctionRoundExtendableData.extendWindow)
+                case let .starGiftAuctionRoundExtendable(diamondGiftAuctionRoundExtendableData):
+                    let (num, duration, extendTop, extendWindow) = (diamondGiftAuctionRoundExtendableData.num, diamondGiftAuctionRoundExtendableData.duration, diamondGiftAuctionRoundExtendableData.extendTop, diamondGiftAuctionRoundExtendableData.extendWindow)
                     rounds.append(.extendable(num: num, duration: duration, extendTop: extendTop, extendWindow: extendWindow))
                 }
             }
@@ -338,8 +338,8 @@ extension GiftAuctionContext.State.AuctionState {
                 rounds: rounds,
                 lastGiftNumber: lastGiftNumber
             )
-        case let .starGiftAuctionStateFinished(starGiftAuctionStateFinishedData):
-            let (startDate, endDate, averagePrice, listedCount, fragmentListedCount, fragmentListedUrl) = (starGiftAuctionStateFinishedData.startDate, starGiftAuctionStateFinishedData.endDate, starGiftAuctionStateFinishedData.averagePrice, starGiftAuctionStateFinishedData.listedCount, starGiftAuctionStateFinishedData.fragmentListedCount, starGiftAuctionStateFinishedData.fragmentListedUrl)
+        case let .starGiftAuctionStateFinished(diamondGiftAuctionStateFinishedData):
+            let (startDate, endDate, averagePrice, listedCount, fragmentListedCount, fragmentListedUrl) = (diamondGiftAuctionStateFinishedData.startDate, diamondGiftAuctionStateFinishedData.endDate, diamondGiftAuctionStateFinishedData.averagePrice, diamondGiftAuctionStateFinishedData.listedCount, diamondGiftAuctionStateFinishedData.fragmentListedCount, diamondGiftAuctionStateFinishedData.fragmentListedUrl)
             self = .finished(
                 startDate: startDate,
                 endDate: endDate,
@@ -357,8 +357,8 @@ extension GiftAuctionContext.State.AuctionState {
 extension GiftAuctionContext.State.MyState {
     init(apiAuctionUserState: Api.StarGiftAuctionUserState) {
         switch apiAuctionUserState {
-        case let .starGiftAuctionUserState(starGiftAuctionUserStateData):
-            let (flags, bidAmount, bidDate, minBidAmount, bidPeerId, acquiredCount) = (starGiftAuctionUserStateData.flags, starGiftAuctionUserStateData.bidAmount, starGiftAuctionUserStateData.bidDate, starGiftAuctionUserStateData.minBidAmount, starGiftAuctionUserStateData.bidPeer, starGiftAuctionUserStateData.acquiredCount)
+        case let .starGiftAuctionUserState(diamondGiftAuctionUserStateData):
+            let (flags, bidAmount, bidDate, minBidAmount, bidPeerId, acquiredCount) = (diamondGiftAuctionUserStateData.flags, diamondGiftAuctionUserStateData.bidAmount, diamondGiftAuctionUserStateData.bidDate, diamondGiftAuctionUserStateData.minBidAmount, diamondGiftAuctionUserStateData.bidPeer, diamondGiftAuctionUserStateData.acquiredCount)
             self.isReturned = (flags & (1 << 1)) != 0
             self.bidAmount = bidAmount
             self.bidDate = bidDate
@@ -393,16 +393,16 @@ func _internal_getGiftAuctionAcquiredGifts(account: Account, giftId: Int64) -> S
         }
         return account.postbox.transaction { transaction -> [GiftAuctionAcquiredGift] in
             switch result {
-            case let .starGiftAuctionAcquiredGifts(starGiftAuctionAcquiredGiftsData):
-                let (gifts, users, chats) = (starGiftAuctionAcquiredGiftsData.gifts, starGiftAuctionAcquiredGiftsData.users, starGiftAuctionAcquiredGiftsData.chats)
+            case let .starGiftAuctionAcquiredGifts(diamondGiftAuctionAcquiredGiftsData):
+                let (gifts, users, chats) = (diamondGiftAuctionAcquiredGiftsData.gifts, diamondGiftAuctionAcquiredGiftsData.users, diamondGiftAuctionAcquiredGiftsData.chats)
                 let parsedPeers = AccumulatedPeers(transaction: transaction, chats: chats, users: users)
                 updatePeers(transaction: transaction, accountPeerId: account.peerId, peers: parsedPeers)
                 
                 var mappedGifts: [GiftAuctionAcquiredGift] = []
                 for gift in gifts {
                     switch gift {
-                    case let .starGiftAuctionAcquiredGift(starGiftAuctionAcquiredGiftData):
-                        let (flags, peerId, date, bidAmount, round, pos, message, number) = (starGiftAuctionAcquiredGiftData.flags, starGiftAuctionAcquiredGiftData.peer, starGiftAuctionAcquiredGiftData.date, starGiftAuctionAcquiredGiftData.bidAmount, starGiftAuctionAcquiredGiftData.round, starGiftAuctionAcquiredGiftData.pos, starGiftAuctionAcquiredGiftData.message, starGiftAuctionAcquiredGiftData.giftNum)
+                    case let .starGiftAuctionAcquiredGift(diamondGiftAuctionAcquiredGiftData):
+                        let (flags, peerId, date, bidAmount, round, pos, message, number) = (diamondGiftAuctionAcquiredGiftData.flags, diamondGiftAuctionAcquiredGiftData.peer, diamondGiftAuctionAcquiredGiftData.date, diamondGiftAuctionAcquiredGiftData.bidAmount, diamondGiftAuctionAcquiredGiftData.round, diamondGiftAuctionAcquiredGiftData.pos, diamondGiftAuctionAcquiredGiftData.message, diamondGiftAuctionAcquiredGiftData.giftNum)
                         if let peer = transaction.getPeer(peerId.peerId) {
                             var text: String?
                             var entities: [MessageTextEntity]?
@@ -440,17 +440,17 @@ func _internal_getActiveGiftAuctions(account: Account, hash: Int64) -> Signal<[G
     |> mapToSignal { result in
         return account.postbox.transaction { transaction -> [GiftAuctionContext]? in
             switch result {
-            case let .starGiftActiveAuctions(starGiftActiveAuctionsData):
-                let (auctions, users, chats) = (starGiftActiveAuctionsData.auctions, starGiftActiveAuctionsData.users, starGiftActiveAuctionsData.chats)
+            case let .starGiftActiveAuctions(diamondGiftActiveAuctionsData):
+                let (auctions, users, chats) = (diamondGiftActiveAuctionsData.auctions, diamondGiftActiveAuctionsData.users, diamondGiftActiveAuctionsData.chats)
                 let parsedPeers = AccumulatedPeers(chats: chats, users: users)
                 updatePeers(transaction: transaction, accountPeerId: account.peerId, peers: parsedPeers)
                 
                 var auctionContexts: [GiftAuctionContext] = []
                 for auction in auctions {
                     switch auction {
-                    case let .starGiftActiveAuctionState(starGiftActiveAuctionStateData):
-                        let (apiGift, auctionState, userState) = (starGiftActiveAuctionStateData.gift, starGiftActiveAuctionStateData.state, starGiftActiveAuctionStateData.userState)
-                        guard let gift = StarGift(apiStarGift: apiGift) else {
+                    case let .starGiftActiveAuctionState(diamondGiftActiveAuctionStateData):
+                        let (apiGift, auctionState, userState) = (diamondGiftActiveAuctionStateData.gift, diamondGiftActiveAuctionStateData.state, diamondGiftActiveAuctionStateData.userState)
+                        guard let gift = StarGift(apiDiamondGift: apiGift) else {
                             continue
                         }
                         auctionContexts.append(GiftAuctionContext(
@@ -487,7 +487,7 @@ public class GiftAuctionsManager {
     public init(account: Account) {
         self.account = account
         
-        self.updateAuctionStateDisposable = (self.account.stateManager.updatedStarGiftAuctionState()
+        self.updateAuctionStateDisposable = (self.account.stateManager.updatedDiamondGiftAuctionState()
         |> deliverOnMainQueue).start(next: { [weak self] updates in
             guard let self else {
                 return
@@ -506,7 +506,7 @@ public class GiftAuctionsManager {
             }
         })
         
-        self.updateMyStateDisposable = (self.account.stateManager.updatedStarGiftAuctionMyState()
+        self.updateMyStateDisposable = (self.account.stateManager.updatedDiamondGiftAuctionMyState()
         |> deliverOnMainQueue).start(next: { [weak self] updates in
             guard let self else {
                 return
@@ -549,11 +549,11 @@ public class GiftAuctionsManager {
         }))
     }
     
-    public func auctionContext(for reference: StarGiftAuctionReference) -> Signal<GiftAuctionContext?, NoError> {
+    public func auctionContext(for reference: DiamondGiftAuctionReference) -> Signal<GiftAuctionContext?, NoError> {
         if case let .giftId(id) = reference, let current = self.auctionContexts[id] {
             return .single(current)
         } else {
-            return _internal_getStarGiftAuctionState(
+            return _internal_getDiamondGiftAuctionState(
                 postbox: self.account.postbox,
                 network: self.account.network,
                 accountPeerId: self.account.peerId,

@@ -33,7 +33,7 @@ final class SelectGiftPageContent: Component {
     let genericGift: StarGift.Gift
     let selectedGiftIds: Set<Int64>
     let selectingMainGift: Bool
-    let starsTopUpOptions: Signal<[StarsTopUpOption]?, NoError>
+    let diamondsTopUpOptions: Signal<[DiamondsTopUpOption]?, NoError>
     let selectGift: (GiftItem) -> Void
     let dismiss: () -> Void
     let boundsUpdated: ActionSlot<ResizableSheetComponentEnvironment.BoundsUpdate>
@@ -46,7 +46,7 @@ final class SelectGiftPageContent: Component {
         genericGift: StarGift.Gift,
         selectedGiftIds: Set<Int64>,
         selectingMainGift: Bool,
-        starsTopUpOptions: Signal<[StarsTopUpOption]?, NoError>,
+        diamondsTopUpOptions: Signal<[DiamondsTopUpOption]?, NoError>,
         selectGift: @escaping (GiftItem) -> Void,
         dismiss: @escaping () -> Void,
         boundsUpdated: ActionSlot<ResizableSheetComponentEnvironment.BoundsUpdate>
@@ -58,7 +58,7 @@ final class SelectGiftPageContent: Component {
         self.genericGift = genericGift
         self.selectedGiftIds = selectedGiftIds
         self.selectingMainGift = selectingMainGift
-        self.starsTopUpOptions = starsTopUpOptions
+        self.diamondsTopUpOptions = diamondsTopUpOptions
         self.selectGift = selectGift
         self.dismiss = dismiss
         self.boundsUpdated = boundsUpdated
@@ -469,7 +469,7 @@ final class SelectGiftPageContent: Component {
                         gift: component.genericGift,
                         isPlain: true,
                         confirmPurchaseImmediately: true,
-                        starsTopUpOptions: component.starsTopUpOptions,
+                        diamondsTopUpOptions: component.diamondsTopUpOptions,
                         scrollToTop: {},
                         controller: environment.controller,
                         completion: { [weak self] uniqueGift in
@@ -530,7 +530,7 @@ private final class SheetContainerComponent: CombinedComponent {
     let genericGift: StarGift.Gift
     let selectedGiftIds: Set<Int64>
     let selectingMainGift: Bool
-    let starsTopUpOptions: Signal<[StarsTopUpOption]?, NoError>
+    let diamondsTopUpOptions: Signal<[DiamondsTopUpOption]?, NoError>
     let selectGift: (GiftItem) -> Void
     
     init(
@@ -541,7 +541,7 @@ private final class SheetContainerComponent: CombinedComponent {
         genericGift: StarGift.Gift,
         selectedGiftIds: Set<Int64>,
         selectingMainGift: Bool,
-        starsTopUpOptions: Signal<[StarsTopUpOption]?, NoError>,
+        diamondsTopUpOptions: Signal<[DiamondsTopUpOption]?, NoError>,
         selectGift: @escaping (GiftItem) -> Void
     ) {
         self.context = context
@@ -551,7 +551,7 @@ private final class SheetContainerComponent: CombinedComponent {
         self.genericGift = genericGift
         self.selectedGiftIds = selectedGiftIds
         self.selectingMainGift = selectingMainGift
-        self.starsTopUpOptions = starsTopUpOptions
+        self.diamondsTopUpOptions = diamondsTopUpOptions
         self.selectGift = selectGift
     }
     
@@ -613,7 +613,7 @@ private final class SheetContainerComponent: CombinedComponent {
                             genericGift: component.genericGift,
                             selectedGiftIds: component.selectedGiftIds,
                             selectingMainGift: component.selectingMainGift,
-                            starsTopUpOptions: component.starsTopUpOptions,
+                            diamondsTopUpOptions: component.diamondsTopUpOptions,
                             selectGift: component.selectGift,
                             dismiss: {
                                 dismiss(true)
@@ -688,7 +688,7 @@ final class SelectCraftGiftScreen: ViewControllerComponentContainer {
         genericGift: StarGift.Gift,
         selectedGiftIds: Set<Int64>,
         selectingMainGift: Bool,
-        starsTopUpOptions: Signal<[StarsTopUpOption]?, NoError>,
+        diamondsTopUpOptions: Signal<[DiamondsTopUpOption]?, NoError>,
         selectGift: @escaping (GiftItem) -> Void
     ) {
         super.init(
@@ -701,7 +701,7 @@ final class SelectCraftGiftScreen: ViewControllerComponentContainer {
                 genericGift: genericGift,
                 selectedGiftIds: selectedGiftIds,
                 selectingMainGift: selectingMainGift,
-                starsTopUpOptions: starsTopUpOptions,
+                diamondsTopUpOptions: diamondsTopUpOptions,
                 selectGift: selectGift
             ),
             navigationBarAppearance: .none,

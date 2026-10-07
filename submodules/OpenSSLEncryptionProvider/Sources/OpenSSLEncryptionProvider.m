@@ -96,7 +96,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)setConstantTime:(id<MTBignum>)other {
     assert([other isKindOfClass:[MTBignumImpl class]]);
-    #ifndef TELEGRAM_USE_BORINGSSL
+    #ifndef ANSIBLE_USE_BORINGSSL
     MTBignumImpl *otherImpl = (MTBignumImpl *)other;
     BN_set_flags(otherImpl->_value, BN_FLG_CONSTTIME);
     #endif

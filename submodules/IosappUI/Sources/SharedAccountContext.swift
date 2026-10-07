@@ -67,15 +67,15 @@ import BotSettingsScreen
 import Camera
 import CameraScreen
 import BirthdayPickerScreen
-import StarsTransactionsScreen
-import StarsPurchaseScreen
-import StarsTransferScreen
-import StarsTransactionScreen
-import StarsWithdrawalScreen
+import DiamondsTransactionsScreen
+import DiamondsPurchaseScreen
+import DiamondsTransferScreen
+import DiamondsTransactionScreen
+import DiamondsWithdrawalScreen
 import MiniAppListScreen
 import GiftOptionsScreen
 import GiftViewScreen
-import StarsIntroScreen
+import DiamondsIntroScreen
 import ContentReportScreen
 import AffiliateProgramSetupScreen
 import GalleryUI
@@ -2304,8 +2304,8 @@ public final class SharedAccountContextImpl: SharedAccountContext {
         return nil
     }
     
-    public func makeChatRecentActionsController(context: AccountContext, peer: EnginePeer, adminPeerId: PeerId?, starsState: StarsRevenueStats?) -> ViewController {
-        return ChatRecentActionsController(context: context, peer: peer, adminPeerId: adminPeerId, starsState: starsState)
+    public func makeChatRecentActionsController(context: AccountContext, peer: EnginePeer, adminPeerId: PeerId?, diamondsState: StarsRevenueStats?) -> ViewController {
+        return ChatRecentActionsController(context: context, peer: peer, adminPeerId: adminPeerId, diamondsState: diamondsState)
     }
     
     public func presentContactsWarningSuppression(context: AccountContext, present: (ViewController, Any?) -> Void) {
@@ -2592,7 +2592,7 @@ public final class SharedAccountContextImpl: SharedAccountContext {
             },
             displayTodoToggleUnavailable: { _ in
             },
-            openStarsPurchase: { _ in
+            openDiamondsPurchase: { _ in
             },
             openRankInfo: { _, _, _ in
             },
@@ -2657,7 +2657,7 @@ public final class SharedAccountContextImpl: SharedAccountContext {
                 availableMessageEffects: nil,
                 savedMessageTags: nil,
                 defaultReaction: nil,
-                areStarReactionsEnabled: false,
+                areDiamondReactionsEnabled: false,
                 isPremium: false,
                 accountPeer: accountPeer.flatMap(EnginePeer.init),
                 forceInlineReactions: true,
@@ -3155,11 +3155,11 @@ public final class SharedAccountContextImpl: SharedAccountContext {
         return PremiumLimitScreen(context: context, subject: mappedSubject, count: count, forceDark: forceDark, cancel: cancel, action: action)
     }
     
-    public func makeStarsGiftController(context: AccountContext, birthdays: [EnginePeer.Id: IosappBirthday]?, completion: @escaping (([EnginePeer.Id]) -> Void)) -> ViewController {
+    public func makeDiamondsGiftController(context: AccountContext, birthdays: [EnginePeer.Id: IosappBirthday]?, completion: @escaping (([EnginePeer.Id]) -> Void)) -> ViewController {
         let presentationData = context.sharedContext.currentPresentationData.with { $0 }
 
         var presentBirthdayPickerImpl: (() -> Void)?
-        let starsMode: ContactSelectionControllerMode = .starsGifting(birthdays: birthdays, hasActions: false, showSelf: false, selfSubtitle: nil)
+        let diamondsMode: ContactSelectionControllerMode = .diamondsGifting(birthdays: birthdays, hasActions: false, showSelf: false, selfSubtitle: nil)
     
         let contactOptions: Signal<[ContactListAdditionalOption], NoError> = context.engine.data.subscribe(IosappEngine.EngineData.Item.Peer.Birthday(id: context.account.peerId))
         |> map { birthday in
@@ -3179,10 +3179,10 @@ public final class SharedAccountContextImpl: SharedAccountContext {
         |> deliverOnMainQueue
         
         let options = Promise<[StarsGiftOption]>()
-        options.set(context.engine.payments.starsGiftOptions(peerId: nil))
+        options.set(context.engine.payments.diamondsGiftOptions(peerId: nil))
         let controller = context.sharedContext.makeContactSelectionController(ContactSelectionControllerParams(
             context: context,
-            mode: starsMode,
+            mode: diamondsMode,
             autoDismiss: false,
             title: { strings in return strings.Diamonds_Purchase_GiftDiamonds },
             options: contactOptions
@@ -3224,7 +3224,7 @@ public final class SharedAccountContextImpl: SharedAccountContext {
         return controller
     }
     
-    public func makePremiumGiftController(context: AccountContext, source: PremiumGiftSource, completion: (([EnginePeer.Id]) -> Signal<Never, TransferStarGiftError>)?) -> ViewController {
+    public func makePremiumGiftController(context: AccountContext, source: PremiumGiftSource, completion: (([EnginePeer.Id]) -> Signal<Never, TransferDiamondGiftError>)?) -> ViewController {
         let presentationData = context.sharedContext.currentPresentationData.with { $0 }
 
         var presentExportAlertImpl: (() -> Void)?
@@ -3234,23 +3234,23 @@ public final class SharedAccountContextImpl: SharedAccountContext {
         var mode: ContactSelectionControllerMode = .generic
         var currentBirthdays: [EnginePeer.Id: IosappBirthday]?
         
-        if case let .starGiftTransfer(birthdays, _, _, _, _, showSelf) = source {
-            mode = .starsGifting(birthdays: birthdays, hasActions: false, showSelf: showSelf, selfSubtitle: presentationData.strings.Premium_Gift_ContactSelection_TransferSelf)
+        if case let .diamondGiftTransfer(birthdays, _, _, _, _, showSelf) = source {
+            mode = .diamondsGifting(birthdays: birthdays, hasActions: false, showSelf: showSelf, selfSubtitle: presentationData.strings.Premium_Gift_ContactSelection_TransferSelf)
             currentBirthdays = birthdays
         } else if case let .chatList(birthdays) = source {
-            mode = .starsGifting(birthdays: birthdays, hasActions: true, showSelf: true, selfSubtitle: presentationData.strings.Premium_Gift_ContactSelection_BuySelf)
+            mode = .diamondsGifting(birthdays: birthdays, hasActions: true, showSelf: true, selfSubtitle: presentationData.strings.Premium_Gift_ContactSelection_BuySelf)
             currentBirthdays = birthdays
         } else if case let .settings(birthdays) = source {
-            mode = .starsGifting(birthdays: birthdays, hasActions: true, showSelf: true, selfSubtitle: presentationData.strings.Premium_Gift_ContactSelection_BuySelf)
+            mode = .diamondsGifting(birthdays: birthdays, hasActions: true, showSelf: true, selfSubtitle: presentationData.strings.Premium_Gift_ContactSelection_BuySelf)
             currentBirthdays = birthdays
         } else {
-            mode = .starsGifting(birthdays: nil, hasActions: true, showSelf: false, selfSubtitle: nil)
+            mode = .diamondsGifting(birthdays: nil, hasActions: true, showSelf: false, selfSubtitle: nil)
         }
         
         var allowChannelsInSearch = false
         var isChannelGift = false
         let contactOptions: Signal<[ContactListAdditionalOption], NoError>
-        if case let .starGiftTransfer(_, reference, _, _, canExportDate, _) = source {
+        if case let .diamondGiftTransfer(_, reference, _, _, canExportDate, _) = source {
             allowChannelsInSearch = true
             if case let .peer(peerId, _) = reference, peerId.namespace == Namespaces.Peer.CloudChannel {
                 isChannelGift = true
@@ -3306,7 +3306,7 @@ public final class SharedAccountContextImpl: SharedAccountContext {
         var sendMessageImpl: ((EnginePeer) -> Void)?
         
         let title: String
-        if case .starGiftTransfer = source {
+        if case .diamondGiftTransfer = source {
             title = presentationData.strings.Gift_Transfer_Title
         } else {
             title = presentationData.strings.Gift_PremiumOrDiamonds_Title
@@ -3335,8 +3335,8 @@ public final class SharedAccountContextImpl: SharedAccountContext {
             controller.result,
             options.get() |> distinctUntilChanged
         )).startStandalone(next: { [weak controller] result, options in
-            if let (peers, _, _, _, _, _) = result, let contactPeer = peers.first, case let .peer(peer, _, _) = contactPeer, let starsContext = context.starsContext {
-                if case .starGiftTransfer = source {
+            if let (peers, _, _, _, _, _) = result, let contactPeer = peers.first, case let .peer(peer, _, _) = contactPeer, let diamondsContext = context.diamondsContext {
+                if case .diamondGiftTransfer = source {
                     presentTransferAlertImpl?(peer)
                 } else {
                     let _ = (context.engine.data.get(IosappEngine.EngineData.Item.Peer.DisallowedGifts(id: peer.id))
@@ -3347,7 +3347,7 @@ public final class SharedAccountContextImpl: SharedAccountContext {
                             return
                         }
                         let premiumOptions = options.filter { $0.users == 1 }.map { CachedPremiumGiftOption(months: $0.months, currency: $0.currency, amount: $0.amount, botUrl: "", storeProductId: $0.storeProductId) }
-                        let giftController = GiftOptionsScreen(context: context, starsContext: starsContext, peerId: peer.id, premiumOptions: premiumOptions, hasBirthday: currentBirthdays?[peer.id] != nil)
+                        let giftController = GiftOptionsScreen(context: context, diamondsContext: diamondsContext, peerId: peer.id, premiumOptions: premiumOptions, hasBirthday: currentBirthdays?[peer.id] != nil)
                         giftController.navigationPresentation = .modal
                         controller?.push(giftController)
                     })
@@ -3413,13 +3413,13 @@ public final class SharedAccountContextImpl: SharedAccountContext {
         }
         
         presentExportAlertImpl = { [weak controller] in
-            guard let controller, case let .starGiftTransfer(_, reference, gift, _, canExportDate, _) = source, let canExportDate else {
+            guard let controller, case let .diamondGiftTransfer(_, reference, gift, _, canExportDate, _) = source, let canExportDate else {
                 return
             }
             let currentTime = Int32(CFAbsoluteTimeGetCurrent() + kCFAbsoluteTimeIntervalSince1970)
             if currentTime > canExportDate {
                 let alertController = giftWithdrawAlertController(context: context, gift: gift, commit: {
-                    let _ = (context.engine.payments.checkStarGiftWithdrawalAvailability(reference: reference)
+                    let _ = (context.engine.payments.checkDiamondGiftWithdrawalAvailability(reference: reference)
                     |> deliverOnMainQueue).start(error: { [weak controller] error in
                         switch error {
                         case .serverProvided:
@@ -3463,14 +3463,14 @@ public final class SharedAccountContextImpl: SharedAccountContext {
             }
         }
         
-        let optionsPromise = Promise<[StarsTopUpOption]?>(nil)
-        if let state = context.starsContext?.currentState, state.balance < StarsAmount(value: 100, nanos: 0) {
-            optionsPromise.set(context.engine.payments.starsTopUpOptions()
+        let optionsPromise = Promise<[DiamondsTopUpOption]?>(nil)
+        if let state = context.diamondsContext?.currentState, state.balance < StarsAmount(value: 100, nanos: 0) {
+            optionsPromise.set(context.engine.payments.diamondsTopUpOptions()
             |> map(Optional.init))
         }
         
         presentTransferAlertImpl = { [weak controller] peer in
-            guard let controller, case let .starGiftTransfer(_, _, gift, transferStars, _, _) = source else {
+            guard let controller, case let .diamondGiftTransfer(_, _, gift, transferStars, _, _) = source else {
                 return
             }
             controller.view.window?.endEditing(true)
@@ -3498,7 +3498,7 @@ public final class SharedAccountContextImpl: SharedAccountContext {
                                 
                                 var errorText: String?
                                 switch error {
-                                case .disallowedStarGift:
+                                case .disallowedDiamondGift:
                                     errorText = presentationData.strings.Gift_Send_ErrorDisallowed(peer.compactDisplayTitle).string
                                 default:
                                     errorText = presentationData.strings.Gift_Send_ErrorUnknown
@@ -3570,21 +3570,21 @@ public final class SharedAccountContextImpl: SharedAccountContext {
                         }
                     }
                     
-                    if transferStars > 0, let starsContext = context.starsContext, let starsState = starsContext.currentState {
-                        if starsState.balance < StarsAmount(value: transferStars, nanos: 0) {
+                    if transferStars > 0, let diamondsContext = context.diamondsContext, let diamondsState = diamondsContext.currentState {
+                        if diamondsState.balance < StarsAmount(value: transferStars, nanos: 0) {
                             let _ = (optionsPromise.get()
                             |> filter { $0 != nil }
                             |> take(1)
                             |> deliverOnMainQueue).startStandalone(next: { [weak controller] options in
-                                let purchaseController = context.sharedContext.makeStarsPurchaseScreen(
+                                let purchaseController = context.sharedContext.makeDiamondsPurchaseScreen(
                                     context: context,
-                                    starsContext: starsContext,
+                                    diamondsContext: diamondsContext,
                                     options: options ?? [],
-                                    purpose: .transferStarGift(requiredStars: transferStars),
+                                    purpose: .transferStarGift(requiredDiamonds: transferStars),
                                     targetPeerId: nil,
                                     customTheme: nil,
                                     completion: { stars in
-                                        starsContext.add(balance: StarsAmount(value: stars, nanos: 0))
+                                        diamondsContext.add(balance: StarsAmount(value: stars, nanos: 0))
                                         proceed(true)
                                     }
                                 )
@@ -3609,10 +3609,10 @@ public final class SharedAccountContextImpl: SharedAccountContext {
     }
     
     public func makeGiftOptionsController(context: AccountContext, peerId: EnginePeer.Id, premiumOptions: [CachedPremiumGiftOption], hasBirthday: Bool, completion: (() -> Void)?) -> ViewController {
-        guard let starsContext = context.starsContext else {
+        guard let diamondsContext = context.diamondsContext else {
             fatalError()
         }
-        let controller = GiftOptionsScreen(context: context, starsContext: starsContext, peerId: peerId, premiumOptions: premiumOptions, hasBirthday: hasBirthday, completion: completion)
+        let controller = GiftOptionsScreen(context: context, diamondsContext: diamondsContext, peerId: peerId, premiumOptions: premiumOptions, hasBirthday: hasBirthday, completion: completion)
         controller.navigationPresentation = .modal
         return controller
     }
@@ -4045,16 +4045,16 @@ public final class SharedAccountContextImpl: SharedAccountContext {
         return messageStatsController(context: context, updatedPresentationData: updatedPresentationData, subject: .story(peerId: peerId, id: storyId, item: storyItem, fromStory: fromStory))
     }
     
-    public func makeStarsTransactionsScreen(context: AccountContext, starsContext: StarsContext) -> ViewController {
-        return StarsTransactionsScreen(context: context, starsContext: starsContext)
+    public func makeDiamondsTransactionsScreen(context: AccountContext, diamondsContext: DiamondsContext) -> ViewController {
+        return DiamondsTransactionsScreen(context: context, diamondsContext: diamondsContext)
     }
         
-    public func makeStarsPurchaseScreen(context: AccountContext, starsContext: StarsContext, options: [Any], purpose: StarsPurchasePurpose, targetPeerId: EnginePeer.Id?, customTheme: PresentationTheme?, completion: @escaping (Int64) -> Void) -> ViewController {
-        return StarsPurchaseScreen(context: context, starsContext: starsContext, options: options, purpose: purpose, targetPeerId: targetPeerId, customTheme: customTheme, completion: completion)
+    public func makeDiamondsPurchaseScreen(context: AccountContext, diamondsContext: DiamondsContext, options: [Any], purpose: DiamondsPurchasePurpose, targetPeerId: EnginePeer.Id?, customTheme: PresentationTheme?, completion: @escaping (Int64) -> Void) -> ViewController {
+        return DiamondsPurchaseScreen(context: context, diamondsContext: diamondsContext, options: options, purpose: purpose, targetPeerId: targetPeerId, customTheme: customTheme, completion: completion)
     }
         
-    public func makeStarsTransferScreen(context: AccountContext, starsContext: StarsContext, invoice: IosappMediaInvoice, source: BotPaymentInvoiceSource, extendedMedia: [IosappExtendedMedia], inputData: Signal<(StarsContext.State, BotPaymentForm, EnginePeer?, EnginePeer?)?, NoError>, completion: @escaping (Bool) -> Void) -> ViewController {
-        return StarsTransferScreen(context: context, starsContext: starsContext, invoice: invoice, source: source, extendedMedia: extendedMedia, inputData: inputData, navigateToPeer: { [weak self] peer in
+    public func makeDiamondsTransferScreen(context: AccountContext, diamondsContext: DiamondsContext, invoice: IosappMediaInvoice, source: BotPaymentInvoiceSource, extendedMedia: [IosappExtendedMedia], inputData: Signal<(DiamondsContext.State, BotPaymentForm, EnginePeer?, EnginePeer?)?, NoError>, completion: @escaping (Bool) -> Void) -> ViewController {
+        return DiamondsTransferScreen(context: context, diamondsContext: diamondsContext, invoice: invoice, source: source, extendedMedia: extendedMedia, inputData: inputData, navigateToPeer: { [weak self] peer in
             guard let self else {
                 return
             }
@@ -4074,40 +4074,40 @@ public final class SharedAccountContextImpl: SharedAccountContext {
         }, completion: completion)
     }
     
-    public func makeStarsSubscriptionTransferScreen(context: AccountContext, starsContext: StarsContext, invoice: IosappMediaInvoice, link: String, inputData: Signal<(StarsContext.State, BotPaymentForm, EnginePeer?, EnginePeer?)?, NoError>, navigateToPeer: @escaping (EnginePeer) -> Void) -> ViewController {
-        return StarsTransferScreen(context: context, starsContext: starsContext, invoice: invoice, source: .starsChatSubscription(hash: link), extendedMedia: [], inputData: inputData, navigateToPeer: navigateToPeer, completion: { _ in })
+    public func makeDiamondsSubscriptionTransferScreen(context: AccountContext, diamondsContext: DiamondsContext, invoice: IosappMediaInvoice, link: String, inputData: Signal<(DiamondsContext.State, BotPaymentForm, EnginePeer?, EnginePeer?)?, NoError>, navigateToPeer: @escaping (EnginePeer) -> Void) -> ViewController {
+        return DiamondsTransferScreen(context: context, diamondsContext: diamondsContext, invoice: invoice, source: .diamondsChatSubscription(hash: link), extendedMedia: [], inputData: inputData, navigateToPeer: navigateToPeer, completion: { _ in })
     }
     
-    public func makeStarsTransactionScreen(context: AccountContext, transaction: StarsContext.State.Transaction, peer: EnginePeer) -> ViewController {
-        return StarsTransactionScreen(context: context, subject: .transaction(transaction, peer))
+    public func makeDiamondsTransactionScreen(context: AccountContext, transaction: DiamondsContext.State.Transaction, peer: EnginePeer) -> ViewController {
+        return DiamondsTransactionScreen(context: context, subject: .transaction(transaction, peer))
     }
     
-    public func makeStarsReceiptScreen(context: AccountContext, receipt: BotPaymentReceipt) -> ViewController {
-        return StarsTransactionScreen(context: context, subject: .receipt(receipt))
+    public func makeDiamondsReceiptScreen(context: AccountContext, receipt: BotPaymentReceipt) -> ViewController {
+        return DiamondsTransactionScreen(context: context, subject: .receipt(receipt))
     }
     
-    public func makeStarsSubscriptionScreen(context: AccountContext, subscription: StarsContext.State.Subscription, update: @escaping (Bool) -> Void) -> ViewController {
-        return StarsTransactionScreen(context: context, subject: .subscription(subscription), updateSubscription: update)
+    public func makeDiamondsSubscriptionScreen(context: AccountContext, subscription: DiamondsContext.State.Subscription, update: @escaping (Bool) -> Void) -> ViewController {
+        return DiamondsTransactionScreen(context: context, subject: .subscription(subscription), updateSubscription: update)
     }
     
-    public func makeStarsSubscriptionScreen(context: AccountContext, peer: EnginePeer, pricing: StarsSubscriptionPricing, importer: PeerInvitationImportersState.Importer, usdRate: Double) -> ViewController {
-        return StarsTransactionScreen(context: context, subject: .importer(peer, pricing, importer, usdRate))
+    public func makeDiamondsSubscriptionScreen(context: AccountContext, peer: EnginePeer, pricing: StarsSubscriptionPricing, importer: PeerInvitationImportersState.Importer, usdRate: Double) -> ViewController {
+        return DiamondsTransactionScreen(context: context, subject: .importer(peer, pricing, importer, usdRate))
     }
     
-    public func makeStarsStatisticsScreen(context: AccountContext, peerId: EnginePeer.Id, revenueContext: StarsRevenueStatsContext) -> ViewController {
-        return StarsStatisticsScreen(context: context, peerId: peerId, revenueContext: revenueContext)
+    public func makeDiamondsStatisticsScreen(context: AccountContext, peerId: EnginePeer.Id, revenueContext: DiamondsRevenueStatsContext) -> ViewController {
+        return DiamondsStatisticsScreen(context: context, peerId: peerId, revenueContext: revenueContext)
     }
     
-    public func makeStarsAmountScreen(context: AccountContext, initialValue: Int64?, completion: @escaping (Int64) -> Void) -> ViewController {
-        return StarsWithdrawScreen(context: context, mode: .paidMedia(initialValue, completion: completion))
+    public func makeDiamondsAmountScreen(context: AccountContext, initialValue: Int64?, completion: @escaping (Int64) -> Void) -> ViewController {
+        return DiamondsWithdrawScreen(context: context, mode: .paidMedia(initialValue, completion: completion))
     }
     
-    public func makeStarsWithdrawalScreen(context: AccountContext, stats: StarsRevenueStats, completion: @escaping (Int64) -> Void) -> ViewController {
-        return StarsWithdrawScreen(context: context, mode: .withdraw(stats, completion: completion))
+    public func makeDiamondsWithdrawalScreen(context: AccountContext, stats: StarsRevenueStats, completion: @escaping (Int64) -> Void) -> ViewController {
+        return DiamondsWithdrawScreen(context: context, mode: .withdraw(stats, completion: completion))
     }
     
-    public func makeStarsWithdrawalScreen(context: AccountContext, subject: StarsWithdrawalScreenSubject) -> ViewController {
-        let mode: StarsWithdrawScreen.Mode
+    public func makeDiamondsWithdrawalScreen(context: AccountContext, subject: DiamondsWithdrawalScreenSubject) -> ViewController {
+        let mode: DiamondsWithdrawScreen.Mode
         switch subject {
         case let .withdraw(completion):
             mode = .accountWithdraw(completion: completion)
@@ -4117,26 +4117,26 @@ public final class SharedAccountContextImpl: SharedAccountContext {
             mode = .suggestedPost(mode: .sender(channel: channel, isFromAdmin: isFromAdmin), price: current, timestamp: timestamp, completion: completion)
         case let .postSuggestionModification(current, timestamp, completion):
             mode = .suggestedPost(mode: .admin, price: current, timestamp: timestamp, completion: completion)
-        case let .starGiftOffer(peer, gift, completion):
-            mode = .starGiftOffer(peer: peer, gift: gift, completion: completion)
+        case let .diamondGiftOffer(peer, gift, completion):
+            mode = .diamondGiftOffer(peer: peer, gift: gift, completion: completion)
         }
-        return StarsWithdrawScreen(context: context, mode: mode)
+        return DiamondsWithdrawScreen(context: context, mode: mode)
     }
     
-    public func makeStarGiftResellScreen(context: AccountContext, gift: StarGift.UniqueGift, update: Bool, completion: @escaping (CurrencyAmount) -> Void) -> ViewController {
-        return StarsWithdrawScreen(context: context, mode: .starGiftResell(gift, update, completion: completion))
+    public func makeDiamondGiftResellScreen(context: AccountContext, gift: StarGift.UniqueGift, update: Bool, completion: @escaping (CurrencyAmount) -> Void) -> ViewController {
+        return DiamondsWithdrawScreen(context: context, mode: .diamondGiftResell(gift, update, completion: completion))
     }
     
-    public func makeStarsGiftScreen(context: AccountContext, message: EngineMessage) -> ViewController {
-        return StarsTransactionScreen(context: context, subject: .gift(message))
+    public func makeDiamondsGiftScreen(context: AccountContext, message: EngineMessage) -> ViewController {
+        return DiamondsTransactionScreen(context: context, subject: .gift(message))
     }
     
-    public func makeStarsGiveawayBoostScreen(context: AccountContext, peerId: EnginePeer.Id, boost: ChannelBoostersContext.State.Boost) -> ViewController {
-        return StarsTransactionScreen(context: context, subject: .boost(peerId, boost))
+    public func makeDiamondsGiveawayBoostScreen(context: AccountContext, peerId: EnginePeer.Id, boost: ChannelBoostersContext.State.Boost) -> ViewController {
+        return DiamondsTransactionScreen(context: context, subject: .boost(peerId, boost))
     }
     
-    public func makeStarsIntroScreen(context: AccountContext) -> ViewController {
-        return StarsIntroScreen(context: context)
+    public func makeDiamondsIntroScreen(context: AccountContext) -> ViewController {
+        return DiamondsIntroScreen(context: context)
     }
     
     public func makeGiftViewScreen(context: AccountContext, message: EngineMessage, shareStory: ((StarGift.UniqueGift) -> Void)?) -> ViewController {

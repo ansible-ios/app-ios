@@ -65,7 +65,7 @@ public func standaloneUploadedImage(postbox: Postbox, network: Network, peerId: 
                                 case let .messageMediaPhoto(messageMediaPhotoData):
                                     let photo = messageMediaPhotoData.photo
                                     if let photo = photo {
-                                        if let mediaImage = telegramMediaImageFromApiPhoto(photo) {
+                                        if let mediaImage = ansibleMediaImageFromApiPhoto(photo) {
                                             return .single(.result(.media(.standalone(media: mediaImage))))
                                         }
                                     }
@@ -161,7 +161,7 @@ public func standaloneUploadedFile(postbox: Postbox, network: Network, peerId: P
                                                 case let .messageMediaDocument(messageMediaDocumentData):
                                                     let (document, altDocuments) = (messageMediaDocumentData.document, messageMediaDocumentData.altDocuments)
                                                     if let document = document {
-                                                        if let mediaFile = telegramMediaFileFromApiDocument(document, altDocuments: altDocuments) {
+                                                        if let mediaFile = ansibleMediaFileFromApiDocument(document, altDocuments: altDocuments) {
                                                             return .single(.result(.media(.standalone(media: mediaFile))))
                                                         }
                                                     }

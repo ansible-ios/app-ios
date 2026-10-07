@@ -5,9 +5,9 @@ import IosappPresentationData
 import ComponentFlow
 import GlassBackgroundComponent
 import AnimatedTextComponent
-import StarsParticleEffect
+import DiamondsParticleEffect
 
-final class StarReactionButtonBadgeComponent: Component {
+final class DiamondReactionButtonBadgeComponent: Component {
     let theme: PresentationTheme
     let count: Int
     let isFilled: Bool
@@ -22,7 +22,7 @@ final class StarReactionButtonBadgeComponent: Component {
         self.isFilled = isFilled
     }
     
-    static func ==(lhs: StarReactionButtonBadgeComponent, rhs: StarReactionButtonBadgeComponent) -> Bool {
+    static func ==(lhs: DiamondReactionButtonBadgeComponent, rhs: DiamondReactionButtonBadgeComponent) -> Bool {
         if lhs.theme !== rhs.theme {
             return false
         }
@@ -39,7 +39,7 @@ final class StarReactionButtonBadgeComponent: Component {
         private let backgroundView: GlassBackgroundView
         private let text = ComponentView<Empty>()
         
-        private var component: StarReactionButtonBadgeComponent?
+        private var component: DiamondReactionButtonBadgeComponent?
         private weak var state: EmptyComponentState?
         
         override init(frame: CGRect) {
@@ -54,7 +54,7 @@ final class StarReactionButtonBadgeComponent: Component {
             fatalError("init(coder:) has not been implemented")
         }
         
-        func update(component: StarReactionButtonBadgeComponent, availableSize: CGSize, state: EmptyComponentState, environment: Environment<Empty>, transition: ComponentTransition) -> CGSize {
+        func update(component: DiamondReactionButtonBadgeComponent, availableSize: CGSize, state: EmptyComponentState, environment: Environment<Empty>, transition: ComponentTransition) -> CGSize {
             self.component = component
             self.state = state
             
@@ -109,7 +109,7 @@ final class StarReactionButtonBadgeComponent: Component {
 }
 
 
-final class StarReactionButtonComponent: Component {
+final class DiamondReactionButtonComponent: Component {
     let theme: PresentationTheme
     let count: Int
     let isFilled: Bool
@@ -130,7 +130,7 @@ final class StarReactionButtonComponent: Component {
         self.longPressAction = longPressAction
     }
     
-    static func ==(lhs: StarReactionButtonComponent, rhs: StarReactionButtonComponent) -> Bool {
+    static func ==(lhs: DiamondReactionButtonComponent, rhs: DiamondReactionButtonComponent) -> Bool {
         if lhs.theme !== rhs.theme {
             return false
         }
@@ -149,7 +149,7 @@ final class StarReactionButtonComponent: Component {
     final class View: UIView {
         private let containerView: UIView
         private let backgroundView: GlassBackgroundView
-        private let backgroundEffectLayer: StarsParticleEffectLayer
+        private let backgroundEffectLayer: DiamondsParticleEffectLayer
         private let backgroundMaskView: UIView
         private var backgroundBadgeMask: UIImageView?
         private let iconView: UIImageView
@@ -157,7 +157,7 @@ final class StarReactionButtonComponent: Component {
         
         private var longTapRecognizer: TapLongTapOrDoubleTapGestureRecognizer?
         
-        private var component: StarReactionButtonComponent?
+        private var component: DiamondReactionButtonComponent?
         private weak var state: EmptyComponentState?
         
         override init(frame: CGRect) {
@@ -165,7 +165,7 @@ final class StarReactionButtonComponent: Component {
             self.backgroundView = GlassBackgroundView()
             self.backgroundMaskView = UIView()
             
-            self.backgroundEffectLayer = StarsParticleEffectLayer()
+            self.backgroundEffectLayer = DiamondsParticleEffectLayer()
             self.backgroundView.contentView.layer.addSublayer(self.backgroundEffectLayer)
             
             self.backgroundView.mask = self.backgroundMaskView
@@ -232,7 +232,7 @@ final class StarReactionButtonComponent: Component {
             }
         }
         
-        func update(component: StarReactionButtonComponent, availableSize: CGSize, state: EmptyComponentState, environment: Environment<Empty>, transition: ComponentTransition) -> CGSize {
+        func update(component: DiamondReactionButtonComponent, availableSize: CGSize, state: EmptyComponentState, environment: Environment<Empty>, transition: ComponentTransition) -> CGSize {
             let previousComponent = self.component
             self.component = component
             self.state = state
@@ -264,7 +264,7 @@ final class StarReactionButtonComponent: Component {
                 
                 let badgeSize = badge.update(
                     transition: badgeTransition,
-                    component: AnyComponent(StarReactionButtonBadgeComponent(
+                    component: AnyComponent(DiamondReactionButtonBadgeComponent(
                         theme: component.theme,
                         count: component.count,
                         isFilled: component.isFilled
@@ -305,7 +305,7 @@ final class StarReactionButtonComponent: Component {
                     if let previousComponent {
                         let _ = badge.update(
                             transition: transition,
-                            component: AnyComponent(StarReactionButtonBadgeComponent(
+                            component: AnyComponent(DiamondReactionButtonBadgeComponent(
                                 theme: component.theme,
                                 count: previousComponent.count,
                                 isFilled: previousComponent.isFilled

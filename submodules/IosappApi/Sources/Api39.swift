@@ -37,7 +37,7 @@ public extension Api.payments {
                 return ("paymentReceipt", [("flags", ConstructorParameterDescription(self.flags)), ("date", ConstructorParameterDescription(self.date)), ("botId", ConstructorParameterDescription(self.botId)), ("providerId", ConstructorParameterDescription(self.providerId)), ("title", ConstructorParameterDescription(self.title)), ("description", ConstructorParameterDescription(self.description)), ("photo", ConstructorParameterDescription(self.photo)), ("invoice", ConstructorParameterDescription(self.invoice)), ("info", ConstructorParameterDescription(self.info)), ("shipping", ConstructorParameterDescription(self.shipping)), ("tipAmount", ConstructorParameterDescription(self.tipAmount)), ("currency", ConstructorParameterDescription(self.currency)), ("totalAmount", ConstructorParameterDescription(self.totalAmount)), ("credentialsTitle", ConstructorParameterDescription(self.credentialsTitle)), ("users", ConstructorParameterDescription(self.users))])
             }
         }
-        public class Cons_paymentReceiptStars: TypeConstructorDescription {
+        public class Cons_paymentReceiptDiamonds: TypeConstructorDescription {
             public var flags: Int32
             public var date: Int32
             public var botId: Int64
@@ -67,7 +67,7 @@ public extension Api.payments {
             }
         }
         case paymentReceipt(Cons_paymentReceipt)
-        case paymentReceiptStars(Cons_paymentReceiptStars)
+        case paymentReceiptStars(Cons_paymentReceiptDiamonds)
 
         public func serialize(_ buffer: Buffer, _ boxed: Swift.Bool) {
             switch self {
@@ -208,7 +208,7 @@ public extension Api.payments {
                 return nil
             }
         }
-        public static func parse_paymentReceiptStars(_ reader: BufferReader) -> PaymentReceipt? {
+        public static func parse_paymentReceiptDiamonds(_ reader: BufferReader) -> PaymentReceipt? {
             var _1: Int32?
             _1 = reader.readInt32()
             var _2: Int32?
@@ -251,7 +251,7 @@ public extension Api.payments {
             let _c10 = _10 != nil
             let _c11 = _11 != nil
             if _c1 && _c2 && _c3 && _c4 && _c5 && _c6 && _c7 && _c8 && _c9 && _c10 && _c11 {
-                return Api.payments.PaymentReceipt.paymentReceiptStars(Cons_paymentReceiptStars(flags: _1!, date: _2!, botId: _3!, title: _4!, description: _5!, photo: _6, invoice: _7!, currency: _8!, totalAmount: _9!, transactionId: _10!, users: _11!))
+                return Api.payments.PaymentReceipt.paymentReceiptStars(Cons_paymentReceiptDiamonds(flags: _1!, date: _2!, botId: _3!, title: _4!, description: _5!, photo: _6, invoice: _7!, currency: _8!, totalAmount: _9!, transactionId: _10!, users: _11!))
             }
             else {
                 return nil
@@ -336,7 +336,7 @@ public extension Api.payments {
 }
 public extension Api.payments {
     enum ResaleStarGifts: TypeConstructorDescription {
-        public class Cons_resaleStarGifts: TypeConstructorDescription {
+        public class Cons_resaleDiamondGifts: TypeConstructorDescription {
             public var flags: Int32
             public var count: Int32
             public var gifts: [Api.StarGift]
@@ -361,7 +361,7 @@ public extension Api.payments {
                 return ("resaleStarGifts", [("flags", ConstructorParameterDescription(self.flags)), ("count", ConstructorParameterDescription(self.count)), ("gifts", ConstructorParameterDescription(self.gifts)), ("nextOffset", ConstructorParameterDescription(self.nextOffset)), ("attributes", ConstructorParameterDescription(self.attributes)), ("attributesHash", ConstructorParameterDescription(self.attributesHash)), ("chats", ConstructorParameterDescription(self.chats)), ("counters", ConstructorParameterDescription(self.counters)), ("users", ConstructorParameterDescription(self.users))])
             }
         }
-        case resaleStarGifts(Cons_resaleStarGifts)
+        case resaleStarGifts(Cons_resaleDiamondGifts)
 
         public func serialize(_ buffer: Buffer, _ boxed: Swift.Bool) {
             switch self {
@@ -417,7 +417,7 @@ public extension Api.payments {
             }
         }
 
-        public static func parse_resaleStarGifts(_ reader: BufferReader) -> ResaleStarGifts? {
+        public static func parse_resaleDiamondGifts(_ reader: BufferReader) -> ResaleStarGifts? {
             var _1: Int32?
             _1 = reader.readInt32()
             var _2: Int32?
@@ -464,7 +464,7 @@ public extension Api.payments {
             let _c8 = (Int(_1 ?? 0) & Int(1 << 2) == 0) || _8 != nil
             let _c9 = _9 != nil
             if _c1 && _c2 && _c3 && _c4 && _c5 && _c6 && _c7 && _c8 && _c9 {
-                return Api.payments.ResaleStarGifts.resaleStarGifts(Cons_resaleStarGifts(flags: _1!, count: _2!, gifts: _3!, nextOffset: _4, attributes: _5, attributesHash: _6, chats: _7!, counters: _8, users: _9!))
+                return Api.payments.ResaleStarGifts.resaleStarGifts(Cons_resaleDiamondGifts(flags: _1!, count: _2!, gifts: _3!, nextOffset: _4, attributes: _5, attributesHash: _6, chats: _7!, counters: _8, users: _9!))
             }
             else {
                 return nil
@@ -530,7 +530,7 @@ public extension Api.payments {
 }
 public extension Api.payments {
     enum SavedStarGifts: TypeConstructorDescription {
-        public class Cons_savedStarGifts: TypeConstructorDescription {
+        public class Cons_savedDiamondGifts: TypeConstructorDescription {
             public var flags: Int32
             public var count: Int32
             public var chatNotificationsEnabled: Api.Bool?
@@ -551,7 +551,7 @@ public extension Api.payments {
                 return ("savedStarGifts", [("flags", ConstructorParameterDescription(self.flags)), ("count", ConstructorParameterDescription(self.count)), ("chatNotificationsEnabled", ConstructorParameterDescription(self.chatNotificationsEnabled)), ("gifts", ConstructorParameterDescription(self.gifts)), ("nextOffset", ConstructorParameterDescription(self.nextOffset)), ("chats", ConstructorParameterDescription(self.chats)), ("users", ConstructorParameterDescription(self.users))])
             }
         }
-        case savedStarGifts(Cons_savedStarGifts)
+        case savedStarGifts(Cons_savedDiamondGifts)
 
         public func serialize(_ buffer: Buffer, _ boxed: Swift.Bool) {
             switch self {
@@ -593,7 +593,7 @@ public extension Api.payments {
             }
         }
 
-        public static func parse_savedStarGifts(_ reader: BufferReader) -> SavedStarGifts? {
+        public static func parse_savedDiamondGifts(_ reader: BufferReader) -> SavedStarGifts? {
             var _1: Int32?
             _1 = reader.readInt32()
             var _2: Int32?
@@ -628,7 +628,7 @@ public extension Api.payments {
             let _c6 = _6 != nil
             let _c7 = _7 != nil
             if _c1 && _c2 && _c3 && _c4 && _c5 && _c6 && _c7 {
-                return Api.payments.SavedStarGifts.savedStarGifts(Cons_savedStarGifts(flags: _1!, count: _2!, chatNotificationsEnabled: _3, gifts: _4!, nextOffset: _5, chats: _6!, users: _7!))
+                return Api.payments.SavedStarGifts.savedStarGifts(Cons_savedDiamondGifts(flags: _1!, count: _2!, chatNotificationsEnabled: _3, gifts: _4!, nextOffset: _5, chats: _6!, users: _7!))
             }
             else {
                 return nil
@@ -1513,7 +1513,7 @@ public extension Api.payments {
 }
 public extension Api.payments {
     enum SuggestedStarRefBots: TypeConstructorDescription {
-        public class Cons_suggestedStarRefBots: TypeConstructorDescription {
+        public class Cons_suggestedDiamondRefBots: TypeConstructorDescription {
             public var flags: Int32
             public var count: Int32
             public var suggestedBots: [Api.StarRefProgram]
@@ -1530,7 +1530,7 @@ public extension Api.payments {
                 return ("suggestedStarRefBots", [("flags", ConstructorParameterDescription(self.flags)), ("count", ConstructorParameterDescription(self.count)), ("suggestedBots", ConstructorParameterDescription(self.suggestedBots)), ("users", ConstructorParameterDescription(self.users)), ("nextOffset", ConstructorParameterDescription(self.nextOffset))])
             }
         }
-        case suggestedStarRefBots(Cons_suggestedStarRefBots)
+        case suggestedStarRefBots(Cons_suggestedDiamondRefBots)
 
         public func serialize(_ buffer: Buffer, _ boxed: Swift.Bool) {
             switch self {
@@ -1564,7 +1564,7 @@ public extension Api.payments {
             }
         }
 
-        public static func parse_suggestedStarRefBots(_ reader: BufferReader) -> SuggestedStarRefBots? {
+        public static func parse_suggestedDiamondRefBots(_ reader: BufferReader) -> SuggestedStarRefBots? {
             var _1: Int32?
             _1 = reader.readInt32()
             var _2: Int32?
@@ -1587,7 +1587,7 @@ public extension Api.payments {
             let _c4 = _4 != nil
             let _c5 = (Int(_1 ?? 0) & Int(1 << 0) == 0) || _5 != nil
             if _c1 && _c2 && _c3 && _c4 && _c5 {
-                return Api.payments.SuggestedStarRefBots.suggestedStarRefBots(Cons_suggestedStarRefBots(flags: _1!, count: _2!, suggestedBots: _3!, users: _4!, nextOffset: _5))
+                return Api.payments.SuggestedStarRefBots.suggestedStarRefBots(Cons_suggestedDiamondRefBots(flags: _1!, count: _2!, suggestedBots: _3!, users: _4!, nextOffset: _5))
             }
             else {
                 return nil
@@ -1597,7 +1597,7 @@ public extension Api.payments {
 }
 public extension Api.payments {
     enum UniqueStarGift: TypeConstructorDescription {
-        public class Cons_uniqueStarGift: TypeConstructorDescription {
+        public class Cons_uniqueDiamondGift: TypeConstructorDescription {
             public var gift: Api.StarGift
             public var chats: [Api.Chat]
             public var users: [Api.User]
@@ -1610,7 +1610,7 @@ public extension Api.payments {
                 return ("uniqueStarGift", [("gift", ConstructorParameterDescription(self.gift)), ("chats", ConstructorParameterDescription(self.chats)), ("users", ConstructorParameterDescription(self.users))])
             }
         }
-        case uniqueStarGift(Cons_uniqueStarGift)
+        case uniqueStarGift(Cons_uniqueDiamondGift)
 
         public func serialize(_ buffer: Buffer, _ boxed: Swift.Bool) {
             switch self {
@@ -1640,7 +1640,7 @@ public extension Api.payments {
             }
         }
 
-        public static func parse_uniqueStarGift(_ reader: BufferReader) -> UniqueStarGift? {
+        public static func parse_uniqueDiamondGift(_ reader: BufferReader) -> UniqueStarGift? {
             var _1: Api.StarGift?
             if let signature = reader.readInt32() {
                 _1 = Api.parse(reader, signature: signature) as? Api.StarGift
@@ -1657,7 +1657,7 @@ public extension Api.payments {
             let _c2 = _2 != nil
             let _c3 = _3 != nil
             if _c1 && _c2 && _c3 {
-                return Api.payments.UniqueStarGift.uniqueStarGift(Cons_uniqueStarGift(gift: _1!, chats: _2!, users: _3!))
+                return Api.payments.UniqueStarGift.uniqueStarGift(Cons_uniqueDiamondGift(gift: _1!, chats: _2!, users: _3!))
             }
             else {
                 return nil
@@ -1667,7 +1667,7 @@ public extension Api.payments {
 }
 public extension Api.payments {
     enum UniqueStarGiftValueInfo: TypeConstructorDescription {
-        public class Cons_uniqueStarGiftValueInfo: TypeConstructorDescription {
+        public class Cons_uniqueDiamondGiftValueInfo: TypeConstructorDescription {
             public var flags: Int32
             public var currency: String
             public var value: Int64
@@ -1700,7 +1700,7 @@ public extension Api.payments {
                 return ("uniqueStarGiftValueInfo", [("flags", ConstructorParameterDescription(self.flags)), ("currency", ConstructorParameterDescription(self.currency)), ("value", ConstructorParameterDescription(self.value)), ("initialSaleDate", ConstructorParameterDescription(self.initialSaleDate)), ("initialSaleStars", ConstructorParameterDescription(self.initialSaleStars)), ("initialSalePrice", ConstructorParameterDescription(self.initialSalePrice)), ("lastSaleDate", ConstructorParameterDescription(self.lastSaleDate)), ("lastSalePrice", ConstructorParameterDescription(self.lastSalePrice)), ("floorPrice", ConstructorParameterDescription(self.floorPrice)), ("averagePrice", ConstructorParameterDescription(self.averagePrice)), ("listedCount", ConstructorParameterDescription(self.listedCount)), ("fragmentListedCount", ConstructorParameterDescription(self.fragmentListedCount)), ("fragmentListedUrl", ConstructorParameterDescription(self.fragmentListedUrl))])
             }
         }
-        case uniqueStarGiftValueInfo(Cons_uniqueStarGiftValueInfo)
+        case uniqueStarGiftValueInfo(Cons_uniqueDiamondGiftValueInfo)
 
         public func serialize(_ buffer: Buffer, _ boxed: Swift.Bool) {
             switch self {
@@ -1746,7 +1746,7 @@ public extension Api.payments {
             }
         }
 
-        public static func parse_uniqueStarGiftValueInfo(_ reader: BufferReader) -> UniqueStarGiftValueInfo? {
+        public static func parse_uniqueDiamondGiftValueInfo(_ reader: BufferReader) -> UniqueStarGiftValueInfo? {
             var _1: Int32?
             _1 = reader.readInt32()
             var _2: String?
@@ -1801,7 +1801,7 @@ public extension Api.payments {
             let _c12 = (Int(_1 ?? 0) & Int(1 << 5) == 0) || _12 != nil
             let _c13 = (Int(_1 ?? 0) & Int(1 << 5) == 0) || _13 != nil
             if _c1 && _c2 && _c3 && _c4 && _c5 && _c6 && _c7 && _c8 && _c9 && _c10 && _c11 && _c12 && _c13 {
-                return Api.payments.UniqueStarGiftValueInfo.uniqueStarGiftValueInfo(Cons_uniqueStarGiftValueInfo(flags: _1!, currency: _2!, value: _3!, initialSaleDate: _4!, initialSaleStars: _5!, initialSalePrice: _6!, lastSaleDate: _7, lastSalePrice: _8, floorPrice: _9, averagePrice: _10, listedCount: _11, fragmentListedCount: _12, fragmentListedUrl: _13))
+                return Api.payments.UniqueStarGiftValueInfo.uniqueStarGiftValueInfo(Cons_uniqueDiamondGiftValueInfo(flags: _1!, currency: _2!, value: _3!, initialSaleDate: _4!, initialSaleStars: _5!, initialSalePrice: _6!, lastSaleDate: _7, lastSalePrice: _8, floorPrice: _9, averagePrice: _10, listedCount: _11, fragmentListedCount: _12, fragmentListedUrl: _13))
             }
             else {
                 return nil
@@ -2013,7 +2013,7 @@ public extension Api.phone {
 }
 public extension Api.phone {
     enum GroupCallStars: TypeConstructorDescription {
-        public class Cons_groupCallStars: TypeConstructorDescription {
+        public class Cons_groupCallDiamonds: TypeConstructorDescription {
             public var totalStars: Int64
             public var topDonors: [Api.GroupCallDonor]
             public var chats: [Api.Chat]
@@ -2028,7 +2028,7 @@ public extension Api.phone {
                 return ("groupCallStars", [("totalStars", ConstructorParameterDescription(self.totalStars)), ("topDonors", ConstructorParameterDescription(self.topDonors)), ("chats", ConstructorParameterDescription(self.chats)), ("users", ConstructorParameterDescription(self.users))])
             }
         }
-        case groupCallStars(Cons_groupCallStars)
+        case groupCallStars(Cons_groupCallDiamonds)
 
         public func serialize(_ buffer: Buffer, _ boxed: Swift.Bool) {
             switch self {
@@ -2063,7 +2063,7 @@ public extension Api.phone {
             }
         }
 
-        public static func parse_groupCallStars(_ reader: BufferReader) -> GroupCallStars? {
+        public static func parse_groupCallDiamonds(_ reader: BufferReader) -> GroupCallStars? {
             var _1: Int64?
             _1 = reader.readInt64()
             var _2: [Api.GroupCallDonor]?
@@ -2083,7 +2083,7 @@ public extension Api.phone {
             let _c3 = _3 != nil
             let _c4 = _4 != nil
             if _c1 && _c2 && _c3 && _c4 {
-                return Api.phone.GroupCallStars.groupCallStars(Cons_groupCallStars(totalStars: _1!, topDonors: _2!, chats: _3!, users: _4!))
+                return Api.phone.GroupCallStars.groupCallStars(Cons_groupCallDiamonds(totalStars: _1!, topDonors: _2!, chats: _3!, users: _4!))
             }
             else {
                 return nil

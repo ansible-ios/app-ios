@@ -519,7 +519,7 @@ public final class InviteLinkViewController: ViewController {
             self.presentationDataPromise = Promise(self.presentationData)
             self.controller = controller
             
-            let configuration = StarsSubscriptionConfiguration.with(appConfiguration: context.currentAppConfiguration.with { $0 })
+            let configuration = DiamondsSubscriptionConfiguration.with(appConfiguration: context.currentAppConfiguration.with { $0 })
             
             self.importersContext = importersContext ?? context.engine.peers.peerInvitationImporters(peerId: peerId, subject: .invite(invite: invite, requested: false))
             if case let .link(_, _, _, requestApproval, _, _, _, _, _, _, _, _, _) = invite, requestApproval {
@@ -594,7 +594,7 @@ public final class InviteLinkViewController: ViewController {
                         return
                     }
                     let usdRate = Double(configuration.usdWithdrawRate) / 1000.0 / 100.0
-                    let subscriptionController = context.sharedContext.makeStarsSubscriptionScreen(context: context, peer: peer, pricing: pricing, importer: importer, usdRate: usdRate)
+                    let subscriptionController = context.sharedContext.makeDiamondsSubscriptionScreen(context: context, peer: peer, pricing: pricing, importer: importer, usdRate: usdRate)
                     self?.controller?.push(subscriptionController)
                 })
             }, copyLink: { [weak self] invite in

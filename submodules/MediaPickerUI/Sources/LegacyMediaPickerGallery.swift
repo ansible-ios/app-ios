@@ -174,8 +174,8 @@ func presentLegacyMediaPickerGallery(
         livePhotoButton.present = present
         return livePhotoButton
     }
-    paintStickersContext.photoToolbarView = { backButton, doneButton, solidBackground, hasSendStarsButton in
-        return makeMediaPickerPhotoToolbarView(context: context, backButton: backButton, doneButton: doneButton, solidBackground: solidBackground, hasSendStarsButton: hasSendStarsButton)
+    paintStickersContext.photoToolbarView = { backButton, doneButton, solidBackground, hasSendDiamondsButton in
+        return makeMediaPickerPhotoToolbarView(context: context, backButton: backButton, doneButton: doneButton, solidBackground: solidBackground, hasSendDiamondsButton: hasSendDiamondsButton)
     }
     paintStickersContext.editCover = { dimensions, completion in
         editCover(dimensions, completion)

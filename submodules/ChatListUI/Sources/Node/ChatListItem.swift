@@ -1061,7 +1061,7 @@ private final class ChatListMediaPreviewNode: ASDisplayNode {
     }
 }
 
-private let telegramCodeRegex = try? NSRegularExpression(pattern: "(?<=: )\\b\\d{5,8}\\b(?=\\.)", options: [])
+private let ansibleCodeRegex = try? NSRegularExpression(pattern: "(?<=: )\\b\\d{5,8}\\b(?=\\.)", options: [])
 private let loginCodeRegex = try? NSRegularExpression(pattern: "\\b\\d{5,8}\\b", options: [])
 
 public class ChatListItemNode: ItemListRevealOptionsItemNode {
@@ -1422,7 +1422,7 @@ public class ChatListItemNode: ItemListRevealOptionsItemNode {
     var avatarBadgeBackground: ASImageNode?
     let onlineNode: PeerOnlineMarkerNode
     var avatarTimerBadge: AvatarBadgeView?
-    private var starView: StarView?
+    private var diamondView: DiamondView?
     var avatarLiveBadge: (outline: UIImageView, foreground: UIImageView)?
     let pinnedIconNode: ASImageNode
     var secretIconNode: ASImageNode?
@@ -2195,7 +2195,7 @@ public class ChatListItemNode: ItemListRevealOptionsItemNode {
             
             if let item = self.item, case .chatList = item.index {
                 self.onlineNode.setImage(PresentationResourcesChatList.recentStatusOnlineIcon(item.presentationData.theme, state: .highlighted, voiceChat: self.onlineIsVoiceChat), color: nil, transition: transition)
-                self.starView?.setOutlineColor(item.presentationData.theme.chatList.itemHighlightedBackgroundColor, transition: transition)
+                self.diamondView?.setOutlineColor(item.presentationData.theme.chatList.itemHighlightedBackgroundColor, transition: transition)
             }
         } else {
             if self.highlightedBackgroundNode.supernode != nil {
@@ -2223,7 +2223,7 @@ public class ChatListItemNode: ItemListRevealOptionsItemNode {
                     effectiveBackgroundColor = item.presentationData.theme.chatList.itemBackgroundColor
                 }
                 self.onlineNode.setImage(onlineIcon, color: nil, transition: transition)
-                self.starView?.setOutlineColor(effectiveBackgroundColor, transition: transition)
+                self.diamondView?.setOutlineColor(effectiveBackgroundColor, transition: transition)
             }
         }
         
@@ -2856,7 +2856,7 @@ public class ChatListItemNode: ItemListRevealOptionsItemNode {
                         if message.id.peerId.isIosappNotifications || message.id.peerId.isVerificationCodes {
                             let regex: NSRegularExpression?
                             if message.id.peerId.isIosappNotifications {
-                                regex = telegramCodeRegex
+                                regex = ansibleCodeRegex
                             } else {
                                 regex = loginCodeRegex
                             }
@@ -3060,7 +3060,7 @@ public class ChatListItemNode: ItemListRevealOptionsItemNode {
                                         switch action.action {
                                         case let .phoneCall(_, _, _, isVideo):
                                             messageTypeIcon = .call(isVideo ? .video : .voice, message.flags.contains(.Incoming) ? .incoming : .outgoing)
-                                        case .giftPremium, .giftStars, .starGift, .starGiftUnique:
+                                        case .giftPremium, .giftDiamonds, .starGift, .starGiftUnique:
                                             messageTypeIcon = .gift
                                         case let .giftCode(_, _, _, boostPeerId, _, _, _, _, _, _, _):
                                             if boostPeerId == nil {
@@ -4460,22 +4460,22 @@ public class ChatListItemNode: ItemListRevealOptionsItemNode {
                     strongSelf.onlineNode.setImage(onlineIcon, color: item.presentationData.theme.list.itemCheckColors.foregroundColor, transition: .immediate)
                     
                     if isSubscription, autoremoveTimeout == nil {
-                        let starView: StarView
-                        if let current = strongSelf.starView {
-                            starView = current
+                        let diamondView: DiamondView
+                        if let current = strongSelf.diamondView {
+                            diamondView = current
                         } else {
-                            starView = StarView()
-                            strongSelf.starView = starView
-                            strongSelf.contextContainer.view.addSubview(starView)
+                            diamondView = DiamondView()
+                            strongSelf.diamondView = diamondView
+                            strongSelf.contextContainer.view.addSubview(diamondView)
                         }
-                        starView.outlineColor = effectiveBackgroundColor
+                        diamondView.outlineColor = effectiveBackgroundColor
                         
-                        let starSize = CGSize(width: 20.0, height: 20.0)
-                        let starFrame = CGRect(origin: CGPoint(x: avatarFrame.maxX - starSize.width + 1.0, y: avatarFrame.maxY - starSize.height + 1.0), size: starSize)
-                        transition.updateFrame(view: starView, frame: starFrame)
-                    } else if let starView = strongSelf.starView {
-                        strongSelf.starView = nil
-                        starView.removeFromSuperview()
+                        let diamondSize = CGSize(width: 20.0, height: 20.0)
+                        let diamondFrame = CGRect(origin: CGPoint(x: avatarFrame.maxX - diamondSize.width + 1.0, y: avatarFrame.maxY - diamondSize.height + 1.0), size: diamondSize)
+                        transition.updateFrame(view: diamondView, frame: diamondFrame)
+                    } else if let diamondView = strongSelf.diamondView {
+                        strongSelf.diamondView = nil
+                        diamondView.removeFromSuperview()
                     }
                     
                     let autoremoveTimeoutFraction: CGFloat
@@ -5872,7 +5872,7 @@ public class ChatListItemNode: ItemListRevealOptionsItemNode {
     }
 }
 
-private class StarView: UIView {
+private class DiamondView: UIView {
     let outline = SimpleLayer()
     let foreground = SimpleLayer()
     

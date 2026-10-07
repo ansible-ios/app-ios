@@ -80,7 +80,7 @@ private final class GiftContextPreviewComponent: Component {
                     subject: subject,
                     animationOffset: nil,
                     animationScale: nil,
-                    displayAnimationStars: false,
+                    displayAnimationDiamonds: false,
                     externalState: self.giftCompositionExternalState,
                     requestUpdate: { [weak state] _ in
                         state?.updated()

@@ -251,7 +251,7 @@ private final class GiftAuctionWearPreviewSheetContent: CombinedComponent {
                     subject: .preview(attributes),
                     animationOffset: animationOffset,
                     animationScale: animationScale,
-                    displayAnimationStars: true,
+                    displayAnimationDiamonds: true,
                     animateScaleOnTransition: false,
                     externalState: giftCompositionExternalState,
                     requestUpdate: { [weak state] transition in

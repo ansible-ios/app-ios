@@ -24,11 +24,11 @@ private enum InviteContactsEntryId: Hashable {
 
 private final class InviteContactsInteraction {
     let toggleContact: (String) -> Void
-    let shareTelegram: () -> Void
+    let shareAnsible: () -> Void
     
-    init(toggleContact: @escaping (String) -> Void, shareTelegram: @escaping () -> Void) {
+    init(toggleContact: @escaping (String) -> Void, shareAnsible: @escaping () -> Void) {
         self.toggleContact = toggleContact
-        self.shareTelegram = shareTelegram
+        self.shareAnsible = shareAnsible
     }
 }
 
@@ -186,7 +186,7 @@ private func inviteContactsEntries(accountPeer: EnginePeer?, sortedContacts: [(D
     var entries: [InviteContactsEntry] = []
         
     entries.append(.option(0, ContactListAdditionalOption(title: strings.Contacts_ShareAnsible, icon: .generic(UIImage(bundleImageName: "Contact List/InviteActionIcon")!), action: {
-        interaction.shareTelegram()
+        interaction.shareAnsible()
     }), theme, strings))
     
     var index = 0
@@ -235,7 +235,7 @@ final class InviteContactsControllerNode: ASDisplayNode {
     
     var requestActivateSearch: (() -> Void)?
     var requestDeactivateSearch: (() -> Void)?
-    var requestShareTelegram: (() -> Void)?
+    var requestShareAnsible: (() -> Void)?
     var requestShare: (([(DeviceContactBasicData, Int32)]) -> Void)?
     var selectionChanged: (() -> Void)?
     
@@ -336,8 +336,8 @@ final class InviteContactsControllerNode: ASDisplayNode {
             if let strongSelf = self {
                 strongSelf.selectionState = strongSelf.selectionState.withToggledContactId(id)
             }
-        }, shareTelegram: { [weak self] in
-            self?.requestShareTelegram?()
+        }, shareAnsible: { [weak self] in
+            self?.requestShareAnsible?()
         })
         
         let existingNumbers: Signal<(Set<String>, Set<EnginePeer.Id>), NoError> = context.engine.data.subscribe(

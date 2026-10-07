@@ -749,7 +749,7 @@ extension IosappBusinessIntro {
         case let .businessIntro(businessIntroData):
             let (flags, title, description, sticker) = (businessIntroData.flags, businessIntroData.title, businessIntroData.description, businessIntroData.sticker)
             let _ = flags
-            self.init(title: title, text: description, stickerFile: sticker.flatMap { telegramMediaFileFromApiDocument($0, altDocuments: []) })
+            self.init(title: title, text: description, stickerFile: sticker.flatMap { ansibleMediaFileFromApiDocument($0, altDocuments: []) })
         }
     }
     

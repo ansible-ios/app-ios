@@ -1177,7 +1177,7 @@ func _internal_cancelStoryUpload(account: Account, stableId: Int32) {
     }).start()
 }
 
-func _internal_beginStoryLivestream(account: Account, peerId: EnginePeer.Id, rtmp: Bool, privacy: EngineStoryPrivacy, isForwardingDisabled: Bool, messagesEnabled: Bool, sendPaidMessageStars: Int64?) -> Signal<EngineStoryItem?, NoError> {
+func _internal_beginStoryLivestream(account: Account, peerId: EnginePeer.Id, rtmp: Bool, privacy: EngineStoryPrivacy, isForwardingDisabled: Bool, messagesEnabled: Bool, sendPaidMessageDiamonds: Int64?) -> Signal<EngineStoryItem?, NoError> {
     return account.postbox.transaction { transaction in
         var flags: Int32 = 0
         if rtmp {
@@ -1195,13 +1195,13 @@ func _internal_beginStoryLivestream(account: Account, peerId: EnginePeer.Id, rtm
         }
         
         flags |= 1 << 6
-        if let sendPaidMessageStars, sendPaidMessageStars > 0 {
+        if let sendPaidMessageDiamonds, sendPaidMessageDiamonds > 0 {
             flags |= 1 << 7
         }
         
         let privacyRules = apiInputPrivacyRules(privacy: privacy, transaction: transaction)
         
-        return account.network.request(Api.functions.stories.startLive(flags: flags, peer: inputPeer, caption: nil, entities: nil, privacyRules: privacyRules, randomId: Int64.random(in: Int64.min ... Int64.max), messagesEnabled: messagesEnabled ? .boolTrue : .boolFalse, sendPaidMessagesStars: sendPaidMessageStars))
+        return account.network.request(Api.functions.stories.startLive(flags: flags, peer: inputPeer, caption: nil, entities: nil, privacyRules: privacyRules, randomId: Int64.random(in: Int64.min ... Int64.max), messagesEnabled: messagesEnabled ? .boolTrue : .boolFalse, sendPaidMessagesStars: sendPaidMessageDiamonds))
         |> map(Optional.init)
         |> `catch` { _ -> Signal<Api.Updates?, NoError> in
             return .single(nil)
@@ -2401,7 +2401,7 @@ extension Stories.StoredItem {
                 case let .messageMediaDocument(messageMediaDocumentData):
                     let altDocuments = messageMediaDocumentData.altDocuments
                     if let altDocuments {
-                        parsedAlternativeMedia = altDocuments.compactMap { telegramMediaFileFromApiDocument($0, altDocuments: []) }
+                        parsedAlternativeMedia = altDocuments.compactMap { ansibleMediaFileFromApiDocument($0, altDocuments: []) }
                     }
                 default:
                     break
@@ -2410,7 +2410,7 @@ extension Stories.StoredItem {
                 
                 var parsedMusic: IosappMediaFile?
                 if let music {
-                    parsedMusic = telegramMediaFileFromApiDocument(music, altDocuments: nil)
+                    parsedMusic = ansibleMediaFileFromApiDocument(music, altDocuments: nil)
                 }
                 
                 let item = Stories.Item(
@@ -3091,7 +3091,7 @@ func _internal_setStoryReaction(account: Account, peerId: EnginePeer.Id, id: Int
     }
 }
 
-func _internal_sendStoryStars(account: Account, peerId: EnginePeer.Id, id: Int32, count: Int) -> Signal<Never, NoError> {
+func _internal_sendStoryDiamonds(account: Account, peerId: EnginePeer.Id, id: Int32, count: Int) -> Signal<Never, NoError> {
     return account.postbox.transaction { transaction -> (Stories.StoredItem?, Api.InputPeer?) in
         guard let peer = transaction.getPeer(peerId) else {
             return (nil, nil)

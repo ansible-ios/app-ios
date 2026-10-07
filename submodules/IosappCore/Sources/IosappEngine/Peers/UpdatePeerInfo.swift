@@ -309,7 +309,7 @@ func _internal_updatePeerEmojiStatus(account: Account, peerId: PeerId, fileId: I
     }
 }
 
-func _internal_updatePeerStarGiftStatus(account: Account, peerId: PeerId, starGift: StarGift.UniqueGift, expirationDate: Int32?) -> Signal<Never, UpdatePeerEmojiStatusError> {
+func _internal_updatePeerDiamondGiftStatus(account: Account, peerId: PeerId, starGift: StarGift.UniqueGift, expirationDate: Int32?) -> Signal<Never, UpdatePeerEmojiStatusError> {
     var flags: Int32 = 0
     if let _ = expirationDate {
         flags |= (1 << 0)

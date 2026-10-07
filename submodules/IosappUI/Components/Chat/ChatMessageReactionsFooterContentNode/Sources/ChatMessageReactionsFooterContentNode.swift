@@ -78,10 +78,10 @@ public final class MessageReactionButtonsNode: ASDisplayNode {
                 deselectedForeground: themeColors.reactionInactiveForeground.argb,
                 selectedForeground: themeColors.reactionActiveForeground.argb,
                 selectedIconTintColor: 0,
-                deselectedStarsBackground: themeColors.reactionStarsInactiveBackground.argb,
-                selectedStarsBackground: themeColors.reactionStarsActiveBackground.argb,
-                deselectedStarsForeground: themeColors.reactionStarsInactiveForeground.argb,
-                selectedStarsForeground: themeColors.reactionStarsActiveForeground.argb,
+                deselectedDiamondsBackground: themeColors.reactionDiamondsInactiveBackground.argb,
+                selectedDiamondsBackground: themeColors.reactionDiamondsActiveBackground.argb,
+                deselectedDiamondsForeground: themeColors.reactionDiamondsInactiveForeground.argb,
+                selectedDiamondsForeground: themeColors.reactionDiamondsActiveForeground.argb,
                 extractedBackground: presentationData.theme.theme.contextMenu.backgroundColor.argb,
                 extractedForeground: presentationData.theme.theme.contextMenu.primaryColor.argb,
                 extractedSelectedForeground: presentationData.theme.theme.overallDarkAppearance ? themeColors.reactionActiveForeground.argb : presentationData.theme.theme.list.itemCheckColors.foregroundColor.argb,
@@ -97,10 +97,10 @@ public final class MessageReactionButtonsNode: ASDisplayNode {
                 deselectedForeground: themeColors.reactionInactiveForeground.argb,
                 selectedForeground: themeColors.reactionActiveForeground.argb,
                 selectedIconTintColor: 0,
-                deselectedStarsBackground: themeColors.reactionStarsInactiveBackground.argb,
-                selectedStarsBackground: themeColors.reactionStarsActiveBackground.argb,
-                deselectedStarsForeground: themeColors.reactionStarsInactiveForeground.argb,
-                selectedStarsForeground: themeColors.reactionStarsActiveForeground.argb,
+                deselectedDiamondsBackground: themeColors.reactionDiamondsInactiveBackground.argb,
+                selectedDiamondsBackground: themeColors.reactionDiamondsActiveBackground.argb,
+                deselectedDiamondsForeground: themeColors.reactionDiamondsInactiveForeground.argb,
+                selectedDiamondsForeground: themeColors.reactionDiamondsActiveForeground.argb,
                 extractedBackground: presentationData.theme.theme.contextMenu.backgroundColor.argb,
                 extractedForeground: presentationData.theme.theme.contextMenu.primaryColor.argb,
                 extractedSelectedForeground: presentationData.theme.theme.overallDarkAppearance ? themeColors.reactionActiveForeground.argb : presentationData.theme.theme.list.itemCheckColors.foregroundColor.argb,
@@ -121,10 +121,10 @@ public final class MessageReactionButtonsNode: ASDisplayNode {
                 deselectedForeground: themeColors.reactionInactiveForeground.argb,
                 selectedForeground: themeColors.reactionActiveForeground.argb,
                 selectedIconTintColor: presentationData.theme.theme.overallDarkAppearance ? 0 : presentationData.theme.theme.chat.message.incoming.accentTextColor.argb,
-                deselectedStarsBackground: selectReactionFillStaticColor(theme: presentationData.theme.theme, wallpaper: presentationData.theme.wallpaper, isStars: true).argb,
-                selectedStarsBackground: themeColors.reactionStarsActiveBackground.argb,
-                deselectedStarsForeground: themeColors.reactionStarsInactiveForeground.argb,
-                selectedStarsForeground: themeColors.reactionStarsActiveForeground.argb,
+                deselectedDiamondsBackground: selectReactionFillStaticColor(theme: presentationData.theme.theme, wallpaper: presentationData.theme.wallpaper, isDiamonds: true).argb,
+                selectedDiamondsBackground: themeColors.reactionDiamondsActiveBackground.argb,
+                deselectedDiamondsForeground: themeColors.reactionDiamondsInactiveForeground.argb,
+                selectedDiamondsForeground: themeColors.reactionDiamondsActiveForeground.argb,
                 extractedBackground: presentationData.theme.theme.contextMenu.backgroundColor.argb,
                 extractedForeground: presentationData.theme.theme.contextMenu.primaryColor.argb,
                 extractedSelectedForeground: presentationData.theme.theme.contextMenu.primaryColor.argb,
@@ -141,7 +141,7 @@ public final class MessageReactionButtonsNode: ASDisplayNode {
         
         let isTag = message.areReactionsTags(accountPeerId: context.account.peerId)
         
-        var hadStars = false
+        var hadDiamonds = false
         var mappedReactions = reactions.reactions.map { reaction in
             var centerAnimation: IosappMediaFile?
             var animationFileId: Int64?
@@ -159,7 +159,7 @@ public final class MessageReactionButtonsNode: ASDisplayNode {
             case let .custom(fileId):
                 animationFileId = fileId
             case .stars:
-                hadStars = true
+                hadDiamonds = true
                 if let availableReactions = availableReactions {
                     for availableReaction in availableReactions.reactions {
                         if availableReaction.value == reaction.value {
@@ -219,7 +219,7 @@ public final class MessageReactionButtonsNode: ASDisplayNode {
                 chosenOrder: reaction.chosenOrder
             )
         }
-        if !"".isEmpty && !hadStars {
+        if !"".isEmpty && !hadDiamonds {
             var centerAnimation: IosappMediaFile?
             let animationFileId: Int64? = nil
             

@@ -25,7 +25,7 @@
 @property (nonatomic, assign) TGPhotoEditorBackButton backButtonType;
 @property (nonatomic, assign) TGPhotoEditorDoneButton doneButtonType;
 
-@property (nonatomic, assign) int64_t sendPaidMessageStars;
+@property (nonatomic, assign) int64_t sendPaidMessageDiamonds;
 
 - (instancetype)initWithContext:(id<LegacyComponentsContext>)context backButton:(TGPhotoEditorBackButton)backButton doneButton:(TGPhotoEditorDoneButton)doneButton solidBackground:(bool)solidBackground stickersContext:(id<TGPhotoPaintStickersContext>)stickersContext;
 

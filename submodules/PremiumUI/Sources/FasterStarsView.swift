@@ -8,7 +8,7 @@ import PremiumStarComponent
 
 private let sceneVersion: Int = 1
 
-final class FasterStarsView: UIView, PhoneDemoDecorationView {
+final class FasterDiamondsView: UIView, PhoneDemoDecorationView {
     private let sceneView: SCNView
     
     private var particles: SCNNode?

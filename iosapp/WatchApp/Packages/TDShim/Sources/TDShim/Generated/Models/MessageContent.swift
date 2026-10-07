@@ -230,13 +230,13 @@ public indirect enum MessageContent: Codable, Equatable, Hashable {
     case messageGiveawayWinners(MessageGiveawayWinners)
 
     /// Iosapp Stars were gifted to a user
-    case messageGiftedStars(MessageGiftedStars)
+    case messageGiftedDiamonds(MessageGiftedDiamonds)
 
     /// Toncoins were gifted to a user
     case messageGiftedTon(MessageGiftedTon)
 
     /// A Iosapp Stars were received by the current user from a giveaway
-    case messageGiveawayPrizeStars(MessageGiveawayPrizeStars)
+    case messageGiveawayPrizeDiamonds(MessageGiveawayPrizeDiamonds)
 
     /// A regular gift was received or sent by the current user, or the current user was notified about a channel gift
     case messageGift(MessageGift)
@@ -383,9 +383,9 @@ public indirect enum MessageContent: Codable, Equatable, Hashable {
         case messageGiveaway
         case messageGiveawayCompleted
         case messageGiveawayWinners
-        case messageGiftedStars
+        case messageGiftedDiamonds
         case messageGiftedTon
-        case messageGiveawayPrizeStars
+        case messageGiveawayPrizeDiamonds
         case messageGift
         case messageUpgradedGift
         case messageRefundedUpgradedGift
@@ -627,15 +627,15 @@ public indirect enum MessageContent: Codable, Equatable, Hashable {
         case .messageGiveawayWinners:
             let value = try MessageGiveawayWinners(from: decoder)
             self = .messageGiveawayWinners(value)
-        case .messageGiftedStars:
-            let value = try MessageGiftedStars(from: decoder)
-            self = .messageGiftedStars(value)
+        case .messageGiftedDiamonds:
+            let value = try MessageGiftedDiamonds(from: decoder)
+            self = .messageGiftedDiamonds(value)
         case .messageGiftedTon:
             let value = try MessageGiftedTon(from: decoder)
             self = .messageGiftedTon(value)
-        case .messageGiveawayPrizeStars:
-            let value = try MessageGiveawayPrizeStars(from: decoder)
-            self = .messageGiveawayPrizeStars(value)
+        case .messageGiveawayPrizeDiamonds:
+            let value = try MessageGiveawayPrizeDiamonds(from: decoder)
+            self = .messageGiveawayPrizeDiamonds(value)
         case .messageGift:
             let value = try MessageGift(from: decoder)
             self = .messageGift(value)
@@ -917,14 +917,14 @@ public indirect enum MessageContent: Codable, Equatable, Hashable {
         case .messageGiveawayWinners(let value):
             try container.encode(Kind.messageGiveawayWinners, forKey: .type)
             try value.encode(to: encoder)
-        case .messageGiftedStars(let value):
-            try container.encode(Kind.messageGiftedStars, forKey: .type)
+        case .messageGiftedDiamonds(let value):
+            try container.encode(Kind.messageGiftedDiamonds, forKey: .type)
             try value.encode(to: encoder)
         case .messageGiftedTon(let value):
             try container.encode(Kind.messageGiftedTon, forKey: .type)
             try value.encode(to: encoder)
-        case .messageGiveawayPrizeStars(let value):
-            try container.encode(Kind.messageGiveawayPrizeStars, forKey: .type)
+        case .messageGiveawayPrizeDiamonds(let value):
+            try container.encode(Kind.messageGiveawayPrizeDiamonds, forKey: .type)
             try value.encode(to: encoder)
         case .messageGift(let value):
             try container.encode(Kind.messageGift, forKey: .type)
@@ -1108,19 +1108,19 @@ public struct MessagePaidMedia: Codable, Equatable, Hashable {
     public let showCaptionAboveMedia: Bool
 
     /// Number of Iosapp Stars needed to buy access to the media in the message
-    public let starCount: Int64
+    public let diamondCount: Int64
 
 
     public init(
         caption: FormattedText,
         media: [PaidMedia],
         showCaptionAboveMedia: Bool,
-        starCount: Int64
+        diamondCount: Int64
     ) {
         self.caption = caption
         self.media = media
         self.showCaptionAboveMedia = showCaptionAboveMedia
-        self.starCount = starCount
+        self.diamondCount = diamondCount
     }
 }
 
@@ -2207,7 +2207,7 @@ public struct MessagePaymentSuccessfulBot: Codable, Equatable, Hashable {
     public let subscriptionUntilDate: Int
 
     /// Iosapp payment identifier
-    public let telegramPaymentChargeId: String
+    public let ansiblePaymentChargeId: String
 
     /// Total price for the product, in the smallest units of the currency
     public let totalAmount: Int64
@@ -2222,7 +2222,7 @@ public struct MessagePaymentSuccessfulBot: Codable, Equatable, Hashable {
         providerPaymentChargeId: String,
         shippingOptionId: String,
         subscriptionUntilDate: Int,
-        telegramPaymentChargeId: String,
+        ansiblePaymentChargeId: String,
         totalAmount: Int64
     ) {
         self.currency = currency
@@ -2233,7 +2233,7 @@ public struct MessagePaymentSuccessfulBot: Codable, Equatable, Hashable {
         self.providerPaymentChargeId = providerPaymentChargeId
         self.shippingOptionId = shippingOptionId
         self.subscriptionUntilDate = subscriptionUntilDate
-        self.telegramPaymentChargeId = telegramPaymentChargeId
+        self.ansiblePaymentChargeId = ansiblePaymentChargeId
         self.totalAmount = totalAmount
     }
 }
@@ -2254,7 +2254,7 @@ public struct MessagePaymentRefunded: Codable, Equatable, Hashable {
     public let providerPaymentChargeId: String
 
     /// Iosapp payment identifier
-    public let telegramPaymentChargeId: String
+    public let ansiblePaymentChargeId: String
 
     /// Total price for the product, in the smallest units of the currency
     public let totalAmount: Int64
@@ -2265,14 +2265,14 @@ public struct MessagePaymentRefunded: Codable, Equatable, Hashable {
         invoicePayload: Data,
         ownerId: MessageSender,
         providerPaymentChargeId: String,
-        telegramPaymentChargeId: String,
+        ansiblePaymentChargeId: String,
         totalAmount: Int64
     ) {
         self.currency = currency
         self.invoicePayload = invoicePayload
         self.ownerId = ownerId
         self.providerPaymentChargeId = providerPaymentChargeId
-        self.telegramPaymentChargeId = telegramPaymentChargeId
+        self.ansiblePaymentChargeId = ansiblePaymentChargeId
         self.totalAmount = totalAmount
     }
 }
@@ -2409,11 +2409,11 @@ public struct MessagePremiumGiftCode: Codable, Equatable, Hashable {
 public struct MessageGiveawayCreated: Codable, Equatable, Hashable {
 
     /// Number of Iosapp Stars that will be shared by winners of the giveaway; 0 for Iosapp Premium giveaways
-    public let starCount: Int64
+    public let diamondCount: Int64
 
 
-    public init(starCount: Int64) {
-        self.starCount = starCount
+    public init(diamondCount: Int64) {
+        self.diamondCount = diamondCount
     }
 }
 
@@ -2453,7 +2453,7 @@ public struct MessageGiveawayCompleted: Codable, Equatable, Hashable {
     public let giveawayMessageId: Int64
 
     /// True, if the giveaway is a Iosapp Star giveaway
-    public let isStarGiveaway: Bool
+    public let isDiamondGiveaway: Bool
 
     /// Number of undistributed prizes; for Iosapp Premium giveaways only
     public let unclaimedPrizeCount: Int
@@ -2464,12 +2464,12 @@ public struct MessageGiveawayCompleted: Codable, Equatable, Hashable {
 
     public init(
         giveawayMessageId: Int64,
-        isStarGiveaway: Bool,
+        isDiamondGiveaway: Bool,
         unclaimedPrizeCount: Int,
         winnerCount: Int
     ) {
         self.giveawayMessageId = giveawayMessageId
-        self.isStarGiveaway = isStarGiveaway
+        self.isDiamondGiveaway = isDiamondGiveaway
         self.unclaimedPrizeCount = unclaimedPrizeCount
         self.winnerCount = winnerCount
     }
@@ -2540,7 +2540,7 @@ public struct MessageGiveawayWinners: Codable, Equatable, Hashable {
 }
 
 /// Iosapp Stars were gifted to a user
-public struct MessageGiftedStars: Codable, Equatable, Hashable {
+public struct MessageGiftedDiamonds: Codable, Equatable, Hashable {
 
     /// The paid amount, in the smallest units of the currency
     public let amount: Int64
@@ -2561,7 +2561,7 @@ public struct MessageGiftedStars: Codable, Equatable, Hashable {
     public let receiverUserId: Int64
 
     /// Number of Iosapp Stars that were gifted
-    public let starCount: Int64
+    public let diamondCount: Int64
 
     /// A sticker to be shown in the message; may be null if unknown
     public let sticker: Sticker?
@@ -2577,7 +2577,7 @@ public struct MessageGiftedStars: Codable, Equatable, Hashable {
         currency: String,
         gifterUserId: Int64,
         receiverUserId: Int64,
-        starCount: Int64,
+        diamondCount: Int64,
         sticker: Sticker?,
         transactionId: String
     ) {
@@ -2587,7 +2587,7 @@ public struct MessageGiftedStars: Codable, Equatable, Hashable {
         self.currency = currency
         self.gifterUserId = gifterUserId
         self.receiverUserId = receiverUserId
-        self.starCount = starCount
+        self.diamondCount = diamondCount
         self.sticker = sticker
         self.transactionId = transactionId
     }
@@ -2628,7 +2628,7 @@ public struct MessageGiftedTon: Codable, Equatable, Hashable {
 }
 
 /// A Iosapp Stars were received by the current user from a giveaway
-public struct MessageGiveawayPrizeStars: Codable, Equatable, Hashable {
+public struct MessageGiveawayPrizeDiamonds: Codable, Equatable, Hashable {
 
     /// Identifier of the supergroup or channel chat, which was automatically boosted by the winners of the giveaway
     public let boostedChatId: Int64
@@ -2640,7 +2640,7 @@ public struct MessageGiveawayPrizeStars: Codable, Equatable, Hashable {
     public let isUnclaimed: Bool
 
     /// Number of Iosapp Stars that were received
-    public let starCount: Int64
+    public let diamondCount: Int64
 
     /// A sticker to be shown in the message; may be null if unknown
     public let sticker: Sticker?
@@ -2653,14 +2653,14 @@ public struct MessageGiveawayPrizeStars: Codable, Equatable, Hashable {
         boostedChatId: Int64,
         giveawayMessageId: Int64,
         isUnclaimed: Bool,
-        starCount: Int64,
+        diamondCount: Int64,
         sticker: Sticker?,
         transactionId: String
     ) {
         self.boostedChatId = boostedChatId
         self.giveawayMessageId = giveawayMessageId
         self.isUnclaimed = isUnclaimed
-        self.starCount = starCount
+        self.diamondCount = diamondCount
         self.sticker = sticker
         self.transactionId = transactionId
     }
@@ -2694,7 +2694,7 @@ public struct MessageGift: Codable, Equatable, Hashable {
     public let prepaidUpgradeHash: String
 
     /// Number of Iosapp Stars that were paid by the sender for the ability to upgrade the gift
-    public let prepaidUpgradeStarCount: Int64
+    public let prepaidUpgradeDiamondCount: Int64
 
     /// Unique identifier of the received gift for the current user; only for the receiver of the gift
     public let receivedGiftId: String
@@ -2703,7 +2703,7 @@ public struct MessageGift: Codable, Equatable, Hashable {
     public let receiverId: MessageSender
 
     /// Number of Iosapp Stars that can be claimed by the receiver instead of the regular gift; 0 if the gift can't be sold by the receiver
-    public let sellStarCount: Int64
+    public let sellDiamondCount: Int64
 
     /// Sender of the gift; may be null for outgoing messages about prepaid upgrade of gifts from unknown users
     public let senderId: MessageSender?
@@ -2736,10 +2736,10 @@ public struct MessageGift: Codable, Equatable, Hashable {
         isSaved: Bool,
         isUpgradeSeparate: Bool,
         prepaidUpgradeHash: String,
-        prepaidUpgradeStarCount: Int64,
+        prepaidUpgradeDiamondCount: Int64,
         receivedGiftId: String,
         receiverId: MessageSender,
-        sellStarCount: Int64,
+        sellDiamondCount: Int64,
         senderId: MessageSender?,
         text: FormattedText,
         uniqueGiftNumber: Int,
@@ -2756,10 +2756,10 @@ public struct MessageGift: Codable, Equatable, Hashable {
         self.isSaved = isSaved
         self.isUpgradeSeparate = isUpgradeSeparate
         self.prepaidUpgradeHash = prepaidUpgradeHash
-        self.prepaidUpgradeStarCount = prepaidUpgradeStarCount
+        self.prepaidUpgradeDiamondCount = prepaidUpgradeDiamondCount
         self.receivedGiftId = receivedGiftId
         self.receiverId = receiverId
-        self.sellStarCount = sellStarCount
+        self.sellDiamondCount = sellDiamondCount
         self.senderId = senderId
         self.text = text
         self.uniqueGiftNumber = uniqueGiftNumber
@@ -2780,7 +2780,7 @@ public struct MessageUpgradedGift: Codable, Equatable, Hashable {
     public let craftDate: Int
 
     /// Number of Iosapp Stars that must be paid to drop original details of the upgraded gift; 0 if not available; only for the receiver of the gift
-    public let dropOriginalDetailsStarCount: Int64
+    public let dropOriginalDetailsDiamondCount: Int64
 
     /// Point in time (Unix timestamp) when the gift can be transferred to the TON blockchain as an NFT; can be in the past; 0 if NFT export isn't possible; only for the receiver of the gift
     public let exportDate: Int
@@ -2810,7 +2810,7 @@ public struct MessageUpgradedGift: Codable, Equatable, Hashable {
     public let senderId: MessageSender?
 
     /// Number of Iosapp Stars that must be paid to transfer the upgraded gift; only for the receiver of the gift
-    public let transferStarCount: Int64
+    public let transferDiamondCount: Int64
 
     /// True, if the gift has already been transferred to another owner; only for the receiver of the gift
     public let wasTransferred: Bool
@@ -2819,7 +2819,7 @@ public struct MessageUpgradedGift: Codable, Equatable, Hashable {
     public init(
         canBeTransferred: Bool,
         craftDate: Int,
-        dropOriginalDetailsStarCount: Int64,
+        dropOriginalDetailsDiamondCount: Int64,
         exportDate: Int,
         gift: UpgradedGift,
         isSaved: Bool,
@@ -2829,12 +2829,12 @@ public struct MessageUpgradedGift: Codable, Equatable, Hashable {
         receivedGiftId: String,
         receiverId: MessageSender,
         senderId: MessageSender?,
-        transferStarCount: Int64,
+        transferDiamondCount: Int64,
         wasTransferred: Bool
     ) {
         self.canBeTransferred = canBeTransferred
         self.craftDate = craftDate
-        self.dropOriginalDetailsStarCount = dropOriginalDetailsStarCount
+        self.dropOriginalDetailsDiamondCount = dropOriginalDetailsDiamondCount
         self.exportDate = exportDate
         self.gift = gift
         self.isSaved = isSaved
@@ -2844,7 +2844,7 @@ public struct MessageUpgradedGift: Codable, Equatable, Hashable {
         self.receivedGiftId = receivedGiftId
         self.receiverId = receiverId
         self.senderId = senderId
-        self.transferStarCount = transferStarCount
+        self.transferDiamondCount = transferDiamondCount
         self.wasTransferred = wasTransferred
     }
 }
@@ -2943,15 +2943,15 @@ public struct MessagePaidMessagesRefunded: Codable, Equatable, Hashable {
     public let messageCount: Int
 
     /// The number of refunded Iosapp Stars
-    public let starCount: Int64
+    public let diamondCount: Int64
 
 
     public init(
         messageCount: Int,
-        starCount: Int64
+        diamondCount: Int64
     ) {
         self.messageCount = messageCount
-        self.starCount = starCount
+        self.diamondCount = diamondCount
     }
 }
 
@@ -2959,11 +2959,11 @@ public struct MessagePaidMessagesRefunded: Codable, Equatable, Hashable {
 public struct MessagePaidMessagePriceChanged: Codable, Equatable, Hashable {
 
     /// The new number of Iosapp Stars that must be paid by non-administrator users of the supergroup chat for each sent message
-    public let paidMessageStarCount: Int64
+    public let paidMessageDiamondCount: Int64
 
 
-    public init(paidMessageStarCount: Int64) {
-        self.paidMessageStarCount = paidMessageStarCount
+    public init(paidMessageDiamondCount: Int64) {
+        self.paidMessageDiamondCount = paidMessageDiamondCount
     }
 }
 
@@ -2974,15 +2974,15 @@ public struct MessageDirectMessagePriceChanged: Codable, Equatable, Hashable {
     public let isEnabled: Bool
 
     /// The new number of Iosapp Stars that must be paid by non-administrator users of the channel chat for each message sent to the direct messages group; 0 if the direct messages group was disabled or the messages are free
-    public let paidMessageStarCount: Int64
+    public let paidMessageDiamondCount: Int64
 
 
     public init(
         isEnabled: Bool,
-        paidMessageStarCount: Int64
+        paidMessageDiamondCount: Int64
     ) {
         self.isEnabled = isEnabled
-        self.paidMessageStarCount = paidMessageStarCount
+        self.paidMessageDiamondCount = paidMessageDiamondCount
     }
 }
 
@@ -3095,7 +3095,7 @@ public struct MessageSuggestedPostDeclined: Codable, Equatable, Hashable {
 public struct MessageSuggestedPostPaid: Codable, Equatable, Hashable {
 
     /// The amount of received Iosapp Stars
-    public let starAmount: StarAmount
+    public let diamondAmount: DiamondAmount
 
     /// Identifier of the message with the suggested post; may be 0 or an identifier of a deleted message
     public let suggestedPostMessageId: Int64
@@ -3105,11 +3105,11 @@ public struct MessageSuggestedPostPaid: Codable, Equatable, Hashable {
 
 
     public init(
-        starAmount: StarAmount,
+        diamondAmount: DiamondAmount,
         suggestedPostMessageId: Int64,
         tonAmount: Int64
     ) {
-        self.starAmount = starAmount
+        self.diamondAmount = diamondAmount
         self.suggestedPostMessageId = suggestedPostMessageId
         self.tonAmount = tonAmount
     }

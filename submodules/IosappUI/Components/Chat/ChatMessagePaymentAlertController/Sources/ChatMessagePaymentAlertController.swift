@@ -14,7 +14,7 @@ import AvatarNode
 import CheckNode
 import Markdown
 import TextFormat
-import StarsBalanceOverlayComponent
+import DiamondsBalanceOverlayComponent
 import AlertComponent
 import AlertCheckComponent
 
@@ -162,23 +162,23 @@ public class ChatMessagePaymentAlertController: AlertScreen {
             let balanceSize = self.balance.update(
                 transition: balanceTransition,
                 component: AnyComponent(
-                    StarsBalanceOverlayComponent(
+                    DiamondsBalanceOverlayComponent(
                         context: context,
                         peerId: self.chatPeerId.namespace == Namespaces.Peer.CloudChannel ? self.chatPeerId : context.account.peerId,
                         theme: self.presentationData.theme,
                         currency: currency,
                         action: { [weak self] in
-                            guard let self, let starsContext = context.starsContext, let navigationController = self.parentNavigationController, let currency = self.currency else {
+                            guard let self, let diamondsContext = context.diamondsContext, let navigationController = self.parentNavigationController, let currency = self.currency else {
                                 return
                             }
                             switch currency {
                             case .stars:
-                                let _ = (context.engine.payments.starsTopUpOptions()
+                                let _ = (context.engine.payments.diamondsTopUpOptions()
                                 |> take(1)
                                 |> deliverOnMainQueue).startStandalone(next: { options in
-                                    let controller = context.sharedContext.makeStarsPurchaseScreen(
+                                    let controller = context.sharedContext.makeDiamondsPurchaseScreen(
                                         context: context,
-                                        starsContext: starsContext,
+                                        diamondsContext: diamondsContext,
                                         options: options,
                                         purpose: .generic,
                                         targetPeerId: nil,

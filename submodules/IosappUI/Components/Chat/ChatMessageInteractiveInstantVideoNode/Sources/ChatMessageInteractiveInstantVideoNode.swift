@@ -527,7 +527,7 @@ public class ChatMessageInteractiveInstantVideoNode: ASDisplayNode {
             let sentViaBot = false
             var viewCount: Int? = nil
             var dateReplies = 0
-            var starsCount: Int64?
+            var diamondsCount: Int64?
             var dateReactionsAndPeers = mergedMessageReactionsAndPeers(accountPeerId: item.context.account.peerId, accountPeer: item.associatedData.accountPeer, message: item.message)
             if item.message.isRestricted(platform: "ios", contentSettings: item.context.currentContentSettings.with { $0 }) {
                 dateReactionsAndPeers = ([], [])
@@ -541,8 +541,8 @@ public class ChatMessageInteractiveInstantVideoNode: ASDisplayNode {
                     if let channel = item.message.peers[item.message.id.peerId] as? IosappChannel, case .group = channel.info {
                         dateReplies = Int(attribute.count)
                     }
-                } else if let attribute = attribute as? PaidStarsMessageAttribute, item.message.id.peerId.namespace == Namespaces.Peer.CloudChannel {
-                    starsCount = attribute.stars.value
+                } else if let attribute = attribute as? PaidDiamondsMessageAttribute, item.message.id.peerId.namespace == Namespaces.Peer.CloudChannel {
+                    diamondsCount = attribute.stars.value
                 }
             }
             
@@ -587,10 +587,10 @@ public class ChatMessageInteractiveInstantVideoNode: ASDisplayNode {
                 reactionPeers: dateReactionsAndPeers.peers,
                 displayAllReactionPeers: item.message.id.peerId.namespace == Namespaces.Peer.CloudUser,
                 areReactionsTags: item.topMessage.areReactionsTags(accountPeerId: item.context.account.peerId),
-                areStarReactionsEnabled: item.associatedData.areStarReactionsEnabled,
+                areDiamondReactionsEnabled: item.associatedData.areDiamondReactionsEnabled,
                 messageEffect: messageEffect,
                 replyCount: dateReplies,
-                starsCount: starsCount,
+                diamondsCount: diamondsCount,
                 isPinned: item.message.tags.contains(.pinned) && !item.associatedData.isInPinnedListMode && !isReplyThread,
                 hasAutoremove: item.message.isSelfExpiring,
                 canViewReactionList: canViewMessageReactionList(message: EngineMessage(item.topMessage)),
@@ -727,7 +727,7 @@ public class ChatMessageInteractiveInstantVideoNode: ASDisplayNode {
                     
                     var previousVideoNode: UniversalVideoNode?
                     var updatedPlayerStatusSignal: Signal<MediaPlayerStatus?, NoError>?
-                    if let telegramFile = updatedFile {
+                    if let ansibleFile = updatedFile {
                         if updatedMedia {
                             previousVideoNode = strongSelf.videoNode
                             if let durationBlurColor = durationBlurColor {
@@ -761,9 +761,9 @@ public class ChatMessageInteractiveInstantVideoNode: ASDisplayNode {
                                     }
                                 }
                             }
-                            durationNode.defaultDuration = telegramFile.duration.flatMap(Double.init)
+                            durationNode.defaultDuration = ansibleFile.duration.flatMap(Double.init)
                             
-                            let streamVideo = automaticDownload && isMediaStreamable(message: EngineMessage(item.message), media: telegramFile) && telegramFile.id?.namespace != Namespaces.Media.LocalFile
+                            let streamVideo = automaticDownload && isMediaStreamable(message: EngineMessage(item.message), media: ansibleFile) && ansibleFile.id?.namespace != Namespaces.Media.LocalFile
                             if let videoNode = strongSelf.videoNode {
                                 videoNode.layer.allowsGroupOpacity = true
                                 videoNode.layer.animateAlpha(from: 1.0, to: 0.0, duration: 0.5, delay: 0.2, removeOnCompletion: false, completion: { [weak videoNode] _ in
@@ -779,7 +779,7 @@ public class ChatMessageInteractiveInstantVideoNode: ASDisplayNode {
                                         }
                                     }
                                 }
-                            }), content: NativeVideoContent(id: .message(item.message.stableId, telegramFile.fileId), userLocation: .peer(item.message.id.peerId), fileReference: .message(message: MessageReference(item.message), media: telegramFile), streamVideo: streamVideo ? .conservative : .none, enableSound: false, fetchAutomatically: false, isAudioVideoMessage: true, captureProtected: item.associatedData.isCopyProtectionEnabled || item.message.isCopyProtected(), storeAfterDownload: nil), priority: item.associatedData.isStandalone ? .overlay : .embedded, autoplay: item.context.sharedContext.energyUsageSettings.autoplayVideo && !isViewOnceMessage)
+                            }), content: NativeVideoContent(id: .message(item.message.stableId, ansibleFile.fileId), userLocation: .peer(item.message.id.peerId), fileReference: .message(message: MessageReference(item.message), media: ansibleFile), streamVideo: streamVideo ? .conservative : .none, enableSound: false, fetchAutomatically: false, isAudioVideoMessage: true, captureProtected: item.associatedData.isCopyProtectionEnabled || item.message.isCopyProtected(), storeAfterDownload: nil), priority: item.associatedData.isStandalone ? .overlay : .embedded, autoplay: item.context.sharedContext.energyUsageSettings.autoplayVideo && !isViewOnceMessage)
                             if let previousVideoNode = previousVideoNode {
                                 videoNode.bounds = previousVideoNode.bounds
                                 videoNode.position = previousVideoNode.position
@@ -790,14 +790,14 @@ public class ChatMessageInteractiveInstantVideoNode: ASDisplayNode {
                             videoNode.canAttachContent = strongSelf.shouldAcquireVideoContext
                         
                             if isSecretMedia {
-                                let updatedSecretPlaceholderSignal = chatSecretMessageVideo(account: item.context.account, userLocation: .peer(item.message.id.peerId), videoReference: .message(message: MessageReference(item.message), media: telegramFile))
+                                let updatedSecretPlaceholderSignal = chatSecretMessageVideo(account: item.context.account, userLocation: .peer(item.message.id.peerId), videoReference: .message(message: MessageReference(item.message), media: ansibleFile))
                                 strongSelf.secretVideoPlaceholder.setSignal(updatedSecretPlaceholderSignal)
                                 if strongSelf.secretVideoPlaceholder.supernode == nil {
                                     strongSelf.insertSubnode(strongSelf.secretVideoPlaceholderBackground, belowSubnode: videoNode)
                                     strongSelf.insertSubnode(strongSelf.secretVideoPlaceholder, belowSubnode: videoNode)
                                 }
                             } else if item.presentationData.isPreview {
-                                let updatedSecretPlaceholderSignal = chatMessageVideo(postbox: item.context.account.postbox, userLocation: .peer(item.message.id.peerId), videoReference: .message(message: MessageReference(item.message), media: telegramFile), synchronousLoad: true)
+                                let updatedSecretPlaceholderSignal = chatMessageVideo(postbox: item.context.account.postbox, userLocation: .peer(item.message.id.peerId), videoReference: .message(message: MessageReference(item.message), media: ansibleFile), synchronousLoad: true)
                                 strongSelf.secretVideoPlaceholder.displaysAsynchronously = false
                                 strongSelf.secretVideoPlaceholder.setSignal(updatedSecretPlaceholderSignal, attemptSynchronously: true)
                                 if strongSelf.secretVideoPlaceholder.supernode == nil {
@@ -994,8 +994,8 @@ public class ChatMessageInteractiveInstantVideoNode: ASDisplayNode {
                     
                     strongSelf.updateStatus(animator: animation.animator)
                     
-                    if let telegramFile = updatedFile, previousAutomaticDownload != automaticDownload, automaticDownload {
-                        strongSelf.fetchDisposable.set(messageMediaFileInteractiveFetched(context: item.context, message: item.message, file: telegramFile, userInitiated: false).startStrict())
+                    if let ansibleFile = updatedFile, previousAutomaticDownload != automaticDownload, automaticDownload {
+                        strongSelf.fetchDisposable.set(messageMediaFileInteractiveFetched(context: item.context, message: item.message, file: ansibleFile, userInitiated: false).startStrict())
                     }
                             
                     if let forwardInfo = item.message.forwardInfo, forwardInfo.flags.contains(.isImported) {

@@ -688,7 +688,7 @@ public final class ChatMessageAttachedContentNode: ASDisplayNode {
                 }
                 var viewCount: Int?
                 var dateReplies = 0
-                var starsCount: Int64?
+                var diamondsCount: Int64?
                 var dateReactionsAndPeers = mergedMessageReactionsAndPeers(accountPeerId: context.account.peerId, accountPeer: associatedData.accountPeer, message: message)
                 if message.isRestricted(platform: "ios", contentSettings: context.currentContentSettings.with { $0 }) || presentationData.isPreview {
                     dateReactionsAndPeers = ([], [])
@@ -702,8 +702,8 @@ public final class ChatMessageAttachedContentNode: ASDisplayNode {
                         if let channel = message.peers[message.id.peerId] as? IosappChannel, case .group = channel.info {
                             dateReplies = Int(attribute.count)
                         }
-                    } else if let attribute = attribute as? PaidStarsMessageAttribute, message.id.peerId.namespace == Namespaces.Peer.CloudChannel {
-                        starsCount = attribute.stars.value
+                    } else if let attribute = attribute as? PaidDiamondsMessageAttribute, message.id.peerId.namespace == Namespaces.Peer.CloudChannel {
+                        diamondsCount = attribute.stars.value
                     }
                 }
                 
@@ -761,10 +761,10 @@ public final class ChatMessageAttachedContentNode: ASDisplayNode {
                                 reactionPeers: dateReactionsAndPeers.peers,
                                 displayAllReactionPeers: message.id.peerId.namespace == Namespaces.Peer.CloudUser,
                                 areReactionsTags: message.areReactionsTags(accountPeerId: context.account.peerId),
-                                areStarReactionsEnabled: associatedData.areStarReactionsEnabled,
+                                areDiamondReactionsEnabled: associatedData.areDiamondReactionsEnabled,
                                 messageEffect: message.messageEffect(availableMessageEffects: associatedData.availableMessageEffects),
                                 replyCount: dateReplies,
-                                starsCount: starsCount,
+                                diamondsCount: diamondsCount,
                                 isPinned: message.tags.contains(.pinned) && !associatedData.isInPinnedListMode && !isReplyThread,
                                 hasAutoremove: message.isSelfExpiring,
                                 canViewReactionList: canViewMessageReactionList(message: EngineMessage(message)),

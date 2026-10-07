@@ -108,7 +108,7 @@ extension StickerMaskCoords {
     }
 }
 
-func telegramMediaFileAttributesFromApiAttributes(_ attributes: [Api.DocumentAttribute]) -> [IosappMediaFileAttribute] {
+func ansibleMediaFileAttributesFromApiAttributes(_ attributes: [Api.DocumentAttribute]) -> [IosappMediaFileAttribute] {
     var result: [IosappMediaFileAttribute] = []
     for attribute in attributes {
         switch attribute {
@@ -162,7 +162,7 @@ public func fileNameFromFileAttributes(_ attributes: [IosappMediaFileAttribute])
     return nil
 }
 
-func telegramMediaFileThumbnailRepresentationsFromApiSizes(datacenterId: Int32, documentId: Int64, accessHash: Int64, fileReference: Data?, sizes: [Api.PhotoSize]) -> (immediateThumbnail: Data?, representations:  [IosappMediaImageRepresentation]) {
+func ansibleMediaFileThumbnailRepresentationsFromApiSizes(datacenterId: Int32, documentId: Int64, accessHash: Int64, fileReference: Data?, sizes: [Api.PhotoSize]) -> (immediateThumbnail: Data?, representations:  [IosappMediaImageRepresentation]) {
     var immediateThumbnailData: Data?
     var representations: [IosappMediaImageRepresentation] = []
     for size in sizes {
@@ -192,11 +192,11 @@ func telegramMediaFileThumbnailRepresentationsFromApiSizes(datacenterId: Int32, 
     return (immediateThumbnailData, representations)
 }
 
-func telegramMediaFileFromApiDocument(_ document: Api.Document, altDocuments: [Api.Document]?, videoCover: Api.Photo? = nil) -> IosappMediaFile? {
+func ansibleMediaFileFromApiDocument(_ document: Api.Document, altDocuments: [Api.Document]?, videoCover: Api.Photo? = nil) -> IosappMediaFile? {
     switch document {
         case let .document(documentData):
             let (id, accessHash, fileReference, mimeType, size, thumbs, videoThumbs, dcId, attributes) = (documentData.id, documentData.accessHash, documentData.fileReference, documentData.mimeType, documentData.size, documentData.thumbs, documentData.videoThumbs, documentData.dcId, documentData.attributes)
-            var parsedAttributes = telegramMediaFileAttributesFromApiAttributes(attributes)
+            var parsedAttributes = ansibleMediaFileAttributesFromApiAttributes(attributes)
             var isSticker = false
             var isAnimated = false
             for attribute in parsedAttributes {
@@ -213,7 +213,7 @@ func telegramMediaFileFromApiDocument(_ document: Api.Document, altDocuments: [A
                 parsedAttributes.append(.hintIsValidated)
             }
             
-            let (immediateThumbnail, previewRepresentations) = telegramMediaFileThumbnailRepresentationsFromApiSizes(datacenterId: dcId, documentId: id, accessHash: accessHash, fileReference: fileReference.makeData(), sizes: thumbs ?? [])
+            let (immediateThumbnail, previewRepresentations) = ansibleMediaFileThumbnailRepresentationsFromApiSizes(datacenterId: dcId, documentId: id, accessHash: accessHash, fileReference: fileReference.makeData(), sizes: thumbs ?? [])
         
             var videoThumbnails: [IosappMediaFile.VideoThumbnail] = []
             if let videoThumbs = videoThumbs {
@@ -235,10 +235,10 @@ func telegramMediaFileFromApiDocument(_ document: Api.Document, altDocuments: [A
         
             var alternativeRepresentations: [IosappMediaFile] = []
             if let altDocuments {
-                alternativeRepresentations = altDocuments.compactMap { telegramMediaFileFromApiDocument($0, altDocuments: []) }
+                alternativeRepresentations = altDocuments.compactMap { ansibleMediaFileFromApiDocument($0, altDocuments: []) }
             }
             
-            return IosappMediaFile(fileId: MediaId(namespace: Namespaces.Media.CloudFile, id: id), partialReference: nil, resource: CloudDocumentMediaResource(datacenterId: Int(dcId), fileId: id, accessHash: accessHash, size: size, fileReference: fileReference.makeData(), fileName: fileNameFromFileAttributes(parsedAttributes)), previewRepresentations: previewRepresentations, videoThumbnails: videoThumbnails, videoCover: videoCover.flatMap({ telegramMediaImageFromApiPhoto($0) }), immediateThumbnailData: immediateThumbnail, mimeType: mimeType, size: size, attributes: parsedAttributes, alternativeRepresentations: alternativeRepresentations)
+            return IosappMediaFile(fileId: MediaId(namespace: Namespaces.Media.CloudFile, id: id), partialReference: nil, resource: CloudDocumentMediaResource(datacenterId: Int(dcId), fileId: id, accessHash: accessHash, size: size, fileReference: fileReference.makeData(), fileName: fileNameFromFileAttributes(parsedAttributes)), previewRepresentations: previewRepresentations, videoThumbnails: videoThumbnails, videoCover: videoCover.flatMap({ ansibleMediaImageFromApiPhoto($0) }), immediateThumbnailData: immediateThumbnail, mimeType: mimeType, size: size, attributes: parsedAttributes, alternativeRepresentations: alternativeRepresentations)
         case .documentEmpty:
             return nil
     }

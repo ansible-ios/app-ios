@@ -95,15 +95,15 @@ final class UserAppearanceScreenComponent: Component {
                 context.engine.data.subscribe(
                     IosappEngine.EngineData.Item.Peer.Peer(id: context.account.peerId)
                 ),
-                context.account.postbox.itemCollectionsView(orderedItemListCollectionIds: [Namespaces.OrderedItemList.CloudUniqueStarGifts], namespaces: [Namespaces.ItemCollection.CloudDice], aroundIndex: nil, count: 10000000),
-                context.engine.payments.cachedStarGifts()
+                context.account.postbox.itemCollectionsView(orderedItemListCollectionIds: [Namespaces.OrderedItemList.CloudUniqueDiamondGifts], namespaces: [Namespaces.ItemCollection.CloudDice], aroundIndex: nil, count: 10000000),
+                context.engine.payments.cachedDiamondGifts()
             )
             |> map { peer, view, starGifts -> ContentsData in
                 var gifts: [StarGift.UniqueGift] = []
                 for orderedView in view.orderedItemListsViews {
-                    if orderedView.collectionId == Namespaces.OrderedItemList.CloudUniqueStarGifts {
+                    if orderedView.collectionId == Namespaces.OrderedItemList.CloudUniqueDiamondGifts {
                         for item in orderedView.items {
-                            guard let item = item.contents.get(RecentStarGiftItem.self) else {
+                            guard let item = item.contents.get(RecentDiamondGiftItem.self) else {
                                 continue
                             }
                             gifts.append(item.starGift)
@@ -212,8 +212,8 @@ final class UserAppearanceScreenComponent: Component {
         private var contentsData: ContentsData?
         private var contentsDataDisposable: Disposable?
         
-        private var starGiftsContext: ProfileGiftsContext?
-        private var starGiftsDisposable: Disposable?
+        private var diamondGiftsContext: ProfileGiftsContext?
+        private var diamondGiftsDisposable: Disposable?
         private var starGifts: [StarGift.UniqueGift] = []
         
         private var cachedIconFiles: [Int64: IosappMediaFile] = [:]
@@ -236,19 +236,19 @@ final class UserAppearanceScreenComponent: Component {
         
         private var buyDisposable: Disposable?
         
-        private var starsTopUpOptionsDisposable: Disposable?
-        private(set) var starsTopUpOptions: [StarsTopUpOption] = [] {
+        private var diamondsTopUpOptionsDisposable: Disposable?
+        private(set) var diamondsTopUpOptions: [DiamondsTopUpOption] = [] {
             didSet {
-                self.starsTopUpOptionsPromise.set(self.starsTopUpOptions)
+                self.diamondsTopUpOptionsPromise.set(self.diamondsTopUpOptions)
             }
         }
-        private let starsTopUpOptionsPromise = ValuePromise<[StarsTopUpOption]?>(nil)
+        private let diamondsTopUpOptionsPromise = ValuePromise<[DiamondsTopUpOption]?>(nil)
         
         private weak var emojiStatusSelectionController: ViewController?
         
         private var cachedChevronImage: (UIImage, PresentationTheme)?
-        private var cachedStarImage: (UIImage, PresentationTheme)?
-        private var cachedSubtitleStarImage: (UIImage, PresentationTheme)?
+        private var cachedDiamondImage: (UIImage, PresentationTheme)?
+        private var cachedSubtitleDiamondImage: (UIImage, PresentationTheme)?
         private var cachedTonImage: (UIImage, PresentationTheme)?
         
         override init(frame: CGRect) {
@@ -288,10 +288,10 @@ final class UserAppearanceScreenComponent: Component {
         
         deinit {
             self.contentsDataDisposable?.dispose()
-            self.starGiftsDisposable?.dispose()
+            self.diamondGiftsDisposable?.dispose()
             self.applyDisposable?.dispose()
             self.buyDisposable?.dispose()
-            self.starsTopUpOptionsDisposable?.dispose()
+            self.diamondsTopUpOptionsDisposable?.dispose()
             self.resolvingCurrentTheme?.disposable.dispose()
         }
 
@@ -417,7 +417,7 @@ final class UserAppearanceScreenComponent: Component {
                     let bottomContentOffset = max(0.0, self.scrollView.contentSize.height - self.scrollView.contentOffset.y - self.scrollView.frame.height)
                     if bottomContentOffset < 320.0 {
                         if !giftListView.loadMore() {
-                            self.starGiftsContext?.loadMore()
+                            self.diamondGiftsContext?.loadMore()
                         }
                     }
                 }
@@ -511,13 +511,13 @@ final class UserAppearanceScreenComponent: Component {
                 return
             }
             
-            if self.starsTopUpOptionsDisposable == nil {
-                self.starsTopUpOptionsDisposable = (component.context.engine.payments.starsTopUpOptions()
+            if self.diamondsTopUpOptionsDisposable == nil {
+                self.diamondsTopUpOptionsDisposable = (component.context.engine.payments.diamondsTopUpOptions()
                 |> deliverOnMainQueue).start(next: { [weak self] options in
                     guard let self else {
                         return
                     }
-                    self.starsTopUpOptions = options
+                    self.diamondsTopUpOptions = options
                 })
             }
             
@@ -537,7 +537,7 @@ final class UserAppearanceScreenComponent: Component {
                     self.state?.updated()
                     
                     let finalPrice = acceptedPrice ?? resellAmount
-                    let signal = component.context.engine.payments.buyStarGift(slug: uniqueGift.slug, peerId: component.context.account.peerId, price: finalPrice)
+                    let signal = component.context.engine.payments.buyDiamondGift(slug: uniqueGift.slug, peerId: component.context.account.peerId, price: finalPrice)
                     self.buyDisposable = (signal
                     |> deliverOnMainQueue).start(error: { [weak self, weak controller] error in
                         guard let self, let controller else {
@@ -610,7 +610,7 @@ final class UserAppearanceScreenComponent: Component {
                         Queue.mainQueue().after(2.5) {
                             switch finalPrice.currency {
                             case .stars:
-                                component.context.starsContext?.load(force: true)
+                                component.context.diamondsContext?.load(force: true)
                             case .ton:
                                 component.context.tonContext?.load(force: true)
                             }
@@ -618,43 +618,43 @@ final class UserAppearanceScreenComponent: Component {
                     })
                 }
                 
-                if resellAmount.currency == .stars, let starsContext = component.context.starsContext, let starsState = starsContext.currentState, starsState.balance < resellAmount.amount {
-                    if self.starsTopUpOptions.isEmpty {
+                if resellAmount.currency == .stars, let diamondsContext = component.context.diamondsContext, let diamondsState = diamondsContext.currentState, diamondsState.balance < resellAmount.amount {
+                    if self.diamondsTopUpOptions.isEmpty {
                         self.isApplyingSettings = true
                         self.state?.updated()
                     }
-                    let _ = (self.starsTopUpOptionsPromise.get()
+                    let _ = (self.diamondsTopUpOptionsPromise.get()
                     |> filter { $0 != nil }
                     |> take(1)
                     |> deliverOnMainQueue).startStandalone(next: { [weak self, weak controller] options in
                         guard let self, let controller else {
                             return
                         }
-                        let purchaseController = component.context.sharedContext.makeStarsPurchaseScreen(
+                        let purchaseController = component.context.sharedContext.makeDiamondsPurchaseScreen(
                             context: component.context,
-                            starsContext: starsContext,
+                            diamondsContext: diamondsContext,
                             options: options ?? [],
-                            purpose: .buyStarGift(requiredStars: resellAmount.amount.value),
+                            purpose: .buyDiamondGift(requiredDiamonds: resellAmount.amount.value),
                             targetPeerId: nil,
                             customTheme: nil,
-                            completion: { [weak self, weak starsContext] stars in
-                                guard let self, let starsContext else {
+                            completion: { [weak self, weak diamondsContext] stars in
+                                guard let self, let diamondsContext else {
                                     return
                                 }
                                 self.isApplyingSettings = true
                                 self.state?.updated()
                                 
-                                starsContext.add(balance: StarsAmount(value: stars, nanos: 0))
-                                let _ = (starsContext.onUpdate
-                                |> deliverOnMainQueue).start(next: { [weak self, weak starsContext] in
+                                diamondsContext.add(balance: StarsAmount(value: stars, nanos: 0))
+                                let _ = (diamondsContext.onUpdate
+                                |> deliverOnMainQueue).start(next: { [weak self, weak diamondsContext] in
                                     guard let self else {
                                         return
                                     }
                                     Queue.mainQueue().after(0.1, { [weak self] in
-                                        guard let self, let starsContext, let starsState = starsContext.currentState else {
+                                        guard let self, let diamondsContext, let diamondsState = diamondsContext.currentState else {
                                             return
                                         }
-                                        if starsState.balance < resellAmount.amount {
+                                        if diamondsState.balance < resellAmount.amount {
                                             self.isApplyingSettings = false
                                             self.state?.updated()
                                             
@@ -823,10 +823,10 @@ final class UserAppearanceScreenComponent: Component {
                                 themePeerId: nil,
                                 peerColor: nil,
                                 hostPeerId: nil,
-                                minOfferStars: nil,
+                                minOfferDiamonds: nil,
                                 craftChancePermille: nil
                             )
-                            signal = component.context.engine.accountData.setStarGiftStatus(starGift: gift, expirationDate: emojiStatus.expirationDate)
+                            signal = component.context.engine.accountData.setDiamondGiftStatus(starGift: gift, expirationDate: emojiStatus.expirationDate)
                         } else {
                             signal = .complete()
                         }
@@ -1097,9 +1097,9 @@ final class UserAppearanceScreenComponent: Component {
                     self.isReady.set(true)
                 })
                 
-                let starGiftsContext = ProfileGiftsContext(account: component.context.account, peerId: component.context.account.peerId, collectionId: nil, filter: .peerColor, limit: 30)
-                self.starGiftsContext = starGiftsContext
-                self.starGiftsDisposable = (starGiftsContext.state
+                let diamondGiftsContext = ProfileGiftsContext(account: component.context.account, peerId: component.context.account.peerId, collectionId: nil, filter: .peerColor, limit: 30)
+                self.diamondGiftsContext = diamondGiftsContext
+                self.diamondGiftsDisposable = (diamondGiftsContext.state
                 |> deliverOnMainQueue).start(next: { [weak self] state in
                     guard let self else {
                         return
@@ -1717,10 +1717,10 @@ final class UserAppearanceScreenComponent: Component {
                     selectedGiftId = collectibleColor.collectibleId
                 }
                 
-                var peerColorStarGifts: [StarGift] = []
+                var peerColorDiamondGifts: [StarGift] = []
                 for gift in contentsData.starGifts {
                     if case let .generic(genericGift) = gift, genericGift.flags.contains(.peerColorAvailable), let resale = genericGift.availability?.resale, resale > 0 {
-                        peerColorStarGifts.append(gift)
+                        peerColorDiamondGifts.append(gift)
                     }
                 }
                 
@@ -1747,7 +1747,7 @@ final class UserAppearanceScreenComponent: Component {
                                     strings: environment.strings,
                                     subject: .name,
                                     gifts: self.starGifts,
-                                    starGifts: peerColorStarGifts,
+                                    starGifts: peerColorDiamondGifts,
                                     selectedId: selectedGiftId,
                                     selectionUpdated: { [weak self] gift in
                                         guard let self, let peerColor = gift.peerColor else {
@@ -1819,14 +1819,14 @@ final class UserAppearanceScreenComponent: Component {
                     resellAmount = starsAmount
                 }
                 
-                if self.cachedStarImage == nil || self.cachedStarImage?.1 !== theme {
-                    self.cachedStarImage = (generateTintedImage(image: UIImage(bundleImageName: "Item List/PremiumIcon"), color: theme.list.itemCheckColors.foregroundColor)!, theme)
+                if self.cachedDiamondImage == nil || self.cachedDiamondImage?.1 !== theme {
+                    self.cachedDiamondImage = (generateTintedImage(image: UIImage(bundleImageName: "Item List/PremiumIcon"), color: theme.list.itemCheckColors.foregroundColor)!, theme)
                 }
                 if self.cachedTonImage == nil || self.cachedTonImage?.1 !== theme {
                     self.cachedTonImage = (generateTintedImage(image: UIImage(bundleImageName: "Ads/TonAbout"), color: theme.list.itemCheckColors.foregroundColor)!, theme)
                 }
-                if self.cachedSubtitleStarImage == nil || self.cachedSubtitleStarImage?.1 !== environment.theme {
-                    self.cachedSubtitleStarImage = (generateTintedImage(image: UIImage(bundleImageName: "Chat/Message/StarsCount"), color: .white)!, theme)
+                if self.cachedSubtitleDiamondImage == nil || self.cachedSubtitleDiamondImage?.1 !== environment.theme {
+                    self.cachedSubtitleDiamondImage = (generateTintedImage(image: UIImage(bundleImageName: "Chat/Message/StarsCount"), color: .white)!, theme)
                 }
                 
                 var buyString = environment.strings.Gift_View_BuyFor
@@ -1835,7 +1835,7 @@ final class UserAppearanceScreenComponent: Component {
                 switch resellAmount.currency {
                 case .stars:
                     currencySymbol = "#"
-                    currencyAmount = formatStarsAmountText(resellAmount.amount, dateTimeFormat: environment.dateTimeFormat)
+                    currencyAmount = formatDiamondsAmountText(resellAmount.amount, dateTimeFormat: environment.dateTimeFormat)
                 case .ton:
                     currencySymbol = "$"
                     currencyAmount = formatTonAmountText(resellAmount.amount.value, dateTimeFormat: environment.dateTimeFormat, maxDecimalPositions: nil)
@@ -1848,8 +1848,8 @@ final class UserAppearanceScreenComponent: Component {
             }
             
             let buttonAttributedString = NSMutableAttributedString(string: buttonTitle, font: Font.semibold(17.0), textColor: theme.list.itemCheckColors.foregroundColor, paragraphAlignment: .center)
-            if let range = buttonAttributedString.string.range(of: "#"), let starImage = self.cachedStarImage?.0 {
-                buttonAttributedString.addAttribute(.attachment, value: starImage, range: NSRange(range, in: buttonAttributedString.string))
+            if let range = buttonAttributedString.string.range(of: "#"), let diamondImage = self.cachedDiamondImage?.0 {
+                buttonAttributedString.addAttribute(.attachment, value: diamondImage, range: NSRange(range, in: buttonAttributedString.string))
                 buttonAttributedString.addAttribute(.foregroundColor, value: theme.list.itemCheckColors.foregroundColor, range: NSRange(range, in: buttonAttributedString.string))
                 buttonAttributedString.addAttribute(.baselineOffset, value: 1.5, range: NSRange(range, in: buttonAttributedString.string))
                 buttonAttributedString.addAttribute(.kern, value: 2.0, range: NSRange(range, in: buttonAttributedString.string))
@@ -1860,8 +1860,8 @@ final class UserAppearanceScreenComponent: Component {
                 buttonAttributedString.addAttribute(.baselineOffset, value: 1.5, range: NSRange(range, in: buttonAttributedString.string))
                 buttonAttributedString.addAttribute(.kern, value: 2.0, range: NSRange(range, in: buttonAttributedString.string))
             }
-            if let buttonAttributedSubtitleString, let range = buttonAttributedSubtitleString.string.range(of: "#"), let starImage = self.cachedSubtitleStarImage?.0 {
-                buttonAttributedSubtitleString.addAttribute(.attachment, value: starImage, range: NSRange(range, in: buttonAttributedSubtitleString.string))
+            if let buttonAttributedSubtitleString, let range = buttonAttributedSubtitleString.string.range(of: "#"), let diamondImage = self.cachedSubtitleDiamondImage?.0 {
+                buttonAttributedSubtitleString.addAttribute(.attachment, value: diamondImage, range: NSRange(range, in: buttonAttributedSubtitleString.string))
                 buttonAttributedSubtitleString.addAttribute(.foregroundColor, value: theme.list.itemCheckColors.foregroundColor.withAlphaComponent(0.7), range: NSRange(range, in: buttonAttributedSubtitleString.string))
                 buttonAttributedSubtitleString.addAttribute(.baselineOffset, value: 1.5, range: NSRange(range, in: buttonAttributedSubtitleString.string))
                 buttonAttributedSubtitleString.addAttribute(.kern, value: 2.0, range: NSRange(range, in: buttonAttributedSubtitleString.string))

@@ -121,7 +121,7 @@ extension ChatControllerImpl: MFMessageComposeViewControllerDelegate {
                         guard let self else {
                             return
                         }
-                        self.inviteToTelegram(numbers: [number])
+                        self.inviteToAnsible(numbers: [number])
                     }))
                 )
             }
@@ -193,7 +193,7 @@ extension ChatControllerImpl: MFMessageComposeViewControllerDelegate {
         })
     }
     
-    private func inviteToTelegram(numbers: [String]) {
+    private func inviteToAnsible(numbers: [String]) {
         if MFMessageComposeViewController.canSendText() {
             let composer = MFMessageComposeViewController()
             composer.messageComposeDelegate = self

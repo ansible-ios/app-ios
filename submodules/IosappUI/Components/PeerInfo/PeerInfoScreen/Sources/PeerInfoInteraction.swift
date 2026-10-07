@@ -34,7 +34,7 @@ final class PeerInfoInteraction {
     let editingRemoveFromCommunity: (EnginePeer.Id) -> Void
     let editingOpenPostSuggestionsSetup: () -> Void
     let editingOpenRevenue: () -> Void
-    let editingOpenStars: () -> Void
+    let editingOpenDiamonds: () -> Void
     let openParticipantsSection: (PeerInfoParticipantsSection) -> Void
     let openRecentActions: () -> Void
     let openChannelMessages: () -> Void
@@ -114,7 +114,7 @@ final class PeerInfoInteraction {
         editingRemoveFromCommunity: @escaping (EnginePeer.Id) -> Void,
         editingOpenPostSuggestionsSetup: @escaping () -> Void,
         editingOpenRevenue: @escaping () -> Void,
-        editingOpenStars: @escaping () -> Void,
+        editingOpenDiamonds: @escaping () -> Void,
         openParticipantsSection: @escaping (PeerInfoParticipantsSection) -> Void,
         openRecentActions: @escaping () -> Void,
         openChannelMessages: @escaping () -> Void,
@@ -193,7 +193,7 @@ final class PeerInfoInteraction {
         self.editingRemoveFromCommunity = editingRemoveFromCommunity
         self.editingOpenPostSuggestionsSetup = editingOpenPostSuggestionsSetup
         self.editingOpenRevenue = editingOpenRevenue
-        self.editingOpenStars = editingOpenStars
+        self.editingOpenDiamonds = editingOpenDiamonds
         self.openParticipantsSection = openParticipantsSection
         self.openRecentActions = openRecentActions
         self.openChannelMessages = openChannelMessages

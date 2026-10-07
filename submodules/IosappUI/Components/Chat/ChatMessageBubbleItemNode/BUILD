@@ -87,7 +87,7 @@ swift_library(
         "//submodules/IosappUI/Components/Chat/ChatMessageJoinedChannelBubbleContentNode",
         "//submodules/IosappUI/Components/Chat/ChatMessageFactCheckBubbleContentNode",
         "//submodules/IosappUI/Components/Chat/ChatMessageUnlockMediaNode",
-        "//submodules/IosappUI/Components/Chat/ChatMessageStarsMediaInfoNode",
+        "//submodules/IosappUI/Components/Chat/ChatMessageDiamondsMediaInfoNode",
         "//submodules/UIKitRuntimeUtils",
         "//submodules/IosappUI/Components/Chat/ChatMessageTransitionNode",
         "//submodules/AnimatedStickerNode",

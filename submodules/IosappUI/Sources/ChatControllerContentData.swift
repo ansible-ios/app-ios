@@ -113,7 +113,7 @@ extension ChatControllerImpl {
             var currentSendAsPeerId: EnginePeer.Id?
             var copyProtectionEnabled: Bool = false
             var myCopyProtectionEnabled: Bool = false
-            var sendPaidMessageStars: StarsAmount?
+            var sendPaidMessageDiamonds: StarsAmount?
             var alwaysShowGiftButton: Bool = false
             var disallowedGifts: IosappDisallowedGifts?
             var appliedBoosts: Int32?
@@ -121,7 +121,7 @@ extension ChatControllerImpl {
             var hasBirthdayToday: Bool = false
             var businessIntro: IosappBusinessIntro?
             var peerVerification: PeerVerification?
-            var starGiftsAvailable: Bool = false
+            var diamondGiftsAvailable: Bool = false
             var performDismissAction: PerformDismissAction?
             var savedMessagesTopicPeer: EnginePeer?
             
@@ -163,7 +163,7 @@ extension ChatControllerImpl {
         
         private var nextChannelToReadDisposable: Disposable?
         private let chatAdditionalDataDisposable = MetaDisposable()
-        private var premiumOrStarsRequiredDisposable: Disposable?
+        private var premiumOrDiamondsRequiredDisposable: Disposable?
         private var buttonKeyboardMessageDisposable: Disposable?
         private var cachedDataDisposable: Disposable?
         private var premiumGiftSuggestionDisposable: Disposable?
@@ -836,13 +836,13 @@ extension ChatControllerImpl {
                             }
                         }
                     }
-                    var starGiftsAvailable = false
+                    var diamondGiftsAvailable = false
                     var peerDiscussionId: PeerId?
                     var peerMonoforumId: PeerId?
                     var peerGeoLocation: PeerGeoLocation?
                     if let peer = peerView.peers[peerView.peerId] as? IosappChannel, let cachedData = peerView.cachedData as? CachedChannelData {
                         if case .broadcast = peer.info {
-                            starGiftsAvailable = cachedData.flags.contains(.starGiftsAvailable)
+                            diamondGiftsAvailable = cachedData.flags.contains(.diamondGiftsAvailable)
                         } else {
                             peerGeoLocation = cachedData.peerGeoLocation
                         }
@@ -856,7 +856,7 @@ extension ChatControllerImpl {
                     var renderedPeer: RenderedPeer?
                     var contactStatus: ChatContactStatus?
                     var businessIntro: IosappBusinessIntro?
-                    var sendPaidMessageStars: StarsAmount?
+                    var sendPaidMessageDiamonds: StarsAmount?
                     var alwaysShowGiftButton = false
                     var disallowedGifts: IosappDisallowedGifts?
                     var isManagedBot = false
@@ -869,7 +869,7 @@ extension ChatControllerImpl {
                             }
                             if case let .peer(peerId) = chatLocation, peerId.namespace == Namespaces.Peer.SecretChat {
                             } else {
-                                sendPaidMessageStars = cachedData.sendPaidMessageStars
+                                sendPaidMessageDiamonds = cachedData.sendPaidMessageDiamonds
                                 if cachedData.disallowedGifts != .All {
                                     alwaysShowGiftButton = globalPrivacySettings.displayGiftButton || cachedData.flags.contains(.displayGiftButton)
                                 }
@@ -895,22 +895,22 @@ extension ChatControllerImpl {
                             if let channel = peerView.peers[peerView.peerId] as? IosappChannel {
                                 if channel.isMonoForum {
                                     if let linkedMonoforumId = channel.linkedMonoforumId, let mainChannel = peerView.peers[linkedMonoforumId] as? IosappChannel, mainChannel.hasPermission(.manageDirect) {
-                                    } else if let sendPaidMessageStarsValue = cachedData.sendPaidMessageStars, sendPaidMessageStarsValue == .zero {
-                                        sendPaidMessageStars = nil
+                                    } else if let sendPaidMessageDiamondsValue = cachedData.sendPaidMessageDiamonds, sendPaidMessageDiamondsValue == .zero {
+                                        sendPaidMessageDiamonds = nil
                                     } else {
-                                        sendPaidMessageStars = channel.sendPaidMessageStars
+                                        sendPaidMessageDiamonds = channel.sendPaidMessageDiamonds
                                     }
                                 } else {
                                     if channel.flags.contains(.isCreator) || channel.adminRights != nil {
                                     } else {
-                                        if let personalSendPaidMessageStars = cachedData.sendPaidMessageStars {
-                                            if personalSendPaidMessageStars == .zero {
-                                                sendPaidMessageStars = nil
+                                        if let personalSendPaidMessageDiamonds = cachedData.sendPaidMessageDiamonds {
+                                            if personalSendPaidMessageDiamonds == .zero {
+                                                sendPaidMessageDiamonds = nil
                                             } else {
-                                                sendPaidMessageStars = personalSendPaidMessageStars
+                                                sendPaidMessageDiamonds = personalSendPaidMessageDiamonds
                                             }
                                         } else {
-                                            sendPaidMessageStars = channel.sendPaidMessageStars
+                                            sendPaidMessageDiamonds = channel.sendPaidMessageDiamonds
                                         }
                                     }
                                 }
@@ -1049,8 +1049,8 @@ extension ChatControllerImpl {
                         boostsToUnrestrict = cachedChannelData.boostsToUnrestrict
                     }
                     
-                    if strongSelf.premiumOrStarsRequiredDisposable == nil, sendPaidMessageStars != nil, let peerId = chatLocation.peerId {
-                        strongSelf.premiumOrStarsRequiredDisposable = ((context.engine.peers.isPremiumRequiredToContact([peerId]) |> then(.complete() |> suspendAwareDelay(60.0, queue: Queue.concurrentDefaultQueue()))) |> restart).startStandalone()
+                    if strongSelf.premiumOrDiamondsRequiredDisposable == nil, sendPaidMessageDiamonds != nil, let peerId = chatLocation.peerId {
+                        strongSelf.premiumOrDiamondsRequiredDisposable = ((context.engine.peers.isPremiumRequiredToContact([peerId]) |> then(.complete() |> suspendAwareDelay(60.0, queue: Queue.concurrentDefaultQueue()))) |> restart).startStandalone()
                     }
                     
                     var adMessage = adMessage
@@ -1079,7 +1079,7 @@ extension ChatControllerImpl {
                     strongSelf.state.myCopyProtectionEnabled = myCopyProtectionEnabled
                     strongSelf.state.hasSearchTags = hasSearchTags
                     strongSelf.state.isPremiumRequiredForMessaging = isPremiumRequiredForMessaging
-                    strongSelf.state.sendPaidMessageStars = sendPaidMessageStars
+                    strongSelf.state.sendPaidMessageDiamonds = sendPaidMessageDiamonds
                     strongSelf.state.alwaysShowGiftButton = alwaysShowGiftButton
                     strongSelf.state.disallowedGifts = disallowedGifts
                     strongSelf.state.hasSavedChats = hasSavedChats
@@ -1089,7 +1089,7 @@ extension ChatControllerImpl {
                     strongSelf.state.businessIntro = businessIntro
                     strongSelf.state.adMessage = adMessage
                     strongSelf.state.peerVerification = peerVerification
-                    strongSelf.state.starGiftsAvailable = starGiftsAvailable
+                    strongSelf.state.diamondGiftsAvailable = diamondGiftsAvailable
                     
                     strongSelf.state.renderedPeer = renderedPeer
                     strongSelf.state.adMessage = adMessage
@@ -1450,7 +1450,7 @@ extension ChatControllerImpl {
                     var contactStatus: ChatContactStatus?
                     var copyProtectionEnabled = false
                     var businessIntro: IosappBusinessIntro?
-                    var sendPaidMessageStars: StarsAmount?
+                    var sendPaidMessageDiamonds: StarsAmount?
                     var alwaysShowGiftButton = false
                     var disallowedGifts: IosappDisallowedGifts?
                     var isManagedBot = false
@@ -1487,12 +1487,12 @@ extension ChatControllerImpl {
                                 if channel.isMonoForum {
                                     if let linkedMonoforumId = channel.linkedMonoforumId, let mainChannel = peerView.peers[linkedMonoforumId] as? IosappChannel, mainChannel.hasPermission(.manageDirect) {
                                     } else {
-                                        sendPaidMessageStars = channel.sendPaidMessageStars
+                                        sendPaidMessageDiamonds = channel.sendPaidMessageDiamonds
                                     }
                                 } else {
                                     if channel.flags.contains(.isCreator) || channel.adminRights != nil {
                                     } else {
-                                        sendPaidMessageStars = channel.sendPaidMessageStars
+                                        sendPaidMessageDiamonds = channel.sendPaidMessageDiamonds
                                     }
                                 }
                             }
@@ -1585,11 +1585,11 @@ extension ChatControllerImpl {
                         }
                         
                         var removePaidMessageFeeData: ChatPresentationInterfaceState.RemovePaidMessageFeeData?
-                        if let savedMessagesPeer, !savedMessagesPeer.isMonoforumFeeRemoved, let peer = savedMessagesPeer.peer, let channel = peerView.peers[peerView.peerId] as? IosappChannel, let sendPaidMessageStars = channel.sendPaidMessageStars, channel.isMonoForum {
+                        if let savedMessagesPeer, !savedMessagesPeer.isMonoforumFeeRemoved, let peer = savedMessagesPeer.peer, let channel = peerView.peers[peerView.peerId] as? IosappChannel, let sendPaidMessageDiamonds = channel.sendPaidMessageDiamonds, channel.isMonoForum {
                             if let linkedMonoforumId = channel.linkedMonoforumId, let mainChannel = peerView.peers[linkedMonoforumId] as? IosappChannel, mainChannel.hasPermission(.manageDirect) {
                                 removePaidMessageFeeData = ChatPresentationInterfaceState.RemovePaidMessageFeeData(
                                     peer: peer,
-                                    amount: sendPaidMessageStars
+                                    amount: sendPaidMessageDiamonds
                                 )
                             }
                         }
@@ -1764,8 +1764,8 @@ extension ChatControllerImpl {
                             boostsToUnrestrict = cachedChannelData.boostsToUnrestrict
                         }
                         
-                        if strongSelf.premiumOrStarsRequiredDisposable == nil, sendPaidMessageStars != nil, let peerId = chatLocation.peerId {
-                            strongSelf.premiumOrStarsRequiredDisposable = ((context.engine.peers.isPremiumRequiredToContact([peerId]) |> then(.complete() |> suspendAwareDelay(60.0, queue: Queue.concurrentDefaultQueue()))) |> restart).startStandalone()
+                        if strongSelf.premiumOrDiamondsRequiredDisposable == nil, sendPaidMessageDiamonds != nil, let peerId = chatLocation.peerId {
+                            strongSelf.premiumOrDiamondsRequiredDisposable = ((context.engine.peers.isPremiumRequiredToContact([peerId]) |> then(.complete() |> suspendAwareDelay(60.0, queue: Queue.concurrentDefaultQueue()))) |> restart).startStandalone()
                         }
                         
                         strongSelf.state.renderedPeer = renderedPeer
@@ -1787,7 +1787,7 @@ extension ChatControllerImpl {
                         strongSelf.state.appliedBoosts = appliedBoosts
                         strongSelf.state.boostsToUnrestrict = boostsToUnrestrict
                         strongSelf.state.businessIntro = businessIntro
-                        strongSelf.state.sendPaidMessageStars = sendPaidMessageStars
+                        strongSelf.state.sendPaidMessageDiamonds = sendPaidMessageDiamonds
                         strongSelf.state.alwaysShowGiftButton = alwaysShowGiftButton
                         strongSelf.state.disallowedGifts = disallowedGifts
                         
@@ -2479,7 +2479,7 @@ extension ChatControllerImpl {
             self.preloadHistoryPeerIdDisposable.dispose()
             self.nextChannelToReadDisposable?.dispose()
             self.chatAdditionalDataDisposable.dispose()
-            self.premiumOrStarsRequiredDisposable?.dispose()
+            self.premiumOrDiamondsRequiredDisposable?.dispose()
             self.buttonKeyboardMessageDisposable?.dispose()
             self.cachedDataDisposable?.dispose()
             self.premiumGiftSuggestionDisposable?.dispose()

@@ -267,7 +267,7 @@ public extension Api {
 }
 public extension Api {
     enum SavedStarGift: TypeConstructorDescription {
-        public class Cons_savedStarGift: TypeConstructorDescription {
+        public class Cons_savedDiamondGift: TypeConstructorDescription {
             public var flags: Int32
             public var fromId: Api.Peer?
             public var date: Int32
@@ -310,7 +310,7 @@ public extension Api {
                 return ("savedStarGift", [("flags", ConstructorParameterDescription(self.flags)), ("fromId", ConstructorParameterDescription(self.fromId)), ("date", ConstructorParameterDescription(self.date)), ("gift", ConstructorParameterDescription(self.gift)), ("message", ConstructorParameterDescription(self.message)), ("msgId", ConstructorParameterDescription(self.msgId)), ("savedId", ConstructorParameterDescription(self.savedId)), ("convertStars", ConstructorParameterDescription(self.convertStars)), ("upgradeStars", ConstructorParameterDescription(self.upgradeStars)), ("canExportAt", ConstructorParameterDescription(self.canExportAt)), ("transferStars", ConstructorParameterDescription(self.transferStars)), ("canTransferAt", ConstructorParameterDescription(self.canTransferAt)), ("canResellAt", ConstructorParameterDescription(self.canResellAt)), ("collectionId", ConstructorParameterDescription(self.collectionId)), ("prepaidUpgradeHash", ConstructorParameterDescription(self.prepaidUpgradeHash)), ("dropOriginalDetailsStars", ConstructorParameterDescription(self.dropOriginalDetailsStars)), ("giftNum", ConstructorParameterDescription(self.giftNum)), ("canCraftAt", ConstructorParameterDescription(self.canCraftAt))])
             }
         }
-        case savedStarGift(Cons_savedStarGift)
+        case savedStarGift(Cons_savedDiamondGift)
 
         public func serialize(_ buffer: Buffer, _ boxed: Swift.Bool) {
             switch self {
@@ -381,7 +381,7 @@ public extension Api {
             }
         }
 
-        public static func parse_savedStarGift(_ reader: BufferReader) -> SavedStarGift? {
+        public static func parse_savedDiamondGift(_ reader: BufferReader) -> SavedStarGift? {
             var _1: Int32?
             _1 = reader.readInt32()
             var _2: Api.Peer?
@@ -475,7 +475,7 @@ public extension Api {
             let _c17 = (Int(_1 ?? 0) & Int(1 << 19) == 0) || _17 != nil
             let _c18 = (Int(_1 ?? 0) & Int(1 << 20) == 0) || _18 != nil
             if _c1 && _c2 && _c3 && _c4 && _c5 && _c6 && _c7 && _c8 && _c9 && _c10 && _c11 && _c12 && _c13 && _c14 && _c15 && _c16 && _c17 && _c18 {
-                return Api.SavedStarGift.savedStarGift(Cons_savedStarGift(flags: _1!, fromId: _2, date: _3!, gift: _4!, message: _5, msgId: _6, savedId: _7, convertStars: _8, upgradeStars: _9, canExportAt: _10, transferStars: _11, canTransferAt: _12, canResellAt: _13, collectionId: _14, prepaidUpgradeHash: _15, dropOriginalDetailsStars: _16, giftNum: _17, canCraftAt: _18))
+                return Api.SavedStarGift.savedStarGift(Cons_savedDiamondGift(flags: _1!, fromId: _2, date: _3!, gift: _4!, message: _5, msgId: _6, savedId: _7, convertStars: _8, upgradeStars: _9, canExportAt: _10, transferStars: _11, canTransferAt: _12, canResellAt: _13, collectionId: _14, prepaidUpgradeHash: _15, dropOriginalDetailsStars: _16, giftNum: _17, canCraftAt: _18))
             }
             else {
                 return nil

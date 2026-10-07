@@ -122,7 +122,7 @@ import PeerNameColorScreen
 import ChatEmptyNode
 import ChatMediaInputStickerGridItem
 import PostSuggestionsSettingsScreen
-import ChatSendStarsScreen
+import ChatSendDiamondsScreen
 import ChatSendAsContextMenu
 import GlobalControlPanelsContext
 import ComponentFlow
@@ -418,7 +418,7 @@ extension ChatControllerImpl {
             presentationInterfaceState = presentationInterfaceState.updatedMyCopyProtectionEnabled(contentData.state.myCopyProtectionEnabled)
             presentationInterfaceState = presentationInterfaceState.updatedHasSearchTags(contentData.state.hasSearchTags)
             presentationInterfaceState = presentationInterfaceState.updatedIsPremiumRequiredForMessaging(contentData.state.isPremiumRequiredForMessaging)
-            presentationInterfaceState = presentationInterfaceState.updatedSendPaidMessageStars(contentData.state.sendPaidMessageStars)
+            presentationInterfaceState = presentationInterfaceState.updatedSendPaidMessageDiamonds(contentData.state.sendPaidMessageDiamonds)
             presentationInterfaceState = presentationInterfaceState.updatedAlwaysShowGiftButton(contentData.state.alwaysShowGiftButton)
             presentationInterfaceState = presentationInterfaceState.updatedDisallowedGifts(contentData.state.disallowedGifts)
             presentationInterfaceState = presentationInterfaceState.updatedHasSavedChats(contentData.state.hasSavedChats)
@@ -428,7 +428,7 @@ extension ChatControllerImpl {
             presentationInterfaceState = presentationInterfaceState.updatedBusinessIntro(contentData.state.businessIntro)
             presentationInterfaceState = presentationInterfaceState.updatedAdMessage(contentData.state.adMessage)
             presentationInterfaceState = presentationInterfaceState.updatedPeerVerification(contentData.state.peerVerification)
-            presentationInterfaceState = presentationInterfaceState.updatedStarGiftsAvailable(contentData.state.starGiftsAvailable)
+            presentationInterfaceState = presentationInterfaceState.updatedDiamondGiftsAvailable(contentData.state.diamondGiftsAvailable)
             presentationInterfaceState = presentationInterfaceState.updatedSavedMessagesTopicPeer(contentData.state.savedMessagesTopicPeer)
             presentationInterfaceState = presentationInterfaceState.updatedKeyboardButtonsMessage(contentData.state.keyboardButtonsMessage)
             presentationInterfaceState = presentationInterfaceState.updatedPinnedMessageId(contentData.state.pinnedMessageId)
@@ -4578,17 +4578,17 @@ extension ChatControllerImpl {
             }
             let controller = self.context.sharedContext.makePremiumIntroController(context: self.context, source: .messageTags, forceDark: false, dismissed: nil)
             self.push(controller)
-        }, openStarsPurchase: { [weak self] requiredStars in
-            guard let self, let starsContext = self.context.starsContext else {
+        }, openDiamondsPurchase: { [weak self] requiredDiamonds in
+            guard let self, let diamondsContext = self.context.diamondsContext else {
                 return
             }
-            let _ = (self.context.engine.payments.starsTopUpOptions()
+            let _ = (self.context.engine.payments.diamondsTopUpOptions()
             |> take(1)
             |> deliverOnMainQueue).startStandalone(next: { [weak self] options in
                 guard let self else {
                     return
                 }
-                let controller = self.context.sharedContext.makeStarsPurchaseScreen(context: self.context, starsContext: starsContext, options: options, purpose: .generic, targetPeerId: nil, customTheme: nil, completion: { _ in
+                let controller = self.context.sharedContext.makeDiamondsPurchaseScreen(context: self.context, diamondsContext: diamondsContext, options: options, purpose: .generic, targetPeerId: nil, customTheme: nil, completion: { _ in
                 })
                 self.push(controller)
             })

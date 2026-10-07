@@ -23,7 +23,7 @@ public enum SendMessageActionSheetControllerParams {
         public let canMakePaidContent: Bool
         public let currentPrice: Int64?
         public let hasTimers: Bool
-        public let sendPaidMessageStars: StarsAmount?
+        public let sendPaidMessageDiamonds: StarsAmount?
         public let isMonoforum: Bool
         
         public init(
@@ -37,7 +37,7 @@ public enum SendMessageActionSheetControllerParams {
             canMakePaidContent: Bool,
             currentPrice: Int64?,
             hasTimers: Bool,
-            sendPaidMessageStars: StarsAmount?,
+            sendPaidMessageDiamonds: StarsAmount?,
             isMonoforum: Bool
         ) {
             self.isScheduledMessages = isScheduledMessages
@@ -50,7 +50,7 @@ public enum SendMessageActionSheetControllerParams {
             self.canMakePaidContent = canMakePaidContent
             self.currentPrice = currentPrice
             self.hasTimers = hasTimers
-            self.sendPaidMessageStars = sendPaidMessageStars
+            self.sendPaidMessageDiamonds = sendPaidMessageDiamonds
             self.isMonoforum = isMonoforum
         }
     }

@@ -441,20 +441,20 @@ public final class WebAppMessagePreviewScreen: ViewControllerComponentContainer 
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func presentPaidMessageAlertIfNeeded(peers: [EnginePeer], requiresStars: [EnginePeer.Id: Int64], completion: @escaping () -> Void) {
+    private func presentPaidMessageAlertIfNeeded(peers: [EnginePeer], requiresDiamonds: [EnginePeer.Id: Int64], completion: @escaping () -> Void) {
         
     }
     
     fileprivate func complete(peers: [EnginePeer], controller: ViewController?) {
         let _ = (self.context.engine.data.get(
             EngineDataMap(
-                peers.map { IosappEngine.EngineData.Item.Peer.SendPaidMessageStars.init(id: $0.id) }
+                peers.map { IosappEngine.EngineData.Item.Peer.SendPaidMessageDiamonds.init(id: $0.id) }
             ),
             EngineDataList(
                 peers.map { IosappEngine.EngineData.Item.Peer.RenderedPeer.init(id: $0.id) }
             )
         )
-        |> deliverOnMainQueue).start(next: { [weak self] sendPaidMessageStars, renderedPeers in
+        |> deliverOnMainQueue).start(next: { [weak self] sendPaidMessageDiamonds, renderedPeers in
             guard let self else {
                 return
             }
@@ -462,7 +462,7 @@ public final class WebAppMessagePreviewScreen: ViewControllerComponentContainer 
             var totalAmount: StarsAmount = .zero
             var chargingPeers: [EngineRenderedPeer] = []
             for peer in renderedPeers {
-                if let maybeAmount = sendPaidMessageStars[peer.peerId], let amount = maybeAmount {
+                if let maybeAmount = sendPaidMessageDiamonds[peer.peerId], let amount = maybeAmount {
                     totalAmount = totalAmount + amount
                     chargingPeers.append(peer)
                 }
@@ -476,7 +476,7 @@ public final class WebAppMessagePreviewScreen: ViewControllerComponentContainer 
                 
                 for peer in peers {
                     var starsAmount: StarsAmount?
-                    if let maybeAmount = sendPaidMessageStars[peer.id], let amount = maybeAmount {
+                    if let maybeAmount = sendPaidMessageDiamonds[peer.id], let amount = maybeAmount {
                         starsAmount = amount
                     }
                     let _ = self.context.engine.messages.enqueueOutgoingMessage(
@@ -484,7 +484,7 @@ public final class WebAppMessagePreviewScreen: ViewControllerComponentContainer 
                         replyTo: nil,
                         storyId: nil,
                         content: .preparedInlineMessage(self.preparedMessage),
-                        sendPaidMessageStars: starsAmount
+                        sendPaidMessageDiamonds: starsAmount
                     ).start()
                 }
                 

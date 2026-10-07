@@ -793,7 +793,7 @@ public final class PendingMessageManager {
                 Logger.shared.log("PendingMessageManager", "beginSendingMessages messagesToUpload.count: \(messagesToUpload.count)")
                 
                 for (messageContext, message, type, contentUploadSignal) in messagesToUpload {
-                    if let paidStarsAttribute = message.paidStarsAttribute, paidStarsAttribute.postponeSending {
+                    if let paidDiamondsAttribute = message.paidDiamondsAttribute, paidDiamondsAttribute.postponeSending {
                         strongSelf.beginWaitingForPostponedMessageCommit(messageContext: messageContext, id: message.id)
                     }
                     if strongSelf.canBeginUploadingMessage(id: message.id, type: type), !messageContext.postponeSending {
@@ -1264,7 +1264,7 @@ public final class PendingMessageManager {
                         flags |= Int32(1 << 16)
                     } else if let attribute = attribute as? ForwardVideoTimestampAttribute {
                         videoTimestamp = attribute.timestamp
-                    } else if let attribute = attribute as? PaidStarsMessageAttribute {
+                    } else if let attribute = attribute as? PaidDiamondsMessageAttribute {
                         allowPaidStars = attribute.stars.value * Int64(messages.count)
                     } else if let attribute = attribute as? SuggestedPostMessageAttribute {
                         suggestedPost = attribute.apiSuggestedPost(fixMinTime: Int32(Date().timeIntervalSince1970 + 10))
@@ -1799,7 +1799,7 @@ public final class PendingMessageManager {
                         messageEffect = attribute
                     } else if let attribute = attribute as? ForwardVideoTimestampAttribute {
                         videoTimestamp = attribute.timestamp
-                    } else if let attribute = attribute as? PaidStarsMessageAttribute {
+                    } else if let attribute = attribute as? PaidDiamondsMessageAttribute {
                         allowPaidStars = attribute.stars.value
                     } else if let attribute = attribute as? SuggestedPostMessageAttribute {
                         suggestedPost = attribute.apiSuggestedPost(fixMinTime: Int32(Date().timeIntervalSince1970 + 10))
@@ -2298,8 +2298,8 @@ public final class PendingMessageManager {
     private func applySentMessage(postbox: Postbox, stateManager: AccountStateManager, message: Message, content: PendingMessageUploadedContentAndReuploadInfo, result: Api.Updates) -> Signal<Void, NoError> {
         if let _ = message.peers[message.id.peerId] as? IosappChannel {
             for attribute in message.attributes {
-                if let attribute = attribute as? PaidStarsMessageAttribute {
-                    stateManager.starsContext?.add(balance: StarsAmount(value: -attribute.stars.value, nanos: (attribute.stars.value == 0 && attribute.stars.nanos != 0 ? -1 : 1) * attribute.stars.nanos))
+                if let attribute = attribute as? PaidDiamondsMessageAttribute {
+                    stateManager.diamondsContext?.add(balance: StarsAmount(value: -attribute.stars.value, nanos: (attribute.stars.value == 0 && attribute.stars.nanos != 0 ? -1 : 1) * attribute.stars.nanos))
                     break
                 }
             }
@@ -2364,8 +2364,8 @@ public final class PendingMessageManager {
         if let message = messages.first {
             if let channel = message.peers[message.id.peerId] as? IosappChannel, channel.isMonoForum {
                 for attribute in message.attributes {
-                    if let attribute = attribute as? PaidStarsMessageAttribute {
-                        stateManager.starsContext?.add(balance: StarsAmount(value: -attribute.stars.value, nanos: (attribute.stars.value == 0 && attribute.stars.nanos != 0 ? -1 : 1) * attribute.stars.nanos))
+                    if let attribute = attribute as? PaidDiamondsMessageAttribute {
+                        stateManager.diamondsContext?.add(balance: StarsAmount(value: -attribute.stars.value, nanos: (attribute.stars.value == 0 && attribute.stars.nanos != 0 ? -1 : 1) * attribute.stars.nanos))
                         break
                     }
                 }

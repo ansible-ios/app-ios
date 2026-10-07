@@ -2,7 +2,7 @@ import Foundation
 import Postbox
 import IosappApi
 
-public final class PaidStarsMessageAttribute: Equatable, MessageAttribute {
+public final class PaidDiamondsMessageAttribute: Equatable, MessageAttribute {
     public let stars: StarsAmount
     public let postponeSending: Bool
     
@@ -21,7 +21,7 @@ public final class PaidStarsMessageAttribute: Equatable, MessageAttribute {
         encoder.encodeBool(self.postponeSending, forKey: "ps")
     }
     
-    public static func ==(lhs: PaidStarsMessageAttribute, rhs: PaidStarsMessageAttribute) -> Bool {
+    public static func ==(lhs: PaidDiamondsMessageAttribute, rhs: PaidDiamondsMessageAttribute) -> Bool {
         return lhs.stars == rhs.stars && lhs.postponeSending == rhs.postponeSending
     }
 }

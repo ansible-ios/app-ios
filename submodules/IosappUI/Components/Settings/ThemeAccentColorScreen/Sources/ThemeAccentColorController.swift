@@ -244,9 +244,9 @@ public final class ThemeAccentColorController: ViewController {
                     })
                 } else if case let .colors(theme, create) = strongSelf.mode {
                     var baseTheme: IosappBaseTheme
-                    var telegramTheme: IosappTheme?
+                    var ansibleTheme: IosappTheme?
                     if case let .cloud(theme) = theme, let settings = theme.theme.settings?.first {
-                        telegramTheme = theme.theme
+                        ansibleTheme = theme.theme
                         baseTheme = settings.baseTheme
                     } else if case let .builtin(theme) = theme {
                         baseTheme = theme.baseTheme
@@ -290,7 +290,7 @@ public final class ThemeAccentColorController: ViewController {
                                 return .complete()
                             }
                         }
-                    } else if let theme = telegramTheme {
+                    } else if let theme = ansibleTheme {
                         apply = (prepareWallpaper |> then(updateTheme(account: context.account, accountManager: context.sharedContext.accountManager, theme: theme, title: theme.title, slug: theme.slug, resource: nil, settings: [settings])))
                         |> mapToSignal { next -> Signal<Void, CreateThemeError> in
                             if case let .result(resultTheme) = next {

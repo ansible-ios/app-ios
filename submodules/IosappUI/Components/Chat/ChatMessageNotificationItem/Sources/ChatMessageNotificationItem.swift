@@ -67,7 +67,7 @@ public final class ChatMessageNotificationItem: NotificationItem {
 private let compactAvatarFont = avatarPlaceholderFont(size: 20.0)
 private let avatarFont = avatarPlaceholderFont(size: 24.0)
 
-private let telegramCodeRegex = try? NSRegularExpression(pattern: "(?<=: )\\b\\d{5,8}\\b(?=\\.)", options: [])
+private let ansibleCodeRegex = try? NSRegularExpression(pattern: "(?<=: )\\b\\d{5,8}\\b(?=\\.)", options: [])
 private let loginCodeRegex = try? NSRegularExpression(pattern: "\\b\\d{5,8}\\b", options: [])
 
 final class ChatMessageNotificationItemNode: NotificationItemNode {
@@ -348,7 +348,7 @@ final class ChatMessageNotificationItemNode: NotificationItemNode {
         if item.messages[0].id.peerId.isIosappNotifications || item.messages[0].id.peerId.isVerificationCodes {
             let regex: NSRegularExpression?
             if item.messages[0].id.peerId.isIosappNotifications {
-                regex = telegramCodeRegex
+                regex = ansibleCodeRegex
             } else {
                 regex = loginCodeRegex
             }

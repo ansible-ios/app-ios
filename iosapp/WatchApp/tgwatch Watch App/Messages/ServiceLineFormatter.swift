@@ -314,7 +314,7 @@ func serviceLineText(
 
     case .messageGiveawayCreated(let m):
         // Actor-less — giveaways are posted by channels.
-        return m.starCount > 0 ? "Stars giveaway started" : "Giveaway started"
+        return m.diamondCount > 0 ? "Stars giveaway started" : "Giveaway started"
 
     case .messageGiveawayCompleted(let m):
         let winners = m.winnerCount == 1 ? "1 winner" : "\(m.winnerCount) winners"

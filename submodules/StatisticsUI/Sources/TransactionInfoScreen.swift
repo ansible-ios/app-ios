@@ -23,14 +23,14 @@ private final class SheetContent: CombinedComponent {
     
     let context: AccountContext
     let peer: EnginePeer
-    let transaction: StarsContext.State.Transaction
+    let transaction: DiamondsContext.State.Transaction
     let openExplorer: (String) -> Void
     let dismiss: () -> Void
     
     init(
         context: AccountContext,
         peer: EnginePeer,
-        transaction: StarsContext.State.Transaction,
+        transaction: DiamondsContext.State.Transaction,
         openExplorer: @escaping (String) -> Void,
         dismiss: @escaping () -> Void
     ) {
@@ -292,13 +292,13 @@ private final class SheetContainerComponent: CombinedComponent {
     
     let context: AccountContext
     let peer: EnginePeer
-    let transaction: StarsContext.State.Transaction
+    let transaction: DiamondsContext.State.Transaction
     let openExplorer: (String) -> Void
     
     init(
         context: AccountContext,
         peer: EnginePeer,
-        transaction: StarsContext.State.Transaction,
+        transaction: DiamondsContext.State.Transaction,
         openExplorer: @escaping (String) -> Void
     ) {
         self.context = context
@@ -412,7 +412,7 @@ final class TransactionInfoScreen: ViewControllerComponentContainer {
     init(
         context: AccountContext,
         peer: EnginePeer,
-        transaction: StarsContext.State.Transaction,
+        transaction: DiamondsContext.State.Transaction,
         openExplorer: @escaping (String) -> Void
     ) {
         self.context = context

@@ -912,7 +912,7 @@ public func groupStatsController(context: AccountContext, updatedPresentationDat
             }
             |> take(1)
             |> deliverOnMainQueue).start(next: { peer in
-                let controller = context.sharedContext.makeChatRecentActionsController(context: context, peer: peer, adminPeerId: participantPeerId, starsState: nil)
+                let controller = context.sharedContext.makeChatRecentActionsController(context: context, peer: peer, adminPeerId: participantPeerId, diamondsState: nil)
                 navigationController.pushViewController(controller)
             })
         }

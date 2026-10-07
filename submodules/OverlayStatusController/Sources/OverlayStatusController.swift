@@ -9,7 +9,7 @@ public enum OverlayStatusControllerType {
     case success
     case shieldSuccess(String, Bool)
     case genericSuccess(String, Bool)
-    case starSuccess(String)
+    case diamondSuccess(String)
 }
 
 private enum OverlayStatusContentController {
@@ -17,7 +17,7 @@ private enum OverlayStatusContentController {
     case progress(ProgressWindowController)
     case shieldSuccess(ProxyWindowController, Bool)
     case genericSuccess(ProxyWindowController, Bool)
-    case starSuccess(ProxyWindowController)
+    case diamondSuccess(ProxyWindowController)
     
     var view: UIView {
         switch self {
@@ -29,7 +29,7 @@ private enum OverlayStatusContentController {
                 return controller.view
             case let .genericSuccess(controller, _):
                 return controller.view
-            case let .starSuccess(controller):
+            case let .diamondSuccess(controller):
                 return controller.view
         }
     }
@@ -44,7 +44,7 @@ private enum OverlayStatusContentController {
                 controller.updateLayout()
             case let .genericSuccess(controller, _):
                 controller.updateLayout()
-            case let .starSuccess(controller):
+            case let .diamondSuccess(controller):
                 controller.updateLayout()
         }
     }
@@ -59,7 +59,7 @@ private enum OverlayStatusContentController {
                 controller.dismiss(success: success, increasedDelay: increasedDelay)
             case let .genericSuccess(controller, increasedDelay):
                 controller.dismiss(success: success, increasedDelay: increasedDelay)
-            case let .starSuccess(controller):
+            case let .diamondSuccess(controller):
                 controller.dismiss(success: success, increasedDelay: false)
         }
     }
@@ -98,7 +98,7 @@ private final class OverlayStatusControllerNode: ViewControllerTracingNode {
                 let controller = ProxyWindowController(light: style == .light, text: text, icon: nil, isShield: false, showCheck: true)!
                 self.contentController = .genericSuccess(controller, increasedDelay)
                 isUserInteractionEnabled = false
-            case let .starSuccess(text):
+            case let .diamondSuccess(text):
                 self.contentController = .genericSuccess(ProxyWindowController(light: style == .light, text: text, icon: UIImage(bundleImageName: "Star"), isShield: false, showCheck: false), false)
         }
         

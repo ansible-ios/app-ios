@@ -244,7 +244,7 @@ func managedSynchronizeAvailableMessageEffects(postbox: Postbox, network: Networ
                         let (hash, effects, documents) = (availableEffectsData.hash, availableEffectsData.effects, availableEffectsData.documents)
                         var files: [Int64: IosappMediaFile] = [:]
                         for document in documents {
-                            if let file = telegramMediaFileFromApiDocument(document, altDocuments: []) {
+                            if let file = ansibleMediaFileFromApiDocument(document, altDocuments: []) {
                                 files[file.fileId.id] = file
                             }
                         }

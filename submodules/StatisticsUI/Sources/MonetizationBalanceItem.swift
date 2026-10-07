@@ -103,7 +103,7 @@ final class MonetizationBalanceItemNode: ListViewItemNode, ItemListItemNode {
     private var timer: Foundation.Timer?
     
     private var item: MonetizationBalanceItem?
-    private var buttonLayout: (isStars: Bool, origin: CGFloat, width: CGFloat, leftInset: CGFloat, rightInset: CGFloat)?
+    private var buttonLayout: (isDiamonds: Bool, origin: CGFloat, width: CGFloat, leftInset: CGFloat, rightInset: CGFloat)?
     
     override var canBeSelected: Bool {
         return false
@@ -174,7 +174,7 @@ final class MonetizationBalanceItemNode: ListViewItemNode, ItemListItemNode {
             let amountString: NSAttributedString
             let value: String
             
-            var isStars = false
+            var isDiamonds = false
             if let stats = item.stats as? StarsRevenueStats {
                 switch stats.balances.availableBalance.currency {
                 case .ton:
@@ -184,7 +184,7 @@ final class MonetizationBalanceItemNode: ListViewItemNode, ItemListItemNode {
                 case .stars:
                     amountString = NSAttributedString(string: presentationStringsFormattedNumber(stats.balances.availableBalance.amount, item.presentationData.dateTimeFormat.groupingSeparator), font: integralFont, textColor: item.presentationData.theme.list.itemPrimaryTextColor)
                     value = stats.balances.availableBalance.amount == StarsAmount.zero ? "" : "~\(formatTonUsdValue(stats.balances.availableBalance.amount.value, divide: false, rate: stats.usdRate, dateTimeFormat: item.presentationData.dateTimeFormat))"
-                    isStars = true
+                    isDiamonds = true
                 }
             } else {
                 fatalError()
@@ -299,7 +299,7 @@ final class MonetizationBalanceItemNode: ListViewItemNode, ItemListItemNode {
                     }
                     
                     if themeUpdated {
-                        if isStars {
+                        if isDiamonds {
                             strongSelf.iconNode.image = UIImage(bundleImageName: "Premium/Stars/BalanceStar")
                         } else {
                             strongSelf.iconNode.image = generateTintedImage(image: UIImage(bundleImageName: "Ads/TonBig"), color: UIColor(rgb: 0x30A1F5))
@@ -319,7 +319,7 @@ final class MonetizationBalanceItemNode: ListViewItemNode, ItemListItemNode {
                     
                     strongSelf.valueTextNode.frame = CGRect(origin: CGPoint(x: floorToScreenPixels((params.width - valueLayout.size.width) / 2.0), y: balanceTextFrame.maxY - 5.0), size: valueLayout.size)
                                       
-                    strongSelf.buttonLayout = (isStars: isStars, origin: strongSelf.valueTextNode.frame.maxY + buttonSpacing + 3.0, width: params.width, leftInset: leftInset, rightInset: rightInset)
+                    strongSelf.buttonLayout = (isDiamonds: isDiamonds, origin: strongSelf.valueTextNode.frame.maxY + buttonSpacing + 3.0, width: params.width, leftInset: leftInset, rightInset: rightInset)
                     strongSelf.updateButton()
                 }
             })
@@ -327,7 +327,7 @@ final class MonetizationBalanceItemNode: ListViewItemNode, ItemListItemNode {
     }
     
     func updateButton() {
-        guard let item = self.item, let (isStars, origin, width, leftInset, rightInset) = self.buttonLayout else {
+        guard let item = self.item, let (isDiamonds, origin, width, leftInset, rightInset) = self.buttonLayout else {
             return
         }
         
@@ -354,7 +354,7 @@ final class MonetizationBalanceItemNode: ListViewItemNode, ItemListItemNode {
                 }
             }
                         
-            var actionTitle = isStars ? item.presentationData.strings.Monetization_BalanceDiamondsWithdraw : item.presentationData.strings.Monetization_BalanceWithdraw
+            var actionTitle = isDiamonds ? item.presentationData.strings.Monetization_BalanceDiamondsWithdraw : item.presentationData.strings.Monetization_BalanceWithdraw
             var withdrawWidth = width - leftInset - rightInset
             if let _ = item.buyAdsAction {
                 withdrawWidth = (withdrawWidth - 10.0) / 2.0

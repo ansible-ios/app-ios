@@ -25,7 +25,7 @@ public class ChatMessageShareButton: ASDisplayNode {
     private var bottomButton: HighlightTrackingButtonNode?
     private var bottomIconNode: ASImageNode?
     
-    private var starsView: StarsView?
+    private var diamondsView: DiamondsView?
     
     private var separatorNode: ASDisplayNode?
     
@@ -336,19 +336,19 @@ public class ChatMessageShareButton: ASDisplayNode {
         }
         
         if isSummarize {
-            let starsView: StarsView
-            if let current = self.starsView {
-                starsView = current
+            let diamondsView: DiamondsView
+            if let current = self.diamondsView {
+                diamondsView = current
             } else {
-                starsView = StarsView()
-                self.starsView = starsView
-                self.view.insertSubview(starsView, belowSubview: self.topIconNode.view)
+                diamondsView = DiamondsView()
+                self.diamondsView = diamondsView
+                self.view.insertSubview(diamondsView, belowSubview: self.topIconNode.view)
             }
-            starsView.frame = CGRect(origin: .zero, size: size)
-            starsView.update(size: size, color: .white)
-        } else if let starsView = self.starsView {
-            self.starsView = nil
-            starsView.removeFromSuperview()
+            diamondsView.frame = CGRect(origin: .zero, size: size)
+            diamondsView.update(size: size, color: .white)
+        } else if let diamondsView = self.diamondsView {
+            self.diamondsView = nil
+            diamondsView.removeFromSuperview()
         }
         
         return size
@@ -365,10 +365,10 @@ public class ChatMessageShareButton: ASDisplayNode {
     }
 }
 
-private final class StarsView: UIView {
+private final class DiamondsView: UIView {
     private let hierarchyTrackingLayer: HierarchyTrackingLayer
-    private let topStar = SimpleLayer()
-    private let bottomStar = SimpleLayer()
+    private let topDiamond = SimpleLayer()
+    private let bottomDiamond = SimpleLayer()
         
     override init(frame: CGRect) {
         self.hierarchyTrackingLayer = HierarchyTrackingLayer()
@@ -385,18 +385,18 @@ private final class StarsView: UIView {
             self.updateAnimations()
         }
         
-        self.layer.addSublayer(self.topStar)
-        self.layer.addSublayer(self.bottomStar)
+        self.layer.addSublayer(self.topDiamond)
+        self.layer.addSublayer(self.bottomDiamond)
         
         let image = UIImage(bundleImageName: "Settings/Storage/ParticleStar")
-        self.topStar.contents = image?.cgImage
-        self.bottomStar.contents = image?.cgImage
+        self.topDiamond.contents = image?.cgImage
+        self.bottomDiamond.contents = image?.cgImage
         
-        self.topStar.bounds = CGRect(origin: .zero, size: CGSize(width: 10.0, height: 10.0))
-        self.bottomStar.bounds = CGRect(origin: .zero, size: CGSize(width: 10.0, height: 10.0))
+        self.topDiamond.bounds = CGRect(origin: .zero, size: CGSize(width: 10.0, height: 10.0))
+        self.bottomDiamond.bounds = CGRect(origin: .zero, size: CGSize(width: 10.0, height: 10.0))
         
-        self.topStar.opacity = 0.5
-        self.bottomStar.opacity = 0.5
+        self.topDiamond.opacity = 0.5
+        self.bottomDiamond.opacity = 0.5
     }
     
     required init(coder: NSCoder) {
@@ -411,7 +411,7 @@ private final class StarsView: UIView {
         topAnimation.autoreverses = true
         topAnimation.repeatCount = Float.infinity
         topAnimation.beginTime = CACurrentMediaTime()
-        self.topStar.add(topAnimation, forKey: "blink")
+        self.topDiamond.add(topAnimation, forKey: "blink")
         
         let bottomAnimation = CAKeyframeAnimation(keyPath: "transform.scale")
         bottomAnimation.values = [1.0 as NSNumber, 1.0 as NSNumber, 0.55 as NSNumber]
@@ -420,14 +420,14 @@ private final class StarsView: UIView {
         bottomAnimation.autoreverses = true
         bottomAnimation.repeatCount = Float.infinity
         bottomAnimation.beginTime = CACurrentMediaTime() + 0.9
-        self.bottomStar.add(bottomAnimation, forKey: "blink")
+        self.bottomDiamond.add(bottomAnimation, forKey: "blink")
     }
             
     func update(size: CGSize, color: UIColor) {
-        self.topStar.layerTintColor = color.cgColor
-        self.bottomStar.layerTintColor = color.cgColor
+        self.topDiamond.layerTintColor = color.cgColor
+        self.bottomDiamond.layerTintColor = color.cgColor
         
-        self.topStar.position = CGPoint(x: 9.0, y: 9.0)
-        self.bottomStar.position = CGPoint(x: size.width - 9.0, y: size.height - 9.0)
+        self.topDiamond.position = CGPoint(x: 9.0, y: 9.0)
+        self.bottomDiamond.position = CGPoint(x: size.width - 9.0, y: size.height - 9.0)
     }
 }

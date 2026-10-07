@@ -440,7 +440,7 @@ public class ChatTextInputPanelNode: ChatInputPanelNode, ASEditableTextNodeDeleg
     public var customSwitchToKeyboard: (() -> Void)?
     public var allowConsecutiveNewlines = true
     
-    private var starReactionButton: ComponentView<Empty>?
+    private var diamondReactionButton: ComponentView<Empty>?
     private var liveMicrophoneButton: ComponentView<Empty>?
     private var settingsButton: ComponentView<Empty>?
     
@@ -1927,7 +1927,7 @@ public class ChatTextInputPanelNode: ChatInputPanelNode, ASEditableTextNodeDeleg
         }
         
         var updatedPlaceholder: String?
-        var placeholderHasStar = false
+        var placeholderHasDiamond = false
         
         let themeUpdated = self.presentationInterfaceState?.theme !== interfaceState.theme
         
@@ -2115,7 +2115,7 @@ public class ChatTextInputPanelNode: ChatInputPanelNode, ASEditableTextNodeDeleg
                 peerUpdated = true
             }
             
-            if peerUpdated || previousState?.chatLocation != interfaceState.chatLocation || previousState?.interfaceState.silentPosting != interfaceState.interfaceState.silentPosting || themeUpdated || !self.initializedPlaceholder || previousState?.keyboardButtonsMessage?.id != interfaceState.keyboardButtonsMessage?.id || previousState?.keyboardButtonsMessage?.visibleReplyMarkupPlaceholder != interfaceState.keyboardButtonsMessage?.visibleReplyMarkupPlaceholder || dismissedButtonMessageUpdated || replyMessageUpdated || (previousState?.interfaceState.editMessage == nil) != (interfaceState.interfaceState.editMessage == nil) || previousState?.forumTopicData != interfaceState.forumTopicData || previousState?.replyMessage?.id != interfaceState.replyMessage?.id || previousState?.sendPaidMessageStars != interfaceState.sendPaidMessageStars {
+            if peerUpdated || previousState?.chatLocation != interfaceState.chatLocation || previousState?.interfaceState.silentPosting != interfaceState.interfaceState.silentPosting || themeUpdated || !self.initializedPlaceholder || previousState?.keyboardButtonsMessage?.id != interfaceState.keyboardButtonsMessage?.id || previousState?.keyboardButtonsMessage?.visibleReplyMarkupPlaceholder != interfaceState.keyboardButtonsMessage?.visibleReplyMarkupPlaceholder || dismissedButtonMessageUpdated || replyMessageUpdated || (previousState?.interfaceState.editMessage == nil) != (interfaceState.interfaceState.editMessage == nil) || previousState?.forumTopicData != interfaceState.forumTopicData || previousState?.replyMessage?.id != interfaceState.replyMessage?.id || previousState?.sendPaidMessageDiamonds != interfaceState.sendPaidMessageDiamonds {
                 self.initializedPlaceholder = true
                 
                 var placeholder: String = ""
@@ -2135,9 +2135,9 @@ public class ChatTextInputPanelNode: ChatInputPanelNode, ASEditableTextNodeDeleg
                                 placeholder = interfaceState.strings.Conversation_InputTextAnonymousPlaceholder
                             } else if case let .replyThread(replyThreadMessage) = interfaceState.chatLocation, !replyThreadMessage.isForumPost, replyThreadMessage.peerId != self.context?.account.peerId {
                                 if replyThreadMessage.isChannelPost {
-                                    if let sendPaidMessageStars = interfaceState.sendPaidMessageStars, interfaceState.interfaceState.editMessage == nil {
+                                    if let sendPaidMessageDiamonds = interfaceState.sendPaidMessageDiamonds, interfaceState.interfaceState.editMessage == nil {
                                         placeholder = interfaceState.strings.Chat_InputTextPaidCommentPlaceholder(" # \(presentationStringsFormattedNumber(Int32(sendPaidMessageStars.value), interfaceState.dateTimeFormat.groupingSeparator))").string
-                                        placeholderHasStar = true
+                                        placeholderHasDiamond = true
                                     } else {
                                         placeholder = interfaceState.strings.Conversation_InputTextPlaceholderComment
                                     }
@@ -2151,9 +2151,9 @@ public class ChatTextInputPanelNode: ChatInputPanelNode, ASEditableTextNodeDeleg
                                     placeholder = interfaceState.strings.Chat_InputPlaceholderMessageInTopic(forumTopicData.title).string
                                 }
                             } else {
-                                if let sendPaidMessageStars = interfaceState.sendPaidMessageStars, interfaceState.interfaceState.editMessage == nil {
+                                if let sendPaidMessageDiamonds = interfaceState.sendPaidMessageDiamonds, interfaceState.interfaceState.editMessage == nil {
                                     placeholder = interfaceState.strings.Chat_InputTextPaidMessagePlaceholder(" # \(presentationStringsFormattedNumber(Int32(sendPaidMessageStars.value), interfaceState.dateTimeFormat.groupingSeparator))").string
-                                    placeholderHasStar = true
+                                    placeholderHasDiamond = true
                                 } else {
                                     placeholder = interfaceState.strings.Conversation_InputTextPlaceholder
                                 }
@@ -2512,7 +2512,7 @@ public class ChatTextInputPanelNode: ChatInputPanelNode, ASEditableTextNodeDeleg
         if let presentationInterfaceState = self.presentationInterfaceState {
             var showTitle = false
             if !self.sendActionButtons.sendContainerNode.alpha.isZero {
-                if let _ = presentationInterfaceState.sendPaidMessageStars {
+                if let _ = presentationInterfaceState.sendPaidMessageDiamonds {
                     showTitle = true
                 } else if case let .customChatContents(customChatContents) = interfaceState.subject {
                     switch customChatContents.kind {
@@ -2526,20 +2526,20 @@ public class ChatTextInputPanelNode: ChatInputPanelNode, ASEditableTextNodeDeleg
             mediaActionButtonsSize = self.mediaActionButtons.updateLayout(size: CGSize(width: 40.0, height: minimalHeight), isMediaInputExpanded: isMediaInputExpanded, showTitle: false, currentMessageEffectId: presentationInterfaceState.interfaceState.sendMessageEffect, transition: transition, interfaceState: presentationInterfaceState)
         }
         
-        var starReactionButtonSize: CGSize?
+        var diamondReactionButtonSize: CGSize?
         if let customRightAction = self.customRightAction, case let .stars(count, isFilled, action, longPressAction) = customRightAction {
-            let starReactionButton: ComponentView<Empty>
-            var starReactionButtonTransition = transition
-            if let current = self.starReactionButton {
-                starReactionButton = current
+            let diamondReactionButton: ComponentView<Empty>
+            var diamondReactionButtonTransition = transition
+            if let current = self.diamondReactionButton {
+                diamondReactionButton = current
             } else {
-                starReactionButton = ComponentView()
-                self.starReactionButton = starReactionButton
-                starReactionButtonTransition = .immediate
+                diamondReactionButton = ComponentView()
+                self.diamondReactionButton = diamondReactionButton
+                diamondReactionButtonTransition = .immediate
             }
-            starReactionButtonSize = starReactionButton.update(
-                transition: ComponentTransition(starReactionButtonTransition),
-                component: AnyComponent(StarReactionButtonComponent(
+            diamondReactionButtonSize = diamondReactionButton.update(
+                transition: ComponentTransition(diamondReactionButtonTransition),
+                component: AnyComponent(DiamondReactionButtonComponent(
                     theme: interfaceState.theme,
                     count: count,
                     isFilled: isFilled,
@@ -2549,13 +2549,13 @@ public class ChatTextInputPanelNode: ChatInputPanelNode, ASEditableTextNodeDeleg
                 environment: {},
                 containerSize: CGSize(width: 40.0, height: 40.0)
             )
-        } else if let starReactionButton = self.starReactionButton {
-            self.starReactionButton = nil
-            if let starReactionButtonView = starReactionButton.view {
-                transition.updateAlpha(layer: starReactionButtonView.layer, alpha: 0.0, completion: { [weak starReactionButtonView] _ in
-                    starReactionButtonView?.removeFromSuperview()
+        } else if let diamondReactionButton = self.diamondReactionButton {
+            self.diamondReactionButton = nil
+            if let diamondReactionButtonView = diamondReactionButton.view {
+                transition.updateAlpha(layer: diamondReactionButtonView.layer, alpha: 0.0, completion: { [weak diamondReactionButtonView] _ in
+                    diamondReactionButtonView?.removeFromSuperview()
                 })
-                transition.updateTransformScale(layer: starReactionButtonView.layer, scale: 0.001)
+                transition.updateTransformScale(layer: diamondReactionButtonView.layer, scale: 0.001)
             }
         }
         
@@ -2590,7 +2590,7 @@ public class ChatTextInputPanelNode: ChatInputPanelNode, ASEditableTextNodeDeleg
             }
         }
         
-        var effectiveActionButtonsSize = starReactionButtonSize ?? mediaActionButtonsSize
+        var effectiveActionButtonsSize = diamondReactionButtonSize ?? mediaActionButtonsSize
         if let liveMicrophoneButtonSize {
             effectiveActionButtonsSize.width += 6.0 + liveMicrophoneButtonSize.width
         }
@@ -2639,10 +2639,10 @@ public class ChatTextInputPanelNode: ChatInputPanelNode, ASEditableTextNodeDeleg
         } else {
             if let customRightAction = self.customRightAction, case .empty = customRightAction {
                 textFieldInsets.right = 8.0
-            } else if let starReactionButtonSize, let liveMicrophoneButtonSize {
-                textFieldInsets.right = 14.0 + starReactionButtonSize.width + 6.0 + liveMicrophoneButtonSize.width
-            } else if let starReactionButtonSize {
-                textFieldInsets.right = 14.0 + starReactionButtonSize.width
+            } else if let diamondReactionButtonSize, let liveMicrophoneButtonSize {
+                textFieldInsets.right = 14.0 + diamondReactionButtonSize.width + 6.0 + liveMicrophoneButtonSize.width
+            } else if let diamondReactionButtonSize {
+                textFieldInsets.right = 14.0 + diamondReactionButtonSize.width
             } else if let liveMicrophoneButtonSize {
                 textFieldInsets.right = 14.0 + liveMicrophoneButtonSize.width + 6.0 + liveMicrophoneButtonSize.width
             } else {
@@ -3321,8 +3321,8 @@ public class ChatTextInputPanelNode: ChatInputPanelNode, ASEditableTextNodeDeleg
             }
             
             let attributedPlaceholder = NSMutableAttributedString(string: currentPlaceholder, font: Font.regular(baseFontSize), textColor: placeholderColor.withAlphaComponent(1.0))
-            if placeholderHasStar, let range = attributedPlaceholder.string.range(of: "#") {
-                attributedPlaceholder.addAttribute(.attachment, value: PresentationResourcesChat.chatPlaceholderStarIcon(interfaceState.theme)!, range: NSRange(range, in: attributedPlaceholder.string))
+            if placeholderHasDiamond, let range = attributedPlaceholder.string.range(of: "#") {
+                attributedPlaceholder.addAttribute(.attachment, value: PresentationResourcesChat.chatPlaceholderDiamondIcon(interfaceState.theme)!, range: NSRange(range, in: attributedPlaceholder.string))
                 attributedPlaceholder.addAttribute(.foregroundColor, value: placeholderColor.withAlphaComponent(1.0), range: NSRange(range, in: attributedPlaceholder.string))
                 attributedPlaceholder.addAttribute(.baselineOffset, value: 1.0, range: NSRange(range, in: attributedPlaceholder.string))
             }
@@ -3455,22 +3455,22 @@ public class ChatTextInputPanelNode: ChatInputPanelNode, ASEditableTextNodeDeleg
             transition.updateFrame(view: liveMicrophoneButtonView, frame: liveMicrophoneButtonFrame)
         }
         
-        if let starReactionButtonView = self.starReactionButton?.view, let starReactionButtonSize {
-            var starReactionButtonFrame = CGRect(origin: CGPoint(x: nextRightActionButtonX, y: textInputContainerBackgroundFrame.maxY - starReactionButtonSize.height), size: starReactionButtonSize)
-            nextRightActionButtonX += 6.0 + starReactionButtonSize.width
+        if let diamondReactionButtonView = self.diamondReactionButton?.view, let diamondReactionButtonSize {
+            var diamondReactionButtonFrame = CGRect(origin: CGPoint(x: nextRightActionButtonX, y: textInputContainerBackgroundFrame.maxY - diamondReactionButtonSize.height), size: diamondReactionButtonSize)
+            nextRightActionButtonX += 6.0 + diamondReactionButtonSize.width
             if inputHasText || self.extendedSearchLayout || hasMediaDraft {
-                starReactionButtonFrame.origin.x = width + 8.0
+                diamondReactionButtonFrame.origin.x = width + 8.0
             }
             
-            if starReactionButtonView.superview == nil {
-                self.view.addSubview(starReactionButtonView)
+            if diamondReactionButtonView.superview == nil {
+                self.view.addSubview(diamondReactionButtonView)
                 if transition.isAnimated {
-                    starReactionButtonView.layer.animateAlpha(from: 0.0, to: 1.0, duration: 0.2)
-                    transition.animateTransformScale(view: starReactionButtonView, from: 0.001)
-                    starReactionButtonView.frame = starReactionButtonFrame
+                    diamondReactionButtonView.layer.animateAlpha(from: 0.0, to: 1.0, duration: 0.2)
+                    transition.animateTransformScale(view: diamondReactionButtonView, from: 0.001)
+                    diamondReactionButtonView.frame = diamondReactionButtonFrame
                 }
             }
-            transition.updateFrame(view: starReactionButtonView, frame: starReactionButtonFrame)
+            transition.updateFrame(view: diamondReactionButtonView, frame: diamondReactionButtonFrame)
         }
         
         var sendActionButtonsFrame = CGRect(origin: CGPoint(x: textInputContainerBackgroundFrame.maxX - sendActionButtonsSize.width, y: textInputContainerBackgroundFrame.maxY - sendActionButtonsSize.height), size: sendActionButtonsSize)
@@ -3739,7 +3739,7 @@ public class ChatTextInputPanelNode: ChatInputPanelNode, ASEditableTextNodeDeleg
                 
         transition.updateAlpha(node: self.viewOnceButton, alpha: viewOnceIsVisible ? 1.0 : 0.0)
         transition.updateTransformScale(node: self.viewOnceButton, scale: viewOnceIsVisible ? 1.0 : 0.01)
-        if let user = interfaceState.renderedPeer?.peer as? IosappUser, user.id != interfaceState.accountPeerId && user.botInfo == nil && interfaceState.sendPaidMessageStars == nil {
+        if let user = interfaceState.renderedPeer?.peer as? IosappUser, user.id != interfaceState.accountPeerId && user.botInfo == nil && interfaceState.sendPaidMessageDiamonds == nil {
             self.viewOnceButton.isHidden = false
         } else {
             self.viewOnceButton.isHidden = true

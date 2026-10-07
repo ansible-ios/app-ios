@@ -49,7 +49,7 @@ import ReactionSelectionNode
 import StoryQualityUpgradeSheetScreen
 import AudioWaveform
 import ChatMessagePaymentAlertController
-import ChatSendStarsScreen
+import ChatSendDiamondsScreen
 import AnimatedTextComponent
 import ChatSendAsContextMenu
 import ShareWithPeersScreen
@@ -104,10 +104,10 @@ final class StoryItemSetContainerSendMessage: @unchecked(Sendable) {
 
     var currentSpeechHolder: SpeechSynthesizerHolder?
 
-    var currentLiveStreamMessageStars: StarsAmount?
-    weak var currentSendStarsUndoController: UndoOverlayController?
-    var currentLiveStreamStarsIsActive: Bool = false
-    var currentLiveStreamStarsIsActiveTimer: Foundation.Timer?
+    var currentLiveStreamMessageDiamonds: StarsAmount?
+    weak var currentSendDiamondsUndoController: UndoOverlayController?
+    var currentLiveStreamDiamondsIsActive: Bool = false
+    var currentLiveStreamDiamondsIsActiveTimer: Foundation.Timer?
 
     struct SendAsData: Equatable {
         var isPremium: Bool
@@ -466,7 +466,7 @@ final class StoryItemSetContainerSendMessage: @unchecked(Sendable) {
         var items: [ContextMenuItem] = []
 
         if case .liveStream = component.slice.item.storyItem.media {
-            items.append(.action(ContextMenuActionItem(text: self.currentLiveStreamMessageStars != nil ? presentationData.strings.LiveStream_InputContextMenuEditDiamonds : presentationData.strings.LiveStream_InputContextMenuAddDiamonds, icon: { theme in return generateTintedImage(image: UIImage(bundleImageName: "Chat/Input/Text/AccessoryIconSuggestPost"), color: theme.contextMenu.primaryColor)
+            items.append(.action(ContextMenuActionItem(text: self.currentLiveStreamMessageDiamonds != nil ? presentationData.strings.LiveStream_InputContextMenuEditDiamonds : presentationData.strings.LiveStream_InputContextMenuAddDiamonds, icon: { theme in return generateTintedImage(image: UIImage(bundleImageName: "Chat/Input/Text/AccessoryIconSuggestPost"), color: theme.contextMenu.primaryColor)
             }, action: { [weak self, weak view] _, a in
                 a(.default)
 
@@ -476,16 +476,16 @@ final class StoryItemSetContainerSendMessage: @unchecked(Sendable) {
                 self.performPaidMessageAction(view: view)
             })))
 
-            var canRemoveStars = self.currentLiveStreamMessageStars != nil
+            var canRemoveDiamonds = self.currentLiveStreamMessageDiamonds != nil
             if let visibleItemView = view.visibleItems[component.slice.item.id]?.view.view as? StoryItemContentComponent.View {
                 if let liveChatStateValue = visibleItemView.liveChatState {
                     if let minMessagePrice = liveChatStateValue.minMessagePrice, minMessagePrice > 1 {
-                        canRemoveStars = false
+                        canRemoveDiamonds = false
                     }
                 }
             }
 
-            if canRemoveStars {
+            if canRemoveDiamonds {
                 items.append(.action(ContextMenuActionItem(text: presentationData.strings.LiveStream_InputContextMenuRemoveDiamonds, icon: { theme in return generateTintedImage(image: UIImage(bundleImageName: "Chat/Context Menu/RemovePrice"), color: theme.contextMenu.primaryColor)
                 }, action: { [weak self, weak view] _, a in
                     a(.default)
@@ -493,7 +493,7 @@ final class StoryItemSetContainerSendMessage: @unchecked(Sendable) {
                     guard let self, let view else {
                         return
                     }
-                    self.currentLiveStreamMessageStars = nil
+                    self.currentLiveStreamMessageDiamonds = nil
                     view.state?.updated(transition: .spring(duration: 0.4))
                 })))
             }
@@ -525,7 +525,7 @@ final class StoryItemSetContainerSendMessage: @unchecked(Sendable) {
                 })))
             }
 
-            if component.slice.additionalPeerData.sendPaidMessageStars == nil {
+            if component.slice.additionalPeerData.sendPaidMessageDiamonds == nil {
                 items.append(.action(ContextMenuActionItem(text: presentationData.strings.Conversation_SendMessage_ScheduleMessage, icon: { theme in return generateTintedImage(image: UIImage(bundleImageName: "Chat/Input/Menu/ScheduleIcon"), color: theme.contextMenu.primaryColor)
                 }, action: { [weak self, weak view] _, a in
                     a(.default)
@@ -592,7 +592,7 @@ final class StoryItemSetContainerSendMessage: @unchecked(Sendable) {
     }
 
     func presentPaidMessageAlertIfNeeded(view: StoryItemSetContainerComponent.View, completion: @escaping () -> Void) {
-        guard let component = view.component, let sendPaidMessageStars = component.slice.additionalPeerData.sendPaidMessageStars else {
+        guard let component = view.component, let sendPaidMessageDiamonds = component.slice.additionalPeerData.sendPaidMessageDiamonds else {
             completion()
             return
         }
@@ -604,7 +604,7 @@ final class StoryItemSetContainerSendMessage: @unchecked(Sendable) {
             updatedPresentationData: nil,
             peers: [EngineRenderedPeer(peer: component.slice.effectivePeer)],
             count: 1,
-            amount: sendPaidMessageStars,
+            amount: sendPaidMessageDiamonds,
             totalAmount: nil,
             hasCheck: false,
             navigationController: component.controller()?.navigationController as? NavigationController,
@@ -683,18 +683,18 @@ final class StoryItemSetContainerSendMessage: @unchecked(Sendable) {
         if case .liveStream = component.slice.item.storyItem.media {
             if let visibleItem = view.visibleItems[component.slice.item.id], let itemView = visibleItem.view.view as? StoryItemContentComponent.View {
 
-                var sendPaidMessageStars = self.currentLiveStreamMessageStars
+                var sendPaidMessageDiamonds = self.currentLiveStreamMessageDiamonds
                 var isAdmin = false
                 var sendAsPeer: SendAsPeer?
                 if let visibleItemView = view.visibleItems[component.slice.item.id]?.view.view as? StoryItemContentComponent.View {
                     if let liveChatStateValue = visibleItemView.liveChatState {
                         if let minMessagePrice = liveChatStateValue.minMessagePrice {
-                            if let current = sendPaidMessageStars {
+                            if let current = sendPaidMessageDiamonds {
                                 if current < StarsAmount(value: minMessagePrice, nanos: 0) {
-                                    sendPaidMessageStars = StarsAmount(value: minMessagePrice, nanos: 0)
+                                    sendPaidMessageDiamonds = StarsAmount(value: minMessagePrice, nanos: 0)
                                 }
                             } else {
-                                sendPaidMessageStars = StarsAmount(value: minMessagePrice, nanos: 0)
+                                sendPaidMessageDiamonds = StarsAmount(value: minMessagePrice, nanos: 0)
                             }
                         }
 
@@ -731,13 +731,13 @@ final class StoryItemSetContainerSendMessage: @unchecked(Sendable) {
                             var maxInputLength: Int?
                             var maxEmojiCount: Int?
                             let paramSets = LiveChatMessageParams(appConfig: component.context.currentAppConfiguration.with({ $0 }))
-                            let params = GroupCallMessagesContext.getStarAmountParamMapping(params: paramSets, value: isAdmin ? 1000000000 : sendPaidMessageStars?.value ?? 0)
+                            let params = GroupCallMessagesContext.getDiamondAmountParamMapping(params: paramSets, value: isAdmin ? 1000000000 : sendPaidMessageDiamonds?.value ?? 0)
                             maxInputLength = params.maxLength
                             maxEmojiCount = params.emojiCount
 
-                            var sendDisabledMinStars: Int64?
+                            var sendDisabledMinDiamonds: Int64?
                             if let maxInputLength, text.string.count > maxInputLength {
-                                sendDisabledMinStars = paramSets.paramSets.sorted(by: { $0.minStars < $1.minStars }).first(where: { $0.maxMessageLength >= text.string.count })?.minStars ?? 1000000000
+                                sendDisabledMinDiamonds = paramSets.paramSets.sorted(by: { $0.minDiamonds < $1.minDiamonds }).first(where: { $0.maxMessageLength >= text.string.count })?.minDiamonds ?? 1000000000
                             }
                             if let maxEmojiCount {
                                 var emojiCount = 0
@@ -759,7 +759,7 @@ final class StoryItemSetContainerSendMessage: @unchecked(Sendable) {
                                     }
                                 }
                                 if emojiCount > maxEmojiCount {
-                                    let absMaxEmojiCount = paramSets.paramSets.max(by: { $0.minStars < $1.minStars })?.maxEmojiCount ?? 10
+                                    let absMaxEmojiCount = paramSets.paramSets.max(by: { $0.minDiamonds < $1.minDiamonds })?.maxEmojiCount ?? 10
                                     if emojiCount > absMaxEmojiCount {
                                         let presentationData = component.context.sharedContext.currentPresentationData.with({ $0 }).withUpdated(theme: component.theme)
                                         view.component?.controller()?.present(textAlertController(context: component.context, updatedPresentationData: (presentationData, .single(presentationData)), title: nil, text: presentationData.strings.LiveStream_ErrorMaxAllowedEmoji_Text(Int32(absMaxEmojiCount)), actions: [TextAlertAction(type: .defaultAction, title: presentationData.strings.Common_OK, action: {})]), in: .window(.root))
@@ -767,12 +767,12 @@ final class StoryItemSetContainerSendMessage: @unchecked(Sendable) {
                                         return
                                     }
 
-                                    sendDisabledMinStars = paramSets.paramSets.sorted(by: { $0.minStars < $1.minStars }).first(where: { $0.maxEmojiCount >= emojiCount })?.minStars ?? 1000000000
+                                    sendDisabledMinDiamonds = paramSets.paramSets.sorted(by: { $0.minDiamonds < $1.minDiamonds }).first(where: { $0.maxEmojiCount >= emojiCount })?.minDiamonds ?? 1000000000
                                 }
                             }
 
-                            if let sendDisabledMinStars {
-                                self.performPaidMessageAction(view: view, minStars: Int(sendDisabledMinStars))
+                            if let sendDisabledMinDiamonds {
+                                self.performPaidMessageAction(view: view, minDiamonds: Int(sendDisabledMinDiamonds))
                                 return
                             }
 
@@ -785,12 +785,12 @@ final class StoryItemSetContainerSendMessage: @unchecked(Sendable) {
 
                             let entities = generateChatInputTextEntities(text)
 
-                            call.sendMessage(fromId: sendAsPeer?.peer.id, isAdmin: isAdmin, text: text.string, entities: entities, paidStars: sendPaidMessageStars?.value)
+                            call.sendMessage(fromId: sendAsPeer?.peer.id, isAdmin: isAdmin, text: text.string, entities: entities, paidDiamonds: sendPaidMessageDiamonds?.value)
 
                             component.storyItemSharedState.replyDrafts.removeValue(forKey: EngineStoryId(peerId: peerId, id: focusedItem.storyItem.id))
                             inputPanelView.clearSendMessageInput(updateState: true)
 
-                            self.currentLiveStreamMessageStars = nil
+                            self.currentLiveStreamMessageDiamonds = nil
                             view.state?.updated(transition: .spring(duration: 0.4))
 
                             let controller = component.controller() as? StoryContainerScreen
@@ -832,8 +832,8 @@ final class StoryItemSetContainerSendMessage: @unchecked(Sendable) {
                     let waveformBuffer = audio.waveform.makeBitstream()
 
                     var messageAttributes: [EngineMessage.Attribute] = []
-                    if let sendPaidMessageStars = component.slice.additionalPeerData.sendPaidMessageStars {
-                        messageAttributes.append(PaidStarsMessageAttribute(stars: sendPaidMessageStars, postponeSending: false))
+                    if let sendPaidMessageDiamonds = component.slice.additionalPeerData.sendPaidMessageDiamonds {
+                        messageAttributes.append(PaidDiamondsMessageAttribute(stars: sendPaidMessageDiamonds, postponeSending: false))
                     }
 
                     let messages: [EnqueueMessage] = [.message(text: "", attributes: messageAttributes, inlineStickers: [:], mediaReference: .standalone(media: IosappMediaFile(fileId: EngineMedia.Id(namespace: Namespaces.Media.LocalFile, id: Int64.random(in: Int64.min ... Int64.max)), partialReference: nil, resource: audio.resource, previewRepresentations: [], videoThumbnails: [], immediateThumbnailData: nil, mimeType: "audio/ogg", size: Int64(audio.fileSize), attributes: [.Audio(isVoice: true, duration: Int(audio.duration), title: nil, performer: nil, waveform: waveformBuffer)], alternativeRepresentations: [])), threadId: nil, replyToMessageId: nil, replyToStoryId: focusedStoryId, localGroupingKey: nil, correlationId: nil, bubbleUpEmojiOrStickersets: [])]
@@ -858,7 +858,7 @@ final class StoryItemSetContainerSendMessage: @unchecked(Sendable) {
                                 content: .text(text.string, entities),
                                 silentPosting: silentPosting,
                                 scheduleTime: scheduleTime,
-                                sendPaidMessageStars: component.slice.additionalPeerData.sendPaidMessageStars
+                                sendPaidMessageDiamonds: component.slice.additionalPeerData.sendPaidMessageDiamonds
                             ) |> deliverOnMainQueue).start(next: { [weak self, weak view] messageIds in
                                 Queue.mainQueue().after(0.3) {
                                     if let self, let view {
@@ -927,7 +927,7 @@ final class StoryItemSetContainerSendMessage: @unchecked(Sendable) {
                     replyTo: nil,
                     storyId: focusedStoryId,
                     content: .file(fileReference),
-                    sendPaidMessageStars: component.slice.additionalPeerData.sendPaidMessageStars
+                    sendPaidMessageDiamonds: component.slice.additionalPeerData.sendPaidMessageDiamonds
                 ) |> deliverOnMainQueue).start(next: { [weak self, weak view] messageIds in
                     Queue.mainQueue().after(0.3) {
                         if let self, let view {
@@ -989,7 +989,7 @@ final class StoryItemSetContainerSendMessage: @unchecked(Sendable) {
                 content: .contextResult(results, result),
                 silentPosting: silentPosting,
                 scheduleTime: scheduleTime,
-                sendPaidMessageStars: component.slice.additionalPeerData.sendPaidMessageStars
+                sendPaidMessageDiamonds: component.slice.additionalPeerData.sendPaidMessageDiamonds
             ) |> deliverOnMainQueue).start(next: { [weak self, weak view] messageIds in
                 Queue.mainQueue().after(0.3) {
                     if let self, let view {
@@ -1422,7 +1422,7 @@ final class StoryItemSetContainerSendMessage: @unchecked(Sendable) {
         }
     }
 
-    func performPaidMessageAction(view: StoryItemSetContainerComponent.View, minStars: Int? = nil) {
+    func performPaidMessageAction(view: StoryItemSetContainerComponent.View, minDiamonds: Int? = nil) {
         Task { @MainActor [weak view] in
             guard let view else {
                 return
@@ -1456,16 +1456,16 @@ final class StoryItemSetContainerSendMessage: @unchecked(Sendable) {
                 minAmount = minMessagePrice
             }
 
-            var currentAmount: Int? = (self.currentLiveStreamMessageStars?.value).flatMap { Int($0) }
-            if let minStars {
+            var currentAmount: Int? = (self.currentLiveStreamMessageDiamonds?.value).flatMap { Int($0) }
+            if let minDiamonds {
                 if let currentAmountValue = currentAmount {
-                    currentAmount = max(currentAmountValue, minStars)
+                    currentAmount = max(currentAmountValue, minDiamonds)
                 } else {
-                    currentAmount = minStars
+                    currentAmount = minDiamonds
                 }
             }
 
-            let initialData = await ChatSendStarsScreen.initialDataLiveStreamMessage(
+            let initialData = await ChatSendDiamondsScreen.initialDataLiveStreamMessage(
                 context: component.context,
                 peerId: peerId,
                 text: inputText,
@@ -1476,12 +1476,12 @@ final class StoryItemSetContainerSendMessage: @unchecked(Sendable) {
                         return
                     }
 
-                    self.currentLiveStreamMessageStars = StarsAmount(value: amount, nanos: 0)
+                    self.currentLiveStreamMessageDiamonds = StarsAmount(value: amount, nanos: 0)
                     view.state?.updated(transition: .spring(duration: 0.4))
                 }
             ).get()
             if let initialData {
-                controller.push(ChatSendStarsScreen(
+                controller.push(ChatSendDiamondsScreen(
                     context: component.context,
                     initialData: initialData,
                     theme: component.theme
@@ -1949,8 +1949,8 @@ final class StoryItemSetContainerSendMessage: @unchecked(Sendable) {
                                 return
                             }
                             var messageAttributes: [EngineMessage.Attribute] = []
-                            if let sendPaidMessageStars = component.slice.additionalPeerData.sendPaidMessageStars {
-                                messageAttributes.append(PaidStarsMessageAttribute(stars: sendPaidMessageStars, postponeSending: false))
+                            if let sendPaidMessageDiamonds = component.slice.additionalPeerData.sendPaidMessageDiamonds {
+                                messageAttributes.append(PaidDiamondsMessageAttribute(stars: sendPaidMessageDiamonds, postponeSending: false))
                             }
                             let message: EnqueueMessage = .message(text: "", attributes: messageAttributes, inlineStickers: [:], mediaReference: mediaReferences.first!, threadId: nil, replyToMessageId: nil, replyToStoryId: focusedStoryId, localGroupingKey: nil, correlationId: nil, bubbleUpEmojiOrStickersets: [])
                             let _ = (enqueueMessages(account: component.context.account, peerId: peer.id, messages: [message.withUpdatedReplyToMessageId(nil)])
@@ -2564,7 +2564,7 @@ final class StoryItemSetContainerSendMessage: @unchecked(Sendable) {
                 hideVia: hideVia,
                 silentPosting: silentPosting,
                 scheduleTime: scheduleTime,
-                sendPaidMessageStars: component.slice.additionalPeerData.sendPaidMessageStars,
+                sendPaidMessageDiamonds: component.slice.additionalPeerData.sendPaidMessageDiamonds,
                 postpone: false
             ) {
             }
@@ -2716,8 +2716,8 @@ final class StoryItemSetContainerSendMessage: @unchecked(Sendable) {
                     return nil
                 }
                 return self.getCaptionPanelView(view: view, peer: peer)
-            }, photoToolbarView: { [context = component.context] backButton, doneButton, solidBackground, hasSendStarsButton in
-                return makeMediaPickerPhotoToolbarView(context: context, backButton: backButton, doneButton: doneButton, solidBackground: solidBackground, hasSendStarsButton: hasSendStarsButton)
+            }, photoToolbarView: { [context = component.context] backButton, doneButton, solidBackground, hasSendDiamondsButton in
+                return makeMediaPickerPhotoToolbarView(context: context, backButton: backButton, doneButton: doneButton, solidBackground: solidBackground, hasSendDiamondsButton: hasSendDiamondsButton)
             }, dismissedWithResult: { [weak self] in
                 guard let self else {
                     return
@@ -2833,8 +2833,8 @@ final class StoryItemSetContainerSendMessage: @unchecked(Sendable) {
                     }
                 }
                 var messageAttributes: [EngineMessage.Attribute] = []
-                if let component = view.component, let sendPaidMessageStars = component.slice.additionalPeerData.sendPaidMessageStars {
-                    messageAttributes.append(PaidStarsMessageAttribute(stars: sendPaidMessageStars, postponeSending: false))
+                if let component = view.component, let sendPaidMessageDiamonds = component.slice.additionalPeerData.sendPaidMessageDiamonds {
+                    messageAttributes.append(PaidDiamondsMessageAttribute(stars: sendPaidMessageDiamonds, postponeSending: false))
                 }
                 return attributes
             }
@@ -3898,7 +3898,7 @@ final class StoryItemSetContainerSendMessage: @unchecked(Sendable) {
         }
     }
 
-    func openSendStars(view: StoryItemSetContainerComponent.View) {
+    func openSendDiamonds(view: StoryItemSetContainerComponent.View) {
         Task { @MainActor [weak view] in
             guard let view else {
                 return
@@ -3918,7 +3918,7 @@ final class StoryItemSetContainerSendMessage: @unchecked(Sendable) {
             var minAmount: Int64 = 1
             var sendAsPeer: SendAsPeer?
             if let visibleItemView = view.visibleItems[component.slice.item.id]?.view.view as? StoryItemContentComponent.View {
-                if let topItems = visibleItemView.liveChatState?.starStats?.topItems {
+                if let topItems = visibleItemView.liveChatState?.diamondStats?.topItems {
                     topPeers = topItems.map { item -> ReactionsMessageAttribute.TopPeer in
                         return ReactionsMessageAttribute.TopPeer(
                             peerId: item.peerId,
@@ -3943,7 +3943,7 @@ final class StoryItemSetContainerSendMessage: @unchecked(Sendable) {
                 }
             }
 
-            let initialData = await ChatSendStarsScreen.initialData(
+            let initialData = await ChatSendDiamondsScreen.initialData(
                 context: component.context,
                 peerId: peerId,
                 myPeer: sendAsPeer?.peer,
@@ -3961,10 +3961,10 @@ final class StoryItemSetContainerSendMessage: @unchecked(Sendable) {
                             }
                         }
                     }
-                    self.performSendStars(view: view, buttonView: nil, count: Int(amount), isFromExpandedView: true)
+                    self.performSendDiamonds(view: view, buttonView: nil, count: Int(amount), isFromExpandedView: true)
                 }).get()
             if let initialData {
-                controller.push(ChatSendStarsScreen(
+                controller.push(ChatSendDiamondsScreen(
                     context: component.context,
                     initialData: initialData,
                     theme: component.theme
@@ -3973,7 +3973,7 @@ final class StoryItemSetContainerSendMessage: @unchecked(Sendable) {
         }
     }
 
-    func performSendStars(view: StoryItemSetContainerComponent.View, buttonView: UIView?, count: Int, isFromExpandedView: Bool) {
+    func performSendDiamonds(view: StoryItemSetContainerComponent.View, buttonView: UIView?, count: Int, isFromExpandedView: Bool) {
         Task { @MainActor [weak self, weak view] in
             guard let self, let view, let component = view.component else {
                 return
@@ -3984,24 +3984,24 @@ final class StoryItemSetContainerSendMessage: @unchecked(Sendable) {
             }
 
             if isFromExpandedView {
-                if let currentSendStarsUndoController = self.currentSendStarsUndoController {
-                    self.currentSendStarsUndoController = nil
-                    currentSendStarsUndoController.dismiss()
+                if let currentSendDiamondsUndoController = self.currentSendDiamondsUndoController {
+                    self.currentSendDiamondsUndoController = nil
+                    currentSendDiamondsUndoController.dismiss()
                 }
 
-                self.commitSendStars(view: view, count: count, delay: false)
+                self.commitSendDiamonds(view: view, count: count, delay: false)
             } else {
-                let starsContextState = await component.context.starsContext?.state.get()
-                guard let balance = starsContextState?.balance else {
+                let diamondsContextState = await component.context.diamondsContext?.state.get()
+                guard let balance = diamondsContextState?.balance else {
                     return
                 }
 
-                var totalExpectedStars = count
-                if let pendingMyStars = visibleItemView.liveChatState?.starStats?.pendingMyStars, pendingMyStars > 0 {
-                    totalExpectedStars += Int(pendingMyStars)
+                var totalExpectedDiamonds = count
+                if let pendingMyDiamonds = visibleItemView.liveChatState?.diamondStats?.pendingMyDiamonds, pendingMyDiamonds > 0 {
+                    totalExpectedDiamonds += Int(pendingMyDiamonds)
                 }
-                if Int64(totalExpectedStars) > balance.value {
-                    guard let starsContext = component.context.starsContext, let navigationController = component.controller()?.navigationController as? NavigationController else {
+                if Int64(totalExpectedDiamonds) > balance.value {
+                    guard let diamondsContext = component.context.diamondsContext, let navigationController = component.controller()?.navigationController as? NavigationController else {
                         return
                     }
                     guard let targetPeerId = component.slice.item.peerId else {
@@ -4009,10 +4009,10 @@ final class StoryItemSetContainerSendMessage: @unchecked(Sendable) {
                     }
 
                     let customTheme = component.theme
-                    let options = await component.context.engine.payments.starsTopUpOptions().get()
-                    let controller = component.context.sharedContext.makeStarsPurchaseScreen(
+                    let options = await component.context.engine.payments.diamondsTopUpOptions().get()
+                    let controller = component.context.sharedContext.makeDiamondsPurchaseScreen(
                         context: component.context,
-                        starsContext: starsContext,
+                        diamondsContext: diamondsContext,
                         options: options,
                         purpose: .generic,
                         targetPeerId: targetPeerId,
@@ -4102,28 +4102,28 @@ final class StoryItemSetContainerSendMessage: @unchecked(Sendable) {
                     )
                 }
 
-                self.currentLiveStreamStarsIsActive = true
-                self.currentLiveStreamStarsIsActiveTimer?.invalidate()
-                self.currentLiveStreamStarsIsActiveTimer = Foundation.Timer.scheduledTimer(withTimeInterval: 5.0, repeats: false, block: { [weak self, weak view] _ in
+                self.currentLiveStreamDiamondsIsActive = true
+                self.currentLiveStreamDiamondsIsActiveTimer?.invalidate()
+                self.currentLiveStreamDiamondsIsActiveTimer = Foundation.Timer.scheduledTimer(withTimeInterval: 5.0, repeats: false, block: { [weak self, weak view] _ in
                     guard let self, let view else {
                         return
                     }
-                    self.currentLiveStreamStarsIsActive = false
+                    self.currentLiveStreamDiamondsIsActive = false
                     view.state?.updated(transition: .spring(duration: 0.4))
                 })
 
                 var totalStars = 0
-                if let pendingMyStars = visibleItemView.liveChatState?.starStats?.pendingMyStars, pendingMyStars > 0 {
+                if let pendingMyDiamonds = visibleItemView.liveChatState?.diamondStats?.pendingMyDiamonds, pendingMyDiamonds > 0 {
                     totalStars += count
-                    totalStars += Int(pendingMyStars)
-                    self.commitSendStars(view: view, count: count, delay: true)
+                    totalStars += Int(pendingMyDiamonds)
+                    self.commitSendDiamonds(view: view, count: count, delay: true)
                 } else {
                     let minAmount: Int64 = 1
                     var count = count
                     count = max(Int(minAmount), count)
                     totalStars += count
 
-                    self.commitSendStars(view: view, count: count, delay: true)
+                    self.commitSendDiamonds(view: view, count: count, delay: true)
                 }
 
                 let title: String
@@ -4141,11 +4141,11 @@ final class StoryItemSetContainerSendMessage: @unchecked(Sendable) {
                     1: .text(component.strings.Chat_ToastDiamondsSent_TextDiamondAmount(Int32(totalStars)))
                 ])
 
-                if let current = self.currentSendStarsUndoController {
-                    current.content = .starsSent(context: component.context, title: title, text: textItems, hasUndo: true)
+                if let current = self.currentSendDiamondsUndoController {
+                    current.content = .diamondsSent(context: component.context, title: title, text: textItems, hasUndo: true)
                 } else {
                     let presentationData = component.context.sharedContext.currentPresentationData.with { $0 }.withUpdated(theme: defaultDarkColorPresentationTheme)
-                    let controller = UndoOverlayController(presentationData: presentationData, content: .starsSent(context: component.context, title: title, text: textItems, hasUndo: true), elevatedLayout: false, position: .top, action: { [weak view] action in
+                    let controller = UndoOverlayController(presentationData: presentationData, content: .diamondsSent(context: component.context, title: title, text: textItems, hasUndo: true), elevatedLayout: false, position: .top, action: { [weak view] action in
                         guard let view else {
                             return false
                         }
@@ -4162,18 +4162,18 @@ final class StoryItemSetContainerSendMessage: @unchecked(Sendable) {
                             guard let call = itemView.mediaStreamCall else {
                                 return false
                             }
-                            call.cancelSendStars()
+                            call.cancelSendDiamonds()
                         }
                         return false
                     })
-                    self.currentSendStarsUndoController = controller
+                    self.currentSendDiamondsUndoController = controller
                     self.view?.component?.controller()?.present(controller, in: .current)
                 }
             }
         }
     }
 
-    private func commitSendStars(view: StoryItemSetContainerComponent.View, count: Int, delay: Bool) {
+    private func commitSendDiamonds(view: StoryItemSetContainerComponent.View, count: Int, delay: Bool) {
         guard let component = view.component else {
             return
         }
@@ -4206,7 +4206,7 @@ final class StoryItemSetContainerSendMessage: @unchecked(Sendable) {
             }
         }
 
-        call.sendStars(fromId: sendAsPeer?.peer.id, isAdmin: isAdmin, amount: Int64(count), delay: delay)
+        call.sendDiamonds(fromId: sendAsPeer?.peer.id, isAdmin: isAdmin, amount: Int64(count), delay: delay)
     }
 
     func openSendAsSelection(view: StoryItemSetContainerComponent.View, sourceView: UIView, gesture: ContextGesture?) {
@@ -4319,7 +4319,7 @@ final class StoryItemSetContainerSendMessage: @unchecked(Sendable) {
                     call: mediaStreamCall,
                     displayExternalStream: callState.isUnifiedStream,
                     allowComments: callState.messagesAreEnabled,
-                    paidMessageStars: callState.sendPaidMessageStars ?? 0
+                    paidMessageStars: callState.sendPaidMessageDiamonds ?? 0
                 ),
                 closeFriends: .single([]),
                 adminedChannels: .single([]),
@@ -4338,7 +4338,7 @@ final class StoryItemSetContainerSendMessage: @unchecked(Sendable) {
                         return
                     }
                     let _ = self
-                    call.updateMessagesEnabled(isEnabled: result.allowComments, sendPaidMessageStars: result.paidMessageStars)
+                    call.updateMessagesEnabled(isEnabled: result.allowComments, sendPaidMessageDiamonds: result.paidMessageStars)
                 }
             )
             controller.push(settingsScreen)

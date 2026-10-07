@@ -219,7 +219,7 @@ final class QuickReplySetupScreenComponent: Component {
                     },
                     openStories: { _, _ in
                     },
-                    openStarsTopup: { _ in
+                    openDiamondsTopup: { _ in
                     },
                     editPeer: { [weak listNode] _ in
                         guard let listNode, let parentView = listNode.parentView else {

@@ -40,7 +40,7 @@ extension PremiumGiftSource {
             } else {
                 return "deeplink"
             }
-        case .stars, .starGiftTransfer:
+        case .stars, .diamondGiftTransfer:
             return ""
         }
     }
@@ -1023,9 +1023,9 @@ private final class PremiumGiftScreenComponent: CombinedComponent {
             
             let background = background.update(component: Rectangle(color: environment.theme.list.blocksBackgroundColor), environment: {}, availableSize: context.availableSize, transition: context.transition)
             
-            var starIsVisible = true
+            var diamondIsVisible = true
             if let topContentOffset = state.topContentOffset, topContentOffset >= 123.0 {
-                starIsVisible = false
+                diamondIsVisible = false
             }
                             
             let topPanel = topPanel.update(
@@ -1167,7 +1167,7 @@ private final class PremiumGiftScreenComponent: CombinedComponent {
                     context: context.component.context,
                     theme: environment.theme,
                     peers: peers,
-                    isVisible: starIsVisible,
+                    isVisible: diamondIsVisible,
                     hasIdleAnimations: state.hasIdleAnimations
                 ),
                 availableSize: CGSize(width: min(414.0, context.availableSize.width), height: 220.0),

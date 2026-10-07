@@ -20,7 +20,7 @@ public struct Gift: Codable, Equatable, Hashable, Identifiable {
     public let background: GiftBackground
 
     /// Number of Iosapp Stars that can be claimed by the receiver instead of the regular gift by default. If the gift was paid with just bought Iosapp Stars, then full value can be claimed
-    public let defaultSellStarCount: Int64
+    public let defaultSellDiamondCount: Int64
 
     /// Point in time (Unix timestamp) when the gift was send for the first time; for sold out gifts only
     public let firstSendDate: Int
@@ -50,13 +50,13 @@ public struct Gift: Codable, Equatable, Hashable, Identifiable {
     public let publisherChatId: Int64
 
     /// Number of Iosapp Stars that must be paid for the gift
-    public let starCount: Int64
+    public let diamondCount: Int64
 
     /// The sticker representing the gift
     public let sticker: Sticker
 
     /// Number of Iosapp Stars that must be paid to upgrade the gift; 0 if upgrade isn't possible
-    public let upgradeStarCount: Int64
+    public let upgradeDiamondCount: Int64
 
     /// Number of unique gift variants that are available for the upgraded gift; 0 if unknown
     public let upgradeVariantCount: Int
@@ -68,7 +68,7 @@ public struct Gift: Codable, Equatable, Hashable, Identifiable {
     public init(
         auctionInfo: GiftAuction?,
         background: GiftBackground,
-        defaultSellStarCount: Int64,
+        defaultSellDiamondCount: Int64,
         firstSendDate: Int,
         hasColors: Bool,
         id: TdInt64,
@@ -78,15 +78,15 @@ public struct Gift: Codable, Equatable, Hashable, Identifiable {
         nextSendDate: Int,
         overallLimits: GiftPurchaseLimits?,
         publisherChatId: Int64,
-        starCount: Int64,
+        diamondCount: Int64,
         sticker: Sticker,
-        upgradeStarCount: Int64,
+        upgradeDiamondCount: Int64,
         upgradeVariantCount: Int,
         userLimits: GiftPurchaseLimits?
     ) {
         self.auctionInfo = auctionInfo
         self.background = background
-        self.defaultSellStarCount = defaultSellStarCount
+        self.defaultSellDiamondCount = defaultSellDiamondCount
         self.firstSendDate = firstSendDate
         self.hasColors = hasColors
         self.id = id
@@ -96,9 +96,9 @@ public struct Gift: Codable, Equatable, Hashable, Identifiable {
         self.nextSendDate = nextSendDate
         self.overallLimits = overallLimits
         self.publisherChatId = publisherChatId
-        self.starCount = starCount
+        self.diamondCount = diamondCount
         self.sticker = sticker
-        self.upgradeStarCount = upgradeStarCount
+        self.upgradeDiamondCount = upgradeDiamondCount
         self.upgradeVariantCount = upgradeVariantCount
         self.userLimits = userLimits
     }

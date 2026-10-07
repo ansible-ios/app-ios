@@ -28,7 +28,7 @@ void set_ic_textures(int a_ic_bubble_dot, int a_ic_bubble, int a_ic_cam_lens, in
 void set_telegram_textures(int a_telegram_sphere, int a_telegram_plane);
 void set_fast_textures(int a_fast_body, int a_fast_spiral, int a_fast_arrow, int a_fast_arrow_shadow);
 void set_free_textures(int a_knot_up, int a_knot_down);
-void set_powerful_textures(int a_powerful_mask, int a_powerful_star, int a_powerful_infinity, int a_powerful_infinity_white);
+void set_powerful_textures(int a_powerful_mask, int a_powerful_diamond, int a_powerful_infinity, int a_powerful_infinity_white);
 void set_private_textures(int a_private_door, int a_private_screw);
 
 void set_y_offset(float a);

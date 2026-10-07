@@ -530,7 +530,7 @@ extension ChatContextResultMessage {
                 self = .text(text: "", entities: nil, richText: RichTextMessageAttribute(apiRichMessage: botInlineMessageRichMessage.richMessage), disableUrlPreview: false, previewParameters: nil, replyMarkup: parsedReplyMarkup)
             case let .botInlineMessageMediaGeo(botInlineMessageMediaGeoData):
                 let (_, geo, heading, period, proximityNotificationRadius, replyMarkup) = (botInlineMessageMediaGeoData.flags, botInlineMessageMediaGeoData.geo, botInlineMessageMediaGeoData.heading, botInlineMessageMediaGeoData.period, botInlineMessageMediaGeoData.proximityNotificationRadius, botInlineMessageMediaGeoData.replyMarkup)
-                let media = telegramMediaMapFromApiGeoPoint(geo, title: nil, address: nil, provider: nil, venueId: nil, venueType: nil, liveBroadcastingTimeout: period, liveProximityNotificationRadius: proximityNotificationRadius, heading: heading)
+                let media = ansibleMediaMapFromApiGeoPoint(geo, title: nil, address: nil, provider: nil, venueId: nil, venueType: nil, liveBroadcastingTimeout: period, liveProximityNotificationRadius: proximityNotificationRadius, heading: heading)
                 var parsedReplyMarkup: ReplyMarkupMessageAttribute?
                 if let replyMarkup = replyMarkup {
                     parsedReplyMarkup = ReplyMarkupMessageAttribute(apiMarkup: replyMarkup)
@@ -538,7 +538,7 @@ extension ChatContextResultMessage {
                 self = .mapLocation(media: media, replyMarkup: parsedReplyMarkup)
             case let .botInlineMessageMediaVenue(botInlineMessageMediaVenueData):
                 let (_, geo, title, address, provider, venueId, venueType, replyMarkup) = (botInlineMessageMediaVenueData.flags, botInlineMessageMediaVenueData.geo, botInlineMessageMediaVenueData.title, botInlineMessageMediaVenueData.address, botInlineMessageMediaVenueData.provider, botInlineMessageMediaVenueData.venueId, botInlineMessageMediaVenueData.venueType, botInlineMessageMediaVenueData.replyMarkup)
-                let media = telegramMediaMapFromApiGeoPoint(geo, title: title, address: address, provider: provider, venueId: venueId, venueType: venueType, liveBroadcastingTimeout: nil, liveProximityNotificationRadius: nil, heading: nil)
+                let media = ansibleMediaMapFromApiGeoPoint(geo, title: title, address: address, provider: provider, venueId: venueId, venueType: venueType, liveBroadcastingTimeout: nil, liveProximityNotificationRadius: nil, heading: nil)
                 var parsedReplyMarkup: ReplyMarkupMessageAttribute?
                 if let replyMarkup = replyMarkup {
                     parsedReplyMarkup = ReplyMarkupMessageAttribute(apiMarkup: replyMarkup)
@@ -614,10 +614,10 @@ extension ChatContextResult {
                 let (_, id, type, photo, document, title, description, sendMessage) = (botInlineMediaResultData.flags, botInlineMediaResultData.id, botInlineMediaResultData.type, botInlineMediaResultData.photo, botInlineMediaResultData.document, botInlineMediaResultData.title, botInlineMediaResultData.description, botInlineMediaResultData.sendMessage)
                 var image: IosappMediaImage?
                 var file: IosappMediaFile?
-                if let photo = photo, let parsedImage = telegramMediaImageFromApiPhoto(photo) {
+                if let photo = photo, let parsedImage = ansibleMediaImageFromApiPhoto(photo) {
                     image = parsedImage
                 }
-                if let document = document, let parsedFile = telegramMediaFileFromApiDocument(document, altDocuments: []) {
+                if let document = document, let parsedFile = ansibleMediaFileFromApiDocument(document, altDocuments: []) {
                     file = parsedFile
                 }
                 self = .internalReference(ChatContextResult.InternalReference(queryId: queryId, id: id, type: type, title: title, description: description, image: image, file: file, message: ChatContextResultMessage(apiMessage: sendMessage)))

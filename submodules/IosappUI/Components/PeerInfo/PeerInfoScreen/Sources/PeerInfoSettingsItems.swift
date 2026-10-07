@@ -256,11 +256,11 @@ func settingsItems(data: PeerInfoScreenData?, context: AccountContext, presentat
             interaction.openSettings(.premium)
         }))
     }
-    if let starsState = data.starsState {
-        if !isPremiumDisabled || abs(starsState.balance.value) > 0 {
+    if let diamondsState = data.diamondsState {
+        if !isPremiumDisabled || abs(diamondsState.balance.value) > 0 {
             let balanceText: NSAttributedString
-            if abs(starsState.balance.value) > 0 {
-                let formattedLabel = formatStarsAmountText(starsState.balance, dateTimeFormat: presentationData.dateTimeFormat)
+            if abs(diamondsState.balance.value) > 0 {
+                let formattedLabel = formatDiamondsAmountText(diamondsState.balance, dateTimeFormat: presentationData.dateTimeFormat)
                 let smallLabelFont = Font.regular(floor(presentationData.listsFontSize.itemListBaseFontSize / 17.0 * 13.0))
                 let labelFont = Font.regular(presentationData.listsFontSize.itemListBaseFontSize)
                 let labelColor = presentationData.theme.list.itemSecondaryTextColor
@@ -279,8 +279,8 @@ func settingsItems(data: PeerInfoScreenData?, context: AccountContext, presentat
             interaction.openSettings(.businessSetup)
         }))
     }
-    if let starsState = data.starsState {
-        if !isPremiumDisabled || starsState.balance > StarsAmount.zero {
+    if let diamondsState = data.diamondsState {
+        if !isPremiumDisabled || diamondsState.balance > StarsAmount.zero {
             items[.payment]!.append(PeerInfoScreenDisclosureItem(id: 105, label: .text(""), text: presentationData.strings.Settings_SendGift, icon: PresentationResourcesSettings.premiumGift, action: {
                 interaction.openSettings(.premiumGift)
             }))

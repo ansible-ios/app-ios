@@ -1511,7 +1511,7 @@ public extension Api {
 }
 public extension Api {
     enum ConnectedBotStarRef: TypeConstructorDescription {
-        public class Cons_connectedBotStarRef: TypeConstructorDescription {
+        public class Cons_connectedBotDiamondRef: TypeConstructorDescription {
             public var flags: Int32
             public var url: String
             public var date: Int32
@@ -1534,7 +1534,7 @@ public extension Api {
                 return ("connectedBotStarRef", [("flags", ConstructorParameterDescription(self.flags)), ("url", ConstructorParameterDescription(self.url)), ("date", ConstructorParameterDescription(self.date)), ("botId", ConstructorParameterDescription(self.botId)), ("commissionPermille", ConstructorParameterDescription(self.commissionPermille)), ("durationMonths", ConstructorParameterDescription(self.durationMonths)), ("participants", ConstructorParameterDescription(self.participants)), ("revenue", ConstructorParameterDescription(self.revenue))])
             }
         }
-        case connectedBotStarRef(Cons_connectedBotStarRef)
+        case connectedBotStarRef(Cons_connectedBotDiamondRef)
 
         public func serialize(_ buffer: Buffer, _ boxed: Swift.Bool) {
             switch self {
@@ -1563,7 +1563,7 @@ public extension Api {
             }
         }
 
-        public static func parse_connectedBotStarRef(_ reader: BufferReader) -> ConnectedBotStarRef? {
+        public static func parse_connectedBotDiamondRef(_ reader: BufferReader) -> ConnectedBotStarRef? {
             var _1: Int32?
             _1 = reader.readInt32()
             var _2: String?
@@ -1591,7 +1591,7 @@ public extension Api {
             let _c7 = _7 != nil
             let _c8 = _8 != nil
             if _c1 && _c2 && _c3 && _c4 && _c5 && _c6 && _c7 && _c8 {
-                return Api.ConnectedBotStarRef.connectedBotStarRef(Cons_connectedBotStarRef(flags: _1!, url: _2!, date: _3!, botId: _4!, commissionPermille: _5!, durationMonths: _6, participants: _7!, revenue: _8!))
+                return Api.ConnectedBotStarRef.connectedBotStarRef(Cons_connectedBotDiamondRef(flags: _1!, url: _2!, date: _3!, botId: _4!, commissionPermille: _5!, durationMonths: _6, participants: _7!, revenue: _8!))
             }
             else {
                 return nil

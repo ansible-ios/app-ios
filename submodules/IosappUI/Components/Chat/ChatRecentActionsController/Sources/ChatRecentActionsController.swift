@@ -22,7 +22,7 @@ public final class ChatRecentActionsController: IosappBaseController {
     private let context: AccountContext
     private let peer: EnginePeer
     private let initialAdminPeerId: EnginePeer.Id?
-    let starsState: StarsRevenueStats?
+    let diamondsState: StarsRevenueStats?
     
     private var presentationData: PresentationData
     private var presentationDataPromise = Promise<PresentationData>()
@@ -40,11 +40,11 @@ public final class ChatRecentActionsController: IosappBaseController {
     
     private var adminsDisposable: Disposable?
     
-    public init(context: AccountContext, peer: EnginePeer, adminPeerId: EnginePeer.Id?, starsState: StarsRevenueStats?) {
+    public init(context: AccountContext, peer: EnginePeer, adminPeerId: EnginePeer.Id?, diamondsState: StarsRevenueStats?) {
         self.context = context
         self.peer = peer
         self.initialAdminPeerId = adminPeerId
-        self.starsState = starsState
+        self.diamondsState = diamondsState
         
         self.presentationData = context.sharedContext.currentPresentationData.with { $0 }
         
@@ -171,7 +171,7 @@ public final class ChatRecentActionsController: IosappBaseController {
         }, openPremiumGift: {
         }, openSuggestPost: { _, _ in
         }, openPremiumRequiredForMessaging: {
-        }, openStarsPurchase: { _ in
+        }, openDiamondsPurchase: { _ in
         }, openMessagePayment: {
         }, openBoostToUnrestrict: {
         }, updateRecordingTrimRange: { _, _, _, _ in

@@ -2276,7 +2276,7 @@ public final class ChatEntityKeyboardInputNode: ChatInputNode {
                             })))
                         }
 
-                        if isSaved && interfaceState.sendPaidMessageStars == nil {
+                        if isSaved && interfaceState.sendPaidMessageDiamonds == nil {
                             items.append(.action(ContextMenuActionItem(text: presentationData.strings.Conversation_SendMessage_ScheduleMessage, icon: { theme in
                                 return generateTintedImage(image: UIImage(bundleImageName: "Chat/Input/Menu/ScheduleIcon"), color: theme.actionSheet.primaryTextColor)
                             }, action: { [weak self] _, f in
@@ -2967,11 +2967,11 @@ public final class EmojiContentPeekBehaviorImpl: EmojiContentPeekBehavior {
                         }))
                     }
                 } else {
-                    let sendPaidMessageStars: Signal<StarsAmount?, NoError>
+                    let sendPaidMessageDiamonds: Signal<StarsAmount?, NoError>
                     if let chatPeerId = strongSelf.chatPeerId {
-                        sendPaidMessageStars = context.engine.data.get(IosappEngine.EngineData.Item.Peer.SendPaidMessageStars(id: chatPeerId))
+                        sendPaidMessageDiamonds = context.engine.data.get(IosappEngine.EngineData.Item.Peer.SendPaidMessageDiamonds(id: chatPeerId))
                     } else {
-                        sendPaidMessageStars = .single(nil)
+                        sendPaidMessageDiamonds = .single(nil)
                     }
 
                     return combineLatest(
@@ -2983,10 +2983,10 @@ public final class EmojiContentPeekBehaviorImpl: EmojiContentPeekBehavior {
                             }
                             return hasPremium
                         },
-                        sendPaidMessageStars
+                        sendPaidMessageDiamonds
                     )
                     |> deliverOnMainQueue
-                    |> map { [weak itemLayer] isStarred, hasPremium, sendPaidMessageStars -> (UIView, CGRect, PeekControllerContent)? in
+                    |> map { [weak itemLayer] isStarred, hasPremium, sendPaidMessageDiamonds -> (UIView, CGRect, PeekControllerContent)? in
                         guard let strongSelf = self, let itemLayer = itemLayer else {
                             return nil
                         }
@@ -3016,7 +3016,7 @@ public final class EmojiContentPeekBehaviorImpl: EmojiContentPeekBehavior {
                                     })))
                                 }
 
-                                if sendPaidMessageStars == nil {
+                                if sendPaidMessageDiamonds == nil {
                                     menuItems.append(.action(ContextMenuActionItem(text: presentationData.strings.Conversation_SendMessage_ScheduleMessage, icon: { theme in
                                         return generateTintedImage(image: UIImage(bundleImageName: "Chat/Input/Menu/ScheduleIcon"), color: theme.actionSheet.primaryTextColor)
                                     }, action: { _, f in

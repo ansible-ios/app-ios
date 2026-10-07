@@ -106,7 +106,7 @@ func updatedRemoteStickerPack(postbox: Postbox, network: Network, reference: Sti
                 }
                 
                 for apiDocument in documents {
-                    if let file = telegramMediaFileFromApiDocument(apiDocument, altDocuments: []), let id = file.id {
+                    if let file = ansibleMediaFileFromApiDocument(apiDocument, altDocuments: []), let id = file.id {
                         let fileIndexKeys: [MemoryBuffer]
                         if let indexKeys = indexKeysByFile[id] {
                             fileIndexKeys = indexKeys

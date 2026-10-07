@@ -440,7 +440,7 @@ public func preparedShareItems(postbox: Postbox, network: Network, to peerId: Pe
     })
 }
 
-public func sentShareItems(accountPeerId: PeerId, postbox: Postbox, network: Network, stateManager: AccountStateManager, auxiliaryMethods: AccountAuxiliaryMethods, to peerIds: [PeerId], threadIds: [PeerId: Int64], requireStars: [PeerId: StarsAmount], items: [PreparedShareItemContent], silently: Bool, additionalText: String) -> Signal<Float, Void> {
+public func sentShareItems(accountPeerId: PeerId, postbox: Postbox, network: Network, stateManager: AccountStateManager, auxiliaryMethods: AccountAuxiliaryMethods, to peerIds: [PeerId], threadIds: [PeerId: Int64], requireDiamonds: [PeerId: StarsAmount], items: [PreparedShareItemContent], silently: Bool, additionalText: String) -> Signal<Float, Void> {
     var messages: [StandaloneSendEnqueueMessage] = []
     var groupingKey: Int64?
     var mediaTypes: (photo: Int, video: Int, music: Int, other: Int) = (0, 0, 0, 0)
@@ -542,11 +542,11 @@ public func sentShareItems(accountPeerId: PeerId, postbox: Postbox, network: Net
     var peerSignals: Signal<Float, StandaloneSendMessagesError> = .single(0.0)
     for peerId in peerIds {
         var peerMessages = messages
-        if let amount = requireStars[peerId] {
+        if let amount = requireDiamonds[peerId] {
             var updatedMessages: [StandaloneSendEnqueueMessage] = []
             for message in peerMessages {
                 var message = message
-                message.sendPaidMessageStars = amount
+                message.sendPaidMessageDiamonds = amount
                 updatedMessages.append(message)
             }
             peerMessages = updatedMessages

@@ -355,13 +355,13 @@ public extension IosappEngine {
             content: EngineOutgoingMessageContent,
             silentPosting: Bool = false,
             scheduleTime: Int32? = nil,
-            sendPaidMessageStars: StarsAmount? = nil
+            sendPaidMessageDiamonds: StarsAmount? = nil
         ) -> Signal<[MessageId?], NoError> {
             var message: EnqueueMessage?
             if case let .preparedInlineMessage(preparedInlineMessage) = content {
-                message = self.outgoingMessageWithChatContextResult(to: peerId, threadId: nil, botId: preparedInlineMessage.botId, result: preparedInlineMessage.result, replyToMessageId: replyToMessageId, replyToStoryId: storyId, hideVia: true, silentPosting: silentPosting, scheduleTime: scheduleTime, sendPaidMessageStars: sendPaidMessageStars, postpone: false, correlationId: nil)
+                message = self.outgoingMessageWithChatContextResult(to: peerId, threadId: nil, botId: preparedInlineMessage.botId, result: preparedInlineMessage.result, replyToMessageId: replyToMessageId, replyToStoryId: storyId, hideVia: true, silentPosting: silentPosting, scheduleTime: scheduleTime, sendPaidMessageDiamonds: sendPaidMessageDiamonds, postpone: false, correlationId: nil)
             } else if case let .contextResult(results, result) = content {
-                message = self.outgoingMessageWithChatContextResult(to: peerId, threadId: nil, botId: results.botId, result: result, replyToMessageId: replyToMessageId, replyToStoryId: storyId, hideVia: true, silentPosting: silentPosting, scheduleTime: scheduleTime, sendPaidMessageStars: sendPaidMessageStars, postpone: false, correlationId: nil)
+                message = self.outgoingMessageWithChatContextResult(to: peerId, threadId: nil, botId: results.botId, result: result, replyToMessageId: replyToMessageId, replyToStoryId: storyId, hideVia: true, silentPosting: silentPosting, scheduleTime: scheduleTime, sendPaidMessageDiamonds: sendPaidMessageDiamonds, postpone: false, correlationId: nil)
             } else {
                 var attributes: [MessageAttribute] = []
                 if silentPosting {
@@ -370,8 +370,8 @@ public extension IosappEngine {
                 if let scheduleTime = scheduleTime {
                      attributes.append(OutgoingScheduleInfoMessageAttribute(scheduleTime: scheduleTime, repeatPeriod: nil))
                 }
-                if let sendPaidMessageStars {
-                    attributes.append(PaidStarsMessageAttribute(stars: sendPaidMessageStars, postponeSending: false))
+                if let sendPaidMessageDiamonds {
+                    attributes.append(PaidDiamondsMessageAttribute(stars: sendPaidMessageDiamonds, postponeSending: false))
                 }
                 
                 var text: String = ""
@@ -412,12 +412,12 @@ public extension IosappEngine {
             )
         }
 
-        public func enqueueOutgoingMessageWithChatContextResult(to peerId: PeerId, threadId: Int64?, botId: PeerId, result: ChatContextResult, replyToMessageId: EngineMessageReplySubject? = nil, replyToStoryId: StoryId? = nil, hideVia: Bool = false, silentPosting: Bool = false, scheduleTime: Int32? = nil, sendPaidMessageStars: StarsAmount?, postpone: Bool = false, correlationId: Int64? = nil) -> Bool {
-            return _internal_enqueueOutgoingMessageWithChatContextResult(account: self.account, to: peerId, threadId: threadId, botId: botId, result: result, replyToMessageId: replyToMessageId, replyToStoryId: replyToStoryId, hideVia: hideVia, silentPosting: silentPosting, scheduleTime: scheduleTime, sendPaidMessageStars: sendPaidMessageStars, postpone: postpone, correlationId: correlationId)
+        public func enqueueOutgoingMessageWithChatContextResult(to peerId: PeerId, threadId: Int64?, botId: PeerId, result: ChatContextResult, replyToMessageId: EngineMessageReplySubject? = nil, replyToStoryId: StoryId? = nil, hideVia: Bool = false, silentPosting: Bool = false, scheduleTime: Int32? = nil, sendPaidMessageDiamonds: StarsAmount?, postpone: Bool = false, correlationId: Int64? = nil) -> Bool {
+            return _internal_enqueueOutgoingMessageWithChatContextResult(account: self.account, to: peerId, threadId: threadId, botId: botId, result: result, replyToMessageId: replyToMessageId, replyToStoryId: replyToStoryId, hideVia: hideVia, silentPosting: silentPosting, scheduleTime: scheduleTime, sendPaidMessageDiamonds: sendPaidMessageDiamonds, postpone: postpone, correlationId: correlationId)
         }
         
-        public func outgoingMessageWithChatContextResult(to peerId: PeerId, threadId: Int64?, botId: PeerId, result: ChatContextResult, replyToMessageId: EngineMessageReplySubject?, replyToStoryId: StoryId?, hideVia: Bool, silentPosting: Bool, scheduleTime: Int32?, sendPaidMessageStars: StarsAmount?, postpone: Bool, correlationId: Int64?) -> EnqueueMessage? {
-            return _internal_outgoingMessageWithChatContextResult(to: peerId, threadId: threadId, botId: botId, result: result, replyToMessageId: replyToMessageId, replyToStoryId: replyToStoryId, hideVia: hideVia, silentPosting: silentPosting, scheduleTime: scheduleTime, sendPaidMessageStars: sendPaidMessageStars, postpone: postpone, correlationId: correlationId)
+        public func outgoingMessageWithChatContextResult(to peerId: PeerId, threadId: Int64?, botId: PeerId, result: ChatContextResult, replyToMessageId: EngineMessageReplySubject?, replyToStoryId: StoryId?, hideVia: Bool, silentPosting: Bool, scheduleTime: Int32?, sendPaidMessageDiamonds: StarsAmount?, postpone: Bool, correlationId: Int64?) -> EnqueueMessage? {
+            return _internal_outgoingMessageWithChatContextResult(to: peerId, threadId: threadId, botId: botId, result: result, replyToMessageId: replyToMessageId, replyToStoryId: replyToStoryId, hideVia: hideVia, silentPosting: silentPosting, scheduleTime: scheduleTime, sendPaidMessageDiamonds: sendPaidMessageDiamonds, postpone: postpone, correlationId: correlationId)
         }
         
         public func setMessageReactions(
@@ -448,24 +448,24 @@ public extension IosappEngine {
             ).startStandalone()
         }
         
-        public func sendStarsReaction(id: EngineMessage.Id, count: Int, privacy: IosappPaidReactionPrivacy?) -> Signal<IosappPaidReactionPrivacy, NoError> {
-            return _internal_sendStarsReactionsInteractively(account: self.account, messageId: id, count: count, privacy: privacy)
+        public func sendDiamondsReaction(id: EngineMessage.Id, count: Int, privacy: IosappPaidReactionPrivacy?) -> Signal<IosappPaidReactionPrivacy, NoError> {
+            return _internal_sendDiamondsReactionsInteractively(account: self.account, messageId: id, count: count, privacy: privacy)
         }
         
-        public func cancelPendingSendStarsReaction(id: EngineMessage.Id) {
-            let _ = cancelPendingSendStarsReactionInteractively(account: self.account, messageId: id).startStandalone()
+        public func cancelPendingSendDiamondsReaction(id: EngineMessage.Id) {
+            let _ = cancelPendingSendDiamondsReactionInteractively(account: self.account, messageId: id).startStandalone()
         }
         
-        public func forceSendPendingSendStarsReaction(id: EngineMessage.Id) {
-            let _ = _internal_forceSendPendingSendStarsReaction(account: self.account, messageId: id).startStandalone()
+        public func forceSendPendingSendDiamondsReaction(id: EngineMessage.Id) {
+            let _ = _internal_forceSendPendingSendDiamondsReaction(account: self.account, messageId: id).startStandalone()
         }
         
         public func forceSendPostponedPaidMessage(peerId: EnginePeer.Id) {
             let _ = _internal_forceSendPostponedPaidMessage(account: self.account, peerId: peerId).startStandalone()
         }
         
-        public func updateStarsReactionPrivacy(id: EngineMessage.Id, privacy: IosappPaidReactionPrivacy) -> Signal<Never, NoError> {
-            return _internal_updateStarsReactionPrivacy(account: self.account, messageId: id, privacy: privacy)
+        public func updateDiamondsReactionPrivacy(id: EngineMessage.Id, privacy: IosappPaidReactionPrivacy) -> Signal<Never, NoError> {
+            return _internal_updateDiamondsReactionPrivacy(account: self.account, messageId: id, privacy: privacy)
         }
 
         public func requestChatContextResults(botId: PeerId, peerId: PeerId, query: String, location: Signal<(Double, Double)?, NoError> = .single(nil), offset: String, incompleteResults: Bool = false, staleCachedResults: Bool = false) -> Signal<RequestChatContextResultsResult?, RequestChatContextResultsError> {
@@ -1554,8 +1554,8 @@ public extension IosappEngine {
             return _internal_uploadStory(account: self.account, target: target, media: media, mediaAreas: mediaAreas, text: text, entities: entities, pin: pin, privacy: privacy, isForwardingDisabled: isForwardingDisabled, period: period, randomId: randomId, forwardInfo: forwardInfo, folders: folders, music: music, uploadInfo: uploadInfo)
         }
         
-        public func beginStoryLivestream(peerId: EnginePeer.Id, rtmp: Bool, privacy: EngineStoryPrivacy, isForwardingDisabled: Bool, messagesEnabled: Bool, sendPaidMessageStars: Int64?) -> Signal<EngineStoryItem?, NoError> {
-            return _internal_beginStoryLivestream(account: self.account, peerId: peerId, rtmp: rtmp, privacy: privacy, isForwardingDisabled: isForwardingDisabled, messagesEnabled: messagesEnabled, sendPaidMessageStars: sendPaidMessageStars)
+        public func beginStoryLivestream(peerId: EnginePeer.Id, rtmp: Bool, privacy: EngineStoryPrivacy, isForwardingDisabled: Bool, messagesEnabled: Bool, sendPaidMessageDiamonds: Int64?) -> Signal<EngineStoryItem?, NoError> {
+            return _internal_beginStoryLivestream(account: self.account, peerId: peerId, rtmp: rtmp, privacy: privacy, isForwardingDisabled: isForwardingDisabled, messagesEnabled: messagesEnabled, sendPaidMessageDiamonds: sendPaidMessageDiamonds)
         }
         
         public func allStoriesUploadEvents() -> Signal<(Int32, Int32), NoError> {
@@ -1645,8 +1645,8 @@ public extension IosappEngine {
             return _internal_setStoryReaction(account: self.account, peerId: peerId, id: id, reaction: reaction)
         }
         
-        public func sendStoryStars(peerId: EnginePeer.Id, id: Int32, count: Int) -> Signal<Never, NoError> {
-            return _internal_sendStoryStars(account: self.account, peerId: peerId, id: id, count: count)
+        public func sendStoryDiamonds(peerId: EnginePeer.Id, id: Int32, count: Int) -> Signal<Never, NoError> {
+            return _internal_sendStoryDiamonds(account: self.account, peerId: peerId, id: id, count: count)
         }
         
         public func getStory(peerId: EnginePeer.Id, id: Int32) -> Signal<EngineStoryItem?, NoError> {

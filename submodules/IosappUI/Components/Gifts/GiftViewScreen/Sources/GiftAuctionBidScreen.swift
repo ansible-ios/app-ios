@@ -19,7 +19,7 @@ import AvatarNode
 import BundleIconComponent
 import TextFormat
 import ContextUI
-import StarsBalanceOverlayComponent
+import DiamondsBalanceOverlayComponent
 import StoryLiveChatMessageComponent
 import IosappStringFormatting
 import GlassBarButtonComponent
@@ -570,7 +570,7 @@ private final class PeerComponent: Component {
         private let place = ComponentView<Empty>()
         private let title = ComponentView<Empty>()
         private let amount = ComponentView<Empty>()
-        private let amountStar = UIImageView()
+        private let amountDiamond = UIImageView()
         private let separator = SimpleLayer()
         private let button = HighlightTrackingButton()
 
@@ -584,8 +584,8 @@ private final class PeerComponent: Component {
             self.layer.addSublayer(self.separator)
             self.layer.addSublayer(self.selectionLayer)
             
-            self.amountStar.image = UIImage(bundleImageName: "Premium/Stars/BalanceStar")
-            self.addSubview(self.amountStar)
+            self.amountDiamond.image = UIImage(bundleImageName: "Premium/Stars/BalanceStar")
+            self.addSubview(self.amountDiamond)
             
             self.button.addTarget(self, action: #selector(self.buttonPressed), for: .touchUpInside)
             self.addSubview(self.button)
@@ -706,8 +706,8 @@ private final class PeerComponent: Component {
                 amountView.frame = amountFrame
             }
             
-            if let icon = self.amountStar.image {
-                self.amountStar.frame = CGRect(origin: CGPoint(x: amountFrame.minX - icon.size.width - 2.0, y: floorToScreenPixels((size.height - icon.size.height) / 2.0) - UIScreenPixel), size: icon.size)
+            if let icon = self.amountDiamond.image {
+                self.amountDiamond.frame = CGRect(origin: CGPoint(x: amountFrame.minX - icon.size.width - 2.0, y: floorToScreenPixels((size.height - icon.size.height) / 2.0) - UIScreenPixel), size: icon.size)
             }
             
             self.separator.backgroundColor = component.theme.list.itemPlainSeparatorColor.cgColor
@@ -810,7 +810,7 @@ private final class SliderBackgroundComponent: Component {
     final class View: UIView {
         private let sliderBackground = UIView()
         private let sliderForeground = UIView()
-        private let sliderStars = SliderStarsView()
+        private let sliderDiamonds = SliderDiamondsView()
         
         private let topForegroundLine = SimpleLayer()
         private let topBackgroundLine = SimpleLayer()
@@ -825,7 +825,7 @@ private final class SliderBackgroundComponent: Component {
             self.sliderBackground.clipsToBounds = true
             
             self.sliderForeground.clipsToBounds = true
-            self.sliderForeground.addSubview(self.sliderStars)
+            self.sliderForeground.addSubview(self.sliderDiamonds)
             
             self.addSubview(self.sliderBackground)
             self.addSubview(self.sliderForeground)
@@ -854,8 +854,8 @@ private final class SliderBackgroundComponent: Component {
             self.sliderBackground.layer.cornerRadius = availableSize.height * 0.5
             self.sliderForeground.layer.cornerRadius = availableSize.height * 0.5
             
-            self.sliderStars.frame = CGRect(origin: .zero, size: availableSize)
-            self.sliderStars.update(size: availableSize, value: component.value)
+            self.sliderDiamonds.frame = CGRect(origin: .zero, size: availableSize)
+            self.sliderDiamonds.update(size: availableSize, value: component.value)
             
             self.sliderForeground.isHidden = sliderForegroundFrame.width <= sliderMinWidth
             
@@ -1161,7 +1161,7 @@ private final class GiftAuctionBidScreenComponent: Component {
         private let title = ComponentView<Empty>()
         private let subtitle = ComponentView<Empty>()
         
-        private let badgeStars = BadgeStarsView()
+        private let badgeDiamonds = BadgeDiamondsView()
         private let sliderBackground = ComponentView<Empty>()
         private let slider = ComponentView<Empty>()
         private let sliderPlus = ComponentView<Empty>()
@@ -1200,7 +1200,7 @@ private final class GiftAuctionBidScreenComponent: Component {
         private var amount: Amount = Amount(realValue: 1, minRealValue: 1, minAllowedRealValue: 1, maxRealValue: 1000, maxSliderValue: 1000, isLogarithmic: true)
         private var didChangeAmount: Bool = false
         
-        private var cachedStarImage: (UIImage, PresentationTheme)?
+        private var cachedDiamondImage: (UIImage, PresentationTheme)?
                 
         private var balanceDisposable: Disposable?
         
@@ -1508,9 +1508,9 @@ private final class GiftAuctionBidScreenComponent: Component {
             if let peerId = self.giftAuctionState?.myState.bidPeerId {
                 myBidPeerId = peerId
             }
-            var requiredStars = value
+            var requiredDiamonds = value
             if let myBidAmount = self.giftAuctionState?.myState.bidAmount {
-                requiredStars = requiredStars - myBidAmount
+                requiredDiamonds = requiredDiamonds - myBidAmount
                 isUpdate = true
                 if value == myBidAmount {
                     controller.dismiss()
@@ -1518,19 +1518,19 @@ private final class GiftAuctionBidScreenComponent: Component {
                 }
             }
             
-            if balance < StarsAmount(value: requiredStars, nanos: 0) {
-                let _ = (component.context.engine.payments.starsTopUpOptions()
+            if balance < StarsAmount(value: requiredDiamonds, nanos: 0) {
+                let _ = (component.context.engine.payments.diamondsTopUpOptions()
                 |> take(1)
                 |> deliverOnMainQueue).startStandalone(next: { [weak self] options in
                     guard let self, let component = self.component else {
                         return
                     }
-                    guard let starsContext = component.context.starsContext else {
+                    guard let diamondsContext = component.context.diamondsContext else {
                         return
                     }
                     
-                    let purchasePurpose: StarsPurchasePurpose = .generic
-                    let purchaseScreen = component.context.sharedContext.makeStarsPurchaseScreen(context: component.context, starsContext: starsContext, options: options, purpose: purchasePurpose, targetPeerId: nil, customTheme: environment.theme, completion: { result in
+                    let purchasePurpose: DiamondsPurchasePurpose = .generic
+                    let purchaseScreen = component.context.sharedContext.makeDiamondsPurchaseScreen(context: component.context, diamondsContext: diamondsContext, options: options, purpose: purchasePurpose, targetPeerId: nil, customTheme: environment.theme, completion: { result in
                         let _ = result
                         //TODO:release
                     })
@@ -1576,7 +1576,7 @@ private final class GiftAuctionBidScreenComponent: Component {
                 peerId = component.toPeerId
             }
             
-            let source: BotPaymentInvoiceSource = .starGiftAuctionBid(
+            let source: BotPaymentInvoiceSource = .diamondGiftAuctionBid(
                update: isUpdate,
                hideName: peerId != nil ? component.hideName : false,
                peerId: peerId,
@@ -1591,7 +1591,7 @@ private final class GiftAuctionBidScreenComponent: Component {
                 return .fail(.generic)
             }
             |> mapToSignal { inputData -> Signal<SendBotPaymentResult, SendBotPaymentFormError> in
-                return component.context.engine.payments.sendStarsPaymentForm(formId: inputData.form.id, source: source)
+                return component.context.engine.payments.sendDiamondsPaymentForm(formId: inputData.form.id, source: source)
             }
             |> deliverOnMainQueue
             
@@ -1638,7 +1638,7 @@ private final class GiftAuctionBidScreenComponent: Component {
                 )
                   
                 Queue.mainQueue().after(2.5) {
-                    component.context.starsContext?.load(force: true)
+                    component.context.diamondsContext?.load(force: true)
                 }
             }, error: { [weak self] _ in
                 guard let self else {
@@ -1648,7 +1648,7 @@ private final class GiftAuctionBidScreenComponent: Component {
                 HapticFeedback().error()
                 
                 let currentValue = self.amount.realValue
-                self.component?.context.starsContext?.load(force: true)
+                self.component?.context.diamondsContext?.load(force: true)
                 self.resetSliderValue(component: self.component, forceMinimum: true)
                 
                 if self.amount.realValue > currentValue {
@@ -1931,23 +1931,23 @@ private final class GiftAuctionBidScreenComponent: Component {
             let balanceSize = self.balanceOverlay.update(
                 transition: .immediate,
                 component: AnyComponent(
-                    StarsBalanceOverlayComponent(
+                    DiamondsBalanceOverlayComponent(
                         context: component.context,
                         peerId: component.context.account.peerId,
                         theme: environment.theme,
                         currency: .stars,
                         action: { [weak self] in
-                            guard let self, let starsContext = context.starsContext, let navigationController = self.environment?.controller()?.navigationController as? NavigationController else {
+                            guard let self, let diamondsContext = context.diamondsContext, let navigationController = self.environment?.controller()?.navigationController as? NavigationController else {
                                 return
                             }
                             self.environment?.controller()?.dismiss()
                             
-                            let _ = (context.engine.payments.starsTopUpOptions()
+                            let _ = (context.engine.payments.diamondsTopUpOptions()
                             |> take(1)
                             |> deliverOnMainQueue).startStandalone(next: { options in
-                                let controller = context.sharedContext.makeStarsPurchaseScreen(
+                                let controller = context.sharedContext.makeDiamondsPurchaseScreen(
                                     context: context,
-                                    starsContext: starsContext,
+                                    diamondsContext: diamondsContext,
                                     options: options,
                                     purpose: .generic,
                                     targetPeerId: nil,
@@ -1974,8 +1974,8 @@ private final class GiftAuctionBidScreenComponent: Component {
             }
             
             if self.component == nil {
-                if let starsContext = component.context.starsContext {
-                    self.balanceDisposable = (starsContext.state
+                if let diamondsContext = component.context.diamondsContext {
+                    self.balanceDisposable = (diamondsContext.state
                     |> deliverOnMainQueue).startStrict(next: { [weak self] state in
                         guard let self else {
                             return
@@ -2145,7 +2145,7 @@ private final class GiftAuctionBidScreenComponent: Component {
                                 
                                 if newSpeed < 0.01 && deltaValue < 0.001 {
                                 } else {
-                                    self.badgeStars.update(speed: newSpeed, delta: delta)
+                                    self.badgeDiamonds.update(speed: newSpeed, delta: delta)
                                 }
                             }
                             
@@ -2171,7 +2171,7 @@ private final class GiftAuctionBidScreenComponent: Component {
                         }
                         if !isTracking {
                             self.previousTimestamp = nil
-                            self.badgeStars.update(speed: 0.0)
+                            self.badgeDiamonds.update(speed: 0.0)
                         }
                     }
                 )),
@@ -2206,7 +2206,7 @@ private final class GiftAuctionBidScreenComponent: Component {
             var sliderColor: UIColor = UIColor(rgb: 0x2a9ef1)
             
             let liveStreamParams = LiveChatMessageParams(appConfig: component.context.currentAppConfiguration.with({ $0 }))
-            let color = GroupCallMessagesContext.getStarAmountParamMapping(params: liveStreamParams, value: Int64(self.amount.realValue / 5)).color ?? GroupCallMessagesContext.Message.Color(rawValue: 0x985FDC)
+            let color = GroupCallMessagesContext.getDiamondAmountParamMapping(params: liveStreamParams, value: Int64(self.amount.realValue / 5)).color ?? GroupCallMessagesContext.Message.Color(rawValue: 0x985FDC)
             sliderColor = StoryLiveChatMessageComponent.getMessageColor(color: color)
             
             var giftsPerRound: Int32 = 50
@@ -2349,7 +2349,7 @@ private final class GiftAuctionBidScreenComponent: Component {
             
             if let sliderView = self.slider.view, let sliderBackgroundView = self.sliderBackground.view, let sliderPlusView = self.sliderPlus.view {
                 if sliderView.superview == nil {
-                    self.scrollContentView.addSubview(self.badgeStars)
+                    self.scrollContentView.addSubview(self.badgeDiamonds)
                     self.scrollContentView.addSubview(sliderBackgroundView)
                     self.scrollContentView.addSubview(sliderView)
                     self.scrollContentView.addSubview(sliderPlusView)
@@ -2396,7 +2396,7 @@ private final class GiftAuctionBidScreenComponent: Component {
                 var badgeFrame = CGRect()
                 if let badgeView = self.badge.view as? BadgeComponent.View {
                     if badgeView.superview == nil {
-                        self.scrollContentView.insertSubview(badgeView, belowSubview: self.badgeStars)
+                        self.scrollContentView.insertSubview(badgeView, belowSubview: self.badgeDiamonds)
                     }
 
                     let apparentBadgeSize = badgeSize
@@ -2425,9 +2425,9 @@ private final class GiftAuctionBidScreenComponent: Component {
                     badgeView.adjustTail(size: apparentBadgeSize, tailOffset: badgeTailOffset, transition: transition)
                 }
                 
-                let starsRect = CGRect(origin: .zero, size: CGSize(width: availableSize.width, height: sliderForegroundFrame.midY))
-                self.badgeStars.frame = starsRect
-                self.badgeStars.update(size: starsRect.size, color: sliderColor, emitterPosition: CGPoint(x: badgeFrame.midX, y: badgeFrame.maxY - 32.0))
+                let diamondsRect = CGRect(origin: .zero, size: CGSize(width: availableSize.width, height: sliderForegroundFrame.midY))
+                self.badgeDiamonds.frame = diamondsRect
+                self.badgeDiamonds.update(size: diamondsRect.size, color: sliderColor, emitterPosition: CGPoint(x: badgeFrame.midX, y: badgeFrame.maxY - 32.0))
             }
                         
             var auctionStats: [([AnimatedTextComponent.Item], String)] = []
@@ -2950,8 +2950,8 @@ private final class GiftAuctionBidScreenComponent: Component {
 
             initialContentHeight = contentHeight
             
-            if self.cachedStarImage == nil || self.cachedStarImage?.1 !== environment.theme {
-                self.cachedStarImage = (generateTintedImage(image: UIImage(bundleImageName: "Item List/PremiumIcon"), color: .white)!, environment.theme)
+            if self.cachedDiamondImage == nil || self.cachedDiamondImage?.1 !== environment.theme {
+                self.cachedDiamondImage = (generateTintedImage(image: UIImage(bundleImageName: "Item List/PremiumIcon"), color: .white)!, environment.theme)
             }
             
             var formattedAmount = presentationStringsFormattedNumber(Int32(clamping: self.amount.realValue), environment.dateTimeFormat.groupingSeparator)
@@ -2971,8 +2971,8 @@ private final class GiftAuctionBidScreenComponent: Component {
                 buttonId = "bid"
             }
             let buttonAttributedString = NSMutableAttributedString(string: buttonString, font: Font.with(size: 17.0, weight: .semibold, traits: .monospacedNumbers), textColor: environment.theme.list.itemCheckColors.foregroundColor, paragraphAlignment: .center)
-            if let range = buttonAttributedString.string.range(of: "#"), let starImage = self.cachedStarImage?.0 {
-                buttonAttributedString.addAttribute(.attachment, value: starImage, range: NSRange(range, in: buttonAttributedString.string))
+            if let range = buttonAttributedString.string.range(of: "#"), let diamondImage = self.cachedDiamondImage?.0 {
+                buttonAttributedString.addAttribute(.attachment, value: diamondImage, range: NSRange(range, in: buttonAttributedString.string))
                 buttonAttributedString.addAttribute(.foregroundColor, value: environment.theme.list.itemCheckColors.foregroundColor, range: NSRange(range, in: buttonAttributedString.string))
                 buttonAttributedString.addAttribute(.baselineOffset, value: 1.5, range: NSRange(range, in: buttonAttributedString.string))
                 buttonAttributedString.addAttribute(.kern, value: 2.0, range: NSRange(range, in: buttonAttributedString.string))
@@ -3181,7 +3181,7 @@ public class GiftAuctionBidScreen: ViewControllerComponentContainer {
     }
 }
 
-private final class BadgeStarsView: UIView {
+private final class BadgeDiamondsView: UIView {
     private let staticEmitterLayer = CAEmitterLayer()
     private let dynamicEmitterLayer = CAEmitterLayer()
     private var currentColor: UIColor?
@@ -3350,7 +3350,7 @@ private final class BadgeStarsView: UIView {
     }
 }
 
-private final class SliderStarsView: UIView {
+private final class SliderDiamondsView: UIView {
     private let emitterLayer = CAEmitterLayer()
     
     override init(frame: CGRect) {

@@ -72,7 +72,7 @@ public final class MessageMediaPlaylistItem: SharedMediaPlaylistItem {
             } else {
                 fileReference = .message(message: MessageReference(self.message), media: file)
             }
-            let source = SharedMediaPlaybackDataSource.telegramFile(reference: fileReference, isCopyProtected: self.message.isCopyProtected(), isViewOnce: self.message.minAutoremoveOrClearTimeout == viewOnceTimeout)
+            let source = SharedMediaPlaybackDataSource.ansibleFile(reference: fileReference, isCopyProtected: self.message.isCopyProtected(), isViewOnce: self.message.minAutoremoveOrClearTimeout == viewOnceTimeout)
             for attribute in file.attributes {
                 switch attribute {
                     case let .Audio(isVoice, _, _, _, _):

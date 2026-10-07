@@ -464,7 +464,7 @@ final class UndoOverlayControllerNode: ViewControllerTracingNode {
                 self.textNode.attributedText = string
                 displayUndo = false
                 self.originalRemainingSeconds = 5
-            case let .starsSent(_, title, textItems, hasUndo):
+            case let .diamondsSent(_, title, textItems, hasUndo):
                 self.avatarNode = nil
                 self.iconNode = nil
                 self.iconCheckNode = nil
@@ -1584,7 +1584,7 @@ final class UndoOverlayControllerNode: ViewControllerTracingNode {
         switch content {
         case .removedChat:
             self.panelWrapperNode.addSubnode(self.timerTextNode)
-        case let .starsSent(_, _, _, hasUndo):
+        case let .diamondsSent(_, _, _, hasUndo):
             if hasUndo {
                 self.panelWrapperNode.addSubnode(self.timerTextNode)
             }
@@ -1767,7 +1767,7 @@ final class UndoOverlayControllerNode: ViewControllerTracingNode {
                     })
                 }
                 let timerColor: UIColor
-                if case .starsSent = self.content {
+                if case .diamondsSent = self.content {
                     timerColor = self.undoTextColor
                 } else {
                     timerColor = .white
@@ -1863,7 +1863,7 @@ final class UndoOverlayControllerNode: ViewControllerTracingNode {
                 self.titleNode.attributedText = NSAttributedString(string: title, font: Font.semibold(14.0), textColor: .white)
             }
             self.textNode.attributedText = attributedText
-        case let .starsSent(_, title, textItems, _):
+        case let .diamondsSent(_, title, textItems, _):
             self.animatedTextItems = textItems
         
             self.titleNode.attributedText = NSAttributedString(string: title, font: Font.semibold(14.0), textColor: .white)
@@ -2023,7 +2023,7 @@ final class UndoOverlayControllerNode: ViewControllerTracingNode {
         
         var buttonTextFrame = CGRect(origin: CGPoint(x: layout.size.width - layout.safeInsets.left - layout.safeInsets.right - rightInset - buttonTextSize.width - leftMargin * 2.0, y: floor((contentHeight - buttonTextSize.height) / 2.0)), size: buttonTextSize)
         var undoButtonFrame = CGRect(origin: CGPoint(x: layout.size.width - layout.safeInsets.left - layout.safeInsets.right - rightInset - buttonTextSize.width - 8.0 - leftMargin * 2.0, y: 0.0), size: CGSize(width: layout.safeInsets.right + rightInset + buttonTextSize.width + 8.0 + leftMargin, height: contentHeight))
-        if case .starsSent = self.content {
+        if case .diamondsSent = self.content {
             let buttonOffset: CGFloat = -34.0
             undoButtonFrame.origin.x += buttonOffset
             buttonTextFrame.origin.x += buttonOffset
@@ -2146,7 +2146,7 @@ final class UndoOverlayControllerNode: ViewControllerTracingNode {
         }
    
         let timerTextSize = self.timerTextNode.updateLayout(CGSize(width: 100.0, height: 100.0))
-        if case .starsSent = self.content {
+        if case .diamondsSent = self.content {
             transition.updateFrame(node: self.timerTextNode, frame: CGRect(origin: CGPoint(x: floor((layout.size.width - layout.safeInsets.left - layout.safeInsets.right - rightInset + floor((rightInset - timerTextSize.width) * 0.5) - 46.0)), y: floor((contentHeight - timerTextSize.height) / 2.0)), size: timerTextSize))
         } else {
             transition.updateFrame(node: self.timerTextNode, frame: CGRect(origin: CGPoint(x: floor((leftInset - timerTextSize.width) / 2.0), y: floor((contentHeight - timerTextSize.height) / 2.0)), size: timerTextSize))
@@ -2155,7 +2155,7 @@ final class UndoOverlayControllerNode: ViewControllerTracingNode {
         if let statusNode = self.statusNode {
             let statusSize: CGFloat = 30.0
             var statusFrame = CGRect(origin: CGPoint(x: floor((leftInset - statusSize) / 2.0), y: floor((contentHeight - statusSize) / 2.0)), size: CGSize(width: statusSize, height: statusSize))
-            if case .starsSent = self.content {
+            if case .diamondsSent = self.content {
                 statusFrame.origin.x = layout.size.width - layout.safeInsets.left - layout.safeInsets.right - rightInset - statusSize - 23.0
             }
             transition.updateFrame(node: statusNode, frame: statusFrame)
@@ -2164,7 +2164,7 @@ final class UndoOverlayControllerNode: ViewControllerTracingNode {
                     
                 } else {
                     let statusColor: UIColor
-                    if case .starsSent = self.content {
+                    if case .diamondsSent = self.content {
                         statusColor = self.undoTextColor
                     } else {
                         statusColor = .white

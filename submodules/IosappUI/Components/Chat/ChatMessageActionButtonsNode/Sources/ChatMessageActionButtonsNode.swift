@@ -231,7 +231,7 @@ private final class ChatMessageActionButtonNode: ASDisplayNode {
             
             let titleColor = bubbleVariableColor(variableColor: messageTheme.actionButtonsTextColor, wallpaper: theme.wallpaper)
             
-            var isStarsPayment = false
+            var isDiamondsPayment = false
             let iconImage: UIImage?
             var tintColor: UIColor?
             if let customIcon = customInfo?.icon {
@@ -278,7 +278,7 @@ private final class ChatMessageActionButtonNode: ASDisplayNode {
                     iconImage = incoming ? graphics.chatBubbleActionButtonIncomingShareIconImage : graphics.chatBubbleActionButtonOutgoingShareIconImage
                 case .payment:
                     if button.title.contains("⭐️") {
-                        isStarsPayment = true
+                        isDiamondsPayment = true
                         iconImage = nil
                     } else {
                         iconImage = incoming ? graphics.chatBubbleActionButtonIncomingPaymentIconImage : graphics.chatBubbleActionButtonOutgoingPaymentIconImage
@@ -309,11 +309,11 @@ private final class ChatMessageActionButtonNode: ASDisplayNode {
             }
             
             let attributedTitle: NSAttributedString
-            if isStarsPayment {
+            if isDiamondsPayment {
                 let updatedTitle = title.replacingOccurrences(of: "⭐️", with: " # ")
                 let buttonAttributedString = NSMutableAttributedString(string: updatedTitle, font: titleFont, textColor: titleColor, paragraphAlignment: .center)
-                if let range = buttonAttributedString.string.range(of: "#"), let starImage = UIImage(bundleImageName: "Item List/PremiumIcon") {
-                    buttonAttributedString.addAttribute(.attachment, value: starImage, range: NSRange(range, in: buttonAttributedString.string))
+                if let range = buttonAttributedString.string.range(of: "#"), let diamondImage = UIImage(bundleImageName: "Item List/PremiumIcon") {
+                    buttonAttributedString.addAttribute(.attachment, value: diamondImage, range: NSRange(range, in: buttonAttributedString.string))
                     buttonAttributedString.addAttribute(.foregroundColor, value: titleColor, range: NSRange(range, in: buttonAttributedString.string))
                     buttonAttributedString.addAttribute(.baselineOffset, value: 1.0, range: NSRange(range, in: buttonAttributedString.string))
                 }

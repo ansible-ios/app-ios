@@ -902,7 +902,7 @@ public final class ChatMessageInteractiveFileNode: ASDisplayNode {
                     }
                     var viewCount: Int?
                     var dateReplies = 0
-                    var starsCount: Int64?
+                    var diamondsCount: Int64?
                     var dateReactionsAndPeers = mergedMessageReactionsAndPeers(accountPeerId: arguments.context.account.peerId, accountPeer: arguments.associatedData.accountPeer, message: arguments.topMessage)
                     if arguments.topMessage.isRestricted(platform: "ios", contentSettings: arguments.context.currentContentSettings.with { $0 }) || arguments.presentationData.isPreview {
                         dateReactionsAndPeers = ([], [])
@@ -916,8 +916,8 @@ public final class ChatMessageInteractiveFileNode: ASDisplayNode {
                             if let channel = arguments.message.peers[arguments.message.id.peerId] as? IosappChannel, case .group = channel.info {
                                 dateReplies = Int(attribute.count)
                             }
-                        } else if let attribute = attribute as? PaidStarsMessageAttribute, arguments.message.id.peerId.namespace == Namespaces.Peer.CloudChannel {
-                            starsCount = attribute.stars.value
+                        } else if let attribute = attribute as? PaidDiamondsMessageAttribute, arguments.message.id.peerId.namespace == Namespaces.Peer.CloudChannel {
+                            diamondsCount = attribute.stars.value
                         }
                     }
                     if arguments.forcedIsEdited {
@@ -961,10 +961,10 @@ public final class ChatMessageInteractiveFileNode: ASDisplayNode {
                         reactionPeers: dateReactionsAndPeers.peers,
                         displayAllReactionPeers: arguments.message.id.peerId.namespace == Namespaces.Peer.CloudUser,
                         areReactionsTags: arguments.message.areReactionsTags(accountPeerId: arguments.context.account.peerId),
-                        areStarReactionsEnabled: arguments.associatedData.areStarReactionsEnabled,
+                        areDiamondReactionsEnabled: arguments.associatedData.areDiamondReactionsEnabled,
                         messageEffect: arguments.message.messageEffect(availableMessageEffects: arguments.associatedData.availableMessageEffects),
                         replyCount: dateReplies,
-                        starsCount: starsCount,
+                        diamondsCount: diamondsCount,
                         isPinned: arguments.isPinned && !arguments.associatedData.isInPinnedListMode,
                         hasAutoremove: arguments.message.isSelfExpiring,
                         canViewReactionList: canViewMessageReactionList(message: EngineMessage(arguments.topMessage)),

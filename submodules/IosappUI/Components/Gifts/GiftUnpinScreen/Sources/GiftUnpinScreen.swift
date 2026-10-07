@@ -22,14 +22,14 @@ private final class SheetContent: CombinedComponent {
     let context: AccountContext
     let gift: ProfileGiftsContext.State.StarGift
     let pinnedGifts: [ProfileGiftsContext.State.StarGift]
-    let completion: (StarGiftReference) -> Void
+    let completion: (DiamondGiftReference) -> Void
     let dismiss: () -> Void
     
     init(
         context: AccountContext,
         gift: ProfileGiftsContext.State.StarGift,
         pinnedGifts: [ProfileGiftsContext.State.StarGift],
-        completion: @escaping (StarGiftReference) -> Void,
+        completion: @escaping (DiamondGiftReference) -> Void,
         dismiss: @escaping () -> Void
     ) {
         self.context = context
@@ -53,7 +53,7 @@ private final class SheetContent: CombinedComponent {
     }
     
     final class State: ComponentState {
-        var selectedGift: StarGiftReference?
+        var selectedGift: DiamondGiftReference?
     }
     
     func makeState() -> State {
@@ -67,7 +67,7 @@ private final class SheetContent: CombinedComponent {
         let gifts = ChildMap(environment: Empty.self, keyedBy: AnyHashable.self)
         let button = Child(ButtonComponent.self)
         
-        var appliedSelectedGift: StarGiftReference?
+        var appliedSelectedGift: DiamondGiftReference?
                 
         return { context in
             let environment = context.environment[EnvironmentType.self]
@@ -287,13 +287,13 @@ private final class SheetContainerComponent: CombinedComponent {
     let context: AccountContext
     let gift: ProfileGiftsContext.State.StarGift
     let pinnedGifts: [ProfileGiftsContext.State.StarGift]
-    let completion: (StarGiftReference) -> Void
+    let completion: (DiamondGiftReference) -> Void
     
     init(
         context: AccountContext,
         gift: ProfileGiftsContext.State.StarGift,
         pinnedGifts: [ProfileGiftsContext.State.StarGift],
-        completion: @escaping (StarGiftReference) -> Void
+        completion: @escaping (DiamondGiftReference) -> Void
     ) {
         self.context = context
         self.gift = gift
@@ -405,7 +405,7 @@ public class GiftUnpinScreen: ViewControllerComponentContainer {
         context: AccountContext,
         gift: ProfileGiftsContext.State.StarGift,
         pinnedGifts: [ProfileGiftsContext.State.StarGift],
-        completion: @escaping (StarGiftReference) -> Void
+        completion: @escaping (DiamondGiftReference) -> Void
     ) {
         super.init(
             context: context,

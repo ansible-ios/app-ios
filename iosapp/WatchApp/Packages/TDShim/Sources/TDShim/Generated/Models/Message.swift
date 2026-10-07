@@ -74,7 +74,7 @@ public struct Message: Codable, Equatable, Hashable, Identifiable {
     public let isOutgoing: Bool
 
     /// True, if the message is a suggested channel post which was paid in Iosapp Stars; a warning must be shown if the message is deleted in less than getOption("suggested_post_lifetime_min") seconds after sending
-    public let isPaidStarSuggestedPost: Bool
+    public let isPaidDiamondSuggestedPost: Bool
 
     /// True, if the message is a suggested channel post which was paid in Toncoins; a warning must be shown if the message is deleted in less than getOption("suggested_post_lifetime_min") seconds after sending
     public let isPaidTonSuggestedPost: Bool
@@ -86,7 +86,7 @@ public struct Message: Codable, Equatable, Hashable, Identifiable {
     public let mediaAlbumId: TdInt64
 
     /// The number of Iosapp Stars the sender paid to send the message
-    public let paidMessageStarCount: Int64
+    public let paidMessageDiamondCount: Int64
 
     /// Reply markup for the message; may be null if none
     public let replyMarkup: ReplyMarkup?
@@ -158,11 +158,11 @@ public struct Message: Codable, Equatable, Hashable, Identifiable {
         isChannelPost: Bool,
         isFromOffline: Bool,
         isOutgoing: Bool,
-        isPaidStarSuggestedPost: Bool,
+        isPaidDiamondSuggestedPost: Bool,
         isPaidTonSuggestedPost: Bool,
         isPinned: Bool,
         mediaAlbumId: TdInt64,
-        paidMessageStarCount: Int64,
+        paidMessageDiamondCount: Int64,
         replyMarkup: ReplyMarkup?,
         replyTo: MessageReplyTo?,
         restrictionInfo: RestrictionInfo?,
@@ -200,11 +200,11 @@ public struct Message: Codable, Equatable, Hashable, Identifiable {
         self.isChannelPost = isChannelPost
         self.isFromOffline = isFromOffline
         self.isOutgoing = isOutgoing
-        self.isPaidStarSuggestedPost = isPaidStarSuggestedPost
+        self.isPaidDiamondSuggestedPost = isPaidDiamondSuggestedPost
         self.isPaidTonSuggestedPost = isPaidTonSuggestedPost
         self.isPinned = isPinned
         self.mediaAlbumId = mediaAlbumId
-        self.paidMessageStarCount = paidMessageStarCount
+        self.paidMessageDiamondCount = paidMessageDiamondCount
         self.replyMarkup = replyMarkup
         self.replyTo = replyTo
         self.restrictionInfo = restrictionInfo

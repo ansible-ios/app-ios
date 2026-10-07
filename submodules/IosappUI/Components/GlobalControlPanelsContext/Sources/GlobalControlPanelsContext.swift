@@ -78,7 +78,7 @@ public final class GlobalControlPanelsContext {
         case reviewLogin(newSessionReview: NewSessionReview, totalCount: Int)
         case reviewBotConnection(newBotConnectionReview: NewBotConnectionReview, botUsername: String, totalCount: Int)
         case premiumGrace
-        case starsSubscriptionLowBalance(amount: StarsAmount, peers: [EnginePeer])
+        case diamondsSubscriptionLowBalance(amount: StarsAmount, peers: [EnginePeer])
         case setupPhoto(EnginePeer)
         case accountFreeze
         case link(id: String, url: String, title: ServerSuggestionInfo.Item.Text, subtitle: ServerSuggestionInfo.Item.Text)
@@ -327,7 +327,7 @@ public final class GlobalControlPanelsContext {
                     return AccountFreezeConfiguration.with(appConfiguration: appConfiguration)
                 })
                 
-                let starsSubscriptionsContextPromise = Promise<StarsSubscriptionsContext?>(nil)
+                let diamondsSubscriptionsContextPromise = Promise<DiamondsSubscriptionsContext?>(nil)
                 
                 let suggestedChatListNoticeSignal: Signal<ChatListNotice?, NoError> = combineLatest(
                     context.engine.notices.getServerProvidedSuggestions(),
@@ -340,10 +340,10 @@ public final class GlobalControlPanelsContext {
                         IosappEngine.EngineData.Item.Peer.Birthday(id: context.account.peerId)
                     ),
                     context.account.stateManager.contactBirthdays,
-                    starsSubscriptionsContextPromise.get(),
+                    diamondsSubscriptionsContextPromise.get(),
                     accountFreezeConfiguration
                 )
-                |> mapToSignal { suggestions, dismissedSuggestions, configuration, newSessionReviews, newBotConnectionReviews, data, birthdays, starsSubscriptionsContext, accountFreezeConfiguration -> Signal<ChatListNotice?, NoError> in
+                |> mapToSignal { suggestions, dismissedSuggestions, configuration, newSessionReviews, newBotConnectionReviews, data, birthdays, diamondsSubscriptionsContext, accountFreezeConfiguration -> Signal<ChatListNotice?, NoError> in
                     let (accountPeer, birthday) = data
                     
                     if let newSessionReview = newSessionReviews.first {
@@ -393,12 +393,12 @@ public final class GlobalControlPanelsContext {
                     
                     if let _ = accountFreezeConfiguration.freezeUntilDate {
                         return .single(.accountFreeze)
-                    } else if suggestions.contains(.starsSubscriptionLowBalance) {
-                        if let starsSubscriptionsContext {
-                            return starsSubscriptionsContext.state
+                    } else if suggestions.contains(.diamondsSubscriptionLowBalance) {
+                        if let diamondsSubscriptionsContext {
+                            return diamondsSubscriptionsContext.state
                             |> map { state in
                                 if state.balance > StarsAmount.zero && !state.subscriptions.isEmpty {
-                                    return .starsSubscriptionLowBalance(
+                                    return .diamondsSubscriptionLowBalance(
                                         amount: state.balance,
                                         peers: state.subscriptions.map { $0.peer }
                                     )
@@ -407,7 +407,7 @@ public final class GlobalControlPanelsContext {
                                 }
                             }
                         } else {
-                            starsSubscriptionsContextPromise.set(.single(context.engine.payments.peerStarsSubscriptionsContext(starsContext: nil, missingBalance: true)))
+                            diamondsSubscriptionsContextPromise.set(.single(context.engine.payments.peerDiamondsSubscriptionsContext(diamondsContext: nil, missingBalance: true)))
                             return .single(nil)
                         }
                     } else if suggestions.contains(.setupPhoto), let accountPeer, accountPeer.smallProfileImage == nil {
@@ -656,8 +656,8 @@ public final class GlobalControlPanelsContext {
                 let _ = self.context.engine.notices.dismissServerProvidedSuggestion(suggestion: ServerProvidedSuggestion.gracePremium.id).startStandalone()
             case .setupPhoto:
                 let _ = self.context.engine.notices.dismissServerProvidedSuggestion(suggestion: ServerProvidedSuggestion.setupPhoto.id).startStandalone()
-            case .starsSubscriptionLowBalance:
-                let _ = self.context.engine.notices.dismissServerProvidedSuggestion(suggestion: ServerProvidedSuggestion.starsSubscriptionLowBalance.id).startStandalone()
+            case .diamondsSubscriptionLowBalance:
+                let _ = self.context.engine.notices.dismissServerProvidedSuggestion(suggestion: ServerProvidedSuggestion.diamondsSubscriptionLowBalance.id).startStandalone()
             case let .link(id, _, _, _):
                 let _ = self.context.engine.notices.dismissServerProvidedSuggestion(suggestion: id).startStandalone()
             default:

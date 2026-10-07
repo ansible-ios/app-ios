@@ -3451,9 +3451,9 @@ private final class PremiumIntroScreenComponent: CombinedComponent {
                         
             let background = background.update(component: Rectangle(color: environment.theme.list.blocksBackgroundColor), environment: {}, availableSize: context.availableSize, transition: context.transition)
             
-            var starIsVisible = true
+            var diamondIsVisible = true
             if let topContentOffset = state.topContentOffset, topContentOffset >= 123.0 {
-                starIsVisible = false
+                diamondIsVisible = false
             }
 
             var isIntro = true
@@ -3467,7 +3467,7 @@ private final class PremiumIntroScreenComponent: CombinedComponent {
                     component: PremiumCoinComponent(
                         mode: .business,
                         isIntro: isIntro,
-                        isVisible: starIsVisible,
+                        isVisible: diamondIsVisible,
                         hasIdleAnimations: state.hasIdleAnimations
                     ),
                     availableSize: CGSize(width: min(414.0, context.availableSize.width), height: 220.0),
@@ -3482,7 +3482,7 @@ private final class PremiumIntroScreenComponent: CombinedComponent {
                         placeholderColor: environment.theme.list.mediaPlaceholderColor,
                         accentColor: environment.theme.list.itemAccentColor,
                         fileId: fileId,
-                        isVisible: starIsVisible,
+                        isVisible: diamondIsVisible,
                         hasIdleAnimations: state.hasIdleAnimations
                     ),
                     availableSize: CGSize(width: min(414.0, context.availableSize.width), height: 220.0),
@@ -3498,7 +3498,7 @@ private final class PremiumIntroScreenComponent: CombinedComponent {
                         accentColor: environment.theme.list.itemAccentColor,
                         fileId: file.fileId.id,
                         file: file,
-                        isVisible: starIsVisible,
+                        isVisible: diamondIsVisible,
                         hasIdleAnimations: state.hasIdleAnimations
                     ),
                     availableSize: CGSize(width: min(414.0, context.availableSize.width), height: 220.0),
@@ -3509,7 +3509,7 @@ private final class PremiumIntroScreenComponent: CombinedComponent {
                     component: PremiumStarComponent(
                         theme: environment.theme,
                         isIntro: isIntro,
-                        isVisible: starIsVisible,
+                        isVisible: diamondIsVisible,
                         hasIdleAnimations: state.hasIdleAnimations,
                         colors: [
                             UIColor(rgb: 0x6a94ff),

@@ -105,15 +105,15 @@ final class StoryItemContentComponent: Component {
 		return true
 	}
     
-    struct StarStats {
-        var myStars: Int64
-        var pendingMyStars: Int64
+    struct DiamondStats {
+        var myDiamonds: Int64
+        var pendingMyDiamonds: Int64
         var totalStars: Int64
-        var topItems: [GroupCallMessagesContext.TopStarsItem]
+        var topItems: [GroupCallMessagesContext.TopDiamondsItem]
         
-        init(myStars: Int64, pendingMyStars: Int64, totalStars: Int64, topItems: [GroupCallMessagesContext.TopStarsItem]) {
-            self.myStars = myStars
-            self.pendingMyStars = pendingMyStars
+        init(myDiamonds: Int64, pendingMyDiamonds: Int64, totalStars: Int64, topItems: [GroupCallMessagesContext.TopDiamondsItem]) {
+            self.myDiamonds = myDiamonds
+            self.pendingMyDiamonds = pendingMyDiamonds
             self.totalStars = totalStars
             self.topItems = topItems
         }
@@ -125,18 +125,18 @@ final class StoryItemContentComponent: Component {
         var hasUnseenMessages: Bool
         var areMessagesEnabled: Bool
         var minMessagePrice: Int64?
-        var starStats: StarStats?
+        var diamondStats: DiamondStats?
         var isAdmin: Bool
         var defaultSendAs: EnginePeer.Id?
         var isUnifiedStream: Bool
         
-        init(isExpanded: Bool, isEmpty: Bool, hasUnseenMessages: Bool, areMessagesEnabled: Bool, minMessagePrice: Int64?, starStats: StarStats?, isAdmin: Bool, defaultSendAs: EnginePeer.Id?, isUnifiedStream: Bool) {
+        init(isExpanded: Bool, isEmpty: Bool, hasUnseenMessages: Bool, areMessagesEnabled: Bool, minMessagePrice: Int64?, diamondStats: DiamondStats?, isAdmin: Bool, defaultSendAs: EnginePeer.Id?, isUnifiedStream: Bool) {
             self.isExpanded = isExpanded
             self.isEmpty = isEmpty
             self.hasUnseenMessages = hasUnseenMessages
             self.areMessagesEnabled = areMessagesEnabled
             self.minMessagePrice = minMessagePrice
-            self.starStats = starStats
+            self.diamondStats = diamondStats
             self.isAdmin = isAdmin
             self.defaultSendAs = defaultSendAs
             self.isUnifiedStream = isUnifiedStream
@@ -232,12 +232,12 @@ final class StoryItemContentComponent: Component {
             let currentInfo = liveChatView.currentInfo
             let mediaStreamCallState = self.mediaStreamCallState
             
-            let starStats = currentInfo.starStats.flatMap { starStats in
-                return StarStats(
-                    myStars: starStats.myStars,
-                    pendingMyStars: starStats.pendingMyStars,
-                    totalStars: starStats.totalStars,
-                    topItems: starStats.topItems
+            let diamondStats = currentInfo.diamondStats.flatMap { diamondStats in
+                return DiamondStats(
+                    myDiamonds: diamondStats.myDiamonds,
+                    pendingMyDiamonds: diamondStats.pendingMyDiamonds,
+                    totalStars: diamondStats.totalStars,
+                    topItems: diamondStats.topItems
                 )
             }
             
@@ -247,7 +247,7 @@ final class StoryItemContentComponent: Component {
                 hasUnseenMessages: self.liveChatExternal.hasUnseenMessages,
                 areMessagesEnabled: mediaStreamCallState?.areMessagesEnabled ?? false,
                 minMessagePrice: mediaStreamCallState?.minMessagePrice,
-                starStats: starStats,
+                diamondStats: diamondStats,
                 isAdmin: mediaStreamCallState?.isAdmin ?? false,
                 defaultSendAs: mediaStreamCallState?.defaultSendAs,
                 isUnifiedStream: mediaStreamCallState?.isUnifiedStream ?? false
@@ -1003,9 +1003,9 @@ final class StoryItemContentComponent: Component {
                     self.liveChat = liveChat
                 }
                 
-                var minPaidStars: Int?
+                var minPaidDiamonds: Int?
                 if let mediaStreamCallState = self.mediaStreamCallState {
-                    minPaidStars = mediaStreamCallState.minMessagePrice.flatMap(Int.init)
+                    minPaidDiamonds = mediaStreamCallState.minMessagePrice.flatMap(Int.init)
                 }
                 
                 let _ = liveChat.update(
@@ -1020,7 +1020,7 @@ final class StoryItemContentComponent: Component {
                         canManageMessagesFromPeers: component.canManageLiveChatMessagesFromPeers,
                         insets: environment.containerInsets,
                         isEmbeddedInCamera: component.isEmbeddedInCamera,
-                        minPaidStars: minPaidStars,
+                        minPaidDiamonds: minPaidDiamonds,
                         controller: { [weak self] in
                             guard let self, let component = self.component else {
                                 return nil
@@ -1212,7 +1212,7 @@ final class StoryItemContentComponent: Component {
                         
                         let mappedState = MediaStreamCallState(
                             areMessagesEnabled: state.messagesAreEnabled,
-                            minMessagePrice: state.sendPaidMessageStars,
+                            minMessagePrice: state.sendPaidMessageDiamonds,
                             isAdmin: state.canManageCall,
                             defaultSendAs: state.defaultSendAs,
                             isUnifiedStream: state.isUnifiedStream

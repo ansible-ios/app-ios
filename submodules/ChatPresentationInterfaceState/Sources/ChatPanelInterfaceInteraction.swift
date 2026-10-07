@@ -179,7 +179,7 @@ public final class ChatPanelInterfaceInteraction {
     public let openPremiumGift: () -> Void
     public let openSuggestPost: (EngineRawMessage?, OpenSuggestPostMode) -> Void
     public let openPremiumRequiredForMessaging: () -> Void
-    public let openStarsPurchase: (Int64?) -> Void
+    public let openDiamondsPurchase: (Int64?) -> Void
     public let openMessagePayment: () -> Void
     public let updateHistoryFilter: ((ChatPresentationInterfaceState.HistoryFilter?) -> ChatPresentationInterfaceState.HistoryFilter?) -> Void
     public let updateChatLocationThread: (Int64?, ChatControllerAnimateInnerChatSwitchDirection?) -> Void
@@ -312,7 +312,7 @@ public final class ChatPanelInterfaceInteraction {
         openPremiumGift: @escaping () -> Void,
         openSuggestPost: @escaping (EngineRawMessage?, OpenSuggestPostMode) -> Void,
         openPremiumRequiredForMessaging: @escaping () -> Void,
-        openStarsPurchase: @escaping (Int64?) -> Void,
+        openDiamondsPurchase: @escaping (Int64?) -> Void,
         openMessagePayment: @escaping () -> Void,
         openBoostToUnrestrict: @escaping () -> Void,
         updateRecordingTrimRange: @escaping (Double, Double, Bool, Bool) -> Void,
@@ -444,7 +444,7 @@ public final class ChatPanelInterfaceInteraction {
         self.openPremiumGift = openPremiumGift
         self.openSuggestPost = openSuggestPost
         self.openPremiumRequiredForMessaging = openPremiumRequiredForMessaging
-        self.openStarsPurchase = openStarsPurchase
+        self.openDiamondsPurchase = openDiamondsPurchase
         self.openMessagePayment = openMessagePayment
         self.openBoostToUnrestrict = openBoostToUnrestrict
         self.updateRecordingTrimRange = updateRecordingTrimRange
@@ -584,7 +584,7 @@ public final class ChatPanelInterfaceInteraction {
         }, openPremiumGift: {
         }, openSuggestPost: { _, _ in
         }, openPremiumRequiredForMessaging: {
-        }, openStarsPurchase: { _ in
+        }, openDiamondsPurchase: { _ in
         }, openMessagePayment: {
         }, openBoostToUnrestrict: {
         }, updateRecordingTrimRange: { _, _, _, _ in

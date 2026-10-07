@@ -79,7 +79,7 @@ import ChatMessageGiveawayBubbleContentNode
 import ChatMessageJoinedChannelBubbleContentNode
 import ChatMessageFactCheckBubbleContentNode
 import ChatMessageUnlockMediaNode
-import ChatMessageStarsMediaInfoNode
+import ChatMessageDiamondsMediaInfoNode
 import UIKitRuntimeUtils
 import ChatMessageTransitionNode
 import AnimatedStickerNode
@@ -142,7 +142,7 @@ private func contentNodeMessagesAndClassesForItem(_ item: ChatMessageItem) -> ([
                 result.append((message, ChatMessageRestrictedBubbleContentNode.self, itemAttributes, BubbleItemAttributes(isAttachment: false, neighborType: .text, neighborSpacing: .default)))
                 needReactions = false
                 break outer
-            } else if let _ = attribute as? PaidStarsMessageAttribute, !addedPriceInfo, message.id.peerId.namespace == Namespaces.Peer.CloudUser {
+            } else if let _ = attribute as? PaidDiamondsMessageAttribute, !addedPriceInfo, message.id.peerId.namespace == Namespaces.Peer.CloudUser {
                 result.append((message, ChatMessageActionBubbleContentNode.self, itemAttributes, BubbleItemAttributes(isAttachment: false, neighborType: .text, neighborSpacing: .default)))
                 addedPriceInfo = true
             }
@@ -229,7 +229,7 @@ private func contentNodeMessagesAndClassesForItem(_ item: ChatMessageItem) -> ([
                     result.append((message, ChatMessageCallBubbleContentNode.self, itemAttributes, BubbleItemAttributes(isAttachment: false, neighborType: .text, neighborSpacing: .default)))
                 } else if case .giftPremium = action.action {
                     result.append((message, ChatMessageGiftBubbleContentNode.self, itemAttributes, BubbleItemAttributes(isAttachment: false, neighborType: .text, neighborSpacing: .default)))
-                } else if case .giftStars = action.action {
+                } else if case .giftDiamonds = action.action {
                     result.append((message, ChatMessageGiftBubbleContentNode.self, itemAttributes, BubbleItemAttributes(isAttachment: false, neighborType: .text, neighborSpacing: .default)))
                 } else if case .giftTon = action.action {
                     result.append((message, ChatMessageGiftBubbleContentNode.self, itemAttributes, BubbleItemAttributes(isAttachment: false, neighborType: .text, neighborSpacing: .default)))
@@ -247,7 +247,7 @@ private func contentNodeMessagesAndClassesForItem(_ item: ChatMessageItem) -> ([
                     result.append((message, ChatMessageWallpaperBubbleContentNode.self, itemAttributes, BubbleItemAttributes(isAttachment: false, neighborType: .text, neighborSpacing: .default)))
                 } else if case .giftCode = action.action {
                     result.append((message, ChatMessageGiftBubbleContentNode.self, itemAttributes, BubbleItemAttributes(isAttachment: false, neighborType: .text, neighborSpacing: .default)))
-                } else if case .prizeStars = action.action {
+                } else if case .prizeDiamonds = action.action {
                     result.append((message, ChatMessageGiftBubbleContentNode.self, itemAttributes, BubbleItemAttributes(isAttachment: false, neighborType: .text, neighborSpacing: .default)))
                 } else if case .joinedChannel = action.action {
                     result.append((message, ChatMessageJoinedChannelBubbleContentNode.self, itemAttributes, BubbleItemAttributes(isAttachment: false, neighborType: .text, neighborSpacing: .default)))
@@ -256,7 +256,7 @@ private func contentNodeMessagesAndClassesForItem(_ item: ChatMessageItem) -> ([
                     result.append((message, ChatMessageGiftBubbleContentNode.self, itemAttributes, BubbleItemAttributes(isAttachment: false, neighborType: .text, neighborSpacing: .default)))
                 } else if case .suggestedBirthday = action.action {
                     result.append((message, ChatMessageBirthdateSuggestionContentNode.self, itemAttributes, BubbleItemAttributes(isAttachment: false, neighborType: .text, neighborSpacing: .default)))
-                } else if case .starGiftPurchaseOffer = action.action {
+                } else if case .diamondGiftPurchaseOffer = action.action {
                     result.append((message, ChatMessageGiftOfferBubbleContentNode.self, itemAttributes, BubbleItemAttributes(isAttachment: false, neighborType: .text, neighborSpacing: .default)))
                 } else if case .copyProtectionRequest = action.action {
                     result.append((message, ChatMessageDisableCopyProtectionBubbleContentNode.self, itemAttributes, BubbleItemAttributes(isAttachment: false, neighborType: .text, neighborSpacing: .default)))
@@ -751,7 +751,7 @@ public class ChatMessageBubbleItemNode: ChatMessageItemView, ChatMessagePreviewI
     private var reactionButtonsNode: ChatMessageReactionButtonsNode?
     
     private var unlockButtonNode: ChatMessageUnlockMediaNode?
-    private var mediaInfoNode: ChatMessageStarsMediaInfoNode?
+    private var mediaInfoNode: ChatMessageDiamondsMediaInfoNode?
     
     private var summarizeButtonNode: ChatMessageShareButton?
     private var shareButtonNode: ChatMessageShareButton?
@@ -1547,7 +1547,7 @@ public class ChatMessageBubbleItemNode: ChatMessageItemView, ChatMessagePreviewI
         let actionButtonsLayout = ChatMessageActionButtonsNode.asyncLayout(self.actionButtonsNode)
         let reactionButtonsLayout = ChatMessageReactionButtonsNode.asyncLayout(self.reactionButtonsNode)
         let unlockButtonLayout = ChatMessageUnlockMediaNode.asyncLayout(self.unlockButtonNode)
-        let mediaInfoLayout = ChatMessageStarsMediaInfoNode.asyncLayout(self.mediaInfoNode)
+        let mediaInfoLayout = ChatMessageDiamondsMediaInfoNode.asyncLayout(self.mediaInfoNode)
         
         let mosaicStatusLayout = ChatMessageDateAndStatusNode.asyncLayout(self.mosaicStatusNode)
         
@@ -1613,7 +1613,7 @@ public class ChatMessageBubbleItemNode: ChatMessageItemView, ChatMessagePreviewI
         actionButtonsLayout: (AccountContext, ChatPresentationThemeData, PresentationChatBubbleCorners, PresentationStrings, WallpaperBackgroundNode?, ReplyMarkupMessageAttribute, [EngineMemoryBuffer: ChatMessageActionButtonsNode.CustomInfo], EngineMessage, CGFloat) -> (minWidth: CGFloat, layout: (CGFloat) -> (CGSize, (ListViewItemUpdateAnimation) -> ChatMessageActionButtonsNode)),
         reactionButtonsLayout: (ChatMessageReactionButtonsNode.Arguments) -> (minWidth: CGFloat, layout: (CGFloat) -> (size: CGSize, apply: (ListViewItemUpdateAnimation) -> ChatMessageReactionButtonsNode)),
         unlockButtonLayout: (ChatMessageUnlockMediaNode.Arguments) -> (CGSize, (Bool) -> ChatMessageUnlockMediaNode),
-        mediaInfoLayout: (ChatMessageStarsMediaInfoNode.Arguments) -> (CGSize, (Bool) -> ChatMessageStarsMediaInfoNode),
+        mediaInfoLayout: (ChatMessageDiamondsMediaInfoNode.Arguments) -> (CGSize, (Bool) -> ChatMessageDiamondsMediaInfoNode),
         mosaicStatusLayout: (ChatMessageDateAndStatusNode.Arguments) -> (CGFloat, (CGFloat) -> (CGSize, (ListViewItemUpdateAnimation) -> ChatMessageDateAndStatusNode)),
         makeSuggestedPostInfoNodeLayout: ChatMessageSuggestedPostInfoNode.AsyncLayout,
         layoutConstants: ChatMessageItemLayoutConstants,
@@ -2601,7 +2601,7 @@ public class ChatMessageBubbleItemNode: ChatMessageItemView, ChatMessagePreviewI
                 }
                 var viewCount: Int?
                 var dateReplies = 0
-                var starsCount: Int64?
+                var diamondsCount: Int64?
                 var dateReactionsAndPeers = mergedMessageReactionsAndPeers(accountPeerId: item.context.account.peerId, accountPeer: item.associatedData.accountPeer, message: message)
                 if message.isRestricted(platform: "ios", contentSettings: item.context.currentContentSettings.with { $0 }) {
                     dateReactionsAndPeers = ([], [])
@@ -2615,12 +2615,12 @@ public class ChatMessageBubbleItemNode: ChatMessageItemView, ChatMessagePreviewI
                         if let channel = message.peers[message.id.peerId] as? IosappChannel, case .group = channel.info {
                             dateReplies = Int(attribute.count)
                         }
-                    } else if let attribute = attribute as? PaidStarsMessageAttribute, item.message.id.peerId.namespace == Namespaces.Peer.CloudChannel {
+                    } else if let attribute = attribute as? PaidDiamondsMessageAttribute, item.message.id.peerId.namespace == Namespaces.Peer.CloudChannel {
                         var messageCount: Int = 1
                         if case let .group(messages) = item.content {
                             messageCount = messages.count
                         }
-                        starsCount = attribute.stars.value * Int64(messageCount)
+                        diamondsCount = attribute.stars.value * Int64(messageCount)
                     }
                 }
                 
@@ -2667,10 +2667,10 @@ public class ChatMessageBubbleItemNode: ChatMessageItemView, ChatMessagePreviewI
                     reactionPeers: dateReactionsAndPeers.peers,
                     displayAllReactionPeers: item.message.id.peerId.namespace == Namespaces.Peer.CloudUser,
                     areReactionsTags: item.message.areReactionsTags(accountPeerId: item.context.account.peerId),
-                    areStarReactionsEnabled: item.associatedData.areStarReactionsEnabled,
+                    areDiamondReactionsEnabled: item.associatedData.areDiamondReactionsEnabled,
                     messageEffect: item.message.messageEffect(availableMessageEffects: item.associatedData.availableMessageEffects),
                     replyCount: dateReplies,
-                    starsCount: starsCount,
+                    diamondsCount: diamondsCount,
                     isPinned: message.tags.contains(.pinned) && !item.associatedData.isInPinnedListMode && !isReplyThread,
                     hasAutoremove: message.isSelfExpiring,
                     canViewReactionList: canViewMessageReactionList(message: EngineMessage(message)),
@@ -2705,7 +2705,7 @@ public class ChatMessageBubbleItemNode: ChatMessageItemView, ChatMessagePreviewI
         var forwardAuthorSignature: String?
         
         var unlockButtonSizeApply: (CGSize, (Bool) -> ChatMessageUnlockMediaNode?) = (CGSize(), {  _ in nil })
-        var mediaInfoSizeApply: (CGSize, (Bool) -> ChatMessageStarsMediaInfoNode?) = (CGSize(), {  _ in nil })
+        var mediaInfoSizeApply: (CGSize, (Bool) -> ChatMessageDiamondsMediaInfoNode?) = (CGSize(), {  _ in nil })
         
         var hasTitleAvatar = false
         var hasTitleTopicNavigation = false
@@ -3144,7 +3144,7 @@ public class ChatMessageBubbleItemNode: ChatMessageItemView, ChatMessagePreviewI
                 
                 lastNodeTopPosition = .None(.Both)
             }
-        } else if incoming, let action = item.message.media.first(where: { $0 is IosappMediaAction }) as? IosappMediaAction, case let .starGiftPurchaseOffer(_, _, expireDate, isAccepted, isDeclined) = action.action, !isAccepted && !isDeclined {
+        } else if incoming, let action = item.message.media.first(where: { $0 is IosappMediaAction }) as? IosappMediaAction, case let .diamondGiftPurchaseOffer(_, _, expireDate, isAccepted, isDeclined) = action.action, !isAccepted && !isDeclined {
             let currentTimestamp = Int32(CFAbsoluteTimeGetCurrent() + NSTimeIntervalSince1970)
             if expireDate <= currentTimestamp {
                 
@@ -3636,7 +3636,7 @@ public class ChatMessageBubbleItemNode: ChatMessageItemView, ChatMessagePreviewI
                 ))
                 unlockButtonSizeApply = (sizeAndApply.0, { synchronousLoads in sizeAndApply.1(synchronousLoads) })
             } else {
-                let sizeAndApply = mediaInfoLayout(ChatMessageStarsMediaInfoNode.Arguments(
+                let sizeAndApply = mediaInfoLayout(ChatMessageDiamondsMediaInfoNode.Arguments(
                     presentationData: item.presentationData,
                     context: item.context,
                     message: EngineMessage(item.message),
@@ -3887,7 +3887,7 @@ public class ChatMessageBubbleItemNode: ChatMessageItemView, ChatMessagePreviewI
         unlockButtonPosition: CGPoint?,
         unlockButtonSizeAndApply: (CGSize, (Bool) -> ChatMessageUnlockMediaNode?),
         mediaInfoOrigin: CGPoint?,
-        mediaInfoSizeAndApply: (CGSize, (Bool) -> ChatMessageStarsMediaInfoNode?),
+        mediaInfoSizeAndApply: (CGSize, (Bool) -> ChatMessageDiamondsMediaInfoNode?),
         needsSummarizeButton: Bool,
         needsShareButton: Bool,
         shareButtonOffset: CGPoint?,

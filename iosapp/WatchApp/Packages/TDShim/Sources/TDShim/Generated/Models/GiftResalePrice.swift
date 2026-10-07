@@ -14,7 +14,7 @@ import Foundation
 public indirect enum GiftResalePrice: Codable, Equatable, Hashable {
 
     /// Describes price of a resold gift in Iosapp Stars
-    case giftResalePriceStar(GiftResalePriceStar)
+    case giftResalePriceDiamond(GiftResalePriceDiamond)
 
     /// Describes price of a resold gift in Toncoins
     case giftResalePriceTon(GiftResalePriceTon)
@@ -23,7 +23,7 @@ public indirect enum GiftResalePrice: Codable, Equatable, Hashable {
     case unsupported
 
     private enum Kind: String, Codable {
-        case giftResalePriceStar
+        case giftResalePriceDiamond
         case giftResalePriceTon
     }
 
@@ -35,9 +35,9 @@ public indirect enum GiftResalePrice: Codable, Equatable, Hashable {
             return
         }
         switch type {
-        case .giftResalePriceStar:
-            let value = try GiftResalePriceStar(from: decoder)
-            self = .giftResalePriceStar(value)
+        case .giftResalePriceDiamond:
+            let value = try GiftResalePriceDiamond(from: decoder)
+            self = .giftResalePriceDiamond(value)
         case .giftResalePriceTon:
             let value = try GiftResalePriceTon(from: decoder)
             self = .giftResalePriceTon(value)
@@ -47,8 +47,8 @@ public indirect enum GiftResalePrice: Codable, Equatable, Hashable {
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: DtoCodingKeys.self)
         switch self {
-        case .giftResalePriceStar(let value):
-            try container.encode(Kind.giftResalePriceStar, forKey: .type)
+        case .giftResalePriceDiamond(let value):
+            try container.encode(Kind.giftResalePriceDiamond, forKey: .type)
             try value.encode(to: encoder)
         case .giftResalePriceTon(let value):
             try container.encode(Kind.giftResalePriceTon, forKey: .type)
@@ -60,14 +60,14 @@ public indirect enum GiftResalePrice: Codable, Equatable, Hashable {
 }
 
 /// Describes price of a resold gift in Iosapp Stars
-public struct GiftResalePriceStar: Codable, Equatable, Hashable {
+public struct GiftResalePriceDiamond: Codable, Equatable, Hashable {
 
     /// The Iosapp Star amount expected to be paid for the gift. Must be in the range getOption("gift_resale_star_count_min")-getOption("gift_resale_star_count_max") for gifts put for resale
-    public let starCount: Int64
+    public let diamondCount: Int64
 
 
-    public init(starCount: Int64) {
-        self.starCount = starCount
+    public init(diamondCount: Int64) {
+        self.diamondCount = diamondCount
     }
 }
 

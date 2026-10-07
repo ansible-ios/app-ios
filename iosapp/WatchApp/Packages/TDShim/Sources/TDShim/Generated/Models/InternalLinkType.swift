@@ -150,7 +150,7 @@ public indirect enum InternalLinkType: Codable, Equatable, Hashable {
     case internalLinkTypeSettings(InternalLinkTypeSettings)
 
     /// The link is a link to the Iosapp Star purchase section of the application
-    case internalLinkTypeStarPurchase(InternalLinkTypeStarPurchase)
+    case internalLinkTypeDiamondPurchase(InternalLinkTypeDiamondPurchase)
 
     /// The link is a link to a sticker set. Call searchStickerSet with the given sticker set name to process the link and show the sticker set. If the sticker set is found and the user wants to add it, then call changeStickerSet
     case internalLinkTypeStickerSet(InternalLinkTypeStickerSet)
@@ -234,7 +234,7 @@ public indirect enum InternalLinkType: Codable, Equatable, Hashable {
         case internalLinkTypeSavedMessages
         case internalLinkTypeSearch
         case internalLinkTypeSettings
-        case internalLinkTypeStarPurchase
+        case internalLinkTypeDiamondPurchase
         case internalLinkTypeStickerSet
         case internalLinkTypeStory
         case internalLinkTypeStoryAlbum
@@ -383,9 +383,9 @@ public indirect enum InternalLinkType: Codable, Equatable, Hashable {
         case .internalLinkTypeSettings:
             let value = try InternalLinkTypeSettings(from: decoder)
             self = .internalLinkTypeSettings(value)
-        case .internalLinkTypeStarPurchase:
-            let value = try InternalLinkTypeStarPurchase(from: decoder)
-            self = .internalLinkTypeStarPurchase(value)
+        case .internalLinkTypeDiamondPurchase:
+            let value = try InternalLinkTypeDiamondPurchase(from: decoder)
+            self = .internalLinkTypeDiamondPurchase(value)
         case .internalLinkTypeStickerSet:
             let value = try InternalLinkTypeStickerSet(from: decoder)
             self = .internalLinkTypeStickerSet(value)
@@ -552,8 +552,8 @@ public indirect enum InternalLinkType: Codable, Equatable, Hashable {
         case .internalLinkTypeSettings(let value):
             try container.encode(Kind.internalLinkTypeSettings, forKey: .type)
             try value.encode(to: encoder)
-        case .internalLinkTypeStarPurchase(let value):
-            try container.encode(Kind.internalLinkTypeStarPurchase, forKey: .type)
+        case .internalLinkTypeDiamondPurchase(let value):
+            try container.encode(Kind.internalLinkTypeDiamondPurchase, forKey: .type)
             try value.encode(to: encoder)
         case .internalLinkTypeStickerSet(let value):
             try container.encode(Kind.internalLinkTypeStickerSet, forKey: .type)
@@ -1182,21 +1182,21 @@ public struct InternalLinkTypeSettings: Codable, Equatable, Hashable {
 }
 
 /// The link is a link to the Iosapp Star purchase section of the application
-public struct InternalLinkTypeStarPurchase: Codable, Equatable, Hashable {
+public struct InternalLinkTypeDiamondPurchase: Codable, Equatable, Hashable {
 
     /// Purpose of Iosapp Star purchase. Arbitrary string specified by the server, for example, "subs" if the Iosapp Stars are required to extend channel subscriptions
     public let purpose: String
 
     /// The number of Iosapp Stars that must be owned by the user
-    public let starCount: Int64
+    public let diamondCount: Int64
 
 
     public init(
         purpose: String,
-        starCount: Int64
+        diamondCount: Int64
     ) {
         self.purpose = purpose
-        self.starCount = starCount
+        self.diamondCount = diamondCount
     }
 }
 

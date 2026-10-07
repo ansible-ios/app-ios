@@ -228,7 +228,7 @@ public class ShareRootControllerImpl {
     }
     
     public func loadView() {
-        telegramUIDeclareEncodables()
+        ansibleUIDeclareEncodables()
     }
     
     public func viewWillAppear() {
@@ -549,8 +549,8 @@ public class ShareRootControllerImpl {
                             } |> runOn(Queue.mainQueue())
                         }
                         
-                        let sentItems: ([PeerId], [PeerId: Int64], [PeerId: StarsAmount], [PreparedShareItemContent], ShareControllerAccountContext, Bool, String) -> Signal<ShareControllerExternalStatus, NoError> = { peerIds, threadIds, requireStars, contents, account, silently, additionalText in
-                            let sentItems = sentShareItems(accountPeerId: account.accountPeerId, postbox: account.stateManager.postbox, network: account.stateManager.network, stateManager: account.stateManager, auxiliaryMethods: makeIosappAccountAuxiliaryMethods(uploadInBackground: nil), to: peerIds, threadIds: threadIds, requireStars: requireStars, items: contents, silently: silently, additionalText: additionalText)
+                        let sentItems: ([PeerId], [PeerId: Int64], [PeerId: StarsAmount], [PreparedShareItemContent], ShareControllerAccountContext, Bool, String) -> Signal<ShareControllerExternalStatus, NoError> = { peerIds, threadIds, requireDiamonds, contents, account, silently, additionalText in
+                            let sentItems = sentShareItems(accountPeerId: account.accountPeerId, postbox: account.stateManager.postbox, network: account.stateManager.network, stateManager: account.stateManager, auxiliaryMethods: makeIosappAccountAuxiliaryMethods(uploadInBackground: nil), to: peerIds, threadIds: threadIds, requireDiamonds: requireDiamonds, items: contents, silently: silently, additionalText: additionalText)
                             |> `catch` { _ -> Signal<
                                 Float, NoError> in
                                 return .complete()
@@ -574,7 +574,7 @@ public class ShareRootControllerImpl {
                                 }
                             }
                         }
-                        let shareController = ShareController(environment: environment, currentContext: context, subject: .fromExternal(itemCount, { peerIds, threadIds, requireStars, additionalText, account, silently in
+                        let shareController = ShareController(environment: environment, currentContext: context, subject: .fromExternal(itemCount, { peerIds, threadIds, requireDiamonds, additionalText, account, silently in
                             if let strongSelf = self, let inputItems = strongSelf.getExtensionContext()?.inputItems, !inputItems.isEmpty, !peerIds.isEmpty {
                                 let rawSignals = TGItemProviderSignals.itemSignals(forInputItems: inputItems)!
                                 return preparedShareItems(postbox: account.stateManager.postbox, network: account.stateManager.network, to: peerIds[0], dataItems: rawSignals)
@@ -600,11 +600,11 @@ public class ShareRootControllerImpl {
                                         return requestUserInteraction(value)
                                         |> castError(ShareControllerError.self)
                                         |> mapToSignal { contents -> Signal<ShareControllerExternalStatus, ShareControllerError> in
-                                            return sentItems(peerIds, threadIds, requireStars, contents, account, silently, additionalText)
+                                            return sentItems(peerIds, threadIds, requireDiamonds, contents, account, silently, additionalText)
                                             |> castError(ShareControllerError.self)
                                         }
                                     case let .done(contents):
-                                        return sentItems(peerIds, threadIds, requireStars, contents, account, silently, additionalText)
+                                        return sentItems(peerIds, threadIds, requireDiamonds, contents, account, silently, additionalText)
                                         |> castError(ShareControllerError.self)
                                     }
                                 }

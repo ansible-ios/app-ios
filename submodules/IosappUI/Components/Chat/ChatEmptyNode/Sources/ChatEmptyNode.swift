@@ -1037,7 +1037,7 @@ public final class ChatEmptyNodePremiumRequiredChatContent: ASDisplayNode, ChatE
     private let text = ComponentView<Empty>()
     private let buttonTitle = ComponentView<Empty>()
     private let button: HighlightTrackingButton
-    private let buttonStarsNode: PremiumStarsNode
+    private let buttonDiamondsNode: PremiumDiamondsNode
         
     private var currentTheme: PresentationTheme?
     private var currentStrings: PresentationStrings?
@@ -1056,8 +1056,8 @@ public final class ChatEmptyNodePremiumRequiredChatContent: ASDisplayNode, ChatE
         self.button = HighlightTrackingButton()
         self.button.clipsToBounds = true
         
-        self.buttonStarsNode = PremiumStarsNode()
-        self.buttonStarsNode.isUserInteractionEnabled = false
+        self.buttonDiamondsNode = PremiumDiamondsNode()
+        self.buttonDiamondsNode.isUserInteractionEnabled = false
         
         super.init()
         
@@ -1066,7 +1066,7 @@ public final class ChatEmptyNodePremiumRequiredChatContent: ASDisplayNode, ChatE
         if !self.isPremiumDisabled {
             self.view.addSubview(self.button)
             
-            self.button.addSubnode(self.buttonStarsNode)
+            self.button.addSubnode(self.buttonDiamondsNode)
             
             self.button.highligthedChanged = { [weak self] highlighted in
                 guard let self else {
@@ -1087,7 +1087,7 @@ public final class ChatEmptyNodePremiumRequiredChatContent: ASDisplayNode, ChatE
     @objc private func buttonPressed() {
         if let interaction = self.interaction {
             if let _ = self.stars {
-                interaction.openStarsPurchase(nil)
+                interaction.openDiamondsPurchase(nil)
             } else {
                 interaction.openPremiumRequiredForMessaging()
             }
@@ -1124,7 +1124,7 @@ public final class ChatEmptyNodePremiumRequiredChatContent: ASDisplayNode, ChatE
             }
         )
         if let amount = self.stars {
-            let starsString = presentationStringsFormattedNumber(Int32(amount), interfaceState.dateTimeFormat.groupingSeparator)
+            let diamondsString = presentationStringsFormattedNumber(Int32(amount), interfaceState.dateTimeFormat.groupingSeparator)
             let rawText: String
             
             if let channel = interfaceState.renderedPeer?.peer as? IosappChannel, channel.isMonoForum {
@@ -1136,7 +1136,7 @@ public final class ChatEmptyNodePremiumRequiredChatContent: ASDisplayNode, ChatE
             }
             let attributedString = parseMarkdownIntoAttributedString(rawText, attributes: attributes).mutableCopy() as! NSMutableAttributedString
             if let range = attributedString.string.range(of: "$") {
-                attributedString.addAttribute(.attachment, value: PresentationResourcesChat.chatEmptyStateStarIcon(interfaceState.theme)!, range: NSRange(range, in: attributedString.string))
+                attributedString.addAttribute(.attachment, value: PresentationResourcesChat.chatEmptyStateDiamondIcon(interfaceState.theme)!, range: NSRange(range, in: attributedString.string))
                 attributedString.addAttribute(.foregroundColor, value: serviceColor.primaryText, range: NSRange(range, in: attributedString.string))
                 attributedString.addAttribute(.baselineOffset, value: 2.0, range: NSRange(range, in: attributedString.string))
             }
@@ -1272,7 +1272,7 @@ public final class ChatEmptyNodePremiumRequiredChatContent: ASDisplayNode, ChatE
                 transition.updateFrame(view: buttonTitleView, frame: CGRect(origin: CGPoint(x: floor((buttonSize.width - buttonTitleSize.width) * 0.5), y: floor((buttonSize.height - buttonTitleSize.height) * 0.5)), size: buttonTitleSize))
             }
             self.button.backgroundColor = interfaceState.theme.overallDarkAppearance ? UIColor(rgb: 0xffffff, alpha: 0.12) : UIColor(rgb: 0x000000, alpha: 0.12)
-            self.buttonStarsNode.frame = CGRect(origin: CGPoint(), size: buttonSize)
+            self.buttonDiamondsNode.frame = CGRect(origin: CGPoint(), size: buttonSize)
             contentsHeight += buttonSize.height
             contentsHeight += bottomInset
         } else {
@@ -1292,7 +1292,7 @@ private enum ChatEmptyNodeContentType: Equatable {
     case greeting
     case topic
     case premiumRequired
-    case starsRequired(Int64?)
+    case diamondsRequired(Int64?)
 }
 
 private final class EmptyAttachedDescriptionNode: HighlightTrackingButtonNode {
@@ -1679,8 +1679,8 @@ public final class ChatEmptyNode: ASDisplayNode {
                 } else if let channel = peer as? IosappChannel, case .group = channel.info, channel.flags.contains(.isCreator) && !channel.flags.contains(.isGigagroup) && !channel.isMonoForum {
                     contentType = .group
                 } else if let peer = peer as? IosappUser {
-                    if let sendPaidMessageStars = interfaceState.sendPaidMessageStars, interfaceState.businessIntro == nil {
-                        contentType = .starsRequired(sendPaidMessageStars.value)
+                    if let sendPaidMessageDiamonds = interfaceState.sendPaidMessageDiamonds, interfaceState.businessIntro == nil {
+                        contentType = .diamondsRequired(sendPaidMessageDiamonds.value)
                     } else if interfaceState.isPremiumRequiredForMessaging {
                         contentType = .premiumRequired
                     } else {
@@ -1697,7 +1697,7 @@ public final class ChatEmptyNode: ASDisplayNode {
                     if let mainChannel = interfaceState.renderedPeer?.chatOrMonoforumMainPeer as? IosappChannel, mainChannel.hasPermission(.manageDirect) {
                         contentType = .regular
                     } else {
-                        contentType = .starsRequired(interfaceState.sendPaidMessageStars?.value)
+                        contentType = .diamondsRequired(interfaceState.sendPaidMessageDiamonds?.value)
                     }
                 } else {
                     contentType = .regular
@@ -1749,7 +1749,7 @@ public final class ChatEmptyNode: ASDisplayNode {
                 node = ChatEmptyNodeTopicChatContent(context: self.context)
             case .premiumRequired:
                 node = ChatEmptyNodePremiumRequiredChatContent(context: self.context, interaction: self.interaction, stars: nil)
-            case let .starsRequired(stars):
+            case let .diamondsRequired(stars):
                 node = ChatEmptyNodePremiumRequiredChatContent(context: self.context, interaction: self.interaction, stars: stars)
             }
             self.content = (contentType, node)
@@ -1762,7 +1762,7 @@ public final class ChatEmptyNode: ASDisplayNode {
             }
         }
         switch contentType {
-        case .greeting, .premiumRequired, .starsRequired, .cloud:
+        case .greeting, .premiumRequired, .diamondsRequired, .cloud:
             self.isUserInteractionEnabled = true
         default:
             self.isUserInteractionEnabled = false

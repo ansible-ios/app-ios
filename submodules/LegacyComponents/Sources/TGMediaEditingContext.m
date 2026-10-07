@@ -3,7 +3,7 @@
 #import "LegacyComponentsInternal.h"
 #import <LegacyComponents/TGStringUtils.h>
 
-#import <LegacyComponents/UIImage+TG.h>
+#import <LegacyComponents/UIImage+AS.h>
 #import <LegacyComponents/TGPhotoEditorUtils.h>
 #import <LegacyComponents/PGPhotoEditorValues.h>
 #import <LegacyComponents/TGVideoEditAdjustments.h>

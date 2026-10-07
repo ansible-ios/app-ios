@@ -1,7 +1,7 @@
 import XCTest
 @testable import RLottieKit
 
-final class TgsDecompressTests: XCTestCase {
+final class AssDecompressTests: XCTestCase {
     func testGzippedTgsRoundtripsToOriginalJson() throws {
         let tgsURL = Bundle.module.url(forResource: "tiny", withExtension: "ass")!
         let jsonURL = Bundle.module.url(forResource: "tiny", withExtension: "json")!

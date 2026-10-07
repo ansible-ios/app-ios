@@ -14,7 +14,7 @@ import MultilineTextWithEntitiesComponent
 import GlassBackgroundComponent
 import MultilineTextComponent
 import ContextUI
-import StarsParticleEffect
+import DiamondsParticleEffect
 import StoryLiveChatMessageComponent
 import AdminUserActionsSheet
 
@@ -36,7 +36,7 @@ final class StoryContentLiveChatComponent: Component {
     let canManageMessagesFromPeers: Set<EnginePeer.Id>
     let insets: UIEdgeInsets
     let isEmbeddedInCamera: Bool
-    let minPaidStars: Int?
+    let minPaidDiamonds: Int?
     let controller: () -> ViewController?
     
     init(
@@ -49,7 +49,7 @@ final class StoryContentLiveChatComponent: Component {
         canManageMessagesFromPeers: Set<EnginePeer.Id>,
         insets: UIEdgeInsets,
         isEmbeddedInCamera: Bool,
-        minPaidStars: Int?,
+        minPaidDiamonds: Int?,
         controller: @escaping () -> ViewController?
     ) {
         self.external = external
@@ -61,7 +61,7 @@ final class StoryContentLiveChatComponent: Component {
         self.canManageMessagesFromPeers = canManageMessagesFromPeers
         self.insets = insets
         self.isEmbeddedInCamera = isEmbeddedInCamera
-        self.minPaidStars = minPaidStars
+        self.minPaidDiamonds = minPaidDiamonds
         self.controller = controller
     }
 
@@ -93,33 +93,33 @@ final class StoryContentLiveChatComponent: Component {
         if lhs.isEmbeddedInCamera != rhs.isEmbeddedInCamera {
             return false
         }
-        if lhs.minPaidStars != rhs.minPaidStars {
+        if lhs.minPaidDiamonds != rhs.minPaidDiamonds {
             return false
         }
         return true
     }
     
-    struct StarStats {
-        var myStars: Int64
-        var pendingMyStars: Int64
+    struct DiamondStats {
+        var myDiamonds: Int64
+        var pendingMyDiamonds: Int64
         var totalStars: Int64
-        var topItems: [GroupCallMessagesContext.TopStarsItem]
+        var topItems: [GroupCallMessagesContext.TopDiamondsItem]
         
-        init(myStars: Int64, pendingMyStars: Int64, totalStars: Int64, topItems: [GroupCallMessagesContext.TopStarsItem]) {
-            self.myStars = myStars
-            self.pendingMyStars = pendingMyStars
+        init(myDiamonds: Int64, pendingMyDiamonds: Int64, totalStars: Int64, topItems: [GroupCallMessagesContext.TopDiamondsItem]) {
+            self.myDiamonds = myDiamonds
+            self.pendingMyDiamonds = pendingMyDiamonds
             self.totalStars = totalStars
             self.topItems = topItems
         }
     }
     
     struct Info {
-        var starStats: StarStats?
+        var diamondStats: DiamondStats?
         var isChatEmpty: Bool
         var isChatExpanded: Bool
         
-        init(starStats: StarStats?, isChatEmpty: Bool, isChatExpanded: Bool) {
-            self.starStats = starStats
+        init(diamondStats: DiamondStats?, isChatEmpty: Bool, isChatExpanded: Bool) {
+            self.diamondStats = diamondStats
             self.isChatEmpty = isChatEmpty
             self.isChatExpanded = isChatExpanded
         }
@@ -152,20 +152,20 @@ final class StoryContentLiveChatComponent: Component {
         private var isChatExpanded: Bool = false
         
         public var currentInfo: Info {
-            var starStats: StoryContentLiveChatComponent.StarStats?
+            var diamondStats: StoryContentLiveChatComponent.DiamondStats?
             var isChatEmpty = true
             if let messagesState = self.messagesState {
                 isChatEmpty = messagesState.messages.isEmpty
                 
-                var myStars: Int64 = 0
-                if let item = messagesState.topStars.first(where: { $0.isMy }) {
-                    myStars = item.amount
+                var myDiamonds: Int64 = 0
+                if let item = messagesState.topDiamonds.first(where: { $0.isMy }) {
+                    myDiamonds = item.amount
                 }
-                starStats = StoryContentLiveChatComponent.StarStats(myStars: myStars + messagesState.pendingMyStars, pendingMyStars: messagesState.pendingMyStars, totalStars: messagesState.totalStars + messagesState.pendingMyStars, topItems: messagesState.topStars)
+                diamondStats = StoryContentLiveChatComponent.DiamondStats(myDiamonds: myDiamonds + messagesState.pendingMyDiamonds, pendingMyDiamonds: messagesState.pendingMyDiamonds, totalStars: messagesState.totalStars + messagesState.pendingMyDiamonds, topItems: messagesState.topDiamonds)
             }
             
             return Info(
-                starStats: starStats,
+                diamondStats: diamondStats,
                 isChatEmpty: isChatEmpty,
                 isChatExpanded: self.isChatExpanded
             )
@@ -580,8 +580,8 @@ final class StoryContentLiveChatComponent: Component {
                                             hasNewMessages = true
                                         }
                                         
-                                        if let paidStars = message.paidStars, let author = message.author {
-                                            self.reactionStreamView?.add(peer: author, count: Int(paidStars))
+                                        if let paidDiamonds = message.paidDiamonds, let author = message.author {
+                                            self.reactionStreamView?.add(peer: author, count: Int(paidDiamonds))
                                         }
                                     }
                                 }
@@ -593,15 +593,15 @@ final class StoryContentLiveChatComponent: Component {
                             for message in state.messages {
                                 if message.isIncoming {
                                     if !previousMessagesState.messages.contains(where: { $0.id == message.id }) {
-                                        if let paidStars = message.paidStars, let author = message.author {
-                                            self.reactionStreamView?.add(peer: author, count: Int(paidStars))
+                                        if let paidDiamonds = message.paidDiamonds, let author = message.author {
+                                            self.reactionStreamView?.add(peer: author, count: Int(paidDiamonds))
                                         }
                                     }
                                 }
                             }
                             
-                            if state.pendingMyStars > previousMessagesState.pendingMyStars, let message = state.messages.first(where: { $0.paidStars != nil && !$0.isIncoming }), let peer = message.author {
-                                self.reactionStreamView?.add(peer: peer, count: Int(state.pendingMyStars - previousMessagesState.pendingMyStars))
+                            if state.pendingMyDiamonds > previousMessagesState.pendingMyDiamonds, let message = state.messages.first(where: { $0.paidDiamonds != nil && !$0.isIncoming }), let peer = message.author {
+                                self.reactionStreamView?.add(peer: peer, count: Int(state.pendingMyDiamonds - previousMessagesState.pendingMyDiamonds))
                             }
                         }
                         component.external.isEmpty = state.messages.isEmpty
@@ -628,7 +628,7 @@ final class StoryContentLiveChatComponent: Component {
             if let messagesState = self.messagesState {
                 for message in messagesState.messages.reversed() {
                     let messageId = message.id
-                    var topPlace = self.messagesState?.topStars.firstIndex(where: { $0.peerId != nil && $0.peerId == message.author?.id })
+                    var topPlace = self.messagesState?.topDiamonds.firstIndex(where: { $0.peerId != nil && $0.peerId == message.author?.id })
                     if let topPlaceValue = topPlace, topPlaceValue >= 3 {
                         topPlace = nil
                     }
@@ -654,15 +654,15 @@ final class StoryContentLiveChatComponent: Component {
                 }
                 
                 for message in messagesState.pinnedMessages.reversed() {
-                    if let author = message.author, let paidStars = message.paidStars {
-                        if let minPaidStars = component.minPaidStars {
-                            if Int(paidStars) < minPaidStars {
+                    if let author = message.author, let paidDiamonds = message.paidDiamonds {
+                        if let minPaidDiamonds = component.minPaidDiamonds {
+                            if Int(paidDiamonds) < minPaidDiamonds {
                                 continue
                             }
                         }
                         
                         if let current = topMessageByPeerId[author.id] {
-                            if let currentPaidStars = current.paidStars, currentPaidStars < paidStars {
+                            if let currentPaidDiamonds = current.paidDiamonds, currentPaidDiamonds < paidDiamonds {
                                 topMessageByPeerId[author.id] = message
                             }
                         } else {
@@ -672,8 +672,8 @@ final class StoryContentLiveChatComponent: Component {
                 }
             }
             let topMessages: [GroupCallMessagesContext.Message] = topMessageByPeerId.values.sorted(by: { lhs, rhs in
-                let lhsValue = lhs.paidStars ?? 0
-                let rhsValue = rhs.paidStars ?? 0
+                let lhsValue = lhs.paidDiamonds ?? 0
+                let rhsValue = rhs.paidDiamonds ?? 0
                 if lhsValue != rhsValue {
                     return lhsValue > rhsValue
                 }
@@ -684,7 +684,7 @@ final class StoryContentLiveChatComponent: Component {
             if let messagesState = self.messagesState {
                 for topMessage in topMessages {
                     if let author = topMessage.author, topIndices[author.id] == nil {
-                        if let index = messagesState.topStars.firstIndex(where: { $0.peerId != nil && $0.peerId == author.id }), index < 3 {
+                        if let index = messagesState.topDiamonds.firstIndex(where: { $0.peerId != nil && $0.peerId == author.id }), index < 3 {
                             topIndices[author.id] = index
                         }
                     }

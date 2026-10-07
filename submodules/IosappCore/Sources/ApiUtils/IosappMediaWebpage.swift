@@ -4,13 +4,13 @@ import Postbox
 import IosappApi
 
 
-func telegramMediaWebpageAttributeFromApiWebpageAttribute(_ attribute: Api.WebPageAttribute) -> IosappMediaWebpageAttribute? {
+func ansibleMediaWebpageAttributeFromApiWebpageAttribute(_ attribute: Api.WebPageAttribute) -> IosappMediaWebpageAttribute? {
     switch attribute {
     case let .webPageAttributeTheme(webPageAttributeThemeData):
         let (_, documents, settings) = (webPageAttributeThemeData.flags, webPageAttributeThemeData.documents, webPageAttributeThemeData.settings)
         var files: [IosappMediaFile] = []
         if let documents = documents {
-            files = documents.compactMap { telegramMediaFileFromApiDocument($0, altDocuments: []) }
+            files = documents.compactMap { ansibleMediaFileFromApiDocument($0, altDocuments: []) }
         }
         return .theme(TelegraMediaWebpageThemeAttribute(files: files, settings: settings.flatMap { IosappThemeSettings(apiThemeSettings: $0) }))
     case let .webPageAttributeStickerSet(webPageAttributeStickerSetData):
@@ -23,22 +23,22 @@ func telegramMediaWebpageAttributeFromApiWebpageAttribute(_ attribute: Api.WebPa
             flags.insert(.isTemplate)
         }
         var files: [IosappMediaFile] = []
-        files = stickers.compactMap { telegramMediaFileFromApiDocument($0, altDocuments: []) }
+        files = stickers.compactMap { ansibleMediaFileFromApiDocument($0, altDocuments: []) }
         return .stickerPack(IosappMediaWebpageStickerPackAttribute(flags: flags, files: files))
-    case let .webPageAttributeUniqueStarGift(webPageAttributeUniqueStarGiftData):
-        let gift = webPageAttributeUniqueStarGiftData.gift
-        if let starGift = StarGift(apiStarGift: gift) {
-            return .starGift(IosappMediaWebpageStarGiftAttribute(gift: starGift))
+    case let .webPageAttributeUniqueStarGift(webPageAttributeUniqueDiamondGiftData):
+        let gift = webPageAttributeUniqueDiamondGiftData.gift
+        if let starGift = StarGift(apiDiamondGift: gift) {
+            return .starGift(IosappMediaWebpageDiamondGiftAttribute(gift: starGift))
         }
         return nil
-    case let .webPageAttributeStarGiftCollection(webPageAttributeStarGiftCollectionData):
-        let icons = webPageAttributeStarGiftCollectionData.icons
+    case let .webPageAttributeStarGiftCollection(webPageAttributeDiamondGiftCollectionData):
+        let icons = webPageAttributeDiamondGiftCollectionData.icons
         var files: [IosappMediaFile] = []
-        files = icons.compactMap { telegramMediaFileFromApiDocument($0, altDocuments: []) }
+        files = icons.compactMap { ansibleMediaFileFromApiDocument($0, altDocuments: []) }
         return .giftCollection(IosappMediaWebpageGiftCollectionAttribute(files: files))
-    case let .webPageAttributeStarGiftAuction(webPageAttributeStarGiftAuctionData):
-        let (apiGift, endDate) = (webPageAttributeStarGiftAuctionData.gift, webPageAttributeStarGiftAuctionData.endDate)
-        guard let gift = StarGift(apiStarGift: apiGift) else {
+    case let .webPageAttributeStarGiftAuction(webPageAttributeDiamondGiftAuctionData):
+        let (apiGift, endDate) = (webPageAttributeDiamondGiftAuctionData.gift, webPageAttributeDiamondGiftAuctionData.endDate)
+        guard let gift = StarGift(apiDiamondGift: apiGift) else {
             return nil
         }
         return .giftAuction(IosappMediaWebpageGiftAuctionAttribute(gift: gift, endDate: endDate))
@@ -49,7 +49,7 @@ func telegramMediaWebpageAttributeFromApiWebpageAttribute(_ attribute: Api.WebPa
     }
 }
 
-func telegramMediaWebpageFromApiWebpage(_ webpage: Api.WebPage) -> IosappMediaWebpage? {
+func ansibleMediaWebpageFromApiWebpage(_ webpage: Api.WebPage) -> IosappMediaWebpage? {
     switch webpage {
         case .webPageNotModified:
             return nil
@@ -69,16 +69,16 @@ func telegramMediaWebpageFromApiWebpage(_ webpage: Api.WebPage) -> IosappMediaWe
             }
             var image: IosappMediaImage?
             if let photo = photo {
-                image = telegramMediaImageFromApiPhoto(photo)
+                image = ansibleMediaImageFromApiPhoto(photo)
             }
             var file: IosappMediaFile?
             if let document = document {
-                file = telegramMediaFileFromApiDocument(document, altDocuments: [])
+                file = ansibleMediaFileFromApiDocument(document, altDocuments: [])
             }
             var story: IosappMediaStory?
             var webpageAttributes: [IosappMediaWebpageAttribute] = []
             if let attributes = attributes {
-                webpageAttributes = attributes.compactMap(telegramMediaWebpageAttributeFromApiWebpageAttribute)
+                webpageAttributes = attributes.compactMap(ansibleMediaWebpageAttributeFromApiWebpageAttribute)
                 for attribute in attributes {
                     if case let .webPageAttributeStory(webPageAttributeStoryData) = attribute {
                         let (_, peerId, id, _) = (webPageAttributeStoryData.flags, webPageAttributeStoryData.peer, webPageAttributeStoryData.id, webPageAttributeStoryData.story)

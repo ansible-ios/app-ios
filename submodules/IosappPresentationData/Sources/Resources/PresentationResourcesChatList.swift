@@ -595,8 +595,8 @@ public struct PresentationResourcesChatList {
         })
     }
     
-    public static func shareAvatarStarsLockBadgeBackground(_ theme: PresentationTheme) -> UIImage? {
-        return theme.image(PresentationResourceKey.shareAvatarStarsLockBadgeBackground.rawValue, { theme in
+    public static func shareAvatarDiamondsLockBadgeBackground(_ theme: PresentationTheme) -> UIImage? {
+        return theme.image(PresentationResourceKey.shareAvatarDiamondsLockBadgeBackground.rawValue, { theme in
             return generateImage(CGSize(width: 20.0, height: 20.0), contextGenerator: { size, context in
                 context.clear(CGRect(origin: .zero, size: size))
                 context.setFillColor(UIColor.white.cgColor)
@@ -607,8 +607,8 @@ public struct PresentationResourcesChatList {
         })
     }
     
-    public static func shareAvatarStarsLockBadgeInnerBackground(_ theme: PresentationTheme) -> UIImage? {
-        return theme.image(PresentationResourceKey.shareAvatarStarsLockBadgeInnerBackground.rawValue, { theme in
+    public static func shareAvatarDiamondsLockBadgeInnerBackground(_ theme: PresentationTheme) -> UIImage? {
+        return theme.image(PresentationResourceKey.shareAvatarDiamondsLockBadgeInnerBackground.rawValue, { theme in
             return generateImage(CGSize(width: 20.0, height: 16.0), contextGenerator: { size, context in
                 context.clear(CGRect(origin: .zero, size: size))
                 context.setFillColor(UIColor.white.cgColor)

@@ -8,8 +8,8 @@
 
 + (void)load
 {
-    TGSwizzleMethodImplementation(self.class, @selector(setAlpha:), @selector(tg_setAlpha:));
-    TGSwizzleMethodImplementation(self.class, @selector(setHidden:), @selector(tg_setHidden:));
+    TGSwizzleMethodImplementation(self.class, @selector(setAlpha:), @selector(as_setAlpha:));
+    TGSwizzleMethodImplementation(self.class, @selector(setHidden:), @selector(as_setHidden:));
 }
 
 - (CGFloat)alpha
@@ -17,10 +17,10 @@
     return [objc_getAssociatedObject(self, @selector(alpha)) floatValue];
 }
 
-- (void)tg_setAlpha:(CGFloat)alpha
+- (void)as_setAlpha:(CGFloat)alpha
 {
     objc_setAssociatedObject(self, @selector(alpha), @(alpha), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    [self tg_setAlpha:alpha];
+    [self as_setAlpha:alpha];
 }
 
 - (bool)isHidden
@@ -28,10 +28,10 @@
     return [objc_getAssociatedObject(self, @selector(isHidden)) boolValue];
 }
 
-- (void)tg_setHidden:(BOOL)hidden
+- (void)as_setHidden:(BOOL)hidden
 {
     objc_setAssociatedObject(self, @selector(isHidden), @(hidden), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    [self tg_setHidden:hidden];
+    [self as_setHidden:hidden];
 }
 
 - (void)_setInitialHidden:(bool)hidden
@@ -44,10 +44,10 @@
     return [objc_getAssociatedObject(self, @selector(width)) floatValue];
 }
 
-- (void)tg_setWidth:(CGFloat)width
+- (void)as_setWidth:(CGFloat)width
 {
     objc_setAssociatedObject(self, @selector(width), @(width), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    [self tg_setWidth:width];
+    [self as_setWidth:width];
 }
 
 - (CGFloat)height
@@ -55,10 +55,10 @@
     return [objc_getAssociatedObject(self, @selector(height)) floatValue];
 }
 
-- (void)tg_setHeight:(CGFloat)height
+- (void)as_setHeight:(CGFloat)height
 {
     objc_setAssociatedObject(self, @selector(height), @(height), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    [self tg_setHeight:height];
+    [self as_setHeight:height];
 }
 
 @end
@@ -68,8 +68,8 @@
 
 + (void)load
 {
-    TGSwizzleMethodImplementation(self.class, @selector(setBackgroundColor:), @selector(tg_setBackgroundColor:));
-    TGSwizzleMethodImplementation(self.class, @selector(setCornerRadius:), @selector(tg_setCornerRadius:));
+    TGSwizzleMethodImplementation(self.class, @selector(setBackgroundColor:), @selector(as_setBackgroundColor:));
+    TGSwizzleMethodImplementation(self.class, @selector(setCornerRadius:), @selector(as_setCornerRadius:));
 }
 
 - (UIColor *)backgroundColor
@@ -77,10 +77,10 @@
     return objc_getAssociatedObject(self, @selector(backgroundColor));
 }
 
-- (void)tg_setBackgroundColor:(UIColor *)backgroundColor
+- (void)as_setBackgroundColor:(UIColor *)backgroundColor
 {
     objc_setAssociatedObject(self, @selector(backgroundColor), backgroundColor, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    [self tg_setBackgroundColor:backgroundColor];
+    [self as_setBackgroundColor:backgroundColor];
 }
 
 - (CGFloat)cornerRadius
@@ -88,10 +88,10 @@
     return [objc_getAssociatedObject(self, @selector(alpha)) floatValue];
 }
 
-- (void)tg_setCornerRadius:(CGFloat)cornerRadius
+- (void)as_setCornerRadius:(CGFloat)cornerRadius
 {
     objc_setAssociatedObject(self, @selector(cornerRadius), @(cornerRadius), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    [self tg_setCornerRadius:cornerRadius];
+    [self as_setCornerRadius:cornerRadius];
 }
 
 @end
@@ -103,9 +103,9 @@
 
 + (void)load
 {
-    TGSwizzleMethodImplementation(self.class, @selector(setText:), @selector(tg_setText:));
-    TGSwizzleMethodImplementation(self.class, @selector(setTextColor:), @selector(tg_setTextColor:));
-    TGSwizzleMethodImplementation(self.class, @selector(setAttributedText:), @selector(tg_setAttributedText:));
+    TGSwizzleMethodImplementation(self.class, @selector(setText:), @selector(as_setText:));
+    TGSwizzleMethodImplementation(self.class, @selector(setTextColor:), @selector(as_setTextColor:));
+    TGSwizzleMethodImplementation(self.class, @selector(setAttributedText:), @selector(as_setAttributedText:));
 }
 
 - (NSString *)text
@@ -113,10 +113,10 @@
     return objc_getAssociatedObject(self, @selector(text));
 }
 
-- (void)tg_setText:(NSString *)text
+- (void)as_setText:(NSString *)text
 {
     objc_setAssociatedObject(self, @selector(text), text, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    [self tg_setText:text];
+    [self as_setText:text];
 }
 
 - (UIColor *)textColor
@@ -124,10 +124,10 @@
     return objc_getAssociatedObject(self, @selector(textColor));
 }
 
-- (void)tg_setTextColor:(UIColor *)textColor
+- (void)as_setTextColor:(UIColor *)textColor
 {
     objc_setAssociatedObject(self, @selector(textColor), textColor, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    [self tg_setTextColor:textColor];
+    [self as_setTextColor:textColor];
 }
 
 - (NSAttributedString *)attributedText
@@ -135,10 +135,10 @@
     return objc_getAssociatedObject(self, @selector(attributedText));
 }
 
-- (void)tg_setAttributedText:(NSAttributedString *)attributedText
+- (void)as_setAttributedText:(NSAttributedString *)attributedText
 {
     objc_setAssociatedObject(self, @selector(attributedText), attributedText, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    [self tg_setAttributedText:attributedText];
+    [self as_setAttributedText:attributedText];
 }
 
 - (NSString *)hyphenatedText
@@ -161,9 +161,9 @@
 
 + (void)load
 {
-    TGSwizzleMethodImplementation(self.class, @selector(setTitle:), @selector(tg_setTitle:));
-    TGSwizzleMethodImplementation(self.class, @selector(setAttributedTitle:), @selector(tg_setAttributedTitle:));
-    TGSwizzleMethodImplementation(self.class, @selector(setTextColor:), @selector(tg_setTextColor:));
+    TGSwizzleMethodImplementation(self.class, @selector(setTitle:), @selector(as_setTitle:));
+    TGSwizzleMethodImplementation(self.class, @selector(setAttributedTitle:), @selector(as_setAttributedTitle:));
+    TGSwizzleMethodImplementation(self.class, @selector(setTextColor:), @selector(as_setTextColor:));
 }
 
 - (NSString *)title
@@ -171,10 +171,10 @@
     return objc_getAssociatedObject(self, @selector(title));
 }
 
-- (void)tg_setTitle:(NSString *)title
+- (void)as_setTitle:(NSString *)title
 {
     objc_setAssociatedObject(self, @selector(title), title, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    [self tg_setTitle:title];
+    [self as_setTitle:title];
 }
 
 - (NSAttributedString *)attributedTitle
@@ -182,10 +182,10 @@
     return objc_getAssociatedObject(self, @selector(attributedTitle));
 }
 
-- (void)tg_setAttributedTitle:(NSAttributedString *)attributedTitle
+- (void)as_setAttributedTitle:(NSAttributedString *)attributedTitle
 {
     objc_setAssociatedObject(self, @selector(attributedTitle), attributedTitle, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    [self tg_setAttributedTitle:attributedTitle];
+    [self as_setAttributedTitle:attributedTitle];
 }
 
 - (bool)isEnabled
@@ -193,10 +193,10 @@
     return [objc_getAssociatedObject(self, @selector(isEnabled)) boolValue];
 }
 
-- (void)tg_setEnabled:(BOOL)enabled
+- (void)as_setEnabled:(BOOL)enabled
 {
     objc_setAssociatedObject(self, @selector(isEnabled), @(enabled), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    [self tg_setEnabled:enabled];
+    [self as_setEnabled:enabled];
 }
 
 @end
@@ -206,7 +206,7 @@
 
 + (void)load
 {
-    TGSwizzleMethodImplementation(self.class, @selector(setRegion:), @selector(tg_setRegion:));
+    TGSwizzleMethodImplementation(self.class, @selector(setRegion:), @selector(as_setRegion:));
 }
 
 - (MKCoordinateRegion)region
@@ -220,7 +220,7 @@
     return region;
 }
 
-- (void)tg_setRegion:(MKCoordinateRegion)region
+- (void)as_setRegion:(MKCoordinateRegion)region
 {
     MKCoordinateRegion currentRegion = self.region;
     
@@ -234,7 +234,7 @@
     if (center != nil && span != nil) {
         objc_setAssociatedObject(self, @selector(region), @[ center, span ], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
-    [self tg_setRegion:region];
+    [self as_setRegion:region];
 }
 
 - (CLLocationCoordinate2D)centerPinCoordinate

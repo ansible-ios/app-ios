@@ -3658,7 +3658,7 @@ final class ChatListSearchListPaneNode: ASDisplayNode, ChatListSearchPaneNode {
             if let sourceNode = sourceNode as? ChatListItemNode {
                 self.interaction.openStories?(id, sourceNode.avatarNode)
             }
-        }, openStarsTopup: { _ in
+        }, openDiamondsTopup: { _ in
         }, editPeer: { _ in
         }, openWebApp: { _ in
         }, openPhotoSetup: {
@@ -5298,7 +5298,7 @@ final class ChatListSearchListPaneNode: ASDisplayNode, ChatListSearchPaneNode {
                                         if let controller = self.navigationController?.topViewController as? ViewController {
                                             controller.present(UndoOverlayController(
                                                 presentationData: presentationData,
-                                                content: .starsSent(context: self.context, title: "", text: [AnimatedTextComponent.Item(
+                                                content: .diamondsSent(context: self.context, title: "", text: [AnimatedTextComponent.Item(
                                                     id: AnyHashable(0),
                                                     isUnbreakable: true,
                                                     content: .text(presentationData.strings.ChatList_PaidSearchToast_Text(Int32(price)))
@@ -5946,7 +5946,7 @@ public final class ChatListSearchShimmerNode: ASDisplayNode {
             }, performBotConnectionReviewAction: { _, _ in
             }, openChatFolderUpdates: {}, hideChatFolderUpdates: {
             }, openStories: { _, _ in
-            }, openStarsTopup: { _ in
+            }, openDiamondsTopup: { _ in
             }, editPeer: { _ in
             }, openWebApp: { _ in
             }, openPhotoSetup: {
@@ -6482,7 +6482,7 @@ private final class EmptyResultsButtonPaidSearchContent: Component {
         private var timer: Foundation.Timer?
         private weak var state: EmptyComponentState?
 
-        private var cachedStarImage: UIImage?
+        private var cachedDiamondImage: UIImage?
 
         override init(frame: CGRect) {
             super.init(frame: frame)
@@ -6495,16 +6495,16 @@ private final class EmptyResultsButtonPaidSearchContent: Component {
         func update(component: EmptyResultsButtonPaidSearchContent, availableSize: CGSize, state: EmptyComponentState, environment: Environment<Empty>, transition: ComponentTransition) -> CGSize {
             let subtitleSpacing: CGFloat = 1.0
 
-            if self.cachedStarImage == nil || self.component?.theme !== component.theme {
-                self.cachedStarImage = generateTintedImage(image: UIImage(bundleImageName: "Item List/PremiumIcon"), color: component.theme.list.itemCheckColors.foregroundColor)
+            if self.cachedDiamondImage == nil || self.component?.theme !== component.theme {
+                self.cachedDiamondImage = generateTintedImage(image: UIImage(bundleImageName: "Item List/PremiumIcon"), color: component.theme.list.itemCheckColors.foregroundColor)
             }
 
             self.component = component
             self.state = state
 
             let attributedString = NSMutableAttributedString(attributedString: NSAttributedString(string: component.strings.ChatList_GlobalSearch_SearchButtonPaidTitle("\(component.price)").string, font: Font.semibold(17.0), textColor: component.theme.list.itemCheckColors.foregroundColor))
-            if let range = attributedString.string.range(of: "*"), let starImage = self.cachedStarImage {
-                attributedString.addAttribute(.attachment, value: starImage, range: NSRange(range, in: attributedString.string))
+            if let range = attributedString.string.range(of: "*"), let diamondImage = self.cachedDiamondImage {
+                attributedString.addAttribute(.attachment, value: diamondImage, range: NSRange(range, in: attributedString.string))
                 attributedString.addAttribute(.foregroundColor, value: component.theme.list.itemCheckColors.foregroundColor, range: NSRange(range, in: attributedString.string))
                 attributedString.addAttribute(.baselineOffset, value: 1.0, range: NSRange(range, in: attributedString.string))
             }

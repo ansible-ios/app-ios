@@ -424,13 +424,13 @@ func openResolvedUrlImpl(
                     case let .peek(peer, deadline):
                         openPeer(peer, .chat(textInputState: nil, subject: nil, peekData: ChatPeekTimeout(deadline: deadline, linkData: link)))
                     case let .invite(invite):
-                        if let subscriptionPricing = invite.subscriptionPricing, let subscriptionFormId = invite.subscriptionFormId, let starsContext = context.starsContext {
+                        if let subscriptionPricing = invite.subscriptionPricing, let subscriptionFormId = invite.subscriptionFormId, let diamondsContext = context.diamondsContext {
                             let inputData = Promise<BotCheckoutController.InputData?>()
                             var photo: [IosappMediaImageRepresentation] = []
                             if let photoRepresentation = invite.photoRepresentation {
                                 photo.append(photoRepresentation)
                             }
-                            let channel = IosappChannel(id: PeerId(namespace: Namespaces.Peer.CloudChannel, id: PeerId.Id._internalFromInt64Value(0)), accessHash: .genericPublic(0), title: invite.title, username: nil, photo: photo, creationDate: 0, version: 0, participationStatus: .left, info: .broadcast(IosappChannelBroadcastInfo(flags: [])), flags: [], restrictionInfo: nil, adminRights: nil, bannedRights: nil, defaultBannedRights: nil, usernames: [], storiesHidden: nil, nameColor: invite.nameColor, backgroundEmojiId: nil, profileColor: nil, profileBackgroundEmojiId: nil, emojiStatus: nil, approximateBoostLevel: nil, subscriptionUntilDate: nil, verificationIconFileId: nil, sendPaidMessageStars: nil, linkedMonoforumId: nil)
+                            let channel = IosappChannel(id: PeerId(namespace: Namespaces.Peer.CloudChannel, id: PeerId.Id._internalFromInt64Value(0)), accessHash: .genericPublic(0), title: invite.title, username: nil, photo: photo, creationDate: 0, version: 0, participationStatus: .left, info: .broadcast(IosappChannelBroadcastInfo(flags: [])), flags: [], restrictionInfo: nil, adminRights: nil, bannedRights: nil, defaultBannedRights: nil, usernames: [], storiesHidden: nil, nameColor: invite.nameColor, backgroundEmojiId: nil, profileColor: nil, profileBackgroundEmojiId: nil, emojiStatus: nil, approximateBoostLevel: nil, subscriptionUntilDate: nil, verificationIconFileId: nil, sendPaidMessageDiamonds: nil, linkedMonoforumId: nil)
                             let invoice = IosappMediaInvoice(title: "", description: "", photo: nil, receiptMessageId: nil, currency: "XTR", totalAmount: subscriptionPricing.amount.value, startParam: "", extendedMedia: nil, subscriptionPeriod: nil, flags: [], version: 0)
                             
                             inputData.set(.single(BotCheckoutController.InputData(
@@ -451,19 +451,19 @@ func openResolvedUrlImpl(
                                 botPeer: EnginePeer(channel)
                             )))
                             
-                            let starsInputData = combineLatest(
+                            let diamondsInputData = combineLatest(
                                 inputData.get(),
-                                starsContext.state
+                                diamondsContext.state
                             )
-                            |> map { data, state -> (StarsContext.State, BotPaymentForm, EnginePeer?, EnginePeer?)? in
+                            |> map { data, state -> (DiamondsContext.State, BotPaymentForm, EnginePeer?, EnginePeer?)? in
                                 if let data, let state {
                                     return (state, data.form, data.botPeer, nil)
                                 } else {
                                     return nil
                                 }
                             }
-                            let _ = (starsInputData |> filter { $0 != nil } |> take(1) |> deliverOnMainQueue).start(next: { _ in
-                                let controller = context.sharedContext.makeStarsSubscriptionTransferScreen(context: context, starsContext: starsContext, invoice: invoice, link: link, inputData: starsInputData, navigateToPeer: { peer in
+                            let _ = (diamondsInputData |> filter { $0 != nil } |> take(1) |> deliverOnMainQueue).start(next: { _ in
+                                let controller = context.sharedContext.makeDiamondsSubscriptionTransferScreen(context: context, diamondsContext: diamondsContext, invoice: invoice, link: link, inputData: diamondsInputData, navigateToPeer: { peer in
                                     openPeer(peer, .chat(textInputState: nil, subject: nil, peekData: nil))
                                 })
                                 navigationController?.pushViewController(controller)
@@ -1071,16 +1071,16 @@ func openResolvedUrlImpl(
             if let navigationController = navigationController {
                 navigationController.pushViewController(controller, animated: true)
             }
-        case let .starsTopup(amount, purpose):
+        case let .diamondsTopup(amount, purpose):
             dismissInput()
-            if let starsContext = context.starsContext {
+            if let diamondsContext = context.diamondsContext {
                 let proceed = {
-                    let controller = context.sharedContext.makeStarsPurchaseScreen(context: context, starsContext: starsContext, options: [], purpose: amount.flatMap { .topUp(requiredStars: $0, purpose: purpose) } ?? .generic, targetPeerId: nil, customTheme: nil, completion: { _ in })
+                    let controller = context.sharedContext.makeDiamondsPurchaseScreen(context: context, diamondsContext: diamondsContext, options: [], purpose: amount.flatMap { .topUp(requiredDiamonds: $0, purpose: purpose) } ?? .generic, targetPeerId: nil, customTheme: nil, completion: { _ in })
                     if let navigationController = navigationController {
                         navigationController.pushViewController(controller, animated: true)
                     }
                 }
-                if let amount, let currentState = starsContext.currentState, currentState.balance >= StarsAmount(value: amount, nanos: 0) {
+                if let amount, let currentState = diamondsContext.currentState, currentState.balance >= StarsAmount(value: amount, nanos: 0) {
                     let presentationData = context.sharedContext.currentPresentationData.with { $0 }
                     let controller = UndoOverlayController(
                         presentationData: presentationData,
@@ -1107,8 +1107,8 @@ func openResolvedUrlImpl(
             }
         case .stars:
             dismissInput()
-            if let starsContext = context.starsContext {
-                let controller = context.sharedContext.makeStarsTransactionsScreen(context: context, starsContext: starsContext)
+            if let diamondsContext = context.diamondsContext {
+                let controller = context.sharedContext.makeDiamondsTransactionsScreen(context: context, diamondsContext: diamondsContext)
                 controller.navigationPresentation = .modal
                 if let navigationController {
                     navigationController.pushViewController(controller, animated: true)
@@ -1401,20 +1401,20 @@ func openResolvedUrlImpl(
                     |> `catch` { _ -> Signal<BotCheckoutController.InputData?, NoError> in
                         return .single(nil)
                     })
-                    if invoice.currency == "XTR", let starsContext = context.starsContext {
-                        let starsInputData = combineLatest(
+                    if invoice.currency == "XTR", let diamondsContext = context.diamondsContext {
+                        let diamondsInputData = combineLatest(
                             inputData.get(),
-                            starsContext.state
+                            diamondsContext.state
                         )
-                        |> map { data, state -> (StarsContext.State, BotPaymentForm, EnginePeer?, EnginePeer?)? in
+                        |> map { data, state -> (DiamondsContext.State, BotPaymentForm, EnginePeer?, EnginePeer?)? in
                             if let data, let state {
                                 return (state, data.form, data.botPeer, nil)
                             } else {
                                 return nil
                             }
                         }
-                        let _ = (starsInputData |> filter { $0 != nil } |> take(1) |> deliverOnMainQueue).start(next: { _ in
-                            let controller = context.sharedContext.makeStarsTransferScreen(context: context, starsContext: starsContext, invoice: invoice, source: .slug(slug), extendedMedia: [], inputData: starsInputData, completion: { _ in })
+                        let _ = (diamondsInputData |> filter { $0 != nil } |> take(1) |> deliverOnMainQueue).start(next: { _ in
+                            let controller = context.sharedContext.makeDiamondsTransferScreen(context: context, diamondsContext: diamondsContext, invoice: invoice, source: .slug(slug), extendedMedia: [], inputData: diamondsInputData, completion: { _ in })
                             navigationController.pushViewController(controller)
                         })
                     } else {

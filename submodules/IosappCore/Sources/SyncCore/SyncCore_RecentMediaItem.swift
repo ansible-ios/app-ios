@@ -321,7 +321,7 @@ public final class RecentReactionItem: Codable, Equatable {
     }
 }
 
-public struct RecentStarGiftItemId {
+public struct RecentDiamondGiftItemId {
     public let rawValue: MemoryBuffer
     public let id: Int64
     
@@ -341,7 +341,7 @@ public struct RecentStarGiftItemId {
     }
 }
 
-public final class RecentStarGiftItem: Codable, Equatable {
+public final class RecentDiamondGiftItem: Codable, Equatable {
     public let starGift: StarGift.UniqueGift
     
     public init(_ starGift: StarGift.UniqueGift) {
@@ -360,7 +360,7 @@ public final class RecentStarGiftItem: Codable, Equatable {
         try container.encode(self.starGift, forKey: "g")
     }
     
-    public static func ==(lhs: RecentStarGiftItem, rhs: RecentStarGiftItem) -> Bool {
+    public static func ==(lhs: RecentDiamondGiftItem, rhs: RecentDiamondGiftItem) -> Bool {
         return lhs.starGift == rhs.starGift
     }
 }

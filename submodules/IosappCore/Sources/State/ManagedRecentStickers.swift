@@ -57,7 +57,7 @@ func managedRecentStickers(postbox: Postbox, network: Network, forceFetch: Bool 
                     let stickers = recentStickersData.stickers
                     var items: [OrderedItemListEntry] = []
                     for sticker in stickers {
-                        if let file = telegramMediaFileFromApiDocument(sticker, altDocuments: []), let id = file.id {
+                        if let file = ansibleMediaFileFromApiDocument(sticker, altDocuments: []), let id = file.id {
                             if let entry = CodableEntry(RecentMediaItem(file)) {
                                 items.append(OrderedItemListEntry(id: RecentMediaItemId(id).rawValue, contents: entry))
                             }
@@ -84,7 +84,7 @@ func managedRecentGifs(postbox: Postbox, network: Network, forceFetch: Bool = fa
                         let gifs = savedGifsData.gifs
                         var items: [OrderedItemListEntry] = []
                         for gif in gifs {
-                            if let file = telegramMediaFileFromApiDocument(gif, altDocuments: []), let id = file.id {
+                            if let file = ansibleMediaFileFromApiDocument(gif, altDocuments: []), let id = file.id {
                                 if let entry = CodableEntry(RecentMediaItem(file)) {
                                     items.append(OrderedItemListEntry(id: RecentMediaItemId(id).rawValue, contents: entry))
                                 }
@@ -127,7 +127,7 @@ func managedSavedStickers(postbox: Postbox, network: Network, forceFetch: Bool =
                         
                         var items: [OrderedItemListEntry] = []
                         for sticker in stickers {
-                            if let file = telegramMediaFileFromApiDocument(sticker, altDocuments: []), let id = file.id {
+                            if let file = ansibleMediaFileFromApiDocument(sticker, altDocuments: []), let id = file.id {
                                 var stringRepresentations: [String] = []
                                 if let representations = fileStringRepresentations[id] {
                                     stringRepresentations = representations
@@ -158,7 +158,7 @@ func managedGreetingStickers(postbox: Postbox, network: Network) -> Signal<Void,
                     let stickers = stickersData.stickers
                     var items: [OrderedItemListEntry] = []
                     for sticker in stickers {
-                        if let file = telegramMediaFileFromApiDocument(sticker, altDocuments: []), let id = file.id {
+                        if let file = ansibleMediaFileFromApiDocument(sticker, altDocuments: []), let id = file.id {
                             if let entry = CodableEntry(RecentMediaItem(file)) {
                                 items.append(OrderedItemListEntry(id: RecentMediaItemId(id).rawValue, contents: entry))
                             }
@@ -186,7 +186,7 @@ func managedPremiumStickers(postbox: Postbox, network: Network) -> Signal<Void, 
                     let stickers = stickersData.stickers
                     var items: [OrderedItemListEntry] = []
                     for sticker in stickers {
-                        if let file = telegramMediaFileFromApiDocument(sticker, altDocuments: []), let id = file.id {
+                        if let file = ansibleMediaFileFromApiDocument(sticker, altDocuments: []), let id = file.id {
                             if let entry = CodableEntry(RecentMediaItem(file)) {
                                 items.append(OrderedItemListEntry(id: RecentMediaItemId(id).rawValue, contents: entry))
                             }
@@ -214,7 +214,7 @@ func managedAllPremiumStickers(postbox: Postbox, network: Network) -> Signal<Voi
                     let stickers = stickersData.stickers
                     var items: [OrderedItemListEntry] = []
                     for sticker in stickers {
-                        if let file = telegramMediaFileFromApiDocument(sticker, altDocuments: []), let id = file.id {
+                        if let file = ansibleMediaFileFromApiDocument(sticker, altDocuments: []), let id = file.id {
                             if let entry = CodableEntry(RecentMediaItem(file)) {
                                 items.append(OrderedItemListEntry(id: RecentMediaItemId(id).rawValue, contents: entry))
                             }
@@ -329,8 +329,8 @@ func managedFeaturedChannelStatusEmoji(postbox: Postbox, network: Network) -> Si
     return (poll |> then(.complete() |> suspendAwareDelay(3.0 * 60.0 * 60.0, queue: Queue.concurrentDefaultQueue()))) |> restart
 }
 
-func managedUniqueStarGifts(accountPeerId: PeerId, postbox: Postbox, network: Network) -> Signal<Void, NoError> {
-    let poll = managedRecentMedia(postbox: postbox, network: network, collectionId: Namespaces.OrderedItemList.CloudUniqueStarGifts, extractItemId: { RecentStarGiftItemId($0).id }, reverseHashOrder: false, forceFetch: false, fetch: { hash in
+func managedUniqueDiamondGifts(accountPeerId: PeerId, postbox: Postbox, network: Network) -> Signal<Void, NoError> {
+    let poll = managedRecentMedia(postbox: postbox, network: network, collectionId: Namespaces.OrderedItemList.CloudUniqueDiamondGifts, extractItemId: { RecentDiamondGiftItemId($0).id }, reverseHashOrder: false, forceFetch: false, fetch: { hash in
         return network.request(Api.functions.account.getCollectibleEmojiStatuses(hash: hash))
         |> retryRequestIfNotFrozen
         |> mapToSignal { result -> Signal<[OrderedItemListEntry]?, NoError> in
@@ -376,11 +376,11 @@ func managedUniqueStarGifts(accountPeerId: PeerId, postbox: Postbox, network: Ne
                                     themePeerId: nil,
                                     peerColor: nil,
                                     hostPeerId: nil,
-                                    minOfferStars: nil,
+                                    minOfferDiamonds: nil,
                                     craftChancePermille: nil
                                 )
-                                if let entry = CodableEntry(RecentStarGiftItem(gift)) {
-                                    items.append(OrderedItemListEntry(id: RecentStarGiftItemId(id).rawValue, contents: entry))
+                                if let entry = CodableEntry(RecentDiamondGiftItem(gift)) {
+                                    items.append(OrderedItemListEntry(id: RecentDiamondGiftItemId(id).rawValue, contents: entry))
                                 }
                             }
                         default:

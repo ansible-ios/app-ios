@@ -26,7 +26,7 @@ swift_library(
         "//submodules/ComponentFlow",
         "//submodules/AnimatedCountLabelNode",
         "//submodules/IosappUI/Components/GlassBackgroundComponent",
-        "//submodules/IosappUI/Components/StarsParticleEffect",
+        "//submodules/IosappUI/Components/DiamondsParticleEffect",
     ],
     visibility = [
         "//visibility:public",

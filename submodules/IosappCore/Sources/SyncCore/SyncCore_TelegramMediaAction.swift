@@ -199,16 +199,16 @@ public enum IosappMediaActionType: PostboxCoding, Equatable {
         }
     }
     
-    public struct StarGiftAuctionBidFlags: OptionSet {
+    public struct DiamondGiftAuctionBidFlags: OptionSet {
         public var rawValue: Int32
         public init(rawValue: Int32) {
             self.rawValue = rawValue
         }
         
-        public static let isAcquired = StarGiftAuctionBidFlags(rawValue: 1 << 0)
-        public static let isOutbid = StarGiftAuctionBidFlags(rawValue: 1 << 1)
-        public static let isReturned = StarGiftAuctionBidFlags(rawValue: 1 << 2)
-        public static let isFinal = StarGiftAuctionBidFlags(rawValue: 1 << 3)
+        public static let isAcquired = DiamondGiftAuctionBidFlags(rawValue: 1 << 0)
+        public static let isOutbid = DiamondGiftAuctionBidFlags(rawValue: 1 << 1)
+        public static let isReturned = DiamondGiftAuctionBidFlags(rawValue: 1 << 2)
+        public static let isFinal = DiamondGiftAuctionBidFlags(rawValue: 1 << 3)
     }
     
     public struct GroupCreatorChange: Codable, Equatable {
@@ -285,8 +285,8 @@ public enum IosappMediaActionType: PostboxCoding, Equatable {
     case giveawayResults(winners: Int32, unclaimed: Int32, stars: Bool)
     case boostsApplied(boosts: Int32)
     case paymentRefunded(peerId: PeerId, currency: String, totalAmount: Int64, payload: Data?, transactionId: String)
-    case giftStars(currency: String, amount: Int64, count: Int64, cryptoCurrency: String?, cryptoAmount: Int64?, transactionId: String?)
-    case prizeStars(amount: Int64, isUnclaimed: Bool, boostPeerId: PeerId?, transactionId: String?, giveawayMessageId: MessageId?)
+    case giftDiamonds(currency: String, amount: Int64, count: Int64, cryptoCurrency: String?, cryptoAmount: Int64?, transactionId: String?)
+    case prizeDiamonds(amount: Int64, isUnclaimed: Bool, boostPeerId: PeerId?, transactionId: String?, giveawayMessageId: MessageId?)
     case starGift(gift: StarGift, convertStars: Int64?, text: String?, entities: [MessageTextEntity]?, nameHidden: Bool, savedToProfile: Bool, converted: Bool, upgraded: Bool, canUpgrade: Bool, upgradeStars: Int64?, isRefunded: Bool, isPrepaidUpgrade: Bool, upgradeMessageId: Int32?, peerId: EnginePeer.Id?, senderId: EnginePeer.Id?, savedId: Int64?, prepaidUpgradeHash: String?, giftMessageId: Int32?, upgradeSeparate: Bool, isAuctionAcquired: Bool, toPeerId: EnginePeer.Id?, number: Int32?)
     case starGiftUnique(gift: StarGift, isUpgrade: Bool, isTransferred: Bool, savedToProfile: Bool, canExportDate: Int32?, transferStars: Int64?, isRefunded: Bool, isPrepaidUpgrade: Bool, peerId: EnginePeer.Id?, senderId: EnginePeer.Id?, savedId: Int64?, resaleAmount: CurrencyAmount?, canTransferDate: Int32?, canResaleDate: Int32?, dropOriginalDetailsStars: Int64?, assigned: Bool, fromOffer: Bool, canCraftAt: Int32?, isCrafted: Bool)
     case paidMessagesRefunded(count: Int32, stars: Int64)
@@ -299,8 +299,8 @@ public enum IosappMediaActionType: PostboxCoding, Equatable {
     case suggestedPostSuccess(amount: CurrencyAmount)
     case suggestedPostRefund(SuggestedPostRefund)
     case suggestedBirthday(IosappBirthday)
-    case starGiftPurchaseOffer(gift: StarGift, amount: CurrencyAmount, expireDate: Int32, isAccepted: Bool, isDeclined: Bool)
-    case starGiftPurchaseOfferDeclined(gift: StarGift, amount: CurrencyAmount, hasExpired: Bool)
+    case diamondGiftPurchaseOffer(gift: StarGift, amount: CurrencyAmount, expireDate: Int32, isAccepted: Bool, isDeclined: Bool)
+    case diamondGiftPurchaseOfferDeclined(gift: StarGift, amount: CurrencyAmount, hasExpired: Bool)
     case groupCreatorChange(GroupCreatorChange)
     case copyProtectionToggle(previousValue: Bool, newValue: Bool)
     case copyProtectionRequest(hasExpired: Bool, previousValue: Bool, newValue: Bool)
@@ -425,7 +425,7 @@ public enum IosappMediaActionType: PostboxCoding, Equatable {
         case 41:
             self = .paymentRefunded(peerId: PeerId(decoder.decodeInt64ForKey("pi", orElse: 0)), currency: decoder.decodeStringForKey("currency", orElse: ""), totalAmount: decoder.decodeInt64ForKey("amount", orElse: 0), payload: decoder.decodeDataForKey("payload"), transactionId: decoder.decodeStringForKey("transactionId", orElse: ""))
         case 42:
-            self = .giftStars(currency: decoder.decodeStringForKey("currency", orElse: ""), amount: decoder.decodeInt64ForKey("amount", orElse: 0), count: decoder.decodeInt64ForKey("count", orElse: 0), cryptoCurrency: decoder.decodeOptionalStringForKey("cryptoCurrency"), cryptoAmount: decoder.decodeOptionalInt64ForKey("cryptoAmount"), transactionId: decoder.decodeOptionalStringForKey("transactionId"))
+            self = .giftDiamonds(currency: decoder.decodeStringForKey("currency", orElse: ""), amount: decoder.decodeInt64ForKey("amount", orElse: 0), count: decoder.decodeInt64ForKey("count", orElse: 0), cryptoCurrency: decoder.decodeOptionalStringForKey("cryptoCurrency"), cryptoAmount: decoder.decodeOptionalInt64ForKey("cryptoAmount"), transactionId: decoder.decodeOptionalStringForKey("transactionId"))
         case 43:
             let boostPeerId = decoder.decodeOptionalInt64ForKey("pi").flatMap { PeerId($0) }
             let giveawayMsgId = decoder.decodeOptionalInt32ForKey("giveawayMsgId")
@@ -433,7 +433,7 @@ public enum IosappMediaActionType: PostboxCoding, Equatable {
             if let boostPeerId, let giveawayMsgId {
                 giveawayMessageId = MessageId(peerId: boostPeerId, namespace: Namespaces.Message.Cloud, id: giveawayMsgId)
             }
-            self = .prizeStars(amount: decoder.decodeInt64ForKey("amount", orElse: 0), isUnclaimed: decoder.decodeBoolForKey("unclaimed", orElse: false), boostPeerId: boostPeerId, transactionId: decoder.decodeOptionalStringForKey("transactionId"), giveawayMessageId: giveawayMessageId)
+            self = .prizeDiamonds(amount: decoder.decodeInt64ForKey("amount", orElse: 0), isUnclaimed: decoder.decodeBoolForKey("unclaimed", orElse: false), boostPeerId: boostPeerId, transactionId: decoder.decodeOptionalStringForKey("transactionId"), giveawayMessageId: giveawayMessageId)
         case 44:
             self = .starGift(gift: decoder.decodeObjectForKey("gift", decoder: { StarGift(decoder: $0) }) as! StarGift, convertStars: decoder.decodeOptionalInt64ForKey("convertStars"), text: decoder.decodeOptionalStringForKey("text"), entities: decoder.decodeOptionalObjectArrayWithDecoderForKey("entities"), nameHidden: decoder.decodeBoolForKey("nameHidden", orElse: false), savedToProfile: decoder.decodeBoolForKey("savedToProfile", orElse: false), converted: decoder.decodeBoolForKey("converted", orElse: false), upgraded: decoder.decodeBoolForKey("upgraded", orElse: false), canUpgrade: decoder.decodeBoolForKey("canUpgrade", orElse: false), upgradeStars: decoder.decodeOptionalInt64ForKey("upgradeStars"), isRefunded: decoder.decodeBoolForKey("isRefunded", orElse: false), isPrepaidUpgrade: decoder.decodeBoolForKey("isPrepaidUpgrade", orElse: false), upgradeMessageId: decoder.decodeOptionalInt32ForKey("upgradeMessageId"), peerId: decoder.decodeOptionalInt64ForKey("peerId").flatMap { EnginePeer.Id($0) }, senderId: decoder.decodeOptionalInt64ForKey("senderId").flatMap { EnginePeer.Id($0) }, savedId: decoder.decodeOptionalInt64ForKey("savedId"), prepaidUpgradeHash: decoder.decodeOptionalStringForKey("prepaidUpgradeHash"), giftMessageId: decoder.decodeOptionalInt32ForKey("giftMessageId"), upgradeSeparate: decoder.decodeOptionalBoolForKey("upgradeSeparate") ?? false, isAuctionAcquired: decoder.decodeOptionalBoolForKey("isAuctionAcquired") ?? false, toPeerId: decoder.decodeOptionalInt64ForKey("toPeerId").flatMap { EnginePeer.Id($0) }, number: decoder.decodeOptionalInt32ForKey("number"))
         case 45:
@@ -476,9 +476,9 @@ public enum IosappMediaActionType: PostboxCoding, Equatable {
         case 55:
             self = .suggestedBirthday(decoder.decodeCodable(IosappBirthday.self, forKey: "birthday") ?? IosappBirthday(day: 1, month: 1, year: nil))
         case 56:
-            self = .starGiftPurchaseOffer(gift: decoder.decodeObjectForKey("gift", decoder: { StarGift(decoder: $0) }) as! StarGift, amount: decoder.decodeCodable(CurrencyAmount.self, forKey: "amount") ?? CurrencyAmount(amount: .zero, currency: .stars), expireDate: decoder.decodeInt32ForKey("expireDate", orElse: 0), isAccepted: decoder.decodeBoolForKey("isAccepted", orElse: false), isDeclined: decoder.decodeBoolForKey("isDeclined", orElse: false))
+            self = .diamondGiftPurchaseOffer(gift: decoder.decodeObjectForKey("gift", decoder: { StarGift(decoder: $0) }) as! StarGift, amount: decoder.decodeCodable(CurrencyAmount.self, forKey: "amount") ?? CurrencyAmount(amount: .zero, currency: .stars), expireDate: decoder.decodeInt32ForKey("expireDate", orElse: 0), isAccepted: decoder.decodeBoolForKey("isAccepted", orElse: false), isDeclined: decoder.decodeBoolForKey("isDeclined", orElse: false))
         case 57:
-            self = .starGiftPurchaseOfferDeclined(gift: decoder.decodeObjectForKey("gift", decoder: { StarGift(decoder: $0) }) as! StarGift, amount: decoder.decodeCodable(CurrencyAmount.self, forKey: "amount")!, hasExpired: decoder.decodeBoolForKey("hasExpired", orElse: false))
+            self = .diamondGiftPurchaseOfferDeclined(gift: decoder.decodeObjectForKey("gift", decoder: { StarGift(decoder: $0) }) as! StarGift, amount: decoder.decodeCodable(CurrencyAmount.self, forKey: "amount")!, hasExpired: decoder.decodeBoolForKey("hasExpired", orElse: false))
         case 59:
             self = .groupCreatorChange(decoder.decodeCodable(GroupCreatorChange.self, forKey: "d") ?? GroupCreatorChange(kind: .pending, targetPeerId: PeerId(namespace: Namespaces.Peer.CloudUser, id: PeerId.Id._internalFromInt64Value(0))))
         case 60:
@@ -751,7 +751,7 @@ public enum IosappMediaActionType: PostboxCoding, Equatable {
                 encoder.encodeNil(forKey: "payload")
             }
             encoder.encodeString(transactionId, forKey: "transactionId")
-        case let .giftStars(currency, amount, count, cryptoCurrency, cryptoAmount, transactionId):
+        case let .giftDiamonds(currency, amount, count, cryptoCurrency, cryptoAmount, transactionId):
             encoder.encodeInt32(42, forKey: "_rawValue")
             encoder.encodeString(currency, forKey: "currency")
             encoder.encodeInt64(amount, forKey: "amount")
@@ -768,7 +768,7 @@ public enum IosappMediaActionType: PostboxCoding, Equatable {
             } else {
                 encoder.encodeNil(forKey: "transactionId")
             }
-        case let .prizeStars(amount, isUnclaimed, boostPeerId, transactionId, giveawayMessageId):
+        case let .prizeDiamonds(amount, isUnclaimed, boostPeerId, transactionId, giveawayMessageId):
             encoder.encodeInt32(43, forKey: "_rawValue")
             encoder.encodeInt64(amount, forKey: "amount")
             encoder.encodeBool(isUnclaimed, forKey: "unclaimed")
@@ -972,14 +972,14 @@ public enum IosappMediaActionType: PostboxCoding, Equatable {
         case let .suggestedBirthday(birthday):
             encoder.encodeInt32(55, forKey: "_rawValue")
             encoder.encodeCodable(birthday, forKey: "birthday")
-        case let .starGiftPurchaseOffer(gift, amount, expireDate, isAccepted, isDeclined):
+        case let .diamondGiftPurchaseOffer(gift, amount, expireDate, isAccepted, isDeclined):
             encoder.encodeInt32(56, forKey: "_rawValue")
             encoder.encodeObject(gift, forKey: "gift")
             encoder.encodeCodable(amount, forKey: "amount")
             encoder.encodeInt32(expireDate, forKey: "expireDate")
             encoder.encodeBool(isAccepted, forKey: "isAccepted")
             encoder.encodeBool(isDeclined, forKey: "isDeclined")
-        case let .starGiftPurchaseOfferDeclined(gift, amount, hasExpired):
+        case let .diamondGiftPurchaseOfferDeclined(gift, amount, hasExpired):
             encoder.encodeInt32(57, forKey: "_rawValue")
             encoder.encodeObject(gift, forKey: "gift")
             encoder.encodeCodable(amount, forKey: "amount")
@@ -1037,7 +1037,7 @@ public enum IosappMediaActionType: PostboxCoding, Equatable {
             return boostPeerId.flatMap { [$0] } ?? []
         case let .paymentRefunded(peerId, _, _, _, _):
             return [peerId]
-        case let .prizeStars(_, _, boostPeerId, _, _):
+        case let .prizeDiamonds(_, _, boostPeerId, _, _):
             return boostPeerId.flatMap { [$0] } ?? []
         case let .starGift(gift, _, _, _, _, _, _, _, _, _, _, _, _, peerId, senderId, _, _, _, _, _, toPeerId, _):
             var peerIds: [PeerId] = []

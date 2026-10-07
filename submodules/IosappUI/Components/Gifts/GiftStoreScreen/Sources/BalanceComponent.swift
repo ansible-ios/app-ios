@@ -40,7 +40,7 @@ final class BalanceComponent: Component {
         private var component: BalanceComponent?
         private var componentState: EmptyComponentState?
         
-        private var starsBalance: Int64 = 0
+        private var diamondsBalance: Int64 = 0
         private var tonBalance: Int64 = 0
         private var balanceDisposable: Disposable?
                         
@@ -75,15 +75,15 @@ final class BalanceComponent: Component {
             self.componentState = state
             
             if self.balanceDisposable == nil {
-                if let starsContext = component.context.starsContext, let tonContext = component.context.tonContext {
+                if let diamondsContext = component.context.diamondsContext, let tonContext = component.context.tonContext {
                     self.balanceDisposable = combineLatest(queue: Queue.mainQueue(),
-                        starsContext.state,
+                        diamondsContext.state,
                         tonContext.state
-                    ).start(next: { [weak self] starsState, tonState in
+                    ).start(next: { [weak self] diamondsState, tonState in
                         guard let self else {
                             return
                         }
-                        self.starsBalance = starsState?.balance.value ?? 0
+                        self.diamondsBalance = diamondsState?.balance.value ?? 0
                         self.tonBalance = tonState?.balance.value ?? 0
                         if !self.isUpdating {
                             self.componentState?.updated()
@@ -95,9 +95,9 @@ final class BalanceComponent: Component {
             let presentationData = component.context.sharedContext.currentPresentationData.with { $0 }
 
             var rawString: String = ""
-            let starsBalanceString = "**⭐️\(presentationStringsFormattedNumber(Int32(clamping: self.starsBalance), presentationData.dateTimeFormat.groupingSeparator))**"
+            let diamondsBalanceString = "**⭐️\(presentationStringsFormattedNumber(Int32(clamping: self.starsBalance), presentationData.dateTimeFormat.groupingSeparator))**"
             // Ansible: TON removed — the gift-store balance chip shows the crystal balance only.
-            rawString = presentationData.strings.Diamonds_Purchase_Balance + "\n" + starsBalanceString
+            rawString = presentationData.strings.Diamonds_Purchase_Balance + "\n" + diamondsBalanceString
             
             let attributedText = parseMarkdownIntoAttributedString(
                 rawString,
@@ -111,10 +111,10 @@ final class BalanceComponent: Component {
                 ),
                 textAlignment: .right
             ).mutableCopy() as! NSMutableAttributedString
-            let starRange = (attributedText.string as NSString).range(of: "⭐️")
-            if starRange.location != NSNotFound {
-                attributedText.addAttribute(ChatTextInputAttributes.customEmoji, value: ChatTextInputTextCustomEmojiAttribute(interactivelySelectedFromPackId: nil, fileId: 0, file: nil, custom: .stars(tinted: false)), range: starRange)
-                attributedText.addAttribute(.baselineOffset, value: 1.0, range: starRange)
+            let diamondRange = (attributedText.string as NSString).range(of: "⭐️")
+            if diamondRange.location != NSNotFound {
+                attributedText.addAttribute(ChatTextInputAttributes.customEmoji, value: ChatTextInputTextCustomEmojiAttribute(interactivelySelectedFromPackId: nil, fileId: 0, file: nil, custom: .stars(tinted: false)), range: diamondRange)
+                attributedText.addAttribute(.baselineOffset, value: 1.0, range: diamondRange)
             }
             let tonRange = (attributedText.string as NSString).range(of: "💎")
             if tonRange.location != NSNotFound {

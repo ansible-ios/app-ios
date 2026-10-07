@@ -2952,7 +2952,7 @@ public final class StoryItemSetContainerComponent: Component {
                 
                 inputPlaceholder = .counter(items)
             } else {
-                if let sendPaidMessageStars = component.slice.additionalPeerData.sendPaidMessageStars {
+                if let sendPaidMessageDiamonds = component.slice.additionalPeerData.sendPaidMessageDiamonds {
                     let dateTimeFormat = component.context.sharedContext.currentPresentationData.with { $0 }.dateTimeFormat
                     inputPlaceholder = .plain(component.strings.Chat_InputTextPaidMessagePlaceholder(" # \(presentationStringsFormattedNumber(Int32(sendPaidMessageStars.value), dateTimeFormat.groupingSeparator))").string)
                 } else if case .liveStream = component.slice.item.storyItem.media {
@@ -3014,16 +3014,16 @@ public final class StoryItemSetContainerComponent: Component {
                 }
                 
                 var liveChatState: MessageInputPanelComponent.LiveChatState?
-                var starStats: MessageInputPanelComponent.StarStats?
+                var diamondStats: MessageInputPanelComponent.DiamondStats?
                 var sendAsConfiguration: MessageInputPanelComponent.SendAsConfiguration?
-                var sendPaidMessageStars = isLiveStream ? self.sendMessageContext.currentLiveStreamMessageStars : component.slice.additionalPeerData.sendPaidMessageStars
+                var sendPaidMessageDiamonds = isLiveStream ? self.sendMessageContext.currentLiveStreamMessageDiamonds : component.slice.additionalPeerData.sendPaidMessageDiamonds
                 var maxInputLength = 4096
                 var maxEmojiCount: Int?
-                var canSendStars = false
+                var canSendDiamonds = false
                 
                 if isLiveStream {
                     if component.slice.item.peerId != component.context.account.peerId || component.isEmbeddedInCamera {
-                        canSendStars = true
+                        canSendDiamonds = true
                     }
                 }
                 
@@ -3036,19 +3036,19 @@ public final class StoryItemSetContainerComponent: Component {
                             hasUnseenMessages: liveChatStateValue.hasUnseenMessages,
                             isUnifiedStream: liveChatStateValue.isUnifiedStream
                         )
-                        starStats = liveChatStateValue.starStats.flatMap { starStats in
-                            return MessageInputPanelComponent.StarStats(
-                                hasOutgoingStars: self.sendMessageContext.currentLiveStreamStarsIsActive,
-                                totalStars: starStats.totalStars
+                        diamondStats = liveChatStateValue.diamondStats.flatMap { diamondStats in
+                            return MessageInputPanelComponent.DiamondStats(
+                                hasOutgoingDiamonds: self.sendMessageContext.currentLiveStreamDiamondsIsActive,
+                                totalStars: diamondStats.totalStars
                             )
                         }
                         if let minMessagePrice = liveChatStateValue.minMessagePrice {
-                            if let current = sendPaidMessageStars {
+                            if let current = sendPaidMessageDiamonds {
                                 if current < StarsAmount(value: minMessagePrice, nanos: 0) {
-                                    sendPaidMessageStars = StarsAmount(value: minMessagePrice, nanos: 0)
+                                    sendPaidMessageDiamonds = StarsAmount(value: minMessagePrice, nanos: 0)
                                 }
                             } else {
-                                sendPaidMessageStars = StarsAmount(value: minMessagePrice, nanos: 0)
+                                sendPaidMessageDiamonds = StarsAmount(value: minMessagePrice, nanos: 0)
                             }
                         }
                         
@@ -3079,12 +3079,12 @@ public final class StoryItemSetContainerComponent: Component {
                         }
                         
                         if liveChatStateValue.isAdmin {
-                            let params = GroupCallMessagesContext.getStarAmountParamMapping(params: LiveChatMessageParams(appConfig: component.context.currentAppConfiguration.with({ $0 })), value: 1000000000)
+                            let params = GroupCallMessagesContext.getDiamondAmountParamMapping(params: LiveChatMessageParams(appConfig: component.context.currentAppConfiguration.with({ $0 })), value: 1000000000)
                             
                             maxInputLength = params.maxLength
                             maxEmojiCount = params.emojiCount
                         } else {
-                            let params = GroupCallMessagesContext.getStarAmountParamMapping(params: LiveChatMessageParams(appConfig: component.context.currentAppConfiguration.with({ $0 })), value: sendPaidMessageStars?.value ?? 0)
+                            let params = GroupCallMessagesContext.getDiamondAmountParamMapping(params: LiveChatMessageParams(appConfig: component.context.currentAppConfiguration.with({ $0 })), value: sendPaidMessageDiamonds?.value ?? 0)
                             
                             maxInputLength = params.maxLength
                             maxEmojiCount = params.emojiCount
@@ -3101,7 +3101,7 @@ public final class StoryItemSetContainerComponent: Component {
                         strings: component.strings,
                         style: .story,
                         placeholder: inputPlaceholder,
-                        sendPaidMessageStars: sendPaidMessageStars,
+                        sendPaidMessageDiamonds: sendPaidMessageDiamonds,
                         maxLength: maxInputLength,
                         maxEmojiCount: maxEmojiCount,
                         queryTypes: [.mention, .hashtag, .emoji],
@@ -3331,17 +3331,17 @@ public final class StoryItemSetContainerComponent: Component {
                                 visibleItemView.toggleLiveChatExpanded()
                             }
                         },
-                        sendStarsAction: (isLiveStream && canSendStars) ? { [weak self] sourceView, isLongPress in
+                        sendDiamondsAction: (isLiveStream && canSendDiamonds) ? { [weak self] sourceView, isLongPress in
                             guard let self, let component = self.component else {
                                 return
                             }
                             if isLongPress || component.isEmbeddedInCamera {
-                                self.sendMessageContext.openSendStars(view: self)
+                                self.sendMessageContext.openSendDiamonds(view: self)
                             } else {
-                                self.sendMessageContext.performSendStars(view: self, buttonView: sourceView, count: 1, isFromExpandedView: false)
+                                self.sendMessageContext.performSendDiamonds(view: self, buttonView: sourceView, count: 1, isFromExpandedView: false)
                             }
                         } : nil,
-                        starStars: starStats,
+                        diamondDiamonds: diamondStats,
                         sendAsConfiguration: sendAsConfiguration,
                         openSettings: component.isEmbeddedInCamera ? { [weak self] in
                             guard let self else {
@@ -4993,8 +4993,8 @@ public final class StoryItemSetContainerComponent: Component {
                                         break
                                     }
                                     
-                                    if let sendPaidMessageStars = component.slice.additionalPeerData.sendPaidMessageStars {
-                                        messageAttributes.append(PaidStarsMessageAttribute(stars: sendPaidMessageStars, postponeSending: false))
+                                    if let sendPaidMessageDiamonds = component.slice.additionalPeerData.sendPaidMessageDiamonds {
+                                        messageAttributes.append(PaidDiamondsMessageAttribute(stars: sendPaidMessageDiamonds, postponeSending: false))
                                     }
 
                                     let message: EnqueueMessage = .message(

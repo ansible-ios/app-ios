@@ -258,7 +258,7 @@ final class OverlayAudioPlayerControllerNode: ViewControllerTracingNode, ASGestu
         }, updateChatLocationThread: { _, _ in
         }, requestToggleTodoMessageItem: { _, _, _ in
         }, displayTodoToggleUnavailable: { _ in
-        }, openStarsPurchase: { _ in
+        }, openDiamondsPurchase: { _ in
         }, openRankInfo: { _, _, _ in
         }, openSetPeerAvatar: {
         }, displayPollRestrictedToast: { _ in

@@ -31,20 +31,20 @@ public class ChartStrings {
     public let zoomOut: String
     public let total: String
     public let revenueInTon: String
-    public let revenueInStars: String
+    public let revenueInDiamonds: String
     public let revenueInUsd: String
     
     public init(
         zoomOut: String,
         total: String,
         revenueInTon: String,
-        revenueInStars: String,
+        revenueInDiamonds: String,
         revenueInUsd: String
     ) {
         self.zoomOut = zoomOut
         self.total = total
         self.revenueInTon = revenueInTon
-        self.revenueInStars = revenueInStars
+        self.revenueInDiamonds = revenueInDiamonds
         self.revenueInUsd = revenueInUsd
     }
     
@@ -52,7 +52,7 @@ public class ChartStrings {
         zoomOut: "Zoom Out",
         total: "Total",
         revenueInTon: "Revenue in GRAM",
-        revenueInStars: "Revenue in Stars",
+        revenueInDiamonds: "Revenue in Stars",
         revenueInUsd: "Revenue in USD"
     )
 }

@@ -212,8 +212,8 @@ public func chatControllerBackgroundImageSignal(wallpaper: IosappWallpaper, medi
                                                         c.draw(image, in: CGRect(origin: CGPoint(), size: thumbnailContextSize))
                                                     }
                                                 }
-                                                telegramFastBlurMore(Int32(thumbnailContextSize.width), Int32(thumbnailContextSize.height), Int32(thumbnailContext.bytesPerRow), thumbnailContext.bytes)
-                                                telegramFastBlurMore(Int32(thumbnailContextSize.width), Int32(thumbnailContextSize.height), Int32(thumbnailContext.bytesPerRow), thumbnailContext.bytes)
+                                                ansibleFastBlurMore(Int32(thumbnailContextSize.width), Int32(thumbnailContextSize.height), Int32(thumbnailContext.bytesPerRow), thumbnailContext.bytes)
+                                                ansibleFastBlurMore(Int32(thumbnailContextSize.width), Int32(thumbnailContextSize.height), Int32(thumbnailContext.bytesPerRow), thumbnailContext.bytes)
                                                 
                                                 if let blurredThumbnailImage = thumbnailContext.generateImage() {
                                                     subscriber.putNext((blurredThumbnailImage, false))
@@ -267,8 +267,8 @@ public func chatControllerBackgroundImageSignal(wallpaper: IosappWallpaper, medi
                                                         c.draw(image, in: CGRect(origin: CGPoint(), size: thumbnailContextSize))
                                                     }
                                                 }
-                                                telegramFastBlurMore(Int32(thumbnailContextSize.width), Int32(thumbnailContextSize.height), Int32(thumbnailContext.bytesPerRow), thumbnailContext.bytes)
-                                                telegramFastBlurMore(Int32(thumbnailContextSize.width), Int32(thumbnailContextSize.height), Int32(thumbnailContext.bytesPerRow), thumbnailContext.bytes)
+                                                ansibleFastBlurMore(Int32(thumbnailContextSize.width), Int32(thumbnailContextSize.height), Int32(thumbnailContext.bytesPerRow), thumbnailContext.bytes)
+                                                ansibleFastBlurMore(Int32(thumbnailContextSize.width), Int32(thumbnailContextSize.height), Int32(thumbnailContext.bytesPerRow), thumbnailContext.bytes)
                                                 
                                                 if let blurredThumbnailImage = thumbnailContext.generateImage() {
                                                     subscriber.putNext((blurredThumbnailImage, false))

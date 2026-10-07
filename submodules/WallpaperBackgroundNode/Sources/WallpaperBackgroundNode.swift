@@ -29,8 +29,8 @@ private func generateBlurredContents(image: UIImage, dimColor: UIColor?) -> UIIm
         c.draw(image.cgImage!, in: CGRect(origin: CGPoint(), size: size))
     }
 
-    telegramFastBlurMore(Int32(context.size.width), Int32(context.size.height), Int32(context.bytesPerRow), context.bytes)
-    telegramFastBlurMore(Int32(context.size.width), Int32(context.size.height), Int32(context.bytesPerRow), context.bytes)
+    ansibleFastBlurMore(Int32(context.size.width), Int32(context.size.height), Int32(context.bytesPerRow), context.bytes)
+    ansibleFastBlurMore(Int32(context.size.width), Int32(context.size.height), Int32(context.bytesPerRow), context.bytes)
 
     adjustSaturationInContext(context: context, saturation: 1.7)
 
@@ -1229,12 +1229,12 @@ public final class WallpaperBackgroundNodeImpl: ASDisplayNode, WallpaperBackgrou
             return
         }
         let previousWallpaper = self.wallpaper
-        let previousStarGift = self.starGift
+        let previousDiamondGift = self.starGift
         
         self.wallpaper = wallpaper
         self.starGift = starGift
                 
-        if previousWallpaper != wallpaper || previousStarGift?.slug != starGift?.slug {
+        if previousWallpaper != wallpaper || previousDiamondGift?.slug != starGift?.slug {
             if let _ = starGift {
                 self.modelRectIndex = Int32.random(in: 0 ..< 10)
             } else {
@@ -1519,9 +1519,9 @@ public final class WallpaperBackgroundNodeImpl: ASDisplayNode, WallpaperBackgrou
                 }
             }
             
-            if let previousStarGift = self.validPatternImage?.starGift, !updated {
+            if let previousDiamondGift = self.validPatternImage?.starGift, !updated {
                 updated = true
-                if previousStarGift.slug == starGift?.slug {
+                if previousDiamondGift.slug == starGift?.slug {
                     updated = false
                 }
             }

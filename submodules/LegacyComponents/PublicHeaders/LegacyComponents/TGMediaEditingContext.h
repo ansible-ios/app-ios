@@ -55,7 +55,7 @@ typedef NS_ENUM(NSUInteger, TGMediaLivePhotoMode)
 
 @property (nonatomic, readonly) bool inhibitEditing;
 
-@property (nonatomic, assign) int64_t sendPaidMessageStars;
+@property (nonatomic, assign) int64_t sendPaidMessageDiamonds;
 
 + (instancetype)contextForCaptionsOnly;
 

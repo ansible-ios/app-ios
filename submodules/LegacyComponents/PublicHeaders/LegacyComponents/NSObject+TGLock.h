@@ -11,7 +11,7 @@
 
 @interface NSObject (TGLock)
 
-- (void)tgLockObject;
-- (void)tgUnlockObject;
+- (void)asLockObject;
+- (void)asUnlockObject;
 
 @end

@@ -2029,7 +2029,7 @@ public final class MediaPickerScreenImpl: ViewController, MediaPickerScreen, Att
         paidMediaAllowed: Bool = false,
         subject: Subject,
         forCollage: Bool = false,
-        sendPaidMessageStars: Int64? = nil,
+        sendPaidMessageDiamonds: Int64? = nil,
         editingContext: TGMediaEditingContext? = nil,
         selectionContext: TGMediaSelectionContext? = nil,
         saveEditedPhotos: Bool = false,
@@ -2334,7 +2334,7 @@ public final class MediaPickerScreenImpl: ViewController, MediaPickerScreen, Att
         
         self.interaction?.selectionState?.grouping = true
         
-        self.interaction?.editingState.sendPaidMessageStars = sendPaidMessageStars ?? 0
+        self.interaction?.editingState.sendPaidMessageDiamonds = sendPaidMessageDiamonds ?? 0
         
         if case let .media(media) = self.subject {
             for item in media {
@@ -3201,7 +3201,7 @@ public final class MediaPickerScreenImpl: ViewController, MediaPickerScreen, Att
                                     return
                                 }
                                 
-                                let controller = self.context.sharedContext.makeStarsAmountScreen(context: self.context, initialValue: price, completion: { [weak self] amount in
+                                let controller = self.context.sharedContext.makeDiamondsAmountScreen(context: self.context, initialValue: price, completion: { [weak self] amount in
                                     guard let self else {
                                         return
                                     }

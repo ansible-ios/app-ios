@@ -19,7 +19,7 @@ public final class UpdateMessageReactionsAction: PendingMessageActionData {
     }
 }
 
-public final class SendStarsReactionsAction: PendingMessageActionData {
+public final class SendDiamondsReactionsAction: PendingMessageActionData {
     public let randomId: Int64
     
     public init(randomId: Int64) {
@@ -35,7 +35,7 @@ public final class SendStarsReactionsAction: PendingMessageActionData {
     }
     
     public func isEqual(to: PendingMessageActionData) -> Bool {
-        if let other = to as? SendStarsReactionsAction {
+        if let other = to as? SendDiamondsReactionsAction {
             if self.randomId != other.randomId {
                 return false
             }

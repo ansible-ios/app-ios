@@ -242,7 +242,7 @@ public extension Api {
                 return ("inputStorePaymentPremiumSubscription", [("flags", ConstructorParameterDescription(self.flags))])
             }
         }
-        public class Cons_inputStorePaymentStarsGift: TypeConstructorDescription {
+        public class Cons_inputStorePaymentDiamondsGift: TypeConstructorDescription {
             public var userId: Api.InputUser
             public var stars: Int64
             public var currency: String
@@ -257,7 +257,7 @@ public extension Api {
                 return ("inputStorePaymentStarsGift", [("userId", ConstructorParameterDescription(self.userId)), ("stars", ConstructorParameterDescription(self.stars)), ("currency", ConstructorParameterDescription(self.currency)), ("amount", ConstructorParameterDescription(self.amount))])
             }
         }
-        public class Cons_inputStorePaymentStarsGiveaway: TypeConstructorDescription {
+        public class Cons_inputStorePaymentDiamondsGiveaway: TypeConstructorDescription {
             public var flags: Int32
             public var stars: Int64
             public var boostPeer: Api.InputPeer
@@ -286,7 +286,7 @@ public extension Api {
                 return ("inputStorePaymentStarsGiveaway", [("flags", ConstructorParameterDescription(self.flags)), ("stars", ConstructorParameterDescription(self.stars)), ("boostPeer", ConstructorParameterDescription(self.boostPeer)), ("additionalPeers", ConstructorParameterDescription(self.additionalPeers)), ("countriesIso2", ConstructorParameterDescription(self.countriesIso2)), ("prizeDescription", ConstructorParameterDescription(self.prizeDescription)), ("randomId", ConstructorParameterDescription(self.randomId)), ("untilDate", ConstructorParameterDescription(self.untilDate)), ("currency", ConstructorParameterDescription(self.currency)), ("amount", ConstructorParameterDescription(self.amount)), ("users", ConstructorParameterDescription(self.users))])
             }
         }
-        public class Cons_inputStorePaymentStarsTopup: TypeConstructorDescription {
+        public class Cons_inputStorePaymentDiamondsTopup: TypeConstructorDescription {
             public var flags: Int32
             public var stars: Int64
             public var currency: String
@@ -308,9 +308,9 @@ public extension Api {
         case inputStorePaymentPremiumGiftCode(Cons_inputStorePaymentPremiumGiftCode)
         case inputStorePaymentPremiumGiveaway(Cons_inputStorePaymentPremiumGiveaway)
         case inputStorePaymentPremiumSubscription(Cons_inputStorePaymentPremiumSubscription)
-        case inputStorePaymentStarsGift(Cons_inputStorePaymentStarsGift)
-        case inputStorePaymentStarsGiveaway(Cons_inputStorePaymentStarsGiveaway)
-        case inputStorePaymentStarsTopup(Cons_inputStorePaymentStarsTopup)
+        case inputStorePaymentStarsGift(Cons_inputStorePaymentDiamondsGift)
+        case inputStorePaymentStarsGiveaway(Cons_inputStorePaymentDiamondsGiveaway)
+        case inputStorePaymentStarsTopup(Cons_inputStorePaymentDiamondsTopup)
 
         public func serialize(_ buffer: Buffer, _ boxed: Swift.Bool) {
             switch self {
@@ -600,7 +600,7 @@ public extension Api {
                 return nil
             }
         }
-        public static func parse_inputStorePaymentStarsGift(_ reader: BufferReader) -> InputStorePaymentPurpose? {
+        public static func parse_inputStorePaymentDiamondsGift(_ reader: BufferReader) -> InputStorePaymentPurpose? {
             var _1: Api.InputUser?
             if let signature = reader.readInt32() {
                 _1 = Api.parse(reader, signature: signature) as? Api.InputUser
@@ -616,13 +616,13 @@ public extension Api {
             let _c3 = _3 != nil
             let _c4 = _4 != nil
             if _c1 && _c2 && _c3 && _c4 {
-                return Api.InputStorePaymentPurpose.inputStorePaymentStarsGift(Cons_inputStorePaymentStarsGift(userId: _1!, stars: _2!, currency: _3!, amount: _4!))
+                return Api.InputStorePaymentPurpose.inputStorePaymentStarsGift(Cons_inputStorePaymentDiamondsGift(userId: _1!, stars: _2!, currency: _3!, amount: _4!))
             }
             else {
                 return nil
             }
         }
-        public static func parse_inputStorePaymentStarsGiveaway(_ reader: BufferReader) -> InputStorePaymentPurpose? {
+        public static func parse_inputStorePaymentDiamondsGiveaway(_ reader: BufferReader) -> InputStorePaymentPurpose? {
             var _1: Int32?
             _1 = reader.readInt32()
             var _2: Int64?
@@ -669,13 +669,13 @@ public extension Api {
             let _c10 = _10 != nil
             let _c11 = _11 != nil
             if _c1 && _c2 && _c3 && _c4 && _c5 && _c6 && _c7 && _c8 && _c9 && _c10 && _c11 {
-                return Api.InputStorePaymentPurpose.inputStorePaymentStarsGiveaway(Cons_inputStorePaymentStarsGiveaway(flags: _1!, stars: _2!, boostPeer: _3!, additionalPeers: _4, countriesIso2: _5, prizeDescription: _6, randomId: _7!, untilDate: _8!, currency: _9!, amount: _10!, users: _11!))
+                return Api.InputStorePaymentPurpose.inputStorePaymentStarsGiveaway(Cons_inputStorePaymentDiamondsGiveaway(flags: _1!, stars: _2!, boostPeer: _3!, additionalPeers: _4, countriesIso2: _5, prizeDescription: _6, randomId: _7!, untilDate: _8!, currency: _9!, amount: _10!, users: _11!))
             }
             else {
                 return nil
             }
         }
-        public static func parse_inputStorePaymentStarsTopup(_ reader: BufferReader) -> InputStorePaymentPurpose? {
+        public static func parse_inputStorePaymentDiamondsTopup(_ reader: BufferReader) -> InputStorePaymentPurpose? {
             var _1: Int32?
             _1 = reader.readInt32()
             var _2: Int64?
@@ -696,7 +696,7 @@ public extension Api {
             let _c4 = _4 != nil
             let _c5 = (Int(_1 ?? 0) & Int(1 << 0) == 0) || _5 != nil
             if _c1 && _c2 && _c3 && _c4 && _c5 {
-                return Api.InputStorePaymentPurpose.inputStorePaymentStarsTopup(Cons_inputStorePaymentStarsTopup(flags: _1!, stars: _2!, currency: _3!, amount: _4!, spendPurposePeer: _5))
+                return Api.InputStorePaymentPurpose.inputStorePaymentStarsTopup(Cons_inputStorePaymentDiamondsTopup(flags: _1!, stars: _2!, currency: _3!, amount: _4!, spendPurposePeer: _5))
             }
             else {
                 return nil

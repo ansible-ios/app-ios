@@ -16,7 +16,7 @@ public enum ServerProvidedSuggestion: Equatable {
     case setupBirthday
     case todayBirthdays
     case gracePremium
-    case starsSubscriptionLowBalance
+    case diamondsSubscriptionLowBalance
     case setupPhoto
     case setupLoginEmail
     case setupLoginEmailBlocking
@@ -50,7 +50,7 @@ public enum ServerProvidedSuggestion: Equatable {
         case "PREMIUM_GRACE":
             self = .gracePremium
         case "STARS_SUBSCRIPTION_LOW_BALANCE":
-            self = .starsSubscriptionLowBalance
+            self = .diamondsSubscriptionLowBalance
         case "USERPIC_SETUP":
             self = .setupPhoto
         case "SETUP_LOGIN_EMAIL":
@@ -90,7 +90,7 @@ public enum ServerProvidedSuggestion: Equatable {
             return "BIRTHDAY_CONTACTS_TODAY"
         case .gracePremium:
             return "PREMIUM_GRACE"
-        case .starsSubscriptionLowBalance:
+        case .diamondsSubscriptionLowBalance:
             return "STARS_SUBSCRIPTION_LOW_BALANCE"
         case .setupPhoto:
             return "USERPIC_SETUP"

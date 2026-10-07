@@ -111,9 +111,9 @@ public func parseMediaData(data: Data) -> Media? {
     
     if let parseBuffer = parseBuffer, let object = Api.parse(parseBuffer) {
         if let photo = object as? Api.Photo {
-            return telegramMediaImageFromApiPhoto(photo)
+            return ansibleMediaImageFromApiPhoto(photo)
         } else if let document = object as? Api.Document {
-            return telegramMediaFileFromApiDocument(document, altDocuments: [])
+            return ansibleMediaFileFromApiDocument(document, altDocuments: [])
         }
     }
     return nil

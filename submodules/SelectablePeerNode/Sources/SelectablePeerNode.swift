@@ -155,7 +155,7 @@ public final class SelectablePeerNode: ASDisplayNode {
         }
     }
     
-    public func setup(context: AccountContext, theme: PresentationTheme, strings: PresentationStrings, peer: EngineRenderedPeer, requiresPremiumForMessaging: Bool, requiresStars: Int64? = nil, customTitle: String? = nil, iconId: Int64? = nil, iconColor: Int32? = nil, online: Bool = false, numberOfLines: Int = 2, synchronousLoad: Bool) {
+    public func setup(context: AccountContext, theme: PresentationTheme, strings: PresentationStrings, peer: EngineRenderedPeer, requiresPremiumForMessaging: Bool, requiresDiamonds: Int64? = nil, customTitle: String? = nil, iconId: Int64? = nil, iconColor: Int32? = nil, online: Bool = false, numberOfLines: Int = 2, synchronousLoad: Bool) {
         self.setup(
             accountPeerId: context.account.peerId,
             stateManager: context.account.stateManager,
@@ -170,7 +170,7 @@ public final class SelectablePeerNode: ASDisplayNode {
             strings: strings,
             peer: peer,
             requiresPremiumForMessaging: requiresPremiumForMessaging,
-            requiresStars: requiresStars,
+            requiresDiamonds: requiresDiamonds,
             customTitle: customTitle,
             iconId: iconId,
             iconColor: iconColor,
@@ -207,7 +207,7 @@ public final class SelectablePeerNode: ASDisplayNode {
         }
     }
     
-    public func setup(accountPeerId: EnginePeer.Id, stateManager: AccountStateManager, energyUsageSettings: EnergyUsageSettings, contentSettings: ContentSettings, animationCache: AnimationCache, animationRenderer: MultiAnimationRenderer, resolveInlineStickers: @escaping ([Int64]) -> Signal<[Int64: IosappMediaFile], NoError>, theme: PresentationTheme, strings: PresentationStrings, peer: EngineRenderedPeer, requiresPremiumForMessaging: Bool, requiresStars: Int64? = nil, customTitle: String? = nil, iconId: Int64? = nil, iconColor: Int32? = nil, online: Bool = false, numberOfLines: Int = 2, synchronousLoad: Bool) {
+    public func setup(accountPeerId: EnginePeer.Id, stateManager: AccountStateManager, energyUsageSettings: EnergyUsageSettings, contentSettings: ContentSettings, animationCache: AnimationCache, animationRenderer: MultiAnimationRenderer, resolveInlineStickers: @escaping ([Int64]) -> Signal<[Int64: IosappMediaFile], NoError>, theme: PresentationTheme, strings: PresentationStrings, peer: EngineRenderedPeer, requiresPremiumForMessaging: Bool, requiresDiamonds: Int64? = nil, customTitle: String? = nil, iconId: Int64? = nil, iconColor: Int32? = nil, online: Bool = false, numberOfLines: Int = 2, synchronousLoad: Bool) {
         let isFirstTime = self.peer == nil
         self.peer = peer
         guard let mainPeer = peer.chatOrMonoforumMainPeer else {
@@ -256,14 +256,14 @@ public final class SelectablePeerNode: ASDisplayNode {
         }
         self.avatarNode.setPeer(accountPeerId: accountPeerId, postbox: stateManager.postbox, network: stateManager.network, contentSettings: contentSettings, theme: theme, peer: mainPeer, overrideImage: overrideImage, emptyColor: self.theme.avatarPlaceholderColor, clipStyle: clipStyle, synchronousLoad: synchronousLoad)
         
-        if let requiresStars {
+        if let requiresDiamonds {
             let avatarBadgeOutline: UIImageView
             if let current = self.avatarBadgeOutline {
                 avatarBadgeOutline = current
             } else {
                 avatarBadgeOutline = UIImageView()
                 avatarBadgeOutline.contentMode = .scaleToFill
-                avatarBadgeOutline.image = PresentationResourcesChatList.shareAvatarStarsLockBadgeBackground(theme)
+                avatarBadgeOutline.image = PresentationResourcesChatList.shareAvatarDiamondsLockBadgeBackground(theme)
                 avatarBadgeOutline.tintColor = theme.actionSheet.opaqueItemBackgroundColor
                 self.avatarBadgeOutline = avatarBadgeOutline
                 self.avatarNodeContainer.view.addSubview(avatarBadgeOutline)
@@ -275,7 +275,7 @@ public final class SelectablePeerNode: ASDisplayNode {
             } else {
                 avatarBadge = UIImageView()
                 avatarBadge.contentMode = .scaleToFill
-                avatarBadge.image = PresentationResourcesChatList.shareAvatarStarsLockBadgeInnerBackground(theme)
+                avatarBadge.image = PresentationResourcesChatList.shareAvatarDiamondsLockBadgeInnerBackground(theme)
                 avatarBadge.tintColor = theme.actionSheet.controlAccentColor
                 self.avatarBadge = avatarBadge
                 self.avatarNodeContainer.view.addSubview(avatarBadge)

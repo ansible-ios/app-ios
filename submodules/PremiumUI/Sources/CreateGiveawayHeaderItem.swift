@@ -17,21 +17,21 @@ final class CreateGiveawayHeaderItem: ItemListControllerHeaderItem {
     let strings: PresentationStrings
     let title: String
     let text: String
-    let isStars: Bool
+    let isDiamonds: Bool
     let cancel: () -> Void
     
-    init(theme: PresentationTheme, strings: PresentationStrings, title: String, text: String, isStars: Bool, cancel: @escaping () -> Void) {
+    init(theme: PresentationTheme, strings: PresentationStrings, title: String, text: String, isDiamonds: Bool, cancel: @escaping () -> Void) {
         self.theme = theme
         self.strings = strings
         self.title = title
         self.text = text
-        self.isStars = isStars
+        self.isDiamonds = isDiamonds
         self.cancel = cancel
     }
     
     func isEqual(to: ItemListControllerHeaderItem) -> Bool {
         if let item = to as? CreateGiveawayHeaderItem {
-            return self.theme === item.theme && self.title == item.title && self.text == item.text && self.isStars == item.isStars
+            return self.theme === item.theme && self.title == item.title && self.text == item.text && self.isDiamonds == item.isDiamonds
         } else {
             return false
         }
@@ -134,12 +134,12 @@ class CreateGiveawayHeaderItemNode: ItemListControllerHeaderItemNode {
         let fraction = max(0.0, min(1.0, titleOffset / titleOffsetDelta))
         let titleScale = 1.0 - fraction * 0.18
                 
-        let starPosition = CGPoint(
+        let diamondPosition = CGPoint(
             x: layout.size.width / 2.0,
             y: -contentOffset + 80.0
         )
         if let view = self.hostView {
-            transition.updatePosition(layer: view.layer, position: starPosition)
+            transition.updatePosition(layer: view.layer, position: diamondPosition)
         }
         
         let titlePosition = CGPoint(
@@ -191,7 +191,7 @@ class CreateGiveawayHeaderItemNode: ItemListControllerHeaderItemNode {
                
         let colors: [UIColor]
         let particleColor: UIColor?
-        if self.item.isStars {
+        if self.item.isDiamonds {
             colors = [
                 UIColor(rgb: 0x1a86d9),
                 UIColor(rgb: 0x2a9ef1),

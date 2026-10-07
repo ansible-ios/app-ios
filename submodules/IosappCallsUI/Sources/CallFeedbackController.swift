@@ -312,10 +312,10 @@ public func callFeedbackController(sharedContext: SharedAccountContext, account:
             }
             comment.append(hashtags)
             
-            let _ = rateCallAndSendLogs(engine: IosappEngine(account: account), callId: callId, starsCount: rating, comment: comment, userInitiated: userInitiated, includeLogs: state.includeLogs).start()
+            let _ = rateCallAndSendLogs(engine: IosappEngine(account: account), callId: callId, diamondsCount: rating, comment: comment, userInitiated: userInitiated, includeLogs: state.includeLogs).start()
             dismissImpl?()
             
-            presentControllerImpl?(OverlayStatusController(theme: presentationData.theme, type: .starSuccess(presentationData.strings.CallFeedback_Success)))
+            presentControllerImpl?(OverlayStatusController(theme: presentationData.theme, type: .diamondSuccess(presentationData.strings.CallFeedback_Success)))
         })
         
         let controllerState = ItemListControllerState(presentationData: ItemListPresentationData(presentationData), title: .text(presentationData.strings.CallFeedback_Title), leftNavigationButton: leftNavigationButton, rightNavigationButton: rightNavigationButton, backNavigationButton: ItemListBackButton(title: presentationData.strings.Common_Back))

@@ -15,9 +15,9 @@ public func selectDateFillStaticColor(theme: PresentationTheme, wallpaper: Iosap
     }
 }
 
-public func selectReactionFillStaticColor(theme: PresentationTheme, wallpaper: IosappWallpaper, isStars: Bool = false) -> UIColor {
-    if isStars {
-        return theme.chat.message.freeform.withoutWallpaper.reactionStarsInactiveBackground
+public func selectReactionFillStaticColor(theme: PresentationTheme, wallpaper: IosappWallpaper, isDiamonds: Bool = false) -> UIColor {
+    if isDiamonds {
+        return theme.chat.message.freeform.withoutWallpaper.reactionDiamondsInactiveBackground
     }
     
     if case .color = wallpaper {
@@ -596,10 +596,10 @@ public func makeDefaultDayPresentationTheme(extendingThemeReference: Presentatio
                     reactionInactiveForeground: defaultDayAccentColor,
                     reactionActiveBackground: defaultDayAccentColor,
                     reactionActiveForeground: .clear,
-                    reactionStarsInactiveBackground: UIColor(rgb: 0xFEF1D4, alpha: 1.0),
-                    reactionStarsInactiveForeground: UIColor(rgb: 0xD3720A),
-                    reactionStarsActiveBackground: UIColor(rgb: 0xFFBC2E, alpha: 1.0),
-                    reactionStarsActiveForeground: .white,
+                    reactionDiamondsInactiveBackground: UIColor(rgb: 0xFEF1D4, alpha: 1.0),
+                    reactionDiamondsInactiveForeground: UIColor(rgb: 0xD3720A),
+                    reactionDiamondsActiveBackground: UIColor(rgb: 0xFFBC2E, alpha: 1.0),
+                    reactionDiamondsActiveForeground: .white,
                     reactionInactiveMediaPlaceholder: UIColor(rgb: 0xffffff, alpha: 0.2),
                     reactionActiveMediaPlaceholder: UIColor(rgb: 0xffffff, alpha: 0.2)
                 ),
@@ -612,10 +612,10 @@ public func makeDefaultDayPresentationTheme(extendingThemeReference: Presentatio
                     reactionInactiveForeground: defaultDayAccentColor,
                     reactionActiveBackground: defaultDayAccentColor,
                     reactionActiveForeground: .clear,
-                    reactionStarsInactiveBackground: UIColor(rgb: 0xFEF1D4, alpha: 1.0),
-                    reactionStarsInactiveForeground: UIColor(rgb: 0xD3720A),
-                    reactionStarsActiveBackground: UIColor(rgb: 0xFFBC2E, alpha: 1.0),
-                    reactionStarsActiveForeground: .white,
+                    reactionDiamondsInactiveBackground: UIColor(rgb: 0xFEF1D4, alpha: 1.0),
+                    reactionDiamondsInactiveForeground: UIColor(rgb: 0xD3720A),
+                    reactionDiamondsActiveBackground: UIColor(rgb: 0xFFBC2E, alpha: 1.0),
+                    reactionDiamondsActiveForeground: .white,
                     reactionInactiveMediaPlaceholder: UIColor(rgb: 0xffffff, alpha: 0.2),
                     reactionActiveMediaPlaceholder: UIColor(rgb: 0xffffff, alpha: 0.2)
                 )
@@ -651,10 +651,10 @@ public func makeDefaultDayPresentationTheme(extendingThemeReference: Presentatio
                     reactionInactiveForeground: UIColor(rgb: 0x3fc33b),
                     reactionActiveBackground: UIColor(rgb: 0x3fc33b),
                     reactionActiveForeground: .clear,
-                    reactionStarsInactiveBackground: UIColor(rgb: 0xFEF1D4, alpha: 1.0),
-                    reactionStarsInactiveForeground: UIColor(rgb: 0xD3720A),
-                    reactionStarsActiveBackground: UIColor(rgb: 0xFFBC2E, alpha: 1.0),
-                    reactionStarsActiveForeground: .white,
+                    reactionDiamondsInactiveBackground: UIColor(rgb: 0xFEF1D4, alpha: 1.0),
+                    reactionDiamondsInactiveForeground: UIColor(rgb: 0xD3720A),
+                    reactionDiamondsActiveBackground: UIColor(rgb: 0xFFBC2E, alpha: 1.0),
+                    reactionDiamondsActiveForeground: .white,
                     reactionInactiveMediaPlaceholder: UIColor(rgb: 0xffffff, alpha: 0.2),
                     reactionActiveMediaPlaceholder: UIColor(rgb: 0xffffff, alpha: 0.2)
                 ),
@@ -667,10 +667,10 @@ public func makeDefaultDayPresentationTheme(extendingThemeReference: Presentatio
                     reactionInactiveForeground: UIColor(rgb: 0x3fc33b),
                     reactionActiveBackground: UIColor(rgb: 0x3fc33b),
                     reactionActiveForeground: .clear,
-                    reactionStarsInactiveBackground: UIColor(rgb: 0xFEF1D4, alpha: 1.0),
-                    reactionStarsInactiveForeground: UIColor(rgb: 0xD3720A),
-                    reactionStarsActiveBackground: UIColor(rgb: 0xFFBC2E, alpha: 1.0),
-                    reactionStarsActiveForeground: .white,
+                    reactionDiamondsInactiveBackground: UIColor(rgb: 0xFEF1D4, alpha: 1.0),
+                    reactionDiamondsInactiveForeground: UIColor(rgb: 0xD3720A),
+                    reactionDiamondsActiveBackground: UIColor(rgb: 0xFFBC2E, alpha: 1.0),
+                    reactionDiamondsActiveForeground: .white,
                     reactionInactiveMediaPlaceholder: UIColor(rgb: 0xffffff, alpha: 0.2),
                     reactionActiveMediaPlaceholder: UIColor(rgb: 0xffffff, alpha: 0.2)
                 )
@@ -708,10 +708,10 @@ public func makeDefaultDayPresentationTheme(extendingThemeReference: Presentatio
                 reactionInactiveForeground: UIColor(rgb: 0xffffff),
                 reactionActiveBackground: UIColor(rgb: 0xffffff, alpha: 0.8),
                 reactionActiveForeground: UIColor(white: 0.0, alpha: 0.1),
-                reactionStarsInactiveBackground: UIColor(rgb: 0xFEF1D4, alpha: 1.0),
-                reactionStarsInactiveForeground: UIColor(rgb: 0xD3720A),
-                reactionStarsActiveBackground: UIColor(rgb: 0xFFBC2E, alpha: 1.0),
-                reactionStarsActiveForeground: .white,
+                reactionDiamondsInactiveBackground: UIColor(rgb: 0xFEF1D4, alpha: 1.0),
+                reactionDiamondsInactiveForeground: UIColor(rgb: 0xD3720A),
+                reactionDiamondsActiveBackground: UIColor(rgb: 0xFFBC2E, alpha: 1.0),
+                reactionDiamondsActiveForeground: .white,
                 reactionInactiveMediaPlaceholder: UIColor(rgb: 0xffffff, alpha: 0.2),
                 reactionActiveMediaPlaceholder: UIColor(rgb: 0xffffff, alpha: 0.2)
             ),
@@ -724,10 +724,10 @@ public func makeDefaultDayPresentationTheme(extendingThemeReference: Presentatio
                 reactionInactiveForeground: UIColor(rgb: 0xffffff),
                 reactionActiveBackground: UIColor(rgb: 0xffffff, alpha: 0.8),
                 reactionActiveForeground: UIColor(white: 0.0, alpha: 0.1),
-                reactionStarsInactiveBackground: UIColor(rgb: 0xFEF1D4, alpha: 1.0),
-                reactionStarsInactiveForeground: UIColor(rgb: 0xD3720A),
-                reactionStarsActiveBackground: UIColor(rgb: 0xFFBC2E, alpha: 1.0),
-                reactionStarsActiveForeground: .white,
+                reactionDiamondsInactiveBackground: UIColor(rgb: 0xFEF1D4, alpha: 1.0),
+                reactionDiamondsInactiveForeground: UIColor(rgb: 0xD3720A),
+                reactionDiamondsActiveBackground: UIColor(rgb: 0xFFBC2E, alpha: 1.0),
+                reactionDiamondsActiveForeground: .white,
                 reactionInactiveMediaPlaceholder: UIColor(rgb: 0xffffff, alpha: 0.2),
                 reactionActiveMediaPlaceholder: UIColor(rgb: 0xffffff, alpha: 0.2)
             )
@@ -760,10 +760,10 @@ public func makeDefaultDayPresentationTheme(extendingThemeReference: Presentatio
                     reactionInactiveForeground: defaultDayAccentColor,
                     reactionActiveBackground: defaultDayAccentColor,
                     reactionActiveForeground: .clear,
-                    reactionStarsInactiveBackground: UIColor(rgb: 0xFEF1D4, alpha: 1.0),
-                    reactionStarsInactiveForeground: UIColor(rgb: 0xD3720A),
-                    reactionStarsActiveBackground: UIColor(rgb: 0xFFBC2E, alpha: 1.0),
-                    reactionStarsActiveForeground: .white,
+                    reactionDiamondsInactiveBackground: UIColor(rgb: 0xFEF1D4, alpha: 1.0),
+                    reactionDiamondsInactiveForeground: UIColor(rgb: 0xD3720A),
+                    reactionDiamondsActiveBackground: UIColor(rgb: 0xFFBC2E, alpha: 1.0),
+                    reactionDiamondsActiveForeground: .white,
                     reactionInactiveMediaPlaceholder: UIColor(rgb: 0xffffff, alpha: 0.2),
                     reactionActiveMediaPlaceholder: UIColor(rgb: 0xffffff, alpha: 0.2)
                 ),
@@ -776,10 +776,10 @@ public func makeDefaultDayPresentationTheme(extendingThemeReference: Presentatio
                     reactionInactiveForeground: defaultDayAccentColor,
                     reactionActiveBackground: defaultDayAccentColor,
                     reactionActiveForeground: .clear,
-                    reactionStarsInactiveBackground: UIColor(rgb: 0xFEF1D4, alpha: 1.0),
-                    reactionStarsInactiveForeground: UIColor(rgb: 0xD3720A),
-                    reactionStarsActiveBackground: UIColor(rgb: 0xFFBC2E, alpha: 1.0),
-                    reactionStarsActiveForeground: .white,
+                    reactionDiamondsInactiveBackground: UIColor(rgb: 0xFEF1D4, alpha: 1.0),
+                    reactionDiamondsInactiveForeground: UIColor(rgb: 0xD3720A),
+                    reactionDiamondsActiveBackground: UIColor(rgb: 0xFFBC2E, alpha: 1.0),
+                    reactionDiamondsActiveForeground: .white,
                     reactionInactiveMediaPlaceholder: UIColor(rgb: 0xffffff, alpha: 0.2),
                     reactionActiveMediaPlaceholder: UIColor(rgb: 0xffffff, alpha: 0.2)
                 )
@@ -818,10 +818,10 @@ public func makeDefaultDayPresentationTheme(extendingThemeReference: Presentatio
                     reactionInactiveForeground: UIColor(rgb: 0xffffff),
                     reactionActiveBackground: UIColor(rgb: 0xffffff),
                     reactionActiveForeground: .clear,
-                    reactionStarsInactiveBackground: UIColor(rgb: 0xFEF1D4, alpha: 1.0),
-                    reactionStarsInactiveForeground: UIColor(rgb: 0xD3720A),
-                    reactionStarsActiveBackground: UIColor(rgb: 0xFFBC2E, alpha: 1.0),
-                    reactionStarsActiveForeground: .white,
+                    reactionDiamondsInactiveBackground: UIColor(rgb: 0xFEF1D4, alpha: 1.0),
+                    reactionDiamondsInactiveForeground: UIColor(rgb: 0xD3720A),
+                    reactionDiamondsActiveBackground: UIColor(rgb: 0xFFBC2E, alpha: 1.0),
+                    reactionDiamondsActiveForeground: .white,
                     reactionInactiveMediaPlaceholder: UIColor(rgb: 0xffffff, alpha: 0.2),
                     reactionActiveMediaPlaceholder: UIColor(rgb: 0xffffff, alpha: 0.2)
                 ),
@@ -834,10 +834,10 @@ public func makeDefaultDayPresentationTheme(extendingThemeReference: Presentatio
                     reactionInactiveForeground: UIColor(rgb: 0xffffff),
                     reactionActiveBackground: UIColor(rgb: 0xffffff),
                     reactionActiveForeground: .clear,
-                    reactionStarsInactiveBackground: UIColor(rgb: 0xFEF1D4, alpha: 1.0),
-                    reactionStarsInactiveForeground: UIColor(rgb: 0xD3720A),
-                    reactionStarsActiveBackground: UIColor(rgb: 0xFFBC2E, alpha: 1.0),
-                    reactionStarsActiveForeground: .white,
+                    reactionDiamondsInactiveBackground: UIColor(rgb: 0xFEF1D4, alpha: 1.0),
+                    reactionDiamondsInactiveForeground: UIColor(rgb: 0xD3720A),
+                    reactionDiamondsActiveBackground: UIColor(rgb: 0xFFBC2E, alpha: 1.0),
+                    reactionDiamondsActiveForeground: .white,
                     reactionInactiveMediaPlaceholder: UIColor(rgb: 0xffffff, alpha: 0.2),
                     reactionActiveMediaPlaceholder: UIColor(rgb: 0xffffff, alpha: 0.2)
                 )
@@ -875,10 +875,10 @@ public func makeDefaultDayPresentationTheme(extendingThemeReference: Presentatio
                 reactionInactiveForeground: defaultDayAccentColor,
                 reactionActiveBackground: defaultDayAccentColor,
                 reactionActiveForeground: .clear,
-                reactionStarsInactiveBackground: UIColor(rgb: 0xFEF1D4, alpha: 1.0),
-                reactionStarsInactiveForeground: UIColor(rgb: 0xD3720A),
-                reactionStarsActiveBackground: UIColor(rgb: 0xFFBC2E, alpha: 1.0),
-                reactionStarsActiveForeground: .white,
+                reactionDiamondsInactiveBackground: UIColor(rgb: 0xFEF1D4, alpha: 1.0),
+                reactionDiamondsInactiveForeground: UIColor(rgb: 0xD3720A),
+                reactionDiamondsActiveBackground: UIColor(rgb: 0xFFBC2E, alpha: 1.0),
+                reactionDiamondsActiveForeground: .white,
                 reactionInactiveMediaPlaceholder: UIColor(rgb: 0xffffff, alpha: 0.2),
                 reactionActiveMediaPlaceholder: UIColor(rgb: 0xffffff, alpha: 0.2)
             ),
@@ -891,10 +891,10 @@ public func makeDefaultDayPresentationTheme(extendingThemeReference: Presentatio
                 reactionInactiveForeground: defaultDayAccentColor,
                 reactionActiveBackground: defaultDayAccentColor,
                 reactionActiveForeground: .clear,
-                reactionStarsInactiveBackground: UIColor(rgb: 0xFEF1D4, alpha: 1.0),
-                reactionStarsInactiveForeground: UIColor(rgb: 0xD3720A),
-                reactionStarsActiveBackground: UIColor(rgb: 0xFFBC2E, alpha: 1.0),
-                reactionStarsActiveForeground: .white,
+                reactionDiamondsInactiveBackground: UIColor(rgb: 0xFEF1D4, alpha: 1.0),
+                reactionDiamondsInactiveForeground: UIColor(rgb: 0xD3720A),
+                reactionDiamondsActiveBackground: UIColor(rgb: 0xFFBC2E, alpha: 1.0),
+                reactionDiamondsActiveForeground: .white,
                 reactionInactiveMediaPlaceholder: UIColor(rgb: 0xffffff, alpha: 0.2),
                 reactionActiveMediaPlaceholder: UIColor(rgb: 0xffffff, alpha: 0.2)
             )

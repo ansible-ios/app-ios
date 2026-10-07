@@ -153,7 +153,7 @@ class GiftOptionItemNode: ItemListRevealOptionsItemNode {
     private let titleBadge = ComponentView<Empty>()
     private let statusNode: TextNode
     private var statusArrowNode: ASImageNode?
-    private var starsIconNode: ASImageNode?
+    private var diamondsIconNode: ASImageNode?
     
     private var labelBackgroundNode: ASImageNode?
     private let labelNode: TextNode
@@ -459,20 +459,20 @@ class GiftOptionItemNode: ItemListRevealOptionsItemNode {
                     
                     var titleOffset: CGFloat = 0.0
                     if let stars = item.stars {
-                        let starsIconNode: ASImageNode
-                        if let current = strongSelf.starsIconNode {
-                            starsIconNode = current
+                        let diamondsIconNode: ASImageNode
+                        if let current = strongSelf.diamondsIconNode {
+                            diamondsIconNode = current
                         } else {
-                            starsIconNode = ASImageNode()
-                            starsIconNode.displaysAsynchronously = false
-                            strongSelf.addSubnode(starsIconNode)
-                            strongSelf.starsIconNode = starsIconNode
+                            diamondsIconNode = ASImageNode()
+                            diamondsIconNode.displaysAsynchronously = false
+                            strongSelf.addSubnode(diamondsIconNode)
+                            strongSelf.diamondsIconNode = diamondsIconNode
                             
-                            starsIconNode.image = generateStarsIcon(amount: stars)
+                            diamondsIconNode.image = generateDiamondsIcon(amount: stars)
                         }
                         
-                        if let icon = starsIconNode.image {
-                            starsIconNode.frame = CGRect(origin: CGPoint(x: leftInset + editingOffset + avatarInset, y: 10.0), size: icon.size)
+                        if let icon = diamondsIconNode.image {
+                            diamondsIconNode.frame = CGRect(origin: CGPoint(x: leftInset + editingOffset + avatarInset, y: 10.0), size: icon.size)
                             titleOffset += icon.size.width + 3.0
                         }
                     }
@@ -718,7 +718,7 @@ class GiftOptionItemNode: ItemListRevealOptionsItemNode {
     }
 }
 
-private func generateStarsIcon(amount: Int64) -> UIImage {
+private func generateDiamondsIcon(amount: Int64) -> UIImage {
     let stars: [Int64: Int] = [
         15: 1,
         75: 2,

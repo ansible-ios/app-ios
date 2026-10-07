@@ -730,12 +730,12 @@ typedef enum
 
 + (void)load
 {
-    TGSwizzleMethodImplementation(self.class, @selector(table:didSelectRowAtIndex:), @selector(tg_table:didSelectRowAtIndex:));
+    TGSwizzleMethodImplementation(self.class, @selector(table:didSelectRowAtIndex:), @selector(as_table:didSelectRowAtIndex:));
 }
 
-- (void)tg_table:(WKInterfaceTable *)table didSelectRowAtIndex:(NSInteger)rowIndex
+- (void)as_table:(WKInterfaceTable *)table didSelectRowAtIndex:(NSInteger)rowIndex
 {
-    [self tg_table:table didSelectRowAtIndex:rowIndex];
+    [self as_table:table didSelectRowAtIndex:rowIndex];
     
     TGTableDataEntry *tableEntry = [table tableData][rowIndex];
     

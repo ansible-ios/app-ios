@@ -230,7 +230,7 @@ public struct PresentationGroupCallState: Equatable {
     public var defaultParticipantMuteState: DefaultParticipantMuteState?
     public var messagesAreEnabled: Bool
     public var canEnableMessages: Bool
-    public var sendPaidMessageStars: Int64?
+    public var sendPaidMessageDiamonds: Int64?
     public var recordingStartTimestamp: Int32?
     public var title: String?
     public var raisedHand: Bool
@@ -252,7 +252,7 @@ public struct PresentationGroupCallState: Equatable {
         defaultParticipantMuteState: DefaultParticipantMuteState?,
         messagesAreEnabled: Bool,
         canEnableMessages: Bool,
-        sendPaidMessageStars: Int64?,
+        sendPaidMessageDiamonds: Int64?,
         recordingStartTimestamp: Int32?,
         title: String?,
         raisedHand: Bool,
@@ -273,7 +273,7 @@ public struct PresentationGroupCallState: Equatable {
         self.defaultParticipantMuteState = defaultParticipantMuteState
         self.messagesAreEnabled = messagesAreEnabled
         self.canEnableMessages = canEnableMessages
-        self.sendPaidMessageStars = sendPaidMessageStars
+        self.sendPaidMessageDiamonds = sendPaidMessageDiamonds
         self.recordingStartTimestamp = recordingStartTimestamp
         self.title = title
         self.raisedHand = raisedHand
@@ -509,7 +509,7 @@ public protocol PresentationGroupCall: AnyObject {
     func disableScreencast()
     func switchVideoCamera()
     func updateDefaultParticipantsAreMuted(isMuted: Bool)
-    func updateMessagesEnabled(isEnabled: Bool, sendPaidMessageStars: Int64?)
+    func updateMessagesEnabled(isEnabled: Bool, sendPaidMessageDiamonds: Int64?)
     func setVolume(peerId: EnginePeer.Id, volume: Int32, sync: Bool)
     func setRequestedVideoList(items: [PresentationGroupCallRequestedVideo])
     func setSuspendVideoChannelRequests(_ value: Bool)

@@ -109,7 +109,7 @@ func _internal_createPeerExportedInvitation(account: Account, peerId: PeerId, ti
             if let _ = subscriptionPricing {
                 flags |= (1 << 5)
             }
-            return account.network.request(Api.functions.messages.exportChatInvite(flags: flags, peer: inputPeer, expireDate: expireDate, usageLimit: usageLimit, title: title, subscriptionPricing: subscriptionPricing?.apiStarsSubscriptionPricing))
+            return account.network.request(Api.functions.messages.exportChatInvite(flags: flags, peer: inputPeer, expireDate: expireDate, usageLimit: usageLimit, title: title, subscriptionPricing: subscriptionPricing?.apiDiamondsSubscriptionPricing))
             |> mapError { _ in return CreatePeerExportedInvitationError.generic }
             |> map { result -> ExportedInvitation? in
                 return ExportedInvitation(apiExportedInvite: result)

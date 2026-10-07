@@ -521,7 +521,7 @@ final class ChatbotSetupScreenComponent: Component {
             }
         }
         
-        private func presentStarGiftsWarningIfNeeded(_ key: IosappBusinessBotRights, completion: @escaping (Bool) -> Void) -> Bool {
+        private func presentDiamondGiftsWarningIfNeeded(_ key: IosappBusinessBotRights, completion: @escaping (Bool) -> Void) -> Bool {
             guard let component = self.component, let environment = self.environment, let botResolutionState = self.botResolutionState, case let .found(peer, _) = botResolutionState.state, let controller = environment.controller() else {
                 return false
             }
@@ -1214,7 +1214,7 @@ final class ChatbotSetupScreenComponent: Component {
                                         }
                                         self.temporaryEnabledPermissions.insert(permission.id)
                                        
-                                        let presentedWarning = self.presentStarGiftsWarningIfNeeded(combinedKey, completion: { [weak self] value in
+                                        let presentedWarning = self.presentDiamondGiftsWarningIfNeeded(combinedKey, completion: { [weak self] value in
                                             guard let self else {
                                                 return
                                             }
@@ -1297,7 +1297,7 @@ final class ChatbotSetupScreenComponent: Component {
                                         }
                                         if let key = subpermission.key {
                                             if !value {
-                                                let _ = self.presentStarGiftsWarningIfNeeded(key, completion: { [weak self] value in
+                                                let _ = self.presentDiamondGiftsWarningIfNeeded(key, completion: { [weak self] value in
                                                     guard let self else {
                                                         return
                                                     }

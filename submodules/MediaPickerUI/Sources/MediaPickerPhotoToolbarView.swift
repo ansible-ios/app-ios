@@ -208,8 +208,8 @@ private final class MediaPickerPhotoToolbarComponent: Component {
     let qualityHighQuality: Bool
     let qualityPreset: Int
     let timerValue: Int
-    let hasSendStarsButton: Bool
-    let sendPaidMessageStars: Int64
+    let hasSendDiamondsButton: Bool
+    let sendPaidMessageDiamonds: Int64
     let editButtonsHidden: Bool
     let editButtonsEnabled: Bool
     let centerButtonsHidden: Bool
@@ -237,8 +237,8 @@ private final class MediaPickerPhotoToolbarComponent: Component {
         qualityHighQuality: Bool,
         qualityPreset: Int,
         timerValue: Int,
-        hasSendStarsButton: Bool,
-        sendPaidMessageStars: Int64,
+        hasSendDiamondsButton: Bool,
+        sendPaidMessageDiamonds: Int64,
         editButtonsHidden: Bool,
         editButtonsEnabled: Bool,
         centerButtonsHidden: Bool,
@@ -265,8 +265,8 @@ private final class MediaPickerPhotoToolbarComponent: Component {
         self.qualityHighQuality = qualityHighQuality
         self.qualityPreset = qualityPreset
         self.timerValue = timerValue
-        self.hasSendStarsButton = hasSendStarsButton
-        self.sendPaidMessageStars = sendPaidMessageStars
+        self.hasSendDiamondsButton = hasSendDiamondsButton
+        self.sendPaidMessageDiamonds = sendPaidMessageDiamonds
         self.editButtonsHidden = editButtonsHidden
         self.editButtonsEnabled = editButtonsEnabled
         self.centerButtonsHidden = centerButtonsHidden
@@ -319,10 +319,10 @@ private final class MediaPickerPhotoToolbarComponent: Component {
         if lhs.timerValue != rhs.timerValue {
             return false
         }
-        if lhs.hasSendStarsButton != rhs.hasSendStarsButton {
+        if lhs.hasSendDiamondsButton != rhs.hasSendDiamondsButton {
             return false
         }
-        if lhs.sendPaidMessageStars != rhs.sendPaidMessageStars {
+        if lhs.sendPaidMessageDiamonds != rhs.sendPaidMessageDiamonds {
             return false
         }
         if lhs.editButtonsHidden != rhs.editButtonsHidden {
@@ -589,7 +589,7 @@ private final class MediaPickerPhotoToolbarComponent: Component {
             if availableSize.width > availableSize.height {
                 let cancelFrame = CGRect(origin: CGPoint(x: sideInset, y: 0.0), size: cancelSize)
                 let doneFrame: CGRect
-                if component.hasSendStarsButton {
+                if component.hasSendDiamondsButton {
                     doneFrame = CGRect(x: availableSize.width - doneSize.width - 2.0, y: 0.0, width: doneSize.width, height: doneSize.height)
                 } else {
                     doneFrame = CGRect(x: availableSize.width - doneSize.width - sideInset, y: 0.0, width: doneSize.width, height: doneSize.height)
@@ -815,7 +815,7 @@ private final class MediaPickerPhotoToolbarComponent: Component {
 
             if availableSize.width > availableSize.height {
                 let leftEdge = toolbarSideButtonSide
-                let rightEdge: CGFloat = component.hasSendStarsButton ? doneSize.width + 2.0 : toolbarSideButtonSide
+                let rightEdge: CGFloat = component.hasSendDiamondsButton ? doneSize.width + 2.0 : toolbarSideButtonSide
                 let availableWidth = availableSize.width - leftEdge - rightEdge
                 let startX = floorToScreenPixels(leftEdge + (availableWidth - totalLength) / 2.0)
 
@@ -887,14 +887,14 @@ private final class MediaPickerPhotoToolbarComponent: Component {
     }
 }
 
-public func makeMediaPickerPhotoToolbarView(context: AccountContext, backButton: TGPhotoEditorBackButton, doneButton: TGPhotoEditorDoneButton, solidBackground: Bool, hasSendStarsButton: Bool) -> (UIView & TGPhotoToolbarViewProtocol)? {
-    return MediaPickerPhotoToolbarView(context: context, backButton: backButton, doneButton: doneButton, solidBackground: solidBackground, hasSendStarsButton: hasSendStarsButton)
+public func makeMediaPickerPhotoToolbarView(context: AccountContext, backButton: TGPhotoEditorBackButton, doneButton: TGPhotoEditorDoneButton, solidBackground: Bool, hasSendDiamondsButton: Bool) -> (UIView & TGPhotoToolbarViewProtocol)? {
+    return MediaPickerPhotoToolbarView(context: context, backButton: backButton, doneButton: doneButton, solidBackground: solidBackground, hasSendDiamondsButton: hasSendDiamondsButton)
 }
 
 final class MediaPickerPhotoToolbarView: UIView, TGPhotoToolbarViewProtocol {
     private let context: AccountContext
     private let solidBackground: Bool
-    private let hasSendStarsButton: Bool
+    private let hasSendDiamondsButton: Bool
     private let rootView = ComponentView<Empty>()
 
     private var transitionedOut = false
@@ -940,7 +940,7 @@ final class MediaPickerPhotoToolbarView: UIView, TGPhotoToolbarViewProtocol {
         }
     }
 
-    var sendPaidMessageStars: Int64 = 0 {
+    var sendPaidMessageDiamonds: Int64 = 0 {
         didSet {
             self.update(transition: ComponentTransition(animation: .curve(duration: 0.2, curve: .easeInOut)))
         }
@@ -974,12 +974,12 @@ final class MediaPickerPhotoToolbarView: UIView, TGPhotoToolbarViewProtocol {
         return (self.rootView.view as? MediaPickerPhotoToolbarComponent.View)?.doneButtonFrame ?? .zero
     }
 
-    init(context: AccountContext, backButton: TGPhotoEditorBackButton, doneButton: TGPhotoEditorDoneButton, solidBackground: Bool, hasSendStarsButton: Bool) {
+    init(context: AccountContext, backButton: TGPhotoEditorBackButton, doneButton: TGPhotoEditorDoneButton, solidBackground: Bool, hasSendDiamondsButton: Bool) {
         self.context = context
         self.backButtonType = backButton
         self.doneButtonType = doneButton
         self.solidBackground = solidBackground
-        self.hasSendStarsButton = hasSendStarsButton
+        self.hasSendDiamondsButton = hasSendDiamondsButton
 
         super.init(frame: .zero)
 
@@ -1137,8 +1137,8 @@ final class MediaPickerPhotoToolbarView: UIView, TGPhotoToolbarViewProtocol {
                     qualityHighQuality: self.qualityHighQuality,
                     qualityPreset: self.qualityPreset,
                     timerValue: self.timerValue,
-                    hasSendStarsButton: self.hasSendStarsButton,
-                    sendPaidMessageStars: self.sendPaidMessageStars,
+                    hasSendDiamondsButton: self.hasSendDiamondsButton,
+                    sendPaidMessageDiamonds: self.sendPaidMessageDiamonds,
                     editButtonsHidden: self.editButtonsHidden,
                     editButtonsEnabled: self.editButtonsEnabled,
                     centerButtonsHidden: self.centerButtonsHidden,

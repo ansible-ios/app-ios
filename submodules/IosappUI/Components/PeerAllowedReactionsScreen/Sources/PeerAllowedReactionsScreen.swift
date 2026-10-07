@@ -99,7 +99,7 @@ final class PeerAllowedReactionsScreenComponent: Component {
         private var allowedReactionCount: Int = 11
         private var appliedReactionSettings: PeerReactionSettings?
         
-        private var areStarsReactionsEnabled: Bool = true
+        private var areDiamondsReactionsEnabled: Bool = true
         
         private var emojiContent: EmojiPagerContentComponent?
         private var emojiContentDisposable: Disposable?
@@ -197,7 +197,7 @@ final class PeerAllowedReactionsScreenComponent: Component {
                 allowedReactions = .empty
             }
             
-            let reactionSettings = PeerReactionSettings(allowedReactions: allowedReactions, maxReactionCount: self.allowedReactionCount >= 11 ? nil : Int32(self.allowedReactionCount), starsAllowed: self.isEnabled && self.areStarsReactionsEnabled)
+            let reactionSettings = PeerReactionSettings(allowedReactions: allowedReactions, maxReactionCount: self.allowedReactionCount >= 11 ? nil : Int32(self.allowedReactionCount), diamondsAllowed: self.isEnabled && self.areDiamondsReactionsEnabled)
             
             if self.appliedReactionSettings != reactionSettings {
                 if case .empty = allowedReactions {
@@ -292,7 +292,7 @@ final class PeerAllowedReactionsScreenComponent: Component {
             } else {
                 allowedReactions = .empty
             }
-            let reactionSettings = PeerReactionSettings(allowedReactions: allowedReactions, maxReactionCount: self.allowedReactionCount == 11 ? nil : Int32(self.allowedReactionCount), starsAllowed: self.isEnabled && self.areStarsReactionsEnabled)
+            let reactionSettings = PeerReactionSettings(allowedReactions: allowedReactions, maxReactionCount: self.allowedReactionCount == 11 ? nil : Int32(self.allowedReactionCount), diamondsAllowed: self.isEnabled && self.areDiamondsReactionsEnabled)
             
             let applyDisposable = (component.context.engine.peers.updatePeerReactionSettings(peerId: component.peerId, reactionSettings: reactionSettings)
             |> deliverOnMainQueue).start(error: { [weak self] error in
@@ -399,14 +399,14 @@ final class PeerAllowedReactionsScreenComponent: Component {
             if let current = self.enabledReactions {
                 enabledReactions = current
             } else {
-                if let value = component.initialContent.reactionSettings?.starsAllowed {
-                    self.areStarsReactionsEnabled = value
+                if let value = component.initialContent.reactionSettings?.diamondsAllowed {
+                    self.areDiamondsReactionsEnabled = value
                 } else {
-                    self.areStarsReactionsEnabled = component.initialContent.isStarReactionAvailable
+                    self.areDiamondsReactionsEnabled = component.initialContent.isDiamondReactionAvailable
                 }
                 
                 var enabledReactionsValue = component.initialContent.enabledReactions
-                if self.areStarsReactionsEnabled {
+                if self.areDiamondsReactionsEnabled {
                     if let item = component.initialContent.availableReactions?.reactions.first(where: { $0.value == .stars }) {
                         enabledReactionsValue.insert(EmojiComponentReactionItem(reaction: item.value, file: item.selectAnimation), at: 0)
                     }
@@ -420,7 +420,7 @@ final class PeerAllowedReactionsScreenComponent: Component {
                     return PeerReactionSettings(
                         allowedReactions: reactionSettings.allowedReactions,
                         maxReactionCount: reactionSettings.maxReactionCount == 11 ? nil : reactionSettings.maxReactionCount,
-                        starsAllowed: reactionSettings.starsAllowed
+                        diamondsAllowed: reactionSettings.diamondsAllowed
                     )
                 }
                 self.allowedReactionCount = (component.initialContent.reactionSettings?.maxReactionCount).flatMap(Int.init) ?? 11
@@ -1021,7 +1021,7 @@ final class PeerAllowedReactionsScreenComponent: Component {
                                             enabledReactions.append(EmojiComponentReactionItem(reaction: reactionItem.value, file: reactionItem.selectAnimation))
                                         }
                                     }
-                                    if self.areStarsReactionsEnabled {
+                                    if self.areDiamondsReactionsEnabled {
                                         if let item = component.initialContent.availableReactions?.reactions.first(where: { $0.value == .stars }) {
                                             enabledReactions.insert(EmojiComponentReactionItem(reaction: item.value, file: item.selectAnimation), at: 0)
                                         }
@@ -1330,7 +1330,7 @@ final class PeerAllowedReactionsScreenComponent: Component {
                 }
                 contentHeight += reactionCountSectionSize.height
                 
-                if component.initialContent.isStarReactionAvailable {
+                if component.initialContent.isDiamondReactionAvailable {
                     contentHeight += 32.0
                     
                     let paidReactionsSection: ComponentView<Empty>
@@ -1388,15 +1388,15 @@ final class PeerAllowedReactionsScreenComponent: Component {
                                 AnyComponentWithIdentity(id: 0, component: AnyComponent(ListSwitchItemComponent(
                                     theme: environment.theme,
                                     title: environment.strings.PeerInfo_AllowedReactions_DiamondReactions,
-                                    value: self.areStarsReactionsEnabled,
+                                    value: self.areDiamondsReactionsEnabled,
                                     valueUpdated: { [weak self] value in
                                         guard let self, let component = self.component else {
                                             return
                                         }
-                                        self.areStarsReactionsEnabled = value
+                                        self.areDiamondsReactionsEnabled = value
                                         
                                         var enabledReactions = self.enabledReactions ?? []
-                                        if self.areStarsReactionsEnabled {
+                                        if self.areDiamondsReactionsEnabled {
                                             if let item = component.initialContent.availableReactions?.reactions.first(where: { $0.value == .stars }) {
                                                 enabledReactions.insert(EmojiComponentReactionItem(reaction: item.value, file: item.selectAnimation), at: 0)
                                                 if let caretPosition = self.caretPosition {
@@ -1618,7 +1618,7 @@ final class PeerAllowedReactionsScreenComponent: Component {
                             self.enabledReactions = enabledReactions
                             
                             if !enabledReactions.contains(where: { $0.reaction == .stars }) {
-                                self.areStarsReactionsEnabled = false
+                                self.areDiamondsReactionsEnabled = false
                             }
                             
                             if !self.isUpdating {
@@ -1726,20 +1726,20 @@ public class PeerAllowedReactionsScreen: ViewControllerComponentContainer {
         public let enabledReactions: [EmojiComponentReactionItem]
         public let availableReactions: AvailableReactions?
         public let reactionSettings: PeerReactionSettings?
-        public let isStarReactionAvailable: Bool
+        public let isDiamondReactionAvailable: Bool
         
         init(
             isEnabled: Bool,
             enabledReactions: [EmojiComponentReactionItem],
             availableReactions: AvailableReactions?,
             reactionSettings: PeerReactionSettings?,
-            isStarReactionAvailable: Bool
+            isDiamondReactionAvailable: Bool
         ) {
             self.isEnabled = isEnabled
             self.enabledReactions = enabledReactions
             self.availableReactions = availableReactions
             self.reactionSettings = reactionSettings
-            self.isStarReactionAvailable = isStarReactionAvailable
+            self.isDiamondReactionAvailable = isDiamondReactionAvailable
         }
         
         public static func ==(lhs: Content, rhs: Content) -> Bool {
@@ -1758,7 +1758,7 @@ public class PeerAllowedReactionsScreen: ViewControllerComponentContainer {
             if lhs.reactionSettings != rhs.reactionSettings {
                 return false
             }
-            if lhs.isStarReactionAvailable != rhs.isStarReactionAvailable {
+            if lhs.isDiamondReactionAvailable != rhs.isDiamondReactionAvailable {
                 return false
             }
             return true
@@ -1841,7 +1841,7 @@ public class PeerAllowedReactionsScreen: ViewControllerComponentContainer {
                 case .empty:
                     isEnabled = false
                 }
-                if let starsAllowed = reactionSettings.starsAllowed, starsAllowed {
+                if let diamondsAllowed = reactionSettings.diamondsAllowed, diamondsAllowed {
                     isEnabled = true
                 }
             }
@@ -1874,7 +1874,7 @@ public class PeerAllowedReactionsScreen: ViewControllerComponentContainer {
                     }
                 }
                 
-                return Content(isEnabled: isEnabled, enabledReactions: result, availableReactions: availableReactions, reactionSettings: reactionSettings, isStarReactionAvailable: cachedData.flags.contains(.paidMediaAllowed))
+                return Content(isEnabled: isEnabled, enabledReactions: result, availableReactions: availableReactions, reactionSettings: reactionSettings, isDiamondReactionAvailable: cachedData.flags.contains(.paidMediaAllowed))
             }
         }
         |> distinctUntilChanged

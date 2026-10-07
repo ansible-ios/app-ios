@@ -322,7 +322,7 @@ public final class ChatControllerInteraction: ChatControllerInteractionProtocol 
     public let updateChatLocationThread: (Int64?, ChatControllerAnimateInnerChatSwitchDirection?) -> Void
     public let requestToggleTodoMessageItem: (EngineMessage.Id, Int32, Bool) -> Void
     public let displayTodoToggleUnavailable: (EngineMessage.Id) -> Void
-    public let openStarsPurchase: (Int64?) -> Void
+    public let openDiamondsPurchase: (Int64?) -> Void
     public let openRankInfo: (EnginePeer, ChatRankInfoScreenRole, String) -> Void
     public let openSetPeerAvatar: () -> Void
     public let displayPollRestrictedToast: (EngineMessage.Id) -> Void
@@ -504,7 +504,7 @@ public final class ChatControllerInteraction: ChatControllerInteractionProtocol 
         displayTodoToggleUnavailable: @escaping (EngineMessage.Id) -> Void,
         canEditMessageRichText: @escaping (EngineRawMessage) -> Bool = { _ in false },
         toggleMessageRichTextCheckbox: @escaping (EngineMessage.Id, [Int], Bool) -> Void = { _, _, _ in },
-        openStarsPurchase: @escaping (Int64?) -> Void,
+        openDiamondsPurchase: @escaping (Int64?) -> Void,
         openRankInfo: @escaping (EnginePeer, ChatRankInfoScreenRole, String) -> Void,
         openSetPeerAvatar: @escaping () -> Void,
         displayPollRestrictedToast: @escaping (EngineMessage.Id) -> Void,
@@ -639,7 +639,7 @@ public final class ChatControllerInteraction: ChatControllerInteractionProtocol 
         self.updateChatLocationThread = updateChatLocationThread
         self.requestToggleTodoMessageItem = requestToggleTodoMessageItem
         self.displayTodoToggleUnavailable = displayTodoToggleUnavailable
-        self.openStarsPurchase = openStarsPurchase
+        self.openDiamondsPurchase = openDiamondsPurchase
         self.openRankInfo = openRankInfo
         self.openSetPeerAvatar = openSetPeerAvatar
         self.displayPollRestrictedToast = displayPollRestrictedToast

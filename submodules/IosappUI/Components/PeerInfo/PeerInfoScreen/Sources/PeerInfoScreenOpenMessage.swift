@@ -230,8 +230,8 @@ extension PeerInfoScreenNode {
                         transitionCompletion()
                     }, getCaptionPanelView: {
                         return nil
-                    }, photoToolbarView: { [context = strongSelf.context] backButton, doneButton, solidBackground, hasSendStarsButton in
-                        return makeMediaPickerPhotoToolbarView(context: context, backButton: backButton, doneButton: doneButton, solidBackground: solidBackground, hasSendStarsButton: hasSendStarsButton)
+                    }, photoToolbarView: { [context = strongSelf.context] backButton, doneButton, solidBackground, hasSendDiamondsButton in
+                        return makeMediaPickerPhotoToolbarView(context: context, backButton: backButton, doneButton: doneButton, solidBackground: solidBackground, hasSendDiamondsButton: hasSendDiamondsButton)
                     }, hasSilentPosting: hasSilentPosting, hasSchedule: hasSchedule, reminder: peer.id == strongSelf.context.account.peerId, presentSchedulePicker: { [weak self] _, done in
                         self?.presentMediaScheduleTimePicker(completion: { time, silentPosting in
                             done(time, silentPosting)

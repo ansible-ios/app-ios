@@ -1212,8 +1212,8 @@ private:
                     mappedBuffer = [[CallVideoFrameNativePixelBuffer alloc] initWithPixelBuffer:pixelBuffer.pixelBuffer];
                 }
                 if ([nativeBuffer isKindOfClass:[TGRTCCVPixelBuffer class]]) {
-                    TGRTCCVPixelBuffer *tgNativeBuffer = (TGRTCCVPixelBuffer *)nativeBuffer;
-                    if (tgNativeBuffer.shouldBeMirrored) {
+                    TGRTCCVPixelBuffer *asNativeBuffer = (TGRTCCVPixelBuffer *)nativeBuffer;
+                    if (asNativeBuffer.shouldBeMirrored) {
                         switch (videoFrame.rotation()) {
                             case webrtc::kVideoRotation_0:
                             case webrtc::kVideoRotation_180:
@@ -1227,9 +1227,9 @@ private:
                                 break;
                         }
                     }
-                    if (tgNativeBuffer.deviceRelativeVideoRotation != -1) {
+                    if (asNativeBuffer.deviceRelativeVideoRotation != -1) {
                         hasDeviceRelativeVideoRotation = true;
-                        switch (tgNativeBuffer.deviceRelativeVideoRotation) {
+                        switch (asNativeBuffer.deviceRelativeVideoRotation) {
                             case webrtc::kVideoRotation_0:
                                 deviceRelativeVideoRotation = OngoingCallVideoOrientation0;
                                 break;

@@ -129,7 +129,7 @@ public extension EmojiPagerContentComponent {
         if case .status = subject {
             orderedItemListCollectionIds.append(Namespaces.OrderedItemList.CloudFeaturedStatusEmoji)
             orderedItemListCollectionIds.append(Namespaces.OrderedItemList.CloudRecentStatusEmoji)
-            orderedItemListCollectionIds.append(Namespaces.OrderedItemList.CloudUniqueStarGifts)
+            orderedItemListCollectionIds.append(Namespaces.OrderedItemList.CloudUniqueDiamondGifts)
             
             iconStatusEmoji = context.engine.stickers.loadedStickerPack(reference: .iconStatusEmoji, forceActualized: false)
             |> map { result -> [IosappMediaFile] in
@@ -351,7 +351,7 @@ public extension EmojiPagerContentComponent {
             var defaultTagReactions: OrderedItemListView?
             var uniqueGifts: OrderedItemListView?
             for orderedView in view.orderedItemListsViews {
-                if orderedView.collectionId == Namespaces.OrderedItemList.CloudUniqueStarGifts {
+                if orderedView.collectionId == Namespaces.OrderedItemList.CloudUniqueDiamondGifts {
                     uniqueGifts = orderedView
                 } else if orderedView.collectionId == Namespaces.OrderedItemList.LocalRecentEmoji {
                     recentEmoji = orderedView
@@ -460,7 +460,7 @@ public extension EmojiPagerContentComponent {
             } else if case .status = subject {
                 let resultItem = EmojiPagerContentComponent.Item(
                     animationData: nil,
-                    content: .icon(.premiumStar),
+                    content: .icon(.premiumDiamond),
                     itemFile: nil,
                     subgroupId: nil,
                     icon: .none,
@@ -612,7 +612,7 @@ public extension EmojiPagerContentComponent {
                     }
                     
                     for item in uniqueGifts.items {
-                        guard let item = item.contents.get(RecentStarGiftItem.self) else {
+                        guard let item = item.contents.get(RecentDiamondGiftItem.self) else {
                             continue
                         }
                         guard let animationData = EntityKeyboardAnimationData(gift: item.starGift) else {

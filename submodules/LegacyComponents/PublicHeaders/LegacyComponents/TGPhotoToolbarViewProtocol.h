@@ -51,7 +51,7 @@ typedef enum
 @property (nonatomic, assign) TGPhotoEditorBackButton backButtonType;
 @property (nonatomic, assign) TGPhotoEditorDoneButton doneButtonType;
 
-@property (nonatomic, assign) int64_t sendPaidMessageStars;
+@property (nonatomic, assign) int64_t sendPaidMessageDiamonds;
 
 @property (nonatomic, readonly) TGPhotoEditorTab currentTabs;
 

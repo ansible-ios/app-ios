@@ -4,12 +4,12 @@ import MtProtoKit
 import SwiftSignalKit
 import IosappApi
 
-func _internal_rateCall(account: Account, callId: CallId, starsCount: Int32, comment: String = "", userInitiated: Bool) -> Signal<Void, NoError> {
+func _internal_rateCall(account: Account, callId: CallId, diamondsCount: Int32, comment: String = "", userInitiated: Bool) -> Signal<Void, NoError> {
     var flags: Int32 = 0
     if userInitiated {
         flags |= (1 << 0)
     }
-    return account.network.request(Api.functions.phone.setCallRating(flags: flags, peer: Api.InputPhoneCall.inputPhoneCall(.init(id: callId.id, accessHash: callId.accessHash)), rating: starsCount, comment: comment))
+    return account.network.request(Api.functions.phone.setCallRating(flags: flags, peer: Api.InputPhoneCall.inputPhoneCall(.init(id: callId.id, accessHash: callId.accessHash)), rating: diamondsCount, comment: comment))
     |> retryRequest
     |> map { _ in }
 }

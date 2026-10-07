@@ -11,7 +11,7 @@ import IosappCallsUI
 import AsyncListComponent
 import AvatarNode
 import ContextUI
-import StarsParticleEffect
+import DiamondsParticleEffect
 import StoryLiveChatMessageComponent
 import PeerNameTextComponent
 
@@ -66,7 +66,7 @@ private final class PinnedBarMessageComponent: Component {
         private let backgroundView: UIImageView
         private let foregroundClippingView: UIView
         private let foregroundView: UIImageView
-        private let effectLayer: StarsParticleEffectLayer
+        private let effectLayer: DiamondsParticleEffectLayer
         
         private var avatarNode: AvatarNode?
         private let title = ComponentView<Empty>()
@@ -86,7 +86,7 @@ private final class PinnedBarMessageComponent: Component {
             self.foregroundClippingView = UIView()
             self.foregroundClippingView.clipsToBounds = true
             self.foregroundView = UIImageView()
-            self.effectLayer = StarsParticleEffectLayer()
+            self.effectLayer = DiamondsParticleEffectLayer()
             
             super.init(frame: frame)
             
@@ -163,7 +163,7 @@ private final class PinnedBarMessageComponent: Component {
             self.containerNode.isGestureEnabled = component.contextGesture != nil
             
             let params = LiveChatMessageParams(appConfig: component.context.currentAppConfiguration.with({ $0 }))
-            let baseColor = StoryLiveChatMessageComponent.getMessageColor(color: GroupCallMessagesContext.getStarAmountParamMapping(params: params, value: component.message.paidStars ?? 0).color ?? GroupCallMessagesContext.Message.Color(rawValue: 0x985FDC))
+            let baseColor = StoryLiveChatMessageComponent.getMessageColor(color: GroupCallMessagesContext.getDiamondAmountParamMapping(params: params, value: component.message.paidDiamonds ?? 0).color ?? GroupCallMessagesContext.Message.Color(rawValue: 0x985FDC))
             
             let itemHeight: CGFloat = 32.0
             let avatarInset: CGFloat = 4.0

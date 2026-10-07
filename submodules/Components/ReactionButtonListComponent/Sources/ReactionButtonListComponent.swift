@@ -21,7 +21,7 @@ private let tagImage: UIImage? = {
     return generateTintedImage(image: UIImage(bundleImageName: "Chat/Message/ReactionTagBackground"), color: .white)?.stretchableImage(withLeftCapWidth: 8, topCapHeight: 15)
 }()
 
-private final class StarsButtonEffectLayer: SimpleLayer {
+private final class DiamondsButtonEffectLayer: SimpleLayer {
     let emitterLayer = CAEmitterLayer()
     
     override init() {
@@ -930,10 +930,10 @@ public final class ReactionButtonAsyncNode: ContextControllerSourceView {
             
             if case .stars = spec.component.reaction.value {
                 backgroundColors = ReactionButtonAsyncNode.ContainerButtonNode.Colors(
-                    background: spec.component.chosenOrder != nil ? spec.component.colors.selectedStarsBackground : spec.component.colors.deselectedStarsBackground,
-                    foreground: spec.component.chosenOrder != nil ? spec.component.colors.selectedStarsForeground : spec.component.colors.deselectedStarsForeground,
-                    extractedBackground: spec.component.chosenOrder != nil ? spec.component.colors.selectedStarsBackground : spec.component.colors.deselectedStarsBackground,
-                    extractedForeground: spec.component.chosenOrder != nil ? spec.component.colors.selectedStarsForeground : spec.component.colors.deselectedStarsForeground,
+                    background: spec.component.chosenOrder != nil ? spec.component.colors.selectedDiamondsBackground : spec.component.colors.deselectedDiamondsBackground,
+                    foreground: spec.component.chosenOrder != nil ? spec.component.colors.selectedDiamondsForeground : spec.component.colors.deselectedDiamondsForeground,
+                    extractedBackground: spec.component.chosenOrder != nil ? spec.component.colors.selectedDiamondsBackground : spec.component.colors.deselectedDiamondsBackground,
+                    extractedForeground: spec.component.chosenOrder != nil ? spec.component.colors.selectedDiamondsForeground : spec.component.colors.deselectedDiamondsForeground,
                     extractedSelectedForeground: spec.component.colors.extractedSelectedForeground,
                     isSelected: spec.component.chosenOrder != nil
                 )
@@ -982,7 +982,7 @@ public final class ReactionButtonAsyncNode: ContextControllerSourceView {
     
     public let containerView: ContextExtractedContentContainingView
     private let buttonNode: ContainerButtonNode
-    private var starsEffectLayer: StarsButtonEffectLayer?
+    private var diamondsEffectLayer: DiamondsButtonEffectLayer?
     public var iconView: ReactionIconView?
     private var avatarsView: AnimatedAvatarSetView?
     
@@ -994,7 +994,7 @@ public final class ReactionButtonAsyncNode: ContextControllerSourceView {
     private var tapAnimationValue: CGFloat = 0.0
     private var previousTapAnimationTimestamp: Double = 0.0
     private var previousTapTimestamp: Double = 0.0
-    private var tapCounterView: StarsReactionCounterView?
+    private var tapCounterView: DiamondsReactionCounterView?
     
     public var activateAfterCompletion: Bool = false {
         didSet {
@@ -1101,11 +1101,11 @@ public final class ReactionButtonAsyncNode: ContextControllerSourceView {
         layout.spec.component.action(self, layout.spec.component.reaction.value, self.containerView)
         
         if case .stars = layout.spec.component.reaction.value {
-            self.addStarsTap()
+            self.addDiamondsTap()
         }
     }
     
-    private func addStarsTap() {
+    private func addDiamondsTap() {
         let timestamp = CACurrentMediaTime()
         
         self.previousTapTimestamp = timestamp
@@ -1126,7 +1126,7 @@ public final class ReactionButtonAsyncNode: ContextControllerSourceView {
             if let tapCounterView = self.tapCounterView {
                 tapCounterView.add()
             } else {
-                let tapCounterView = StarsReactionCounterView(count: 2)
+                let tapCounterView = DiamondsReactionCounterView(count: 2)
                 self.tapCounterView = tapCounterView
                 self.addSubview(tapCounterView)
                 tapCounterView.animateIn()
@@ -1197,27 +1197,27 @@ public final class ReactionButtonAsyncNode: ContextControllerSourceView {
         animation.animator.updateBounds(layer: self.buttonNode.layer, bounds: CGRect(origin: CGPoint(), size: buttonFrame.size), completion: nil)
         
         if case .stars = layout.spec.component.reaction.value {
-            let starsEffectLayer: StarsButtonEffectLayer
-            if let current = self.starsEffectLayer {
-                starsEffectLayer = current
+            let diamondsEffectLayer: DiamondsButtonEffectLayer
+            if let current = self.diamondsEffectLayer {
+                diamondsEffectLayer = current
             } else {
-                starsEffectLayer = StarsButtonEffectLayer()
-                self.starsEffectLayer = starsEffectLayer
+                diamondsEffectLayer = DiamondsButtonEffectLayer()
+                self.diamondsEffectLayer = diamondsEffectLayer
                 if let iconView = self.iconView {
-                    self.buttonNode.layer.insertSublayer(starsEffectLayer, below: iconView.layer)
+                    self.buttonNode.layer.insertSublayer(diamondsEffectLayer, below: iconView.layer)
                 } else {
-                    self.buttonNode.layer.insertSublayer(starsEffectLayer, at: 0)
+                    self.buttonNode.layer.insertSublayer(diamondsEffectLayer, at: 0)
                 }
             }
-            let starsEffectLayerFrame = CGRect(origin: CGPoint(), size: layout.size)
-            animation.animator.updateFrame(layer: starsEffectLayer, frame: starsEffectLayerFrame, completion: nil)
-            starsEffectLayer.update(size: starsEffectLayerFrame.size)
+            let diamondsEffectLayerFrame = CGRect(origin: CGPoint(), size: layout.size)
+            animation.animator.updateFrame(layer: diamondsEffectLayer, frame: diamondsEffectLayerFrame, completion: nil)
+            diamondsEffectLayer.update(size: diamondsEffectLayerFrame.size)
             
-            starsEffectLayer.opacity = layout.isDark ? 0.55 : 1.0
+            diamondsEffectLayer.opacity = layout.isDark ? 0.55 : 1.0
         } else {
-            if let starsEffectLayer = self.starsEffectLayer {
-                self.starsEffectLayer = nil
-                starsEffectLayer.removeFromSuperlayer()
+            if let diamondsEffectLayer = self.diamondsEffectLayer {
+                self.diamondsEffectLayer = nil
+                diamondsEffectLayer.removeFromSuperlayer()
             }
         }
         
@@ -1368,10 +1368,10 @@ public final class ReactionButtonComponent: Equatable {
         public var deselectedForeground: UInt32
         public var selectedForeground: UInt32
         public var selectedIconTintColor: UInt32
-        public var deselectedStarsBackground: UInt32
-        public var selectedStarsBackground: UInt32
-        public var deselectedStarsForeground: UInt32
-        public var selectedStarsForeground: UInt32
+        public var deselectedDiamondsBackground: UInt32
+        public var selectedDiamondsBackground: UInt32
+        public var deselectedDiamondsForeground: UInt32
+        public var selectedDiamondsForeground: UInt32
         public var extractedBackground: UInt32
         public var extractedForeground: UInt32
         public var extractedSelectedForeground: UInt32
@@ -1385,10 +1385,10 @@ public final class ReactionButtonComponent: Equatable {
             deselectedForeground: UInt32,
             selectedForeground: UInt32,
             selectedIconTintColor: UInt32,
-            deselectedStarsBackground: UInt32,
-            selectedStarsBackground: UInt32,
-            deselectedStarsForeground: UInt32,
-            selectedStarsForeground: UInt32,
+            deselectedDiamondsBackground: UInt32,
+            selectedDiamondsBackground: UInt32,
+            deselectedDiamondsForeground: UInt32,
+            selectedDiamondsForeground: UInt32,
             extractedBackground: UInt32,
             extractedForeground: UInt32,
             extractedSelectedForeground: UInt32,
@@ -1401,10 +1401,10 @@ public final class ReactionButtonComponent: Equatable {
             self.deselectedForeground = deselectedForeground
             self.selectedForeground = selectedForeground
             self.selectedIconTintColor = selectedIconTintColor
-            self.deselectedStarsBackground = deselectedStarsBackground
-            self.selectedStarsBackground = selectedStarsBackground
-            self.deselectedStarsForeground = deselectedStarsForeground
-            self.selectedStarsForeground = selectedStarsForeground
+            self.deselectedDiamondsBackground = deselectedDiamondsBackground
+            self.selectedDiamondsBackground = selectedDiamondsBackground
+            self.deselectedDiamondsForeground = deselectedDiamondsForeground
+            self.selectedDiamondsForeground = selectedDiamondsForeground
             self.extractedBackground = extractedBackground
             self.extractedForeground = extractedForeground
             self.extractedSelectedForeground = extractedSelectedForeground
@@ -1691,7 +1691,7 @@ public final class ReactionButtonsAsyncLayoutContainer {
     }
 }
 
-private final class StarsReactionCounterView: UIView {
+private final class DiamondsReactionCounterView: UIView {
     private let portalSource: PortalSourceView
     private let label = ComponentView<Empty>()
     

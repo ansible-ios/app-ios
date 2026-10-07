@@ -105,13 +105,13 @@ extension ChatControllerImpl {
                 
                 let _ = (context.engine.data.get(
                     EngineDataMap(
-                        peerIds.map(IosappEngine.EngineData.Item.Peer.SendPaidMessageStars.init(id:))
+                        peerIds.map(IosappEngine.EngineData.Item.Peer.SendPaidMessageDiamonds.init(id:))
                     ),
                     EngineDataList(
                         peerIds.map(IosappEngine.EngineData.Item.Peer.RenderedPeer.init(id:))
                     )
                 )
-                |> deliverOnMainQueue).start(next: { [weak self, weak controller] sendPaidMessageStars, renderedPeers in
+                |> deliverOnMainQueue).start(next: { [weak self, weak controller] sendPaidMessageDiamonds, renderedPeers in
                     guard let strongSelf = self else {
                         return
                     }
@@ -124,7 +124,7 @@ extension ChatControllerImpl {
                     var totalAmount: StarsAmount = .zero
                     var chargingPeers: [EngineRenderedPeer] = []
                     for peer in renderedPeers {
-                        if let maybeAmount = sendPaidMessageStars[peer.peerId], let amount = maybeAmount {
+                        if let maybeAmount = sendPaidMessageDiamonds[peer.peerId], let amount = maybeAmount {
                             totalAmount = totalAmount + amount
                             chargingPeers.append(peer)
                         }
@@ -204,11 +204,11 @@ extension ChatControllerImpl {
                                         }
                                     }
                                     
-                                    if let maybeAmount = sendPaidMessageStars[peer.id], let amount = maybeAmount {
+                                    if let maybeAmount = sendPaidMessageDiamonds[peer.id], let amount = maybeAmount {
                                         peerMessages = peerMessages.map { message -> EnqueueMessage in
                                             return message.withUpdatedAttributes { attributes in
                                                 var attributes = attributes
-                                                attributes.append(PaidStarsMessageAttribute(stars: amount, postponeSending: false))
+                                                attributes.append(PaidDiamondsMessageAttribute(stars: amount, postponeSending: false))
                                                 return attributes
                                             }
                                         }

@@ -10,10 +10,10 @@ import IosappVoip
 import AccountContext
 import AlertComponent
 
-func rateCallAndSendLogs(engine: IosappEngine, callId: CallId, starsCount: Int, comment: String, userInitiated: Bool, includeLogs: Bool) -> Signal<Void, NoError> {
+func rateCallAndSendLogs(engine: IosappEngine, callId: CallId, diamondsCount: Int, comment: String, userInitiated: Bool, includeLogs: Bool) -> Signal<Void, NoError> {
     let peerId = EnginePeer.Id(namespace: Namespaces.Peer.CloudUser, id: EnginePeer.Id.Id._internalFromInt64Value(4244000))
 
-    let rate = engine.calls.rateCall(callId: callId, starsCount: Int32(starsCount), comment: comment, userInitiated: userInitiated)
+    let rate = engine.calls.rateCall(callId: callId, diamondsCount: Int32(diamondsCount), comment: comment, userInitiated: userInitiated)
     if includeLogs {
         let id = Int64.random(in: Int64.min ... Int64.max)
         let name = "\(callId.id)_\(callId.accessHash).log.json"
@@ -67,7 +67,7 @@ public func callRatingController(
                 if rating < 4 {
                     push(callFeedbackController(sharedContext: sharedContext, account: account, callId: callId, rating: rating, userInitiated: userInitiated, isVideo: isVideo))
                 } else {
-                    let _ = rateCallAndSendLogs(engine: IosappEngine(account: account), callId: callId, starsCount: rating, comment: "", userInitiated: userInitiated, includeLogs: false).start()
+                    let _ = rateCallAndSendLogs(engine: IosappEngine(account: account), callId: callId, diamondsCount: rating, comment: "", userInitiated: userInitiated, includeLogs: false).start()
                 }
             })
         )
@@ -103,7 +103,7 @@ private final class AlertCallRatingComponent: Component {
     
     public final class View: UIView {
         private var containerView: UIView
-        private let starButtons: [HighlightTrackingButton]
+        private let diamondButtons: [HighlightTrackingButton]
         
         var rating: Int?
         
@@ -113,19 +113,19 @@ private final class AlertCallRatingComponent: Component {
         public override init(frame: CGRect) {
             self.containerView = UIView()
             
-            var starButtons: [HighlightTrackingButton] = []
+            var diamondButtons: [HighlightTrackingButton] = []
             for _ in 0 ..< 5 {
-                starButtons.append(HighlightTrackingButton())
+                diamondButtons.append(HighlightTrackingButton())
             }
-            self.starButtons = starButtons
+            self.diamondButtons = diamondButtons
             
             super.init(frame: frame)
             
             self.addSubview(self.containerView)
             
-            for button in self.starButtons {
-                button.addTarget(self, action: #selector(self.starPressed(_:)), for: .touchDown)
-                button.addTarget(self, action: #selector(self.starReleased(_:)), for: .touchUpInside)
+            for button in self.diamondButtons {
+                button.addTarget(self, action: #selector(self.diamondPressed(_:)), for: .touchDown)
+                button.addTarget(self, action: #selector(self.diamondReleased(_:)), for: .touchUpInside)
                 self.containerView.addSubview(button)
             }
             
@@ -139,7 +139,7 @@ private final class AlertCallRatingComponent: Component {
         @objc func panGesture(_ gestureRecognizer: UIPanGestureRecognizer) {
             let location = gestureRecognizer.location(in: self.containerView)
             var selectedButton: HighlightTrackingButton?
-            for button in self.starButtons {
+            for button in self.diamondButtons {
                 if button.frame.contains(location) {
                     selectedButton = button
                     break
@@ -148,44 +148,44 @@ private final class AlertCallRatingComponent: Component {
             if let selectedButton = selectedButton {
                 switch gestureRecognizer.state {
                     case .began, .changed:
-                        self.starPressed(selectedButton)
+                        self.diamondPressed(selectedButton)
                     case .ended:
-                        self.starReleased(selectedButton)
+                        self.diamondReleased(selectedButton)
                     case .cancelled:
-                        self.resetStars()
+                        self.resetDiamonds()
                     default:
                         break
                 }
             } else {
-                self.resetStars()
+                self.resetDiamonds()
             }
         }
         
-        private func resetStars() {
-            for i in 0 ..< self.starButtons.count {
-                let node = self.starButtons[i]
+        private func resetDiamonds() {
+            for i in 0 ..< self.diamondButtons.count {
+                let node = self.diamondButtons[i]
                 node.isSelected = false
             }
         }
         
-        @objc func starPressed(_ sender: HighlightTrackingButton) {
-            if let index = self.starButtons.firstIndex(of: sender) {
+        @objc func diamondPressed(_ sender: HighlightTrackingButton) {
+            if let index = self.diamondButtons.firstIndex(of: sender) {
                 self.rating = index + 1
-                for i in 0 ..< self.starButtons.count {
-                    let node = self.starButtons[i]
+                for i in 0 ..< self.diamondButtons.count {
+                    let node = self.diamondButtons[i]
                     node.isSelected = i <= index
                 }
             }
         }
         
-        @objc func starReleased(_ sender: HighlightTrackingButton) {
+        @objc func diamondReleased(_ sender: HighlightTrackingButton) {
             guard let component = self.component else {
                 return
             }
-            if let index = self.starButtons.firstIndex(of: sender) {
+            if let index = self.diamondButtons.firstIndex(of: sender) {
                 self.rating = index + 1
-                for i in 0 ..< self.starButtons.count {
-                    let node = self.starButtons[i]
+                for i in 0 ..< self.diamondButtons.count {
+                    let node = self.diamondButtons[i]
                     node.isSelected = i <= index
                 }
                 if let rating = self.rating {
@@ -196,8 +196,8 @@ private final class AlertCallRatingComponent: Component {
         
         func update(component: AlertCallRatingComponent, availableSize: CGSize, state: EmptyComponentState, environment: Environment<AlertComponentEnvironment>, transition: ComponentTransition) -> CGSize {
             if self.component == nil {
-                for i in 0 ..< self.starButtons.count {
-                    let button = self.starButtons[i]
+                for i in 0 ..< self.diamondButtons.count {
+                    let button = self.diamondButtons[i]
                     button.setImage(UIImage(bundleImageName: "Call/Star")?.withRenderingMode(.alwaysTemplate), for: .normal)
                     button.setImage(UIImage(bundleImageName: "Call/StarHighlighted")?.withRenderingMode(.alwaysTemplate), for: .selected)
                     button.setImage(UIImage(bundleImageName: "Call/StarHighlighted")?.withRenderingMode(.alwaysTemplate), for: [.selected, .highlighted])
@@ -209,15 +209,15 @@ private final class AlertCallRatingComponent: Component {
             
             let environment = environment[AlertComponentEnvironment.self]
                         
-            let buttonCount = CGFloat(self.starButtons.count)
-            let starSize = CGSize(width: 42.0, height: 38.0)
-            let starsOrigin = floorToScreenPixels((availableSize.width - starSize.width * buttonCount) / 2.0)
-            self.containerView.frame = CGRect(origin: CGPoint(x: starsOrigin, y: 0.0), size: CGSize(width: starSize.width * buttonCount, height: starSize.height))
-            for i in 0 ..< self.starButtons.count {
-                let button = self.starButtons[i]
+            let buttonCount = CGFloat(self.diamondButtons.count)
+            let diamondSize = CGSize(width: 42.0, height: 38.0)
+            let diamondsOrigin = floorToScreenPixels((availableSize.width - diamondSize.width * buttonCount) / 2.0)
+            self.containerView.frame = CGRect(origin: CGPoint(x: diamondsOrigin, y: 0.0), size: CGSize(width: diamondSize.width * buttonCount, height: diamondSize.height))
+            for i in 0 ..< self.diamondButtons.count {
+                let button = self.diamondButtons[i]
                 button.imageView?.tintColor = environment.theme.actionSheet.controlAccentColor
                 
-                transition.setFrame(view: button, frame: CGRect(x: starSize.width * CGFloat(i), y: 0.0, width: starSize.width, height: starSize.height))
+                transition.setFrame(view: button, frame: CGRect(x: diamondSize.width * CGFloat(i), y: 0.0, width: diamondSize.width, height: diamondSize.height))
             }
             
             return CGSize(width: availableSize.width, height: 38.0)

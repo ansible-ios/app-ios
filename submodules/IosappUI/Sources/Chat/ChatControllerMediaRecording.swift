@@ -164,7 +164,7 @@ extension ChatControllerImpl {
                 var viewOnceAvailable = false
                 if let peerId = self.chatLocation.peerId {
                     allowLiveUpload = peerId.namespace != Namespaces.Peer.SecretChat
-                    viewOnceAvailable = !isScheduledMessages && peerId.namespace == Namespaces.Peer.CloudUser && peerId != self.context.account.peerId && !isBot && self.presentationInterfaceState.sendPaidMessageStars == nil
+                    viewOnceAvailable = !isScheduledMessages && peerId.namespace == Namespaces.Peer.CloudUser && peerId != self.context.account.peerId && !isBot && self.presentationInterfaceState.sendPaidMessageDiamonds == nil
                 } else if case .customChatContents = self.chatLocation {
                     allowLiveUpload = true
                 }
@@ -257,7 +257,7 @@ extension ChatControllerImpl {
         }
         
         var sendImmediately = false
-        if let _ = self.presentationInterfaceState.sendPaidMessageStars, case .send = action {
+        if let _ = self.presentationInterfaceState.sendPaidMessageDiamonds, case .send = action {
             updatedAction = .preview
             sendImmediately = true
         }

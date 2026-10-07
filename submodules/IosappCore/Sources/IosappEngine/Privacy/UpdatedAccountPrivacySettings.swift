@@ -17,7 +17,7 @@ func _internal_updateGlobalPrivacySettings(account: Account) -> Signal<Never, No
             let globalSettings: GlobalPrivacySettings
             switch result {
             case let .globalPrivacySettings(globalPrivacySettingsData):
-                let (flags, nonContactPeersPaidStars, disallowedStarGifts) = (globalPrivacySettingsData.flags, globalPrivacySettingsData.noncontactPeersPaidStars, globalPrivacySettingsData.disallowedGifts)
+                let (flags, nonContactPeersPaidDiamonds, disallowedDiamondGifts) = (globalPrivacySettingsData.flags, globalPrivacySettingsData.noncontactPeersPaidStars, globalPrivacySettingsData.disallowedGifts)
                 let automaticallyArchiveAndMuteNonContacts = (flags & (1 << 0)) != 0
                 let keepArchivedUnmuted = (flags & (1 << 1)) != 0
                 let keepArchivedFolders = (flags & (1 << 2)) != 0
@@ -26,15 +26,15 @@ func _internal_updateGlobalPrivacySettings(account: Account) -> Signal<Never, No
                 let displayGiftButton = (flags & (1 << 7)) != 0
                 
                 let nonContactChatsPrivacy: GlobalPrivacySettings.NonContactChatsPrivacy
-                if let nonContactPeersPaidStars, nonContactPeersPaidStars > 0 {
-                    nonContactChatsPrivacy = .paidMessages(StarsAmount(value: nonContactPeersPaidStars, nanos: 0))
+                if let nonContactPeersPaidDiamonds, nonContactPeersPaidDiamonds > 0 {
+                    nonContactChatsPrivacy = .paidMessages(StarsAmount(value: nonContactPeersPaidDiamonds, nanos: 0))
                 } else if nonContactChatsRequirePremium {
                     nonContactChatsPrivacy = .requirePremium
                 } else {
                     nonContactChatsPrivacy = .everybody
                 }
                 
-                let disallowedGifts = IosappDisallowedGifts(apiDisallowedGifts: disallowedStarGifts)
+                let disallowedGifts = IosappDisallowedGifts(apiDisallowedGifts: disallowedDiamondGifts)
                 
                 globalSettings = GlobalPrivacySettings(
                     automaticallyArchiveAndMuteNonContacts: automaticallyArchiveAndMuteNonContacts,
@@ -253,7 +253,7 @@ func _internal_requestAccountPrivacySettings(account: Account) -> Signal<Account
         let globalSettings: GlobalPrivacySettings
         switch globalPrivacySettings {
         case let .globalPrivacySettings(globalPrivacySettingsData):
-            let (flags, nonContactPeersPaidStars, disallowedStarGifts) = (globalPrivacySettingsData.flags, globalPrivacySettingsData.noncontactPeersPaidStars, globalPrivacySettingsData.disallowedGifts)
+            let (flags, nonContactPeersPaidDiamonds, disallowedDiamondGifts) = (globalPrivacySettingsData.flags, globalPrivacySettingsData.noncontactPeersPaidStars, globalPrivacySettingsData.disallowedGifts)
             let automaticallyArchiveAndMuteNonContacts = (flags & (1 << 0)) != 0
             let keepArchivedUnmuted = (flags & (1 << 1)) != 0
             let keepArchivedFolders = (flags & (1 << 2)) != 0
@@ -262,15 +262,15 @@ func _internal_requestAccountPrivacySettings(account: Account) -> Signal<Account
             let displayGiftButton = (flags & (1 << 7)) != 0
             
             let nonContactChatsPrivacy: GlobalPrivacySettings.NonContactChatsPrivacy
-            if let nonContactPeersPaidStars, nonContactPeersPaidStars > 0 {
-                nonContactChatsPrivacy = .paidMessages(StarsAmount(value: nonContactPeersPaidStars, nanos: 0))
+            if let nonContactPeersPaidDiamonds, nonContactPeersPaidDiamonds > 0 {
+                nonContactChatsPrivacy = .paidMessages(StarsAmount(value: nonContactPeersPaidDiamonds, nanos: 0))
             } else if nonContactChatsRequirePremium {
                 nonContactChatsPrivacy = .requirePremium
             } else {
                 nonContactChatsPrivacy = .everybody
             }
             
-            let disallowedGifts = IosappDisallowedGifts(apiDisallowedGifts: disallowedStarGifts)
+            let disallowedGifts = IosappDisallowedGifts(apiDisallowedGifts: disallowedDiamondGifts)
             
             globalSettings = GlobalPrivacySettings(
                 automaticallyArchiveAndMuteNonContacts: automaticallyArchiveAndMuteNonContacts,

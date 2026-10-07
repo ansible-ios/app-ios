@@ -8,26 +8,26 @@
 
 - (bool)isTransitionInProgress
 {
-    return ([self tg_transitionData] != nil);
+    return ([self as_transitionData] != nil);
 }
 
-- (NSMutableDictionary *)tg_transitionData
+- (NSMutableDictionary *)as_transitionData
 {
-    return objc_getAssociatedObject(self, @selector(tg_transitionData));
+    return objc_getAssociatedObject(self, @selector(as_transitionData));
 }
 
-- (void)tg_setTransitionData:(NSMutableDictionary *)data
+- (void)as_setTransitionData:(NSMutableDictionary *)data
 {
-    objc_setAssociatedObject(self, @selector(tg_transitionData), data, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(as_transitionData), data, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (SPipe *)tg_transitionPipe
+- (SPipe *)as_transitionPipe
 {
-    SPipe *pipe = objc_getAssociatedObject(self, @selector(tg_transitionPipe));
+    SPipe *pipe = objc_getAssociatedObject(self, @selector(as_transitionPipe));
     if (pipe == nil)
     {
         pipe = [[SPipe alloc] init];
-        objc_setAssociatedObject(self, @selector(tg_transitionPipe), pipe, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        objc_setAssociatedObject(self, @selector(as_transitionPipe), pipe, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return pipe;
 }
@@ -39,7 +39,7 @@
     NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
     data[@"duration"] = @(duration);
     data[@"startTime"] = @(CACurrentMediaTime());
-    [self tg_setTransitionData:data];
+    [self as_setTransitionData:data];
     
     CADisplayLink *link = [CADisplayLink displayLinkWithTarget:self selector:@selector(updateProgress:)];
     [link addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
@@ -48,21 +48,21 @@
     UICollectionViewTransitionLayout *transitionLayout = [self startInteractiveTransitionToCollectionViewLayout:layout completion:^(BOOL completed, BOOL finish)
     {
         __strong UICollectionView *strongSelf = weakSelf;
-        NSMutableDictionary *data = [strongSelf tg_transitionData];
+        NSMutableDictionary *data = [strongSelf as_transitionData];
         UICollectionViewTransitionLayout *transitionLayout = data[@"transitionLayout"];
         if ([transitionLayout conformsToProtocol:@protocol(TGTransitionAnimatorLayout)])
         {
             id<TGTransitionAnimatorLayout>layout = (id<TGTransitionAnimatorLayout>)transitionLayout;
             [layout collectionViewDidCompleteTransitioning:strongSelf completed:completed finish:finish];
         }
-        [strongSelf tg_setTransitionData:nil];
+        [strongSelf as_setTransitionData:nil];
         
         if (completion != nil)
             completion(completed, finish);
         
         dispatch_async(dispatch_get_main_queue(), ^
         {
-            [self tg_transitionPipe].sink(@true);            
+            [self as_transitionPipe].sink(@true);            
         });
     }];
     data[@"transitionLayout"] = transitionLayout;
@@ -81,7 +81,7 @@ CGFloat TGQuadraticEaseInOut(CGFloat p)
 
 - (void)updateProgress:(CADisplayLink *)link
 {
-    NSMutableDictionary *data = [self tg_transitionData];
+    NSMutableDictionary *data = [self as_transitionData];
     UICollectionViewLayout *layout = self.collectionViewLayout;
     
     if ([layout isKindOfClass:[UICollectionViewTransitionLayout class]])
@@ -108,7 +108,7 @@ CGFloat TGQuadraticEaseInOut(CGFloat p)
 
 - (void)finishTransition:(CADisplayLink *)link
 {
-    NSMutableDictionary *data = [self tg_transitionData];
+    NSMutableDictionary *data = [self as_transitionData];
     UICollectionViewTransitionLayout *transitionLayout = data[@"transitionLayout"];
     if ([transitionLayout conformsToProtocol:@protocol(TGTransitionAnimatorLayout)])
     {
@@ -170,7 +170,7 @@ CGFloat TGQuadraticEaseInOut(CGFloat p)
     if (!self.isTransitionInProgress)
         return [SSignal complete];
     
-    return [[[self tg_transitionPipe].signalProducer() take:1] mapToSignal:^SSignal *(__unused id value)
+    return [[[self as_transitionPipe].signalProducer() take:1] mapToSignal:^SSignal *(__unused id value)
     {
         return [SSignal complete];
     }];

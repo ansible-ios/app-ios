@@ -674,8 +674,8 @@ private final class PendingInAppPurchaseState: Codable {
             case giftCode
             case giveaway
             case stars
-            case starsGift
-            case starsGiveaway
+            case diamondsGift
+            case diamondsGiveaway
             case authCode
         }
         
@@ -686,8 +686,8 @@ private final class PendingInAppPurchaseState: Codable {
         case giftCode(peerIds: [EnginePeer.Id], boostPeer: EnginePeer.Id?, text: String?, entities: [MessageTextEntity]?)
         case giveaway(boostPeer: EnginePeer.Id, additionalPeerIds: [EnginePeer.Id], countries: [String], onlyNewSubscribers: Bool, showWinners: Bool, prizeDescription: String?, randomId: Int64, untilDate: Int32)
         case stars(count: Int64, peerId: EnginePeer.Id?)
-        case starsGift(peerId: EnginePeer.Id, count: Int64)
-        case starsGiveaway(stars: Int64, boostPeer: EnginePeer.Id, additionalPeerIds: [EnginePeer.Id], countries: [String], onlyNewSubscribers: Bool, showWinners: Bool, prizeDescription: String?, randomId: Int64, untilDate: Int32, users: Int32)
+        case diamondsGift(peerId: EnginePeer.Id, count: Int64)
+        case diamondsGiveaway(stars: Int64, boostPeer: EnginePeer.Id, additionalPeerIds: [EnginePeer.Id], countries: [String], onlyNewSubscribers: Bool, showWinners: Bool, prizeDescription: String?, randomId: Int64, untilDate: Int32, users: Int32)
         case authCode(restore: Bool, phoneNumber: String, phoneCodeHash: String, premiumDays: Int32)
         
         public init(from decoder: Decoder) throws {
@@ -728,13 +728,13 @@ private final class PendingInAppPurchaseState: Codable {
                     count: try container.decode(Int64.self, forKey: .stars),
                     peerId: try container.decodeIfPresent(Int64.self, forKey: .peer).flatMap { EnginePeer.Id($0) }
                 )
-            case .starsGift:
-                self = .starsGift(
+            case .diamondsGift:
+                self = .diamondsGift(
                     peerId: EnginePeer.Id(try container.decode(Int64.self, forKey: .peer)),
                     count: try container.decode(Int64.self, forKey: .stars)
                 )
-            case .starsGiveaway:
-                self = .starsGiveaway(
+            case .diamondsGiveaway:
+                self = .diamondsGiveaway(
                     stars: try container.decode(Int64.self, forKey: .stars),
                     boostPeer: EnginePeer.Id(try container.decode(Int64.self, forKey: .boostPeer)),
                     additionalPeerIds: try container.decode([Int64].self, forKey: .randomId).map { EnginePeer.Id($0) },
@@ -791,12 +791,12 @@ private final class PendingInAppPurchaseState: Codable {
                 try container.encode(PurposeType.stars.rawValue, forKey: .type)
                 try container.encode(count, forKey: .stars)
                 try container.encodeIfPresent(peerId?.toInt64(), forKey: .peer)
-            case let .starsGift(peerId, count):
-                try container.encode(PurposeType.starsGift.rawValue, forKey: .type)
+            case let .diamondsGift(peerId, count):
+                try container.encode(PurposeType.diamondsGift.rawValue, forKey: .type)
                 try container.encode(peerId.toInt64(), forKey: .peer)
                 try container.encode(count, forKey: .stars)
-            case let .starsGiveaway(stars, boostPeer, additionalPeerIds, countries, onlyNewSubscribers, showWinners, prizeDescription, randomId, untilDate, users):
-                try container.encode(PurposeType.starsGiveaway.rawValue, forKey: .type)
+            case let .diamondsGiveaway(stars, boostPeer, additionalPeerIds, countries, onlyNewSubscribers, showWinners, prizeDescription, randomId, untilDate, users):
+                try container.encode(PurposeType.diamondsGiveaway.rawValue, forKey: .type)
                 try container.encode(stars, forKey: .stars)
                 try container.encode(boostPeer.toInt64(), forKey: .boostPeer)
                 try container.encode(additionalPeerIds.map { $0.toInt64() }, forKey: .additionalPeerIds)
@@ -832,10 +832,10 @@ private final class PendingInAppPurchaseState: Codable {
                 self = .giveaway(boostPeer: boostPeer, additionalPeerIds: additionalPeerIds, countries: countries, onlyNewSubscribers: onlyNewSubscribers, showWinners: showWinners, prizeDescription: prizeDescription, randomId: randomId, untilDate: untilDate)
             case let .stars(count, _, _, peerId):
                 self = .stars(count: count, peerId: peerId)
-            case let .starsGift(peerId, count, _, _):
-                self = .starsGift(peerId: peerId, count: count)
-            case let .starsGiveaway(stars, boostPeer, additionalPeerIds, countries, onlyNewSubscribers, showWinners, prizeDescription, randomId, untilDate, _, _, users):
-                self = .starsGiveaway(stars: stars, boostPeer: boostPeer, additionalPeerIds: additionalPeerIds, countries: countries, onlyNewSubscribers: onlyNewSubscribers, showWinners: showWinners, prizeDescription: prizeDescription, randomId: randomId, untilDate: untilDate, users: users)
+            case let .diamondsGift(peerId, count, _, _):
+                self = .diamondsGift(peerId: peerId, count: count)
+            case let .diamondsGiveaway(stars, boostPeer, additionalPeerIds, countries, onlyNewSubscribers, showWinners, prizeDescription, randomId, untilDate, _, _, users):
+                self = .diamondsGiveaway(stars: stars, boostPeer: boostPeer, additionalPeerIds: additionalPeerIds, countries: countries, onlyNewSubscribers: onlyNewSubscribers, showWinners: showWinners, prizeDescription: prizeDescription, randomId: randomId, untilDate: untilDate, users: users)
             case let .authCode(restore, phoneNumber, phoneCodeHash, premiumDays, _, _):
                 self = .authCode(restore: restore, phoneNumber: phoneNumber, phoneCodeHash: phoneCodeHash, premiumDays: premiumDays)
             }
@@ -858,10 +858,10 @@ private final class PendingInAppPurchaseState: Codable {
                 return .giveaway(boostPeer: boostPeer, additionalPeerIds: additionalPeerIds, countries: countries, onlyNewSubscribers: onlyNewSubscribers, showWinners: showWinners, prizeDescription: prizeDescription, randomId: randomId, untilDate: untilDate, currency: currency, amount: amount)
             case let .stars(count, peerId):
                 return .stars(count: count, currency: currency, amount: amount, peerId: peerId)
-            case let .starsGift(peerId, count):
-                return .starsGift(peerId: peerId, count: count, currency: currency, amount: amount)
-            case let .starsGiveaway(stars, boostPeer, additionalPeerIds, countries, onlyNewSubscribers, showWinners, prizeDescription, randomId, untilDate, users):
-                return .starsGiveaway(stars: stars, boostPeer: boostPeer, additionalPeerIds: additionalPeerIds, countries: countries, onlyNewSubscribers: onlyNewSubscribers, showWinners: showWinners, prizeDescription: prizeDescription, randomId: randomId, untilDate: untilDate, currency: currency, amount: amount, users: users)
+            case let .diamondsGift(peerId, count):
+                return .diamondsGift(peerId: peerId, count: count, currency: currency, amount: amount)
+            case let .diamondsGiveaway(stars, boostPeer, additionalPeerIds, countries, onlyNewSubscribers, showWinners, prizeDescription, randomId, untilDate, users):
+                return .diamondsGiveaway(stars: stars, boostPeer: boostPeer, additionalPeerIds: additionalPeerIds, countries: countries, onlyNewSubscribers: onlyNewSubscribers, showWinners: showWinners, prizeDescription: prizeDescription, randomId: randomId, untilDate: untilDate, currency: currency, amount: amount, users: users)
             case let .authCode(restore, phoneNumber, phoneCodeHash, premiumDays):
                 return .authCode(restore: restore, phoneNumber: phoneNumber, phoneCodeHash: phoneCodeHash, premiumDays: premiumDays, currency: currency, amount: amount)
             }

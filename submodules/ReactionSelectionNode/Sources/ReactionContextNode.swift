@@ -3823,9 +3823,9 @@ public final class StandaloneReactionAnimation: ASDisplayNode {
     
     public func animateOutToReaction(context: AccountContext, theme: PresentationTheme, item: ReactionItem, value: MessageReaction.Reaction, sourceView: UIView, targetView: UIView, hideNode: Bool, forceSwitchToInlineImmediately: Bool = false, animateTargetContainer: UIView?, addStandaloneReactionAnimation: ((StandaloneReactionAnimation) -> Void)?, onHit: (() -> Void)?, completion: @escaping () -> Void) {
         let star = ComponentView<Empty>()
-        let starSize = star.update(
+        let diamondSize = star.update(
             transition: .immediate,
-            component: AnyComponent(StandalonePremiumStarComponent(
+            component: AnyComponent(StandalonePremiumDiamondComponent(
                 theme: theme,
                 colors: [
                     UIColor(rgb: 0x1a86d9),
@@ -3837,7 +3837,7 @@ public final class StandaloneReactionAnimation: ASDisplayNode {
             environment: {},
             containerSize: CGSize(width: 240.0, height: 240.0)
         )
-        guard let starView = star.view else {
+        guard let diamondView = star.view else {
             return
         }
         
@@ -3846,15 +3846,15 @@ public final class StandaloneReactionAnimation: ASDisplayNode {
         }
         
         self.view.addSubview(sourceCloneView)
-        self.view.addSubview(starView)
+        self.view.addSubview(diamondView)
         
         sourceCloneView.layer.animateAlpha(from: 1.0, to: 0.0, duration: 0.08, removeOnCompletion: false)
-        starView.layer.animateAlpha(from: 0.0, to: 1.0, duration: 0.12)
+        diamondView.layer.animateAlpha(from: 0.0, to: 1.0, duration: 0.12)
         
         let didTriggerExpandedReaction = "".isEmpty
         
         let sourceFrame = sourceView.convert(sourceView.bounds, to: self.view)
-        starView.bounds = CGRect(origin: CGPoint(), size: starSize)
+        diamondView.bounds = CGRect(origin: CGPoint(), size: diamondSize)
         
         sourceView.layer.isHidden = true
         
@@ -3898,7 +3898,7 @@ public final class StandaloneReactionAnimation: ASDisplayNode {
         
         let transition: ContainedViewLayoutTransition = .animated(duration: 0.4, curve: .linear)
         
-        starView.center = expandedFrame.center
+        diamondView.center = expandedFrame.center
         sourceCloneView.frame = sourceFrame
         
         let additionalAnimationNode: DefaultAnimatedStickerNodeImpl?
@@ -3985,20 +3985,20 @@ public final class StandaloneReactionAnimation: ASDisplayNode {
             additionalAnimationCompleted = true
         }
         
-        starView.center = selfTargetRect.center
+        diamondView.center = selfTargetRect.center
         sourceCloneView.center = selfTargetRect.center
         
-        let starSourceScale = sourceFrame.width / starSize.width
-        let starDestinationScale = selfTargetRect.width / starSize.width
+        let diamondSourceScale = sourceFrame.width / diamondSize.width
+        let diamondDestinationScale = selfTargetRect.width / diamondSize.width
         
         let elevation: CGFloat = min(selfSourceRect.center.y, expandedFrame.center.y) - selfSourceRect.center.y - 40.0
         let keyframes = generateParabollicMotionKeyframes(from: selfSourceRect.center, to: expandedFrame.center, elevation: -elevation)
-        let scaleKeyframes = generateScaleKeyframes(from: starSourceScale, center: 1.0, to: starDestinationScale)
-        starView.layer.transform = CATransform3DMakeScale(starDestinationScale, starDestinationScale, 1.0)
-        transition.animateScaleWithKeyframes(layer: starView.layer, keyframes: scaleKeyframes)
-        transition.animatePositionWithKeyframes(layer: starView.layer, keyframes: keyframes, completion: { [weak starView, weak targetView, weak animateTargetContainer] _ in
+        let scaleKeyframes = generateScaleKeyframes(from: diamondSourceScale, center: 1.0, to: diamondDestinationScale)
+        diamondView.layer.transform = CATransform3DMakeScale(diamondDestinationScale, diamondDestinationScale, 1.0)
+        transition.animateScaleWithKeyframes(layer: diamondView.layer, keyframes: scaleKeyframes)
+        transition.animatePositionWithKeyframes(layer: diamondView.layer, keyframes: keyframes, completion: { [weak diamondView, weak targetView, weak animateTargetContainer] _ in
             let afterCompletion: () -> Void = {
-                guard let starView else {
+                guard let diamondView else {
                     return
                 }
                 if let animateTargetContainer = animateTargetContainer {
@@ -4016,12 +4016,12 @@ public final class StandaloneReactionAnimation: ASDisplayNode {
                 if let targetView = targetView as? ReactionIconView {
                     if switchToInlineImmediately {
                         targetView.updateIsAnimationHidden(isAnimationHidden: false, transition: .immediate)
-                        starView.isHidden = true
+                        diamondView.isHidden = true
                     } else {
                         targetView.updateIsAnimationHidden(isAnimationHidden: true, transition: .immediate)
                     }
                 } else if let targetView = targetView as? UIImageView {
-                    starView.isHidden = true
+                    diamondView.isHidden = true
                     targetView.layer.animateAlpha(from: 0.0, to: 1.0, duration: 0.12)
                     targetView.layer.animateScale(from: 0.2, to: 1.0, duration: 0.12)
                 }

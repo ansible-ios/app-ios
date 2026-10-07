@@ -91,7 +91,7 @@ final class ContactSelectionControllerNode: ASDisplayNode {
         var excludeSelf = true
         
         let displayTopPeers: ContactListPresentation.TopPeers
-        if case let .starsGifting(birthdays, hasActions, showSelf, selfSubtitle) = mode {
+        if case let .diamondsGifting(birthdays, hasActions, showSelf, selfSubtitle) = mode {
             if showSelf {
                 excludeSelf = false
             }
@@ -137,7 +137,7 @@ final class ContactSelectionControllerNode: ASDisplayNode {
         if requirePhoneNumbers {
             filters.append(.excludeWithoutPhoneNumbers)
         }
-        if case .starsGifting = mode {
+        if case .diamondsGifting = mode {
             filters.append(.excludeBots)
         }
         self.filters = filters

@@ -2,7 +2,7 @@ import Foundation
 import SwiftSignalKit
 import Postbox
 
-public let telegramPostboxSeedConfiguration: SeedConfiguration = {
+public let ansiblePostboxSeedConfiguration: SeedConfiguration = {
     var messageHoles: [PeerId.Namespace: [MessageId.Namespace: Set<MessageTags>]] = [:]
     for peerNamespace in peerIdNamespacesWithInitialCloudMessageHoles {
         messageHoles[peerNamespace] = [
@@ -275,7 +275,7 @@ public enum AccountTransactionError {
 
 public func accountTransaction<T>(rootPath: String, id: AccountRecordId, encryptionParameters: ValueBoxEncryptionParameters, isReadOnly: Bool, useCopy: Bool = false, useCaches: Bool = true, removeDatabaseOnError: Bool = true, transaction: @escaping (Postbox, Transaction) -> T) -> Signal<T, AccountTransactionError> {
     let path = "\(rootPath)/\(accountRecordIdPathName(id))"
-    let postbox = openPostbox(basePath: path + "/postbox", seedConfiguration: telegramPostboxSeedConfiguration, encryptionParameters: encryptionParameters, timestampForAbsoluteTimeBasedOperations: Int32(CFAbsoluteTimeGetCurrent() + NSTimeIntervalSince1970), isMainProcess: false, isTemporary: true, isReadOnly: isReadOnly, useCopy: useCopy, useCaches: useCaches, removeDatabaseOnError: removeDatabaseOnError)
+    let postbox = openPostbox(basePath: path + "/postbox", seedConfiguration: ansiblePostboxSeedConfiguration, encryptionParameters: encryptionParameters, timestampForAbsoluteTimeBasedOperations: Int32(CFAbsoluteTimeGetCurrent() + NSTimeIntervalSince1970), isMainProcess: false, isTemporary: true, isReadOnly: isReadOnly, useCopy: useCopy, useCaches: useCaches, removeDatabaseOnError: removeDatabaseOnError)
     return postbox
     |> castError(AccountTransactionError.self)
     |> mapToSignal { value -> Signal<T, AccountTransactionError> in

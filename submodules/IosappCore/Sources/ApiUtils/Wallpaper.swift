@@ -69,7 +69,7 @@ extension IosappWallpaper {
         switch apiWallpaper {
             case let .wallPaper(wallPaperData):
                 let (id, flags, accessHash, slug, document, settings) = (wallPaperData.id, wallPaperData.flags, wallPaperData.accessHash, wallPaperData.slug, wallPaperData.document, wallPaperData.settings)
-                if let file = telegramMediaFileFromApiDocument(document, altDocuments: []) {
+                if let file = ansibleMediaFileFromApiDocument(document, altDocuments: []) {
                     let wallpaperSettings: WallpaperSettings
                     if let settings = settings {
                         wallpaperSettings = WallpaperSettings(apiWallpaperSettings: settings)

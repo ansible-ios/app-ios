@@ -14,7 +14,7 @@ import Foundation
 public struct GiftResaleParameters: Codable, Equatable, Hashable {
 
     /// Resale price of the gift in Iosapp Stars
-    public let starCount: Int64
+    public let diamondCount: Int64
 
     /// Resale price of the gift in 1/100 of Toncoin
     public let toncoinCentCount: Int64
@@ -24,11 +24,11 @@ public struct GiftResaleParameters: Codable, Equatable, Hashable {
 
 
     public init(
-        starCount: Int64,
+        diamondCount: Int64,
         toncoinCentCount: Int64,
         toncoinOnly: Bool
     ) {
-        self.starCount = starCount
+        self.diamondCount = diamondCount
         self.toncoinCentCount = toncoinCentCount
         self.toncoinOnly = toncoinOnly
     }

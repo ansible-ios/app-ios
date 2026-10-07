@@ -435,7 +435,7 @@ public final class ChatChannelSubscriberInputPanelNode: ChatInputPanelNode {
         var displayHelp = false
         
         if let peer = interfaceState.renderedPeer?.peer as? IosappChannel {
-            if case .broadcast = peer.info, interfaceState.starGiftsAvailable {
+            if case .broadcast = peer.info, interfaceState.diamondGiftsAvailable {
                 displayGift = true
             }
             if case let .broadcast(broadcastInfo) = peer.info, broadcastInfo.flags.contains(.hasMonoforum) {

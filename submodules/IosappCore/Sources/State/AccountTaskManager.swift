@@ -89,7 +89,7 @@ final class AccountTaskManager {
                     tasks.add(managedSynchronizeMarkAllUnseenReactionsOperations(postbox: self.stateManager.postbox, network: self.stateManager.network, stateManager: self.stateManager).start())
                     tasks.add(managedSynchronizeMarkAllUnseenPollVotesOperations(postbox: self.stateManager.postbox, network: self.stateManager.network, stateManager: self.stateManager).start())
                     tasks.add(managedApplyPendingMessageReactionsActions(postbox: self.stateManager.postbox, network: self.stateManager.network, stateManager: self.stateManager).start())
-                    tasks.add(managedApplyPendingMessageStarsReactionsActions(postbox: self.stateManager.postbox, network: self.stateManager.network, stateManager: self.stateManager).start())
+                    tasks.add(managedApplyPendingMessageDiamondsReactionsActions(postbox: self.stateManager.postbox, network: self.stateManager.network, stateManager: self.stateManager).start())
                     
                     tasks.add(managedApplyPendingPaidMessageActions(postbox: self.stateManager.postbox, network: self.stateManager.network, stateManager: self.stateManager).start())
                     
@@ -115,7 +115,7 @@ final class AccountTaskManager {
                     tasks.add(managedRecentStatusEmoji(postbox: self.stateManager.postbox, network: self.stateManager.network).start())
                     tasks.add(managedFeaturedStatusEmoji(postbox: self.stateManager.postbox, network: self.stateManager.network).start())
                     tasks.add(managedFeaturedChannelStatusEmoji(postbox: self.stateManager.postbox, network: self.stateManager.network).start())
-                    tasks.add(managedUniqueStarGifts(accountPeerId: self.accountPeerId, postbox: self.stateManager.postbox, network: self.stateManager.network).start())
+                    tasks.add(managedUniqueDiamondGifts(accountPeerId: self.accountPeerId, postbox: self.stateManager.postbox, network: self.stateManager.network).start())
                     tasks.add(managedProfilePhotoEmoji(postbox: self.stateManager.postbox, network: self.stateManager.network).start())
                     tasks.add(managedGroupPhotoEmoji(postbox: self.stateManager.postbox, network: self.stateManager.network).start())
                     tasks.add(managedBackgroundIconEmoji(postbox: self.stateManager.postbox, network: self.stateManager.network).start())
@@ -126,7 +126,7 @@ final class AccountTaskManager {
                     tasks.add(managedDisabledChannelStatusIconEmoji(postbox: self.stateManager.postbox, network: self.stateManager.network).start())
                     tasks.add(_internal_loadedStickerPack(postbox: self.stateManager.postbox, network: self.stateManager.network, reference: .iconTopicEmoji, forceActualized: true).start())
                     tasks.add(managedPeerColorUpdates(postbox: self.stateManager.postbox, network: self.stateManager.network).start())
-                    tasks.add(managedStarGiftsUpdates(postbox: self.stateManager.postbox, network: self.stateManager.network, accountPeerId: self.stateManager.accountPeerId).start())
+                    tasks.add(managedDiamondGiftsUpdates(postbox: self.stateManager.postbox, network: self.stateManager.network, accountPeerId: self.stateManager.accountPeerId).start())
                     tasks.add(managedSavedMusicIdsUpdates(postbox: self.stateManager.postbox, network: self.stateManager.network, accountPeerId: self.stateManager.accountPeerId).start())
                     tasks.add(managedEmojiGameUpdates(postbox: self.stateManager.postbox, network: self.stateManager.network).start())
                     tasks.add(managedSynchronizeCloudAITextStyles(postbox: self.stateManager.postbox, network: self.stateManager.network).start())

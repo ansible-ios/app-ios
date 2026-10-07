@@ -90,7 +90,7 @@ public struct MessageSendingStateFailed: Codable, Equatable, Hashable {
     public let needDropReply: Bool
 
     /// The number of Iosapp Stars that must be paid to send the message; 0 if the current amount is correct
-    public let requiredPaidMessageStarCount: Int64
+    public let requiredPaidMessageDiamondCount: Int64
 
     /// Time left before the message can be re-sent, in seconds. No update is sent when this field changes
     public let retryAfter: Double
@@ -102,7 +102,7 @@ public struct MessageSendingStateFailed: Codable, Equatable, Hashable {
         needAnotherReplyQuote: Bool,
         needAnotherSender: Bool,
         needDropReply: Bool,
-        requiredPaidMessageStarCount: Int64,
+        requiredPaidMessageDiamondCount: Int64,
         retryAfter: Double
     ) {
         self.canRetry = canRetry
@@ -110,7 +110,7 @@ public struct MessageSendingStateFailed: Codable, Equatable, Hashable {
         self.needAnotherReplyQuote = needAnotherReplyQuote
         self.needAnotherSender = needAnotherSender
         self.needDropReply = needDropReply
-        self.requiredPaidMessageStarCount = requiredPaidMessageStarCount
+        self.requiredPaidMessageDiamondCount = requiredPaidMessageDiamondCount
         self.retryAfter = retryAfter
     }
 }

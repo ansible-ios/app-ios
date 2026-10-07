@@ -612,9 +612,9 @@ public extension Message {
         return nil
     }
     
-    var paidStarsAttribute: PaidStarsMessageAttribute? {
+    var paidDiamondsAttribute: PaidDiamondsMessageAttribute? {
         for attribute in self.attributes {
-            if let attribute = attribute as? PaidStarsMessageAttribute {
+            if let attribute = attribute as? PaidDiamondsMessageAttribute {
                 return attribute
             }
         }
@@ -711,9 +711,9 @@ public func _internal_parseMediaAttachment(data: Data) -> Media? {
         return nil
     }
     if let photo = object as? Api.Photo {
-        return telegramMediaImageFromApiPhoto(photo)
+        return ansibleMediaImageFromApiPhoto(photo)
     } else if let file = object as? Api.Document {
-        return telegramMediaFileFromApiDocument(file, altDocuments: [])
+        return ansibleMediaFileFromApiDocument(file, altDocuments: [])
     } else {
         return nil
     }

@@ -138,17 +138,17 @@ final class AffiliateProgramSetupScreenComponent: Component {
         private var isApplying: Bool = false
         private var applyDisposable: Disposable?
         
-        private var currentProgram: IosappStarRefProgram?
+        private var currentProgram: IosappDiamondRefProgram?
         private var programEndTimer: Foundation.Timer?
         
-        private var connectedStarBots: EngineConnectedStarRefBotsContext?
-        private var connectedStarBotsState: EngineConnectedStarRefBotsContext.State?
-        private var connectedStarBotsStateDisposable: Disposable?
+        private var connectedDiamondBots: EngineConnectedDiamondRefBotsContext?
+        private var connectedDiamondBotsState: EngineConnectedDiamondRefBotsContext.State?
+        private var connectedDiamondBotsStateDisposable: Disposable?
         private var expectedManualRemoveConnectedBotUrl: String?
         
-        private var suggestedStarBots: EngineSuggestedStarRefBotsContext?
-        private var suggestedStarBotsState: EngineSuggestedStarRefBotsContext.State?
-        private var suggestedStarBotsStateDisposable: Disposable?
+        private var suggestedDiamondBots: EngineSuggestedDiamondRefBotsContext?
+        private var suggestedDiamondBotsState: EngineSuggestedDiamondRefBotsContext.State?
+        private var suggestedDiamondBotsStateDisposable: Disposable?
         
         private var isSuggestedSortModeUpdating: Bool = false
         
@@ -181,8 +181,8 @@ final class AffiliateProgramSetupScreenComponent: Component {
         deinit {
             self.applyDisposable?.dispose()
             self.programEndTimer?.invalidate()
-            self.connectedStarBotsStateDisposable?.dispose()
-            self.suggestedStarBotsStateDisposable?.dispose()
+            self.connectedDiamondBotsStateDisposable?.dispose()
+            self.suggestedDiamondBotsStateDisposable?.dispose()
         }
 
         func scrollToTop() {
@@ -390,24 +390,24 @@ final class AffiliateProgramSetupScreenComponent: Component {
             
             if self.scrollView.bounds.maxY >= self.scrollView.contentSize.height - 100.0 {
                 var shouldLoadMoreConnected = false
-                if let connectedStarBotsState = self.connectedStarBotsState, connectedStarBotsState.isLoaded, connectedStarBotsState.nextOffset != nil {
+                if let connectedDiamondBotsState = self.connectedDiamondBotsState, connectedDiamondBotsState.isLoaded, connectedDiamondBotsState.nextOffset != nil {
                     shouldLoadMoreConnected = true
                 }
                 
                 var shouldLoadMoreSuggested = false
-                if let suggestedStarBotsState = self.suggestedStarBotsState, suggestedStarBotsState.isLoaded, suggestedStarBotsState.nextOffset != nil {
+                if let suggestedDiamondBotsState = self.suggestedDiamondBotsState, suggestedDiamondBotsState.isLoaded, suggestedDiamondBotsState.nextOffset != nil {
                     shouldLoadMoreSuggested = true
                 }
                 
                 if shouldLoadMoreConnected {
-                    self.connectedStarBots?.loadMore()
+                    self.connectedDiamondBots?.loadMore()
                 } else if shouldLoadMoreSuggested {
-                    self.suggestedStarBots?.loadMore()
+                    self.suggestedDiamondBots?.loadMore()
                 }
             }
         }
         
-        private func openConnectedBot(bot: EngineConnectedStarRefBotsContext.Item) {
+        private func openConnectedBot(bot: EngineConnectedDiamondRefBotsContext.Item) {
             guard let component = self.component else {
                 return
             }
@@ -445,28 +445,28 @@ final class AffiliateProgramSetupScreenComponent: Component {
             })
         }
         
-        private func leaveProgram(bot: EngineConnectedStarRefBotsContext.Item) {
+        private func leaveProgram(bot: EngineConnectedDiamondRefBotsContext.Item) {
             self.expectedManualRemoveConnectedBotUrl = bot.url
-            self.connectedStarBots?.remove(url: bot.url)
+            self.connectedDiamondBots?.remove(url: bot.url)
         }
         
         private func openSortModeMenu(sourceView: UIView) {
             guard let component = self.component, let environment = self.environment, let controller = environment.controller() else {
                 return
             }
-            guard let suggestedStarBots = self.suggestedStarBots else {
+            guard let suggestedDiamondBots = self.suggestedDiamondBots else {
                 return
             }
             
             var items: [ContextMenuItem] = []
             
-            let availableModes: [(EngineSuggestedStarRefBotsContext.SortMode, String)] = [
+            let availableModes: [(EngineSuggestedDiamondRefBotsContext.SortMode, String)] = [
                 (.profitability, environment.strings.AffiliateProgram_SortSelectorProfitability),
                 (.revenue, environment.strings.AffiliateProgram_SortSelectorRevenue),
                 (.date, environment.strings.AffiliateProgram_SortSelectorDate)
             ]
             for (mode, title) in availableModes {
-                let isSelected = mode == suggestedStarBots.sortMode
+                let isSelected = mode == suggestedDiamondBots.sortMode
                 items.append(.action(ContextMenuActionItem(text: title, icon: { theme in
                     if isSelected {
                         return generateTintedImage(image: UIImage(bundleImageName: "Chat/Context Menu/Check"), color: theme.actionSheet.primaryTextColor)
@@ -479,20 +479,20 @@ final class AffiliateProgramSetupScreenComponent: Component {
                     guard let self else {
                         return
                     }
-                    if self.suggestedStarBots?.sortMode != mode {
+                    if self.suggestedDiamondBots?.sortMode != mode {
                         self.isSuggestedSortModeUpdating = true
                         self.state?.updated(transition: .immediate)
                         
-                        let suggestedStarBots = component.context.engine.peers.suggestedStarRefBots(id: component.initialContent.peerId, sortMode: mode)
-                        self.suggestedStarBots = suggestedStarBots
-                        self.suggestedStarBotsStateDisposable?.dispose()
-                        self.suggestedStarBotsStateDisposable = (suggestedStarBots.state
+                        let suggestedDiamondBots = component.context.engine.peers.suggestedStarRefBots(id: component.initialContent.peerId, sortMode: mode)
+                        self.suggestedDiamondBots = suggestedDiamondBots
+                        self.suggestedDiamondBotsStateDisposable?.dispose()
+                        self.suggestedDiamondBotsStateDisposable = (suggestedDiamondBots.state
                         |> deliverOnMainQueue).startStrict(next: { [weak self] state in
                             guard let self else {
                                 return
                             }
                             self.isSuggestedSortModeUpdating = false
-                            self.suggestedStarBotsState = state
+                            self.suggestedDiamondBotsState = state
                             self.state?.updated(transition: .immediate)
                         })
                     }
@@ -613,9 +613,9 @@ final class AffiliateProgramSetupScreenComponent: Component {
                         self.durationMinValue = 0
                     }
                 case .connectedPrograms:
-                    let connectedStarBots = component.context.engine.peers.connectedStarRefBots(id: component.initialContent.peerId)
-                    self.connectedStarBots = connectedStarBots
-                    self.connectedStarBotsStateDisposable = (connectedStarBots.state
+                    let connectedDiamondBots = component.context.engine.peers.connectedStarRefBots(id: component.initialContent.peerId)
+                    self.connectedDiamondBots = connectedDiamondBots
+                    self.connectedDiamondBotsStateDisposable = (connectedDiamondBots.state
                     |> deliverOnMainQueue).startStrict(next: { [weak self] state in
                         guard let self else {
                             return
@@ -624,24 +624,24 @@ final class AffiliateProgramSetupScreenComponent: Component {
                         if let expectedManualRemoveConnectedBotUrl = self.expectedManualRemoveConnectedBotUrl {
                             self.expectedManualRemoveConnectedBotUrl = nil
                             
-                            if let currentState = self.connectedStarBotsState {
+                            if let currentState = self.connectedDiamondBotsState {
                                 if currentState.items.count == state.items.count + 1 && currentState.items.contains(where: { $0.url == expectedManualRemoveConnectedBotUrl }) && !state.items.contains(where: { $0.url == expectedManualRemoveConnectedBotUrl }) {
                                     transition = .easeInOut(duration: 0.25)
                                 }
                             }
                         }
-                        self.connectedStarBotsState = state
+                        self.connectedDiamondBotsState = state
                         self.state?.updated(transition: transition)
                     })
                     
-                    let suggestedStarBots = component.context.engine.peers.suggestedStarRefBots(id: component.initialContent.peerId, sortMode: .profitability)
-                    self.suggestedStarBots = suggestedStarBots
-                    self.suggestedStarBotsStateDisposable = (suggestedStarBots.state
+                    let suggestedDiamondBots = component.context.engine.peers.suggestedStarRefBots(id: component.initialContent.peerId, sortMode: .profitability)
+                    self.suggestedDiamondBots = suggestedDiamondBots
+                    self.suggestedDiamondBotsStateDisposable = (suggestedDiamondBots.state
                     |> deliverOnMainQueue).startStrict(next: { [weak self] state in
                         guard let self else {
                             return
                         }
-                        self.suggestedStarBotsState = state
+                        self.suggestedDiamondBotsState = state
                         self.state?.updated(transition: .immediate)
                     })
                 }
@@ -1243,12 +1243,12 @@ final class AffiliateProgramSetupScreenComponent: Component {
                 
                 contentHeight += bottomPanelFrame.height
             case .connectedPrograms:
-                if let connectedStarBotsState = self.connectedStarBotsState, connectedStarBotsState.isLoaded, let suggestedStarBots = self.suggestedStarBots, let suggestedStarBotsState = self.suggestedStarBotsState, suggestedStarBotsState.isLoaded {
-                    let suggestedStarBotListItems = suggestedStarBotsState.items.filter({ item in !connectedStarBotsState.items.contains(where: { $0.peer.id == item.peer.id }) })
+                if let connectedDiamondBotsState = self.connectedDiamondBotsState, connectedDiamondBotsState.isLoaded, let suggestedDiamondBots = self.suggestedDiamondBots, let suggestedDiamondBotsState = self.suggestedDiamondBotsState, suggestedDiamondBotsState.isLoaded {
+                    let suggestedDiamondBotListItems = suggestedDiamondBotsState.items.filter({ item in !connectedDiamondBotsState.items.contains(where: { $0.peer.id == item.peer.id }) })
                     
                     do {
                         var activeSectionItems: [AnyComponentWithIdentity<Empty>] = []
-                        for item in connectedStarBotsState.items {
+                        for item in connectedDiamondBotsState.items {
                             let durationTitle: String
                             if let durationMonths = item.durationMonths {
                                 durationTitle = timeIntervalString(strings: environment.strings, value: durationMonths * (30 * 24 * 60 * 60))
@@ -1420,16 +1420,16 @@ final class AffiliateProgramSetupScreenComponent: Component {
                                 self.scrollView.addSubview(activeProgramsSectionView)
                             }
                             transition.setFrame(view: activeProgramsSectionView, frame: activeProgramsSectionFrame)
-                            transition.setAlpha(view: activeProgramsSectionView, alpha: connectedStarBotsState.items.isEmpty ? 0.0 : 1.0)
+                            transition.setAlpha(view: activeProgramsSectionView, alpha: connectedDiamondBotsState.items.isEmpty ? 0.0 : 1.0)
                         }
-                        if !connectedStarBotsState.items.isEmpty {
+                        if !connectedDiamondBotsState.items.isEmpty {
                             contentHeight += activeProgramsSectionSize.height
                             contentHeight += sectionSpacing
                         }
                     }
                     do {
                         var suggestedSectionItems: [AnyComponentWithIdentity<Empty>] = []
-                        if suggestedStarBotListItems.isEmpty {
+                        if suggestedDiamondBotListItems.isEmpty {
                             suggestedSectionItems.append(AnyComponentWithIdentity(id: "empty", component: AnyComponent(ZStack([
                                 AnyComponentWithIdentity(id: 0, component: AnyComponent(Rectangle(color: .clear, width: nil, height: 100.0))),
                                 AnyComponentWithIdentity(id: 1, component: AnyComponent(MultilineTextComponent(
@@ -1440,7 +1440,7 @@ final class AffiliateProgramSetupScreenComponent: Component {
                                 )))
                             ]))))
                         }
-                        for item in suggestedStarBotListItems {
+                        for item in suggestedDiamondBotListItems {
                             let commissionTitle = "\(formatPermille(item.program.commissionPermille))%"
                             let durationTitle: String
                             if let durationMonths = item.program.durationMonths {
@@ -1535,11 +1535,11 @@ final class AffiliateProgramSetupScreenComponent: Component {
                             )),
                             maximumNumberOfLines: 0
                         ))))
-                        if suggestedStarBotListItems.count > 1 {
+                        if suggestedDiamondBotListItems.count > 1 {
                             suggestedHeaderItems.append(AnyComponentWithIdentity(id: 1, component: AnyComponent(BotSectionSortButtonComponent(
                                 theme: environment.theme,
                                 strings: environment.strings,
-                                sortMode: suggestedStarBots.sortMode,
+                                sortMode: suggestedDiamondBots.sortMode,
                                 action: { [weak self] sourceView in
                                     guard let self else {
                                         return
@@ -1570,12 +1570,12 @@ final class AffiliateProgramSetupScreenComponent: Component {
                             }
                             transition.setFrame(view: suggestedProgramsSectionView, frame: suggestedProgramsSectionFrame)
                             
-                            suggestedProgramsSectionView.isHidden = connectedStarBotsState.nextOffset != nil
+                            suggestedProgramsSectionView.isHidden = connectedDiamondBotsState.nextOffset != nil
                             
                             suggestedProgramsSectionView.contentViewImpl.alpha = self.isSuggestedSortModeUpdating ? 0.6 : 1.0
                             suggestedProgramsSectionView.contentViewImpl.isUserInteractionEnabled = !self.isSuggestedSortModeUpdating
                         }
-                        if connectedStarBotsState.nextOffset == nil {
+                        if connectedDiamondBotsState.nextOffset == nil {
                             contentHeight += suggestedProgramsSectionSize.height
                             contentHeight += sectionSpacing
                         }
@@ -1615,9 +1615,9 @@ final class AffiliateProgramSetupScreenComponent: Component {
 public class AffiliateProgramSetupScreen: ViewControllerComponentContainer {
     enum Mode {
         final class EditProgram {
-            let currentRefProgram: IosappStarRefProgram?
+            let currentRefProgram: IosappDiamondRefProgram?
             
-            init(currentRefProgram: IosappStarRefProgram?) {
+            init(currentRefProgram: IosappDiamondRefProgram?) {
                 self.currentRefProgram = currentRefProgram
             }
         }

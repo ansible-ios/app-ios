@@ -2369,7 +2369,7 @@ public extension Api {
                 return ("updateSmsJob", [("jobId", ConstructorParameterDescription(self.jobId))])
             }
         }
-        public class Cons_updateStarGiftAuctionState: TypeConstructorDescription {
+        public class Cons_updateDiamondGiftAuctionState: TypeConstructorDescription {
             public var giftId: Int64
             public var state: Api.StarGiftAuctionState
             public init(giftId: Int64, state: Api.StarGiftAuctionState) {
@@ -2380,7 +2380,7 @@ public extension Api {
                 return ("updateStarGiftAuctionState", [("giftId", ConstructorParameterDescription(self.giftId)), ("state", ConstructorParameterDescription(self.state))])
             }
         }
-        public class Cons_updateStarGiftAuctionUserState: TypeConstructorDescription {
+        public class Cons_updateDiamondGiftAuctionUserState: TypeConstructorDescription {
             public var giftId: Int64
             public var userState: Api.StarGiftAuctionUserState
             public init(giftId: Int64, userState: Api.StarGiftAuctionUserState) {
@@ -2391,7 +2391,7 @@ public extension Api {
                 return ("updateStarGiftAuctionUserState", [("giftId", ConstructorParameterDescription(self.giftId)), ("userState", ConstructorParameterDescription(self.userState))])
             }
         }
-        public class Cons_updateStarsBalance: TypeConstructorDescription {
+        public class Cons_updateDiamondsBalance: TypeConstructorDescription {
             public var balance: Api.StarsAmount
             public init(balance: Api.StarsAmount) {
                 self.balance = balance
@@ -2400,7 +2400,7 @@ public extension Api {
                 return ("updateStarsBalance", [("balance", ConstructorParameterDescription(self.balance))])
             }
         }
-        public class Cons_updateStarsRevenueStatus: TypeConstructorDescription {
+        public class Cons_updateDiamondsRevenueStatus: TypeConstructorDescription {
             public var peer: Api.Peer
             public var status: Api.StarsRevenueStatus
             public init(peer: Api.Peer, status: Api.StarsRevenueStatus) {
@@ -2745,11 +2745,11 @@ public extension Api {
         case updateSentStoryReaction(Cons_updateSentStoryReaction)
         case updateServiceNotification(Cons_updateServiceNotification)
         case updateSmsJob(Cons_updateSmsJob)
-        case updateStarGiftAuctionState(Cons_updateStarGiftAuctionState)
-        case updateStarGiftAuctionUserState(Cons_updateStarGiftAuctionUserState)
+        case updateStarGiftAuctionState(Cons_updateDiamondGiftAuctionState)
+        case updateStarGiftAuctionUserState(Cons_updateDiamondGiftAuctionUserState)
         case updateStarGiftCraftFail
-        case updateStarsBalance(Cons_updateStarsBalance)
-        case updateStarsRevenueStatus(Cons_updateStarsRevenueStatus)
+        case updateStarsBalance(Cons_updateDiamondsBalance)
+        case updateStarsRevenueStatus(Cons_updateDiamondsRevenueStatus)
         case updateStickerSets(Cons_updateStickerSets)
         case updateStickerSetsOrder(Cons_updateStickerSetsOrder)
         case updateStoriesStealthMode(Cons_updateStoriesStealthMode)
@@ -7320,7 +7320,7 @@ public extension Api {
                 return nil
             }
         }
-        public static func parse_updateStarGiftAuctionState(_ reader: BufferReader) -> Update? {
+        public static func parse_updateDiamondGiftAuctionState(_ reader: BufferReader) -> Update? {
             var _1: Int64?
             _1 = reader.readInt64()
             var _2: Api.StarGiftAuctionState?
@@ -7330,13 +7330,13 @@ public extension Api {
             let _c1 = _1 != nil
             let _c2 = _2 != nil
             if _c1 && _c2 {
-                return Api.Update.updateStarGiftAuctionState(Cons_updateStarGiftAuctionState(giftId: _1!, state: _2!))
+                return Api.Update.updateStarGiftAuctionState(Cons_updateDiamondGiftAuctionState(giftId: _1!, state: _2!))
             }
             else {
                 return nil
             }
         }
-        public static func parse_updateStarGiftAuctionUserState(_ reader: BufferReader) -> Update? {
+        public static func parse_updateDiamondGiftAuctionUserState(_ reader: BufferReader) -> Update? {
             var _1: Int64?
             _1 = reader.readInt64()
             var _2: Api.StarGiftAuctionUserState?
@@ -7346,29 +7346,29 @@ public extension Api {
             let _c1 = _1 != nil
             let _c2 = _2 != nil
             if _c1 && _c2 {
-                return Api.Update.updateStarGiftAuctionUserState(Cons_updateStarGiftAuctionUserState(giftId: _1!, userState: _2!))
+                return Api.Update.updateStarGiftAuctionUserState(Cons_updateDiamondGiftAuctionUserState(giftId: _1!, userState: _2!))
             }
             else {
                 return nil
             }
         }
-        public static func parse_updateStarGiftCraftFail(_ reader: BufferReader) -> Update? {
+        public static func parse_updateDiamondGiftCraftFail(_ reader: BufferReader) -> Update? {
             return Api.Update.updateStarGiftCraftFail
         }
-        public static func parse_updateStarsBalance(_ reader: BufferReader) -> Update? {
+        public static func parse_updateDiamondsBalance(_ reader: BufferReader) -> Update? {
             var _1: Api.StarsAmount?
             if let signature = reader.readInt32() {
                 _1 = Api.parse(reader, signature: signature) as? Api.StarsAmount
             }
             let _c1 = _1 != nil
             if _c1 {
-                return Api.Update.updateStarsBalance(Cons_updateStarsBalance(balance: _1!))
+                return Api.Update.updateStarsBalance(Cons_updateDiamondsBalance(balance: _1!))
             }
             else {
                 return nil
             }
         }
-        public static func parse_updateStarsRevenueStatus(_ reader: BufferReader) -> Update? {
+        public static func parse_updateDiamondsRevenueStatus(_ reader: BufferReader) -> Update? {
             var _1: Api.Peer?
             if let signature = reader.readInt32() {
                 _1 = Api.parse(reader, signature: signature) as? Api.Peer
@@ -7380,7 +7380,7 @@ public extension Api {
             let _c1 = _1 != nil
             let _c2 = _2 != nil
             if _c1 && _c2 {
-                return Api.Update.updateStarsRevenueStatus(Cons_updateStarsRevenueStatus(peer: _1!, status: _2!))
+                return Api.Update.updateStarsRevenueStatus(Cons_updateDiamondsRevenueStatus(peer: _1!, status: _2!))
             }
             else {
                 return nil

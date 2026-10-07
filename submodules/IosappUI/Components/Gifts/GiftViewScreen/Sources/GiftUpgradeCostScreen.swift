@@ -119,9 +119,9 @@ private final class GiftUpgradeCostScreenComponent: Component {
             var contentHeight: CGFloat = 56.0
             
             var value: CGFloat = 0.0
-            if let startStars = component.upgradePreview.prices.first?.stars, let endStars = component.upgradePreview.prices.last?.stars {
-                let effectiveValue = self.effectiveUpgradePrice?.stars ?? endStars
-                value = (CGFloat(effectiveValue - endStars) / CGFloat(startStars - endStars))
+            if let startDiamonds = component.upgradePreview.prices.first?.stars, let endDiamonds = component.upgradePreview.prices.last?.stars {
+                let effectiveValue = self.effectiveUpgradePrice?.stars ?? endDiamonds
+                value = (CGFloat(effectiveValue - endDiamonds) / CGFloat(startDiamonds - endDiamonds))
             }
             value = pow(value, 0.6)
             value = min(0.96, 1.0 - value)

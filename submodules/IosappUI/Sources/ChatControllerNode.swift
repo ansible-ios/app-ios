@@ -975,7 +975,7 @@ class ChatControllerNode: ASDisplayNode, ASScrollViewDelegate {
                         guard let self else {
                             return
                         }
-                        if let _ = self.chatPresentationInterfaceState.sendPaidMessageStars {
+                        if let _ = self.chatPresentationInterfaceState.sendPaidMessageDiamonds {
                             var count: Int32
                             if let forwardedCount = self.chatPresentationInterfaceState.interfaceState.forwardMessageIds?.count, forwardedCount > 0 {
                                 count = Int32(forwardedCount)

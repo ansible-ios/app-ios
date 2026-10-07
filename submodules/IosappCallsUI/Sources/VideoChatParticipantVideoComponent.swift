@@ -25,7 +25,7 @@ private func blurredAvatarImage(_ dataImage: UIImage) -> UIImage? {
             }
         }
         
-        telegramFastBlurMore(Int32(imageContext.size.width * imageContext.scale), Int32(imageContext.size.height * imageContext.scale), Int32(imageContext.bytesPerRow), imageContext.bytes)
+        ansibleFastBlurMore(Int32(imageContext.size.width * imageContext.scale), Int32(imageContext.size.height * imageContext.scale), Int32(imageContext.bytesPerRow), imageContext.bytes)
         
         return imageContext.generateImage()
     } else {

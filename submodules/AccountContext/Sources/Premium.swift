@@ -56,7 +56,7 @@ public enum PremiumGiftSource: Equatable {
     case settings([EnginePeer.Id: IosappBirthday]?)
     case chatList([EnginePeer.Id: IosappBirthday]?)
     case stars([EnginePeer.Id: IosappBirthday]?)
-    case starGiftTransfer([EnginePeer.Id: IosappBirthday]?, StarGiftReference, StarGift.UniqueGift, Int64, Int32?, Bool)
+    case diamondGiftTransfer([EnginePeer.Id: IosappBirthday]?, DiamondGiftReference, StarGift.UniqueGift, Int64, Int32?, Bool)
     case channelBoost
     case deeplink(String?)
 }
@@ -136,34 +136,34 @@ public enum BoostSubject: Equatable {
     case autoTranslate
 }
 
-public enum StarsPurchasePurpose: Equatable {
+public enum DiamondsPurchasePurpose: Equatable {
     case generic
-    case topUp(requiredStars: Int64, purpose: String?)
-    case transfer(peerId: EnginePeer.Id, requiredStars: Int64)
-    case reactions(peerId: EnginePeer.Id, requiredStars: Int64)
-    case subscription(peerId: EnginePeer.Id, requiredStars: Int64, renew: Bool)
+    case topUp(requiredDiamonds: Int64, purpose: String?)
+    case transfer(peerId: EnginePeer.Id, requiredDiamonds: Int64)
+    case reactions(peerId: EnginePeer.Id, requiredDiamonds: Int64)
+    case subscription(peerId: EnginePeer.Id, requiredDiamonds: Int64, renew: Bool)
     case gift(peerId: EnginePeer.Id)
-    case unlockMedia(requiredStars: Int64)
-    case starGift(peerId: EnginePeer.Id, requiredStars: Int64)
-    case upgradeStarGift(requiredStars: Int64)
-    case transferStarGift(requiredStars: Int64)
-    case sendMessage(peerId: EnginePeer.Id, requiredStars: Int64)
-    case buyStarGift(requiredStars: Int64)
-    case removeOriginalDetailsStarGift(requiredStars: Int64)
-    case starGiftOffer(requiredStars: Int64)
+    case unlockMedia(requiredDiamonds: Int64)
+    case starGift(peerId: EnginePeer.Id, requiredDiamonds: Int64)
+    case upgradeStarGift(requiredDiamonds: Int64)
+    case transferStarGift(requiredDiamonds: Int64)
+    case sendMessage(peerId: EnginePeer.Id, requiredDiamonds: Int64)
+    case buyDiamondGift(requiredDiamonds: Int64)
+    case removeOriginalDetailsDiamondGift(requiredDiamonds: Int64)
+    case diamondGiftOffer(requiredDiamonds: Int64)
 }
 
 public struct PremiumConfiguration {
     public static var defaultValue: PremiumConfiguration {
         return PremiumConfiguration(
             isPremiumDisabled: false,
-            areStarsDisabled: true,
+            areDiamondsDisabled: true,
             subscriptionManagementUrl: "",
             showPremiumGiftInAttachMenu: false,
             showPremiumGiftInTextField: false,
             giveawayGiftsPurchaseAvailable: false,
-            starsGiftsPurchaseAvailable: false,
-            starGiftsPurchaseBlocked: true,
+            diamondsGiftsPurchaseAvailable: false,
+            diamondGiftsPurchaseBlocked: true,
             boostsPerGiftCount: 3,
             audioTransciptionTrialMaxDuration: 300,
             audioTransciptionTrialCount: 2,
@@ -187,13 +187,13 @@ public struct PremiumConfiguration {
     }
     
     public let isPremiumDisabled: Bool
-    public let areStarsDisabled: Bool
+    public let areDiamondsDisabled: Bool
     public let subscriptionManagementUrl: String
     public let showPremiumGiftInAttachMenu: Bool
     public let showPremiumGiftInTextField: Bool
     public let giveawayGiftsPurchaseAvailable: Bool
-    public let starsGiftsPurchaseAvailable: Bool
-    public let starGiftsPurchaseBlocked: Bool
+    public let diamondsGiftsPurchaseAvailable: Bool
+    public let diamondGiftsPurchaseBlocked: Bool
     public let boostsPerGiftCount: Int32
     public let audioTransciptionTrialMaxDuration: Int32
     public let audioTransciptionTrialCount: Int32
@@ -216,13 +216,13 @@ public struct PremiumConfiguration {
     
     fileprivate init(
         isPremiumDisabled: Bool,
-        areStarsDisabled: Bool,
+        areDiamondsDisabled: Bool,
         subscriptionManagementUrl: String,
         showPremiumGiftInAttachMenu: Bool,
         showPremiumGiftInTextField: Bool,
         giveawayGiftsPurchaseAvailable: Bool,
-        starsGiftsPurchaseAvailable: Bool,
-        starGiftsPurchaseBlocked: Bool,
+        diamondsGiftsPurchaseAvailable: Bool,
+        diamondGiftsPurchaseBlocked: Bool,
         boostsPerGiftCount: Int32,
         audioTransciptionTrialMaxDuration: Int32,
         audioTransciptionTrialCount: Int32,
@@ -244,13 +244,13 @@ public struct PremiumConfiguration {
         minGroupAudioTranscriptionLevel: Int32
     ) {
         self.isPremiumDisabled = isPremiumDisabled
-        self.areStarsDisabled = areStarsDisabled
+        self.areDiamondsDisabled = areDiamondsDisabled
         self.subscriptionManagementUrl = subscriptionManagementUrl
         self.showPremiumGiftInAttachMenu = showPremiumGiftInAttachMenu
         self.showPremiumGiftInTextField = showPremiumGiftInTextField
         self.giveawayGiftsPurchaseAvailable = giveawayGiftsPurchaseAvailable
-        self.starsGiftsPurchaseAvailable = starsGiftsPurchaseAvailable
-        self.starGiftsPurchaseBlocked = starGiftsPurchaseBlocked
+        self.diamondsGiftsPurchaseAvailable = diamondsGiftsPurchaseAvailable
+        self.diamondGiftsPurchaseBlocked = diamondGiftsPurchaseBlocked
         self.boostsPerGiftCount = boostsPerGiftCount
         self.audioTransciptionTrialMaxDuration = audioTransciptionTrialMaxDuration
         self.audioTransciptionTrialCount = audioTransciptionTrialCount
@@ -280,13 +280,13 @@ public struct PremiumConfiguration {
             }
             return PremiumConfiguration(
                 isPremiumDisabled: data["premium_purchase_blocked"] as? Bool ?? defaultValue.isPremiumDisabled,
-                areStarsDisabled: data["stars_purchase_blocked"] as? Bool ?? defaultValue.areStarsDisabled,
+                areDiamondsDisabled: data["stars_purchase_blocked"] as? Bool ?? defaultValue.areDiamondsDisabled,
                 subscriptionManagementUrl: data["premium_manage_subscription_url"] as? String ?? "",
                 showPremiumGiftInAttachMenu: data["premium_gift_attach_menu_icon"] as? Bool ?? defaultValue.showPremiumGiftInAttachMenu,
                 showPremiumGiftInTextField: data["premium_gift_text_field_icon"] as? Bool ?? defaultValue.showPremiumGiftInTextField,
                 giveawayGiftsPurchaseAvailable: data["giveaway_gifts_purchase_available"] as? Bool ?? defaultValue.giveawayGiftsPurchaseAvailable,
-                starsGiftsPurchaseAvailable: data["stars_gifts_enabled"] as? Bool ?? defaultValue.starsGiftsPurchaseAvailable,
-                starGiftsPurchaseBlocked: data["stargifts_blocked"] as? Bool ?? defaultValue.starGiftsPurchaseBlocked,
+                diamondsGiftsPurchaseAvailable: data["stars_gifts_enabled"] as? Bool ?? defaultValue.diamondsGiftsPurchaseAvailable,
+                diamondGiftsPurchaseBlocked: data["stargifts_blocked"] as? Bool ?? defaultValue.diamondGiftsPurchaseBlocked,
                 boostsPerGiftCount: get(data["boosts_per_sent_gift"]) ?? defaultValue.boostsPerGiftCount,
                 audioTransciptionTrialMaxDuration: get(data["transcribe_audio_trial_duration_max"]) ?? defaultValue.audioTransciptionTrialMaxDuration,
                 audioTransciptionTrialCount: get(data["transcribe_audio_trial_weekly_number"]) ?? defaultValue.audioTransciptionTrialCount,

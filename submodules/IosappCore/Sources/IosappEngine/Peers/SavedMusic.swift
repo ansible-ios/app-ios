@@ -63,7 +63,7 @@ func _internal_getSavedMusicById(postbox: Postbox, network: Network, peer: PeerR
         if let result {
             switch result {
             case let .savedMusic(savedMusicData):
-                if let file = savedMusicData.documents.first.flatMap({ telegramMediaFileFromApiDocument($0, altDocuments: nil) }) {
+                if let file = savedMusicData.documents.first.flatMap({ ansibleMediaFileFromApiDocument($0, altDocuments: nil) }) {
                     return file
                 }
             default:
@@ -367,7 +367,7 @@ public final class ProfileSavedMusicContext {
             |> map { result -> ([IosappMediaFile], Int32) in
                 switch result {
                 case let .savedMusic(savedMusicData):
-                    return (savedMusicData.documents.compactMap { telegramMediaFileFromApiDocument($0, altDocuments: nil) }, savedMusicData.count)
+                    return (savedMusicData.documents.compactMap { ansibleMediaFileFromApiDocument($0, altDocuments: nil) }, savedMusicData.count)
                 case let .savedMusicNotModified(savedMusicNotModifiedData):
                     return ([], savedMusicNotModifiedData.count)
                 }

@@ -603,7 +603,7 @@ public enum ContextControllerTip: Equatable {
     case messageCopyProtection(text: String)
     case animatedEmoji(text: String?, arguments: TextNodeWithEntities.Arguments?, file: IosappMediaFile?, action: (() -> Void)?)
     case notificationTopicExceptions(text: String, action: (() -> Void)?)
-    case starsReactions(topCount: Int)
+    case diamondsReactions(topCount: Int)
     case videoProcessing
     case collageReordering
     case deleteReaction
@@ -658,8 +658,8 @@ public enum ContextControllerTip: Equatable {
             } else {
                 return false
             }
-        case let .starsReactions(topCount):
-            if case .starsReactions(topCount) = rhs {
+        case let .diamondsReactions(topCount):
+            if case .diamondsReactions(topCount) = rhs {
                 return true
             } else {
                 return false

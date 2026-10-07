@@ -251,7 +251,7 @@ final class StoryPreviewComponent: Component {
                     strings: presentationData.strings,
                     style: .story,
                     placeholder: .plain(presentationData.strings.Story_InputPlaceholderReplyPrivately),
-                    sendPaidMessageStars: nil,
+                    sendPaidMessageDiamonds: nil,
                     maxLength: nil,
                     queryTypes: [],
                     alwaysDarkWhenHasText: false,

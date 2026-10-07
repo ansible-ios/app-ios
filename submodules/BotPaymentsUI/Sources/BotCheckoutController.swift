@@ -11,8 +11,8 @@ public final class BotCheckoutController: ViewController {
     public final class InputData {
         public enum FetchError {
             case generic
-            case disallowedStarGifts
-            case starGiftsUserLimit
+            case disallowedDiamondGifts
+            case diamondGiftsUserLimit
         }
 
         public let form: BotPaymentForm
@@ -33,7 +33,7 @@ public final class BotCheckoutController: ViewController {
             let theme = context.sharedContext.currentPresentationData.with { $0 }.theme
             let themeParams: [String: Any]?
             switch source {
-            case .starGift, .starGiftUpgrade:
+            case .starGift, .diamondGiftUpgrade:
                 themeParams = nil
             default:
                 themeParams = [
@@ -57,10 +57,10 @@ public final class BotCheckoutController: ViewController {
             return context.engine.payments.fetchBotPaymentForm(source: source, themeParams: themeParams)
             |> mapError { error -> FetchError in
                 switch error {
-                case .disallowedStarGift:
-                    return .disallowedStarGifts
-                case .starGiftUserLimit:
-                    return .starGiftsUserLimit
+                case .disallowedDiamondGift:
+                    return .disallowedDiamondGifts
+                case .diamondGiftUserLimit:
+                    return .diamondGiftsUserLimit
                 default:
                     return .generic
                 }

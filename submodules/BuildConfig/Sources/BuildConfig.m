@@ -1,6 +1,6 @@
 #import <BuildConfig/BuildConfig.h>
 
-static NSString *telegramApplicationSecretKey = @"telegramApplicationSecretKey_v3";
+static NSString *ansibleApplicationSecretKey = @"telegramApplicationSecretKey_v3";
 API_AVAILABLE(ios(10))
 @interface LocalPrivateKey : NSObject {
     SecKeyRef _privateKey;
@@ -222,9 +222,9 @@ API_AVAILABLE(ios(10))
 
 + (NSData * _Nullable)applicationSecretTag:(bool)isCheckKey {
     if (isCheckKey) {
-        return [[telegramApplicationSecretKey stringByAppendingString:@"_check"] dataUsingEncoding:NSUTF8StringEncoding];
+        return [[ansibleApplicationSecretKey stringByAppendingString:@"_check"] dataUsingEncoding:NSUTF8StringEncoding];
     } else {
-        return [telegramApplicationSecretKey dataUsingEncoding:NSUTF8StringEncoding];
+        return [ansibleApplicationSecretKey dataUsingEncoding:NSUTF8StringEncoding];
     }
 }
 

@@ -1281,26 +1281,26 @@ public final class WebAppController: ViewController, AttachmentContainable {
                             |> `catch` { _ -> Signal<BotCheckoutController.InputData?, NoError> in
                                 return .single(nil)
                             })
-                            if invoice.currency == "XTR", let starsContext = strongSelf.context.starsContext {
-                                let starsInputData = combineLatest(
+                            if invoice.currency == "XTR", let diamondsContext = strongSelf.context.diamondsContext {
+                                let diamondsInputData = combineLatest(
                                     inputData.get(),
-                                    starsContext.state
+                                    diamondsContext.state
                                 )
-                                |> map { data, state -> (StarsContext.State, BotPaymentForm, EnginePeer?, EnginePeer?)? in
+                                |> map { data, state -> (DiamondsContext.State, BotPaymentForm, EnginePeer?, EnginePeer?)? in
                                     if let data, let state {
                                         return (state, data.form, data.botPeer, nil)
                                     } else {
                                         return nil
                                     }
                                 }
-                                let _ = (starsInputData |> filter { $0 != nil } |> take(1) |> deliverOnMainQueue).start(next: { _ in
-                                    let controller = strongSelf.context.sharedContext.makeStarsTransferScreen(
+                                let _ = (diamondsInputData |> filter { $0 != nil } |> take(1) |> deliverOnMainQueue).start(next: { _ in
+                                    let controller = strongSelf.context.sharedContext.makeDiamondsTransferScreen(
                                         context: strongSelf.context,
-                                        starsContext: starsContext,
+                                        diamondsContext: diamondsContext,
                                         invoice: invoice,
                                         source: .slug(slug),
                                         extendedMedia: [],
-                                        inputData: starsInputData,
+                                        inputData: diamondsInputData,
                                         completion: { [weak self] paid in
                                             guard let self else {
                                                 return

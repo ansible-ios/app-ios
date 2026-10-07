@@ -64,7 +64,7 @@ public class ChatMessageGiftBubbleContentNode: ChatMessageBubbleContentNode {
     
     private var shimmerEffectNode: ShimmerEffectForegroundNode?
     private let buttonNode: HighlightTrackingButtonNode
-    private let buttonStarsNode: PremiumStarsNode
+    private let buttonDiamondsNode: PremiumDiamondsNode
     private let buttonContentNode: ASDisplayNode
     private let buttonTitleNode: TextNode
     private var buttonIconNode: DefaultAnimatedStickerNodeImpl?
@@ -82,7 +82,7 @@ public class ChatMessageGiftBubbleContentNode: ChatMessageBubbleContentNode {
     private var isExpanded: Bool = false
     private var appliedIsExpanded: Bool = false
     
-    private var isStarGift = false
+    private var isDiamondGift = false
     
     private var currentProgressDisposable: Disposable?
     
@@ -173,7 +173,7 @@ public class ChatMessageGiftBubbleContentNode: ChatMessageBubbleContentNode {
         self.buttonNode.clipsToBounds = true
         self.buttonNode.cornerRadius = 17.0
         
-        self.buttonStarsNode = PremiumStarsNode()
+        self.buttonDiamondsNode = PremiumDiamondsNode()
         
         self.buttonContentNode = ASDisplayNode()
         self.buttonContentNode.isUserInteractionEnabled = false
@@ -211,7 +211,7 @@ public class ChatMessageGiftBubbleContentNode: ChatMessageBubbleContentNode {
         self.addSubnode(self.moreTextNode)
         
         self.addSubnode(self.buttonNode)
-        self.buttonNode.addSubnode(self.buttonStarsNode)
+        self.buttonNode.addSubnode(self.buttonDiamondsNode)
         self.buttonNode.addSubnode(self.buttonContentNode)
                 
         self.buttonContentNode.addSubnode(self.buttonTitleNode)
@@ -432,7 +432,7 @@ public class ChatMessageGiftBubbleContentNode: ChatMessageBubbleContentNode {
                 var ribbonTitle = ""
                 var customRibbonColors: [UIColor]?
                 var textSpacing: CGFloat = 0.0
-                var isStarGift = false
+                var isDiamondGift = false
                 
                 var creatorButtonTitle = ""
                 
@@ -468,7 +468,7 @@ public class ChatMessageGiftBubbleContentNode: ChatMessageBubbleContentNode {
                             } else {
                                 text = item.presentationData.strings.Notification_PremiumGift_SubscriptionDescription
                             }
-                        case let .giftStars(_, _, count, _, _, _):
+                        case let .giftDiamonds(_, _, count, _, _, _):
                             if count <= 1000 {
                                 months = 3
                             } else if count < 2500 {
@@ -500,7 +500,7 @@ public class ChatMessageGiftBubbleContentNode: ChatMessageBubbleContentNode {
                             title = "$ \(formatTonAmountText(cryptoAmount, dateTimeFormat: item.presentationData.dateTimeFormat, maxDecimalPositions: 3))"
                             text = incoming ? item.presentationData.strings.Notification_Ton_Subtitle : item.presentationData.strings.Notification_Ton_SubtitleYou(peerName).string
                             buttonTitle = ""
-                        case let .prizeStars(count, _, channelId, _, _):
+                        case let .prizeDiamonds(count, _, channelId, _, _):
                             if count <= 1000 {
                                 months = 3
                             } else if count < 2500 {
@@ -513,8 +513,8 @@ public class ChatMessageGiftBubbleContentNode: ChatMessageBubbleContentNode {
                                 peerName = EnginePeer(channel).compactDisplayTitle
                             }
                             title = item.presentationData.strings.Notification_DiamondsGiveaway_Title
-                            let starsString = item.presentationData.strings.Notification_DiamondsGiveaway_Subtitle_Diamonds(Int32(clamping: count)).replacingOccurrences(of: " ", with: "\u{00A0}")
-                            text = item.presentationData.strings.Notification_DiamondsGiveaway_Subtitle(peerName, starsString).string
+                            let diamondsString = item.presentationData.strings.Notification_DiamondsGiveaway_Subtitle_Diamonds(Int32(clamping: count)).replacingOccurrences(of: " ", with: "\u{00A0}")
+                            text = item.presentationData.strings.Notification_DiamondsGiveaway_Subtitle(peerName, diamondsString).string
                         case let .giftCode(_, fromGiveaway, unclaimed, channelId, daysValue, _, _, _, _, giftText, giftEntities):
                             let monthsValue = max(3, Int32(round(Float(daysValue) / 30.0)))
                             if channelId == nil {
@@ -568,7 +568,7 @@ public class ChatMessageGiftBubbleContentNode: ChatMessageBubbleContentNode {
                                 if let releasedBy = gift.releasedBy, let peer = item.message.peers[releasedBy], let addressName = peer.addressName {
                                     creatorButtonTitle = item.presentationData.strings.Notification_DiamondGift_ReleasedBy("**@\(addressName)**").string
                                 }
-                                isStarGift = true
+                                isDiamondGift = true
                                 
                                 var isSelfGift = item.message.id.peerId == item.context.account.peerId
                                 if item.message.id.peerId.isIosappNotifications, let toPeerId {
@@ -646,8 +646,8 @@ public class ChatMessageGiftBubbleContentNode: ChatMessageBubbleContentNode {
                                         }
                                         if peerName.isEmpty {
                                             if let convertStars, convertStars > 0 {
-                                                let starsString = item.presentationData.strings.Notification_DiamondGift_Subtitle_Diamonds(Int32(clamping: convertStars)).replacingOccurrences(of: " ", with: "\u{00A0}")
-                                                text = item.presentationData.strings.Notification_DiamondGift_Subtitle(starsString).string
+                                                let diamondsString = item.presentationData.strings.Notification_DiamondGift_Subtitle_Diamonds(Int32(clamping: convertStars)).replacingOccurrences(of: " ", with: "\u{00A0}")
+                                                text = item.presentationData.strings.Notification_DiamondGift_Subtitle(diamondsString).string
                                             } else {
                                                 text =  item.presentationData.strings.Notification_DiamondGift_Bot_Subtitle
                                             }
@@ -657,11 +657,11 @@ public class ChatMessageGiftBubbleContentNode: ChatMessageBubbleContentNode {
                                             } else if upgradeStars != nil {
                                                 text =  item.presentationData.strings.Notification_DiamondGift_Subtitle_Upgrade_Other(peerName).string
                                             } else if let convertStars, convertStars > 0 {
-                                                let starsString = item.presentationData.strings.Notification_DiamondGift_Subtitle_Other_Diamonds(Int32(clamping: convertStars)).replacingOccurrences(of: " ", with: "\u{00A0}")
-                                                let formattedString = item.presentationData.strings.Notification_DiamondGift_Subtitle_Other(peerName, starsString)
+                                                let diamondsString = item.presentationData.strings.Notification_DiamondGift_Subtitle_Other_Diamonds(Int32(clamping: convertStars)).replacingOccurrences(of: " ", with: "\u{00A0}")
+                                                let formattedString = item.presentationData.strings.Notification_DiamondGift_Subtitle_Other(peerName, diamondsString)
                                                 text = formattedString.string
-                                                if let starsRange = formattedString.ranges.last {
-                                                    entities.append(MessageTextEntity(range: starsRange.range.lowerBound ..< starsRange.range.upperBound, type: .Bold))
+                                                if let diamondsRange = formattedString.ranges.last {
+                                                    entities.append(MessageTextEntity(range: diamondsRange.range.lowerBound ..< diamondsRange.range.upperBound, type: .Bold))
                                                 }
                                             } else {
                                                 text = item.presentationData.strings.Notification_DiamondGift_Subtitle_OtherNoConvert
@@ -692,7 +692,7 @@ public class ChatMessageGiftBubbleContentNode: ChatMessageBubbleContentNode {
                             }
                         case let .starGiftUnique(gift, isUpgrade, _, _, _, _, isRefunded, _, _, _, _, _, _, _, _, _, fromOffer, _, isCrafted):
                             if case let .unique(uniqueGift) = gift {
-                                isStarGift = true
+                                isDiamondGift = true
                                 
                                 if let releasedBy = gift.releasedBy, let peer = item.message.peers[releasedBy], let addressName = peer.addressName {
                                     creatorButtonTitle = item.presentationData.strings.Notification_DiamondGift_ReleasedBy("**@\(addressName)**").string
@@ -763,7 +763,7 @@ public class ChatMessageGiftBubbleContentNode: ChatMessageBubbleContentNode {
                                     }
                                 }
                             } else if isRefunded, case let .generic(gift) = gift {
-                                isStarGift = true
+                                isDiamondGift = true
                                 let authorName = item.message.author.flatMap { EnginePeer($0) }?.compactDisplayTitle ?? ""
                                 title = item.presentationData.strings.Notification_DiamondGift_Title(authorName).string
                                 text = item.presentationData.strings.Notification_DiamondGift_Subtitle_Refunded
@@ -1056,7 +1056,7 @@ public class ChatMessageGiftBubbleContentNode: ChatMessageBubbleContentNode {
                                 }
                             }
                             strongSelf.item = item
-                            strongSelf.isStarGift = isStarGift
+                            strongSelf.isDiamondGift = isDiamondGift
                             
                             strongSelf.updateVisibility()
                             
@@ -1302,7 +1302,7 @@ public class ChatMessageGiftBubbleContentNode: ChatMessageBubbleContentNode {
                             }
                                                         
                             animation.animator.updateFrame(layer: strongSelf.buttonNode.layer, frame: CGRect(origin: CGPoint(x: mediaBackgroundFrame.minX + floorToScreenPixels((mediaBackgroundFrame.width - buttonSize.width) / 2.0), y: buttonOriginY), size: buttonSize), completion: nil)
-                            strongSelf.buttonStarsNode.frame = CGRect(origin: .zero, size: buttonSize)
+                            strongSelf.buttonDiamondsNode.frame = CGRect(origin: .zero, size: buttonSize)
                             strongSelf.buttonContentNode.frame = CGRect(origin: .zero, size: buttonSize)
                             
                             if ribbonTextLayout.size.width > 0.0 {
@@ -1663,7 +1663,7 @@ public class ChatMessageGiftBubbleContentNode: ChatMessageBubbleContentNode {
             if !alreadySeen && self.animationNode.isPlaying {
                 item.controllerInteraction.playNextOutgoingGift = false
                 
-                Queue.mainQueue().after(self.isStarGift ? 0.1 : 1.0) {
+                Queue.mainQueue().after(self.isDiamondGift ? 0.1 : 1.0) {
                     item.controllerInteraction.animateDiceSuccess(false, true)
                 }
             }

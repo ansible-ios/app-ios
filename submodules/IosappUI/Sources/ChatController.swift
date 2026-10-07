@@ -599,9 +599,9 @@ public final class ChatControllerImpl: IosappBaseController, ChatController, Gal
     
     var messageComposeController: MFMessageComposeViewController?
     
-    weak var currentSendStarsUndoController: UndoOverlayController?
-    var currentSendStarsUndoMessageId: EngineMessage.Id?
-    var currentSendStarsUndoCount: Int = 0
+    weak var currentSendDiamondsUndoController: UndoOverlayController?
+    var currentSendDiamondsUndoMessageId: EngineMessage.Id?
+    var currentSendDiamondsUndoCount: Int = 0
     
     weak var currentPaidMessageUndoController: UndoOverlayController?
     
@@ -1131,7 +1131,7 @@ public final class ChatControllerImpl: IosappBaseController, ChatController, Gal
                                     guard let self else {
                                         return
                                     }
-                                    self.push(self.context.sharedContext.makeStarsReceiptScreen(context: self.context, receipt: receipt))
+                                    self.push(self.context.sharedContext.makeDiamondsReceiptScreen(context: self.context, receipt: receipt))
                                 })
                             } else {
                                 self.present(BotReceiptController(context: self.context, messageId: message.id), in: .window(.root), with: ViewControllerPresentationArguments(presentationAnimation: .modalSheet))
@@ -1238,8 +1238,8 @@ public final class ChatControllerImpl: IosappBaseController, ChatController, Gal
                                 self.push(controller)
                             }
                             return true
-                        case .giftStars:
-                            let controller = self.context.sharedContext.makeStarsGiftScreen(context: self.context, message: EngineMessage(message))
+                        case .giftDiamonds:
+                            let controller = self.context.sharedContext.makeDiamondsGiftScreen(context: self.context, message: EngineMessage(message))
                             self.push(controller)
                             return true
                         case let .giftTon(_, _, _, _, transactionId):
@@ -1247,19 +1247,19 @@ public final class ChatControllerImpl: IosappBaseController, ChatController, Gal
                                 guard let self, let transactionId, let peerId = self.chatLocation.peerId else {
                                     return
                                 }
-                                let transactionData = await self.context.engine.payments.getStarsTransaction(reference: StarsTransactionReference(peerId: self.context.account.peerId, ton: true, id: transactionId, isRefund: false)).get()
+                                let transactionData = await self.context.engine.payments.getDiamondsTransaction(reference: DiamondsTransactionReference(peerId: self.context.account.peerId, ton: true, id: transactionId, isRefund: false)).get()
                                 let peer = await self.context.engine.data.get(
                                     IosappEngine.EngineData.Item.Peer.Peer(id: peerId)
                                 ).get()
                                 if let transactionData, let peer {
-                                    self.push(self.context.sharedContext.makeStarsTransactionScreen(context: self.context, transaction: transactionData, peer: peer))
+                                    self.push(self.context.sharedContext.makeDiamondsTransactionScreen(context: self.context, transaction: transactionData, peer: peer))
                                 }
                             }
                         case let .giftCode(slug, _, _, _, _, _, _, _, _, _, _):
                             self.openResolved(result: .premiumGiftCode(slug: slug), sourceMessageId: message.id, progress: params.progress)
                             return true
-                        case .prizeStars:
-                            let controller = self.context.sharedContext.makeStarsGiftScreen(context: self.context, message: EngineMessage(message))
+                        case .prizeDiamonds:
+                            let controller = self.context.sharedContext.makeDiamondsGiftScreen(context: self.context, message: EngineMessage(message))
                             self.push(controller)
                             return true
                         case let .suggestedBirthday(birthday):
@@ -1361,7 +1361,7 @@ public final class ChatControllerImpl: IosappBaseController, ChatController, Gal
                         case .paidMessagesPriceEdited:
                             self.interfaceInteraction?.openMonoforum()
                             return true
-                        case .starGiftPurchaseOffer:
+                        case .diamondGiftPurchaseOffer:
                             let controller = self.context.sharedContext.makeGiftViewScreen(context: self.context, message: EngineMessage(message), shareStory: { [weak self] uniqueGift in
                                 Queue.mainQueue().after(0.15) {
                                     if let self {
@@ -1603,13 +1603,13 @@ public final class ChatControllerImpl: IosappBaseController, ChatController, Gal
                             
                             if let mediaReference = mediaReference, let peer = message.peers[message.id.peerId] {
                                 let hasSilentPosting = peer.id != self.context.account.peerId
-                                let hasSchedule = self.presentationInterfaceState.subject != .scheduledMessages && peer.id.namespace != Namespaces.Peer.SecretChat && self.presentationInterfaceState.sendPaidMessageStars == nil
+                                let hasSchedule = self.presentationInterfaceState.subject != .scheduledMessages && peer.id.namespace != Namespaces.Peer.SecretChat && self.presentationInterfaceState.sendPaidMessageDiamonds == nil
                                 legacyMediaEditor(context: self.context, peer: EnginePeer(peer), threadTitle: self.contentData?.state.threadInfo?.title, media: mediaReference, mode: .draw, initialCaption: NSAttributedString(), snapshots: snapshots, transitionCompletion: {
                                     transitionCompletion()
                                 }, getCaptionPanelView: { [weak self] in
                                     return self?.getCaptionPanelView(isFile: false)
-                                }, photoToolbarView: { [context = self.context] backButton, doneButton, solidBackground, hasSendStarsButton in
-                                    return makeMediaPickerPhotoToolbarView(context: context, backButton: backButton, doneButton: doneButton, solidBackground: solidBackground, hasSendStarsButton: hasSendStarsButton)
+                                }, photoToolbarView: { [context = self.context] backButton, doneButton, solidBackground, hasSendDiamondsButton in
+                                    return makeMediaPickerPhotoToolbarView(context: context, backButton: backButton, doneButton: doneButton, solidBackground: solidBackground, hasSendDiamondsButton: hasSendDiamondsButton)
                                 }, hasSilentPosting: hasSilentPosting, hasSchedule: hasSchedule, reminder: peer.id == self.context.account.peerId, presentSchedulePicker: { [weak self] _, done in
                                     guard let self else {
                                         return
@@ -1924,14 +1924,14 @@ public final class ChatControllerImpl: IosappBaseController, ChatController, Gal
                             }
                         })
                         
-                        guard let starsContext = strongSelf.context.starsContext else {
+                        guard let diamondsContext = strongSelf.context.diamondsContext else {
                             return
                         }
                         guard let peerId = strongSelf.chatLocation.peerId else {
                             return
                         }
                         let _ = (combineLatest(
-                            starsContext.state,
+                            diamondsContext.state,
                             strongSelf.context.engine.data.get(IosappEngine.EngineData.Item.Peer.ReactionSettings(id: peerId))
                         )
                         |> take(1)
@@ -1940,7 +1940,7 @@ public final class ChatControllerImpl: IosappBaseController, ChatController, Gal
                                 return
                             }
                             
-                            if case let .known(reactionSettings) = reactionSettings, let starsAllowed = reactionSettings.starsAllowed, !starsAllowed {
+                            if case let .known(reactionSettings) = reactionSettings, let diamondsAllowed = reactionSettings.diamondsAllowed, !diamondsAllowed {
                                 if let peer = strongSelf.presentationInterfaceState.renderedPeer?.chatMainPeer {
                                     let alertController = textAlertController(
                                         context: strongSelf.context,
@@ -1956,17 +1956,17 @@ public final class ChatControllerImpl: IosappBaseController, ChatController, Gal
                             }
                             
                             if balance < StarsAmount(value: 1, nanos: 0) {
-                                let _ = (strongSelf.context.engine.payments.starsTopUpOptions()
+                                let _ = (strongSelf.context.engine.payments.diamondsTopUpOptions()
                                 |> take(1)
                                 |> deliverOnMainQueue).startStandalone(next: { [weak strongSelf] options in
                                     guard let strongSelf, let peerId = strongSelf.chatLocation.peerId else {
                                         return
                                     }
-                                    guard let starsContext = strongSelf.context.starsContext else {
+                                    guard let diamondsContext = strongSelf.context.diamondsContext else {
                                         return
                                     }
                                     
-                                    let purchaseScreen = strongSelf.context.sharedContext.makeStarsPurchaseScreen(context: strongSelf.context, starsContext: starsContext, options: options, purpose: .reactions(peerId: peerId, requiredStars: 1), targetPeerId: nil, customTheme: nil, completion: { result in
+                                    let purchaseScreen = strongSelf.context.sharedContext.makeDiamondsPurchaseScreen(context: strongSelf.context, diamondsContext: diamondsContext, options: options, purpose: .reactions(peerId: peerId, requiredDiamonds: 1), targetPeerId: nil, customTheme: nil, completion: { result in
                                         let _ = result
                                     })
                                     strongSelf.push(purchaseScreen)
@@ -1975,12 +1975,12 @@ public final class ChatControllerImpl: IosappBaseController, ChatController, Gal
                                 return
                             }
                             
-                            let _ = (strongSelf.context.engine.messages.sendStarsReaction(id: message.id, count: 1, privacy: nil)
+                            let _ = (strongSelf.context.engine.messages.sendDiamondsReaction(id: message.id, count: 1, privacy: nil)
                             |> deliverOnMainQueue).startStandalone(next: { privacy in
                                 guard let strongSelf = self else {
                                     return
                                 }
-                                strongSelf.displayOrUpdateSendStarsUndo(messageId: message.id, count: 1, privacy: privacy)
+                                strongSelf.displayOrUpdateSendDiamondsUndo(messageId: message.id, count: 1, privacy: privacy)
                             })
                         })
                     } else {
@@ -2664,7 +2664,7 @@ public final class ChatControllerImpl: IosappBaseController, ChatController, Gal
                 return
             }
             
-            if let action = message.media.first(where: { $0 is IosappMediaAction }) as? IosappMediaAction, case let .starGiftPurchaseOffer(gift, amount, _, isAccepted, isDeclined) = action.action, !isAccepted && !isDeclined {
+            if let action = message.media.first(where: { $0 is IosappMediaAction }) as? IosappMediaAction, case let .diamondGiftPurchaseOffer(gift, amount, _, isAccepted, isDeclined) = action.action, !isAccepted && !isDeclined {
                 guard let data = data?.makeData(), message.effectivelyIncoming(strongSelf.context.account.peerId) else {
                     return
                 }
@@ -2787,8 +2787,8 @@ public final class ChatControllerImpl: IosappBaseController, ChatController, Gal
                             var timestamp: Int32?
                             var funds: (amount: CurrencyAmount, commissionPermille: Int)?
                             if let amount = attribute.amount {
-                                let configuration = StarsSubscriptionConfiguration.with(appConfiguration: strongSelf.context.currentAppConfiguration.with { $0 })
-                                funds = (amount, amount.currency == .stars ? Int(configuration.channelMessageSuggestionStarsCommissionPermille) : Int(configuration.channelMessageSuggestionTonCommissionPermille))
+                                let configuration = DiamondsSubscriptionConfiguration.with(appConfiguration: strongSelf.context.currentAppConfiguration.with { $0 })
+                                funds = (amount, amount.currency == .stars ? Int(configuration.channelMessageSuggestionDiamondsCommissionPermille) : Int(configuration.channelMessageSuggestionTonCommissionPermille))
                             }
                                                         
                             var isAdmin = false
@@ -2800,22 +2800,22 @@ public final class ChatControllerImpl: IosappBaseController, ChatController, Gal
                                 switch funds.amount.currency {
                                 case .stars:
                                     var balance: StarsAmount?
-                                    if let starsContext = strongSelf.context.starsContext {
-                                        let state = await (starsContext.state |> take(1) |> deliverOnMainQueue).get()
+                                    if let diamondsContext = strongSelf.context.diamondsContext {
+                                        let state = await (diamondsContext.state |> take(1) |> deliverOnMainQueue).get()
                                         balance = state?.balance
                                     }
                                     
                                     if let balance, funds.amount.amount > balance {
-                                        guard let starsContext = strongSelf.context.starsContext else {
+                                        guard let diamondsContext = strongSelf.context.diamondsContext else {
                                             return
                                         }
-                                        let _ = (strongSelf.context.engine.payments.starsTopUpOptions()
+                                        let _ = (strongSelf.context.engine.payments.diamondsTopUpOptions()
                                         |> take(1)
                                         |> deliverOnMainQueue).startStandalone(next: { [weak strongSelf] options in
                                             guard let strongSelf else {
                                                 return
                                             }
-                                            let purchaseController = strongSelf.context.sharedContext.makeStarsPurchaseScreen(context: strongSelf.context, starsContext: starsContext, options: options, purpose: .generic, targetPeerId: nil, customTheme: nil, completion: { _ in
+                                            let purchaseController = strongSelf.context.sharedContext.makeDiamondsPurchaseScreen(context: strongSelf.context, diamondsContext: diamondsContext, options: options, purpose: .generic, targetPeerId: nil, customTheme: nil, completion: { _ in
                                             })
                                             strongSelf.push(purchaseController)
                                         })
@@ -3592,19 +3592,19 @@ public final class ChatControllerImpl: IosappBaseController, ChatController, Gal
                         |> `catch` { _ -> Signal<BotCheckoutController.InputData?, NoError> in
                             return .single(nil)
                         })
-                        if let starsContext = strongSelf.context.starsContext {
-                            let starsInputData = combineLatest(
+                        if let diamondsContext = strongSelf.context.diamondsContext {
+                            let diamondsInputData = combineLatest(
                                 inputData.get(),
-                                starsContext.state
+                                diamondsContext.state
                             )
-                            |> map { data, state -> (StarsContext.State, BotPaymentForm, EnginePeer?, EnginePeer?)? in
+                            |> map { data, state -> (DiamondsContext.State, BotPaymentForm, EnginePeer?, EnginePeer?)? in
                                 if let data, let state {
                                     return (state, data.form, data.botPeer, message.forwardInfo?.sourceMessageId == nil ? message.author : nil)
                                 } else {
                                     return nil
                                 }
                             }
-                            let _ = (starsInputData |> filter { $0 != nil } |> take(1) |> deliverOnMainQueue).start(next: { [weak self] _ in
+                            let _ = (diamondsInputData |> filter { $0 != nil } |> take(1) |> deliverOnMainQueue).start(next: { [weak self] _ in
                                 guard let strongSelf = self, let extendedMedia = paidContent.extendedMedia.first, case let .preview(dimensions, immediateThumbnailData, _) = extendedMedia else {
                                     return
                                 }
@@ -3613,7 +3613,7 @@ public final class ChatControllerImpl: IosappBaseController, ChatController, Gal
                                     messageId = sourceMessageId
                                 }
                                 let invoice = IosappMediaInvoice(title: "", description: "", photo: nil, receiptMessageId: nil, currency: "XTR", totalAmount: paidContent.amount, startParam: "", extendedMedia: .preview(dimensions: dimensions, immediateThumbnailData: immediateThumbnailData, videoDuration: nil), subscriptionPeriod: nil, flags: [], version: 0)
-                                let controller = strongSelf.context.sharedContext.makeStarsTransferScreen(context: strongSelf.context, starsContext: starsContext, invoice: invoice, source: .message(messageId), extendedMedia: paidContent.extendedMedia, inputData: starsInputData, completion: { _ in })
+                                let controller = strongSelf.context.sharedContext.makeDiamondsTransferScreen(context: strongSelf.context, diamondsContext: diamondsContext, invoice: invoice, source: .message(messageId), extendedMedia: paidContent.extendedMedia, inputData: diamondsInputData, completion: { _ in })
                                 strongSelf.push(controller)
                                 
                                 progressDisposable.dispose()
@@ -3628,7 +3628,7 @@ public final class ChatControllerImpl: IosappBaseController, ChatController, Gal
                                     guard let strongSelf = self else {
                                         return
                                     }
-                                    strongSelf.push(strongSelf.context.sharedContext.makeStarsReceiptScreen(context: strongSelf.context, receipt: receipt))
+                                    strongSelf.push(strongSelf.context.sharedContext.makeDiamondsReceiptScreen(context: strongSelf.context, receipt: receipt))
                                 })
                             } else {
                                 strongSelf.present(BotReceiptController(context: strongSelf.context, messageId: receiptMessageId), in: .window(.root), with: ViewControllerPresentationArguments(presentationAnimation: .modalSheet))
@@ -3640,23 +3640,23 @@ public final class ChatControllerImpl: IosappBaseController, ChatController, Gal
                             |> `catch` { _ -> Signal<BotCheckoutController.InputData?, NoError> in
                                 return .single(nil)
                             })
-                            if invoice.currency == "XTR", let starsContext = strongSelf.context.starsContext {
-                                let starsInputData = combineLatest(
+                            if invoice.currency == "XTR", let diamondsContext = strongSelf.context.diamondsContext {
+                                let diamondsInputData = combineLatest(
                                     inputData.get(),
-                                    starsContext.state
+                                    diamondsContext.state
                                 )
-                                |> map { data, state -> (StarsContext.State, BotPaymentForm, EnginePeer?, EnginePeer?)? in
+                                |> map { data, state -> (DiamondsContext.State, BotPaymentForm, EnginePeer?, EnginePeer?)? in
                                     if let data, let state {
                                         return (state, data.form, data.botPeer, nil)
                                     } else {
                                         return nil
                                     }
                                 }
-                                let _ = (starsInputData |> filter { $0 != nil } |> take(1) |> deliverOnMainQueue).start(next: { [weak self] _ in
+                                let _ = (diamondsInputData |> filter { $0 != nil } |> take(1) |> deliverOnMainQueue).start(next: { [weak self] _ in
                                     guard let strongSelf = self else {
                                         return
                                     }
-                                    let controller = strongSelf.context.sharedContext.makeStarsTransferScreen(context: strongSelf.context, starsContext: starsContext, invoice: invoice, source: .message(messageId), extendedMedia: [], inputData: starsInputData, completion: { _ in })
+                                    let controller = strongSelf.context.sharedContext.makeDiamondsTransferScreen(context: strongSelf.context, diamondsContext: diamondsContext, invoice: invoice, source: .message(messageId), extendedMedia: [], inputData: diamondsInputData, completion: { _ in })
                                     strongSelf.push(controller)
                                 })
                             } else {
@@ -3894,7 +3894,7 @@ public final class ChatControllerImpl: IosappBaseController, ChatController, Gal
                                 }
                                 let _ = resendMessages(account: self.context.account, messageIds: selectedGroup.map({ $0.id })).startStandalone()
                             })
-                            f(self.presentationInterfaceState.sendPaidMessageStars == nil ? .dismissWithoutContent : .default)
+                            f(self.presentationInterfaceState.sendPaidMessageDiamonds == nil ? .dismissWithoutContent : .default)
                         }
                     })))
                     if totalGroupCount != 1 {
@@ -3908,7 +3908,7 @@ public final class ChatControllerImpl: IosappBaseController, ChatController, Gal
                                     }
                                     let _ = resendMessages(account: self.context.account, messageIds: messages.map({ $0.id })).startStandalone()
                                 })
-                                f(self.presentationInterfaceState.sendPaidMessageStars == nil ? .dismissWithoutContent : .default)
+                                f(self.presentationInterfaceState.sendPaidMessageDiamonds == nil ? .dismissWithoutContent : .default)
                             }
                         })))
                     }
@@ -4761,8 +4761,8 @@ public final class ChatControllerImpl: IosappBaseController, ChatController, Gal
                         let inputText = strongSelf.presentationInterfaceState.interfaceState.effectiveInputState.inputText
                         legacyMediaEditor(context: strongSelf.context, peer: EnginePeer(peer), threadTitle: strongSelf.contentData?.state.threadInfo?.title, media: mediaReference, mode: .draw, initialCaption: inputText, snapshots: [], transitionCompletion: nil, getCaptionPanelView: { [weak self] in
                             return self?.getCaptionPanelView(isFile: true)
-                        }, photoToolbarView: { [context = strongSelf.context] backButton, doneButton, solidBackground, hasSendStarsButton in
-                            return makeMediaPickerPhotoToolbarView(context: context, backButton: backButton, doneButton: doneButton, solidBackground: solidBackground, hasSendStarsButton: hasSendStarsButton)
+                        }, photoToolbarView: { [context = strongSelf.context] backButton, doneButton, solidBackground, hasSendDiamondsButton in
+                            return makeMediaPickerPhotoToolbarView(context: context, backButton: backButton, doneButton: doneButton, solidBackground: solidBackground, hasSendDiamondsButton: hasSendDiamondsButton)
                         }, sendMessagesWithSignals: { [weak self] signals, _, _, _ in
                             if let strongSelf = self {
                                 strongSelf.interfaceInteraction?.setupEditMessage(messageId, { _ in })
@@ -5820,8 +5820,8 @@ public final class ChatControllerImpl: IosappBaseController, ChatController, Gal
             }, queue: .mainQueue())
             self.richTextCheckboxDebounceTimers[messageId] = timer
             timer.start()
-        }, openStarsPurchase: { [weak self] amount in
-            self?.interfaceInteraction?.openStarsPurchase(amount)
+        }, openDiamondsPurchase: { [weak self] amount in
+            self?.interfaceInteraction?.openDiamondsPurchase(amount)
         }, openRankInfo: { [weak self] peer, role, rank in
             guard let self, let chatPeer = self.presentationInterfaceState.renderedPeer?.peer else {
                 return
@@ -7811,7 +7811,7 @@ public final class ChatControllerImpl: IosappBaseController, ChatController, Gal
                         |> take(1)
                         |> deliverOnMainQueue).startStandalone(next: { [weak self] playlistStateAndType in
                             if let self, let (_, playbackState, _) = playlistStateAndType, case let .state(state) = playbackState {
-                                if let source = state.item.playbackData?.source, case let .telegramFile(_, _, isViewOnce) = source, isViewOnce {
+                                if let source = state.item.playbackData?.source, case let .ansibleFile(_, _, isViewOnce) = source, isViewOnce {
                                     self.context.sharedContext.mediaManager.setPlaylist(nil, type: .voice, control: .playback(.pause))
                                 }
                             }
@@ -8909,15 +8909,15 @@ public final class ChatControllerImpl: IosappBaseController, ChatController, Gal
             return message.withUpdatedAttributes { attributes in
                 var attributes = attributes
                 
-                if let sendPaidMessageStars = self.presentationInterfaceState.sendPaidMessageStars {
+                if let sendPaidMessageDiamonds = self.presentationInterfaceState.sendPaidMessageDiamonds {
                     var effectivePostpone = postpone
                     for i in (0 ..< attributes.count).reversed() {
-                        if let paidStarsMessageAttribute = attributes[i] as? PaidStarsMessageAttribute {
-                            effectivePostpone = effectivePostpone || paidStarsMessageAttribute.postponeSending
+                        if let paidDiamondsMessageAttribute = attributes[i] as? PaidDiamondsMessageAttribute {
+                            effectivePostpone = effectivePostpone || paidDiamondsMessageAttribute.postponeSending
                             attributes.remove(at: i)
                         }
                     }
-                    attributes.append(PaidStarsMessageAttribute(stars: sendPaidMessageStars, postponeSending: effectivePostpone))
+                    attributes.append(PaidDiamondsMessageAttribute(stars: sendPaidMessageDiamonds, postponeSending: effectivePostpone))
                 }
                 
                 if silentPosting || scheduleTime != nil {
@@ -9054,7 +9054,7 @@ public final class ChatControllerImpl: IosappBaseController, ChatController, Gal
         getAnimatedTransitionSource: ((String) -> UIView?)? = nil,
         completion: @escaping () -> Void = {}
     ) {
-        if let _ = self.presentationInterfaceState.sendPaidMessageStars {
+        if let _ = self.presentationInterfaceState.sendPaidMessageDiamonds {
             self.presentPaidMessageAlertIfNeeded(count: Int32(signals?.count ?? 1), forceDark: fromGallery, completion: { [weak self] postpone in
                 self?.commitEnqueueMediaMessages(signals: signals, silentPosting: silentPosting, scheduleTime: scheduleTime, postpone: postpone, parameters: parameters, getAnimatedTransitionSource: getAnimatedTransitionSource, completion: completion)
             })
@@ -9326,8 +9326,8 @@ public final class ChatControllerImpl: IosappBaseController, ChatController, Gal
             }
             let replyMessageSubject = self.presentationInterfaceState.interfaceState.replyMessageSubject
             
-            let sendPaidMessageStars = self.presentationInterfaceState.sendPaidMessageStars
-            if self.context.engine.messages.enqueueOutgoingMessageWithChatContextResult(to: peerId, threadId: self.chatLocation.threadId, botId: results.botId, result: result, replyToMessageId: replyMessageSubject?.subjectModel, hideVia: hideVia, silentPosting: silentPosting, scheduleTime: scheduleTime, sendPaidMessageStars: sendPaidMessageStars, postpone: postpone) {
+            let sendPaidMessageDiamonds = self.presentationInterfaceState.sendPaidMessageDiamonds
+            if self.context.engine.messages.enqueueOutgoingMessageWithChatContextResult(to: peerId, threadId: self.chatLocation.threadId, botId: results.botId, result: result, replyToMessageId: replyMessageSubject?.subjectModel, hideVia: hideVia, silentPosting: silentPosting, scheduleTime: scheduleTime, sendPaidMessageDiamonds: sendPaidMessageDiamonds, postpone: postpone) {
                 self.chatDisplayNode.setupSendActionOnViewUpdate({ [weak self] in
                     if let strongSelf = self {
                         strongSelf.chatDisplayNode.collapseInput()

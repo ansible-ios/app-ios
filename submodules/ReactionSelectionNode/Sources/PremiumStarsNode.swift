@@ -5,27 +5,27 @@ import Display
 import SwiftSignalKit
 import AppBundle
 
-private let starsCount = 9
-public final class PremiumStarsNode: ASDisplayNode {
-    private let starNodes: [ASImageNode]
+private let diamondsCount = 9
+public final class PremiumDiamondsNode: ASDisplayNode {
+    private let diamondNodes: [ASImageNode]
     private var timer: SwiftSignalKit.Timer?
     
     public override init() {
         let image = UIImage(bundleImageName: "Premium/ReactionsStar")
-        var starNodes: [ASImageNode] = []
-        for _ in 0 ..< starsCount {
+        var diamondNodes: [ASImageNode] = []
+        for _ in 0 ..< diamondsCount {
             let node = ASImageNode()
             node.isLayerBacked = true
             node.alpha = 0.0
             node.image = image
             node.displaysAsynchronously = false
-            starNodes.append(node)
+            diamondNodes.append(node)
         }
-        self.starNodes = starNodes
+        self.diamondNodes = diamondNodes
         
         super.init()
         
-        for node in starNodes {
+        for node in diamondNodes {
             self.addSubnode(node)
         }
         
@@ -50,15 +50,15 @@ public final class PremiumStarsNode: ASDisplayNode {
         } else {
             size = CGSize(width: 72.0, height: 32.0)
         }
-        let starSize = CGSize(width: 6.0, height: 8.0)
+        let diamondSize = CGSize(width: 6.0, height: 8.0)
         
-        for node in self.starNodes {
+        for node in self.diamondNodes {
             if node.layer.animation(forKey: "transform.scale") == nil && node.layer.animation(forKey: "opacity") == nil {
                 let x = CGFloat.random(in: 0 ..< size.width)
                 let y = CGFloat.random(in: 0 ..< size.width)
                 
                 let randomTargetScale = CGFloat.random(in: 0.8 ..< 1.0)
-                node.bounds = CGRect(origin: .zero, size: starSize)
+                node.bounds = CGRect(origin: .zero, size: diamondSize)
                 node.position = CGPoint(x: x, y: y)
                 
                 node.alpha = 1.0

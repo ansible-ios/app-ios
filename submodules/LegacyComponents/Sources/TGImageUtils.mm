@@ -510,7 +510,7 @@ NSString *TGImageHash(NSData *data)
     return result;
 }
 
-- (void)tgPreload
+- (void)asPreload
 {
     UIGraphicsBeginImageContextWithOptions(CGSizeMake(1, 1), true, 0);
     [self drawAtPoint:CGPointZero];

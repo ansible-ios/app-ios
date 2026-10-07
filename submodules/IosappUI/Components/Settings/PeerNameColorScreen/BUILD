@@ -61,7 +61,7 @@ swift_library(
         "//submodules/IosappUI/Components/Gifts/GiftItemComponent",
         "//submodules/IosappUI/Components/Gifts/GiftLoadingShimmerView",
         "//submodules/IosappUI/Components/Gifts/GiftViewScreen",
-        "//submodules/IosappUI/Components/Stars/BalanceNeededScreen",
+        "//submodules/IosappUI/Components/Diamonds/BalanceNeededScreen",
         "//submodules/IosappUI/Components/EdgeEffect",
     ],
     visibility = [

@@ -34,4 +34,4 @@ NSArray *TGBlurredBackgroundImages(UIImage *source, CGSize size);
 
 void TGAddImageCorners(void *memory, const unsigned int width, const unsigned int height, const unsigned int stride, int radius, int position);
 
-void telegramFastBlur(int imageWidth, int imageHeight, int imageStride, void *pixels);
+void ansibleFastBlur(int imageWidth, int imageHeight, int imageStride, void *pixels);

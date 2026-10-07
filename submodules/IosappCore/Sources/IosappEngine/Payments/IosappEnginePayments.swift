@@ -66,131 +66,131 @@ public extension IosappEngine {
             return _internal_launchPrepaidGiveaway(account: self.account, peerId: peerId, purpose: purpose, id: id, additionalPeerIds: additionalPeerIds, countries: countries, onlyNewSubscribers: onlyNewSubscribers, showWinners: showWinners, prizeDescription: prizeDescription, randomId: randomId, untilDate: untilDate)
         }
         
-        public func starsTopUpOptions() -> Signal<[StarsTopUpOption], NoError> {
+        public func diamondsTopUpOptions() -> Signal<[DiamondsTopUpOption], NoError> {
             return _internal_starsTopUpOptions(account: self.account)
         }
         
-        public func starsGiftOptions(peerId: EnginePeer.Id?) -> Signal<[StarsGiftOption], NoError> {
+        public func diamondsGiftOptions(peerId: EnginePeer.Id?) -> Signal<[StarsGiftOption], NoError> {
             return _internal_starsGiftOptions(account: self.account, peerId: peerId)
         }
         
-        public func starsGiveawayOptions() -> Signal<[StarsGiveawayOption], NoError> {
+        public func diamondsGiveawayOptions() -> Signal<[StarsGiveawayOption], NoError> {
             return _internal_starsGiveawayOptions(account: self.account)
         }
         
-        public func peerStarsContext() -> StarsContext {
-            return StarsContext(account: self.account, ton: false)
+        public func peerDiamondsContext() -> DiamondsContext {
+            return DiamondsContext(account: self.account, ton: false)
         }
         
-        public func peerTonContext() -> StarsContext {
-            return StarsContext(account: self.account, ton: true)
+        public func peerTonContext() -> DiamondsContext {
+            return DiamondsContext(account: self.account, ton: true)
         }
         
-        public func peerStarsRevenueContext(peerId: EnginePeer.Id, ton: Bool) -> StarsRevenueStatsContext {
-            return StarsRevenueStatsContext(account: self.account, peerId: peerId, ton: ton)
+        public func peerDiamondsRevenueContext(peerId: EnginePeer.Id, ton: Bool) -> DiamondsRevenueStatsContext {
+            return DiamondsRevenueStatsContext(account: self.account, peerId: peerId, ton: ton)
         }
         
-        public func peerStarsTransactionsContext(subject: StarsTransactionsContext.Subject, mode: StarsTransactionsContext.Mode) -> StarsTransactionsContext {
-            return StarsTransactionsContext(account: self.account, subject: subject, mode: mode)
+        public func peerDiamondsTransactionsContext(subject: DiamondsTransactionsContext.Subject, mode: DiamondsTransactionsContext.Mode) -> DiamondsTransactionsContext {
+            return DiamondsTransactionsContext(account: self.account, subject: subject, mode: mode)
         }
         
-        public func peerStarsSubscriptionsContext(starsContext: StarsContext?, missingBalance: Bool = false) -> StarsSubscriptionsContext {
-            return StarsSubscriptionsContext(account: self.account, starsContext: starsContext, missingBalance: missingBalance)
+        public func peerDiamondsSubscriptionsContext(diamondsContext: DiamondsContext?, missingBalance: Bool = false) -> DiamondsSubscriptionsContext {
+            return DiamondsSubscriptionsContext(account: self.account, diamondsContext: diamondsContext, missingBalance: missingBalance)
         }
         
-        public func sendStarsPaymentForm(formId: Int64, source: BotPaymentInvoiceSource) -> Signal<SendBotPaymentResult, SendBotPaymentFormError> {
-            return _internal_sendStarsPaymentForm(account: self.account, formId: formId, source: source)
+        public func sendDiamondsPaymentForm(formId: Int64, source: BotPaymentInvoiceSource) -> Signal<SendBotPaymentResult, SendBotPaymentFormError> {
+            return _internal_sendDiamondsPaymentForm(account: self.account, formId: formId, source: source)
         }
         
-        public func fulfillStarsSubscription(peerId: EnginePeer.Id, subscriptionId: String) -> Signal<Never, FulfillStarsSubsciptionError> {
-            return _internal_fulfillStarsSubscription(account: self.account, peerId: peerId, subscriptionId: subscriptionId)
+        public func fulfillStarsSubscription(peerId: EnginePeer.Id, subscriptionId: String) -> Signal<Never, FulfillDiamondsSubsciptionError> {
+            return _internal_fulfillDiamondsSubscription(account: self.account, peerId: peerId, subscriptionId: subscriptionId)
         }
         
-        public func cachedStarGifts() -> Signal<[StarGift]?, NoError> {
-            return _internal_cachedStarGifts(postbox: self.account.postbox)
-            |> map { starGiftsList in
-                return starGiftsList?.items
+        public func cachedDiamondGifts() -> Signal<[StarGift]?, NoError> {
+            return _internal_cachedDiamondGifts(postbox: self.account.postbox)
+            |> map { diamondGiftsList in
+                return diamondGiftsList?.items
             }
         }
         
-        public func keepStarGiftsUpdated() -> Signal<Never, NoError> {
-            return _internal_keepCachedStarGiftsUpdated(postbox: self.account.postbox, network: self.account.network, accountPeerId: self.account.peerId)
+        public func keepDiamondGiftsUpdated() -> Signal<Never, NoError> {
+            return _internal_keepCachedDiamondGiftsUpdated(postbox: self.account.postbox, network: self.account.network, accountPeerId: self.account.peerId)
         }
         
-        public func convertStarGift(reference: StarGiftReference) -> Signal<Never, NoError> {
-            return _internal_convertStarGift(account: self.account, reference: reference)
+        public func convertStarGift(reference: DiamondGiftReference) -> Signal<Never, NoError> {
+            return _internal_convertDiamondGift(account: self.account, reference: reference)
         }
         
-        public func updateStarGiftAddedToProfile(reference: StarGiftReference, added: Bool) -> Signal<Never, NoError> {
-            return _internal_updateStarGiftAddedToProfile(account: self.account, reference: reference, added: added)
+        public func updateDiamondGiftAddedToProfile(reference: DiamondGiftReference, added: Bool) -> Signal<Never, NoError> {
+            return _internal_updateDiamondGiftAddedToProfile(account: self.account, reference: reference, added: added)
         }
         
-        public func dropStarGiftOriginalDetails(reference: StarGiftReference) -> Signal<Never, DropStarGiftOriginalDetailsError> {
-            return _internal_dropStarGiftOriginalDetails(account: self.account, reference: reference)
+        public func dropDiamondGiftOriginalDetails(reference: DiamondGiftReference) -> Signal<Never, DropDiamondGiftOriginalDetailsError> {
+            return _internal_dropDiamondGiftOriginalDetails(account: self.account, reference: reference)
         }
         
-        public func transferStarGift(prepaid: Bool, reference: StarGiftReference, peerId: EnginePeer.Id) -> Signal<Never, TransferStarGiftError> {
-            return _internal_transferStarGift(account: self.account, prepaid: prepaid, reference: reference, peerId: peerId)
+        public func transferStarGift(prepaid: Bool, reference: DiamondGiftReference, peerId: EnginePeer.Id) -> Signal<Never, TransferDiamondGiftError> {
+            return _internal_transferDiamondGift(account: self.account, prepaid: prepaid, reference: reference, peerId: peerId)
         }
         
-        public func buyStarGift(slug: String, peerId: EnginePeer.Id, price: CurrencyAmount?) -> Signal<Never, BuyStarGiftError> {
-            return _internal_buyStarGift(account: self.account, slug: slug, peerId: peerId, price: price)
+        public func buyDiamondGift(slug: String, peerId: EnginePeer.Id, price: CurrencyAmount?) -> Signal<Never, BuyDiamondGiftError> {
+            return _internal_buyDiamondGift(account: self.account, slug: slug, peerId: peerId, price: price)
         }
         
-        public func upgradeStarGift(formId: Int64?, reference: StarGiftReference, keepOriginalInfo: Bool) -> Signal<ProfileGiftsContext.State.StarGift, UpgradeStarGiftError> {
-            return _internal_upgradeStarGift(account: self.account, formId: formId, reference: reference, keepOriginalInfo: keepOriginalInfo)
+        public func upgradeStarGift(formId: Int64?, reference: DiamondGiftReference, keepOriginalInfo: Bool) -> Signal<ProfileGiftsContext.State.StarGift, UpgradeDiamondGiftError> {
+            return _internal_upgradeDiamondGift(account: self.account, formId: formId, reference: reference, keepOriginalInfo: keepOriginalInfo)
         }
         
         public func starGiftUpgradePreview(giftId: Int64) -> Signal<StarGiftUpgradePreview?, NoError> {
             return _internal_starGiftUpgradePreview(account: self.account, giftId: giftId)
         }
         
-        public func checkCanSendStarGift(giftId: Int64) -> Signal<CanSendGiftResult, NoError> {
-            return _internal_checkCanSendStarGift(account: self.account, giftId: giftId)
+        public func checkCanSendDiamondGift(giftId: Int64) -> Signal<CanSendGiftResult, NoError> {
+            return _internal_checkCanSendDiamondGift(account: self.account, giftId: giftId)
         }
         
-        public func getUniqueStarGift(slug: String) -> Signal<StarGift.UniqueGift, GetUniqueStarGiftError> {
-            return _internal_getUniqueStarGift(account: self.account, slug: slug)
+        public func getUniqueStarGift(slug: String) -> Signal<StarGift.UniqueGift, GetUniqueDiamondGiftError> {
+            return _internal_getUniqueDiamondGift(account: self.account, slug: slug)
         }
         
         public func getUniqueStarGiftValueInfo(slug: String) -> Signal<StarGift.UniqueGift.ValueInfo?, NoError> {
-            return _internal_getUniqueStarGiftValueInfo(account: self.account, slug: slug)
+            return _internal_getUniqueDiamondGiftValueInfo(account: self.account, slug: slug)
         }
                 
-        public func checkStarGiftWithdrawalAvailability(reference: StarGiftReference) -> Signal<Never, RequestStarGiftWithdrawalError> {
-            return _internal_checkStarGiftWithdrawalAvailability(account: self.account, reference: reference)
+        public func checkDiamondGiftWithdrawalAvailability(reference: DiamondGiftReference) -> Signal<Never, RequestDiamondGiftWithdrawalError> {
+            return _internal_checkDiamondGiftWithdrawalAvailability(account: self.account, reference: reference)
         }
         
-        public func requestStarGiftWithdrawalUrl(reference: StarGiftReference, password: String) -> Signal<String, RequestStarGiftWithdrawalError> {
-            return _internal_requestStarGiftWithdrawalUrl(account: account, reference: reference, password: password)
+        public func requestDiamondGiftWithdrawalUrl(reference: DiamondGiftReference, password: String) -> Signal<String, RequestDiamondGiftWithdrawalError> {
+            return _internal_requestDiamondGiftWithdrawalUrl(account: account, reference: reference, password: password)
         }
         
-        public func toggleStarGiftsNotifications(peerId: EnginePeer.Id, enabled: Bool) -> Signal<Never, NoError> {
-            return _internal_toggleStarGiftsNotifications(account: self.account, peerId: peerId, enabled: enabled)
+        public func toggleDiamondGiftsNotifications(peerId: EnginePeer.Id, enabled: Bool) -> Signal<Never, NoError> {
+            return _internal_toggleDiamondGiftsNotifications(account: self.account, peerId: peerId, enabled: enabled)
         }
         
-        public func updateStarGiftResalePrice(reference: StarGiftReference, price: CurrencyAmount?) -> Signal<Never, UpdateStarGiftPriceError> {
-            return _internal_updateStarGiftResalePrice(account: self.account, reference: reference, price: price)
+        public func updateDiamondGiftResalePrice(reference: DiamondGiftReference, price: CurrencyAmount?) -> Signal<Never, UpdateDiamondGiftPriceError> {
+            return _internal_updateDiamondGiftResalePrice(account: self.account, reference: reference, price: price)
         }
         
         public func getGiftAuctionAcquiredGifts(giftId: Int64) -> Signal<[GiftAuctionAcquiredGift], NoError> {
             return _internal_getGiftAuctionAcquiredGifts(account: self.account, giftId: giftId)
         }
         
-        public func getStarsTransaction(reference: StarsTransactionReference) -> Signal<StarsContext.State.Transaction?, NoError> {
-            return _internal_getStarsTransaction(accountPeerId: self.account.peerId, postbox: self.account.postbox, network: self.account.network, transactionReference: reference)
+        public func getDiamondsTransaction(reference: DiamondsTransactionReference) -> Signal<DiamondsContext.State.Transaction?, NoError> {
+            return _internal_getDiamondsTransaction(accountPeerId: self.account.peerId, postbox: self.account.postbox, network: self.account.network, transactionReference: reference)
         }
         
-        public func resolveStarGiftOffer(messageId: EngineMessage.Id, accept: Bool) -> Signal<Never, ResolveStarGiftOfferError> {
-            return _internal_resolveStarGiftOffer(account: self.account, messageId: messageId, accept: accept)
+        public func resolveStarGiftOffer(messageId: EngineMessage.Id, accept: Bool) -> Signal<Never, ResolveDiamondGiftOfferError> {
+            return _internal_resolveDiamondGiftOffer(account: self.account, messageId: messageId, accept: accept)
         }
  
-        public func sendStarGiftOffer(peerId: EnginePeer.Id, slug: String, amount: CurrencyAmount, duration: Int32, allowPaidStars: Int64?) -> Signal<Never, SendStarGiftOfferError> {
-            return _internal_sendStarGiftOffer(account: self.account, peerId: peerId, slug: slug, amount: amount, duration: duration, allowPaidStars: allowPaidStars)
+        public func sendStarGiftOffer(peerId: EnginePeer.Id, slug: String, amount: CurrencyAmount, duration: Int32, allowPaidStars: Int64?) -> Signal<Never, SendDiamondGiftOfferError> {
+            return _internal_sendDiamondGiftOffer(account: self.account, peerId: peerId, slug: slug, amount: amount, duration: duration, allowPaidStars: allowPaidStars)
         }
         
         public func getStarGiftUpgradeAttributes(giftId: Int64) -> Signal<[StarGift.UniqueGift.Attribute]?, NoError> {
-            return _internal_getStarGiftUpgradeAttributes(account: self.account, giftId: giftId)
+            return _internal_getDiamondGiftUpgradeAttributes(account: self.account, giftId: giftId)
         }
     }
 }

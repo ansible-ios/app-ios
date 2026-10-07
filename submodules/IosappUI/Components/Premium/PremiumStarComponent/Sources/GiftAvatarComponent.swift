@@ -167,13 +167,13 @@ public final class GiftAvatarComponent: Component {
                     "particles_center"
                 ]
                 
-                let starNames: [String] = [
+                let diamondNames: [String] = [
                     "coins_left",
                     "coins_right"
                 ]
                 
                 let particleColor = color
-                for name in starNames {
+                for name in diamondNames {
                     if let node = scene.rootNode.childNode(withName: name, recursively: false), let particleSystem = node.particleSystems?.first {
                         particleSystem.particleIntensity = 1.0
                         particleSystem.particleIntensityVariation = 0.05

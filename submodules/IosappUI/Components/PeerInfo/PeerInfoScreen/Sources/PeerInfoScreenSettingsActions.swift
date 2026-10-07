@@ -287,12 +287,12 @@ extension PeerInfoScreenNode {
             }
             self.context.sharedContext.openExternalUrl(context: self.context, urlContext: .generic, url: url, forceExternal: !url.hasPrefix("as://") && !url.contains("?start="), presentationData: self.context.sharedContext.currentPresentationData.with({$0}), navigationController: controller.navigationController as? NavigationController, dismissInput: {})
         case .stars:
-            if let starsContext = self.controller?.starsContext {
-                push(self.context.sharedContext.makeStarsTransactionsScreen(context: self.context, starsContext: starsContext))
+            if let diamondsContext = self.controller?.diamondsContext {
+                push(self.context.sharedContext.makeDiamondsTransactionsScreen(context: self.context, diamondsContext: diamondsContext))
             }
         case .ton:
             if let tonContext = self.controller?.tonContext {
-                push(self.context.sharedContext.makeStarsTransactionsScreen(context: self.context, starsContext: tonContext))
+                push(self.context.sharedContext.makeDiamondsTransactionsScreen(context: self.context, diamondsContext: tonContext))
             }
         }
     }

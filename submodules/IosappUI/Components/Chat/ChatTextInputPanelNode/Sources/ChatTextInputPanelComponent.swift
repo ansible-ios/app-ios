@@ -733,7 +733,7 @@ public final class ChatTextInputPanelComponent: Component {
                     },
                     openPremiumRequiredForMessaging: {
                     },
-                    openStarsPurchase: { _ in
+                    openDiamondsPurchase: { _ in
                     },
                     openMessagePayment: {
                     },
@@ -839,7 +839,7 @@ public final class ChatTextInputPanelComponent: Component {
             presentationInterfaceState = presentationInterfaceState.updatedInterfaceState { interfaceState in
                 return interfaceState.withUpdatedEffectiveInputState(component.externalState.textInputState)
             }
-            presentationInterfaceState = presentationInterfaceState.updatedSendPaidMessageStars(component.paidMessagePrice)
+            presentationInterfaceState = presentationInterfaceState.updatedSendPaidMessageDiamonds(component.paidMessagePrice)
             
             if let sendAsConfiguration = component.sendAsConfiguration {
                 presentationInterfaceState = presentationInterfaceState.updatedSendAsPeers([SendAsPeer(

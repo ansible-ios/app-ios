@@ -486,7 +486,7 @@ public final class InlineStickerItemLayer: MultiAnimationRenderTarget {
             case let .nameColors(colors):
                 self.updateNameColors(colors: colors)
             case let .stars(tinted):
-                self.updateStars(tinted: tinted)
+                self.updateDiamonds(tinted: tinted)
                 if tinted {
                     self.updateTintColor()
                 }
@@ -693,8 +693,8 @@ public final class InlineStickerItemLayer: MultiAnimationRenderTarget {
         self.contents = image?.cgImage
     }
     
-    private func updateStars(tinted: Bool) {
-        self.contents = tinted ? tintedStarImage?.cgImage : starImage?.cgImage
+    private func updateDiamonds(tinted: Bool) {
+        self.contents = tinted ? tintedDiamondImage?.cgImage : diamondImage?.cgImage
     }
     
     private func updateTon(tinted: Bool) {
@@ -1079,7 +1079,7 @@ public final class CustomEmojiContainerView: UIView {
     }
 }
 
-private let tintedStarImage: UIImage? = {
+private let tintedDiamondImage: UIImage? = {
     generateImage(CGSize(width: 32.0, height: 32.0), contextGenerator: { size, context in
         context.clear(CGRect(origin: .zero, size: size))
         
@@ -1089,7 +1089,7 @@ private let tintedStarImage: UIImage? = {
     })?.withRenderingMode(.alwaysTemplate)
 }()
 
-private let starImage: UIImage? = {
+private let diamondImage: UIImage? = {
     generateImage(CGSize(width: 32.0, height: 32.0), contextGenerator: { size, context in
         context.clear(CGRect(origin: .zero, size: size))
         

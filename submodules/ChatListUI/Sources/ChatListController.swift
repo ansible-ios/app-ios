@@ -1625,11 +1625,11 @@ public class ChatListControllerImpl: IosappBaseController, ChatListController {
             self.openBirthdaySetup()
         }
         
-        self.chatListDisplayNode.mainContainerNode.openStarsTopup = { [weak self] amount in
+        self.chatListDisplayNode.mainContainerNode.openDiamondsTopup = { [weak self] amount in
             guard let self else {
                 return
             }
-            self.openStarsTopup(amount: amount)
+            self.openDiamondsTopup(amount: amount)
         }
         
         self.chatListDisplayNode.mainContainerNode.openWebApp = { [weak self] user in
@@ -6457,11 +6457,11 @@ public class ChatListControllerImpl: IosappBaseController, ChatListController {
         self.push(controller)
     }
     
-    func openStarsTopup(amount: Int64?) {
-        guard let starsContext = self.context.starsContext else {
+    func openDiamondsTopup(amount: Int64?) {
+        guard let diamondsContext = self.context.diamondsContext else {
             return
         }
-        let controller = self.context.sharedContext.makeStarsPurchaseScreen(context: self.context, starsContext: starsContext, options: [], purpose: amount.flatMap({ .topUp(requiredStars: $0, purpose: "subs") }) ?? .generic, targetPeerId: nil, customTheme: nil, completion: { _ in })
+        let controller = self.context.sharedContext.makeDiamondsPurchaseScreen(context: self.context, diamondsContext: diamondsContext, options: [], purpose: amount.flatMap({ .topUp(requiredDiamonds: $0, purpose: "subs") }) ?? .generic, targetPeerId: nil, customTheme: nil, completion: { _ in })
         self.push(controller)
     }
     

@@ -1371,7 +1371,7 @@ public extension Api.payments {
 }
 public extension Api.payments {
     enum ConnectedStarRefBots: TypeConstructorDescription {
-        public class Cons_connectedStarRefBots: TypeConstructorDescription {
+        public class Cons_connectedDiamondRefBots: TypeConstructorDescription {
             public var count: Int32
             public var connectedBots: [Api.ConnectedBotStarRef]
             public var users: [Api.User]
@@ -1384,7 +1384,7 @@ public extension Api.payments {
                 return ("connectedStarRefBots", [("count", ConstructorParameterDescription(self.count)), ("connectedBots", ConstructorParameterDescription(self.connectedBots)), ("users", ConstructorParameterDescription(self.users))])
             }
         }
-        case connectedStarRefBots(Cons_connectedStarRefBots)
+        case connectedStarRefBots(Cons_connectedDiamondRefBots)
 
         public func serialize(_ buffer: Buffer, _ boxed: Swift.Bool) {
             switch self {
@@ -1414,7 +1414,7 @@ public extension Api.payments {
             }
         }
 
-        public static func parse_connectedStarRefBots(_ reader: BufferReader) -> ConnectedStarRefBots? {
+        public static func parse_connectedDiamondRefBots(_ reader: BufferReader) -> ConnectedStarRefBots? {
             var _1: Int32?
             _1 = reader.readInt32()
             var _2: [Api.ConnectedBotStarRef]?
@@ -1429,7 +1429,7 @@ public extension Api.payments {
             let _c2 = _2 != nil
             let _c3 = _3 != nil
             if _c1 && _c2 && _c3 {
-                return Api.payments.ConnectedStarRefBots.connectedStarRefBots(Cons_connectedStarRefBots(count: _1!, connectedBots: _2!, users: _3!))
+                return Api.payments.ConnectedStarRefBots.connectedStarRefBots(Cons_connectedDiamondRefBots(count: _1!, connectedBots: _2!, users: _3!))
             }
             else {
                 return nil
@@ -1677,7 +1677,7 @@ public extension Api.payments {
                 return ("paymentForm", [("flags", ConstructorParameterDescription(self.flags)), ("formId", ConstructorParameterDescription(self.formId)), ("botId", ConstructorParameterDescription(self.botId)), ("title", ConstructorParameterDescription(self.title)), ("description", ConstructorParameterDescription(self.description)), ("photo", ConstructorParameterDescription(self.photo)), ("invoice", ConstructorParameterDescription(self.invoice)), ("providerId", ConstructorParameterDescription(self.providerId)), ("url", ConstructorParameterDescription(self.url)), ("nativeProvider", ConstructorParameterDescription(self.nativeProvider)), ("nativeParams", ConstructorParameterDescription(self.nativeParams)), ("additionalMethods", ConstructorParameterDescription(self.additionalMethods)), ("savedInfo", ConstructorParameterDescription(self.savedInfo)), ("savedCredentials", ConstructorParameterDescription(self.savedCredentials)), ("users", ConstructorParameterDescription(self.users))])
             }
         }
-        public class Cons_paymentFormStarGift: TypeConstructorDescription {
+        public class Cons_paymentFormDiamondGift: TypeConstructorDescription {
             public var formId: Int64
             public var invoice: Api.Invoice
             public init(formId: Int64, invoice: Api.Invoice) {
@@ -1688,7 +1688,7 @@ public extension Api.payments {
                 return ("paymentFormStarGift", [("formId", ConstructorParameterDescription(self.formId)), ("invoice", ConstructorParameterDescription(self.invoice))])
             }
         }
-        public class Cons_paymentFormStars: TypeConstructorDescription {
+        public class Cons_paymentFormDiamonds: TypeConstructorDescription {
             public var flags: Int32
             public var formId: Int64
             public var botId: Int64
@@ -1712,8 +1712,8 @@ public extension Api.payments {
             }
         }
         case paymentForm(Cons_paymentForm)
-        case paymentFormStarGift(Cons_paymentFormStarGift)
-        case paymentFormStars(Cons_paymentFormStars)
+        case paymentFormStarGift(Cons_paymentFormDiamondGift)
+        case paymentFormStars(Cons_paymentFormDiamonds)
 
         public func serialize(_ buffer: Buffer, _ boxed: Swift.Bool) {
             switch self {
@@ -1880,7 +1880,7 @@ public extension Api.payments {
                 return nil
             }
         }
-        public static func parse_paymentFormStarGift(_ reader: BufferReader) -> PaymentForm? {
+        public static func parse_paymentFormDiamondGift(_ reader: BufferReader) -> PaymentForm? {
             var _1: Int64?
             _1 = reader.readInt64()
             var _2: Api.Invoice?
@@ -1890,13 +1890,13 @@ public extension Api.payments {
             let _c1 = _1 != nil
             let _c2 = _2 != nil
             if _c1 && _c2 {
-                return Api.payments.PaymentForm.paymentFormStarGift(Cons_paymentFormStarGift(formId: _1!, invoice: _2!))
+                return Api.payments.PaymentForm.paymentFormStarGift(Cons_paymentFormDiamondGift(formId: _1!, invoice: _2!))
             }
             else {
                 return nil
             }
         }
-        public static func parse_paymentFormStars(_ reader: BufferReader) -> PaymentForm? {
+        public static func parse_paymentFormDiamonds(_ reader: BufferReader) -> PaymentForm? {
             var _1: Int32?
             _1 = reader.readInt32()
             var _2: Int64?
@@ -1930,7 +1930,7 @@ public extension Api.payments {
             let _c7 = _7 != nil
             let _c8 = _8 != nil
             if _c1 && _c2 && _c3 && _c4 && _c5 && _c6 && _c7 && _c8 {
-                return Api.payments.PaymentForm.paymentFormStars(Cons_paymentFormStars(flags: _1!, formId: _2!, botId: _3!, title: _4!, description: _5!, photo: _6, invoice: _7!, users: _8!))
+                return Api.payments.PaymentForm.paymentFormStars(Cons_paymentFormDiamonds(flags: _1!, formId: _2!, botId: _3!, title: _4!, description: _5!, photo: _6, invoice: _7!, users: _8!))
             }
             else {
                 return nil

@@ -21,7 +21,7 @@ import AlertTransferHeaderComponent
 import AvatarComponent
 import AlertTableComponent
 import TableComponent
-import StarsAvatarComponent
+import DiamondsAvatarComponent
 
 public func giftSaleAlertController(
     context: AccountContext,

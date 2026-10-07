@@ -412,7 +412,7 @@ public struct InputMessagePaidMedia: Codable, Equatable, Hashable {
     public let showCaptionAboveMedia: Bool
 
     /// The number of Iosapp Stars that must be paid to see the media; 1-getOption("paid_media_message_star_count_max")
-    public let starCount: Int64
+    public let diamondCount: Int64
 
 
     public init(
@@ -420,13 +420,13 @@ public struct InputMessagePaidMedia: Codable, Equatable, Hashable {
         paidMedia: [InputPaidMedia],
         payload: String,
         showCaptionAboveMedia: Bool,
-        starCount: Int64
+        diamondCount: Int64
     ) {
         self.caption = caption
         self.paidMedia = paidMedia
         self.payload = payload
         self.showCaptionAboveMedia = showCaptionAboveMedia
-        self.starCount = starCount
+        self.diamondCount = diamondCount
     }
 }
 

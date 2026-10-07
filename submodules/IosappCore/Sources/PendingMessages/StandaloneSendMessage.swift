@@ -105,7 +105,7 @@ public struct StandaloneSendEnqueueMessage {
     public var forwardOptions: ForwardOptions?
     public var isSilent: Bool = false
     public var groupingKey: Int64? = nil
-    public var sendPaidMessageStars: StarsAmount? = nil
+    public var sendPaidMessageDiamonds: StarsAmount? = nil
     
     public init(
         content: Content,
@@ -179,8 +179,8 @@ public func standaloneSendEnqueueMessages(
         if message.isSilent {
             attributes.append(NotificationInfoMessageAttribute(flags: .muted))
         }
-        if let sendPaidMessageStars = message.sendPaidMessageStars {
-            attributes.append(PaidStarsMessageAttribute(stars: sendPaidMessageStars, postponeSending: false))
+        if let sendPaidMessageDiamonds = message.sendPaidMessageDiamonds {
+            attributes.append(PaidDiamondsMessageAttribute(stars: sendPaidMessageDiamonds, postponeSending: false))
         }
                 
         let content = messageContentToUpload(accountPeerId: accountPeerId, network: network, postbox: postbox, auxiliaryMethods: auxiliaryMethods, transformOutgoingMessageMedia: { _, _, _, _ in
@@ -439,7 +439,7 @@ private func sendUploadedMessageContent(
                 } else if let attribute = attribute as? ForwardVideoTimestampAttribute {
                     flags |= Int32(1 << 20)
                     videoTimestamp = attribute.timestamp
-                } else if let attribute = attribute as? PaidStarsMessageAttribute {
+                } else if let attribute = attribute as? PaidDiamondsMessageAttribute {
                     allowPaidStars = attribute.stars.value
                 } else if let attribute = attribute as? SuggestedPostMessageAttribute {
                     suggestedPost = attribute.apiSuggestedPost(fixMinTime: Int32(Date().timeIntervalSince1970 + 10))
@@ -735,7 +735,7 @@ private func sendMessageContent(account: Account, peerId: PeerId, attributes: [M
                     }
                 } else if let attribute = attribute as? SendAsMessageAttribute {
                     sendAsPeerId = attribute.peerId
-                } else if let attribute = attribute as? PaidStarsMessageAttribute {
+                } else if let attribute = attribute as? PaidDiamondsMessageAttribute {
                     allowPaidStars = attribute.stars.value
                 } else if let attribute = attribute as? SuggestedPostMessageAttribute {
                     suggestedPost = attribute.apiSuggestedPost(fixMinTime: Int32(Date().timeIntervalSince1970 + 10))

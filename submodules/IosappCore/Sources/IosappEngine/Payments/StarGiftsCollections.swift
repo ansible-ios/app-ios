@@ -40,18 +40,18 @@ public struct StarGiftCollection: Codable, Equatable {
 }
 
 extension StarGiftCollection {
-    init?(apiStarGiftCollection: Api.StarGiftCollection) {
-        switch apiStarGiftCollection {
-        case let .starGiftCollection(starGiftCollectionData):
-            let _ = starGiftCollectionData.flags
-            let collectionId = starGiftCollectionData.collectionId
-            let title = starGiftCollectionData.title
-            let icon = starGiftCollectionData.icon
-            let giftsCount = starGiftCollectionData.giftsCount
-            let hash = starGiftCollectionData.hash
+    init?(apiDiamondGiftCollection: Api.StarGiftCollection) {
+        switch apiDiamondGiftCollection {
+        case let .starGiftCollection(diamondGiftCollectionData):
+            let _ = diamondGiftCollectionData.flags
+            let collectionId = diamondGiftCollectionData.collectionId
+            let title = diamondGiftCollectionData.title
+            let icon = diamondGiftCollectionData.icon
+            let giftsCount = diamondGiftCollectionData.giftsCount
+            let hash = diamondGiftCollectionData.hash
             self.id = collectionId
             self.title = title
-            self.icon = icon.flatMap { telegramMediaFileFromApiDocument($0, altDocuments: nil) }
+            self.icon = icon.flatMap { ansibleMediaFileFromApiDocument($0, altDocuments: nil) }
             self.count = giftsCount
             self.hash = hash
         }
@@ -96,7 +96,7 @@ private func intListSimpleHash(_ list: [Int64]) -> Int64 {
     return Int64(Int32(truncatingIfNeeded: acc))
 }
 
-private func _internal_getStarGiftCollections(postbox: Postbox, network: Network, peerId: EnginePeer.Id) -> Signal<[StarGiftCollection]?, NoError> {
+private func _internal_getDiamondGiftCollections(postbox: Postbox, network: Network, peerId: EnginePeer.Id) -> Signal<[StarGiftCollection]?, NoError> {
     return postbox.transaction { transaction -> (Api.InputPeer, [StarGiftCollection]?)? in
         guard let inputPeer = transaction.getPeer(peerId).flatMap(apiInputPeer) else {
             return nil
@@ -127,9 +127,9 @@ private func _internal_getStarGiftCollections(postbox: Postbox, network: Network
                 }
                 return postbox.transaction { transaction -> [StarGiftCollection]? in
                     switch result {
-                    case let .starGiftCollections(starGiftCollectionsData):
-                        let apiCollections = starGiftCollectionsData.collections
-                        let collections = apiCollections.compactMap { StarGiftCollection(apiStarGiftCollection: $0) }
+                    case let .starGiftCollections(diamondGiftCollectionsData):
+                        let apiCollections = diamondGiftCollectionsData.collections
+                        let collections = apiCollections.compactMap { StarGiftCollection(apiDiamondGiftCollection: $0) }
                         return collections
                     case .starGiftCollectionsNotModified:
                         return cachedCollections ?? []
@@ -140,20 +140,20 @@ private func _internal_getStarGiftCollections(postbox: Postbox, network: Network
     }
 }
 
-private func _internal_createStarGiftCollection(account: Account, peerId: EnginePeer.Id, title: String, starGifts: [ProfileGiftsContext.State.StarGift]) -> Signal<StarGiftCollection?, NoError> {
+private func _internal_createDiamondGiftCollection(account: Account, peerId: EnginePeer.Id, title: String, starGifts: [ProfileGiftsContext.State.StarGift]) -> Signal<StarGiftCollection?, NoError> {
     return account.postbox.transaction { transaction -> (Api.InputPeer, [Api.InputSavedStarGift])? in
         guard let inputPeer = transaction.getPeer(peerId).flatMap(apiInputPeer) else {
             return nil
         }
-        let inputStarGifts = starGifts.compactMap { $0.reference }.compactMap { $0.apiStarGiftReference(transaction: transaction) }
-        return (inputPeer, inputStarGifts)
+        let inputDiamondGifts = starGifts.compactMap { $0.reference }.compactMap { $0.apiDiamondGiftReference(transaction: transaction) }
+        return (inputPeer, inputDiamondGifts)
     }
     |> mapToSignal { inputPeerAndGifts -> Signal<StarGiftCollection?, NoError> in
-        guard let (inputPeer, inputStarGifts) = inputPeerAndGifts else {
+        guard let (inputPeer, inputDiamondGifts) = inputPeerAndGifts else {
             return .single(nil)
         }
         
-        return account.network.request(Api.functions.payments.createStarGiftCollection(peer: inputPeer, title: title, stargift: inputStarGifts))
+        return account.network.request(Api.functions.payments.createStarGiftCollection(peer: inputPeer, title: title, stargift: inputDiamondGifts))
         |> map(Optional.init)
         |> `catch` { _ -> Signal<Api.StarGiftCollection?, NoError> in
             return .single(nil)
@@ -162,7 +162,7 @@ private func _internal_createStarGiftCollection(account: Account, peerId: Engine
             guard let result else {
                 return nil
             }
-            return StarGiftCollection(apiStarGiftCollection: result)
+            return StarGiftCollection(apiDiamondGiftCollection: result)
         }
         |> beforeNext { collection in
             let _ = account.postbox.transaction { transaction in
@@ -174,7 +174,7 @@ private func _internal_createStarGiftCollection(account: Account, peerId: Engine
     }
 }
 
-private func _internal_reorderStarGiftCollections(account: Account, peerId: EnginePeer.Id, order: [Int32]) -> Signal<Bool, NoError> {
+private func _internal_reorderDiamondGiftCollections(account: Account, peerId: EnginePeer.Id, order: [Int32]) -> Signal<Bool, NoError> {
     return account.postbox.transaction { transaction -> Api.InputPeer? in
         return transaction.getPeer(peerId).flatMap(apiInputPeer)
     }
@@ -197,7 +197,7 @@ private func _internal_reorderStarGiftCollections(account: Account, peerId: Engi
     }
 }
 
-private func _internal_updateStarGiftCollection(account: Account, peerId: EnginePeer.Id, collectionId: Int32, giftsContext: ProfileGiftsContext?, allGiftsContext: ProfileGiftsContext?, actions: [ProfileGiftsCollectionsContext.UpdateAction]) -> Signal<StarGiftCollection?, NoError> {
+private func _internal_updateDiamondGiftCollection(account: Account, peerId: EnginePeer.Id, collectionId: Int32, giftsContext: ProfileGiftsContext?, allGiftsContext: ProfileGiftsContext?, actions: [ProfileGiftsCollectionsContext.UpdateAction]) -> Signal<StarGiftCollection?, NoError> {
     for action in actions {
         switch action {
         case let .addGifts(gifts):
@@ -206,11 +206,11 @@ private func _internal_updateStarGiftCollection(account: Account, peerId: Engine
                 collectionIds.append(collectionId)
                 return gift.withCollectionIds(collectionIds)
             }
-            giftsContext?.insertStarGifts(gifts: gifts)
+            giftsContext?.insertDiamondGifts(gifts: gifts)
         case let .removeGifts(gifts):
-            giftsContext?.removeStarGifts(references: gifts)
+            giftsContext?.removeDiamondGifts(references: gifts)
         case let .reorderGifts(gifts):
-            giftsContext?.reorderStarGifts(references: gifts)
+            giftsContext?.reorderDiamondGifts(references: gifts)
         default:
             break
         }
@@ -223,8 +223,8 @@ private func _internal_updateStarGiftCollection(account: Account, peerId: Engine
         
         var flags: Int32 = 0
         var title: String?
-        var deleteStarGift: [Api.InputSavedStarGift] = []
-        var addStarGift: [Api.InputSavedStarGift] = []
+        var deleteDiamondGift: [Api.InputSavedStarGift] = []
+        var addDiamondGift: [Api.InputSavedStarGift] = []
         var order: [Api.InputSavedStarGift] = []
         
         for action in actions {
@@ -234,17 +234,17 @@ private func _internal_updateStarGiftCollection(account: Account, peerId: Engine
                 title = newTitle
             case let .addGifts(gifts):
                 flags |= (1 << 2)
-                addStarGift.append(contentsOf: gifts.compactMap { $0.reference }.compactMap { $0.apiStarGiftReference(transaction: transaction) })
+                addDiamondGift.append(contentsOf: gifts.compactMap { $0.reference }.compactMap { $0.apiDiamondGiftReference(transaction: transaction) })
             case let .removeGifts(gifts):
                 flags |= (1 << 1)
-                deleteStarGift.append(contentsOf: gifts.compactMap { $0.apiStarGiftReference(transaction: transaction) })
+                deleteDiamondGift.append(contentsOf: gifts.compactMap { $0.apiDiamondGiftReference(transaction: transaction) })
             case let .reorderGifts(gifts):
                 flags |= (1 << 3)
-                order = gifts.compactMap { $0.apiStarGiftReference(transaction: transaction) }
+                order = gifts.compactMap { $0.apiDiamondGiftReference(transaction: transaction) }
             }
         }
         
-        let request = Api.functions.payments.updateStarGiftCollection(flags: flags, peer: inputPeer, collectionId: collectionId, title: title, deleteStargift: deleteStarGift, addStargift: addStarGift, order: order)
+        let request = Api.functions.payments.updateStarGiftCollection(flags: flags, peer: inputPeer, collectionId: collectionId, title: title, deleteStargift: deleteDiamondGift, addStargift: addDiamondGift, order: order)
         
         return (inputPeer, request)
     }
@@ -262,12 +262,12 @@ private func _internal_updateStarGiftCollection(account: Account, peerId: Engine
             guard let result else {
                 return nil
             }
-            return StarGiftCollection(apiStarGiftCollection: result)
+            return StarGiftCollection(apiDiamondGiftCollection: result)
         }
     }
 }
 
-private func _internal_deleteStarGiftCollection(account: Account, peerId: EnginePeer.Id, collectionId: Int32) -> Signal<Bool, NoError> {
+private func _internal_deleteDiamondGiftCollection(account: Account, peerId: EnginePeer.Id, collectionId: Int32) -> Signal<Bool, NoError> {
     return account.postbox.transaction { transaction -> Api.InputPeer? in
         return transaction.getPeer(peerId).flatMap(apiInputPeer)
     }
@@ -299,8 +299,8 @@ public final class ProfileGiftsCollectionsContext {
     public enum UpdateAction {
         case updateTitle(String)
         case addGifts([ProfileGiftsContext.State.StarGift])
-        case removeGifts([StarGiftReference])
-        case reorderGifts([StarGiftReference])
+        case removeGifts([DiamondGiftReference])
+        case reorderGifts([DiamondGiftReference])
     }
     
     private let queue: Queue = .mainQueue()
@@ -347,7 +347,7 @@ public final class ProfileGiftsCollectionsContext {
         self.isLoading = true
         self.pushState()
         
-        self.disposable.set((_internal_getStarGiftCollections(postbox: self.account.postbox, network: self.account.network, peerId: self.peerId)
+        self.disposable.set((_internal_getDiamondGiftCollections(postbox: self.account.postbox, network: self.account.network, peerId: self.peerId)
         |> deliverOn(self.queue)).start(next: { [weak self] collections in
             guard let self else {
                 return
@@ -360,7 +360,7 @@ public final class ProfileGiftsCollectionsContext {
     }
     
     public func createCollection(title: String, starGifts: [ProfileGiftsContext.State.StarGift]) -> Signal<StarGiftCollection?, NoError> {
-        return _internal_createStarGiftCollection(account: self.account, peerId: self.peerId, title: title, starGifts: starGifts)
+        return _internal_createDiamondGiftCollection(account: self.account, peerId: self.peerId, title: title, starGifts: starGifts)
         |> deliverOn(self.queue)
         |> beforeNext { [weak self] collection in
             guard let self else {
@@ -376,7 +376,7 @@ public final class ProfileGiftsCollectionsContext {
     
     public func updateCollection(id: Int32, actions: [UpdateAction]) -> Signal<StarGiftCollection?, NoError> {
         let giftsContext = self.giftsContextForCollection(id: id)
-        return _internal_updateStarGiftCollection(account: self.account, peerId: self.peerId, collectionId: id, giftsContext: giftsContext, allGiftsContext: self.allGiftsContext, actions: actions)
+        return _internal_updateDiamondGiftCollection(account: self.account, peerId: self.peerId, collectionId: id, giftsContext: giftsContext, allGiftsContext: self.allGiftsContext, actions: actions)
         |> deliverOn(self.queue)
         |> afterNext { [weak self] collection in
             guard let self else {
@@ -396,11 +396,11 @@ public final class ProfileGiftsCollectionsContext {
         return self.updateCollection(id: id, actions: [.addGifts(gifts)])
     }
         
-    public func removeGifts(id: Int32, gifts: [StarGiftReference]) -> Signal<StarGiftCollection?, NoError> {
+    public func removeGifts(id: Int32, gifts: [DiamondGiftReference]) -> Signal<StarGiftCollection?, NoError> {
         return self.updateCollection(id: id, actions: [.removeGifts(gifts)])
     }
 
-    public func reorderGifts(id: Int32, gifts: [StarGiftReference]) -> Signal<StarGiftCollection?, NoError> {
+    public func reorderGifts(id: Int32, gifts: [DiamondGiftReference]) -> Signal<StarGiftCollection?, NoError> {
         return self.updateCollection(id: id, actions: [.reorderGifts(gifts)])
     }
     
@@ -410,7 +410,7 @@ public final class ProfileGiftsCollectionsContext {
     
     public func reorderCollections(order: [Int32]) -> Signal<Bool, NoError> {
         let peerId = self.peerId
-        return _internal_reorderStarGiftCollections(account: self.account, peerId: peerId, order: order)
+        return _internal_reorderDiamondGiftCollections(account: self.account, peerId: peerId, order: order)
         |> deliverOn(self.queue)
         |> afterNext { [weak self] collection in
             guard let self else {
@@ -433,7 +433,7 @@ public final class ProfileGiftsCollectionsContext {
     }
     
     public func deleteCollection(id: Int32) -> Signal<Bool, NoError> {
-        return _internal_deleteStarGiftCollection(account: self.account, peerId: self.peerId, collectionId: id)
+        return _internal_deleteDiamondGiftCollection(account: self.account, peerId: self.peerId, collectionId: id)
         |> deliverOn(self.queue)
         |> afterNext { [weak self] _ in
             guard let self else {

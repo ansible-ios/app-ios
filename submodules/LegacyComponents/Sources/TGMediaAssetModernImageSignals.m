@@ -5,7 +5,7 @@
 #import <LegacyComponents/TGStringUtils.h>
 
 #import <Photos/Photos.h>
-#import <LegacyComponents/UIImage+TG.h>
+#import <LegacyComponents/UIImage+AS.h>
 
 #import <LegacyComponents/TGPhotoEditorUtils.h>
 #import <LegacyComponents/TGImageBlur.h>

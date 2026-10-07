@@ -4,9 +4,9 @@ import IosappApi
 
 public struct MessageReaction: Equatable, PostboxCoding, Codable {
     #if DEBUG
-    public static let starsReactionId: Int64 = 5435957248314579621
+    public static let diamondsReactionId: Int64 = 5435957248314579621
     #else
-    public static let starsReactionId: Int64 = 12340000
+    public static let diamondsReactionId: Int64 = 12340000
     #endif
     
     public enum Reaction: Hashable, Comparable, Codable, PostboxCoding {
@@ -564,7 +564,7 @@ public final class PendingReactionsMessageAttribute: MessageAttribute {
     }
 }
 
-public final class PendingStarsReactionsMessageAttribute: MessageAttribute {
+public final class PendingDiamondsReactionsMessageAttribute: MessageAttribute {
     public let accountPeerId: PeerId?
     public let count: Int32
     public let privacy: IosappPaidReactionPrivacy

@@ -22,21 +22,21 @@ extension ChatControllerImpl {
         guard let renderedPeer = self.presentationInterfaceState.renderedPeer.flatMap(EngineRenderedPeer.init) else {
             return
         }
-        if let sendPaidMessageStars = self.presentationInterfaceState.sendPaidMessageStars, self.presentationInterfaceState.interfaceState.editMessage == nil {
-            let totalAmount = sendPaidMessageStars.value * Int64(count)
+        if let sendPaidMessageDiamonds = self.presentationInterfaceState.sendPaidMessageDiamonds, self.presentationInterfaceState.interfaceState.editMessage == nil {
+            let totalAmount = sendPaidMessageDiamonds.value * Int64(count)
             
             let _ = (ApplicationSpecificNotice.dismissedPaidMessageWarningNamespace(accountManager: self.context.sharedContext.accountManager, peerId: peer.id)
             |> take(1)
             |> deliverOnMainQueue).start(next: { [weak self] dismissedAmount in
-                guard let self, let starsContext = self.context.starsContext else {
+                guard let self, let diamondsContext = self.context.diamondsContext else {
                     return
                 }
-                if !alwaysAsk, let dismissedAmount, dismissedAmount == sendPaidMessageStars.value, let currentState = starsContext.currentState, currentState.balance.value > totalAmount {
+                if !alwaysAsk, let dismissedAmount, dismissedAmount == sendPaidMessageDiamonds.value, let currentState = diamondsContext.currentState, currentState.balance.value > totalAmount {
                     if count < 3 && totalAmount < 100 {
                         completion(false)
                     } else {
                         completion(true)
-                        self.displayPaidMessageUndo(count: count, amount: sendPaidMessageStars)
+                        self.displayPaidMessageUndo(count: count, amount: sendPaidMessageDiamonds)
                     }
                 } else {
                     var presentationData = self.presentationData
@@ -55,7 +55,7 @@ extension ChatControllerImpl {
                         updatedPresentationData: nil,
                         peers: [renderedPeer],
                         count: count,
-                        amount: sendPaidMessageStars,
+                        amount: sendPaidMessageDiamonds,
                         totalAmount: nil,
                         hasCheck: !alwaysAsk,
                         navigationController: self.navigationController as? NavigationController,
@@ -65,19 +65,19 @@ extension ChatControllerImpl {
                             }
                             
                             if dontAskAgain {
-                                let _ = ApplicationSpecificNotice.setDismissedPaidMessageWarningNamespace(accountManager: self.context.sharedContext.accountManager, peerId: peer.id, amount: sendPaidMessageStars.value).start()
+                                let _ = ApplicationSpecificNotice.setDismissedPaidMessageWarningNamespace(accountManager: self.context.sharedContext.accountManager, peerId: peer.id, amount: sendPaidMessageDiamonds.value).start()
                             }
                             
-                            if let currentState = starsContext.currentState, currentState.balance.value < totalAmount {
-                                let _ = (self.context.engine.payments.starsTopUpOptions()
+                            if let currentState = diamondsContext.currentState, currentState.balance.value < totalAmount {
+                                let _ = (self.context.engine.payments.diamondsTopUpOptions()
                                 |> take(1)
                                 |> deliverOnMainQueue).startStandalone(next: { [weak self] options in
                                     guard let self else {
                                         return
                                     }
-                                    let controller = self.context.sharedContext.makeStarsPurchaseScreen(context: self.context, starsContext: starsContext, options: options, purpose: .sendMessage(peerId: peer.id, requiredStars: totalAmount), targetPeerId: nil, customTheme: nil, completion: { stars in
-                                        starsContext.add(balance: StarsAmount(value: stars, nanos: 0))
-                                        let _ = (starsContext.onUpdate
+                                    let controller = self.context.sharedContext.makeDiamondsPurchaseScreen(context: self.context, diamondsContext: diamondsContext, options: options, purpose: .sendMessage(peerId: peer.id, requiredDiamonds: totalAmount), targetPeerId: nil, customTheme: nil, completion: { stars in
+                                        diamondsContext.add(balance: StarsAmount(value: stars, nanos: 0))
+                                        let _ = (diamondsContext.onUpdate
                                         |> deliverOnMainQueue).start(next: {
                                             completion(false)
                                         })
@@ -114,7 +114,7 @@ extension ChatControllerImpl {
         let textItems: [AnimatedTextComponent.Item] = [
             AnimatedTextComponent.Item(id: 0, content: .text(text))
         ]
-        let controller = UndoOverlayController(presentationData: self.presentationData, content: .starsSent(context: self.context, title: title, text: textItems, hasUndo: true), elevatedLayout: false, position: .top, action: { [weak self] action in
+        let controller = UndoOverlayController(presentationData: self.presentationData, content: .diamondsSent(context: self.context, title: title, text: textItems, hasUndo: true), elevatedLayout: false, position: .top, action: { [weak self] action in
             guard let self else {
                 return false
             }

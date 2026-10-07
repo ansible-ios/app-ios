@@ -5,7 +5,7 @@ import Display
 import AppBundle
 import PremiumStarComponent
 
-final class BadgeStarsView: UIView, PhoneDemoDecorationView {
+final class BadgeDiamondsView: UIView, PhoneDemoDecorationView {
     private let sceneView: SCNView
     
     private var leftParticles: SCNNode?
@@ -59,7 +59,7 @@ final class BadgeStarsView: UIView, PhoneDemoDecorationView {
     }
 }
 
-final class EmojiStarsView: UIView, PhoneDemoDecorationView {
+final class EmojiDiamondsView: UIView, PhoneDemoDecorationView {
     private let sceneView: SCNView
     
     private var leftParticles: SCNNode?
@@ -113,7 +113,7 @@ final class EmojiStarsView: UIView, PhoneDemoDecorationView {
     }
 }
 
-final class TagStarsView: UIView, PhoneDemoDecorationView {
+final class TagDiamondsView: UIView, PhoneDemoDecorationView {
     private let sceneView: SCNView
     
     private var leftParticles: SCNNode?

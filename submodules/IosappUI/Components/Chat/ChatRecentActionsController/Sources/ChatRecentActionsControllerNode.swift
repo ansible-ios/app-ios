@@ -831,7 +831,7 @@ final class ChatRecentActionsControllerNode: ViewControllerTracingNode {
         }, updateChatLocationThread: { _, _ in
         }, requestToggleTodoMessageItem: { _, _, _ in
         }, displayTodoToggleUnavailable: { _ in
-        }, openStarsPurchase: { _ in
+        }, openDiamondsPurchase: { _ in
         }, openRankInfo: { _, _, _ in
         }, openSetPeerAvatar: {
         }, displayPollRestrictedToast: { _ in
@@ -1541,13 +1541,13 @@ final class ChatRecentActionsControllerNode: ViewControllerTracingNode {
                                 case let .peek(peer, deadline):
                                     openPeer(peer, ChatPeekTimeout(deadline: deadline, linkData: link))
                                 case let .invite(invite):
-                                    if let subscriptionPricing = invite.subscriptionPricing, let subscriptionFormId = invite.subscriptionFormId, let starsContext = context.starsContext {
+                                    if let subscriptionPricing = invite.subscriptionPricing, let subscriptionFormId = invite.subscriptionFormId, let diamondsContext = context.diamondsContext {
                                         let inputData = Promise<BotCheckoutController.InputData?>()
                                         var photo: [IosappMediaImageRepresentation] = []
                                         if let photoRepresentation = invite.photoRepresentation {
                                             photo.append(photoRepresentation)
                                         }
-                                        let channel = IosappChannel(id: EnginePeer.Id(namespace: Namespaces.Peer.CloudChannel, id: EnginePeer.Id.Id._internalFromInt64Value(0)), accessHash: .genericPublic(0), title: invite.title, username: nil, photo: photo, creationDate: 0, version: 0, participationStatus: .left, info: .broadcast(IosappChannelBroadcastInfo(flags: [])), flags: [], restrictionInfo: nil, adminRights: nil, bannedRights: nil, defaultBannedRights: nil, usernames: [], storiesHidden: nil, nameColor: invite.nameColor, backgroundEmojiId: nil, profileColor: nil, profileBackgroundEmojiId: nil, emojiStatus: nil, approximateBoostLevel: nil, subscriptionUntilDate: nil, verificationIconFileId: nil, sendPaidMessageStars: nil, linkedMonoforumId: nil)
+                                        let channel = IosappChannel(id: EnginePeer.Id(namespace: Namespaces.Peer.CloudChannel, id: EnginePeer.Id.Id._internalFromInt64Value(0)), accessHash: .genericPublic(0), title: invite.title, username: nil, photo: photo, creationDate: 0, version: 0, participationStatus: .left, info: .broadcast(IosappChannelBroadcastInfo(flags: [])), flags: [], restrictionInfo: nil, adminRights: nil, bannedRights: nil, defaultBannedRights: nil, usernames: [], storiesHidden: nil, nameColor: invite.nameColor, backgroundEmojiId: nil, profileColor: nil, profileBackgroundEmojiId: nil, emojiStatus: nil, approximateBoostLevel: nil, subscriptionUntilDate: nil, verificationIconFileId: nil, sendPaidMessageDiamonds: nil, linkedMonoforumId: nil)
                                         let invoice = IosappMediaInvoice(title: "", description: "", photo: nil, receiptMessageId: nil, currency: "XTR", totalAmount: subscriptionPricing.amount.value, startParam: "", extendedMedia: nil, subscriptionPeriod: nil, flags: [], version: 0)
                                         
                                         inputData.set(.single(BotCheckoutController.InputData(
@@ -1568,22 +1568,22 @@ final class ChatRecentActionsControllerNode: ViewControllerTracingNode {
                                             botPeer: EnginePeer(channel)
                                         )))
                                         
-                                        let starsInputData = combineLatest(
+                                        let diamondsInputData = combineLatest(
                                             inputData.get(),
-                                            starsContext.state
+                                            diamondsContext.state
                                         )
-                                        |> map { data, state -> (StarsContext.State, BotPaymentForm, EnginePeer?, EnginePeer?)? in
+                                        |> map { data, state -> (DiamondsContext.State, BotPaymentForm, EnginePeer?, EnginePeer?)? in
                                             if let data, let state {
                                                 return (state, data.form, data.botPeer, nil)
                                             } else {
                                                 return nil
                                             }
                                         }
-                                        let _ = (starsInputData
+                                        let _ = (diamondsInputData
                                         |> SwiftSignalKit.filter { $0 != nil }
                                         |> take(1)
                                         |> deliverOnMainQueue).start(next: { _ in
-                                            let controller = context.sharedContext.makeStarsSubscriptionTransferScreen(context: context, starsContext: starsContext, invoice: invoice, link: link, inputData: starsInputData, navigateToPeer: { peer in
+                                            let controller = context.sharedContext.makeDiamondsSubscriptionTransferScreen(context: context, diamondsContext: diamondsContext, invoice: invoice, link: link, inputData: diamondsInputData, navigateToPeer: { peer in
                                                 openPeer(peer, nil)
                                             })
                                             navigationController?.pushViewController(controller)
@@ -1685,7 +1685,7 @@ final class ChatRecentActionsControllerNode: ViewControllerTracingNode {
                         break
                     case .premiumOffer:
                         break
-                    case .starsTopup:
+                    case .diamondsTopup:
                         break
                     case let .joinVoiceChat(peerId, invite):
                         strongSelf.presentController(VoiceChatJoinScreen(context: strongSelf.context, peerId: peerId, invite: invite, join: { call in

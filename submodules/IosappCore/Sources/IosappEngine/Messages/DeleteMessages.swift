@@ -101,22 +101,22 @@ func _internal_deleteAllReactionsWithAuthor(account: Account, peerId: PeerId, au
 
                         let removedRecentPeers = attribute.recentPeers.filter { $0.peerId == authorId }
                         var updatedTopPeers = attribute.topPeers
-                        var removedStarsTopPeerCount: Int32 = 0
+                        var removedDiamondsTopPeerCount: Int32 = 0
                         for j in (0 ..< updatedTopPeers.count).reversed() {
                             if updatedTopPeers[j].peerId == authorId {
-                                removedStarsTopPeerCount += updatedTopPeers[j].count
+                                removedDiamondsTopPeerCount += updatedTopPeers[j].count
                                 updatedTopPeers.remove(at: j)
                             }
                         }
 
-                        if removedRecentPeers.isEmpty && removedStarsTopPeerCount == 0 {
+                        if removedRecentPeers.isEmpty && removedDiamondsTopPeerCount == 0 {
                             continue
                         }
 
                         var updatedReactions = attribute.reactions
                         for removedRecentPeer in removedRecentPeers {
                             if let index = updatedReactions.firstIndex(where: { $0.value == removedRecentPeer.value }) {
-                                if removedRecentPeer.value != .stars || removedStarsTopPeerCount == 0 {
+                                if removedRecentPeer.value != .stars || removedDiamondsTopPeerCount == 0 {
                                     updatedReactions[index].count -= 1
                                 }
                                 if removedRecentPeer.isMy {
@@ -124,8 +124,8 @@ func _internal_deleteAllReactionsWithAuthor(account: Account, peerId: PeerId, au
                                 }
                             }
                         }
-                        if removedStarsTopPeerCount != 0, let index = updatedReactions.firstIndex(where: { $0.value == .stars }) {
-                            updatedReactions[index].count -= removedStarsTopPeerCount
+                        if removedDiamondsTopPeerCount != 0, let index = updatedReactions.firstIndex(where: { $0.value == .stars }) {
+                            updatedReactions[index].count -= removedDiamondsTopPeerCount
                         }
                         for j in (0 ..< updatedReactions.count).reversed() {
                             if updatedReactions[j].count <= 0 {
@@ -193,22 +193,22 @@ func _internal_deleteReaction(account: Account, messageId: MessageId, authorId: 
 
                     let removedRecentPeers = attribute.recentPeers.filter { $0.peerId == authorId }
                     var updatedTopPeers = attribute.topPeers
-                    var removedStarsTopPeerCount: Int32 = 0
+                    var removedDiamondsTopPeerCount: Int32 = 0
                     for j in (0 ..< updatedTopPeers.count).reversed() {
                         if updatedTopPeers[j].peerId == authorId {
-                            removedStarsTopPeerCount += updatedTopPeers[j].count
+                            removedDiamondsTopPeerCount += updatedTopPeers[j].count
                             updatedTopPeers.remove(at: j)
                         }
                     }
 
-                    if removedRecentPeers.isEmpty && removedStarsTopPeerCount == 0 {
+                    if removedRecentPeers.isEmpty && removedDiamondsTopPeerCount == 0 {
                         continue
                     }
 
                     var updatedReactions = attribute.reactions
                     for removedRecentPeer in removedRecentPeers {
                         if let index = updatedReactions.firstIndex(where: { $0.value == removedRecentPeer.value }) {
-                            if removedRecentPeer.value != .stars || removedStarsTopPeerCount == 0 {
+                            if removedRecentPeer.value != .stars || removedDiamondsTopPeerCount == 0 {
                                 updatedReactions[index].count -= 1
                             }
                             if removedRecentPeer.isMy {
@@ -216,8 +216,8 @@ func _internal_deleteReaction(account: Account, messageId: MessageId, authorId: 
                             }
                         }
                     }
-                    if removedStarsTopPeerCount != 0, let index = updatedReactions.firstIndex(where: { $0.value == .stars }) {
-                        updatedReactions[index].count -= removedStarsTopPeerCount
+                    if removedDiamondsTopPeerCount != 0, let index = updatedReactions.firstIndex(where: { $0.value == .stars }) {
+                        updatedReactions[index].count -= removedDiamondsTopPeerCount
                     }
                     for j in (0 ..< updatedReactions.count).reversed() {
                         if updatedReactions[j].count <= 0 {

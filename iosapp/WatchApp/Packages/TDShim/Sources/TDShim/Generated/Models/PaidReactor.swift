@@ -26,7 +26,7 @@ public struct PaidReactor: Codable, Equatable, Hashable {
     public let senderId: MessageSender?
 
     /// Number of Iosapp Stars added
-    public let starCount: Int64
+    public let diamondCount: Int64
 
 
     public init(
@@ -34,13 +34,13 @@ public struct PaidReactor: Codable, Equatable, Hashable {
         isMe: Bool,
         isTop: Bool,
         senderId: MessageSender?,
-        starCount: Int64
+        diamondCount: Int64
     ) {
         self.isAnonymous = isAnonymous
         self.isMe = isMe
         self.isTop = isTop
         self.senderId = senderId
-        self.starCount = starCount
+        self.diamondCount = diamondCount
     }
 }
 

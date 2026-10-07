@@ -193,10 +193,10 @@ public class ChatMessageDateAndStatusNode: ASDisplayNode {
         var reactionPeers: [(MessageReaction.Reaction, EnginePeer)]
         var displayAllReactionPeers: Bool
         var areReactionsTags: Bool
-        var areStarReactionsEnabled: Bool
+        var areDiamondReactionsEnabled: Bool
         var messageEffect: AvailableMessageEffects.MessageEffect?
         var replyCount: Int
-        var starsCount: Int64?
+        var diamondsCount: Int64?
         var tonAmount: Int64?
         var isPinned: Bool
         var hasAutoremove: Bool
@@ -219,10 +219,10 @@ public class ChatMessageDateAndStatusNode: ASDisplayNode {
             reactionPeers: [(MessageReaction.Reaction, EnginePeer)],
             displayAllReactionPeers: Bool,
             areReactionsTags: Bool,
-            areStarReactionsEnabled: Bool,
+            areDiamondReactionsEnabled: Bool,
             messageEffect: AvailableMessageEffects.MessageEffect?,
             replyCount: Int,
-            starsCount: Int64?,
+            diamondsCount: Int64?,
             tonAmount: Int64? = nil,
             isPinned: Bool,
             hasAutoremove: Bool,
@@ -244,10 +244,10 @@ public class ChatMessageDateAndStatusNode: ASDisplayNode {
             self.reactionPeers = reactionPeers
             self.displayAllReactionPeers = displayAllReactionPeers
             self.areReactionsTags = areReactionsTags
-            self.areStarReactionsEnabled = areStarReactionsEnabled
+            self.areDiamondReactionsEnabled = areDiamondReactionsEnabled
             self.messageEffect = messageEffect
             self.replyCount = replyCount
-            self.starsCount = starsCount
+            self.diamondsCount = diamondsCount
             self.tonAmount = tonAmount
             self.isPinned = isPinned
             self.hasAutoremove = hasAutoremove
@@ -271,8 +271,8 @@ public class ChatMessageDateAndStatusNode: ASDisplayNode {
     private var repliesIcon: ASImageNode?
     private var selfExpiringIcon: ASImageNode?
     private var replyCountNode: TextNode?
-    private var starsIcon: ASImageNode?
-    private var starsCountNode: TextNode?
+    private var diamondsIcon: ASImageNode?
+    private var diamondsCountNode: TextNode?
 
     private var type: ChatMessageDateAndStatusType?
     private var theme: ChatPresentationThemeData?
@@ -327,13 +327,13 @@ public class ChatMessageDateAndStatusNode: ASDisplayNode {
         var currentBackgroundNode = self.backgroundNode
         var currentImpressionIcon = self.impressionIcon
         var currentRepliesIcon = self.repliesIcon
-        var currentStarsIcon = self.starsIcon
+        var currentDiamondsIcon = self.diamondsIcon
 
         let currentType = self.type
         let currentTheme = self.theme
 
         let makeReplyCountLayout = TextNode.asyncLayout(self.replyCountNode)
-        let makeStarsCountLayout = TextNode.asyncLayout(self.starsCountNode)
+        let makeDiamondsCountLayout = TextNode.asyncLayout(self.diamondsCountNode)
 
         let reactionButtonsContainer = self.reactionButtonsContainer
         
@@ -350,7 +350,7 @@ public class ChatMessageDateAndStatusNode: ASDisplayNode {
             let clockMinImage: UIImage?
             var impressionImage: UIImage?
             var repliesImage: UIImage?
-            var starsImage: UIImage?
+            var diamondsImage: UIImage?
 
             let themeUpdated = arguments.presentationData.theme != currentTheme || arguments.type != currentType
             
@@ -371,10 +371,10 @@ public class ChatMessageDateAndStatusNode: ASDisplayNode {
                     deselectedForeground: themeColors.reactionInactiveForeground.argb,
                     selectedForeground: themeColors.reactionActiveForeground.argb,
                     selectedIconTintColor: 0,
-                    deselectedStarsBackground: themeColors.reactionStarsInactiveBackground.argb,
-                    selectedStarsBackground: themeColors.reactionStarsActiveBackground.argb,
-                    deselectedStarsForeground: themeColors.reactionStarsInactiveForeground.argb,
-                    selectedStarsForeground: themeColors.reactionStarsActiveForeground.argb,
+                    deselectedDiamondsBackground: themeColors.reactionDiamondsInactiveBackground.argb,
+                    selectedDiamondsBackground: themeColors.reactionDiamondsActiveBackground.argb,
+                    deselectedDiamondsForeground: themeColors.reactionDiamondsInactiveForeground.argb,
+                    selectedDiamondsForeground: themeColors.reactionDiamondsActiveForeground.argb,
                     extractedBackground: arguments.presentationData.theme.theme.contextMenu.backgroundColor.argb,
                     extractedForeground: arguments.presentationData.theme.theme.contextMenu.primaryColor.argb,
                     extractedSelectedForeground: arguments.presentationData.theme.theme.overallDarkAppearance ? themeColors.reactionActiveForeground.argb : arguments.presentationData.theme.theme.contextMenu.primaryColor.argb,
@@ -391,10 +391,10 @@ public class ChatMessageDateAndStatusNode: ASDisplayNode {
                     deselectedForeground: themeColors.reactionInactiveForeground.argb,
                     selectedForeground: themeColors.reactionActiveForeground.argb,
                     selectedIconTintColor: 0,
-                    deselectedStarsBackground: themeColors.reactionStarsInactiveBackground.argb,
-                    selectedStarsBackground: themeColors.reactionStarsActiveBackground.argb,
-                    deselectedStarsForeground: themeColors.reactionStarsInactiveForeground.argb,
-                    selectedStarsForeground: themeColors.reactionStarsActiveForeground.argb,
+                    deselectedDiamondsBackground: themeColors.reactionDiamondsInactiveBackground.argb,
+                    selectedDiamondsBackground: themeColors.reactionDiamondsActiveBackground.argb,
+                    deselectedDiamondsForeground: themeColors.reactionDiamondsInactiveForeground.argb,
+                    selectedDiamondsForeground: themeColors.reactionDiamondsActiveForeground.argb,
                     extractedBackground: arguments.presentationData.theme.theme.contextMenu.backgroundColor.argb,
                     extractedForeground: arguments.presentationData.theme.theme.contextMenu.primaryColor.argb,
                     extractedSelectedForeground: arguments.presentationData.theme.theme.overallDarkAppearance ? themeColors.reactionActiveForeground.argb : arguments.presentationData.theme.theme.list.itemCheckColors.foregroundColor.argb,
@@ -420,10 +420,10 @@ public class ChatMessageDateAndStatusNode: ASDisplayNode {
                 } else if arguments.isPinned {
                     repliesImage = graphics.incomingDateAndStatusPinnedIcon
                 }
-                if (arguments.starsCount ?? 0) != 0 {
-                    starsImage = graphics.incomingDateAndStatusStarsIcon
+                if (arguments.diamondsCount ?? 0) != 0 {
+                    diamondsImage = graphics.incomingDateAndStatusDiamondsIcon
                 } else if (arguments.tonAmount ?? 0) != 0 {
-                    starsImage = graphics.incomingDateAndStatusTonIcon
+                    diamondsImage = graphics.incomingDateAndStatusTonIcon
                 }
             case let .BubbleOutgoing(status):
                 dateColor = arguments.presentationData.theme.theme.chat.message.outgoing.secondaryTextColor
@@ -441,10 +441,10 @@ public class ChatMessageDateAndStatusNode: ASDisplayNode {
                 } else if arguments.isPinned {
                     repliesImage = graphics.outgoingDateAndStatusPinnedIcon
                 }
-                if (arguments.starsCount ?? 0)  != 0 {
-                    starsImage = graphics.outgoingDateAndStatusStarsIcon
+                if (arguments.diamondsCount ?? 0)  != 0 {
+                    diamondsImage = graphics.outgoingDateAndStatusDiamondsIcon
                 } else if (arguments.tonAmount ?? 0)  != 0 {
-                    starsImage = graphics.outgoingDateAndStatusTonIcon
+                    diamondsImage = graphics.outgoingDateAndStatusTonIcon
                 }
             case .ImageIncoming:
                 dateColor = arguments.presentationData.theme.theme.chat.message.mediaDateAndStatusTextColor
@@ -462,10 +462,10 @@ public class ChatMessageDateAndStatusNode: ASDisplayNode {
                 } else if arguments.isPinned {
                     repliesImage = graphics.mediaPinnedIcon
                 }
-                if (arguments.starsCount ?? 0)  != 0 {
-                    starsImage = graphics.mediaStarsIcon
+                if (arguments.diamondsCount ?? 0)  != 0 {
+                    diamondsImage = graphics.mediaDiamondsIcon
                 } else if (arguments.tonAmount ?? 0)  != 0 {
-                    starsImage = graphics.mediaTonIcon
+                    diamondsImage = graphics.mediaTonIcon
                 }
             case let .ImageOutgoing(status):
                 dateColor = arguments.presentationData.theme.theme.chat.message.mediaDateAndStatusTextColor
@@ -484,10 +484,10 @@ public class ChatMessageDateAndStatusNode: ASDisplayNode {
                 } else if arguments.isPinned {
                     repliesImage = graphics.mediaPinnedIcon
                 }
-                if (arguments.starsCount ?? 0)  != 0 {
-                    starsImage = graphics.mediaStarsIcon
+                if (arguments.diamondsCount ?? 0)  != 0 {
+                    diamondsImage = graphics.mediaDiamondsIcon
                 } else if (arguments.tonAmount ?? 0)  != 0 {
-                    starsImage = graphics.mediaTonIcon
+                    diamondsImage = graphics.mediaTonIcon
                 }
             case .FreeIncoming:
                 let serviceColor = serviceMessageColorComponents(theme: arguments.presentationData.theme.theme, wallpaper: arguments.presentationData.theme.wallpaper)
@@ -507,10 +507,10 @@ public class ChatMessageDateAndStatusNode: ASDisplayNode {
                 } else if arguments.isPinned {
                     repliesImage = graphics.freePinnedIcon
                 }
-                if (arguments.starsCount ?? 0)  != 0 {
-                    starsImage = graphics.freeStarsIcon
+                if (arguments.diamondsCount ?? 0)  != 0 {
+                    diamondsImage = graphics.freeDiamondsIcon
                 } else if (arguments.tonAmount ?? 0)  != 0 {
-                    starsImage = graphics.freeTonIcon
+                    diamondsImage = graphics.freeTonIcon
                 }
             case let .FreeOutgoing(status):
                 let serviceColor = serviceMessageColorComponents(theme: arguments.presentationData.theme.theme, wallpaper: arguments.presentationData.theme.wallpaper)
@@ -530,10 +530,10 @@ public class ChatMessageDateAndStatusNode: ASDisplayNode {
                 } else if arguments.isPinned {
                     repliesImage = graphics.freePinnedIcon
                 }
-                if (arguments.starsCount ?? 0)  != 0 {
-                    starsImage = graphics.freeStarsIcon
+                if (arguments.diamondsCount ?? 0)  != 0 {
+                    diamondsImage = graphics.freeDiamondsIcon
                 } else if (arguments.tonAmount ?? 0)  != 0 {
-                    starsImage = graphics.freeTonIcon
+                    diamondsImage = graphics.freeTonIcon
                 }
             }
             
@@ -590,18 +590,18 @@ public class ChatMessageDateAndStatusNode: ASDisplayNode {
                 currentRepliesIcon = nil
             }
             
-            var starsIconSize = CGSize()
-            if let starsImage = starsImage {
-                if currentStarsIcon == nil {
+            var diamondsIconSize = CGSize()
+            if let diamondsImage = diamondsImage {
+                if currentDiamondsIcon == nil {
                     let iconNode = ASImageNode()
                     iconNode.isLayerBacked = true
                     iconNode.displayWithoutProcessing = true
                     iconNode.displaysAsynchronously = false
-                    currentStarsIcon = iconNode
+                    currentDiamondsIcon = iconNode
                 }
-                starsIconSize = starsImage.size
+                diamondsIconSize = diamondsImage.size
             } else {
-                currentStarsIcon = nil
+                currentDiamondsIcon = nil
             }
             
             if let outgoingStatus = outgoingStatus {
@@ -715,7 +715,7 @@ public class ChatMessageDateAndStatusNode: ASDisplayNode {
             }
 
             var replyCountLayoutAndApply: (TextNodeLayout, () -> TextNode)?
-            var starsCountLayoutAndApply: (TextNodeLayout, () -> TextNode)?
+            var diamondsCountLayoutAndApply: (TextNodeLayout, () -> TextNode)?
 
             let reactionSize: CGFloat = 8.0
             let reactionSpacing: CGFloat = 2.0
@@ -735,7 +735,7 @@ public class ChatMessageDateAndStatusNode: ASDisplayNode {
                 
                 let layoutAndApply = makeReplyCountLayout(TextNodeLayoutArguments(attributedString: NSAttributedString(string: countString, font: dateFont, textColor: dateColor), backgroundColor: nil, maximumNumberOfLines: 1, truncationType: .end, constrainedSize: CGSize(width: 100.0, height: 100.0)))
                 reactionInset += 14.0 + layoutAndApply.0.size.width + 4.0
-                if arguments.starsCount != nil || arguments.tonAmount != nil {
+                if arguments.diamondsCount != nil || arguments.tonAmount != nil {
                     reactionInset += 3.0
                 }
                 replyCountLayoutAndApply = layoutAndApply
@@ -743,24 +743,24 @@ public class ChatMessageDateAndStatusNode: ASDisplayNode {
                 reactionInset += 12.0
             }
             
-            if let starsCount = arguments.starsCount, starsCount > 0 {
+            if let diamondsCount = arguments.diamondsCount, diamondsCount > 0 {
                 let countString: String
-                if starsCount > 1000000 {
+                if diamondsCount > 1000000 {
                     countString = "\(starsCount / 1000000)M"
-                } else if starsCount > 1000 {
+                } else if diamondsCount > 1000 {
                     countString = "\(starsCount / 1000)K"
                 } else {
                     countString = "\(starsCount)"
                 }
                 
-                let layoutAndApply = makeStarsCountLayout(TextNodeLayoutArguments(attributedString: NSAttributedString(string: countString, font: dateFont, textColor: dateColor), backgroundColor: nil, maximumNumberOfLines: 1, truncationType: .end, constrainedSize: CGSize(width: 100.0, height: 100.0)))
+                let layoutAndApply = makeDiamondsCountLayout(TextNodeLayoutArguments(attributedString: NSAttributedString(string: countString, font: dateFont, textColor: dateColor), backgroundColor: nil, maximumNumberOfLines: 1, truncationType: .end, constrainedSize: CGSize(width: 100.0, height: 100.0)))
                 reactionInset += 14.0 + layoutAndApply.0.size.width + 4.0
-                starsCountLayoutAndApply = layoutAndApply
+                diamondsCountLayoutAndApply = layoutAndApply
             } else if let tonAmount = arguments.tonAmount, tonAmount > 0 {
                 let countString = formatTonAmountText(tonAmount, dateTimeFormat: arguments.presentationData.dateTimeFormat)
-                let layoutAndApply = makeStarsCountLayout(TextNodeLayoutArguments(attributedString: NSAttributedString(string: countString, font: dateFont, textColor: dateColor), backgroundColor: nil, maximumNumberOfLines: 1, truncationType: .end, constrainedSize: CGSize(width: 100.0, height: 100.0)))
+                let layoutAndApply = makeDiamondsCountLayout(TextNodeLayoutArguments(attributedString: NSAttributedString(string: countString, font: dateFont, textColor: dateColor), backgroundColor: nil, maximumNumberOfLines: 1, truncationType: .end, constrainedSize: CGSize(width: 100.0, height: 100.0)))
                 reactionInset += 14.0 + layoutAndApply.0.size.width + 4.0
-                starsCountLayoutAndApply = layoutAndApply
+                diamondsCountLayoutAndApply = layoutAndApply
             }
             
             if arguments.messageEffect != nil {
@@ -803,13 +803,13 @@ public class ChatMessageDateAndStatusNode: ASDisplayNode {
                         totalReactionCount += Int(reaction.count)
                     }
                     
-                    var hadStars = false
+                    var hadDiamonds = false
                     var mappedReactions = arguments.reactions.map { reaction in
                         var centerAnimation: IosappMediaFile?
                         var animationFileId: Int64?
                         
                         if case .stars = reaction.value {
-                            hadStars = true
+                            hadDiamonds = true
                         }
                         
                         switch reaction.value {
@@ -862,7 +862,7 @@ public class ChatMessageDateAndStatusNode: ASDisplayNode {
                         )
                     }
                     
-                    if arguments.areStarReactionsEnabled && !hadStars && !mappedReactions.isEmpty {
+                    if arguments.areDiamondReactionsEnabled && !hadDiamonds && !mappedReactions.isEmpty {
                         var centerAnimation: IosappMediaFile?
                         let animationFileId: Int64? = nil
                         
@@ -1347,7 +1347,7 @@ public class ChatMessageDateAndStatusNode: ASDisplayNode {
                             let replyCountFrame = CGRect(origin: CGPoint(x: reactionOffset + 4.0, y: backgroundInsets.top + 1.0 + offset + verticalInset), size: layout.size)
                             animation.animator.updateFrame(layer: node.layer, frame: replyCountFrame, completion: nil)
                             reactionOffset += 4.0 + layout.size.width
-                            if currentStarsIcon != nil {
+                            if currentDiamondsIcon != nil {
                                 reactionOffset += 8.0
                             }
                         } else if let replyCountNode = strongSelf.replyCountNode {
@@ -1361,53 +1361,53 @@ public class ChatMessageDateAndStatusNode: ASDisplayNode {
                             }
                         }
                         
-                        if let currentStarsIcon = currentStarsIcon {
-                            currentStarsIcon.displaysAsynchronously = false
-                            if currentStarsIcon.image !== starsImage {
-                                currentStarsIcon.image = starsImage
+                        if let currentDiamondsIcon = currentDiamondsIcon {
+                            currentDiamondsIcon.displaysAsynchronously = false
+                            if currentDiamondsIcon.image !== diamondsImage {
+                                currentDiamondsIcon.image = diamondsImage
                             }
-                            if currentStarsIcon.supernode == nil {
-                                strongSelf.starsIcon = currentStarsIcon
-                                strongSelf.addSubnode(currentStarsIcon)
+                            if currentDiamondsIcon.supernode == nil {
+                                strongSelf.diamondsIcon = currentDiamondsIcon
+                                strongSelf.addSubnode(currentDiamondsIcon)
                                 if animation.isAnimated {
-                                    currentStarsIcon.layer.animateAlpha(from: 0.0, to: 1.0, duration: 0.15)
+                                    currentDiamondsIcon.layer.animateAlpha(from: 0.0, to: 1.0, duration: 0.15)
                                 }
                             }
-                            let starsIconFrame = CGRect(origin: CGPoint(x: reactionOffset - 2.0, y: backgroundInsets.top + offset + verticalInset + floor((date.size.height - starsIconSize.height) / 2.0)), size: starsIconSize)
-                            animation.animator.updateFrame(layer: currentStarsIcon.layer, frame: starsIconFrame, completion: nil)
+                            let diamondsIconFrame = CGRect(origin: CGPoint(x: reactionOffset - 2.0, y: backgroundInsets.top + offset + verticalInset + floor((date.size.height - diamondsIconSize.height) / 2.0)), size: diamondsIconSize)
+                            animation.animator.updateFrame(layer: currentDiamondsIcon.layer, frame: diamondsIconFrame, completion: nil)
                             reactionOffset += 9.0
-                        } else if let starsIcon = strongSelf.starsIcon {
-                            strongSelf.starsIcon = nil
+                        } else if let diamondsIcon = strongSelf.diamondsIcon {
+                            strongSelf.diamondsIcon = nil
                             if animation.isAnimated {
-                                starsIcon.layer.animateAlpha(from: 1.0, to: 0.0, duration: 0.2, removeOnCompletion: false, completion: { [weak starsIcon] _ in
-                                    starsIcon?.removeFromSupernode()
+                                diamondsIcon.layer.animateAlpha(from: 1.0, to: 0.0, duration: 0.2, removeOnCompletion: false, completion: { [weak diamondsIcon] _ in
+                                    diamondsIcon?.removeFromSupernode()
                                 })
                             } else {
-                                starsIcon.removeFromSupernode()
+                                diamondsIcon.removeFromSupernode()
                             }
                         }
                         
-                        if let (layout, apply) = starsCountLayoutAndApply {
+                        if let (layout, apply) = diamondsCountLayoutAndApply {
                             let node = apply()
-                            if strongSelf.starsCountNode !== node {
-                                strongSelf.starsCountNode?.removeFromSupernode()
+                            if strongSelf.diamondsCountNode !== node {
+                                strongSelf.diamondsCountNode?.removeFromSupernode()
                                 strongSelf.addSubnode(node)
-                                strongSelf.starsCountNode = node
+                                strongSelf.diamondsCountNode = node
                                 if animation.isAnimated {
                                     node.layer.animateAlpha(from: 0.0, to: 1.0, duration: 0.15)
                                 }
                             }
-                            let starsCountFrame = CGRect(origin: CGPoint(x: reactionOffset + 4.0, y: backgroundInsets.top + 1.0 + offset + verticalInset), size: layout.size)
-                            animation.animator.updateFrame(layer: node.layer, frame: starsCountFrame, completion: nil)
+                            let diamondsCountFrame = CGRect(origin: CGPoint(x: reactionOffset + 4.0, y: backgroundInsets.top + 1.0 + offset + verticalInset), size: layout.size)
+                            animation.animator.updateFrame(layer: node.layer, frame: diamondsCountFrame, completion: nil)
                             reactionOffset += 4.0 + layout.size.width
-                        } else if let starsCountNode = strongSelf.starsCountNode {
-                            strongSelf.starsCountNode = nil
+                        } else if let diamondsCountNode = strongSelf.diamondsCountNode {
+                            strongSelf.diamondsCountNode = nil
                             if animation.isAnimated {
-                                starsCountNode.layer.animateAlpha(from: 1.0, to: 0.0, duration: 0.2, removeOnCompletion: false, completion: { [weak starsCountNode] _ in
-                                    starsCountNode?.removeFromSupernode()
+                                diamondsCountNode.layer.animateAlpha(from: 1.0, to: 0.0, duration: 0.2, removeOnCompletion: false, completion: { [weak diamondsCountNode] _ in
+                                    diamondsCountNode?.removeFromSupernode()
                                 })
                             } else {
-                                starsCountNode.removeFromSupernode()
+                                diamondsCountNode.removeFromSupernode()
                             }
                         }
                     }

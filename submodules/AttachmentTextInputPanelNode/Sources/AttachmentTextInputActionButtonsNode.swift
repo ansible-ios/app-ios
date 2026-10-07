@@ -141,7 +141,7 @@ final class AttachmentTextInputActionButtonsNode: ASDisplayNode, ChatSendMessage
             let font = Font.with(size: 17.0, design: .round, weight: .semibold, traits: .monospacedNumbers)
             let badgeString = NSMutableAttributedString(string: "⭐️ ", font: font, textColor: interfaceState.theme.chat.inputPanel.actionControlForegroundColor)
             if let range = badgeString.string.range(of: "⭐️") {
-                badgeString.addAttribute(.attachment, value: PresentationResourcesChat.chatPlaceholderStarIcon(interfaceState.theme)!, range: NSRange(range, in: badgeString.string))
+                badgeString.addAttribute(.attachment, value: PresentationResourcesChat.chatPlaceholderDiamondIcon(interfaceState.theme)!, range: NSRange(range, in: badgeString.string))
                 badgeString.addAttribute(.baselineOffset, value: 1.0, range: NSRange(range, in: badgeString.string))
             }
             segments.append(.text(0, badgeString))

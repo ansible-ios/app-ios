@@ -550,7 +550,7 @@ extension PeerInfoScreenNode {
                     }
                     
                     if strongSelf.peerId.namespace == Namespaces.Peer.CloudUser && user.botInfo == nil && !user.flags.contains(.isSupport) {
-                        if let cachedUserData = strongSelf.data?.cachedData as? CachedUserData, let _ = cachedUserData.sendPaidMessageStars {
+                        if let cachedUserData = strongSelf.data?.cachedData as? CachedUserData, let _ = cachedUserData.sendPaidMessageDiamonds {
                             
                         } else {
                             items.append(.action(ContextMenuActionItem(text: presentationData.strings.UserInfo_StartSecretChat, icon: { theme in
@@ -891,7 +891,7 @@ extension PeerInfoScreenNode {
                     }
                 } else if case let .channel(channel) = peer {
                     if let cachedData = strongSelf.data?.cachedData as? CachedChannelData {
-                        if case .broadcast = channel.info, cachedData.flags.contains(.starGiftsAvailable) {
+                        if case .broadcast = channel.info, cachedData.flags.contains(.diamondGiftsAvailable) {
                             items.append(.action(ContextMenuActionItem(text: presentationData.strings.Profile_SendGift, badge: nil, icon: { theme in
                                 generateTintedImage(image: UIImage(bundleImageName: "Chat/Context Menu/Gift"), color: theme.contextMenu.primaryColor)
                             }, action: { [weak self] _, f in

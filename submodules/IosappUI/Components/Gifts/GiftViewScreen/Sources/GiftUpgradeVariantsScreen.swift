@@ -796,7 +796,7 @@ private final class GiftUpgradeVariantsScreenComponent: Component {
                     subject: .preview(attributes),
                     animationOffset: CGPoint(x: 0.0, y: 20.0),
                     animationScale: nil,
-                    displayAnimationStars: false,
+                    displayAnimationDiamonds: false,
                     alwaysAnimateTransition: true,
                     revealedAttributes: Set(),
                     externalState: self.giftCompositionExternalState,

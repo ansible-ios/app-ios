@@ -130,10 +130,10 @@ class ProjectGenerator {
         try xcodeproj.write(path: projectPath)
 
         // Generate scheme for main target
-        if let telegramTarget = targetBuilder.getTarget(named: "IosappUI") {
+        if let ansibleTarget = targetBuilder.getTarget(named: "IosappUI") {
             print("Generating scheme...")
             let schemeGenerator = SchemeGenerator(projectPath: projectPath, pbxproj: pbxproj)
-            try schemeGenerator.generateScheme(for: telegramTarget, named: "IosappUI")
+            try schemeGenerator.generateScheme(for: ansibleTarget, named: "IosappUI")
         } else {
             print("Warning: Could not find IosappUI target for scheme")
         }

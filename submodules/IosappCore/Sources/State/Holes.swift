@@ -176,7 +176,7 @@ func resolveUnknownEmojiFiles<T>(postbox: Postbox, source: FetchMessageHistoryHo
                         for documentSet in documentSets {
                             if let documentSet = documentSet {
                                 for document in documentSet {
-                                    if let file = telegramMediaFileFromApiDocument(document, altDocuments: []) {
+                                    if let file = ansibleMediaFileFromApiDocument(document, altDocuments: []) {
                                         transaction.storeMediaIfNotPresent(media: file)
                                     }
                                 }

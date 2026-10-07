@@ -34,7 +34,7 @@ final class ChatGiftPreviewItem: ListViewItem, ItemListItem, ListItemComponentAd
     let text: String
     let entities: [MessageTextEntity]
     let upgradeStars: Int64?
-    let chargeStars: Int64?
+    let chargeDiamonds: Int64?
     let bottomInset: CGFloat
     
     init(
@@ -54,7 +54,7 @@ final class ChatGiftPreviewItem: ListViewItem, ItemListItem, ListItemComponentAd
         text: String,
         entities: [MessageTextEntity],
         upgradeStars: Int64?,
-        chargeStars: Int64?,
+        chargeDiamonds: Int64?,
         bottomInset: CGFloat = 0.0
     ) {
         self.context = context
@@ -73,7 +73,7 @@ final class ChatGiftPreviewItem: ListViewItem, ItemListItem, ListItemComponentAd
         self.text = text
         self.entities = entities
         self.upgradeStars = upgradeStars
-        self.chargeStars = chargeStars
+        self.chargeDiamonds = chargeDiamonds
         self.bottomInset = bottomInset
     }
     

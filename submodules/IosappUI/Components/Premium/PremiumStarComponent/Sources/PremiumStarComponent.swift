@@ -313,13 +313,13 @@ public final class PremiumStarComponent: Component {
                 "particles_center"
             ]
             
-            let starNames: [String] = [
+            let diamondNames: [String] = [
                 "coins_left",
                 "coins_right"
             ]
             
             if let particleColor = component.particleColor {
-                for name in starNames {
+                for name in diamondNames {
                     if let node = scene.rootNode.childNode(withName: name, recursively: false), let particleSystem = node.particleSystems?.first {
                         if animated {
                             particleSystem.warmupDuration = 0.0
@@ -348,7 +348,7 @@ public final class PremiumStarComponent: Component {
                 }
             } else {
                 if animated {
-                    for name in starNames {
+                    for name in diamondNames {
                         if let node = scene.rootNode.childNode(withName: name, recursively: false) {
                             node.isHidden = true
                         }
@@ -723,7 +723,7 @@ public final class PremiumStarComponent: Component {
     }
 }
 
-public final class StandalonePremiumStarComponent: Component {
+public final class StandalonePremiumDiamondComponent: Component {
     let theme: PresentationTheme
     let colors: [UIColor]?
     
@@ -735,7 +735,7 @@ public final class StandalonePremiumStarComponent: Component {
         self.colors = colors
     }
     
-    public static func ==(lhs: StandalonePremiumStarComponent, rhs: StandalonePremiumStarComponent) -> Bool {
+    public static func ==(lhs: StandalonePremiumDiamondComponent, rhs: StandalonePremiumDiamondComponent) -> Bool {
         return lhs.theme === rhs.theme && lhs.colors == rhs.colors
     }
     
@@ -752,7 +752,7 @@ public final class StandalonePremiumStarComponent: Component {
             return false
         }
         
-        private var component: StandalonePremiumStarComponent?
+        private var component: StandalonePremiumDiamondComponent?
         
         private var _ready = Promise<Bool>()
         public var ready: Signal<Bool, NoError> {
@@ -905,7 +905,7 @@ public final class StandalonePremiumStarComponent: Component {
             node.addAnimation(animation, forKey: "rotate")
         }
         
-        func update(component: StandalonePremiumStarComponent, availableSize: CGSize, transition: ComponentTransition) -> CGSize {
+        func update(component: StandalonePremiumDiamondComponent, availableSize: CGSize, transition: ComponentTransition) -> CGSize {
             self.component = component
             
             self.setup()

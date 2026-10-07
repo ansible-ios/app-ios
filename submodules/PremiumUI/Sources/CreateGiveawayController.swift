@@ -33,9 +33,9 @@ private final class CreateGiveawayControllerArguments {
     let scrollToDescription: () -> Void
     let setItemIdWithRevealedOptions: (EnginePeer.Id?, EnginePeer.Id?) -> Void
     let removeChannel: (EnginePeer.Id) -> Void
-    let expandStars: () -> Void
+    let expandDiamonds: () -> Void
     
-    init(context: AccountContext, updateState: @escaping ((CreateGiveawayControllerState) -> CreateGiveawayControllerState) -> Void, dismissInput: @escaping () -> Void, openPeersSelection: @escaping () -> Void, openChannelsSelection: @escaping () -> Void, openCountriesSelection: @escaping () -> Void, openPremiumIntro: @escaping () -> Void, scrollToDate: @escaping () -> Void, scrollToDescription: @escaping () -> Void, setItemIdWithRevealedOptions: @escaping (EnginePeer.Id?, EnginePeer.Id?) -> Void, removeChannel: @escaping (EnginePeer.Id) -> Void, expandStars: @escaping () -> Void) {
+    init(context: AccountContext, updateState: @escaping ((CreateGiveawayControllerState) -> CreateGiveawayControllerState) -> Void, dismissInput: @escaping () -> Void, openPeersSelection: @escaping () -> Void, openChannelsSelection: @escaping () -> Void, openCountriesSelection: @escaping () -> Void, openPremiumIntro: @escaping () -> Void, scrollToDate: @escaping () -> Void, scrollToDescription: @escaping () -> Void, setItemIdWithRevealedOptions: @escaping (EnginePeer.Id?, EnginePeer.Id?) -> Void, removeChannel: @escaping (EnginePeer.Id) -> Void, expandDiamonds: @escaping () -> Void) {
         self.context = context
         self.updateState = updateState
         self.dismissInput = dismissInput
@@ -47,7 +47,7 @@ private final class CreateGiveawayControllerArguments {
         self.scrollToDescription = scrollToDescription
         self.setItemIdWithRevealedOptions = setItemIdWithRevealedOptions
         self.removeChannel = removeChannel
-        self.expandStars = expandStars
+        self.expandDiamonds = expandDiamonds
     }
 }
 
@@ -82,15 +82,15 @@ private enum CreateGiveawayEntry: ItemListNodeEntry {
     
     case modeHeader(PresentationTheme, String)
     case giftPremium(PresentationTheme, String, String, Bool)
-    case giftStars(PresentationTheme, String, String, Bool)
+    case giftDiamonds(PresentationTheme, String, String, Bool)
     
     case prepaidHeader(PresentationTheme, String)
     case prepaid(PresentationTheme, String, String, PrepaidGiveaway)
     
-    case starsHeader(PresentationTheme, String, String)
+    case diamondsHeader(PresentationTheme, String, String)
     case stars(Int32, PresentationTheme, Int32, String, String, String, Bool, Int32)
-    case starsMore(PresentationTheme, String)
-    case starsInfo(PresentationTheme, String)
+    case diamondsMore(PresentationTheme, String)
+    case diamondsInfo(PresentationTheme, String)
     
     case subscriptionsHeader(PresentationTheme, String, String)
     case subscriptions(PresentationTheme, Int32, [Int32])
@@ -126,9 +126,9 @@ private enum CreateGiveawayEntry: ItemListNodeEntry {
         switch self {
         case .header:
             return CreateGiveawaySection.header.rawValue
-        case .modeHeader, .giftPremium, .giftStars, .prepaidHeader, .prepaid:
+        case .modeHeader, .giftPremium, .giftDiamonds, .prepaidHeader, .prepaid:
             return CreateGiveawaySection.mode.rawValue
-        case .starsHeader, .stars, .starsMore, .starsInfo:
+        case .diamondsHeader, .stars, .diamondsMore, .diamondsInfo:
             return CreateGiveawaySection.stars.rawValue
         case .subscriptionsHeader, .subscriptions, .subscriptionsInfo:
             return CreateGiveawaySection.subscriptions.rawValue
@@ -155,19 +155,19 @@ private enum CreateGiveawayEntry: ItemListNodeEntry {
             return -1
         case .giftPremium:
             return 0
-        case .giftStars:
+        case .giftDiamonds:
             return 1
         case .prepaidHeader:
             return 2
         case .prepaid:
             return 3
-        case .starsHeader:
+        case .diamondsHeader:
             return 4
         case let .stars(_, _, stars, _, _, _, _, _):
             return 5 + stars
-        case .starsMore:
+        case .diamondsMore:
             return 100000
-        case .starsInfo:
+        case .diamondsInfo:
             return 100001
         case .subscriptionsHeader:
             return 100002
@@ -238,8 +238,8 @@ private enum CreateGiveawayEntry: ItemListNodeEntry {
             } else {
                 return false
             }
-        case let .giftStars(lhsTheme, lhsText, lhsSubtext, lhsSelected):
-            if case let .giftStars(rhsTheme, rhsText, rhsSubtext, rhsSelected) = rhs, lhsTheme === rhsTheme, lhsText == rhsText, lhsSubtext == rhsSubtext, lhsSelected == rhsSelected {
+        case let .giftDiamonds(lhsTheme, lhsText, lhsSubtext, lhsSelected):
+            if case let .giftDiamonds(rhsTheme, rhsText, rhsSubtext, rhsSelected) = rhs, lhsTheme === rhsTheme, lhsText == rhsText, lhsSubtext == rhsSubtext, lhsSelected == rhsSelected {
                 return true
             } else {
                 return false
@@ -256,26 +256,26 @@ private enum CreateGiveawayEntry: ItemListNodeEntry {
             } else {
                 return false
             }
-        case let .starsHeader(lhsTheme, lhsText, lhsAdditionalText):
-            if case let .starsHeader(rhsTheme, rhsText, rhsAdditionalText) = rhs, lhsTheme === rhsTheme, lhsText == rhsText, lhsAdditionalText == rhsAdditionalText {
+        case let .diamondsHeader(lhsTheme, lhsText, lhsAdditionalText):
+            if case let .diamondsHeader(rhsTheme, rhsText, rhsAdditionalText) = rhs, lhsTheme === rhsTheme, lhsText == rhsText, lhsAdditionalText == rhsAdditionalText {
                 return true
             } else {
                 return false
             }
-        case let .stars(lhsIndex, lhsTheme, lhsStars, lhsTitle, lhsSubtitle, lhsLabel, lhsIsSelected, lhsMaxWinners):
-            if case let .stars(rhsIndex, rhsTheme, rhsStars, rhsTitle, rhsSubtitle, rhsLabel, rhsIsSelected, rhsMaxWinners) = rhs, lhsIndex == rhsIndex, lhsTheme === rhsTheme, lhsStars == rhsStars, lhsTitle == rhsTitle, lhsSubtitle == rhsSubtitle, lhsLabel == rhsLabel, lhsIsSelected == rhsIsSelected, lhsMaxWinners == rhsMaxWinners {
+        case let .stars(lhsIndex, lhsTheme, lhsDiamonds, lhsTitle, lhsSubtitle, lhsLabel, lhsIsSelected, lhsMaxWinners):
+            if case let .stars(rhsIndex, rhsTheme, rhsDiamonds, rhsTitle, rhsSubtitle, rhsLabel, rhsIsSelected, rhsMaxWinners) = rhs, lhsIndex == rhsIndex, lhsTheme === rhsTheme, lhsDiamonds == rhsDiamonds, lhsTitle == rhsTitle, lhsSubtitle == rhsSubtitle, lhsLabel == rhsLabel, lhsIsSelected == rhsIsSelected, lhsMaxWinners == rhsMaxWinners {
                 return true
             } else {
                 return false
             }
-        case let .starsMore(lhsTheme, lhsText):
-            if case let .starsMore(rhsTheme, rhsText) = rhs, lhsTheme === rhsTheme, lhsText == rhsText {
+        case let .diamondsMore(lhsTheme, lhsText):
+            if case let .diamondsMore(rhsTheme, rhsText) = rhs, lhsTheme === rhsTheme, lhsText == rhsText {
                 return true
             } else {
                 return false
             }
-        case let .starsInfo(lhsTheme, lhsText):
-            if case let .starsInfo(rhsTheme, rhsText) = rhs, lhsTheme === rhsTheme, lhsText == rhsText {
+        case let .diamondsInfo(lhsTheme, lhsText):
+            if case let .diamondsInfo(rhsTheme, rhsText) = rhs, lhsTheme === rhsTheme, lhsText == rhsText {
                 return true
             } else {
                 return false
@@ -447,11 +447,11 @@ private enum CreateGiveawayEntry: ItemListNodeEntry {
                     arguments.openPeersSelection()
                 }
             })
-        case let .giftStars(_, title, subtitle, isSelected):
+        case let .giftDiamonds(_, title, subtitle, isSelected):
             return GiftOptionItem(presentationData: presentationData, systemStyle: .glass, context: arguments.context, icon: .image(color: .stars, name: "Peer Info/PremiumIcon"), title: title, subtitle: subtitle, subtitleActive: false, isSelected: isSelected, sectionId: self.section, action: {
                 arguments.updateState { state in
                     var updatedState = state
-                    updatedState.mode = .starsGiveaway
+                    updatedState.mode = .diamondsGiveaway
                     return updatedState
                 }
             })
@@ -481,7 +481,7 @@ private enum CreateGiveawayEntry: ItemListNodeEntry {
                 boosts = boostCount
             }
             return GiftOptionItem(presentationData: presentationData, systemStyle: .glass, context: arguments.context, icon: .image(color: color, name: icon), title: title, titleFont: .bold, titleBadge: "\(boosts)", subtitle: subtitle, sectionId: self.section, action: nil)
-        case let .starsHeader(_, text, additionalText):
+        case let .diamondsHeader(_, text, additionalText):
             return ItemListSectionHeaderItem(presentationData: presentationData, text: text, accessoryText: ItemListSectionHeaderAccessoryText(value: additionalText, color: .generic), sectionId: self.section)
         case let .stars(_, _, stars, title, subtitle, label, isSelected, maxWinners):
             return GiftOptionItem(presentationData: presentationData, context: arguments.context, title: title, subtitle: subtitle, subtitleFont: .small, label: .generic(label), badge: nil, isSelected: isSelected, stars: Int64(stars), sectionId: self.section, action: {
@@ -492,11 +492,11 @@ private enum CreateGiveawayEntry: ItemListNodeEntry {
                     return updatedState
                 }
             })
-        case let .starsMore(theme, title):
+        case let .diamondsMore(theme, title):
             return ItemListPeerActionItem(presentationData: presentationData, systemStyle: .glass, icon: PresentationResourcesItemList.downArrowImage(theme), title: title, sectionId: self.section, editing: false, action: {
-                arguments.expandStars()
+                arguments.expandDiamonds()
             })
-        case let .starsInfo(_, text):
+        case let .diamondsInfo(_, text):
             return ItemListTextItem(presentationData: presentationData, text: .plain(text), sectionId: self.section)
         case let .subscriptionsHeader(_, text, additionalText):
             return ItemListSectionHeaderItem(presentationData: presentationData, text: text, accessoryText: ItemListSectionHeaderAccessoryText(value: additionalText, color: .generic), sectionId: self.section)
@@ -506,7 +506,7 @@ private enum CreateGiveawayEntry: ItemListNodeEntry {
                     var updatedState = state
                     if state.mode == .giveaway {
                         updatedState.subscriptions = value
-                    } else if state.mode == .starsGiveaway {
+                    } else if state.mode == .diamondsGiveaway {
                         updatedState.winners = value
                     }
                     return updatedState
@@ -711,7 +711,7 @@ private struct PremiumGiftProduct: Equatable {
     }
 }
 
-private struct StarsGiveawayProduct: Equatable {
+private struct DiamondsGiveawayProduct: Equatable {
     let giveawayOption: StarsGiveawayOption
     let storeProduct: InAppPurchaseManager.Product
     
@@ -733,7 +733,7 @@ private func createGiveawayControllerEntries(
     peers: [EnginePeer.Id: EnginePeer],
     products: [PremiumGiftProduct],
     defaultPrice: (Int64, NSDecimalNumber),
-    starsGiveawayOptions: [StarsGiveawayProduct],
+    diamondsGiveawayOptions: [DiamondsGiveawayProduct],
     minDate: Int32,
     maxDate: Int32
 ) -> [CreateGiveawayEntry] {
@@ -768,7 +768,7 @@ private func createGiveawayControllerEntries(
         entries.append(.modeHeader(presentationData.theme, presentationData.strings.BoostGift_Prize.uppercased()))
         entries.append(.giftPremium(presentationData.theme, presentationData.strings.BoostGift_Prize_Premium, recipientsText, state.mode == .giveaway || state.mode == .gift))
         
-        entries.append(.giftStars(presentationData.theme, presentationData.strings.BoostGift_Prize_Diamonds, presentationData.strings.BoostGift_CreateGiveawayInfo, state.mode == .starsGiveaway))
+        entries.append(.giftDiamonds(presentationData.theme, presentationData.strings.BoostGift_Prize_Diamonds, presentationData.strings.BoostGift_CreateGiveawayInfo, state.mode == .diamondsGiveaway))
     case let .prepaid(prepaidGiveaway):
         entries.append(.prepaidHeader(presentationData.theme, presentationData.strings.BoostGift_PrepaidGiveawayTitle))
         let title: String
@@ -784,23 +784,23 @@ private func createGiveawayControllerEntries(
         entries.append(.prepaid(presentationData.theme, title, text, prepaidGiveaway))
     }
     
-    if case .generic = subject, case .starsGiveaway = state.mode, !starsGiveawayOptions.isEmpty {
-        let selectedOption = starsGiveawayOptions.first(where: { $0.giveawayOption.count == state.stars })!
-        entries.append(.starsHeader(presentationData.theme, presentationData.strings.BoostGift_Diamonds_Title.uppercased(), presentationData.strings.BoostGift_Diamonds_Boosts(selectedOption.giveawayOption.yearlyBoosts).uppercased()))
+    if case .generic = subject, case .diamondsGiveaway = state.mode, !diamondsGiveawayOptions.isEmpty {
+        let selectedOption = diamondsGiveawayOptions.first(where: { $0.giveawayOption.count == state.stars })!
+        entries.append(.diamondsHeader(presentationData.theme, presentationData.strings.BoostGift_Diamonds_Title.uppercased(), presentationData.strings.BoostGift_Diamonds_Boosts(selectedOption.giveawayOption.yearlyBoosts).uppercased()))
         
         var i: Int32 = 0
-        for product in starsGiveawayOptions {
-            if !state.starsExpanded && product.giveawayOption.isExtended {
+        for product in diamondsGiveawayOptions {
+            if !state.diamondsExpanded && product.giveawayOption.isExtended {
                 continue
             }
             let giftTitle: String = presentationData.strings.BoostGift_Diamonds_Diamonds(Int32(clamping: product.giveawayOption.count))
             let maxWinners = product.giveawayOption.winners.sorted(by: { $0.users < $1.users }).last?.users ?? 1
 
-            let starsPerUser: Int64
+            let diamondsPerUser: Int64
             if let winners = product.giveawayOption.winners.first(where: { $0.users == state.winners }) {
-                starsPerUser = winners.starsPerUser
+                diamondsPerUser = winners.diamondsPerUser
             } else {
-                starsPerUser = product.giveawayOption.count / Int64(state.winners)
+                diamondsPerUser = product.giveawayOption.count / Int64(state.winners)
             }
             let subtitle = presentationData.strings.BoostGift_Diamonds_PerUser("\(starsPerUser)").string
             let label = product.storeProduct.price
@@ -811,11 +811,11 @@ private func createGiveawayControllerEntries(
             i += 1
         }
         
-        if !state.starsExpanded {
-            entries.append(.starsMore(presentationData.theme, presentationData.strings.BoostGift_Diamonds_ShowMoreOptions))
+        if !state.diamondsExpanded {
+            entries.append(.diamondsMore(presentationData.theme, presentationData.strings.BoostGift_Diamonds_ShowMoreOptions))
         }
         
-        entries.append(.starsInfo(presentationData.theme, presentationData.strings.BoostGift_Diamonds_Info))
+        entries.append(.diamondsInfo(presentationData.theme, presentationData.strings.BoostGift_Diamonds_Info))
     }
     
     let appendDurationEntries = {
@@ -827,7 +827,7 @@ private func createGiveawayControllerEntries(
             recipientCount = Int(state.subscriptions)
         case .gift:
             recipientCount = state.peers.count
-        case .starsGiveaway:
+        case .diamondsGiveaway:
             recipientCount = Int(state.subscriptions)
         }
         
@@ -868,12 +868,12 @@ private func createGiveawayControllerEntries(
     }
     
     switch state.mode {
-    case .giveaway, .starsGiveaway:
-        if case .starsGiveaway = state.mode {
+    case .giveaway, .diamondsGiveaway:
+        if case .diamondsGiveaway = state.mode {
             if case .prepaid = subject {
             } else {
                 var values: [Int32] = [1]
-                if let selectedOption = starsGiveawayOptions.first(where: { $0.giveawayOption.count == state.stars }) {
+                if let selectedOption = diamondsGiveawayOptions.first(where: { $0.giveawayOption.count == state.stars }) {
                     values = selectedOption.giveawayOption.winners.map { $0.users }
                 }
                 if values.count > 1 {
@@ -896,7 +896,7 @@ private func createGiveawayControllerEntries(
             boostCount = state.subscriptions * 4
         case .gift:
             boostCount = Int32(state.peers.count) * 4
-        case .starsGiveaway:
+        case .diamondsGiveaway:
             boostCount = Int32(state.stars) / 500
         }
         
@@ -937,7 +937,7 @@ private func createGiveawayControllerEntries(
         entries.append(.usersNew(presentationData.theme, isGroup ? presentationData.strings.BoostGift_Group_OnlyNewMembers : presentationData.strings.BoostGift_OnlyNewSubscribers, countriesText, state.onlyNewEligible))
         entries.append(.usersInfo(presentationData.theme, isGroup ? presentationData.strings.BoostGift_Group_LimitMembersInfo : presentationData.strings.BoostGift_LimitSubscribersInfo))
         
-        if case .starsGiveaway = state.mode  {
+        if case .diamondsGiveaway = state.mode  {
 
         } else {
             if case .generic = subject {
@@ -946,16 +946,16 @@ private func createGiveawayControllerEntries(
         }
         
         entries.append(.prizeDescription(presentationData.theme, presentationData.strings.BoostGift_AdditionalPrizes, state.showPrizeDescription))
-        var prizeDescriptionInfoText = state.mode == .starsGiveaway ? presentationData.strings.BoostGift_AdditionalPrizesInfoDiamondsOff : presentationData.strings.BoostGift_AdditionalPrizesInfoOff
+        var prizeDescriptionInfoText = state.mode == .diamondsGiveaway ? presentationData.strings.BoostGift_AdditionalPrizesInfoDiamondsOff : presentationData.strings.BoostGift_AdditionalPrizesInfoOff
         if state.showPrizeDescription {
             entries.append(.prizeDescriptionText(presentationData.theme, presentationData.strings.BoostGift_AdditionalPrizesPlaceholder, state.prizeDescription, state.subscriptions))
            
-            if state.mode == .starsGiveaway {
-                let starsString = presentationData.strings.BoostGift_AdditionalPrizesInfoDiamonds(Int32(clamping: state.stars))
+            if state.mode == .diamondsGiveaway {
+                let diamondsString = presentationData.strings.BoostGift_AdditionalPrizesInfoDiamonds(Int32(clamping: state.stars))
                 if state.prizeDescription.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                    prizeDescriptionInfoText = presentationData.strings.BoostGift_AdditionalPrizesInfoDiamondsOn(starsString, "").string
+                    prizeDescriptionInfoText = presentationData.strings.BoostGift_AdditionalPrizesInfoDiamondsOn(diamondsString, "").string
                 } else {
-                    prizeDescriptionInfoText = presentationData.strings.BoostGift_AdditionalPrizesInfoDiamondsOn(starsString, presentationData.strings.BoostGift_AdditionalPrizesInfoDiamondsAndOther("\(state.winners)", state.prizeDescription).string).string
+                    prizeDescriptionInfoText = presentationData.strings.BoostGift_AdditionalPrizesInfoDiamondsOn(diamondsString, presentationData.strings.BoostGift_AdditionalPrizesInfoDiamondsAndOther("\(state.winners)", state.prizeDescription).string).string
                 }
             } else {
                 let monthsString = presentationData.strings.BoostGift_AdditionalPrizesInfoForMonths(state.selectedMonths ?? 12)
@@ -976,13 +976,13 @@ private func createGiveawayControllerEntries(
         
         let timeInfoText: String
         if isGroup {
-            if case .starsGiveaway = state.mode {
+            if case .diamondsGiveaway = state.mode {
                 timeInfoText = presentationData.strings.BoostGift_Group_DiamondsDateInfo(presentationData.strings.BoostGift_Group_DateInfoMembers(Int32(state.winners))).string
             } else {
                 timeInfoText = presentationData.strings.BoostGift_Group_DateInfo(presentationData.strings.BoostGift_Group_DateInfoMembers(Int32(state.subscriptions))).string
             }
         } else {
-            if case .starsGiveaway = state.mode {
+            if case .diamondsGiveaway = state.mode {
                 timeInfoText = presentationData.strings.BoostGift_DiamondsDateInfo(presentationData.strings.BoostGift_DateInfoSubscribers(Int32(state.winners))).string
             } else {
                 timeInfoText = presentationData.strings.BoostGift_DateInfo(presentationData.strings.BoostGift_DateInfoSubscribers(Int32(state.subscriptions))).string
@@ -1003,7 +1003,7 @@ private struct CreateGiveawayControllerState: Equatable {
     enum Mode {
         case giveaway
         case gift
-        case starsGiveaway
+        case diamondsGiveaway
     }
     
     var mode: Mode
@@ -1023,7 +1023,7 @@ private struct CreateGiveawayControllerState: Equatable {
     var pickingExpiryDate = false
     var revealedItemId: EnginePeer.Id? = nil
     var updating = false
-    var starsExpanded = false
+    var diamondsExpanded = false
 }
 
 public enum CreateGiveawaySubject {
@@ -1035,21 +1035,21 @@ public func createGiveawayController(context: AccountContext, updatedPresentatio
     let actionsDisposable = DisposableSet()
     
     let initialSubscriptions: Int32
-    let initialStars: Int64
+    let initialDiamonds: Int64
     let initialWinners: Int32
     var initialMode: CreateGiveawayControllerState.Mode = .giveaway
     if case let .prepaid(prepaidGiveaway) = subject {
         if case let .stars(stars, _) = prepaidGiveaway.prize {
-            initialStars = stars
-            initialMode = .starsGiveaway
+            initialDiamonds = stars
+            initialMode = .diamondsGiveaway
         } else {
-            initialStars = 500
+            initialDiamonds = 500
         }
         initialSubscriptions = prepaidGiveaway.quantity
         initialWinners = prepaidGiveaway.quantity
     } else {
         initialSubscriptions = 5
-        initialStars = 500
+        initialDiamonds = 500
         initialWinners = 5
     }
     let currentTime = Int32(CFAbsoluteTimeGetCurrent() + kCFAbsoluteTimeIntervalSince1970)
@@ -1068,7 +1068,7 @@ public func createGiveawayController(context: AccountContext, updatedPresentatio
     let minDate = currentTime + 60 * 1
     let maxDate = currentTime + context.userLimits.maxGiveawayPeriodSeconds
     
-    let initialState: CreateGiveawayControllerState = CreateGiveawayControllerState(mode: initialMode, subscriptions: initialSubscriptions, stars: initialStars, winners: initialWinners, time: expiryTime)
+    let initialState: CreateGiveawayControllerState = CreateGiveawayControllerState(mode: initialMode, subscriptions: initialSubscriptions, stars: initialDiamonds, winners: initialWinners, time: expiryTime)
 
     let statePromise = ValuePromise(initialState, ignoreRepeated: true)
     let stateValue = Atomic(value: initialState)
@@ -1079,7 +1079,7 @@ public func createGiveawayController(context: AccountContext, updatedPresentatio
     let isGroupValue = Atomic<Bool>(value: false)
     
     let productsValue = Atomic<[PremiumGiftProduct]?>(value: nil)
-    let starsValue = Atomic<[StarsGiveawayProduct]?>(value: nil)
+    let diamondsValue = Atomic<[DiamondsGiveawayProduct]?>(value: nil)
 
     var buyActionImpl: (() -> Void)?
     var openPeersSelectionImpl: (() -> Void)?
@@ -1125,10 +1125,10 @@ public func createGiveawayController(context: AccountContext, updatedPresentatio
             return updatedState
         }
     },
-    expandStars: {
+    expandDiamonds: {
         updateState { state in
             var updatedState = state
-            updatedState.starsExpanded = true
+            updatedState.diamondsExpanded = true
             return updatedState
         }
     })
@@ -1157,15 +1157,15 @@ public func createGiveawayController(context: AccountContext, updatedPresentatio
         return (gifts, defaultPrice)
     }
     
-    let starsGiveawayOptions: Signal<[StarsGiveawayProduct], NoError> = combineLatest(
-        .single([]) |> then(context.engine.payments.starsGiveawayOptions()),
+    let diamondsGiveawayOptions: Signal<[DiamondsGiveawayProduct], NoError> = combineLatest(
+        .single([]) |> then(context.engine.payments.diamondsGiveawayOptions()),
         context.inAppPurchaseManager?.availableProducts ?? .single([])
     )
     |> map { options, products in
-        var result: [StarsGiveawayProduct] = []
+        var result: [DiamondsGiveawayProduct] = []
         for option in options {
             if let product = products.first(where: { $0.id == option.storeProductId }), !product.isSubscription {
-                result.append(StarsGiveawayProduct(giveawayOption: option, storeProduct: product))
+                result.append(DiamondsGiveawayProduct(giveawayOption: option, storeProduct: product))
             }
         }
         return result
@@ -1186,10 +1186,10 @@ public func createGiveawayController(context: AccountContext, updatedPresentatio
             }
         },
         productsAndDefaultPrice,
-        starsGiveawayOptions
+        diamondsGiveawayOptions
     )
     |> deliverOnMainQueue
-    |> map { presentationData, stateAndPeersMap, productsAndDefaultPrice, starsGiveawayOptions -> (ItemListControllerState, (ItemListNodeState, Any)) in
+    |> map { presentationData, stateAndPeersMap, productsAndDefaultPrice, diamondsGiveawayOptions -> (ItemListControllerState, (ItemListNodeState, Any)) in
         var presentationData = presentationData
         
         let (products, defaultPrice) = productsAndDefaultPrice
@@ -1206,7 +1206,7 @@ public func createGiveawayController(context: AccountContext, updatedPresentatio
         let _ = isGroupValue.swap(isGroup)
                 
         let headerText = isGroup ? presentationData.strings.BoostGift_NewDescriptionGroup : presentationData.strings.BoostGift_NewDescription
-        let headerItem = CreateGiveawayHeaderItem(theme: presentationData.theme, strings: presentationData.strings, title: presentationData.strings.BoostGift_Title, text: headerText, isStars: state.mode == .starsGiveaway, cancel: {
+        let headerItem = CreateGiveawayHeaderItem(theme: presentationData.theme, strings: presentationData.strings, title: presentationData.strings.BoostGift_Title, text: headerText, isDiamonds: state.mode == .diamondsGiveaway, cancel: {
             dismissImpl?()
         })
         
@@ -1216,7 +1216,7 @@ public func createGiveawayController(context: AccountContext, updatedPresentatio
             badgeCount = state.subscriptions * 4
         case .gift:
             badgeCount = Int32(state.peers.count) * 4
-        case .starsGiveaway:
+        case .diamondsGiveaway:
             badgeCount = Int32(state.stars) / 500
         }
         let footerItem = CreateGiveawayFooterItem(theme: presentationData.theme, title: state.mode == .gift ? presentationData.strings.BoostGift_GiftPremium : presentationData.strings.BoostGift_StartGiveaway, badgeCount: badgeCount, isLoading: state.updating, action: {
@@ -1232,8 +1232,8 @@ public func createGiveawayController(context: AccountContext, updatedPresentatio
         let leftNavigationButton = ItemListNavigationButton(content: .none, style: .regular, enabled: false, action: {})
         
         let _ = productsValue.swap(products)
-        let previousStars = starsValue.swap(starsGiveawayOptions)
-        if (previousStars ?? []).isEmpty && !starsGiveawayOptions.isEmpty {
+        let previousDiamonds = diamondsValue.swap(diamondsGiveawayOptions)
+        if (previousDiamonds ?? []).isEmpty && !diamondsGiveawayOptions.isEmpty {
             
         }
         
@@ -1255,7 +1255,7 @@ public func createGiveawayController(context: AccountContext, updatedPresentatio
             if previousState.showPrizeDescription != state.showPrizeDescription {
                 animateChanges = true
             }
-            if previousState.starsExpanded != state.starsExpanded {
+            if previousState.diamondsExpanded != state.diamondsExpanded {
                 animateChanges = true
             }
         }
@@ -1268,7 +1268,7 @@ public func createGiveawayController(context: AccountContext, updatedPresentatio
         }
         
         let controllerState = ItemListControllerState(presentationData: ItemListPresentationData(presentationData), title: .text(""), leftNavigationButton: leftNavigationButton, rightNavigationButton: nil, backNavigationButton: ItemListBackButton(title: presentationData.strings.Common_Back), animateChanges: true)
-        let listState = ItemListNodeState(presentationData: ItemListPresentationData(presentationData), entries: createGiveawayControllerEntries(peerId: peerId, subject: subject, state: state, presentationData: presentationData, locale: locale, peers: peers, products: products, defaultPrice: defaultPrice, starsGiveawayOptions: starsGiveawayOptions, minDate: minDate, maxDate: maxDate), style: .blocks, emptyStateItem: nil, headerItem: headerItem, footerItem: footerItem, crossfadeState: false, animateChanges: animateChanges)
+        let listState = ItemListNodeState(presentationData: ItemListPresentationData(presentationData), entries: createGiveawayControllerEntries(peerId: peerId, subject: subject, state: state, presentationData: presentationData, locale: locale, peers: peers, products: products, defaultPrice: defaultPrice, diamondsGiveawayOptions: diamondsGiveawayOptions, minDate: minDate, maxDate: maxDate), style: .blocks, emptyStateItem: nil, headerItem: headerItem, footerItem: footerItem, crossfadeState: false, animateChanges: animateChanges)
         
         return (controllerState, (listState, arguments))
     }
@@ -1307,9 +1307,9 @@ public func createGiveawayController(context: AccountContext, updatedPresentatio
                 return
             }
             var selectedProduct: PremiumGiftProduct?
-            var selectedStarsProduct: StarsGiveawayProduct?
+            var selectedDiamondsProduct: DiamondsGiveawayProduct?
             let selectedMonths = state.selectedMonths ?? 12
-            let selectedStars = state.stars
+            let selectedDiamonds = state.stars
             switch state.mode {
             case .giveaway:
                 if let product = products.first(where: { $0.months == selectedMonths && $0.giftOption.users == state.subscriptions }) {
@@ -1319,12 +1319,12 @@ public func createGiveawayController(context: AccountContext, updatedPresentatio
                 if let product = products.first(where: { $0.months == selectedMonths && $0.giftOption.users == 1 }) {
                     selectedProduct = product
                 }
-            case .starsGiveaway:
-                guard let starsOptions = starsValue.with({ $0 }), !starsOptions.isEmpty else {
+            case .diamondsGiveaway:
+                guard let diamondsOptions = diamondsValue.with({ $0 }), !diamondsOptions.isEmpty else {
                     return
                 }
-                if let product = starsOptions.first(where: { $0.giveawayOption.count == selectedStars }) {
-                    selectedStarsProduct = product
+                if let product = diamondsOptions.first(where: { $0.giveawayOption.count == selectedDiamonds }) {
+                    selectedDiamondsProduct = product
                 }
             }
             
@@ -1370,16 +1370,16 @@ public func createGiveawayController(context: AccountContext, updatedPresentatio
                 purpose = .giftCode(peerIds: state.peers, boostPeer: peerId, currency: currency, amount: amount, text: nil, entities: nil)
                 quantity = Int32(state.peers.count)
                 storeProduct = selectedProduct.storeProduct
-            case .starsGiveaway:
-                guard let selectedStarsProduct else {
+            case .diamondsGiveaway:
+                guard let selectedDiamondsProduct else {
                     return
                 }
-                let (currency, amount) = selectedStarsProduct.storeProduct.priceCurrencyAndAmount
+                let (currency, amount) = selectedDiamondsProduct.storeProduct.priceCurrencyAndAmount
                 let currentTime = Int32(CFAbsoluteTimeGetCurrent() + kCFAbsoluteTimeIntervalSince1970)
                 let untilDate = max(state.time, currentTime + 60)
-                purpose = .starsGiveaway(stars: selectedStarsProduct.giveawayOption.count, boostPeer: peerId, additionalPeerIds: state.channels.filter { $0 != peerId }, countries: state.countries, onlyNewSubscribers: state.onlyNewEligible, showWinners: state.showWinners, prizeDescription: state.prizeDescription.isEmpty ? nil : state.prizeDescription, randomId: Int64.random(in: .min ..< .max), untilDate: untilDate, currency: currency, amount: amount, users: state.winners)
+                purpose = .diamondsGiveaway(stars: selectedDiamondsProduct.giveawayOption.count, boostPeer: peerId, additionalPeerIds: state.channels.filter { $0 != peerId }, countries: state.countries, onlyNewSubscribers: state.onlyNewEligible, showWinners: state.showWinners, prizeDescription: state.prizeDescription.isEmpty ? nil : state.prizeDescription, randomId: Int64.random(in: .min ..< .max), untilDate: untilDate, currency: currency, amount: amount, users: state.winners)
                 quantity = 1
-                storeProduct = selectedStarsProduct.storeProduct
+                storeProduct = selectedDiamondsProduct.storeProduct
             }
             
             guard let storeProduct else {
@@ -1414,7 +1414,7 @@ public func createGiveawayController(context: AccountContext, updatedPresentatio
                                 case .giveaway:
                                     title = presentationData.strings.BoostGift_GiveawayCreated_Title
                                     text = isGroup ? presentationData.strings.BoostGift_Group_GiveawayCreated_Text : presentationData.strings.BoostGift_GiveawayCreated_Text
-                                case .starsGiveaway:
+                                case .diamondsGiveaway:
                                     title = presentationData.strings.BoostGift_DiamondsGiveawayCreated_Title
                                     text = isGroup ? presentationData.strings.BoostGift_Group_DiamondsGiveawayCreated_Text : presentationData.strings.BoostGift_DiamondsGiveawayCreated_Text
                                 case .gift:
@@ -1423,7 +1423,7 @@ public func createGiveawayController(context: AccountContext, updatedPresentatio
                                 }
                                 
                                 var content: UndoOverlayContent
-                                if case .starsGiveaway = state.mode {
+                                if case .diamondsGiveaway = state.mode {
                                     content = .universal(
                                         animation: "StarsBuy",
                                         scale: 0.066,

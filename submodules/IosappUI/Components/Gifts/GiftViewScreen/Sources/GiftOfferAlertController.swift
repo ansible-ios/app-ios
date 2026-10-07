@@ -41,14 +41,14 @@ public func giftOfferAlertController(
         priceString = formatTonAmountText(amount.amount.value, dateTimeFormat: presentationData.dateTimeFormat, formatString: strings.Currency_Grams)
     }
     
-    let resaleConfiguration = StarsSubscriptionConfiguration.with(appConfiguration: context.currentAppConfiguration.with { $0 })
+    let resaleConfiguration = DiamondsSubscriptionConfiguration.with(appConfiguration: context.currentAppConfiguration.with { $0 })
     let finalPriceString: String
     switch amount.currency {
     case .stars:
-        let starsValue = Int32(floor(Float(amount.amount.value) * Float(resaleConfiguration.starGiftCommissionStarsPermille) / 1000.0))
-        finalPriceString = strings.Chat_GiftPurchaseOffer_AcceptConfirmation_Text_Diamonds(starsValue)
+        let diamondsValue = Int32(floor(Float(amount.amount.value) * Float(resaleConfiguration.diamondGiftCommissionDiamondsPermille) / 1000.0))
+        finalPriceString = strings.Chat_GiftPurchaseOffer_AcceptConfirmation_Text_Diamonds(diamondsValue)
     case .ton:
-        let tonValue = Int64(Float(amount.amount.value) * Float(resaleConfiguration.starGiftCommissionTonPermille) / 1000.0)
+        let tonValue = Int64(Float(amount.amount.value) * Float(resaleConfiguration.diamondGiftCommissionTonPermille) / 1000.0)
         finalPriceString = formatTonAmountText(tonValue, dateTimeFormat: presentationData.dateTimeFormat, maxDecimalPositions: 3, formatString: strings.Currency_Grams)
     }
     
@@ -187,7 +187,7 @@ public func giftOfferAlertController(
     ))
     
     if let valueAmount = gift.valueUsdAmount {
-        let resaleConfiguration = StarsSubscriptionConfiguration.with(appConfiguration: context.currentAppConfiguration.with { $0 })
+        let resaleConfiguration = DiamondsSubscriptionConfiguration.with(appConfiguration: context.currentAppConfiguration.with { $0 })
         
         let usdRate: Double
         switch amount.currency {

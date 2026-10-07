@@ -235,8 +235,8 @@ func channelAdminLogEvents(accountPeerId: PeerId, postbox: Postbox, network: Net
                                     action = .changeUsername(prev: prev, new: new)
                                 case let .channelAdminLogEventActionChangePhoto(channelAdminLogEventActionChangePhotoData):
                                     let (prev, new) = (channelAdminLogEventActionChangePhotoData.prevPhoto, channelAdminLogEventActionChangePhotoData.newPhoto)
-                                    let previousImage = telegramMediaImageFromApiPhoto(prev)
-                                    let newImage = telegramMediaImageFromApiPhoto(new)
+                                    let previousImage = ansibleMediaImageFromApiPhoto(prev)
+                                    let newImage = ansibleMediaImageFromApiPhoto(new)
                                     action = .changePhoto(prev: (previousImage?.representations ?? [], previousImage?.videoRepresentations ?? []) , new: (newImage?.representations ?? [], newImage?.videoRepresentations ?? []))
                                 case let .channelAdminLogEventActionToggleInvites(channelAdminLogEventActionToggleInvitesData):
                                     action = .toggleInvites(boolFromApiValue(channelAdminLogEventActionToggleInvitesData.newValue))

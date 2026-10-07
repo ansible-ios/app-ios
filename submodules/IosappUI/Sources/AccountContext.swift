@@ -128,8 +128,8 @@ public final class AccountContextImpl: AccountContext {
     public let wallpaperUploadManager: WallpaperUploadManager?
     private let themeUpdateManager: ThemeUpdateManager?
     public let inAppPurchaseManager: InAppPurchaseManager?
-    public let starsContext: StarsContext?
-    public let tonContext: StarsContext?
+    public let diamondsContext: DiamondsContext?
+    public let tonContext: DiamondsContext?
     public let giftAuctionsManager: GiftAuctionsManager?
     
     public let peerChannelMemberCategoriesContextsManager = PeerChannelMemberCategoriesContextsManager()
@@ -300,7 +300,7 @@ public final class AccountContextImpl: AccountContext {
             self.themeUpdateManager = ThemeUpdateManagerImpl(sharedContext: sharedContext, account: account)
             
             self.inAppPurchaseManager = InAppPurchaseManager(engine: .authorized(self.engine))
-            self.starsContext = self.engine.payments.peerStarsContext()
+            self.diamondsContext = self.engine.payments.peerDiamondsContext()
             self.tonContext = self.engine.payments.peerTonContext()
             self.giftAuctionsManager = GiftAuctionsManager(account: account)
         } else {
@@ -308,13 +308,13 @@ public final class AccountContextImpl: AccountContext {
             self.wallpaperUploadManager = nil
             self.themeUpdateManager = nil
             self.inAppPurchaseManager = nil
-            self.starsContext = nil
+            self.diamondsContext = nil
             self.tonContext = nil
             self.giftAuctionsManager = nil
         }
         
-        self.account.stateManager.starsContext = self.starsContext
-        self.account.stateManager.tonContext = self.starsContext
+        self.account.stateManager.diamondsContext = self.diamondsContext
+        self.account.stateManager.tonContext = self.diamondsContext
                 
         self.cachedGroupCallContexts = AccountGroupCallContextCacheImpl()
         

@@ -9,7 +9,7 @@ extension IosappTheme {
         switch apiTheme {
             case let .theme(themeData):
                 let (flags, id, accessHash, slug, title, document, settings, emoticon, installCount) = (themeData.flags, themeData.id, themeData.accessHash, themeData.slug, themeData.title, themeData.document, themeData.settings, themeData.emoticon, themeData.installsCount)
-                self.init(id: id, accessHash: accessHash, slug: slug, emoticon: emoticon, title: title, file: document.flatMap { telegramMediaFileFromApiDocument($0, altDocuments: []) }, settings: settings?.compactMap(IosappThemeSettings.init(apiThemeSettings:)), isCreator: (flags & 1 << 0) != 0, isDefault: (flags & 1 << 1) != 0, installCount: installCount)
+                self.init(id: id, accessHash: accessHash, slug: slug, emoticon: emoticon, title: title, file: document.flatMap { ansibleMediaFileFromApiDocument($0, altDocuments: []) }, settings: settings?.compactMap(IosappThemeSettings.init(apiThemeSettings:)), isCreator: (flags & 1 << 0) != 0, isDefault: (flags & 1 << 1) != 0, installCount: installCount)
         }
     }
 }

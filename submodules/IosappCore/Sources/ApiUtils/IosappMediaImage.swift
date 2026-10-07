@@ -3,7 +3,7 @@ import Postbox
 import IosappApi
 
 
-func telegramMediaImageRepresentationsFromApiSizes(datacenterId: Int32, photoId: Int64, accessHash: Int64, fileReference: Data?, sizes: [Api.PhotoSize]) -> (immediateThumbnail: Data?, representations:  [IosappMediaImageRepresentation]) {
+func ansibleMediaImageRepresentationsFromApiSizes(datacenterId: Int32, photoId: Int64, accessHash: Int64, fileReference: Data?, sizes: [Api.PhotoSize]) -> (immediateThumbnail: Data?, representations:  [IosappMediaImageRepresentation]) {
     var immediateThumbnailData: Data?
     var representations: [IosappMediaImageRepresentation] = []
     for size in sizes {
@@ -34,11 +34,11 @@ func telegramMediaImageRepresentationsFromApiSizes(datacenterId: Int32, photoId:
     return (immediateThumbnailData, representations)
 }
 
-func telegramMediaImageFromApiPhoto(_ photo: Api.Photo, video: Api.Document? = nil) -> IosappMediaImage? {
+func ansibleMediaImageFromApiPhoto(_ photo: Api.Photo, video: Api.Document? = nil) -> IosappMediaImage? {
     switch photo {
         case let .photo(photoData):
             let (flags, id, accessHash, fileReference, sizes, videoSizes, dcId) = (photoData.flags, photoData.id, photoData.accessHash, photoData.fileReference, photoData.sizes, photoData.videoSizes, photoData.dcId)
-            let (immediateThumbnailData, representations) = telegramMediaImageRepresentationsFromApiSizes(datacenterId: dcId, photoId: id, accessHash: accessHash, fileReference: fileReference.makeData(), sizes: sizes)
+            let (immediateThumbnailData, representations) = ansibleMediaImageRepresentationsFromApiSizes(datacenterId: dcId, photoId: id, accessHash: accessHash, fileReference: fileReference.makeData(), sizes: sizes)
             var imageFlags: IosappMediaImageFlags = []
             let hasStickers = (flags & (1 << 0)) != 0
             if hasStickers {
@@ -70,7 +70,7 @@ func telegramMediaImageFromApiPhoto(_ photo: Api.Photo, video: Api.Document? = n
                     }
                 }
             }
-            return IosappMediaImage(imageId: MediaId(namespace: Namespaces.Media.CloudImage, id: id), representations: representations, videoRepresentations: videoRepresentations, immediateThumbnailData: immediateThumbnailData, emojiMarkup: emojiMarkup, reference: .cloud(imageId: id, accessHash: accessHash, fileReference: fileReference.makeData()), partialReference: nil, flags: imageFlags, video: video.flatMap { telegramMediaFileFromApiDocument($0, altDocuments: nil) })
+            return IosappMediaImage(imageId: MediaId(namespace: Namespaces.Media.CloudImage, id: id), representations: representations, videoRepresentations: videoRepresentations, immediateThumbnailData: immediateThumbnailData, emojiMarkup: emojiMarkup, reference: .cloud(imageId: id, accessHash: accessHash, fileReference: fileReference.makeData()), partialReference: nil, flags: imageFlags, video: video.flatMap { ansibleMediaFileFromApiDocument($0, altDocuments: nil) })
         case .photoEmpty:
             return nil
     }

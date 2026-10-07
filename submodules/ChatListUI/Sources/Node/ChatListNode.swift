@@ -120,7 +120,7 @@ public final class ChatListNodeInteraction {
     let openStories: (ChatListNode.OpenStoriesSubject, ASDisplayNode?) -> Void
     let openCommunity: (EnginePeer.Id) -> Void
     let ungroupCommunity: (EnginePeer.Id) -> Void
-    let openStarsTopup: (Int64?) -> Void
+    let openDiamondsTopup: (Int64?) -> Void
     let editPeer: (ChatListItem) -> Void
     let openWebApp: (IosappUser) -> Void
     let openPhotoSetup: () -> Void
@@ -183,7 +183,7 @@ public final class ChatListNodeInteraction {
         openStories: @escaping (ChatListNode.OpenStoriesSubject, ASDisplayNode?) -> Void,
         openCommunity: @escaping (EnginePeer.Id) -> Void = { _ in },
         ungroupCommunity: @escaping (EnginePeer.Id) -> Void = { _ in },
-        openStarsTopup: @escaping (Int64?) -> Void,
+        openDiamondsTopup: @escaping (Int64?) -> Void,
         editPeer: @escaping (ChatListItem) -> Void,
         openWebApp: @escaping (IosappUser) -> Void,
         openPhotoSetup: @escaping () -> Void,
@@ -233,7 +233,7 @@ public final class ChatListNodeInteraction {
         self.openStories = openStories
         self.openCommunity = openCommunity
         self.ungroupCommunity = ungroupCommunity
-        self.openStarsTopup = openStarsTopup
+        self.openDiamondsTopup = openDiamondsTopup
         self.editPeer = editPeer
         self.openWebApp = openWebApp
         self.openPhotoSetup = openPhotoSetup
@@ -1254,7 +1254,7 @@ public final class ChatListNode: ListViewImpl {
     public var ungroupCommunity: ((EnginePeer.Id) -> Void)?
     public var openBirthdaySetup: (() -> Void)?
     public var openPremiumManagement: (() -> Void)?
-    public var openStarsTopup: ((Int64?) -> Void)?
+    public var openDiamondsTopup: ((Int64?) -> Void)?
     public var openWebApp: ((IosappUser) -> Void)?
     public var openPhotoSetup: (() -> Void)?
     public var openAdInfo: ((ASDisplayNode, AdPeer) -> Void)?
@@ -1890,11 +1890,11 @@ public final class ChatListNode: ListViewImpl {
                 return
             }
             self.ungroupCommunity?(communityId)
-        }, openStarsTopup: { [weak self] amount in
+        }, openDiamondsTopup: { [weak self] amount in
             guard let self else {
                 return
             }
-            self.openStarsTopup?(amount)
+            self.openDiamondsTopup?(amount)
         }, editPeer: { _ in
         }, openWebApp: { [weak self] user in
             guard let self else {

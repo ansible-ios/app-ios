@@ -1040,7 +1040,7 @@ private func finalStateWithUpdatesAndServerTime(accountPeerId: PeerId, postbox: 
                                 let _ = url
                                 updatedState.updateMedia(MediaId(namespace: Namespaces.Media.CloudWebpage, id: id), media: nil)
                             default:
-                                if let webpage = telegramMediaWebpageFromApiWebpage(apiWebpage) {
+                                if let webpage = ansibleMediaWebpageFromApiWebpage(apiWebpage) {
                                     updatedState.updateMedia(webpage.webpageId, media: webpage)
                                 }
                         }
@@ -1333,7 +1333,7 @@ private func finalStateWithUpdatesAndServerTime(accountPeerId: PeerId, postbox: 
                         let _ = url
                         updatedState.updateMedia(MediaId(namespace: Namespaces.Media.CloudWebpage, id: id), media: nil)
                     default:
-                        if let webpage = telegramMediaWebpageFromApiWebpage(updateWebPageData.webpage) {
+                        if let webpage = ansibleMediaWebpageFromApiWebpage(updateWebPageData.webpage) {
                             updatedState.updateMedia(webpage.webpageId, media: webpage)
                         }
                 }
@@ -1982,11 +1982,11 @@ private func finalStateWithUpdatesAndServerTime(accountPeerId: PeerId, postbox: 
                 )
             case let .updatePeerWallpaper(updatePeerWallpaperData):
                 updatedState.updateWallpaper(peerId: updatePeerWallpaperData.peer.peerId, wallpaper: updatePeerWallpaperData.wallpaper.flatMap { IosappWallpaper(apiWallpaper: $0) })
-            case let .updateStarsBalance(updateStarsBalanceData):
-                let amount = CurrencyAmount(apiAmount: updateStarsBalanceData.balance)
+            case let .updateStarsBalance(updateDiamondsBalanceData):
+                let amount = CurrencyAmount(apiAmount: updateDiamondsBalanceData.balance)
                 updatedState.updateStarsBalance(peerId: accountPeerId, currency: amount.currency, balance: amount.amount)
-            case let .updateStarsRevenueStatus(updateStarsRevenueStatusData):
-                updatedState.updateStarsRevenueStatus(peerId: updateStarsRevenueStatusData.peer.peerId, status: StarsRevenueStats.Balances(apiStarsRevenueStatus: updateStarsRevenueStatusData.status))
+            case let .updateStarsRevenueStatus(updateDiamondsRevenueStatusData):
+                updatedState.updateStarsRevenueStatus(peerId: updateDiamondsRevenueStatusData.peer.peerId, status: StarsRevenueStats.Balances(apiDiamondsRevenueStatus: updateDiamondsRevenueStatusData.status))
             case let .updatePaidReactionPrivacy(updatePaidReactionPrivacyData):
                 let mappedPrivacy: IosappPaidReactionPrivacy
                 switch updatePaidReactionPrivacyData.private {
@@ -2020,18 +2020,18 @@ private func finalStateWithUpdatesAndServerTime(accountPeerId: PeerId, postbox: 
                     }
                     mappedPrivacy = .peer(peerId)
                 }
-                updatedState.updateStarsReactionsDefaultPrivacy(privacy: mappedPrivacy)
+                updatedState.updateDiamondsReactionsDefaultPrivacy(privacy: mappedPrivacy)
             case let .updateMonoForumNoPaidException(updateMonoForumNoPaidExceptionData):
                 let (flags, channelId, savedPeerId) = (updateMonoForumNoPaidExceptionData.flags, updateMonoForumNoPaidExceptionData.channelId, updateMonoForumNoPaidExceptionData.savedPeerId)
                 updatedState.updateMonoForumNoPaidException(peerId: PeerId(namespace: Namespaces.Peer.CloudChannel, id: PeerId.Id._internalFromInt64Value(channelId)), threadId: savedPeerId.peerId.toInt64(), isFree: (flags & (1 << 0)) != 0)
-            case let .updateStarGiftAuctionState(updateStarGiftAuctionStateData):
-                let (giftId, state) = (updateStarGiftAuctionStateData.giftId, updateStarGiftAuctionStateData.state)
+            case let .updateStarGiftAuctionState(updateDiamondGiftAuctionStateData):
+                let (giftId, state) = (updateDiamondGiftAuctionStateData.giftId, updateDiamondGiftAuctionStateData.state)
                 if let state = GiftAuctionContext.State.AuctionState(apiAuctionState: state, peers: updatedState.peers) {
                     updatedState.updateStarGiftAuctionState(giftId: giftId, state: state)
                 }
-            case let .updateStarGiftAuctionUserState(updateStarGiftAuctionUserStateData):
-                let (giftId, userState) = (updateStarGiftAuctionUserStateData.giftId, updateStarGiftAuctionUserStateData.userState)
-                updatedState.updateStarGiftAuctionMyState(giftId: giftId, state: GiftAuctionContext.State.MyState(apiAuctionUserState: userState))
+            case let .updateStarGiftAuctionUserState(updateDiamondGiftAuctionUserStateData):
+                let (giftId, userState) = (updateDiamondGiftAuctionUserStateData.giftId, updateDiamondGiftAuctionUserStateData.userState)
+                updatedState.updateDiamondGiftAuctionMyState(giftId: giftId, state: GiftAuctionContext.State.MyState(apiAuctionUserState: userState))
             case let .updateEmojiGameInfo(updateEmojiGameInfoData):
                 updatedState.updateEmojiGameInfo(info: EmojiGameInfo(apiEmojiGameInfo: updateEmojiGameInfoData.info))
             default:
@@ -3578,7 +3578,7 @@ private func pollChannel(accountPeerId: PeerId, postbox: Postbox, network: Netwo
                             let _ = url
                             updatedState.updateMedia(MediaId(namespace: Namespaces.Media.CloudWebpage, id: id), media: nil)
                         default:
-                            if let webpage = telegramMediaWebpageFromApiWebpage(apiWebpage) {
+                            if let webpage = ansibleMediaWebpageFromApiWebpage(apiWebpage) {
                                 updatedState.updateMedia(webpage.webpageId, media: webpage)
                             }
                         }
@@ -3821,7 +3821,7 @@ private func optimizedOperations(_ operations: [AccountStateMutationOperation]) 
     var currentAddQuickReplyMessages: OptimizeAddMessagesState?
     for operation in operations {
         switch operation {
-        case .DeleteMessages, .DeleteMessagesWithGlobalIds, .EditMessage, .UpdateMessagePoll, .UpdateMessageReactions, .UpdateMedia, .MergeApiChats, .MergeApiUsers, .MergePeerPresences, .UpdatePeer, .ReadInbox, .ReadOutbox, .ReadGroupFeedInbox, .ResetReadState, .ResetIncomingReadState, .UpdatePeerChatUnreadMark, .ResetMessageTagSummary, .UpdateNotificationSettings, .UpdateGlobalNotificationSettings, .UpdateSecretChat, .AddSecretMessages, .ReadSecretOutbox, .AddPeerInputActivity, .AddPeerLiveTypingDraftUpdate, .UpdateCachedPeerData, .UpdatePinnedItemIds, .UpdatePinnedSavedItemIds, .UpdatePinnedTopic, .UpdatePinnedTopicOrder, .ReadMessageContents, .UpdateMessageImpressionCount, .UpdateMessageForwardsCount, .UpdateInstalledStickerPacks, .UpdateRecentGifs, .UpdateChatInputState, .UpdateCall, .AddCallSignalingData, .UpdateLangPack, .UpdateMinAvailableMessage, .UpdateIsContact, .UpdatePeerChatInclusion, .UpdateTheme, .SyncChatListFilters, .UpdateChatListFilter, .UpdateChatListFilterOrder, .UpdateReadThread, .UpdateMessagesPinned, .UpdateGroupCallParticipants, .UpdateGroupCall, .UpdateGroupCallChainBlocks, .UpdateGroupCallMessage, .UpdateGroupCallOpaqueMessage, .UpdateAutoremoveTimeout, .UpdateAttachMenuBots, .UpdateAudioTranscription, .UpdateConfig, .UpdateExtendedMedia, .ResetForumTopic, .UpdateStory, .UpdateReadStories, .UpdateStoryStealthMode, .UpdateStorySentReaction, .UpdateNewAuthorization, .UpdateNewBotConnection, .UpdateWebBrowserSettings, .UpdateWebBrowserException, .UpdateWallpaper, .UpdateStarsBalance, .UpdateStarsRevenueStatus, .UpdateStarsReactionsDefaultPrivacy, .ReportMessageDelivery, .UpdateMonoForumNoPaidException, .UpdateStarGiftAuctionState, .UpdateStarGiftAuctionMyState, .UpdateEmojiGameInfo:
+        case .DeleteMessages, .DeleteMessagesWithGlobalIds, .EditMessage, .UpdateMessagePoll, .UpdateMessageReactions, .UpdateMedia, .MergeApiChats, .MergeApiUsers, .MergePeerPresences, .UpdatePeer, .ReadInbox, .ReadOutbox, .ReadGroupFeedInbox, .ResetReadState, .ResetIncomingReadState, .UpdatePeerChatUnreadMark, .ResetMessageTagSummary, .UpdateNotificationSettings, .UpdateGlobalNotificationSettings, .UpdateSecretChat, .AddSecretMessages, .ReadSecretOutbox, .AddPeerInputActivity, .AddPeerLiveTypingDraftUpdate, .UpdateCachedPeerData, .UpdatePinnedItemIds, .UpdatePinnedSavedItemIds, .UpdatePinnedTopic, .UpdatePinnedTopicOrder, .ReadMessageContents, .UpdateMessageImpressionCount, .UpdateMessageForwardsCount, .UpdateInstalledStickerPacks, .UpdateRecentGifs, .UpdateChatInputState, .UpdateCall, .AddCallSignalingData, .UpdateLangPack, .UpdateMinAvailableMessage, .UpdateIsContact, .UpdatePeerChatInclusion, .UpdateTheme, .SyncChatListFilters, .UpdateChatListFilter, .UpdateChatListFilterOrder, .UpdateReadThread, .UpdateMessagesPinned, .UpdateGroupCallParticipants, .UpdateGroupCall, .UpdateGroupCallChainBlocks, .UpdateGroupCallMessage, .UpdateGroupCallOpaqueMessage, .UpdateAutoremoveTimeout, .UpdateAttachMenuBots, .UpdateAudioTranscription, .UpdateConfig, .UpdateExtendedMedia, .ResetForumTopic, .UpdateStory, .UpdateReadStories, .UpdateStoryStealthMode, .UpdateStorySentReaction, .UpdateNewAuthorization, .UpdateNewBotConnection, .UpdateWebBrowserSettings, .UpdateWebBrowserException, .UpdateWallpaper, .UpdateStarsBalance, .UpdateStarsRevenueStatus, .UpdateDiamondsReactionsDefaultPrivacy, .ReportMessageDelivery, .UpdateMonoForumNoPaidException, .UpdateStarGiftAuctionState, .UpdateDiamondGiftAuctionMyState, .UpdateEmojiGameInfo:
                 if let currentAddMessages = currentAddMessages, !currentAddMessages.messages.isEmpty {
                     result.append(.AddMessages(currentAddMessages.messages, currentAddMessages.location))
                 }
@@ -3956,13 +3956,13 @@ func replayFinalState(
     var deletedMessageIds: [DeletedMessageId] = []
     var syncAttachMenuBots = false
     var updateConfig = false
-    var updatedStarsBalance: [PeerId: StarsAmount] = [:]
+    var updatedDiamondsBalance: [PeerId: StarsAmount] = [:]
     var updatedTonBalance: [PeerId: StarsAmount] = [:]
-    var updatedStarsRevenueStatus: [PeerId: StarsRevenueStats.Balances] = [:]
-    var updatedStarsReactionsDefaultPrivacy: IosappPaidReactionPrivacy?
+    var updatedDiamondsRevenueStatus: [PeerId: StarsRevenueStats.Balances] = [:]
+    var updatedDiamondsReactionsDefaultPrivacy: IosappPaidReactionPrivacy?
     var reportMessageDelivery = Set<MessageId>()
-    var updatedStarGiftAuctionState: [Int64: GiftAuctionContext.State.AuctionState] = [:]
-    var updatedStarGiftAuctionMyState: [Int64: GiftAuctionContext.State.MyState] = [:]
+    var updatedDiamondGiftAuctionState: [Int64: GiftAuctionContext.State.AuctionState] = [:]
+    var updatedDiamondGiftAuctionMyState: [Int64: GiftAuctionContext.State.MyState] = [:]
     var updatedEmojiGameInfo: EmojiGameInfo?
     var recentlyUsedGuestChatBots = Set<PeerId>()
     var webBrowserSettingsUpdates: [(AccountWebBrowserSettings) -> AccountWebBrowserSettings] = []
@@ -5577,12 +5577,12 @@ func replayFinalState(
                 case .ton:
                     updatedTonBalance[peerId] = balance
                 case .stars:
-                    updatedStarsBalance[peerId] = balance
+                    updatedDiamondsBalance[peerId] = balance
                 }
             case let .UpdateStarsRevenueStatus(peerId, status):
-                updatedStarsRevenueStatus[peerId] = status
-            case let .UpdateStarsReactionsDefaultPrivacy(value):
-                updatedStarsReactionsDefaultPrivacy = value
+                updatedDiamondsRevenueStatus[peerId] = status
+            case let .UpdateDiamondsReactionsDefaultPrivacy(value):
+                updatedDiamondsReactionsDefaultPrivacy = value
             case let .ReportMessageDelivery(messageIds):
                 reportMessageDelivery = Set(messageIds)
             case let .UpdateMonoForumNoPaidException(peerId, threadId, isFree):
@@ -5594,9 +5594,9 @@ func replayFinalState(
                     }
                 }
             case let .UpdateStarGiftAuctionState(giftId, state):
-                updatedStarGiftAuctionState[giftId] = state
-            case let .UpdateStarGiftAuctionMyState(giftId, state):
-                updatedStarGiftAuctionMyState[giftId] = state
+                updatedDiamondGiftAuctionState[giftId] = state
+            case let .UpdateDiamondGiftAuctionMyState(giftId, state):
+                updatedDiamondGiftAuctionMyState[giftId] = state
             case let .UpdateEmojiGameInfo(info):
                 updatedEmojiGameInfo = info
         }
@@ -5740,7 +5740,7 @@ func replayFinalState(
                             }
                             
                             for apiDocument in documents {
-                                if let file = telegramMediaFileFromApiDocument(apiDocument, altDocuments: []), let id = file.id {
+                                if let file = ansibleMediaFileFromApiDocument(apiDocument, altDocuments: []), let id = file.id {
                                     let fileIndexKeys: [MemoryBuffer]
                                     if let indexKeys = indexKeysByFile[id] {
                                         fileIndexKeys = indexKeys
@@ -6114,8 +6114,8 @@ func replayFinalState(
         }
     }
     
-    if let updatedStarsReactionsDefaultPrivacy {
-        _internal_setStarsReactionDefaultPrivacy(privacy: updatedStarsReactionsDefaultPrivacy, transaction: transaction)
+    if let updatedDiamondsReactionsDefaultPrivacy {
+        _internal_setDiamondsReactionDefaultPrivacy(privacy: updatedDiamondsReactionsDefaultPrivacy, transaction: transaction)
     }
     
     if !liveTypingDraftUpdates.isEmpty {
@@ -6219,14 +6219,14 @@ func replayFinalState(
         updatedOutgoingThreadReadStates: updatedOutgoingThreadReadStates,
         updateConfig: updateConfig,
         isPremiumUpdated: isPremiumUpdated,
-        updatedStarsBalance: updatedStarsBalance,
+        updatedDiamondsBalance: updatedDiamondsBalance,
         updatedTonBalance: updatedTonBalance,
-        updatedStarsRevenueStatus: updatedStarsRevenueStatus,
+        updatedDiamondsRevenueStatus: updatedDiamondsRevenueStatus,
         sentScheduledMessageIds: finalState.state.sentScheduledMessageIds,
         reportMessageDelivery: reportMessageDelivery,
         addedConferenceInvitationMessagesIds: addedConferenceInvitationMessagesIds,
-        updatedStarGiftAuctionState: updatedStarGiftAuctionState,
-        updatedStarGiftAuctionMyState: updatedStarGiftAuctionMyState,
+        updatedDiamondGiftAuctionState: updatedDiamondGiftAuctionState,
+        updatedDiamondGiftAuctionMyState: updatedDiamondGiftAuctionMyState,
         updatedEmojiGameInfo: updatedEmojiGameInfo
     )
 }

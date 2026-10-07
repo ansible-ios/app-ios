@@ -49,7 +49,7 @@ extension PeerInfoScreenNode {
             }
             let presentationData = strongSelf.presentationData
                         
-            let telegramCallAction: (Bool) -> Void = { [weak self] isVideo in
+            let ansibleCallAction: (Bool) -> Void = { [weak self] isVideo in
                 guard let strongSelf = self else {
                     return
                 }
@@ -99,12 +99,12 @@ extension PeerInfoScreenNode {
                 if !strongSelf.isMyProfile {
                     items.append(.action(ContextMenuActionItem(text: presentationData.strings.UserInfo_AnsibleCall, icon: { theme in generateTintedImage(image: UIImage(bundleImageName: "Chat/Context Menu/Call"), color: theme.contextMenu.primaryColor) }, action: { c, _ in
                         c?.dismiss {
-                            telegramCallAction(false)
+                            ansibleCallAction(false)
                         }
                     })))
                     items.append(.action(ContextMenuActionItem(text: presentationData.strings.UserInfo_AnsibleVideoCall, icon: { theme in generateTintedImage(image: UIImage(bundleImageName: "Chat/Context Menu/VideoCall"), color: theme.contextMenu.primaryColor) }, action: { c, _ in
                         c?.dismiss {
-                            telegramCallAction(true)
+                            ansibleCallAction(true)
                         }
                     })))
                 }

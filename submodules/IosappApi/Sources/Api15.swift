@@ -1706,7 +1706,7 @@ public extension Api {
                 return ("mediaAreaGeoPoint", [("flags", ConstructorParameterDescription(self.flags)), ("coordinates", ConstructorParameterDescription(self.coordinates)), ("geo", ConstructorParameterDescription(self.geo)), ("address", ConstructorParameterDescription(self.address))])
             }
         }
-        public class Cons_mediaAreaStarGift: TypeConstructorDescription {
+        public class Cons_mediaAreaDiamondGift: TypeConstructorDescription {
             public var coordinates: Api.MediaAreaCoordinates
             public var slug: String
             public init(coordinates: Api.MediaAreaCoordinates, slug: String) {
@@ -1781,7 +1781,7 @@ public extension Api {
         case inputMediaAreaVenue(Cons_inputMediaAreaVenue)
         case mediaAreaChannelPost(Cons_mediaAreaChannelPost)
         case mediaAreaGeoPoint(Cons_mediaAreaGeoPoint)
-        case mediaAreaStarGift(Cons_mediaAreaStarGift)
+        case mediaAreaStarGift(Cons_mediaAreaDiamondGift)
         case mediaAreaSuggestedReaction(Cons_mediaAreaSuggestedReaction)
         case mediaAreaUrl(Cons_mediaAreaUrl)
         case mediaAreaVenue(Cons_mediaAreaVenue)
@@ -1980,7 +1980,7 @@ public extension Api {
                 return nil
             }
         }
-        public static func parse_mediaAreaStarGift(_ reader: BufferReader) -> MediaArea? {
+        public static func parse_mediaAreaDiamondGift(_ reader: BufferReader) -> MediaArea? {
             var _1: Api.MediaAreaCoordinates?
             if let signature = reader.readInt32() {
                 _1 = Api.parse(reader, signature: signature) as? Api.MediaAreaCoordinates
@@ -1990,7 +1990,7 @@ public extension Api {
             let _c1 = _1 != nil
             let _c2 = _2 != nil
             if _c1 && _c2 {
-                return Api.MediaArea.mediaAreaStarGift(Cons_mediaAreaStarGift(coordinates: _1!, slug: _2!))
+                return Api.MediaArea.mediaAreaStarGift(Cons_mediaAreaDiamondGift(coordinates: _1!, slug: _2!))
             }
             else {
                 return nil

@@ -479,7 +479,7 @@ private enum InviteLinksEditEntry: ItemListNodeEntry {
     }
 }
 
-private func inviteLinkEditControllerEntries(invite: ExportedInvitation?, state: InviteLinkEditControllerState, isGroup: Bool, isPublic: Bool, globalRequestApproval: Bool, presentationData: PresentationData, configuration: StarsSubscriptionConfiguration) -> [InviteLinksEditEntry] {
+private func inviteLinkEditControllerEntries(invite: ExportedInvitation?, state: InviteLinkEditControllerState, isGroup: Bool, isPublic: Bool, globalRequestApproval: Bool, presentationData: PresentationData, configuration: DiamondsSubscriptionConfiguration) -> [InviteLinksEditEntry] {
     var entries: [InviteLinksEditEntry] = []
     
     entries.append(.titleHeader(presentationData.theme, presentationData.strings.InviteLink_Create_LinkNameTitle.uppercased()))
@@ -680,7 +680,7 @@ public func inviteLinkEditController(context: AccountContext, updatedPresentatio
     
     let presentationData = updatedPresentationData?.signal ?? context.sharedContext.presentationData
     
-    let configuration = StarsSubscriptionConfiguration.with(appConfiguration: context.currentAppConfiguration.with { $0 })
+    let configuration = DiamondsSubscriptionConfiguration.with(appConfiguration: context.currentAppConfiguration.with { $0 })
     
     let previousState = Atomic<InviteLinkEditControllerState?>(value: nil)
     let signal = combineLatest(

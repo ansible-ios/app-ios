@@ -3,7 +3,7 @@ import Postbox
 import IosappApi
 
 
-func telegramMediaMapFromApiGeoPoint(_ geo: Api.GeoPoint, title: String?, address: String?, provider: String?, venueId: String?, venueType: String?, liveBroadcastingTimeout: Int32?, liveProximityNotificationRadius: Int32?, heading: Int32?) -> IosappMediaMap {
+func ansibleMediaMapFromApiGeoPoint(_ geo: Api.GeoPoint, title: String?, address: String?, provider: String?, venueId: String?, venueType: String?, liveBroadcastingTimeout: Int32?, liveProximityNotificationRadius: Int32?, heading: Int32?) -> IosappMediaMap {
     var venue: MapVenue?
     if let title = title {
         venue = MapVenue(title: title, address: address, provider: provider, id: venueId, type: venueType)

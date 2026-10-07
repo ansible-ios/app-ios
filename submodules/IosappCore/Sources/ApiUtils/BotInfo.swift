@@ -50,8 +50,8 @@ extension BotInfo {
         switch apiBotInfo {
             case let .botInfo(botInfoData):
                 let (_, _, description, descriptionPhoto, descriptionDocument, apiCommands, apiMenuButton, privacyPolicyUrl, appSettings, verifierSettings) = (botInfoData.flags, botInfoData.userId, botInfoData.description, botInfoData.descriptionPhoto, botInfoData.descriptionDocument, botInfoData.commands, botInfoData.menuButton, botInfoData.privacyPolicyUrl, botInfoData.appSettings, botInfoData.verifierSettings)
-                let photo: IosappMediaImage? = descriptionPhoto.flatMap { telegramMediaImageFromApiPhoto($0) }
-                let video: IosappMediaFile? = descriptionDocument.flatMap { telegramMediaFileFromApiDocument($0, altDocuments: []) }
+                let photo: IosappMediaImage? = descriptionPhoto.flatMap { ansibleMediaImageFromApiPhoto($0) }
+                let video: IosappMediaFile? = descriptionDocument.flatMap { ansibleMediaFileFromApiDocument($0, altDocuments: []) }
                 var commands: [BotCommand] = []
                 if let apiCommands = apiCommands {
                     commands = apiCommands.map { command in

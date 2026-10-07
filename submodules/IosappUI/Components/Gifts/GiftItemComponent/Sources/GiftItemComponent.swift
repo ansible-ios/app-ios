@@ -989,7 +989,7 @@ public final class GiftItemComponent: Component {
                 }
                 
                 let buttonColor: UIColor
-                var starsColor: UIColor?
+                var diamondsColor: UIColor?
                 var tinted = false
                 let price: String
                 switch component.subject {
@@ -1001,7 +1001,7 @@ public final class GiftItemComponent: Component {
                         if priceValue.contains("#") {
                             buttonColor = component.theme.overallDarkAppearance ? UIColor(rgb: 0x53c7f5) : UIColor(rgb: 0x1a86d9)
                             if !component.isSoldOut {
-                                starsColor = UIColor(rgb: 0x2a9ef1)
+                                diamondsColor = UIColor(rgb: 0x2a9ef1)
                             }
                         } else {
                             buttonColor = component.theme.list.itemAccentColor
@@ -1029,12 +1029,12 @@ public final class GiftItemComponent: Component {
                 let buttonSize = self.button.update(
                     transition: transition,
                     component: AnyComponent(
-                        StarsButtonContentComponent(
+                        DiamondsButtonContentComponent(
                             context: component.context,
                             text: price,
                             color: buttonColor,
                             tinted: tinted,
-                            starsColor: starsColor
+                            diamondsColor: diamondsColor
                         )
                     ),
                     environment: {},
@@ -1638,12 +1638,12 @@ public final class GiftItemComponent: Component {
     }
 }
 
-public final class StarsButtonContentComponent: Component {
+public final class DiamondsButtonContentComponent: Component {
     let context: AccountContext
     let text: String
     let color: UIColor
     let tinted: Bool
-    let starsColor: UIColor?
+    let diamondsColor: UIColor?
     let font: UIFont
     let height: CGFloat
     
@@ -1652,7 +1652,7 @@ public final class StarsButtonContentComponent: Component {
         text: String,
         color: UIColor,
         tinted: Bool = false,
-        starsColor: UIColor? = nil,
+        diamondsColor: UIColor? = nil,
         font: UIFont = Font.semibold(11.0),
         height: CGFloat = 30.0
     ) {
@@ -1660,12 +1660,12 @@ public final class StarsButtonContentComponent: Component {
         self.text = text
         self.color = color
         self.tinted = tinted
-        self.starsColor = starsColor
+        self.diamondsColor = diamondsColor
         self.font = font
         self.height = height
     }
 
-    public static func ==(lhs: StarsButtonContentComponent, rhs: StarsButtonContentComponent) -> Bool {
+    public static func ==(lhs: DiamondsButtonContentComponent, rhs: DiamondsButtonContentComponent) -> Bool {
         if lhs.context !== rhs.context {
             return false
         }
@@ -1678,7 +1678,7 @@ public final class StarsButtonContentComponent: Component {
         if lhs.tinted != rhs.tinted {
             return false
         }
-        if lhs.starsColor != rhs.starsColor {
+        if lhs.diamondsColor != rhs.diamondsColor {
             return false
         }
         if lhs.font != rhs.font {
@@ -1691,13 +1691,13 @@ public final class StarsButtonContentComponent: Component {
     }
 
     public final class View: UIView {
-        private var component: StarsButtonContentComponent?
+        private var component: DiamondsButtonContentComponent?
         private weak var componentState: EmptyComponentState?
         
         private let backgroundLayer = SimpleLayer()
         private let title = ComponentView<Empty>()
         
-        private var starsLayer: StarsButtonEffectLayer?
+        private var diamondsLayer: DiamondsButtonEffectLayer?
         
         override init(frame: CGRect) {
             super.init(frame: frame)
@@ -1710,7 +1710,7 @@ public final class StarsButtonContentComponent: Component {
             fatalError("init(coder:) has not been implemented")
         }
         
-        func update(component: StarsButtonContentComponent, availableSize: CGSize, state: EmptyComponentState, environment: Environment<Empty>, transition: ComponentTransition) -> CGSize {
+        func update(component: DiamondsButtonContentComponent, availableSize: CGSize, state: EmptyComponentState, environment: Environment<Empty>, transition: ComponentTransition) -> CGSize {
             self.component = component
             self.componentState = state
             
@@ -1747,22 +1747,22 @@ public final class StarsButtonContentComponent: Component {
             let padding: CGFloat = 9.0
             let size = CGSize(width: titleSize.width + padding * 2.0, height: component.height)
             
-            if let starsColor = component.starsColor {
-                let starsLayer: StarsButtonEffectLayer
-                if let current = self.starsLayer {
-                    starsLayer = current
+            if let diamondsColor = component.diamondsColor {
+                let diamondsLayer: DiamondsButtonEffectLayer
+                if let current = self.diamondsLayer {
+                    diamondsLayer = current
                 } else {
-                    starsLayer = StarsButtonEffectLayer()
-                    self.layer.addSublayer(starsLayer)
-                    self.starsLayer = starsLayer
+                    diamondsLayer = DiamondsButtonEffectLayer()
+                    self.layer.addSublayer(diamondsLayer)
+                    self.diamondsLayer = diamondsLayer
                 }
-                starsLayer.masksToBounds = true
-                starsLayer.frame = CGRect(origin: .zero, size: size)
-                starsLayer.update(color: starsColor, size: size)
-                starsLayer.cornerRadius = size.height * 0.5
+                diamondsLayer.masksToBounds = true
+                diamondsLayer.frame = CGRect(origin: .zero, size: size)
+                diamondsLayer.update(color: diamondsColor, size: size)
+                diamondsLayer.cornerRadius = size.height * 0.5
             } else {
-                self.starsLayer?.removeFromSuperlayer()
-                self.starsLayer = nil
+                self.diamondsLayer?.removeFromSuperlayer()
+                self.diamondsLayer = nil
             }
             
             let titleFrame = CGRect(origin: CGPoint(x: floorToScreenPixels((size.width - titleSize.width) / 2.0), y: floorToScreenPixels((size.height - titleSize.height) / 2.0)), size: titleSize)
@@ -1801,7 +1801,7 @@ public final class StarsButtonContentComponent: Component {
     }
 }
 
-private final class StarsButtonEffectLayer: SimpleLayer {
+private final class DiamondsButtonEffectLayer: SimpleLayer {
     let emitterLayer = CAEmitterLayer()
     
     override init() {

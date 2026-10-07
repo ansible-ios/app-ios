@@ -332,7 +332,7 @@ public struct PresentationResourcesSettings {
     public static let stats = renderSettingsIcon(name: "Item List/Icons/Stats", backgroundColors: [colorViolet])
     public static let balance = renderSettingsIcon(name: "Item List/Icons/Balance", backgroundColors: [colorGreen])
     public static let affiliateProgram = renderSettingsIcon(name: "Item List/Icons/Affiliate", backgroundColors: [colorViolet])
-    public static let earnStars = renderSettingsIcon(name: "Item List/Icons/Earn", backgroundColors: [colorGreen])
+    public static let earnDiamonds = renderSettingsIcon(name: "Item List/Icons/Earn", backgroundColors: [colorGreen])
     public static let channelMessages = renderSettingsIcon(name: "Item List/Icons/Messages", backgroundColors: [colorViolet])
     public static let settings = renderSettingsIcon(name: "Item List/Icons/Settings", backgroundColors: [colorOrange])
     public static let antiSpam = renderSettingsIcon(name: "Item List/Icons/AntiSpam", backgroundColors: [colorGreen])

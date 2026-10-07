@@ -795,12 +795,12 @@ public func formatPermille(_ value: Int) -> String {
     }
 }
 
-public enum StarRefBotConnectionEvent {
-    case add(peerId: EnginePeer.Id, item: EngineConnectedStarRefBotsContext.Item)
+public enum DiamondRefBotConnectionEvent {
+    case add(peerId: EnginePeer.Id, item: EngineConnectedDiamondRefBotsContext.Item)
     case remove(peerId: EnginePeer.Id, url: String)
 }
 
-public final class EngineConnectedStarRefBotsContext {
+public final class EngineConnectedDiamondRefBotsContext {
     public final class Item: Equatable {
         public let peer: EnginePeer
         public let url: String
@@ -896,7 +896,7 @@ public final class EngineConnectedStarRefBotsContext {
             
             self.loadMore()
             
-            self.eventsDisposable = (account.stateManager.starRefBotConnectionEvents()
+            self.eventsDisposable = (account.stateManager.diamondRefBotConnectionEvents()
             |> deliverOn(self.queue)).startStrict(next: { [weak self] event in
                 guard let self else {
                     return
@@ -936,7 +936,7 @@ public final class EngineConnectedStarRefBotsContext {
                 effectiveOffset = (timestamp: offset.timestamp, link: offset.link)
             }
             self.loadMoreDisposable?.dispose()
-            self.loadMoreDisposable = (_internal_requestConnectedStarRefBots(account: self.account, id: self.peerId, offset: effectiveOffset, limit: 100)
+            self.loadMoreDisposable = (_internal_requestConnectedDiamondRefBots(account: self.account, id: self.peerId, offset: effectiveOffset, limit: 100)
             |> deliverOn(self.queue)).startStrict(next: { [weak self] result in
                 guard let self else {
                     return
@@ -980,7 +980,7 @@ public final class EngineConnectedStarRefBotsContext {
         
         func remove(url: String) {
             self.pendingRemoveItems.insert(url)
-            let _ = _internal_removeConnectedStarRefBot(account: self.account, id: self.peerId, link: url).startStandalone()
+            let _ = _internal_removeConnectedDiamondRefBot(account: self.account, id: self.peerId, link: url).startStandalone()
             self.updateState()
         }
     }
@@ -1015,12 +1015,12 @@ public final class EngineConnectedStarRefBotsContext {
     }
 }
 
-public final class EngineSuggestedStarRefBotsContext {
+public final class EngineSuggestedDiamondRefBotsContext {
     public final class Item: Equatable {
         public let peer: EnginePeer
-        public let program: IosappStarRefProgram
+        public let program: IosappDiamondRefProgram
         
-        public init(peer: EnginePeer, program: IosappStarRefProgram) {
+        public init(peer: EnginePeer, program: IosappDiamondRefProgram) {
             self.peer = peer
             self.program = program
         }
@@ -1095,7 +1095,7 @@ public final class EngineSuggestedStarRefBotsContext {
             self.isLoadingMore = true
             
             self.loadMoreDisposable?.dispose()
-            self.loadMoreDisposable = (_internal_requestSuggestedStarRefBots(account: self.account, id: self.peerId, sortMode: self.sortMode, offset: offset, limit: 100)
+            self.loadMoreDisposable = (_internal_requestSuggestedDiamondRefBots(account: self.account, id: self.peerId, sortMode: self.sortMode, offset: offset, limit: 100)
             |> deliverOn(self.queue)).startStrict(next: { [weak self] result in
                 guard let self else {
                     return
@@ -1155,7 +1155,7 @@ public final class EngineSuggestedStarRefBotsContext {
     }
 }
 
-func _internal_updateStarRefProgram(account: Account, id: EnginePeer.Id, program: (commissionPermille: Int32, durationMonths: Int32?)?) -> Signal<Never, NoError> {
+func _internal_updateDiamondRefProgram(account: Account, id: EnginePeer.Id, program: (commissionPermille: Int32, durationMonths: Int32?)?) -> Signal<Never, NoError> {
     return account.postbox.transaction { transaction -> Api.InputUser? in
         return transaction.getPeer(id).flatMap(apiInputUser)
     }
@@ -1188,7 +1188,7 @@ func _internal_updateStarRefProgram(account: Account, id: EnginePeer.Id, program
                     guard var current = current as? CachedUserData else {
                         return current ?? CachedUserData()
                     }
-                    current = current.withUpdatedStarRefProgram(IosappStarRefProgram(apiStarRefProgram: result))
+                    current = current.withUpdatedDiamondRefProgram(IosappDiamondRefProgram(apiDiamondRefProgram: result))
                     return current
                 })
             }
@@ -1197,11 +1197,11 @@ func _internal_updateStarRefProgram(account: Account, id: EnginePeer.Id, program
     }
 }
 
-fileprivate func  _internal_requestConnectedStarRefBots(account: Account, id: EnginePeer.Id, offset: (timestamp: Int32, link: String)?, limit: Int) -> Signal<(items: [EngineConnectedStarRefBotsContext.Item], totalCount: Int, nextOffset: (timestamp: Int32, link: String)?)?, NoError> {
+fileprivate func  _internal_requestConnectedDiamondRefBots(account: Account, id: EnginePeer.Id, offset: (timestamp: Int32, link: String)?, limit: Int) -> Signal<(items: [EngineConnectedDiamondRefBotsContext.Item], totalCount: Int, nextOffset: (timestamp: Int32, link: String)?)?, NoError> {
     return account.postbox.transaction { transaction -> Api.InputPeer? in
         return transaction.getPeer(id).flatMap(apiInputPeer)
     }
-    |> mapToSignal { inputPeer -> Signal<(items: [EngineConnectedStarRefBotsContext.Item], totalCount: Int, nextOffset: (timestamp: Int32, link: String)?)?, NoError> in
+    |> mapToSignal { inputPeer -> Signal<(items: [EngineConnectedDiamondRefBotsContext.Item], totalCount: Int, nextOffset: (timestamp: Int32, link: String)?)?, NoError> in
         guard let inputPeer else {
             return .single(nil)
         }
@@ -1220,25 +1220,25 @@ fileprivate func  _internal_requestConnectedStarRefBots(account: Account, id: En
         |> `catch` { _ -> Signal<Api.payments.ConnectedStarRefBots?, NoError> in
             return .single(nil)
         }
-        |> mapToSignal { result -> Signal<(items: [EngineConnectedStarRefBotsContext.Item], totalCount: Int, nextOffset: (timestamp: Int32, link: String)?)?, NoError> in
+        |> mapToSignal { result -> Signal<(items: [EngineConnectedDiamondRefBotsContext.Item], totalCount: Int, nextOffset: (timestamp: Int32, link: String)?)?, NoError> in
             guard let result else {
                 return .single(nil)
             }
-            return account.postbox.transaction { transaction -> (items: [EngineConnectedStarRefBotsContext.Item], totalCount: Int, nextOffset: (timestamp: Int32, link: String)?)? in
+            return account.postbox.transaction { transaction -> (items: [EngineConnectedDiamondRefBotsContext.Item], totalCount: Int, nextOffset: (timestamp: Int32, link: String)?)? in
                 switch result {
-                case let .connectedStarRefBots(connectedStarRefBotsData):
-                    let (count, connectedBots, users) = (connectedStarRefBotsData.count, connectedStarRefBotsData.connectedBots, connectedStarRefBotsData.users)
+                case let .connectedStarRefBots(connectedDiamondRefBotsData):
+                    let (count, connectedBots, users) = (connectedDiamondRefBotsData.count, connectedDiamondRefBotsData.connectedBots, connectedDiamondRefBotsData.users)
                     updatePeers(transaction: transaction, accountPeerId: account.peerId, peers: AccumulatedPeers(users: users))
                     
-                    var items: [EngineConnectedStarRefBotsContext.Item] = []
+                    var items: [EngineConnectedDiamondRefBotsContext.Item] = []
                     for connectedBot in connectedBots {
                         switch connectedBot {
-                        case let .connectedBotStarRef(connectedBotStarRefData):
-                            let (url, date, botId, commissionPermille, durationMonths, participants, revenue) = (connectedBotStarRefData.url, connectedBotStarRefData.date, connectedBotStarRefData.botId, connectedBotStarRefData.commissionPermille, connectedBotStarRefData.durationMonths, connectedBotStarRefData.participants, connectedBotStarRefData.revenue)
+                        case let .connectedBotStarRef(connectedBotDiamondRefData):
+                            let (url, date, botId, commissionPermille, durationMonths, participants, revenue) = (connectedBotDiamondRefData.url, connectedBotDiamondRefData.date, connectedBotDiamondRefData.botId, connectedBotDiamondRefData.commissionPermille, connectedBotDiamondRefData.durationMonths, connectedBotDiamondRefData.participants, connectedBotDiamondRefData.revenue)
                             guard let botPeer = transaction.getPeer(PeerId(namespace: Namespaces.Peer.CloudUser, id: PeerId.Id._internalFromInt64Value(botId))) else {
                                 continue
                             }
-                            items.append(EngineConnectedStarRefBotsContext.Item(
+                            items.append(EngineConnectedDiamondRefBotsContext.Item(
                                 peer: EnginePeer(botPeer),
                                 url: url,
                                 timestamp: date,
@@ -1264,11 +1264,11 @@ fileprivate func  _internal_requestConnectedStarRefBots(account: Account, id: En
     }
 }
 
-fileprivate func _internal_requestSuggestedStarRefBots(account: Account, id: EnginePeer.Id, sortMode: EngineSuggestedStarRefBotsContext.SortMode, offset: String?, limit: Int) -> Signal<(items: [EngineSuggestedStarRefBotsContext.Item], totalCount: Int, nextOffset: String?)?, NoError> {
+fileprivate func _internal_requestSuggestedDiamondRefBots(account: Account, id: EnginePeer.Id, sortMode: EngineSuggestedDiamondRefBotsContext.SortMode, offset: String?, limit: Int) -> Signal<(items: [EngineSuggestedDiamondRefBotsContext.Item], totalCount: Int, nextOffset: String?)?, NoError> {
     return account.postbox.transaction { transaction -> Api.InputPeer? in
         return transaction.getPeer(id).flatMap(apiInputPeer)
     }
-    |> mapToSignal { inputPeer -> Signal<(items: [EngineSuggestedStarRefBotsContext.Item], totalCount: Int, nextOffset: String?)?, NoError> in
+    |> mapToSignal { inputPeer -> Signal<(items: [EngineSuggestedDiamondRefBotsContext.Item], totalCount: Int, nextOffset: String?)?, NoError> in
         guard let inputPeer else {
             return .single(nil)
         }
@@ -1291,23 +1291,23 @@ fileprivate func _internal_requestSuggestedStarRefBots(account: Account, id: Eng
         |> `catch` { _ -> Signal<Api.payments.SuggestedStarRefBots?, NoError> in
             return .single(nil)
         }
-        |> mapToSignal { result -> Signal<(items: [EngineSuggestedStarRefBotsContext.Item], totalCount: Int, nextOffset: String?)?, NoError> in
+        |> mapToSignal { result -> Signal<(items: [EngineSuggestedDiamondRefBotsContext.Item], totalCount: Int, nextOffset: String?)?, NoError> in
             guard let result else {
                 return .single(nil)
             }
-            return account.postbox.transaction { transaction -> (items: [EngineSuggestedStarRefBotsContext.Item], totalCount: Int, nextOffset: String?)? in
+            return account.postbox.transaction { transaction -> (items: [EngineSuggestedDiamondRefBotsContext.Item], totalCount: Int, nextOffset: String?)? in
                 switch result {
-                case let .suggestedStarRefBots(suggestedStarRefBotsData):
-                    let (count, suggestedBots, users, nextOffset) = (suggestedStarRefBotsData.count, suggestedStarRefBotsData.suggestedBots, suggestedStarRefBotsData.users, suggestedStarRefBotsData.nextOffset)
+                case let .suggestedStarRefBots(suggestedDiamondRefBotsData):
+                    let (count, suggestedBots, users, nextOffset) = (suggestedDiamondRefBotsData.count, suggestedDiamondRefBotsData.suggestedBots, suggestedDiamondRefBotsData.users, suggestedDiamondRefBotsData.nextOffset)
                     updatePeers(transaction: transaction, accountPeerId: account.peerId, peers: AccumulatedPeers(users: users))
                     
-                    var items: [EngineSuggestedStarRefBotsContext.Item] = []
+                    var items: [EngineSuggestedDiamondRefBotsContext.Item] = []
                     for starRefProgram in suggestedBots {
-                        let parsedProgram = IosappStarRefProgram(apiStarRefProgram: starRefProgram)
+                        let parsedProgram = IosappDiamondRefProgram(apiDiamondRefProgram: starRefProgram)
                         guard let botPeer = transaction.getPeer(parsedProgram.botId) else {
                             continue
                         }
-                        items.append(EngineSuggestedStarRefBotsContext.Item(
+                        items.append(EngineSuggestedDiamondRefBotsContext.Item(
                             peer: EnginePeer(botPeer),
                             program: parsedProgram
                         ))
@@ -1320,41 +1320,41 @@ fileprivate func _internal_requestSuggestedStarRefBots(account: Account, id: Eng
     }
 }
 
-public enum ConnectStarRefBotError {
+public enum ConnectDiamondRefBotError {
     case generic
 }
 
-func _internal_connectStarRefBot(account: Account, id: EnginePeer.Id, botId: EnginePeer.Id) -> Signal<EngineConnectedStarRefBotsContext.Item, ConnectStarRefBotError> {
+func _internal_connectDiamondRefBot(account: Account, id: EnginePeer.Id, botId: EnginePeer.Id) -> Signal<EngineConnectedDiamondRefBotsContext.Item, ConnectDiamondRefBotError> {
     return account.postbox.transaction { transaction -> (Api.InputPeer?, Api.InputUser?) in
         return (
             transaction.getPeer(id).flatMap(apiInputPeer),
             transaction.getPeer(botId).flatMap(apiInputUser)
         )
     }
-    |> castError(ConnectStarRefBotError.self)
-    |> mapToSignal { inputPeer, inputBotUser -> Signal<EngineConnectedStarRefBotsContext.Item, ConnectStarRefBotError> in
+    |> castError(ConnectDiamondRefBotError.self)
+    |> mapToSignal { inputPeer, inputBotUser -> Signal<EngineConnectedDiamondRefBotsContext.Item, ConnectDiamondRefBotError> in
         guard let inputPeer, let inputBotUser else {
             return .fail(.generic)
         }
         return account.network.request(Api.functions.payments.connectStarRefBot(peer: inputPeer, bot: inputBotUser))
-        |> mapError { _ -> ConnectStarRefBotError in
+        |> mapError { _ -> ConnectDiamondRefBotError in
             return .generic
         }
-        |> mapToSignal { result -> Signal<EngineConnectedStarRefBotsContext.Item, ConnectStarRefBotError> in
-            return account.postbox.transaction { transaction -> EngineConnectedStarRefBotsContext.Item? in
+        |> mapToSignal { result -> Signal<EngineConnectedDiamondRefBotsContext.Item, ConnectDiamondRefBotError> in
+            return account.postbox.transaction { transaction -> EngineConnectedDiamondRefBotsContext.Item? in
                 switch result {
-                case let .connectedStarRefBots(connectedStarRefBotsData):
-                    let (connectedBots, users) = (connectedStarRefBotsData.connectedBots, connectedStarRefBotsData.users)
+                case let .connectedStarRefBots(connectedDiamondRefBotsData):
+                    let (connectedBots, users) = (connectedDiamondRefBotsData.connectedBots, connectedDiamondRefBotsData.users)
                     updatePeers(transaction: transaction, accountPeerId: account.peerId, peers: AccumulatedPeers(users: users))
 
                     if let bot = connectedBots.first {
                         switch bot {
-                        case let .connectedBotStarRef(connectedBotStarRefData):
-                            let (url, date, botId, commissionPermille, durationMonths, participants, revenue) = (connectedBotStarRefData.url, connectedBotStarRefData.date, connectedBotStarRefData.botId, connectedBotStarRefData.commissionPermille, connectedBotStarRefData.durationMonths, connectedBotStarRefData.participants, connectedBotStarRefData.revenue)
+                        case let .connectedBotStarRef(connectedBotDiamondRefData):
+                            let (url, date, botId, commissionPermille, durationMonths, participants, revenue) = (connectedBotDiamondRefData.url, connectedBotDiamondRefData.date, connectedBotDiamondRefData.botId, connectedBotDiamondRefData.commissionPermille, connectedBotDiamondRefData.durationMonths, connectedBotDiamondRefData.participants, connectedBotDiamondRefData.revenue)
                             guard let botPeer = transaction.getPeer(PeerId(namespace: Namespaces.Peer.CloudUser, id: PeerId.Id._internalFromInt64Value(botId))) else {
                                 return nil
                             }
-                            return EngineConnectedStarRefBotsContext.Item(
+                            return EngineConnectedDiamondRefBotsContext.Item(
                                 peer: EnginePeer(botPeer),
                                 url: url,
                                 timestamp: date,
@@ -1369,10 +1369,10 @@ func _internal_connectStarRefBot(account: Account, id: EnginePeer.Id, botId: Eng
                     }
                 }
             }
-            |> castError(ConnectStarRefBotError.self)
-            |> mapToSignal { item -> Signal<EngineConnectedStarRefBotsContext.Item, ConnectStarRefBotError> in
+            |> castError(ConnectDiamondRefBotError.self)
+            |> mapToSignal { item -> Signal<EngineConnectedDiamondRefBotsContext.Item, ConnectDiamondRefBotError> in
                 if let item {
-                    account.stateManager.addStarRefBotConnectionEvent(event: .add(peerId: id, item: item))
+                    account.stateManager.addDiamondRefBotConnectionEvent(event: .add(peerId: id, item: item))
                     return .single(item)
                 } else {
                     return .fail(.generic)
@@ -1382,47 +1382,47 @@ func _internal_connectStarRefBot(account: Account, id: EnginePeer.Id, botId: Eng
     }
 }
 
-fileprivate func _internal_removeConnectedStarRefBot(account: Account, id: EnginePeer.Id, link: String) -> Signal<Never, ConnectStarRefBotError> {
+fileprivate func _internal_removeConnectedDiamondRefBot(account: Account, id: EnginePeer.Id, link: String) -> Signal<Never, ConnectDiamondRefBotError> {
     return account.postbox.transaction { transaction -> Api.InputPeer? in
         return transaction.getPeer(id).flatMap(apiInputPeer)
     }
-    |> castError(ConnectStarRefBotError.self)
-    |> mapToSignal { inputPeer -> Signal<Never, ConnectStarRefBotError> in
+    |> castError(ConnectDiamondRefBotError.self)
+    |> mapToSignal { inputPeer -> Signal<Never, ConnectDiamondRefBotError> in
         guard let inputPeer else {
             return .fail(.generic)
         }
         var flags: Int32 = 0
         flags |= 1 << 0
         return account.network.request(Api.functions.payments.editConnectedStarRefBot(flags: flags, peer: inputPeer, link: link))
-        |> mapError { _ -> ConnectStarRefBotError in
+        |> mapError { _ -> ConnectDiamondRefBotError in
             return .generic
         }
-        |> mapToSignal { result -> Signal<Never, ConnectStarRefBotError> in
+        |> mapToSignal { result -> Signal<Never, ConnectDiamondRefBotError> in
             return account.postbox.transaction { transaction -> Void in
                 switch result {
-                case let .connectedStarRefBots(connectedStarRefBotsData):
-                    let (connectedBots, users) = (connectedStarRefBotsData.connectedBots, connectedStarRefBotsData.users)
+                case let .connectedStarRefBots(connectedDiamondRefBotsData):
+                    let (connectedBots, users) = (connectedDiamondRefBotsData.connectedBots, connectedDiamondRefBotsData.users)
                     updatePeers(transaction: transaction, accountPeerId: account.peerId, peers: AccumulatedPeers(users: users))
 
                     let _ = connectedBots
                 }
                 
-                account.stateManager.addStarRefBotConnectionEvent(event: .remove(peerId: id, url: link))
+                account.stateManager.addDiamondRefBotConnectionEvent(event: .remove(peerId: id, url: link))
             }
-            |> castError(ConnectStarRefBotError.self)
+            |> castError(ConnectDiamondRefBotError.self)
             |> ignoreValues
         }
     }
 }
 
-func _internal_getStarRefBotConnection(account: Account, id: EnginePeer.Id, targetId: EnginePeer.Id) -> Signal<EngineConnectedStarRefBotsContext.Item?, NoError> {
+func _internal_getDiamondRefBotConnection(account: Account, id: EnginePeer.Id, targetId: EnginePeer.Id) -> Signal<EngineConnectedDiamondRefBotsContext.Item?, NoError> {
     return account.postbox.transaction { transaction -> (Api.InputUser?, Api.InputPeer?) in
         return (
             transaction.getPeer(id).flatMap(apiInputUser),
             transaction.getPeer(targetId).flatMap(apiInputPeer)
         )
     }
-    |> mapToSignal { inputPeer, targetPeer -> Signal<EngineConnectedStarRefBotsContext.Item?, NoError> in
+    |> mapToSignal { inputPeer, targetPeer -> Signal<EngineConnectedDiamondRefBotsContext.Item?, NoError> in
         guard let inputPeer, let targetPeer else {
             return .single(nil)
         }
@@ -1431,20 +1431,20 @@ func _internal_getStarRefBotConnection(account: Account, id: EnginePeer.Id, targ
         |> `catch` { _ -> Signal<Api.payments.ConnectedStarRefBots?, NoError> in
             return .single(nil)
         }
-        |> mapToSignal { result -> Signal<EngineConnectedStarRefBotsContext.Item?, NoError> in
+        |> mapToSignal { result -> Signal<EngineConnectedDiamondRefBotsContext.Item?, NoError> in
             guard let result else {
                 return .single(nil)
             }
-            return account.postbox.transaction { transaction -> EngineConnectedStarRefBotsContext.Item? in
+            return account.postbox.transaction { transaction -> EngineConnectedDiamondRefBotsContext.Item? in
                 switch result {
-                case let .connectedStarRefBots(connectedStarRefBotsData):
-                    let (connectedBots, users) = (connectedStarRefBotsData.connectedBots, connectedStarRefBotsData.users)
+                case let .connectedStarRefBots(connectedDiamondRefBotsData):
+                    let (connectedBots, users) = (connectedDiamondRefBotsData.connectedBots, connectedDiamondRefBotsData.users)
                     updatePeers(transaction: transaction, accountPeerId: account.peerId, peers: AccumulatedPeers(users: users))
 
                     if let bot = connectedBots.first {
                         switch bot {
-                        case let .connectedBotStarRef(connectedBotStarRefData):
-                            let (flags, url, date, botId, commissionPermille, durationMonths, participants, revenue) = (connectedBotStarRefData.flags, connectedBotStarRefData.url, connectedBotStarRefData.date, connectedBotStarRefData.botId, connectedBotStarRefData.commissionPermille, connectedBotStarRefData.durationMonths, connectedBotStarRefData.participants, connectedBotStarRefData.revenue)
+                        case let .connectedBotStarRef(connectedBotDiamondRefData):
+                            let (flags, url, date, botId, commissionPermille, durationMonths, participants, revenue) = (connectedBotDiamondRefData.flags, connectedBotDiamondRefData.url, connectedBotDiamondRefData.date, connectedBotDiamondRefData.botId, connectedBotDiamondRefData.commissionPermille, connectedBotDiamondRefData.durationMonths, connectedBotDiamondRefData.participants, connectedBotDiamondRefData.revenue)
                             let isRevoked = (flags & (1 << 1)) != 0
                             if isRevoked {
                                return nil
@@ -1453,7 +1453,7 @@ func _internal_getStarRefBotConnection(account: Account, id: EnginePeer.Id, targ
                             guard let botPeer = transaction.getPeer(PeerId(namespace: Namespaces.Peer.CloudUser, id: PeerId.Id._internalFromInt64Value(botId))) else {
                                 return nil
                             }
-                            return EngineConnectedStarRefBotsContext.Item(
+                            return EngineConnectedDiamondRefBotsContext.Item(
                                 peer: EnginePeer(botPeer),
                                 url: url,
                                 timestamp: date,
@@ -1472,7 +1472,7 @@ func _internal_getStarRefBotConnection(account: Account, id: EnginePeer.Id, targ
     }
 }
 
-func _internal_getPossibleStarRefBotTargets(account: Account) -> Signal<[EnginePeer], NoError> {
+func _internal_getPossibleDiamondRefBotTargets(account: Account) -> Signal<[EnginePeer], NoError> {
     return combineLatest(
         account.network.request(Api.functions.bots.getAdminedBots())
         |> `catch` { _ -> Signal<[Api.User], NoError> in

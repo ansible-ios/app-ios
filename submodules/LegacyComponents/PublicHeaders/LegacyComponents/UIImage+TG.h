@@ -3,7 +3,7 @@
 @class TGImageLuminanceMap;
 @class TGStaticBackdropImageData;
 
-@interface UIImage (TG)
+@interface UIImage (AS)
 
 - (NSDictionary *)attachmentsDictionary;
 - (void)setAttachmentsFromDictionary:(NSDictionary *)attachmentsDictionary;

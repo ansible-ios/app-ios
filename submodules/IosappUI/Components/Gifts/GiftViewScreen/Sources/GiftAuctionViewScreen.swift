@@ -88,7 +88,7 @@ private final class GiftAuctionViewSheetContent: CombinedComponent {
         private(set) var previewBackdrops: [StarGift.UniqueGift.Attribute] = []
         private(set) var previewSymbols: [StarGift.UniqueGift.Attribute] = []
         
-        var cachedStarImage: (UIImage, PresentationTheme)?
+        var cachedDiamondImage: (UIImage, PresentationTheme)?
         
         var cachedChevronImage: (UIImage, PresentationTheme)?
         var cachedSmallChevronImage: (UIImage, PresentationTheme)?
@@ -488,7 +488,7 @@ private final class GiftAuctionViewSheetContent: CombinedComponent {
         let moreButton = Child(GlassBarButtonComponent.self)
         
         let title = Child(MultilineTextComponent.self)
-        let description = Child(StarsButtonContentComponent.self)
+        let description = Child(DiamondsButtonContentComponent.self)
         let learnMore = Child(PlainButtonComponent.self)
 
         let table = Child(TableComponent.self)
@@ -497,7 +497,7 @@ private final class GiftAuctionViewSheetContent: CombinedComponent {
         
         let variantsButton = Child(PlainButtonComponent.self)
         let acquiredButton = Child(PlainButtonComponent.self)
-        let telegramSaleButton = Child(PlainButtonComponent.self)
+        let ansibleSaleButton = Child(PlainButtonComponent.self)
         let fragmentSaleButton = Child(PlainButtonComponent.self)
         
         let moreButtonPlayOnce = ActionSlot<Void>()
@@ -760,7 +760,7 @@ private final class GiftAuctionViewSheetContent: CombinedComponent {
                         subject: .preview(attributes),
                         animationOffset: CGPoint(x: 0.0, y: -4.0),
                         animationScale: nil,
-                        displayAnimationStars: false,
+                        displayAnimationDiamonds: false,
                         revealedAttributes: Set(),
                         externalState: giftCompositionExternalState,
                         requestUpdate: { [weak state] transition in
@@ -796,12 +796,12 @@ private final class GiftAuctionViewSheetContent: CombinedComponent {
             )
              
             let description = description.update(
-                component: StarsButtonContentComponent(
+                component: DiamondsButtonContentComponent(
                     context: component.context,
                     text: descriptionText,
                     color: buttonColor,
                     tinted: true,
-                    starsColor: isEnded ? .clear : UIColor(white: 1.0, alpha: 0.5),
+                    diamondsColor: isEnded ? .clear : UIColor(white: 1.0, alpha: 0.5),
                     font: Font.medium(13.0),
                     height: 24.0
                 ),
@@ -920,7 +920,7 @@ private final class GiftAuctionViewSheetContent: CombinedComponent {
                 if let listedCount = listedCount, listedCount > 0  {
                     originY += 5.0
                     
-                    let telegramSaleButton = telegramSaleButton.update(
+                    let ansibleSaleButton = ansibleSaleButton.update(
                         component: PlainButtonComponent(content: AnyComponent(
                             HStack([
                                 AnyComponentWithIdentity(id: "count", component: AnyComponent(
@@ -955,9 +955,9 @@ private final class GiftAuctionViewSheetContent: CombinedComponent {
                         availableSize: CGSize(width: context.availableSize.width - 64.0, height: context.availableSize.height),
                         transition: context.transition
                     )
-                    context.add(telegramSaleButton
-                        .position(CGPoint(x: context.availableSize.width / 2.0, y: originY + telegramSaleButton.size.height / 2.0)))
-                    originY += telegramSaleButton.size.height
+                    context.add(ansibleSaleButton
+                        .position(CGPoint(x: context.availableSize.width / 2.0, y: originY + ansibleSaleButton.size.height / 2.0)))
+                    originY += ansibleSaleButton.size.height
                     originY += 12.0
                     
                     hasAdditionalButtons = true

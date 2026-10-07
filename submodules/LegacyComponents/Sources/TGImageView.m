@@ -4,7 +4,7 @@
 
 #import <LegacyComponents/TGImageManager.h>
 
-#import <LegacyComponents/UIImage+TG.h>
+#import <LegacyComponents/UIImage+AS.h>
 
 NSString *TGImageViewOptionKeepCurrentImageAsPlaceholder = @"TGImageViewOptionKeepCurrentImageAsPlaceholder";
 NSString *TGImageViewOptionEmbeddedImage = @"TGImageViewOptionEmbeddedImage";

@@ -109,9 +109,9 @@ public class ChatMessageAnimatedStickerItemNode: ChatMessageItemView {
     private var deliveryFailedNode: ChatMessageDeliveryFailedNode?
     private var shareButtonNode: ChatMessageShareButton?
     
-    public var telegramFile: IosappMediaFile?
+    public var ansibleFile: IosappMediaFile?
     public var emojiFile: IosappMediaFile?
-    public var telegramDice: IosappMediaDice?
+    public var ansibleDice: IosappMediaDice?
     public var emojiString: String?
     private let disposable = MetaDisposable()
     private let disposables = DisposableSet()
@@ -290,7 +290,7 @@ public class ChatMessageAnimatedStickerItemNode: ChatMessageItemView {
                     }
                 }
                 
-                if strongSelf.telegramFile == nil {
+                if strongSelf.ansibleFile == nil {
                     if let animationNode = strongSelf.animationNode, animationNode.frame.contains(point) {
                         return .waitForSingleTap
                     }
@@ -386,8 +386,8 @@ public class ChatMessageAnimatedStickerItemNode: ChatMessageItemView {
             return
         }
         
-        if let telegramDice = self.telegramDice {
-            if telegramDice.emoji == "🎰" {
+        if let ansibleDice = self.ansibleDice {
+            if ansibleDice.emoji == "🎰" {
                 let animationNode = SlotMachineAnimationNode(account: item.context.account)
                 if !item.message.effectivelyIncoming(item.context.account.peerId) {
                     animationNode.success = { [weak self] onlyHaptic in
@@ -398,7 +398,7 @@ public class ChatMessageAnimatedStickerItemNode: ChatMessageItemView {
                 }
                 self.animationNode = animationNode
             } else {
-                let animationNode = ManagedDiceAnimationNode(context: item.context, emoji: telegramDice.emoji.strippedEmoji)
+                let animationNode = ManagedDiceAnimationNode(context: item.context, emoji: ansibleDice.emoji.strippedEmoji)
                 if !item.message.effectivelyIncoming(item.context.account.peerId) {
                     animationNode.success = { [weak self] in
                         if let strongSelf = self, let item = strongSelf.item {
@@ -451,36 +451,36 @@ public class ChatMessageAnimatedStickerItemNode: ChatMessageItemView {
         }
                 
         for media in item.message.media {
-            if let telegramFile = media as? IosappMediaFile {
-                if self.telegramFile?.id != telegramFile.id {
-                    self.telegramFile = telegramFile
-                    let dimensions = telegramFile.dimensions ?? PixelDimensions(width: 512, height: 512)
-                    self.imageNode.setSignal(chatMessageAnimatedSticker(postbox: item.context.account.postbox, userLocation: .peer(item.message.id.peerId), file: telegramFile, small: false, size: dimensions.cgSize.aspectFitted(CGSize(width: 384.0, height: 384.0)), thumbnail: false, synchronousLoad: synchronousLoad), attemptSynchronously: synchronousLoad)
+            if let ansibleFile = media as? IosappMediaFile {
+                if self.ansibleFile?.id != ansibleFile.id {
+                    self.ansibleFile = ansibleFile
+                    let dimensions = ansibleFile.dimensions ?? PixelDimensions(width: 512, height: 512)
+                    self.imageNode.setSignal(chatMessageAnimatedSticker(postbox: item.context.account.postbox, userLocation: .peer(item.message.id.peerId), file: ansibleFile, small: false, size: dimensions.cgSize.aspectFitted(CGSize(width: 384.0, height: 384.0)), thumbnail: false, synchronousLoad: synchronousLoad), attemptSynchronously: synchronousLoad)
                     self.updateVisibility()
-                    self.disposable.set(freeMediaFileInteractiveFetched(account: item.context.account, userLocation: .peer(item.message.id.peerId), fileReference: .message(message: MessageReference(item.message), media: telegramFile)).startStrict())
+                    self.disposable.set(freeMediaFileInteractiveFetched(account: item.context.account, userLocation: .peer(item.message.id.peerId), fileReference: .message(message: MessageReference(item.message), media: ansibleFile)).startStrict())
                     
-                    if telegramFile.isPremiumSticker {
-                        if let effect = telegramFile.videoThumbnails.first {
-                            self.disposables.add(freeMediaFileResourceInteractiveFetched(account: item.context.account, userLocation: .peer(item.message.id.peerId), fileReference: .message(message: MessageReference(item.message), media: telegramFile), resource: effect.resource).startStrict())
+                    if ansibleFile.isPremiumSticker {
+                        if let effect = ansibleFile.videoThumbnails.first {
+                            self.disposables.add(freeMediaFileResourceInteractiveFetched(account: item.context.account, userLocation: .peer(item.message.id.peerId), fileReference: .message(message: MessageReference(item.message), media: ansibleFile), resource: effect.resource).startStrict())
                         }
                     }
                 }
                 break
-            } else if let telegramDice = media as? IosappMediaDice {
-                self.telegramDice = telegramDice
+            } else if let ansibleDice = media as? IosappMediaDice {
+                self.ansibleDice = ansibleDice
             }
         }
         
         self.setupNode(item: item)
         
-        if let telegramDice = self.telegramDice, let diceNode = self.animationNode as? SlotMachineAnimationNode {
-            if let value = telegramDice.value {
+        if let ansibleDice = self.ansibleDice, let diceNode = self.animationNode as? SlotMachineAnimationNode {
+            if let value = ansibleDice.value {
                 diceNode.setState(value == 0 ? .rolling : .value(value, true))
             } else {
                 diceNode.setState(.rolling)
             }
-        } else if let telegramDice = self.telegramDice, let diceNode = self.animationNode as? ManagedDiceAnimationNode {
-            if let value = telegramDice.value {
+        } else if let ansibleDice = self.ansibleDice, let diceNode = self.animationNode as? ManagedDiceAnimationNode {
+            if let value = ansibleDice.value {
                 let wasRolling = diceNode.isRolling
                 diceNode.setState(value == 0 ? .rolling : .value(value, true))
                 
@@ -500,7 +500,7 @@ public class ChatMessageAnimatedStickerItemNode: ChatMessageItemView {
                 self.labelNode.textNode.alpha = 0.0
                 self.labelBackgroundNode?.alpha = 0.0
             }
-        } else if self.telegramFile == nil && self.telegramDice == nil {
+        } else if self.ansibleFile == nil && self.ansibleDice == nil {
             let (emoji, fitz) = item.message.text.basicEmoji
             
             var emojiFile: IosappMediaFile?
@@ -593,8 +593,8 @@ public class ChatMessageAnimatedStickerItemNode: ChatMessageItemView {
         var isEmoji = false
         var fitzModifier: EmojiFitzModifier?
         
-        if let telegramFile = self.telegramFile {
-            file = telegramFile
+        if let ansibleFile = self.ansibleFile {
+            file = ansibleFile
             if !item.context.sharedContext.energyUsageSettings.loopStickers {
                 playbackMode = .once
             }
@@ -833,9 +833,9 @@ public class ChatMessageAnimatedStickerItemNode: ChatMessageItemView {
         
     override public func asyncLayout() -> (_ item: ChatMessageItem, _ params: ListViewItemLayoutParams, _ mergedTop: ChatMessageMerge, _ mergedBottom: ChatMessageMerge, _ dateHeaderAtBottom: ChatMessageHeaderSpec) -> (ListViewItemNodeLayout, (ListViewItemUpdateAnimation, ListViewItemApply, Bool) -> Void) {
         var displaySize = CGSize(width: 180.0, height: 180.0)
-        let telegramFile = self.telegramFile
+        let ansibleFile = self.ansibleFile
         let emojiFile = self.emojiFile
-        let telegramDice = self.telegramDice
+        let ansibleDice = self.ansibleDice
         let emojiString = self.emojiString
         let layoutConstants = self.layoutConstants
         let imageLayout = self.imageNode.asyncLayout()
@@ -868,7 +868,7 @@ public class ChatMessageAnimatedStickerItemNode: ChatMessageItemView {
             var imageTopPadding: CGFloat = 0.0
             var imageBottomPadding: CGFloat = 0.0
             var imageHorizontalOffset: CGFloat = 0.0
-            if !(telegramFile?.videoThumbnails.isEmpty ?? true) {
+            if !(ansibleFile?.videoThumbnails.isEmpty ?? true) {
                 displaySize = CGSize(width: 240.0, height: 240.0)
                 imageVerticalInset = -20.0
                 imageHorizontalOffset = 12.0
@@ -1023,12 +1023,12 @@ public class ChatMessageAnimatedStickerItemNode: ChatMessageItemView {
             }
             
             var isEmoji = false
-            if let _ = telegramDice {
+            if let _ = ansibleDice {
                 imageSize = displaySize
-            } else if let telegramFile = telegramFile {
-                if let dimensions = telegramFile.dimensions {
+            } else if let ansibleFile = ansibleFile {
+                if let dimensions = ansibleFile.dimensions {
                     imageSize = dimensions.cgSize.aspectFitted(displaySize)
-                } else if let thumbnailSize = telegramFile.previewRepresentations.first?.dimensions {
+                } else if let thumbnailSize = ansibleFile.previewRepresentations.first?.dimensions {
                     imageSize = thumbnailSize.cgSize.aspectFitted(displaySize)
                 } else {
                     imageSize = displaySize
@@ -1128,7 +1128,7 @@ public class ChatMessageAnimatedStickerItemNode: ChatMessageItemView {
             var edited = false
             var viewCount: Int? = nil
             var dateReplies = 0
-            var starsCount: Int64?
+            var diamondsCount: Int64?
             var tonAmount: Int64?
             var dateReactionsAndPeers = mergedMessageReactionsAndPeers(accountPeerId: item.context.account.peerId, accountPeer: item.associatedData.accountPeer, message: item.message)
             if item.message.isRestricted(platform: "ios", contentSettings: item.context.currentContentSettings.with { $0 }) {
@@ -1143,12 +1143,12 @@ public class ChatMessageAnimatedStickerItemNode: ChatMessageItemView {
                     if let channel = item.message.peers[item.message.id.peerId] as? IosappChannel, case .group = channel.info {
                         dateReplies = Int(attribute.count)
                     }
-                } else if let attribute = attribute as? PaidStarsMessageAttribute, item.message.id.peerId.namespace == Namespaces.Peer.CloudChannel {
-                    starsCount = attribute.stars.value
+                } else if let attribute = attribute as? PaidDiamondsMessageAttribute, item.message.id.peerId.namespace == Namespaces.Peer.CloudChannel {
+                    diamondsCount = attribute.stars.value
                 }
             }
             
-            if let stakeTonAmount = telegramDice?.tonAmount {
+            if let stakeTonAmount = ansibleDice?.tonAmount {
                 tonAmount = stakeTonAmount
             }
             
@@ -1176,10 +1176,10 @@ public class ChatMessageAnimatedStickerItemNode: ChatMessageItemView {
                 reactionPeers: dateReactionsAndPeers.peers,
                 displayAllReactionPeers: item.message.id.peerId.namespace == Namespaces.Peer.CloudUser,
                 areReactionsTags: item.message.areReactionsTags(accountPeerId: item.context.account.peerId),
-                areStarReactionsEnabled: item.associatedData.areStarReactionsEnabled,
+                areDiamondReactionsEnabled: item.associatedData.areDiamondReactionsEnabled,
                 messageEffect: messageEffect,
                 replyCount: dateReplies,
-                starsCount: starsCount,
+                diamondsCount: diamondsCount,
                 tonAmount: tonAmount,
                 isPinned: item.message.tags.contains(.pinned) && !item.associatedData.isInPinnedListMode && !isReplyThread,
                 hasAutoremove: item.message.isSelfExpiring,
@@ -1577,7 +1577,7 @@ public class ChatMessageAnimatedStickerItemNode: ChatMessageItemView {
                         updatedImageFrame = imageFrame.offsetBy(dx: 0.0, dy: floor((contentHeight - imageSize.height) / 2.0))
                         contextContentFrame = updatedImageFrame
                         
-                        if let telegramDice, let _ = telegramDice.tonAmount {
+                        if let ansibleDice, let _ = ansibleDice.tonAmount {
                             updatedImageFrame = updatedImageFrame.offsetBy(dx: 0.0, dy: -30.0)
                         }
                     }
@@ -1649,15 +1649,15 @@ public class ChatMessageAnimatedStickerItemNode: ChatMessageItemView {
                     strongSelf.containerNode.targetNodeForActivationProgressContentRect = strongSelf.contextSourceNode.contentRect
                     
                     var animationNodeFrame = updatedContentFrame.insetBy(dx: imageInset, dy: imageInset)
-                    if let telegramFile, telegramFile.isPremiumSticker {
+                    if let ansibleFile, ansibleFile.isPremiumSticker {
                         animationNodeFrame = animationNodeFrame.offsetBy(dx: 0.0, dy: 20.0)
                     }
                     
                     var file: IosappMediaFile?
                     if let emojiFile = emojiFile {
                         file = emojiFile
-                    } else if let telegramFile = telegramFile {
-                        file = telegramFile
+                    } else if let ansibleFile = ansibleFile {
+                        file = ansibleFile
                     }
                     
                     if let file = file, let immediateThumbnailData = file.immediateThumbnailData {
@@ -2205,7 +2205,7 @@ public class ChatMessageAnimatedStickerItemNode: ChatMessageItemView {
     
     private var playedPremiumStickerAnimation = false
     func playPremiumStickerAnimation() {
-        guard !self.playedPremiumStickerAnimation, let item = self.item, let file = self.telegramFile, file.isPremiumSticker, let effect = file.videoThumbnails.first else {
+        guard !self.playedPremiumStickerAnimation, let item = self.item, let file = self.ansibleFile, file.isPremiumSticker, let effect = file.videoThumbnails.first else {
             return
         }
         self.playedPremiumStickerAnimation = true
@@ -2579,7 +2579,7 @@ public class ChatMessageAnimatedStickerItemNode: ChatMessageItemView {
                 if let emojiString = self.emojiString, emojiString.count == 1 {
                     return emojiTapAction(false)
                 }
-                if let file = self.telegramFile {
+                if let file = self.ansibleFile {
                     let noPremium = item.message.attributes.contains(where: { attribute in
                         if attribute is NonPremiumMessageAttribute {
                             return true
@@ -2602,7 +2602,7 @@ public class ChatMessageAnimatedStickerItemNode: ChatMessageItemView {
                             let _ = item.controllerInteraction.openMessage(item.message, OpenMessageParams(mode: .default))
                         })
                     }
-                } else if let dice = self.telegramDice {
+                } else if let dice = self.ansibleDice {
                     return .optionalAction({
                         item.controllerInteraction.displayDiceTooltip(dice)
                     })
@@ -2925,8 +2925,8 @@ public class ChatMessageAnimatedStickerItemNode: ChatMessageItemView {
         
         self.layer.animateAlpha(from: 0.0, to: 1.0, duration: 0.2)
         
-        if let telegramDice = self.telegramDice, let item = self.item, item.message.effectivelyIncoming(item.context.account.peerId) {
-            if let value = telegramDice.value, value != 0 {
+        if let ansibleDice = self.ansibleDice, let item = self.item, item.message.effectivelyIncoming(item.context.account.peerId) {
+            if let value = ansibleDice.value, value != 0 {
                 if let diceNode = self.animationNode as? ManagedDiceAnimationNode {
                     diceNode.setState(.rolling)
                     diceNode.setState(.value(value, false))

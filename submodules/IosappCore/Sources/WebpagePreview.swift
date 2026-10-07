@@ -181,7 +181,7 @@ public func webpagePreviewWithProgress(account: Account, urls: [String], webpage
                                 let peers = AccumulatedPeers(chats: chats, users: users)
                                 updatePeers(transaction: transaction, accountPeerId: account.peerId, peers: peers)
                                 
-                                if let media = telegramMediaWebpageFromApiWebpage(webpage), let url = media.content.url {
+                                if let media = ansibleMediaWebpageFromApiWebpage(webpage), let url = media.content.url {
                                     if case .Loaded = media.content {
                                         return .single(.result(WebpagePreviewResult.Result(webpage: media, sourceUrl: url)))
                                     } else {
@@ -230,7 +230,7 @@ public func actualizedWebpage(account: Account, webpage: IosappMediaWebpage) -> 
                         let parsedPeers = AccumulatedPeers(transaction: transaction, chats: chats, users: users)
                         updatePeers(transaction: transaction, accountPeerId: account.peerId, peers: parsedPeers)
 
-                        if let updatedWebpage = telegramMediaWebpageFromApiWebpage(apiWebpage), case .Loaded = updatedWebpage.content, updatedWebpage.webpageId == webpage.webpageId {
+                        if let updatedWebpage = ansibleMediaWebpageFromApiWebpage(apiWebpage), case .Loaded = updatedWebpage.content, updatedWebpage.webpageId == webpage.webpageId {
                             return .single(updatedWebpage)
                         } else if case let .webPageNotModified(webPageNotModifiedData) = apiWebpage, let views = webPageNotModifiedData.cachedPageViews, case let .Loaded(content) = webpage.content {
                             let updatedContent: IosappMediaWebpageContent = .Loaded(IosappMediaWebpageLoadedContent(
@@ -279,7 +279,7 @@ public func updatedRemoteWebpage(postbox: Postbox, network: Network, accountPeer
             return .single(nil)
         }
         |> mapToSignal { result -> Signal<IosappMediaWebpage?, NoError> in
-            if let result = result, case let .webPage(webPageData) = result, let updatedWebpage = telegramMediaWebpageFromApiWebpage(webPageData.webpage), case .Loaded = updatedWebpage.content {
+            if let result = result, case let .webPage(webPageData) = result, let updatedWebpage = ansibleMediaWebpageFromApiWebpage(webPageData.webpage), case .Loaded = updatedWebpage.content {
                 let (chats, users) = (webPageData.chats, webPageData.users)
                 if updatedWebpage.webpageId.id == id {
                     return postbox.transaction { transaction -> IosappMediaWebpage? in

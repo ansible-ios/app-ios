@@ -39,7 +39,7 @@ public struct SecretApi8 {
             return parser(reader)
         }
         else {
-            telegramApiLog("Type constructor \(String(signature, radix: 16, uppercase: false)) not found")
+            ansibleApiLog("Type constructor \(String(signature, radix: 16, uppercase: false)) not found")
             return nil
         }
     }

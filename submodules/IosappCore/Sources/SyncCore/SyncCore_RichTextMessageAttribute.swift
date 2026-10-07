@@ -44,12 +44,12 @@ extension RichTextMessageAttribute {
         case let .richMessage(richMessage):
             var media: [MediaId: Media] = [:]
             for photo in richMessage.photos {
-                if let image = telegramMediaImageFromApiPhoto(photo), let id = image.id {
+                if let image = ansibleMediaImageFromApiPhoto(photo), let id = image.id {
                     media[id] = image
                 }
             }
             for file in richMessage.documents {
-                if let file = telegramMediaFileFromApiDocument(file, altDocuments: []), let id = file.id {
+                if let file = ansibleMediaFileFromApiDocument(file, altDocuments: []), let id = file.id {
                     media[id] = file
                 }
             }

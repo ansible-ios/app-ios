@@ -22,7 +22,7 @@ static NSData *sha1(NSData *data) {
     return [[NSData alloc] initWithBytes:digest length:20];
 }
 
-static NSString *telegramApplicationSecretKey = @"telegramApplicationSecretKey_v3";
+static NSString *ansibleApplicationSecretKey = @"telegramApplicationSecretKey_v3";
 
 static uint32_t funcSwap32(uint32_t input)
 {

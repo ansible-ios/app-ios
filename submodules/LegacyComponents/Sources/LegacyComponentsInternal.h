@@ -32,8 +32,8 @@ int cpuCoreCount();
     
 #define TGRestrictedToMainThread {if(![[NSThread currentThread] isMainThread]) TGLegacyLog(@"***** Warning: main thread-bound operation is running in background! *****");}
     
-#define TG_TIMESTAMP_DEFINE(s) CFAbsoluteTime tg_timestamp_##s = CFAbsoluteTimeGetCurrent(); int tg_timestamp_line_##s = __LINE__;
-#define TG_TIMESTAMP_MEASURE(s) { CFAbsoluteTime tg_timestamp_current_time = CFAbsoluteTimeGetCurrent(); TGLegacyLog(@"%s %d-%d: %f ms", #s, tg_timestamp_line_##s, __LINE__, (tg_timestamp_current_time - tg_timestamp_##s) * 1000.0); tg_timestamp_##s = tg_timestamp_current_time; tg_timestamp_line_##s = __LINE__; }
+#define TG_TIMESTAMP_DEFINE(s) CFAbsoluteTime as_timestamp_##s = CFAbsoluteTimeGetCurrent(); int as_timestamp_line_##s = __LINE__;
+#define TG_TIMESTAMP_MEASURE(s) { CFAbsoluteTime as_timestamp_current_time = CFAbsoluteTimeGetCurrent(); TGLegacyLog(@"%s %d-%d: %f ms", #s, as_timestamp_line_##s, __LINE__, (as_timestamp_current_time - as_timestamp_##s) * 1000.0); as_timestamp_##s = as_timestamp_current_time; as_timestamp_line_##s = __LINE__; }
     
 #ifdef __LP64__
 #   define CGFloor floor

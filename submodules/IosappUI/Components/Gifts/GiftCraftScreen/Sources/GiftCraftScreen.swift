@@ -38,7 +38,7 @@ private final class CraftGiftPageContent: Component {
     
     class ExternalState {
         fileprivate(set) var giftsMap: [Int64: GiftItem]
-        fileprivate(set) var starGiftsMap: [Int64: StarGift.Gift] = [:]
+        fileprivate(set) var diamondGiftsMap: [Int64: StarGift.Gift] = [:]
         fileprivate(set) var displayFailure = false
         
         fileprivate(set) var testFailOrSuccess: Bool?
@@ -65,7 +65,7 @@ private final class CraftGiftPageContent: Component {
     let result: CraftTableComponent.Result?
     let screenSize: CGSize
     let externalState: ExternalState
-    let starsTopUpOptionsPromise: Promise<[StarsTopUpOption]?>
+    let diamondsTopUpOptionsPromise: Promise<[DiamondsTopUpOption]?>
     let selectGift: (Int32, GiftItem) -> Void
     let removeGift: (Int32) -> Void
     let craftAnotherGift: () -> Void
@@ -83,7 +83,7 @@ private final class CraftGiftPageContent: Component {
         result: CraftTableComponent.Result?,
         screenSize: CGSize,
         externalState: ExternalState,
-        starsTopUpOptionsPromise: Promise<[StarsTopUpOption]?>,
+        diamondsTopUpOptionsPromise: Promise<[DiamondsTopUpOption]?>,
         selectGift: @escaping (Int32, GiftItem) -> Void,
         removeGift: @escaping (Int32) -> Void,
         craftAnotherGift: @escaping () -> Void,
@@ -100,7 +100,7 @@ private final class CraftGiftPageContent: Component {
         self.result = result
         self.screenSize = screenSize
         self.externalState = externalState
-        self.starsTopUpOptionsPromise = starsTopUpOptionsPromise
+        self.diamondsTopUpOptionsPromise = diamondsTopUpOptionsPromise
         self.selectGift = selectGift
         self.removeGift = removeGift
         self.craftAnotherGift = craftAnotherGift
@@ -170,7 +170,7 @@ private final class CraftGiftPageContent: Component {
         
         private let upgradePreviewDisposable = DisposableSet()
         private var upgradePreview: [StarGift.UniqueGift.Attribute]?
-        private var starGiftsMap: [Int64: StarGift.Gift] = [:]
+        private var diamondGiftsMap: [Int64: StarGift.Gift] = [:]
                 
         private var availableGifts: [GiftItem] = []
         private var giftMap: [Int64: GiftItem] = [:]
@@ -224,7 +224,7 @@ private final class CraftGiftPageContent: Component {
         }
         
         func openUpgradeVariants() {
-            guard let component = self.component, let controller = self.environment?.controller(), let gift = self.starGiftsMap[component.gift.giftId] else {
+            guard let component = self.component, let controller = self.environment?.controller(), let gift = self.diamondGiftsMap[component.gift.giftId] else {
                 return
             }
             
@@ -324,19 +324,19 @@ private final class CraftGiftPageContent: Component {
                     self.state?.updated()
                 }))
                 
-                self.upgradePreviewDisposable.add((.single(nil) |> then(component.context.engine.payments.cachedStarGifts())
+                self.upgradePreviewDisposable.add((.single(nil) |> then(component.context.engine.payments.cachedDiamondGifts())
                 |> deliverOnMainQueue).start(next: { [weak self] starGifts in
                     guard let self, let component = self.component, let starGifts else {
                         return
                     }
-                    var starGiftsMap: [Int64: StarGift.Gift] = [:]
+                    var diamondGiftsMap: [Int64: StarGift.Gift] = [:]
                     for gift in starGifts {
                         if case let .generic(gift) = gift {
-                            starGiftsMap[gift.id] = gift
+                            diamondGiftsMap[gift.id] = gift
                         }
                     }
-                    self.starGiftsMap = starGiftsMap
-                    component.externalState.starGiftsMap = starGiftsMap
+                    self.diamondGiftsMap = diamondGiftsMap
+                    component.externalState.diamondGiftsMap = diamondGiftsMap
                     self.state?.updated()
                 }))
             }
@@ -442,7 +442,7 @@ private final class CraftGiftPageContent: Component {
             let rawDescriptionString = environment.strings.Gift_Craft_Description(giftTitle).string
             let descriptionString = parseMarkdownIntoAttributedString(rawDescriptionString, attributes: MarkdownAttributes(body: MarkdownAttributeSet(font: descriptionFont, textColor: descriptionColor), bold: MarkdownAttributeSet(font: descriptionBoldFont, textColor: descriptionColor), link: MarkdownAttributeSet(font: descriptionFont, textColor: descriptionColor), linkAttribute: { _ in return nil })).mutableCopy() as! NSMutableAttributedString
             
-            if let gift = self.starGiftsMap[component.gift.giftId] {
+            if let gift = self.diamondGiftsMap[component.gift.giftId] {
                 let range = (descriptionString.string as NSString).range(of: "$")
                 if range.location != NSNotFound {
                     descriptionString.addAttribute(ChatTextInputAttributes.customEmoji, value: ChatTextInputTextCustomEmojiAttribute(interactivelySelectedFromPackId: nil, fileId: gift.file.fileId.id, file: gift.file, custom: nil, enableAnimation: false), range: range)
@@ -754,7 +754,7 @@ private final class CraftGiftPageContent: Component {
                 }
                 
                 let variantsButtonSize = CGSize(width: variantsButtonMeasure.width + 87.0, height: 24.0)
-                if let gift = self.starGiftsMap[component.gift.giftId] {
+                if let gift = self.diamondGiftsMap[component.gift.giftId] {
                     var variant1: GiftItemComponent.Subject = .starGift(gift: gift, price: "")
                     var variant2: GiftItemComponent.Subject = .starGift(gift: gift, price: "")
                     var variant3: GiftItemComponent.Subject = .starGift(gift: gift, price: "")
@@ -1154,7 +1154,7 @@ private final class CraftGiftPageContent: Component {
                         isCrafting: isCrafting,
                         result: component.result,
                         select: { [weak self] index in
-                            guard let self, let component = self.component, let environment = self.environment, let genericGift = self.starGiftsMap[component.gift.giftId], let resaleContext = component.resaleContext() else {
+                            guard let self, let component = self.component, let environment = self.environment, let genericGift = self.diamondGiftsMap[component.gift.giftId], let resaleContext = component.resaleContext() else {
                                 return
                             }
                             
@@ -1168,7 +1168,7 @@ private final class CraftGiftPageContent: Component {
                                 genericGift: genericGift,
                                 selectedGiftIds: Set(component.selectedGiftIds.values),
                                 selectingMainGift: index == 0,
-                                starsTopUpOptions: component.starsTopUpOptionsPromise.get(),
+                                diamondsTopUpOptions: component.diamondsTopUpOptionsPromise.get(),
                                 selectGift: { [weak self] item in
                                     guard let self, let component = self.component else {
                                         return
@@ -1202,12 +1202,12 @@ private final class CraftGiftPageContent: Component {
                             guard let self, let component = self.component, let environment = self.environment, let controller = environment.controller() as? GiftCraftScreen else {
                                 return
                             }
-                            var references: [StarGiftReference] = []
+                            var references: [DiamondGiftReference] = []
                             for gift in selectedGifts.values {
                                 references.append(gift.reference)
                             }
                             Queue.mainQueue().after(0.5) {
-                                controller.profileGiftsContext?.removeStarGifts(references: references)
+                                controller.profileGiftsContext?.removeDiamondGifts(references: references)
                             }
                             if let _ = view {
                                 if case let .gift(gift) = component.result {
@@ -1224,7 +1224,7 @@ private final class CraftGiftPageContent: Component {
                                         navigationController.view.addSubview(ConfettiView(frame: navigationController.view.bounds))
                                     }
                                     Queue.mainQueue().after(0.5) {
-                                        controller.profileGiftsContext?.insertStarGifts(gifts: [gift], afterPinned: true)
+                                        controller.profileGiftsContext?.insertDiamondGifts(gifts: [gift], afterPinned: true)
                                     }
                                 }
                                 controller.view.layer.animateAlpha(from: 1.0, to: 0.0, duration: 0.35, removeOnCompletion: false, completion: { _ in
@@ -1265,7 +1265,7 @@ private final class CraftGiftPageContent: Component {
                         subject: .unique(nil, selectedMainGift),
                         animationOffset: nil,
                         animationScale: nil,
-                        displayAnimationStars: false,
+                        displayAnimationDiamonds: false,
                         animateScaleOnTransition: false,
                         externalState: nil,
                         requestUpdate: { _ in
@@ -1477,7 +1477,7 @@ private final class SheetContainerComponent: CombinedComponent {
         var result: CraftTableComponent.Result?
         var selectedGiftIds: [Int32: Int64] = [:]
         
-        let starsTopUpOptionsPromise = Promise<[StarsTopUpOption]?>(nil)
+        let diamondsTopUpOptionsPromise = Promise<[DiamondsTopUpOption]?>(nil)
                 
         private var _resaleContext: ResaleGiftsContext?
         var resaleContext: ResaleGiftsContext {
@@ -1512,7 +1512,7 @@ private final class SheetContainerComponent: CombinedComponent {
                 }
             })
             
-            self.starsTopUpOptionsPromise.set(context.engine.payments.starsTopUpOptions() |> map(Optional.init))
+            self.diamondsTopUpOptionsPromise.set(context.engine.payments.diamondsTopUpOptions() |> map(Optional.init))
         }
         
         deinit {
@@ -1565,12 +1565,12 @@ private final class SheetContainerComponent: CombinedComponent {
             let navigationController = environment.controller()?.navigationController as? NavigationController
             let profileGiftsContext = (environment.controller() as? GiftCraftScreen)?.profileGiftsContext
             let resaleContext = state.resaleContext
-            let starsTopUpOptionsPromise = state.starsTopUpOptionsPromise
+            let diamondsTopUpOptionsPromise = state.diamondsTopUpOptionsPromise
             let craftAnotherGift = { [weak navigationController] in
                 guard let navigationController else {
                     return
                 }
-                if let genericGift = externalState.starGiftsMap[component.gift.giftId] {
+                if let genericGift = externalState.diamondGiftsMap[component.gift.giftId] {
                     HapticFeedback().impact(.light)
                     
                     let selectController = SelectCraftGiftScreen(
@@ -1581,7 +1581,7 @@ private final class SheetContainerComponent: CombinedComponent {
                         genericGift: genericGift,
                         selectedGiftIds: Set(),
                         selectingMainGift: true,
-                        starsTopUpOptions: starsTopUpOptionsPromise.get(),
+                        diamondsTopUpOptions: diamondsTopUpOptionsPromise.get(),
                         selectGift: { [weak navigationController] item in
                             if let navigationController{
                                 let craftController = GiftCraftScreen(context: component.context, gift: item.gift, profileGiftsContext: profileGiftsContext)
@@ -1755,7 +1755,7 @@ private final class SheetContainerComponent: CombinedComponent {
                             result: state.result,
                             screenSize: context.availableSize,
                             externalState: externalState,
-                            starsTopUpOptionsPromise: state.starsTopUpOptionsPromise,
+                            diamondsTopUpOptionsPromise: state.diamondsTopUpOptionsPromise,
                             selectGift: { [weak state] index, gift in
                                 guard let state else {
                                     return
@@ -1868,7 +1868,7 @@ private final class SheetContainerComponent: CombinedComponent {
                                     for index in state.selectedGiftIds.keys.sorted() {
                                         indices.append(Int(index))
                                     }
-                                    var references: [StarGiftReference] = []
+                                    var references: [DiamondGiftReference] = []
                                     for index in indices {
                                         if let giftId = state.selectedGiftIds[Int32(index)], let gift = externalState.giftsMap[giftId] {
                                             references.append(gift.reference)

@@ -12,7 +12,7 @@ import AccountContext
 import AppBundle
 import Markdown
 import GiftItemComponent
-import StarsAvatarComponent
+import DiamondsAvatarComponent
 import PasswordSetupUI
 import PresentationDataUtils
 import AlertComponent
@@ -43,7 +43,7 @@ public func giftWithdrawAlertController(
                     )
                 )),
                 toComponent: AnyComponentWithIdentity(id: "fragment", component: AnyComponent(
-                    StarsAvatarComponent(
+                    DiamondsAvatarComponent(
                         context: context,
                         theme: presentationData.theme,
                         peer: .transactionPeer(.fragment),
@@ -89,7 +89,7 @@ public func giftWithdrawAlertController(
 public func confirmGiftWithdrawalController(
     context: AccountContext,
     updatedPresentationData: (initial: PresentationData, signal: Signal<PresentationData, NoError>)? = nil,
-    reference: StarGiftReference,
+    reference: DiamondGiftReference,
     present: @escaping (ViewController, Any?) -> Void,
     completion: @escaping (String) -> Void
 ) -> ViewController {
@@ -158,7 +158,7 @@ public func confirmGiftWithdrawalController(
     applyImpl = {
         doneInProgressPromise.set(true)
 
-        let _ = (context.engine.payments.requestStarGiftWithdrawalUrl(reference: reference, password: inputState.value)
+        let _ = (context.engine.payments.requestDiamondGiftWithdrawalUrl(reference: reference, password: inputState.value)
         |> deliverOnMainQueue).start(next: { url in
             dismissImpl?()
             completion(url)
@@ -189,8 +189,8 @@ public func confirmGiftWithdrawalController(
 public func giftWithdrawalController(
     context: AccountContext,
     updatedPresentationData: (initial: PresentationData, signal: Signal<PresentationData, NoError>)? = nil,
-    reference: StarGiftReference,
-    initialError: RequestStarGiftWithdrawalError,
+    reference: DiamondGiftReference,
+    initialError: RequestDiamondGiftWithdrawalError,
     present: @escaping (ViewController, Any?) -> Void,
     completion: @escaping (String) -> Void
 ) -> ViewController {

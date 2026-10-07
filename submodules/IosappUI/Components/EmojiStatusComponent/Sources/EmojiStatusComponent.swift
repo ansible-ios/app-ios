@@ -233,7 +233,7 @@ public final class EmojiStatusComponent: Component {
         
         private weak var state: EmptyComponentState?
         private var component: EmojiStatusComponent?
-        private var starsLayer: StarsEffectLayer?
+        private var diamondsLayer: DiamondsEffectLayer?
         
         private var iconLayer: SimpleLayer?
         private var iconLayerImage: UIImage?
@@ -302,21 +302,21 @@ public final class EmojiStatusComponent: Component {
             self.isUserInteractionEnabled = component.action != nil
             
             if let particleColor = component.particleColor {
-                let starsLayer: StarsEffectLayer
-                if let current = self.starsLayer {
-                    starsLayer = current
+                let diamondsLayer: DiamondsEffectLayer
+                if let current = self.diamondsLayer {
+                    diamondsLayer = current
                 } else {
-                    starsLayer = StarsEffectLayer()
-                    self.layer.insertSublayer(starsLayer, at: 0)
-                    self.starsLayer = starsLayer
+                    diamondsLayer = DiamondsEffectLayer()
+                    self.layer.insertSublayer(diamondsLayer, at: 0)
+                    self.diamondsLayer = diamondsLayer
                 }
                 let side = floor(availableSize.width * 1.25)
-                let starsFrame = CGSize(width: side, height: side).centered(in: CGRect(origin: .zero, size: availableSize))
-                starsLayer.frame = starsFrame
-                starsLayer.update(color: particleColor, size: starsFrame.size)
-            } else if let starsLayer = self.starsLayer {
-                self.starsLayer = nil
-                starsLayer.removeFromSuperlayer()
+                let diamondsFrame = CGSize(width: side, height: side).centered(in: CGRect(origin: .zero, size: availableSize))
+                diamondsLayer.frame = diamondsFrame
+                diamondsLayer.update(color: particleColor, size: diamondsFrame.size)
+            } else if let diamondsLayer = self.diamondsLayer {
+                self.diamondsLayer = nil
+                diamondsLayer.removeFromSuperlayer()
             }
             
             //let previousContent = self.component?.content
@@ -688,7 +688,7 @@ public func topicIconColors(for color: Int32) -> ([UInt32], [UInt32]) {
     return topicColors[color] ?? ([0x6FB9F0, 0x0261E4], [0x026CB5, 0x064BB7])
 }
 
-public final class StarsEffectLayer: SimpleLayer {
+public final class DiamondsEffectLayer: SimpleLayer {
     private let emitterLayer = CAEmitterLayer()
     
     public override init() {
