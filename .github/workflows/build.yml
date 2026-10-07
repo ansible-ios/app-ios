@@ -6,20 +6,40 @@ on:
 
   workflow_dispatch:
 
+permissions:
+  contents: write   # создание релиза и загрузка артефактов
+
 jobs:
   build:
-    runs-on: macos-13
+    # macos-13 выведен из обращения: бегунок не выделялся НИ РАЗУ (runner_name
+    # пуст, шагов 0), и запуск убивал лимит очереди в 24 часа. macos-latest
+    # существует всегда, а нужную версию Xcode выбирает шаг ниже.
+    # timeout-minutes считается с НАЧАЛА ВЫПОЛНЕНИЯ и от неверной метки не
+    # спасает, поэтому метка обязана быть существующей.
+    runs-on: macos-latest
+    timeout-minutes: 300
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           submodules: 'recursive'
           fetch-depth: '0'
 
       - name: Set active Xcode path
         run: |
+          set -x
+          sw_vers
+          ls -d /Applications/Xcode*.app || true
           XCODE_VERSION=$(cat versions.json | python3 -c 'import json,sys;obj=json.load(sys.stdin);print(obj["xcode"]);')
-          sudo xcode-select -s /Applications/Xcode_$XCODE_VERSION.app/Contents/Developer
+          echo "versions.json требует Xcode $XCODE_VERSION"
+          if [ -d "/Applications/Xcode_$XCODE_VERSION.app" ]; then
+            sudo xcode-select -s "/Applications/Xcode_$XCODE_VERSION.app/Contents/Developer"
+          else
+            NEWEST=$(ls -d /Applications/Xcode*.app | sort -V | tail -1)
+            echo "::warning::Xcode $XCODE_VERSION отсутствует на бегунке, беру $NEWEST"
+            sudo xcode-select -s "$NEWEST/Contents/Developer"
+          fi
+          xcodebuild -version
 
       - name: Create canonical source directory
         run: |
@@ -68,42 +88,23 @@ jobs:
 
           # collect dsym
           mkdir -p build/DSYMs
-          for f in bazel-out/applebin_ios-ios_arm*-opt-ST-*/bin/Telegram/*.dSYM; do
+          for f in bazel-out/applebin_ios-ios_arm*-opt-ST-*/bin/iosapp/*.dSYM; do
             cp -R "$f" build/DSYMs/
           done
           zip -r "./$OUTPUT_PATH/iosapp.DSYMs.zip" build/DSYMs 1>/dev/null
 
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # 🚨 Было три шага на actions/create-release@v1 и upload-release-asset@v1 —
+      # оба архивированы GitHub и работают на Node 12, то есть на современном
+      # бегунке не запускаются. Заменено на то же действие, что уже используется
+      # в репозитории андроида.
+      - name: Publish unsigned build
+        uses: softprops/action-gh-release@v2
         with:
           tag_name: build-${{ env.BUILD_NUMBER }}
-          release_name: Telegram ${{ env.APP_VERSION }} (${{ env.BUILD_NUMBER }})
+          name: Ansible ${{ env.APP_VERSION }} (${{ env.BUILD_NUMBER }})
           body: |
-            An unsigned build of Telegram for iOS ${{ env.APP_VERSION }} (${{ env.BUILD_NUMBER }})
-          draft: false
-          prerelease: false
-
-      - name: Upload Release IPA
-        id: upload-release-ipa 
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: /Users/Shared/telegram-ios/build/artifacts/iosapp.ipa
-          asset_name: iosapp.ipa
-          asset_content_type: application/zip
-
-      - name: Upload Release DSYM
-        id: upload-release-dsym 
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: /Users/Shared/telegram-ios/build/artifacts/iosapp.DSYMs.zip
-          asset_name: iosapp.DSYMs.zip
-          asset_content_type: application/zip
+            Неподписанная сборка Ansible for iOS ${{ env.APP_VERSION }} (${{ env.BUILD_NUMBER }})
+          files: |
+            /Users/Shared/telegram-ios/build/artifacts/iosapp.ipa
+            /Users/Shared/telegram-ios/build/artifacts/iosapp.DSYMs.zip
+          fail_on_unmatched_files: true
