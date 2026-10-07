@@ -46,8 +46,8 @@ private func jsStringLiteral(_ value: String) -> String {
 private func eventProxySource() -> String {
     return """
     (function() {
-        var AnsibleWebviewProxyProto = function() {};
-        AnsibleWebviewProxyProto.prototype.postEvent = function(eventName, eventData) {
+        var TelegramWebviewProxyProto = function() {};
+        TelegramWebviewProxyProto.prototype.postEvent = function(eventName, eventData) {
             window.webkit.messageHandlers.performAction.postMessage({'eventName': eventName, 'eventData': eventData});
         };
         window.TelegramWebviewProxy = new TelegramWebviewProxyProto();
@@ -61,8 +61,8 @@ private func securedEventProxySource(trustedOrigin: String) -> String {
         if (window.location.origin !== \(jsStringLiteral(trustedOrigin))) {
             return;
         }
-        var AnsibleWebviewProxyProto = function() {};
-        AnsibleWebviewProxyProto.prototype.postEvent = function(eventName, eventData) {
+        var TelegramWebviewProxyProto = function() {};
+        TelegramWebviewProxyProto.prototype.postEvent = function(eventName, eventData) {
             window.webkit.messageHandlers.performAction.postMessage({'eventName': eventName, 'eventData': eventData});
         };
         window.TelegramWebviewProxy = new TelegramWebviewProxyProto();

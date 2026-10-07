@@ -3,7 +3,7 @@
 
 #import "LegacyComponentsInternal.h"
 
-#import <LegacyComponents/UIImage+AS.h>
+#import <LegacyComponents/UIImage+TG.h>
 
 #import <LegacyComponents/TGPaintUtils.h>
 #import <LegacyComponents/TGPhotoEditorUtils.h>

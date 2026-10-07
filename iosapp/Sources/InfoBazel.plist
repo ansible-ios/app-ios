@@ -194,7 +194,7 @@
 				<string>BlueIcon@3x.png</string>
 			</array>
 			<key>UTTypeIdentifier</key>
-			<string>org.ansible.Ansible-iOS.theme</string>
+			<string>org.telegram.Telegram-iOS.theme</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>

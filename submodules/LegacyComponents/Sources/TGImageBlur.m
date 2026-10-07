@@ -6,7 +6,7 @@
 
 #import <Accelerate/Accelerate.h>
 
-#import <LegacyComponents/UIImage+AS.h>
+#import <LegacyComponents/UIImage+TG.h>
 #import <LegacyComponents/TGStaticBackdropImageData.h>
 #import <LegacyComponents/TGStaticBackdropAreaData.h>
 
