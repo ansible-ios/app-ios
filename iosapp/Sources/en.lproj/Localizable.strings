@@ -108,7 +108,7 @@
 "PUSH_MESSAGE_NOTHEME" = "%1$@|disabled chat theme";
 "PUSH_MESSAGE_RECURRING_PAY" = "%1$@|You were charged %2$@";
 "CHAT_MESSAGE_RECURRING_PAY" = "%1$@|You were charged %2$@";
-"PUSH_MESSAGE_PAID_MEDIA" = "%1$@sent you a paid post for %2$@ stars";
+"PUSH_MESSAGE_PAID_MEDIA" = "%1$@sent you a paid post for %2$@ diamonds";
 
 "PUSH_CHANNEL_MESSAGE_TEXT" = "%1$@|%2$@";
 "PUSH_CHANNEL_MESSAGE_NOTEXT" = "%1$@|posted a message";
@@ -139,7 +139,7 @@
 "PUSH_CHANNEL_ALBUM" = "%1$@|posted an album";
 "PUSH_CHANNEL_MESSAGE_DOCS_TEXT_1" = "posted a file";
 "PUSH_CHANNEL_MESSAGE_DOCS_TEXT_any" = "posted %d files";
-"PUSH_CHANNEL_MESSAGE_PAID_MEDIA" = "%1$@ sent a paid post for %2$@ stars";
+"PUSH_CHANNEL_MESSAGE_PAID_MEDIA" = "%1$@ sent a paid post for %2$@ diamonds";
 
 "PUSH_CHAT_MESSAGE_TEXT" = "%2$@|%1$@:%3$@";
 "PUSH_CHAT_MESSAGE_NOTEXT" = "%2$@|%1$@ sent a message to the group";
@@ -185,7 +185,7 @@
 "PUSH_CHAT_MESSAGE_THEME" = "%1$@|set theme to %3$@ in the group %2$@";
 "PUSH_CHAT_MESSAGE_NOTHEME" = "%1$@|disabled theme in the group %2$@";
 "PUSH_CHAT_REQ_JOINED" = "%1$@ was accepted into the group %2$@";
-"PUSH_CHAT_MESSAGE_PAID_MEDIA" = "%1$@ sent a paid post to the group %2$@ for %3$@ stars";
+"PUSH_CHAT_MESSAGE_PAID_MEDIA" = "%1$@ sent a paid post to the group %2$@ for %3$@ diamonds";
 
 "PUSH_PINNED_TEXT" = "%1$@|pinned \"%2$@\" ";
 "PUSH_PINNED_NOTEXT" = "%1$@|pinned a message";
@@ -287,7 +287,7 @@
 "LOCAL_CHAT_MESSAGE_FWDS" = "%1$@ forwarded %2$d messages";
 
 "PUSH_STORY_HIDDEN_AUTHOR" = "New story was posted";
-"PUSH_MESSAGE_STARGIFT" = "%1$@|sent you a Gift worth of %2$@ stars";
+"PUSH_MESSAGE_STARGIFT" = "%1$@|sent you a Gift worth of %2$@ diamonds";
 
 // Common
 "Common.OK" = "OK";
@@ -4411,7 +4411,7 @@ Unused sets are archived when you add more.";
 "SettingsSearch.Synonyms.Premium.Stickers" = " ";
 "SettingsSearch.Synonyms.Premium.AnimatedEmoji" = " ";
 "SettingsSearch.Synonyms.Premium.ChatManagement" = " ";
-"SettingsSearch.Synonyms.Premium.Badge" = "Star";
+"SettingsSearch.Synonyms.Premium.Badge" = "Diamond";
 "SettingsSearch.Synonyms.Premium.Avatar" = "Video Avatar";
 "SettingsSearch.Synonyms.Premium.AppIcon" = " ";
 
@@ -10325,7 +10325,7 @@ Sorry for the inconvenience.";
 "BoostGift.GiveawayCreated.Text" = "Check your channel's [Statistics]() to see how this giveaway boosted your channel.";
 "BoostGift.PremiumGifted.Title" = "Premium Subscriptions Gifted";
 "BoostGift.PremiumGifted.Text" = "Check your channel's [Statistics]() to see how gifts boosted your channel.";
-"BoostGift.DiamondsGiveawayCreated.Title" = "Stars Giveaway Created";
+"BoostGift.DiamondsGiveawayCreated.Title" = "Diamonds Giveaway Created";
 "BoostGift.DiamondsGiveawayCreated.Text" = "Check your channel's [Statistics]() to see how this giveaway boosted your channel.";
 "BoostGift.Group.DiamondsGiveawayCreated.Text" = "Check your group's [Boosts]() to see how this giveaway boosted your group.";
 
@@ -12307,24 +12307,24 @@ Sorry for the inconvenience.";
 "Conversation.ContextMenuAddFactCheck" = "Add Fact Check";
 "Conversation.ContextMenuEditFactCheck" = "Edit Fact Check";
 
-"Diamonds.Intro.Title" = "Ansible Stars";
-"Diamonds.Intro.Description" = "Buy Stars to unlock content and services in miniapps on Ansible.";
+"Diamonds.Intro.Title" = "Ansible Diamonds";
+"Diamonds.Intro.Description" = "Buy Diamonds to unlock content and services in miniapps on Ansible.";
 "Diamonds.Intro.Balance" = "Balance";
 "Diamonds.Intro.YourBalance" = "your balance";
-"Diamonds.Intro.Buy" = "Buy More Stars";
+"Diamonds.Intro.Buy" = "Buy More Diamonds";
 "Diamonds.Intro.AllTransactions" = "All Transactions";
 "Diamonds.Intro.Incoming" = "Incoming";
 "Diamonds.Intro.Outgoing" = "Outgoing";
 
 "Diamonds.Intro.Transaction.GiveawayPrize" = "Giveaway Prize";
 "Diamonds.Intro.Transaction.MediaPurchase" = "Media Purchase";
-"Diamonds.Intro.Transaction.AppleTopUp.Title" = "Stars Top-Up";
+"Diamonds.Intro.Transaction.AppleTopUp.Title" = "Diamonds Top-Up";
 "Diamonds.Intro.Transaction.AppleTopUp.Subtitle" = "via App Store";
-"Diamonds.Intro.Transaction.GoogleTopUp.Title" = "Stars Top-Up";
+"Diamonds.Intro.Transaction.GoogleTopUp.Title" = "Diamonds Top-Up";
 "Diamonds.Intro.Transaction.GoogleTopUp.Subtitle" = "via Play Market";
-"Diamonds.Intro.Transaction.PremiumBotTopUp.Title" = "Stars Top-Up";
+"Diamonds.Intro.Transaction.PremiumBotTopUp.Title" = "Diamonds Top-Up";
 "Diamonds.Intro.Transaction.PremiumBotTopUp.Subtitle" = "via Premium Bot";
-"Diamonds.Intro.Transaction.FragmentTopUp.Title" = "Stars Top-Up";
+"Diamonds.Intro.Transaction.FragmentTopUp.Title" = "Diamonds Top-Up";
 "Diamonds.Intro.Transaction.FragmentTopUp.Subtitle" = "via Fragment";
 "Diamonds.Intro.Transaction.FragmentWithdrawal.Title" = "Withdrawal";
 "Diamonds.Intro.Transaction.FragmentWithdrawal.Subtitle" = "via Fragment";
@@ -12336,25 +12336,25 @@ Sorry for the inconvenience.";
 "Diamonds.Intro.Transaction.Refund" = "Refund";
 "Diamonds.Intro.Transaction.GiftUpgrade" = "Gift Upgrade";
 
-"Diamonds.Intro.PurchasedTitle" = "Stars Acquired";
+"Diamonds.Intro.PurchasedTitle" = "Diamonds Acquired";
 "Diamonds.Intro.PurchasedText" = "**%@** added to your balance.";
-"Diamonds.Intro.PurchasedText.Diamonds_1" = "%@ Star";
-"Diamonds.Intro.PurchasedText.Diamonds_any" = "%@ Stars";
+"Diamonds.Intro.PurchasedText.Diamonds_1" = "%@ Diamond";
+"Diamonds.Intro.PurchasedText.Diamonds_any" = "%@ Diamonds";
 
-"Diamonds.Purchase.GetDiamonds" = "Get Stars";
-"Diamonds.Purchase.GetDiamondsInfo" = "Choose how many Stars you would like to buy.";
+"Diamonds.Purchase.GetDiamonds" = "Get Diamonds";
+"Diamonds.Purchase.GetDiamondsInfo" = "Choose how many Diamonds you would like to buy.";
 
 "Diamonds.Purchase.Balance" = "Balance";
 
-"Diamonds.Purchase.DiamondsNeeded_1" = "%@ Star Needed";
-"Diamonds.Purchase.DiamondsNeeded_any" = "%@ Stars Needed";
-"Diamonds.Purchase.DiamondsNeededInfo" = "Buy Stars to use them on **%@** and other miniapps.";
-"Diamonds.Purchase.DiamondsNeededUnlockInfo" = "Buy Stars to unlock media and use them on miniapps.";
+"Diamonds.Purchase.DiamondsNeeded_1" = "%@ Diamond Needed";
+"Diamonds.Purchase.DiamondsNeeded_any" = "%@ Diamonds Needed";
+"Diamonds.Purchase.DiamondsNeededInfo" = "Buy Diamonds to use them on **%@** and other miniapps.";
+"Diamonds.Purchase.DiamondsNeededUnlockInfo" = "Buy Diamonds to unlock media and use them on miniapps.";
 
-"Diamonds.Purchase.Diamonds_1" = "%@ Star";
-"Diamonds.Purchase.Diamonds_any" = "%@ Stars";
+"Diamonds.Purchase.Diamonds_1" = "%@ Diamond";
+"Diamonds.Purchase.Diamonds_any" = "%@ Diamonds";
 "Diamonds.Purchase.ShowMore" = "Show More Options";
-"Diamonds.Purchase.Info" = "By proceeding and purchasing Stars, you agree with [Terms and Conditions]().";
+"Diamonds.Purchase.Info" = "By proceeding and purchasing Diamonds, you agree with [Terms and Conditions]().";
 "Diamonds.Purchase.Terms_URL" = "https://telegram.org/tos";
 
 "Diamonds.Transaction.Via" = "Via";
@@ -12363,22 +12363,22 @@ Sorry for the inconvenience.";
 "Diamonds.Transaction.Media" = "Media";
 "Diamonds.Transaction.Id" = "Transaction ID";
 "Diamonds.Transaction.Date" = "Date";
-"Diamonds.Transaction.Terms" = "Review the [Terms of Service]() for Stars.";
+"Diamonds.Transaction.Terms" = "Review the [Terms of Service]() for Diamonds.";
 "Diamonds.Transaction.Terms_URL" = "https://telegram.org/tos";
 "Diamonds.Transaction.CopiedId" = "Transaction ID copied to clipboard.";
 
 "Diamonds.Transaction.MediaPurchase" = "Media Purchase";
-"Diamonds.Transaction.AppleTopUp.Title" = "Stars Top-Up";
+"Diamonds.Transaction.AppleTopUp.Title" = "Diamonds Top-Up";
 "Diamonds.Transaction.AppleTopUp.Subtitle" = "App Store";
-"Diamonds.Transaction.GoogleTopUp.Title" = "Stars Top-Up";
+"Diamonds.Transaction.GoogleTopUp.Title" = "Diamonds Top-Up";
 "Diamonds.Transaction.GoogleTopUp.Subtitle" = "Play Market";
-"Diamonds.Transaction.PremiumBotTopUp.Title" = "Stars Top-Up";
+"Diamonds.Transaction.PremiumBotTopUp.Title" = "Diamonds Top-Up";
 "Diamonds.Transaction.PremiumBotTopUp.Subtitle" = "Premium Bot";
-"Diamonds.Transaction.FragmentTopUp.Title" = "Stars Top-Up";
+"Diamonds.Transaction.FragmentTopUp.Title" = "Diamonds Top-Up";
 "Diamonds.Transaction.FragmentTopUp.Subtitle" = "Fragment";
-"Diamonds.Transaction.FragmentWithdrawal.Title" = "Stars Withdrawal";
+"Diamonds.Transaction.FragmentWithdrawal.Title" = "Diamonds Withdrawal";
 "Diamonds.Transaction.FragmentWithdrawal.Subtitle" = "Fragment";
-"Diamonds.Transaction.AnsibleAds.Title" = "Stars Withdrawal";
+"Diamonds.Transaction.AnsibleAds.Title" = "Diamonds Withdrawal";
 "Diamonds.Transaction.AnsibleAds.Subtitle" = "Ansible Ads";
 "Diamonds.Transaction.Unsupported.Title" = "Unsupported";
 "Diamonds.Transaction.Refund" = "Refund";
@@ -12393,20 +12393,20 @@ Sorry for the inconvenience.";
 
 "Diamonds.Transfer.Title" = "Confirm Your Purchase";
 "Diamonds.Transfer.Info" = "Do you want to buy **%1$@** in **%2$@** for **%3$@**?";
-"Diamonds.Transfer.Info.Diamonds_1" = "%@ Star";
-"Diamonds.Transfer.Info.Diamonds_any" = "%@ Stars";
+"Diamonds.Transfer.Info.Diamonds_1" = "%@ Diamond";
+"Diamonds.Transfer.Info.Diamonds_any" = "%@ Diamonds";
 "Diamonds.Transfer.Pay" = "Confirm and Pay";
 "Diamonds.Transfer.PurchasedTitle" = "Purchase Completed";
 "Diamonds.Transfer.PurchasedText" = "You acquired **%1$@** in **%2$@** for **%3$@**.";
-"Diamonds.Transfer.Purchased.Diamonds_1" = "%@ Star";
-"Diamonds.Transfer.Purchased.Diamonds_any" = "%@ Stars";
+"Diamonds.Transfer.Purchased.Diamonds_1" = "%@ Diamond";
+"Diamonds.Transfer.Purchased.Diamonds_any" = "%@ Diamonds";
 "Diamonds.Transfer.UnlockedText" = "You unlocked media for **%1$@**.";
 "Diamonds.Transfer.UnlockInfo" = "Do you want to unlock %1$@ in **%2$@** for **%3$@**?";
 "Diamonds.Transfer.UnlockBotInfo" = "Do you want to unlock %1$@ from **%2$@** for **%3$@**?";
 
 "Diamonds.Transfer.Balance" = "Balance";
 
-"Diamonds.Transfer.Unavailable" = "Sorry, no star purchases are available from your country.";
+"Diamonds.Transfer.Unavailable" = "Sorry, no diamond purchases are available from your country.";
 
 "Diamonds.Transfer.Photos_1" = "%@ photo";
 "Diamonds.Transfer.Photos_any" = "%@ photos";
@@ -12416,7 +12416,7 @@ Sorry for the inconvenience.";
 "Diamonds.Transfer.SingleVideo" = "video";
 "Diamonds.Transfer.MediaAnd" = "%1$@ and %2$@";
 
-"Settings.Diamonds" = "Your Stars";
+"Settings.Diamonds" = "Your Diamonds";
 
 "Chat.MessageEffectMenu.TitleAddEffect" = "Add an animated effect";
 "Chat.MessageEffectMenu.SectionMessageEffects" = "Message Effects";
@@ -12432,8 +12432,8 @@ Sorry for the inconvenience.";
 
 "PeerInfo.Bot.Username" = "Username";
 "PeerInfo.Bot.Balance" = "Balance";
-"PeerInfo.Bot.Balance.Diamonds_1" = "%@ Star";
-"PeerInfo.Bot.Balance.Diamonds_any" = "%@ Stars";
+"PeerInfo.Bot.Balance.Diamonds_1" = "%@ Diamond";
+"PeerInfo.Bot.Balance.Diamonds_any" = "%@ Diamonds";
 
 "HashtagSearch.StoriesFound_1" = "%@ Story Found";
 "HashtagSearch.StoriesFound_any" = "%@ Stories Found";
@@ -12449,39 +12449,39 @@ Sorry for the inconvenience.";
 "HashtagSearch.FoundStories" = "stories";
 "HashtagSearch.FoundPosts" = "posts";
 
-"Diamonds.BotRevenue.Title" = "Stars Balance";
-"Diamonds.BotRevenue.Revenue.Title" = "Stars Received";
+"Diamonds.BotRevenue.Title" = "Diamonds Balance";
+"Diamonds.BotRevenue.Revenue.Title" = "Diamonds Received";
 "Diamonds.BotRevenue.Proceeds.Title" = "Rewards Overview";
 "Diamonds.BotRevenue.Proceeds.Available" = "Available Balance";
 "Diamonds.BotRevenue.Proceeds.Current" = "Total Balance";
 "Diamonds.BotRevenue.Proceeds.Total" = "Lifetime Proceeds";
-"Diamonds.BotRevenue.Proceeds.Info" = "Stars from your total balance can be used for ads or withdrawn as rewards 21 days after they are earned.";
+"Diamonds.BotRevenue.Proceeds.Info" = "Diamonds from your total balance can be used for ads or withdrawn as rewards 21 days after they are earned.";
 
 "Diamonds.BotRevenue.Withdraw.Balance" = "Available Balance";
 "Diamonds.BotRevenue.Withdraw.Withdraw" = "Withdraw via Fragment";
 "Diamonds.BotRevenue.Withdraw.WithdrawShort" = "Withdraw";
 "Diamonds.BotRevenue.Withdraw.BuyAds" = "Buy Ads";
-"Diamonds.BotRevenue.Withdraw.Info" = "You can collect rewards for Stars using Fragment, or use Stars to advertise your bot. [Learn More >]()";
+"Diamonds.BotRevenue.Withdraw.Info" = "You can collect rewards for Diamonds using Fragment, or use Diamonds to advertise your bot. [Learn More >]()";
 "Diamonds.BotRevenue.Withdraw.Info_URL" = "https://telegram.org/tos/bot-developers#6-2-2-tpa-balance";
 
 "Diamonds.BotRevenue.Transactions.Title" = "Transaction History";
 
 "Diamonds.Withdraw.Title" = "Withdraw";
 "Diamonds.Withdraw.AmountTitle" = "ENTER AMOUNT TO WITHDRAW";
-"Diamonds.Withdraw.AmountPlaceholder" = "Stars Amount";
+"Diamonds.Withdraw.AmountPlaceholder" = "Diamonds Amount";
 "Diamonds.Withdraw.Withdraw" = "Withdraw";
 
 "Diamonds.Withdraw.Withdraw.ErrorMinimum" = "You cannot withdraw less than [%@]().";
-"Diamonds.Withdraw.Withdraw.ErrorMinimum.Diamonds_1" = "%@ Star";
-"Diamonds.Withdraw.Withdraw.ErrorMinimum.Diamonds_any" = "%@ Stars";
+"Diamonds.Withdraw.Withdraw.ErrorMinimum.Diamonds_1" = "%@ Diamond";
+"Diamonds.Withdraw.Withdraw.ErrorMinimum.Diamonds_any" = "%@ Diamonds";
 
 "Diamonds.Withdraw.Withdraw.ErrorTimeout" = "Next withdrawal will be available in **%@**.";
 
 "Diamonds.PaidContent.Title" = "Paid Content";
 "Diamonds.PaidContent.AmountTitle" = "ENTER UNLOCK COST";
-"Diamonds.PaidContent.AmountPlaceholder" = "Stars to Unlock";
-"Diamonds.PaidContent.AmountInfo" = "Users will have to transfer this amount of Stars to your channel in order to view this media.\n[More about Stars >]()";
-"Diamonds.PaidContent.AmountInfo_URL" = "https://telegram.org/tos/stars";
+"Diamonds.PaidContent.AmountPlaceholder" = "Diamonds to Unlock";
+"Diamonds.PaidContent.AmountInfo" = "Users will have to transfer this amount of Diamonds to your channel in order to view this media.\n[More about Diamonds >]()";
+"Diamonds.PaidContent.AmountInfo_URL" = "https://telegram.org/tos/diamonds";
 "Diamonds.PaidContent.Create" = "Make This Media Paid";
 
 "MediaEditor.AddLink" = "LINK";
@@ -12514,12 +12514,12 @@ Sorry for the inconvenience.";
 "Monetization.DiamondsBalanceTitle" = "STARS BALANCE";
 
 "Monetization.TonTransactions" = "GRAM Transactions";
-"Monetization.DiamondsTransactions" = "Stars Transactions";
+"Monetization.DiamondsTransactions" = "Diamonds Transactions";
 
 "Monetization.BalanceDiamondsWithdraw" = "Withdraw via Fragment";
 "Monetization.BalanceDiamondsWithdrawShort" = "Withdraw";
 "Monetization.BalanceDiamondsBuyAds" = "Buy Ads";
-"Monetization.Balance.DiamondsInfo" = "You can collect rewards for Stars using Fragment, or use Stars to advertise your channel. [Learn More >]()";
+"Monetization.Balance.DiamondsInfo" = "You can collect rewards for Diamonds using Fragment, or use Diamonds to advertise your channel. [Learn More >]()";
 "Monetization.Balance.DiamondsInfo_URL" = "https://telegram.org";
 
 "Monetization.DiamondsProceeds.Title" = "Rewards Overview";
@@ -12536,8 +12536,8 @@ Sorry for the inconvenience.";
 
 "Attachment.SendWithoutGrouping" = "Send Without Grouping";
 "Attachment.Paid.EditPrice" = "Edit Price";
-"Attachment.Paid.EditPrice.Diamonds_1" = "%@ Star";
-"Attachment.Paid.EditPrice.Diamonds_any" = "%@ Stars";
+"Attachment.Paid.EditPrice.Diamonds_1" = "%@ Diamond";
+"Attachment.Paid.EditPrice.Diamonds_any" = "%@ Diamonds";
 "Attachment.Paid.Create" = "Make This Content Paid";
 
 "WebApp.MinimizedTitleFormat" = "%1$@ & %2$@";
@@ -12548,9 +12548,9 @@ Sorry for the inconvenience.";
 "WebApp.Minimized.CloseAll_1" = "Close All %@ Tab";
 "WebApp.Minimized.CloseAll_any" = "Close All %@ Tabs";
 
-"Diamonds.SendDiamonds.Title" = "Send Stars";
+"Diamonds.SendDiamonds.Title" = "Send Diamonds";
 "Diamonds.SendDiamonds.AmountTitle" = "ENTER AMOUNT";
-"Diamonds.SendDiamonds.AmountPlaceholder" = "Stars Amount";
+"Diamonds.SendDiamonds.AmountPlaceholder" = "Diamonds Amount";
 "Diamonds.SendDiamonds.AmountInfo" = "Send %@ or more to highlight your profile in the TOP 3 supporters of this message.";
 "Diamonds.SendDiamonds.SendDiamonds" = "Confirm and Send";
 
@@ -12561,14 +12561,14 @@ Sorry for the inconvenience.";
 "WebApp.Miniapp" = "miniapp";
 "WebApp.Share" = "Share";
 
-"Diamonds.Purchase.GiftDiamonds" = "Gift Stars";
-"Diamonds.Purchase.GiftInfo" = "With Stars, **%1$@** will be able to unlock content and services on Ansible. [See Examples >]()";
+"Diamonds.Purchase.GiftDiamonds" = "Gift Diamonds";
+"Diamonds.Purchase.GiftInfo" = "With Diamonds, **%1$@** will be able to unlock content and services on Ansible. [See Examples >]()";
 
-"Diamonds.Purchase.SubscriptionInfo" = "Buy Stars to subscribe for **%@**.";
-"Diamonds.Purchase.SubscriptionRenewInfo" = "Buy Stars to keep your subscription for **%@**.";
+"Diamonds.Purchase.SubscriptionInfo" = "Buy Diamonds to subscribe for **%@**.";
+"Diamonds.Purchase.SubscriptionRenewInfo" = "Buy Diamonds to keep your subscription for **%@**.";
 
 "InviteLink.Create.Subscription" = "Require Monthly Fee";
-"InviteLink.Create.Subscription.Placeholder" = "Stars amount per month";
+"InviteLink.Create.Subscription.Placeholder" = "Diamonds amount per month";
 "InviteLink.Create.Subscription.PerMonth" = "%@ / month";
 "InviteLink.Create.Subscription.Info" = "Charge a subscription fee from people joining your channel via this link. [Learn More >]()";
 "InviteLink.Create.Subscription.EditInfo" = "If you need to change the subscription fee, create a new invite link with a different price.";
@@ -12581,10 +12581,10 @@ Sorry for the inconvenience.";
 "Notification.DiamondsGift.Sent" = "%1$@ sent you a gift for %2$@";
 "Notification.DiamondsGift.SentYou" = "You sent a gift for %@";
 
-"Notification.DiamondsGift.Title_1" = "%@ Star";
-"Notification.DiamondsGift.Title_any" = "%@ Stars";
-"Notification.DiamondsGift.Subtitle" = "Use Stars to unlock content and services on Ansible.";
-"Notification.DiamondsGift.SubtitleYou" = "With Stars, %@ will be able to unlock content and services on Ansible.";
+"Notification.DiamondsGift.Title_1" = "%@ Diamond";
+"Notification.DiamondsGift.Title_any" = "%@ Diamonds";
+"Notification.DiamondsGift.Subtitle" = "Use Diamonds to unlock content and services on Ansible.";
+"Notification.DiamondsGift.SubtitleYou" = "With Diamonds, %@ will be able to unlock content and services on Ansible.";
 "Notification.DiamondsGift.UnknownUser" = "Unknown user";
 
 "Bot.Settings" = "Bot Settings";
@@ -12600,10 +12600,10 @@ Sorry for the inconvenience.";
 "WebBrowser.Ansible" = "Ansible";
 
 "Monetization.Proceeds.Ton.Info" = "GRAM from your total balance can be used for ads or withdrawn as rewards 3 days after they are earned.";
-"Monetization.Proceeds.Diamonds.Info" = "Stars from your total balance can be used for ads or withdrawn as rewards 21 days after they are earned.";
-"Monetization.Proceeds.TonAndDiamonds.Info" = "Stars and GRAM from your total balance can be used for ads or withdrawn as rewards 21 and 3 days respectively after they are earned.";
+"Monetization.Proceeds.Diamonds.Info" = "Diamonds from your total balance can be used for ads or withdrawn as rewards 21 days after they are earned.";
+"Monetization.Proceeds.TonAndDiamonds.Info" = "Diamonds and GRAM from your total balance can be used for ads or withdrawn as rewards 21 and 3 days respectively after they are earned.";
 
-"Diamonds.Transaction.FragmentUnknown_URL" = "https://fragment.com/stars";
+"Diamonds.Transaction.FragmentUnknown_URL" = "https://fragment.com/diamonds";
 "Conversation.StatusBotSubscribers_1" = "1 user";
 "Conversation.StatusBotSubscribers_any" = "%d users";
 
@@ -12619,15 +12619,15 @@ Sorry for the inconvenience.";
 "WebBrowser.FileForwardTooltip.ManyChats.One" = "Document forwarded to **%@** and %@ others";
 "WebBrowser.FileForwardTooltip.SavedMessages.One" = "Document forwarded to **Saved Messages**";
 
-"Diamonds.Intro.DiamondsSent_1" = "%@ Star sent.";
-"Diamonds.Intro.DiamondsSent_any" = "%@ Stars sent.";
+"Diamonds.Intro.DiamondsSent_1" = "%@ Diamond sent.";
+"Diamonds.Intro.DiamondsSent_any" = "%@ Diamonds sent.";
 "Diamonds.Intro.DiamondsSent.ViewChat" = "View Chat";
 
 "Diamonds.Gift.Received.Title" = "Received Gift";
-"Diamonds.Gift.Received.Text" = "Use Stars to unlock content and services on Ansible. [See Examples >]()";
+"Diamonds.Gift.Received.Text" = "Use Diamonds to unlock content and services on Ansible. [See Examples >]()";
 
 "Diamonds.Gift.Sent.Title" = "Sent Gift";
-"Diamonds.Gift.Sent.Text" = "With Stars, %@ will be able to unlock content and services on Ansible. [See Examples >]()";
+"Diamonds.Gift.Sent.Text" = "With Diamonds, %@ will be able to unlock content and services on Ansible. [See Examples >]()";
 
 "WebBrowser.Reload" = "Reload";
 "WebBrowser.Share" = "Share";
@@ -12744,7 +12744,7 @@ Sorry for the inconvenience.";
 
 "Conversation.OpenProfile" = "OPEN PROFILE";
 
-"Diamonds.Intro.GiftDiamonds" = "Gift Stars to Friends";
+"Diamonds.Intro.GiftDiamonds" = "Gift Diamonds to Friends";
 
 "MediaPicker.CreateSticker" = "Create a sticker from a photo";
 
@@ -12759,9 +12759,9 @@ Sorry for the inconvenience.";
 "InviteLink.ShareShort" = "Share";
 
 "Diamonds.Subscription.Terms" = "By subscribing you agree to the [Terms of Service]().";
-"Diamonds.Subscription.Terms_URL" = "https://telegram.org/tos/stars";
+"Diamonds.Subscription.Terms_URL" = "https://telegram.org/tos/diamonds";
 
-"Diamonds.Transaction.Reaction.Title" = "Star reaction";
+"Diamonds.Transaction.Reaction.Title" = "Diamond reaction";
 "Diamonds.Transaction.Reaction.Post" = "Post";
 
 "Diamonds.Transaction.SubscriptionFee" = "Monthly Subscription Fee";
@@ -12800,10 +12800,10 @@ Sorry for the inconvenience.";
 "Diamonds.Intro.Subscriptions.ShowMore" = "Show More";
 
 "Diamonds.Intro.Transaction.SubscriptionFee.Title" = "Monthly Subscription Fee";
-"Diamonds.Intro.Transaction.Reaction.Title" = "Star Reaction";
+"Diamonds.Intro.Transaction.Reaction.Title" = "Diamond Reaction";
 
-"Diamonds.Purchase.GenericPurchasePurpose" = "Buy Stars to unlock content and services on Ansible.";
-"Diamonds.Purchase.PurchasePurpose.subs" = "Buy Stars to keep all your subscriptions.";
+"Diamonds.Purchase.GenericPurchasePurpose" = "Buy Diamonds to unlock content and services on Ansible.";
+"Diamonds.Purchase.PurchasePurpose.subs" = "Buy Diamonds to keep all your subscriptions.";
 
 "Diamonds.Transfer.Subscribe.Channel.Title" = "Subscribe";
 "Diamonds.Transfer.SubscribeInfo" = "Do you want to subscribe to **%1$@** for **%2$@** per month?";
@@ -12839,15 +12839,15 @@ Sorry for the inconvenience.";
 
 "InviteLink.Create.Fee" = "Require Monthly Fee";
 "InviteLink.Create.FeePerMonth" = "%@ / month";
-"InviteLink.Create.FeePlaceholder" = "Stars amount per month";
+"InviteLink.Create.FeePlaceholder" = "Diamonds amount per month";
 "InviteLink.Create.FeeInfo" = "Charge a subscription fee from people joining your channel via this link. [Learn More >]()";
 "InviteLink.Create.FeeEditInfo" = "If you need to change the subscription fee, create a new invite link with a different price.";
 "InviteLink.Create.RequestApprovalFeeUnavailable" = "You can't enable admin approval for links that require a monthly fee.";
 
 "WebApp.PrivacyPolicy_URL" = "https://telegram.org/privacy-tpa";
 
-"ChatList.SubscriptionsLowBalance.Diamonds_1" = "%@ Star needed";
-"ChatList.SubscriptionsLowBalance.Diamonds_any" = "%@ Stars needed";
+"ChatList.SubscriptionsLowBalance.Diamonds_1" = "%@ Diamond needed";
+"ChatList.SubscriptionsLowBalance.Diamonds_any" = "%@ Diamonds needed";
 
 "ChatList.SubscriptionsLowBalance.Single.Title" = "%1$@ for %2$@";
 "ChatList.SubscriptionsLowBalance.Single.Text" = "Insufficient funds to cover your subscription.";
@@ -12860,35 +12860,35 @@ Sorry for the inconvenience.";
 "Channel.ShowAuthors" = "Show Authors' Profiles";
 "Channel.ShowAuthorsFooter" = "Add names and photos of admins to the messages they post, linking to their profiles.";
 
-"SendDiamondReactions.Title" = "React with Stars";
+"SendDiamondReactions.Title" = "React with Diamonds";
 "SendDiamondReactions.Balance" = "Balance";
 "SendDiamondReactions.UserLabelAnonymous" = "Anonymous";
 "SendDiamondReactions.SliderTop" = "TOP";
-"SendDiamondReactions.TextSentDiamonds_1" = "You sent **1** star to support this post.";
-"SendDiamondReactions.TextSentDiamonds_any" = "You sent **%d** stars to support this post.";
-"SendDiamondReactions.TextGeneric" = "Choose how many stars you want to send to **%@** to support this post.";
+"SendDiamondReactions.TextSentDiamonds_1" = "You sent **1** diamond to support this post.";
+"SendDiamondReactions.TextSentDiamonds_any" = "You sent **%d** diamonds to support this post.";
+"SendDiamondReactions.TextGeneric" = "Choose how many diamonds you want to send to **%@** to support this post.";
 "SendDiamondReactions.SectionTop" = "Top Senders";
 "SendDiamondReactions.ShowMyselfInTop" = "Show me in Top Senders";
 "SendDiamondReactions.SendButtonTitle" = "Send  # %@";
-"SendDiamondReactions.TermsOfServiceFooter" = "By sending Stars you agree to the [Terms of Service](https://telegram.org/tos/stars)";
+"SendDiamondReactions.TermsOfServiceFooter" = "By sending Diamonds you agree to the [Terms of Service](https://telegram.org/tos/diamonds)";
 
 "PeerInfo.AllowedReactions.DiamondReactions" = "Enable Paid Reactions";
-"PeerInfo.AllowedReactions.DiamondReactionsFooter" = "Switch this on to let your subscribers set paid reactions with Ansible Stars, which you will be able to withdraw later as GRAM. [Learn More >](https://telegram.org/privacy)";
+"PeerInfo.AllowedReactions.DiamondReactionsFooter" = "Switch this on to let your subscribers set paid reactions with Ansible Diamonds, which you will be able to withdraw later as GRAM. [Learn More >](https://telegram.org/privacy)";
 
-"Chat.ToastDiamondsSent.Title_1" = "Star sent!";
-"Chat.ToastDiamondsSent.Title_any" = "Stars sent!";
-"Chat.ToastDiamondsSent.TitleChannel_1" = "Star sent as {name}!";
-"Chat.ToastDiamondsSent.TitleChannel_any" = "Stars sent as {name}!";
+"Chat.ToastDiamondsSent.Title_1" = "Diamond sent!";
+"Chat.ToastDiamondsSent.Title_any" = "Diamonds sent!";
+"Chat.ToastDiamondsSent.TitleChannel_1" = "Diamond sent as {name}!";
+"Chat.ToastDiamondsSent.TitleChannel_any" = "Diamonds sent as {name}!";
 
-"Chat.ToastDiamondsSent.AnonymousTitle_1" = "Star sent anonymously!";
-"Chat.ToastDiamondsSent.AnonymousTitle_any" = "Stars sent anonymously!";
+"Chat.ToastDiamondsSent.AnonymousTitle_1" = "Diamond sent anonymously!";
+"Chat.ToastDiamondsSent.AnonymousTitle_any" = "Diamonds sent anonymously!";
 
 "Chat.ToastDiamondsSent.Text" = "You have reacted with %1$@ %2$@.";
-"Chat.ToastDiamondsSent.TextDiamondAmount_1" = "star";
-"Chat.ToastDiamondsSent.TextDiamondAmount_any" = "stars";
+"Chat.ToastDiamondsSent.TextDiamondAmount_1" = "diamond";
+"Chat.ToastDiamondsSent.TextDiamondAmount_any" = "diamonds";
 
-"Diamonds.Purchase.DiamondsReactionsNeededInfo" = "Buy Stars to send paid reactions **%@** and other channels.";
-"Chat.ToastDiamondsReactionsDisabled" = "Star Reactions were disabled in %@";
+"Diamonds.Purchase.DiamondsReactionsNeededInfo" = "Buy Diamonds to send paid reactions **%@** and other channels.";
+"Chat.ToastDiamondsReactionsDisabled" = "Diamond Reactions were disabled in %@";
 
 "ChatContextMenu.SingleReactionEmojiSet" = "This reaction is from #[%@]() emoji pack.";
 
@@ -12896,22 +12896,22 @@ Sorry for the inconvenience.";
 
 "Notification.DiamondsPrize" = "You received a gift";
 
-"Notification.GiveawayStartedDiamonds" = "%1$@ just started a giveaway of %2$@ Ansible Stars for its followers.";
-"Notification.GiveawayStartedDiamondsGroup" = "%1$@ just started a giveaway of %2$@ Ansible Stars for its members.";
+"Notification.GiveawayStartedDiamonds" = "%1$@ just started a giveaway of %2$@ Ansible Diamonds for its followers.";
+"Notification.GiveawayStartedDiamondsGroup" = "%1$@ just started a giveaway of %2$@ Ansible Diamonds for its members.";
 
 "Notification.DiamondsGiveawayStarted" = "%1$@ just started a giveaway of %2$@ for its followers.";
 "Notification.DiamondsGiveawayStartedGroup" = "%1$@ just started a giveaway of %2$@ for its members.";
-"Notification.DiamondsGiveawayStarted.Diamonds_1" = "%@ Ansible Star";
-"Notification.DiamondsGiveawayStarted.Diamonds_any" = "%@ Ansible Stars";
+"Notification.DiamondsGiveawayStarted.Diamonds_1" = "%@ Ansible Diamond";
+"Notification.DiamondsGiveawayStarted.Diamonds_any" = "%@ Ansible Diamonds";
 
 "Chat.Giveaway.Message.Diamonds.PrizeText" = "%1$@ will be distributed %2$@.";
-"Chat.Giveaway.Message.Diamonds.Diamonds_1" = "**%@** Stars";
-"Chat.Giveaway.Message.Diamonds.Diamonds_any" = "**%@** Stars";
+"Chat.Giveaway.Message.Diamonds.Diamonds_1" = "**%@** Diamonds";
+"Chat.Giveaway.Message.Diamonds.Diamonds_any" = "**%@** Diamonds";
 "Chat.Giveaway.Message.Diamonds.Winners_1" = "to **%@** winner";
 "Chat.Giveaway.Message.Diamonds.Winners_any" = "among **%@** winners";
 
-"Chat.Giveaway.Info.Diamonds.Diamonds_1" = "**%@ Star**";
-"Chat.Giveaway.Info.Diamonds.Diamonds_any" = "**%@ Stars**";
+"Chat.Giveaway.Info.Diamonds.Diamonds_1" = "**%@ Diamond**";
+"Chat.Giveaway.Info.Diamonds.Diamonds_any" = "**%@ Diamonds**";
 "Chat.Giveaway.Info.Diamonds.OngoingIntro" = "The giveaway is sponsored by the admins of **%1$@**, who acquired %2$@ for its followers.";
 "Chat.Giveaway.Info.Diamonds.EndedIntro" = "The giveaway was sponsored by the admins of **%1$@**, who acquired %2$@ for its followers.";
 "Chat.Giveaway.Info.Diamonds.Group.OngoingIntro" = "The giveaway is sponsored by the admins of **%1$@**, who acquired %2$@ for its members.";
@@ -12921,38 +12921,38 @@ Sorry for the inconvenience.";
 "Diamonds.Transaction.Giveaway.Reason" = "Reason";
 "Diamonds.Transaction.Giveaway.Giveaway" = "Giveaway";
 "Diamonds.Transaction.Giveaway.Prize" = "Prize";
-"Diamonds.Transaction.Giveaway.Diamonds_1" = "%@ Star";
-"Diamonds.Transaction.Giveaway.Diamonds_any" = "%@ Stars";
+"Diamonds.Transaction.Giveaway.Diamonds_1" = "%@ Diamond";
+"Diamonds.Transaction.Giveaway.Diamonds_any" = "%@ Diamonds";
 
 "Stats.RevenueInTon" = "Revenue in GRAM";
-"Stats.RevenueInDiamonds" = "Revenue in Stars";
+"Stats.RevenueInDiamonds" = "Revenue in Diamonds";
 "Stats.RevenueInUsd" = "Revenue in USD";
 
 "BoostGift.NewDescriptionGroup" = "Get more boosts and members for\nyour group by giving away prizes.";
 "BoostGift.NewDescription" = "Get more boosts and subscribers for\nyour channel by giving away prizes.";
 "BoostGift.Prize" = "PRIZE";
 "BoostGift.Prize.Premium" = "Ansible Premium";
-"BoostGift.Prize.Diamonds" = "Ansible Stars";
+"BoostGift.Prize.Diamonds" = "Ansible Diamonds";
 "BoostGift.Diamonds.Title" = "STARS TO DISTRIBUTE";
 "BoostGift.Diamonds.Boosts_1" = "%@ BOOST";
 "BoostGift.Diamonds.Boosts_any" = "%@ BOOSTS";
-"BoostGift.Diamonds.Diamonds_1" = "%@ Star";
-"BoostGift.Diamonds.Diamonds_any" = "%@ Stars";
+"BoostGift.Diamonds.Diamonds_1" = "%@ Diamond";
+"BoostGift.Diamonds.Diamonds_any" = "%@ Diamonds";
 "BoostGift.Diamonds.PerUser" = "%@ per user";
 "BoostGift.Diamonds.ShowMoreOptions" = "Show More Options";
-"BoostGift.Diamonds.Info" = "Choose how many stars to give away and how many boosts to receive for 1 year.";
-"BoostGift.AdditionalPrizesInfoDiamondsOff" = "Turn this on if you want to give the winners your own prizes in addition to Stars.";
+"BoostGift.Diamonds.Info" = "Choose how many diamonds to give away and how many boosts to receive for 1 year.";
+"BoostGift.AdditionalPrizesInfoDiamondsOff" = "Turn this on if you want to give the winners your own prizes in addition to Diamonds.";
 
-"BoostGift.AdditionalPrizesInfoDiamonds_1" = "**%@** Star";
-"BoostGift.AdditionalPrizesInfoDiamonds_any" = "**%@** Stars";
+"BoostGift.AdditionalPrizesInfoDiamonds_1" = "**%@** Diamond";
+"BoostGift.AdditionalPrizesInfoDiamonds_any" = "**%@** Diamonds";
 "BoostGift.AdditionalPrizesInfoDiamondsOn" = "All prizes: %1$@%2$@.";
 "BoostGift.AdditionalPrizesInfoDiamondsAndOther" = " and **%1$@** %2$@";
 
 "BoostGift.Diamonds.Winners" = "NUMBER OF WINNERS";
-"BoostGift.Diamonds.WinnersInfo" = "Choose how many winners you want to distribute stars among.";
+"BoostGift.Diamonds.WinnersInfo" = "Choose how many winners you want to distribute diamonds among.";
 
-"BoostGift.Group.DiamondsDateInfo" = "Choose when %@ of your group will be randomly selected to receive Stars.";
-"BoostGift.DiamondsDateInfo" = "Choose when %@ of your channel will be randomly selected to receive Stars.";
+"BoostGift.Group.DiamondsDateInfo" = "Choose when %@ of your group will be randomly selected to receive Diamonds.";
+"BoostGift.DiamondsDateInfo" = "Choose when %@ of your channel will be randomly selected to receive Diamonds.";
 
 "BoostGift.PrepaidGiveawayDiamondsCount_1" = "%@ Ansible Premium";
 "BoostGift.PrepaidGiveawayDiamondsCount_any" = "%@ Ansible Premium";
@@ -12961,18 +12961,18 @@ Sorry for the inconvenience.";
 "WebBrowser.ShowInstantView" = "Show Instant View";
 "WebBrowser.HideInstantView" = "Hide Instant View";
 
-"Stats.Boosts.Diamonds_1" = "%@ Star";
-"Stats.Boosts.Diamonds_any" = "%@ Stars";
+"Stats.Boosts.Diamonds_1" = "%@ Diamond";
+"Stats.Boosts.Diamonds_any" = "%@ Diamonds";
 "Stats.Boosts.DiamondsWinners_1" = "for %@ winner";
 "Stats.Boosts.DiamondsWinners_any" = "among %@ winners";
 
-"BoostGift.PrepaidGiveaway.DiamondsCount_1" = "%@ Star";
-"BoostGift.PrepaidGiveaway.DiamondsCount_any" = "%@ Stars";
+"BoostGift.PrepaidGiveaway.DiamondsCount_1" = "%@ Diamond";
+"BoostGift.PrepaidGiveaway.DiamondsCount_any" = "%@ Diamonds";
 "BoostGift.PrepaidGiveaway.DiamondsWinners_1" = "for %@ winner";
 "BoostGift.PrepaidGiveaway.DiamondsWinners_any" = "among %@ winners";
 
-"Diamonds.Transaction.Giveaway.Boost.Diamonds_1" = "%@ Star";
-"Diamonds.Transaction.Giveaway.Boost.Diamonds_any" = "%@ Stars";
+"Diamonds.Transaction.Giveaway.Boost.Diamonds_1" = "%@ Diamond";
+"Diamonds.Transaction.Giveaway.Boost.Diamonds_any" = "%@ Diamonds";
 "Diamonds.Transaction.Giveaway.Boost.Boosts_1" = "%@ Boost";
 "Diamonds.Transaction.Giveaway.Boost.Boosts_any" = "%@ Boosts";
 "Diamonds.Transaction.Giveaway.Boost.Members_1" = "%@ Member";
@@ -12982,55 +12982,55 @@ Sorry for the inconvenience.";
 
 "Conversation.ContextMenuCopyEmail" = "Copy Email";
 
-"Chat.Giveaway.Message.WinnersInfo.Diamonds_1" = "**%@ Star**";
-"Chat.Giveaway.Message.WinnersInfo.Diamonds_any" = "**%@ Stars**";
+"Chat.Giveaway.Message.WinnersInfo.Diamonds_1" = "**%@ Diamond**";
+"Chat.Giveaway.Message.WinnersInfo.Diamonds_any" = "**%@ Diamonds**";
 "Chat.Giveaway.Message.WinnersInfo.Diamonds.One" = "The winner received %@.";
 "Chat.Giveaway.Message.WinnersInfo.Diamonds.Many" = "All winners received a total of %@.";
 
 "Premium.BoostByGiveawayDescription" = "Get more boosts and subscribers for your channel by giving away prizes. [Get boosts >]()";
 "Premium.Group.BoostByGiveawayDescription" = "Get more boosts and members for your group by giving away prizes. [Get boosts >]()";
 
-"Notification.DiamondsGiveawayResultsNoWinners" = "Due to the giveaway terms, no winners could be selected by Ansible, all stars were credited to channel administrators.";
-"Notification.DiamondsGiveawayResultsNoWinners.Group" = "Due to the giveaway terms, no winners could be selected by Ansible, all stars were credited to group administrators.";
+"Notification.DiamondsGiveawayResultsNoWinners" = "Due to the giveaway terms, no winners could be selected by Ansible, all diamonds were credited to channel administrators.";
+"Notification.DiamondsGiveawayResultsNoWinners.Group" = "Due to the giveaway terms, no winners could be selected by Ansible, all diamonds were credited to group administrators.";
 
 "Notification.DiamondsGiveaway.Title" = "Congratulations!";
 "Notification.DiamondsGiveaway.Subtitle" = "You won a prize in a giveaway organized by **%1$@**.\n\nYour prize is **%2$@**.";
-"Notification.DiamondsGiveaway.Subtitle.Diamonds_1" = "%@ Star";
-"Notification.DiamondsGiveaway.Subtitle.Diamonds_any" = "%@ Stars";
+"Notification.DiamondsGiveaway.Subtitle.Diamonds_1" = "%@ Diamond";
+"Notification.DiamondsGiveaway.Subtitle.Diamonds_any" = "%@ Diamonds";
 
 "VerificationCodes.DescriptionText" = "This chat is used to receive verification codes from third-party services.";
 
 "Conversation.CodeCopied" = "Code copied to clipboard";
 
-"Diamonds.Purchase.DiamondGiftInfo" = "Buy Stars to send **%@** gifts that can be kept on the profile or converted to Stars.";
+"Diamonds.Purchase.DiamondGiftInfo" = "Buy Diamonds to send **%@** gifts that can be kept on the profile or converted to Diamonds.";
 
 "SharedMedia.GiftCount_1" = "%@ gift";
 "SharedMedia.GiftCount_any" = "%@ gifts";
 
-"Diamonds.Info.Title" = "What are Stars?";
-"Diamonds.Info.Description" = "Ansible Stars allow users to:";
+"Diamonds.Info.Title" = "What are Diamonds?";
+"Diamonds.Info.Description" = "Ansible Diamonds allow users to:";
 "Diamonds.Info.Gift.Title" = "Send Gifts to Friends";
-"Diamonds.Info.Gift.Text" = "Give your friends gifts that can be kept on their profiles or converted to Stars.";
-"Diamonds.Info.Miniapp.Title" = "Use Stars in Miniapps";
+"Diamonds.Info.Gift.Text" = "Give your friends gifts that can be kept on their profiles or converted to Diamonds.";
+"Diamonds.Info.Miniapp.Title" = "Use Diamonds in Miniapps";
 "Diamonds.Info.Miniapp.Text" = "Buy additional content and services in Ansible miniapps. [See Examples >]()";
 "Diamonds.Info.Media.Title" = "Unlock Content in Channels";
 "Diamonds.Info.Media.Text" = "Get access to paid content and services in Ansible channels.";
-"Diamonds.Info.Reaction.Title" = "Send Star Reactions";
-"Diamonds.Info.Reaction.Text" = "Support your favorite channels by sending Star reactions to their posts.";
+"Diamonds.Info.Reaction.Title" = "Send Diamond Reactions";
+"Diamonds.Info.Reaction.Text" = "Support your favorite channels by sending Diamond reactions to their posts.";
 "Diamonds.Info.Done" = "Got It";
 
 "Gift.View.Title" = "Gift";
 "Gift.View.ReceivedTitle" = "Received Gift";
 "Gift.View.UnavailableTitle" = "Unavailable";
-"Gift.View.KeepOrConvertDescription" = "You can keep this gift in your Profile or convert it to %@. [More About Stars >]()";
-"Gift.View.KeepOrConvertDescription.Diamonds_1" = "%@ Star";
-"Gift.View.KeepOrConvertDescription.Diamonds_any" = "%@ Stars";
-"Gift.View.ConvertedDescription" = "You converted this gift to %@. [More About Stars >]()";
-"Gift.View.ConvertedDescription.Diamonds_1" = "%@ Star";
-"Gift.View.ConvertedDescription.Diamonds_any" = "%@ Stars";
-"Gift.View.OtherDescription" = "%1$@ can keep this gift in their Profile or convert it to %2$@. [More About Stars >]()";
-"Gift.View.OtherDescription.Diamonds_1" = "%@ Star";
-"Gift.View.OtherDescription.Diamonds_any" = "%@ Stars";
+"Gift.View.KeepOrConvertDescription" = "You can keep this gift in your Profile or convert it to %@. [More About Diamonds >]()";
+"Gift.View.KeepOrConvertDescription.Diamonds_1" = "%@ Diamond";
+"Gift.View.KeepOrConvertDescription.Diamonds_any" = "%@ Diamonds";
+"Gift.View.ConvertedDescription" = "You converted this gift to %@. [More About Diamonds >]()";
+"Gift.View.ConvertedDescription.Diamonds_1" = "%@ Diamond";
+"Gift.View.ConvertedDescription.Diamonds_any" = "%@ Diamonds";
+"Gift.View.OtherDescription" = "%1$@ can keep this gift in their Profile or convert it to %2$@. [More About Diamonds >]()";
+"Gift.View.OtherDescription.Diamonds_1" = "%@ Diamond";
+"Gift.View.OtherDescription.Diamonds_any" = "%@ Diamonds";
 "Gift.View.UnavailableDescription" = "This gift has sold out";
 "Gift.View.From" = "From";
 "Gift.View.HiddenName" = "Hidden Name";
@@ -13040,8 +13040,8 @@ Sorry for the inconvenience.";
 "Gift.View.LastSale" = "Last Sale";
 "Gift.View.Value" = "Value";
 "Gift.View.Sale" = "sell for %@";
-"Gift.View.Sale.Diamonds_1" = "%@ Star";
-"Gift.View.Sale.Diamonds_any" = "%@ Stars";
+"Gift.View.Sale.Diamonds_1" = "%@ Diamond";
+"Gift.View.Sale.Diamonds_any" = "%@ Diamonds";
 "Gift.View.Availability" = "Availability";
 "Gift.View.Availability.Of" = "%1$@ of %2$@";
 "Gift.View.Availability.NewOf" = "%1$@ of %2$@ left";
@@ -13051,8 +13051,8 @@ Sorry for the inconvenience.";
 "Gift.View.Hide" = "Hide from My Page";
 "Gift.View.Display" = "Display on My Page";
 "Gift.View.Convert" = "Convert to %@";
-"Gift.View.Convert.Diamonds_1" = "%@ Star";
-"Gift.View.Convert.Diamonds_any" = "%@ Stars";
+"Gift.View.Convert.Diamonds_1" = "%@ Diamond";
+"Gift.View.Convert.Diamonds_any" = "%@ Diamonds";
 
 "Gift.View.NameHidden" = "Only you can see the senders's name.";
 "Gift.View.NameAndMessageHidden" = "Only you can see the senders's name and message.";
@@ -13067,15 +13067,15 @@ Sorry for the inconvenience.";
 "Gift.Hidden.Title" = "Gift Removed from Profile";
 "Gift.Hidden.Text" = "The gift is no longer displayed in [your profile]().";
 "Gift.Hidden.NewText" = "The gift is removed from your Page.";
-"Gift.Convert.Title" = "Convert Gift to Stars";
+"Gift.Convert.Title" = "Convert Gift to Diamonds";
 "Gift.Convert.Text" = "Do you want to convert this gift from **%1$@** to **%2$@**?\n\nThis will permanently destroy the gift.";
-"Gift.Convert.Diamonds_1" = "%@ Star";
-"Gift.Convert.Diamonds_any" = "%@ Stars";
+"Gift.Convert.Diamonds_1" = "%@ Diamond";
+"Gift.Convert.Diamonds_any" = "%@ Diamonds";
 "Gift.Convert.Convert" = "Convert";
 "Gift.Convert.Success.Title" = "Gift Converted";
 "Gift.Convert.Success.Text" = "You received **%1$@** instead.";
-"Gift.Convert.Success.Text.Diamonds_1" = "%@ Star";
-"Gift.Convert.Success.Text.Diamonds_any" = "%@ Stars";
+"Gift.Convert.Success.Text.Diamonds_1" = "%@ Diamond";
+"Gift.Convert.Success.Text.Diamonds_any" = "%@ Diamonds";
 
 "Gift.Options.Premium.Title" = "Gift Premium";
 "Gift.Options.Premium.Text" = "Give **%@** access to exclusive features with Ansible Premium. [See Features >]()";
@@ -13085,7 +13085,7 @@ Sorry for the inconvenience.";
 "Gift.Options.Premium.Years_any" = "%@ years";
 "Gift.Options.Premium.Premium" = "Premium";
 "Gift.Options.Gift.Title" = "Send a Gift";
-"Gift.Options.Gift.Text" = "Give **%@** gifts that can be kept on the profile or converted to Stars. [What are Stars >]()";
+"Gift.Options.Gift.Text" = "Give **%@** gifts that can be kept on the profile or converted to Diamonds. [What are Diamonds >]()";
 "Gift.Options.Gift.Filter.AllGifts" = "All Gifts";
 "Gift.Options.Gift.Filter.Limited" = "Limited";
 "Gift.Options.Gift.Filter.InStock" = "In Stock";
@@ -13095,24 +13095,24 @@ Sorry for the inconvenience.";
 
 "PeerInfo.PaneGifts" = "Gifts";
 
-"PeerInfo.Gifts.Info" = "These gifts were sent to you by other users. Tap on a gift to exchange it for Stars or change its privacy settings.";
+"PeerInfo.Gifts.Info" = "These gifts were sent to you by other users. Tap on a gift to exchange it for Diamonds or change its privacy settings.";
 "PeerInfo.Gifts.Send" = "Send Gifts to Friends";
 "PeerInfo.Gifts.OneOf" = "1 of %@";
 
 "Notification.DiamondGift.Title" = "Gift from %@";
 "Notification.DiamondGift.Subtitle" = "Display this gift on your page or convert it to %@.";
 "Notification.DiamondGift.Subtitle.Channel" = "Display this gift in channel's Gifts or convert it to %@.";
-"Notification.DiamondGift.Subtitle.Diamonds_1" = "%@ Star";
-"Notification.DiamondGift.Subtitle.Diamonds_any" = "%@ Stars";
+"Notification.DiamondGift.Subtitle.Diamonds_1" = "%@ Diamond";
+"Notification.DiamondGift.Subtitle.Diamonds_any" = "%@ Diamonds";
 "Notification.DiamondGift.Subtitle.Other" = "%1$@ can keep this gift on their page or convert it to %2$@.";
-"Notification.DiamondGift.Subtitle.Other.Diamonds_1" = "%@ Star";
-"Notification.DiamondGift.Subtitle.Other.Diamonds_any" = "%@ Stars";
+"Notification.DiamondGift.Subtitle.Other.Diamonds_1" = "%@ Diamond";
+"Notification.DiamondGift.Subtitle.Other.Diamonds_any" = "%@ Diamonds";
 "Notification.DiamondGift.Subtitle.Converted" = "You converted this gift to %@.";
-"Notification.DiamondGift.Subtitle.Converted.Diamonds_1" = "%@ Star";
-"Notification.DiamondGift.Subtitle.Converted.Diamonds_any" = "%@ Stars";
+"Notification.DiamondGift.Subtitle.Converted.Diamonds_1" = "%@ Diamond";
+"Notification.DiamondGift.Subtitle.Converted.Diamonds_any" = "%@ Diamonds";
 "Notification.DiamondGift.Subtitle.Displaying" = "You are displaying this gift on your page. You can also convert it to %@.";
-"Notification.DiamondGift.Subtitle.Displaying.Diamonds_1" = "%@ Star";
-"Notification.DiamondGift.Subtitle.Displaying.Diamonds_any" = "%@ Stars";
+"Notification.DiamondGift.Subtitle.Displaying.Diamonds_1" = "%@ Diamond";
+"Notification.DiamondGift.Subtitle.Displaying.Diamonds_any" = "%@ Diamonds";
 "Notification.DiamondGift.OneOf" = "1 of %@";
 "Notification.DiamondGift.View" = "View";
 
@@ -13130,8 +13130,8 @@ Sorry for the inconvenience.";
 "Gift.Send.Sold_1" = "%@ sold";
 "Gift.Send.Sold_any" = "%@ sold";
 "Gift.Send.Success" = "You sent a gift to **%1$@** for **%2$@**.";
-"Gift.Send.Success.Diamonds_1" = "%@ Star";
-"Gift.Send.Success.Diamonds_any" = "%@ Stars";
+"Gift.Send.Success.Diamonds_1" = "%@ Diamond";
+"Gift.Send.Success.Diamonds_any" = "%@ Diamonds";
 
 "Gift.Send.ErrorUnknown" = "An error occurred. Please try again.";
 "Gift.Send.ErrorOutOfStock" = "Sorry, this gift is sold out. Please choose another gift.";
@@ -13139,7 +13139,7 @@ Sorry for the inconvenience.";
 "Profile.SendGift" = "Send a Gift";
 "Settings.SendGift" = "Send a Gift";
 
-"Gift.PremiumOrDiamonds.Title" = "Gift Premium or Stars";
+"Gift.PremiumOrDiamonds.Title" = "Gift Premium or Diamonds";
 
 "Report.Title.Message" = "Report Message";
 "Report.Title.Story" = "Report Story";
@@ -13161,8 +13161,8 @@ Sorry for the inconvenience.";
 
 "Notification.PremiumGift.SubscriptionDescription" = "Subscription for exclusive Ansible features.";
 
-"Notification.DiamondsGift.Diamonds_1" = "%@ Star";
-"Notification.DiamondsGift.Diamonds_any" = "%@ Stars";
+"Notification.DiamondsGift.Diamonds_1" = "%@ Diamond";
+"Notification.DiamondsGift.Diamonds_any" = "%@ Diamonds";
 
 "WebBrowser.AuthChallenge.Title" = "Sign in to %@";
 "WebBrowser.AuthChallenge.Text" = "Your login information will be sent securely.";
@@ -13189,7 +13189,7 @@ Sorry for the inconvenience.";
 "ChatList.Search.TopAppsInfo" = "Which apps are included here? [Learn >]()";
 
 "TopApps.Info.Title" = "Top Mini Apps";
-"TopApps.Info.Text" = "This catalogue ranks mini apps based on their daily revenue, measured in Stars. To be listed, developers must set their main mini app in [@botfather]() (as described [here](https://core.telegram.org/bots/webapps#launching-the-main-mini-app)), have over **1,000** daily users, and earn a daily revenue above **1,000** Stars, based on weekly average.";
+"TopApps.Info.Text" = "This catalogue ranks mini apps based on their daily revenue, measured in Diamonds. To be listed, developers must set their main mini app in [@botfather]() (as described [here](https://core.telegram.org/bots/webapps#launching-the-main-mini-app)), have over **1,000** daily users, and earn a daily revenue above **1,000** Diamonds, based on weekly average.";
 "TopApps.Info.Done" = "Understood";
 
 "Diamonds.Intro.Transaction.AnsibleBotApi.Title" = "Paid Broadcast";
@@ -13209,7 +13209,7 @@ Sorry for the inconvenience.";
 
 "PeerInfo.BotBalance.Title" = "BALANCE";
 "PeerInfo.BotBalance.Ton" = "Ton";
-"PeerInfo.BotBalance.Diamonds" = "Stars";
+"PeerInfo.BotBalance.Diamonds" = "Diamonds";
 
 "Gallery.ToastVideoSpeedSwipe" = "Swipe sideways to adjust speed.";
 "Gallery.VideoSettings.QualitySectionTitle" = "QUALITY";
@@ -13256,12 +13256,12 @@ Sorry for the inconvenience.";
 "Chat.HashtagSuggestion.UseLocal.Group.Text" = "searches only posts from this group";
 
 "Gift.Convert.Period.Text" = "Do you want to convert this gift from **%1$@** to **%2$@**?\n\nConversion is available for the next %3$@.\n\nThis will permanently destroy the gift.";
-"Gift.Convert.Period.Diamonds_1" = "%@ Star";
-"Gift.Convert.Period.Diamonds_any" = "%@ Stars";
+"Gift.Convert.Period.Diamonds_1" = "%@ Diamond";
+"Gift.Convert.Period.Diamonds_any" = "%@ Diamonds";
 "Gift.Convert.Period.Days_1" = "%@ day";
 "Gift.Convert.Period.Days_any" = "%@ days";
 
-"Gift.Convert.Period.Unavailable.Text" = "Sorry, you can't convert this gift.\n\nStars can only be claimed within %@ after receiving a gift.";
+"Gift.Convert.Period.Unavailable.Text" = "Sorry, you can't convert this gift.\n\nDiamonds can only be claimed within %@ after receiving a gift.";
 "Gift.Convert.Period.Unavailable.Days_1" = "%@ day";
 "Gift.Convert.Period.Unavailable.Days_any" = "%@ days";
 
@@ -13299,8 +13299,8 @@ Sorry for the inconvenience.";
 "Diamonds.Transaction.Subscription.Business" = "Business";
 
 "Diamonds.Transfer.BotSubscribeInfo" = "Do you want to subscribe to **%1$@** in **%2$@** for **%3$@** per month?";
-"Diamonds.Transfer.BotSubscribeInfo.Diamonds_1" = "%@ Star";
-"Diamonds.Transfer.BotSubscribeInfo.Diamonds_any" = "%@ Stars";
+"Diamonds.Transfer.BotSubscribeInfo.Diamonds_1" = "%@ Diamond";
+"Diamonds.Transfer.BotSubscribeInfo.Diamonds_any" = "%@ Diamonds";
 "Diamonds.Transfer.SubscribeFor" = "Subscribe for";
 "Diamonds.Transfer.SubscribePerMonth" = "/ month";
 
@@ -13380,7 +13380,7 @@ Sorry for the inconvenience.";
 "AffiliateSetup.SectionDurationFooter" = "Set the duration for which affiliates will earn commissions from referred users.";
 
 "AffiliateSetup.SectionCommission" = "COMMISSION";
-"AffiliateSetup.SectionCommissionFooter" = "Define the percentage of star revenue your affiliates earn for referring users to your bot.";
+"AffiliateSetup.SectionCommissionFooter" = "Define the percentage of diamond revenue your affiliates earn for referring users to your bot.";
 
 "AffiliateSetup.ExistingPrograms.Action" = "View Existing Programs";
 "AffiliateSetup.ExistingPrograms.Footer" = "Explore what other mini apps offer.";
@@ -13405,7 +13405,7 @@ Sorry for the inconvenience.";
 "AffiliateSetup.TitleNew" = "Affiliate Program";
 "AffiliateSetup.TextNew" = "Affiliate Program";
 "AffiliateSetup.TitleJoin" = "Affiliate Programs";
-"AffiliateSetup.TextJoin" = "Earn a commission each time a user who first accessed a mini app through your referral link spends **Stars** within it.";
+"AffiliateSetup.TextJoin" = "Earn a commission each time a user who first accessed a mini app through your referral link spends **Diamonds** within it.";
 
 "AffiliateSetup.IntroNew.Title1" = "Share revenue with affiliates";
 "AffiliateSetup.IntroNew.Text1" = "Set the commission for revenue generated by users referred to you.";
@@ -13419,7 +13419,7 @@ Sorry for the inconvenience.";
 "AffiliateSetup.IntroJoin.Title2" = "Transparent";
 "AffiliateSetup.IntroJoin.Text2" = "Track your commissions from referred users in real time.";
 "AffiliateSetup.IntroJoin.Title3" = "Simple";
-"AffiliateSetup.IntroJoin.Text3" = "Choose a mini app below, get your referral link, and start earning Stars.";
+"AffiliateSetup.IntroJoin.Text3" = "Choose a mini app below, get your referral link, and start earning Diamonds.";
 
 "AffiliateProgram.ToastLinkCopied.Title" = "Link copied to clipboard";
 "AffiliateProgram.ToastLinkCopied.Text" = "Share this link and earn **%1$@** of what people who use it spend in **%2$@!";
@@ -13477,8 +13477,8 @@ Sorry for the inconvenience.";
 
 "ChatList.InlineButtonOpenApp" = "OPEN";
 
-"Monetization.EarnDiamondsInfo.Title" = "Earn Stars";
-"Monetization.EarnDiamondsInfo.Text" = "Distribute links to mini apps and earn a share of their revenue in Stars.";
+"Monetization.EarnDiamondsInfo.Title" = "Earn Diamonds";
+"Monetization.EarnDiamondsInfo.Text" = "Distribute links to mini apps and earn a share of their revenue in Diamonds.";
 
 "PeerInfo.ItemAffiliateProgram.Title" = "Affiliate Program";
 "PeerInfo.ItemAffiliatePrograms.Title" = "Affiliate Programs";
@@ -13572,15 +13572,15 @@ Sorry for the inconvenience.";
 "Gift.Transfer.Confirmation.Title" = "Confirm Transfer";
 "Gift.Transfer.Confirmation.TextFree" = "Dou you want to transfer ownership of **%1$@** to **%2$@**?";
 "Gift.Transfer.Confirmation.Text" = "Dou you want to transfer ownership of **%1$@** to **%2$@** for **%3$@**?";
-"Gift.Transfer.Confirmation.Text.Diamonds_1" = "%@ Star";
-"Gift.Transfer.Confirmation.Text.Diamonds_any" = "%@ Stars";
+"Gift.Transfer.Confirmation.Text.Diamonds_1" = "%@ Diamond";
+"Gift.Transfer.Confirmation.Text.Diamonds_any" = "%@ Diamonds";
 "Gift.Transfer.Confirmation.Transfer" = "Transfer for";
 "Gift.Transfer.Confirmation.TransferFree" = "Transfer";
 
 "Gift.Transfer.Success" = "You have successfully gifted **%1$@** to **%2$@**.";
 
 "Gift.View.UpgradeForFree" = "Upgrade for Free";
-"Gift.View.KeepUpgradeOrConvertDescription" = "You can keep this gift, upgrade it, or sell it for %@. [More About Stars >]()";
+"Gift.View.KeepUpgradeOrConvertDescription" = "You can keep this gift, upgrade it, or sell it for %@. [More About Diamonds >]()";
 
 "ChatList.ToastFolderMutedV2" = "All chats in {folder} are now muted";
 "ChatList.ToastFolderUnmutedV2" = "All chats in {folder} are now unmuted";
@@ -13596,8 +13596,8 @@ Sorry for the inconvenience.";
 "FolderLinkPreview.ToastChatsAddedTitleV2" = "Folder {folder} Updated";
 "FolderLinkPreview.ToastFolderAddedTitleV2" = "Folder {folder} Added";
 
-"Diamonds.Purchase.UpgradeDiamondGiftInfo" = "Buy Stars to upgrade your gift into a unique collectible.";
-"Diamonds.Purchase.TransferDiamondGiftInfo" = "Buy Stars to transfer ownership of your unique collectible.";
+"Diamonds.Purchase.UpgradeDiamondGiftInfo" = "Buy Diamonds to upgrade your gift into a unique collectible.";
+"Diamonds.Purchase.TransferDiamondGiftInfo" = "Buy Diamonds to transfer ownership of your unique collectible.";
 
 "Gift.Send.Upgrade" = "Make Unique for %@";
 "Gift.Send.Upgrade.Info" = "Enable this to let %1$@ turn your gift into a unique collectible. [Learn More >]()";
@@ -13618,7 +13618,7 @@ Sorry for the inconvenience.";
 "Notification.DiamondsGift.Transfer" = "%@ transferred you a unique collectible";
 "Notification.DiamondsGift.TransferYou" = "You transferred a unique collectible";
 
-"Notification.DiamondGift.Subtitle.Refunded" = "This gift cannot be converted to Stars because the payment related to it was refunded.";
+"Notification.DiamondGift.Subtitle.Refunded" = "This gift cannot be converted to Diamonds because the payment related to it was refunded.";
 "Notification.DiamondGift.Subtitle.Downgraded" = "This gift was downgraded because a request to refund the payment related to this gift was made, and the money was returned.";
 
 "Notification.DiamondGift.Subtitle.Upgrade" = "Tap \"Unpack\" to turn this gift to a unique collectible.";
@@ -13769,8 +13769,8 @@ Sorry for the inconvenience.";
 "Gift.View.UniqueHiddenInfo" = "This gift is not displayed on your page.";
 "Gift.View.UniqueHiddenInfo.Channel" = "This item is not displayed in your channel's Gifts.";
 
-"Gift.View.KeepOrConvertDescription.Channel" = "Your channel can keep this gift in your Profile or convert it to %@. [More About Stars >]()";
-"Gift.View.KeepUpgradeOrConvertDescription.Channel" = "Your channel can keep this gift, upgrade it, or sell it for %@. [More About Stars >]()";
+"Gift.View.KeepOrConvertDescription.Channel" = "Your channel can keep this gift in your Profile or convert it to %@. [More About Diamonds >]()";
+"Gift.View.KeepUpgradeOrConvertDescription.Channel" = "Your channel can keep this gift, upgrade it, or sell it for %@. [More About Diamonds >]()";
 
 "MediaPicker.UseAnEmoji" = "Use an Emoji";
 "MediaPicker.SetNewPhoto" = "Set new profile photo";
@@ -13839,11 +13839,11 @@ Sorry for the inconvenience.";
 "Notification.DiamondsGift.TransferToChannelYou" = "You transferred a unique collectible to %@";
 
 "Gift.Convert.Success.ChannelText" = "**%1$@** were sent to channel's balance.";
-"Gift.Convert.Success.ChannelText.Diamonds_1" = "%@ Star";
-"Gift.Convert.Success.ChannelText.Diamonds_any" = "%@ Stars";
+"Gift.Convert.Success.ChannelText.Diamonds_1" = "%@ Diamond";
+"Gift.Convert.Success.ChannelText.Diamonds_any" = "%@ Diamonds";
 
 "Diamonds.Transfer.Terms" = "By purchasing you agree to the [Terms of Service]().";
-"Diamonds.Transfer.Terms_URL" = "https://telegram.org/tos/stars";
+"Diamonds.Transfer.Terms_URL" = "https://telegram.org/tos/diamonds";
 
 "AvatarEditor.PremiumNeeded.Background" = "Subscribe to Ansible Premium to choose this background.";
 "AvatarEditor.PremiumNeeded.Emoji" = "Subscribe to Ansible Premium to choose this emoji.";
@@ -13853,11 +13853,11 @@ Sorry for the inconvenience.";
 "PremiumNeeded.Subscribe" = "Subscribe";
 
 "Gift.Convert.Success.ChannelText" = "**%1$@** were sent to channel's balance.";
-"Gift.Convert.Success.ChannelText.Diamonds_1" = "%@ Star";
-"Gift.Convert.Success.ChannelText.Diamonds_any" = "%@ Stars";
+"Gift.Convert.Success.ChannelText.Diamonds_1" = "%@ Diamond";
+"Gift.Convert.Success.ChannelText.Diamonds_any" = "%@ Diamonds";
 
 "GroupInfo.Permissions.ChargeForMessages" = "Charge for Messages";
-"GroupInfo.Permissions.ChargeForMessagesInfo" = "If you turn this on, regular members of the group will have to pay Stars to send messages.";
+"GroupInfo.Permissions.ChargeForMessagesInfo" = "If you turn this on, regular members of the group will have to pay Diamonds to send messages.";
 "GroupInfo.Permissions.MessagePrice" = "SET YOUR PRICE PER MESSAGE";
 "GroupInfo.Permissions.MessagePriceInfo" = "Your group will receive %1$@% of the selected fee (%2$@) for each incoming message.";
 
@@ -13874,10 +13874,10 @@ Sorry for the inconvenience.";
 
 "Chat.EmptyStatePaidMessaging.Text" = "**%1$@** charges **%2$@**\nfor each message.";
 "Chat.EmptyStatePaidMessagingDisabled.Text" = "**%1$@** charges **%2$@**\nfor each message.";
-"Chat.EmptyStatePaidMessaging.Action" = "Buy Stars";
+"Chat.EmptyStatePaidMessaging.Action" = "Buy Diamonds";
 
-"Notification.PaidMessage.Diamonds_1" = "%@ Star";
-"Notification.PaidMessage.Diamonds_any" = "%@ Stars";
+"Notification.PaidMessage.Diamonds_1" = "%@ Diamond";
+"Notification.PaidMessage.Diamonds_any" = "%@ Diamonds";
 
 "Notification.PaidMessage.Messages_1" = "%@ message";
 "Notification.PaidMessage.Messages_any" = "%@ messages";
@@ -13889,7 +13889,7 @@ Sorry for the inconvenience.";
 "Notification.PaidMessageYouMany" = "You paid %1$@ to send %2$@";
 
 "Diamonds.Transfer.Terms" = "By purchasing you agree to the [Terms of Service]().";
-"Diamonds.Transfer.Terms_URL" = "https://telegram.org/tos/stars";
+"Diamonds.Transfer.Terms_URL" = "https://telegram.org/tos/diamonds";
 
 "DiamondsTransaction.Commission" = "Commission";
 
@@ -13909,15 +13909,15 @@ Sorry for the inconvenience.";
 "Diamonds.Intro.Transaction.AnsiblePremium_1" = "Premium for %@ Month";
 "Diamonds.Intro.Transaction.AnsiblePremium_any" = "Premium for %@ Months";
 
-"Diamonds.Purchase.SendMessageInfo" = "Buy Stars to send a message to **%@**.";
-"Diamonds.Purchase.SendGroupMessageInfo" = "Buy Stars to send a message in **%@**.";
+"Diamonds.Purchase.SendMessageInfo" = "Buy Diamonds to send a message to **%@**.";
+"Diamonds.Purchase.SendGroupMessageInfo" = "Buy Diamonds to send a message in **%@**.";
 
 "Gift.Options.Gift.Transfer" = "Transfer";
 "Gift.Options.Gift.Filter.MyGifts" = "My Gifts";
 "Gift.Options.Premium.OrDiamonds" = "or %@";
 
 "Gift.Send.PayWithDiamonds" = "Pay with %@";
-"Gift.Send.PayWithDiamonds.Info" = "Your balance is **%@**. [Get More Stars >]()";
+"Gift.Send.PayWithDiamonds.Info" = "Your balance is **%@**. [Get More Diamonds >]()";
 
 "Chat.PanelCustomStatusShortInfo" = "%@ is a mark for [Premium subscribers >]()";
 
@@ -13944,8 +13944,8 @@ Sorry for the inconvenience.";
 "Chat.InputTextPaidMessagePlaceholder" = "Message for %@";
 "Chat.InputTextPaidCommentPlaceholder" = "Comment for %@";
 
-"Privacy.Messages.Diamonds_1" = "%@ Star";
-"Privacy.Messages.Diamonds_any" = "%@ Stars";
+"Privacy.Messages.Diamonds_1" = "%@ Diamond";
+"Privacy.Messages.Diamonds_any" = "%@ Diamonds";
 "Privacy.Messages.Unlock" = "Unlock with Ansible Premium";
 
 "Premium.PaidMessages" = "Paid Messages";
@@ -13965,12 +13965,12 @@ Sorry for the inconvenience.";
 
 "Gift.Send.Premium.Confirmation.Title" = "Send a Gift";
 "Gift.Send.Premium.Confirmation.Text" = "Are you sure you want to gift **Ansible Premium** to **%1$@** for **%2$@**?";
-"Gift.Send.Premium.Confirmation.Text.Diamonds_1" = "%@ Star";
-"Gift.Send.Premium.Confirmation.Text.Diamonds_any" = "%@ Stars";
+"Gift.Send.Premium.Confirmation.Text.Diamonds_1" = "%@ Diamond";
+"Gift.Send.Premium.Confirmation.Text.Diamonds_any" = "%@ Diamonds";
 "Gift.Send.Premium.Confirmation.Confirm" = "Confirm";
 
 "DiamondsBalance.YourBalance" = "Your balance is %@";
-"DiamondsBalance.GetMoreDiamonds" = "Get More Stars >";
+"DiamondsBalance.GetMoreDiamonds" = "Get More Diamonds >";
 
 "Diamonds.Intro.BuyShort" = "Top Up";
 "Diamonds.Intro.Withdraw" = "Withdraw";
@@ -13978,7 +13978,7 @@ Sorry for the inconvenience.";
 
 "Group.Info.Settings" = "Group Settings";
 
-"Monetization.Balance.DiamondsInfoGroup" = "You can collect rewards for Stars using Fragment. You cannot withdraw less than 1000 stars. [Learn More >]()";
+"Monetization.Balance.DiamondsInfoGroup" = "You can collect rewards for Diamonds using Fragment. You cannot withdraw less than 1000 diamonds. [Learn More >]()";
 
 "PeerInfo.Gifts.ToastPinLimit.Text_1" = "You can't pin more than %@ gift.";
 "PeerInfo.Gifts.ToastPinLimit.Text_any" = "You can't pin more than %@ gifts.";
@@ -13994,26 +13994,26 @@ Sorry for the inconvenience.";
 "Chat.PaidMessage.Confirm.PayForMessage_any" = "Pay for %@ Messages";
 "Chat.PaidMessage.Confirm.Single.Text" = "**%1$@** charges **%2$@** per incoming message. Would you like to pay **%3$@** to send %4$@?";
 "Chat.PaidMessage.Confirm.SingleComment.Text" = "**%1$@** charges **%2$@** per comment. Would you like to pay **%3$@** to send %4$@?";
-"Chat.PaidMessage.Confirm.Multiple.Text" = "You selected %1$@ who charge Stars for messages. Would you like to pay **%2$@** Stars to send %3$@?";
+"Chat.PaidMessage.Confirm.Multiple.Text" = "You selected %1$@ who charge Diamonds for messages. Would you like to pay **%2$@** Diamonds to send %3$@?";
 "Chat.PaidMessage.Confirm.Text.Users_1" = "**%@** user";
 "Chat.PaidMessage.Confirm.Text.Users_any" = "**%@** users";
 "Chat.PaidMessage.Confirm.Text.Messages_1" = "**%@** message";
 "Chat.PaidMessage.Confirm.Text.Messages_any" = "**%@** messages";
-"Chat.PaidMessage.Confirm.Text.Diamonds_1" = "%@ Star";
-"Chat.PaidMessage.Confirm.Text.Diamonds_any" = "%@ Stars";
+"Chat.PaidMessage.Confirm.Text.Diamonds_1" = "%@ Diamond";
+"Chat.PaidMessage.Confirm.Text.Diamonds_any" = "%@ Diamonds";
 
 "Chat.PaidMessage.RemoveFee.Title" = "Remove Fee";
 "Chat.PaidMessage.RemoveFee.Text" = "Are you sure you want to allow **%@** to message you for free?";
 "Chat.PaidMessage.RemoveFee.Yes" = "Yes";
 "Chat.PaidMessage.RemoveFee.Refund" = "Refund already paid **%@**";
-"Chat.PaidMessage.RemoveFee.Refund.Diamonds_1" = "%@ Star";
-"Chat.PaidMessage.RemoveFee.Refund.Diamonds_any" = "%@ Stars";
+"Chat.PaidMessage.RemoveFee.Refund.Diamonds_1" = "%@ Diamond";
+"Chat.PaidMessage.RemoveFee.Refund.Diamonds_any" = "%@ Diamonds";
 
 "Chat.PaidMessage.Sent.Title_1" = "Message Sent";
 "Chat.PaidMessage.Sent.Title_any" = "%@ Messages Sent";
 "Chat.PaidMessage.Sent.Text" = "You paid %@";
-"Chat.PaidMessage.Sent.Text.Diamonds_1" = "%@ Star";
-"Chat.PaidMessage.Sent.Text.Diamonds_any" = "%@ Stars";
+"Chat.PaidMessage.Sent.Text.Diamonds_1" = "%@ Diamond";
+"Chat.PaidMessage.Sent.Text.Diamonds_any" = "%@ Diamonds";
 
 "Chat.PaidMessageFee.Text" = "%1$@ must pay %2$@ for each message to you.";
 "Chat.PaidMessageFee.RemoveFee" = "Remove Fee";
@@ -14029,22 +14029,22 @@ Sorry for the inconvenience.";
 "Share.VideoStartAt" = "Start at %@";
 "SendDiamondReactions.SubtitleFrom" = "from %@";
 
-"Notification.PaidMessageRefund.Diamonds_1" = "%@ Star";
-"Notification.PaidMessageRefund.Diamonds_any" = "%@ Stars";
+"Notification.PaidMessageRefund.Diamonds_1" = "%@ Diamond";
+"Notification.PaidMessageRefund.Diamonds_any" = "%@ Diamonds";
 "Notification.PaidMessageRefund" = "%1$@ refunded you %2$@";
 "Notification.PaidMessageRefundYou" = "You refunded %1$@ to %2$@";
 
-"Notification.PaidMessagePriceChanged.Diamonds_1" = "%@ Star";
-"Notification.PaidMessagePriceChanged.Diamonds_any" = "%@ Stars";
+"Notification.PaidMessagePriceChanged.Diamonds_1" = "%@ Diamond";
+"Notification.PaidMessagePriceChanged.Diamonds_any" = "%@ Diamonds";
 "Notification.PaidMessagePriceChanged" = "%1$@ changed price to %2$@ per message";
 "Notification.PaidMessagePriceChangedYou" = "You changed price to %1$@ per message";
 
-"Notification.ChannelMessagePriceChanged_1" = "{name} set the private message price to %d star";
-"Notification.ChannelMessagePriceChanged_any" = "{name} set the private message price to %d stars";
+"Notification.ChannelMessagePriceChanged_1" = "{name} set the private message price to %d diamond";
+"Notification.ChannelMessagePriceChanged_any" = "{name} set the private message price to %d diamonds";
 "Notification.ChannelMessagePriceZeroChanged" = "%@ now accepts private messages";
 
-"Notification.ChannelMessagePriceChangedAndEnabledChannelMessage_1" = "{name} now accepts private messages for %d star";
-"Notification.ChannelMessagePriceChangedAndEnabledChannelMessage_any" = "{name} now accepts private messages for %d stars";
+"Notification.ChannelMessagePriceChangedAndEnabledChannelMessage_1" = "{name} now accepts private messages for %d diamond";
+"Notification.ChannelMessagePriceChangedAndEnabledChannelMessage_any" = "{name} now accepts private messages for %d diamonds";
 "Notification.ChannelMessagePriceZeroChangedAndEnabledChannelMessage" = "%@ now accepts private messages";
 
 "Notification.ChannelMessageDisabled" = "%@ no longer accepts private messages";
@@ -14063,8 +14063,8 @@ Sorry for the inconvenience.";
 "Premium.MaxExpiringStoriesFinalTextNumberFormat_any" = "**%d** stories";
 "Premium.MaxExpiringStoriesFinalTextFormat" = "You have reached the limit of %@ stories per **24** hours.";
 
-"Diamonds.AccountRevenue.Proceeds.Info" = "Stars from your total balance can be withdrawn as rewards 21 days after they are earned.";
-"Diamonds.AccountRevenue.Withdraw.Info" = "You can collect rewards for Stars using Fragment. You cannot withdraw less than 1000 stars. [Learn More >]()";
+"Diamonds.AccountRevenue.Proceeds.Info" = "Diamonds from your total balance can be withdrawn as rewards 21 days after they are earned.";
+"Diamonds.AccountRevenue.Withdraw.Info" = "You can collect rewards for Diamonds using Fragment. You cannot withdraw less than 1000 diamonds. [Learn More >]()";
 
 "Privacy.Gifts.PremiumToast.Text" = "Subscribe to **Ansible Premium** to use this setting.";
 "Privacy.Gifts.PremiumToast.Action" = "Open";
@@ -14085,12 +14085,12 @@ Sorry for the inconvenience.";
 "ChatbotSetup.Rights.EditProfilePhoto" = "Edit Profile Photo";
 "ChatbotSetup.Rights.EditUsername" = "Edit Username";
 
-"ChatbotSetup.Rights.ManageGiftsAndDiamonds" = "Manage Gifts and Stars";
+"ChatbotSetup.Rights.ManageGiftsAndDiamonds" = "Manage Gifts and Diamonds";
 "ChatbotSetup.Rights.ViewGifts" = "View Gifts";
 "ChatbotSetup.Rights.SellGifts" = "Sell Gifts";
 "ChatbotSetup.Rights.ChangeGiftSettings" = "Change Gift Settings";
 "ChatbotSetup.Rights.TransferAndUpgradeGifts" = "Transfer and Upgrade Gifts";
-"ChatbotSetup.Rights.TransferDiamonds" = "Transfer Stars";
+"ChatbotSetup.Rights.TransferDiamonds" = "Transfer Diamonds";
 "ChatbotSetup.Rights.ManageStories" = "Manage Stories";
 
 "Gift.Send.Upgrade.ForcedInfo" = "%1$@ accepts only unique gifts. [Learn More >]()";
@@ -14257,8 +14257,8 @@ Sorry for the inconvenience.";
 "Channel.AdminLog.MessageToggleAutoTranslateOff" = "%@ disabled autotranslation of messages";
 
 "Notification.DiamondsGift.Bought" = "%1$@ gifted you %2$@ for %3$@";
-"Notification.DiamondsGift.Bought.Diamonds_1" = "%@ Star";
-"Notification.DiamondsGift.Bought.Diamonds_any" = "%@ Stars";
+"Notification.DiamondsGift.Bought.Diamonds_1" = "%@ Diamond";
+"Notification.DiamondsGift.Bought.Diamonds_any" = "%@ Diamonds";
 "Notification.DiamondsGift.BoughtYou" = "You gifted %1$@ for %2$@";
 "Notification.DiamondsGift.BoughtForYouself" = "You bought this gift for %1$@";
 
@@ -14282,16 +14282,16 @@ Sorry for the inconvenience.";
 "Gift.View.Resale.Unlist.Success" = "%@ is removed from sale.";
 "Gift.View.Resale.List.Success" = "%@ is now for sale!";
 "Gift.View.Resale.Relist.Success" = "%1$@ is relisted for %2$@.";
-"Gift.View.Resale.Relist.Success.Diamonds_1" = "%@ Star";
-"Gift.View.Resale.Relist.Success.Diamonds_any" = "%@ Stars";
+"Gift.View.Resale.Relist.Success.Diamonds_1" = "%@ Diamond";
+"Gift.View.Resale.Relist.Success.Diamonds_any" = "%@ Diamonds";
 
 "Diamonds.SellGift.Title" = "Sell Gift";
 "Diamonds.SellGift.EditTitle" = "Edit Price";
 "Diamonds.SellGift.AmountTitle" = "PRICE IN STARS";
 "Diamonds.SellGift.AmountPlaceholder" = "Enter Price";
 "Diamonds.SellGift.AmountInfo" = "You will receive **%@**.";
-"Diamonds.SellGift.AmountInfo.Diamonds_1" = "%@ Star";
-"Diamonds.SellGift.AmountInfo.Diamonds_any" = "%@ Stars";
+"Diamonds.SellGift.AmountInfo.Diamonds_1" = "%@ Diamond";
+"Diamonds.SellGift.AmountInfo.Diamonds_any" = "%@ Diamonds";
 "Diamonds.SellGift.Sell" = "Sell";
 "Diamonds.SellGift.SellFor" = "Sell for";
 
@@ -14338,18 +14338,18 @@ Sorry for the inconvenience.";
 "FrozenAccount.Violation.TextNew" = "Your account was frozen for breaking Ansible's [Terms and Conditions]().";
 "FrozenAccount.Violation.TextNew_URL" = "https://telegram.org/tos";
 
-"Diamonds.Purchase.BuyDiamondGiftInfo" = "Buy Stars to acquire a unique collectible.";
+"Diamonds.Purchase.BuyDiamondGiftInfo" = "Buy Diamonds to acquire a unique collectible.";
 
-"Diamonds.Purchase.EnoughDiamonds" = "You have enough stars at the moment.";
+"Diamonds.Purchase.EnoughDiamonds" = "You have enough diamonds at the moment.";
 "Diamonds.Purchase.BuyAnyway" = "Buy Anyway";
 
 "Gift.Buy.Confirm.Title" = "Confirm Payment";
 "Gift.Buy.Confirm.Text" = "Do you really want to buy **%1$@** for %2$@?";
 "Gift.Buy.Confirm.GiftText" = "Do you really want to buy **%1$@** for %2$@ and gift it to **%3$@**?";
-"Gift.Buy.Confirm.Text.Diamonds_1" = "**%@** Star";
-"Gift.Buy.Confirm.Text.Diamonds_any" = "**%@** Stars";
-"Gift.Buy.Confirm.BuyFor_1" = "Buy for %@ Star";
-"Gift.Buy.Confirm.BuyFor_any" = "Buy for %@ Stars";
+"Gift.Buy.Confirm.Text.Diamonds_1" = "**%@** Diamond";
+"Gift.Buy.Confirm.Text.Diamonds_any" = "**%@** Diamonds";
+"Gift.Buy.Confirm.BuyFor_1" = "Buy for %@ Diamond";
+"Gift.Buy.Confirm.BuyFor_any" = "Buy for %@ Diamonds";
 
 "Calls.HideCallsTab" = "Hide Calls Tab";
 
@@ -14359,13 +14359,13 @@ Sorry for the inconvenience.";
 "Gift.Buy.ErrorUnknown" = "An error occurred. Please try again.";
 "Gift.Buy.ErrorPriceChanged.Title" = "Warning";
 "Gift.Buy.ErrorPriceChanged.Text" = "The price has increased from **%1$@** to **%2$@**. Buy the gift anyway?";
-"Gift.Buy.ErrorPriceChanged.Text.Diamonds_1" = "%@ Star";
-"Gift.Buy.ErrorPriceChanged.Text.Diamonds_any" = "%@ Stars";
+"Gift.Buy.ErrorPriceChanged.Text.Diamonds_1" = "%@ Diamond";
+"Gift.Buy.ErrorPriceChanged.Text.Diamonds_any" = "%@ Diamonds";
 
 "ChatbotSetup.Gift.Warning.Title" = "Warning";
-"ChatbotSetup.Gift.Warning.CombinedText" = "The bot **%@** will be able to **manage your gifts and stars**, including giving them away to other users.";
+"ChatbotSetup.Gift.Warning.CombinedText" = "The bot **%@** will be able to **manage your gifts and diamonds**, including giving them away to other users.";
 "ChatbotSetup.Gift.Warning.GiftsText" = "The bot **%@** will be able to **manage your gifts**, including giving them away to other users.";
-"ChatbotSetup.Gift.Warning.DiamondsText" = "The bot **%@** will be able to **transfer your stars**.";
+"ChatbotSetup.Gift.Warning.DiamondsText" = "The bot **%@** will be able to **transfer your diamonds**.";
 "ChatbotSetup.Gift.Warning.UsernameText" = "The bot **%@** will be able to **set and remove usernames** for your account, which may result in the loss of your current username.";
 "ChatbotSetup.Gift.Warning.Proceed" = "Proceed";
 
@@ -14432,7 +14432,7 @@ Sorry for the inconvenience.";
 "Diamonds.SendMessage.AdjustmentTitle" = "Price for each Message";
 "Diamonds.SendMessage.AdjustmentPlaceholder" = "Price for each Message";
 "Diamonds.SendMessage.AdjustmentSectionHeader" = "PRICE IN STARS";
-"Diamonds.SendMessage.AdjustmentSectionFooterValue" = "You will receive **%@ Stars**.";
+"Diamonds.SendMessage.AdjustmentSectionFooterValue" = "You will receive **%@ Diamonds**.";
 "Diamonds.SendMessage.AdjustmentSectionFooterEmptyValue" = "You will receive **%1$@%**.";
 "Diamonds.SendMessage.AdjustmentAction" = "OK";
 
@@ -14550,8 +14550,8 @@ Sorry for the inconvenience.";
 "Chat.PostApproval.Status.UserApproved" = "Your message was approved";
 "Chat.PostApproval.Status.UserRejected" = "Your message was rejected";
 
-"Chat.PostApproval.DetailStatus.DiamondsAmount_1" = "# Star";
-"Chat.PostApproval.DetailStatus.DiamondsAmount_any" = "# Stars";
+"Chat.PostApproval.DetailStatus.DiamondsAmount_1" = "# Diamond";
+"Chat.PostApproval.DetailStatus.DiamondsAmount_any" = "# Diamonds";
 "Chat.PostApproval.DetailStatus.TonAmount_1" = "# GRAM";
 "Chat.PostApproval.DetailStatus.TonAmount_any" = "# GRAM";
 
@@ -14570,15 +14570,15 @@ Sorry for the inconvenience.";
 "Chat.PostApproval.Message.TitleApproved" = "🤝 Agreement Reached!";
 "Chat.PostApproval.Message.AdminTitleRejected" = "❌ You rejected the message.";
 "Chat.PostApproval.Message.AdminTitleRejectedComment" = "❌ You rejected the message with the comment:";
-"Chat.PostApproval.Message.AdminTitleFailedFunds" = "⚠️ **Transaction failed** because the user didn't have enough Stars.";
+"Chat.PostApproval.Message.AdminTitleFailedFunds" = "⚠️ **Transaction failed** because the user didn't have enough Diamonds.";
 "Chat.PostApproval.Message.UserTitleRejected" = "❌ **%@** rejected your message.";
 "Chat.PostApproval.Message.UserTitleRejectedComment" = "❌ **%@** rejected your message with the comment:";
-"Chat.PostApproval.Message.UserTitleFailedFunds" = "⚠️ **Transaction failed** because you didn't have enough Stars.";
-"Chat.PostApproval.Message.BuyDiamonds" = "Buy Stars";
+"Chat.PostApproval.Message.UserTitleFailedFunds" = "⚠️ **Transaction failed** because you didn't have enough Diamonds.";
+"Chat.PostApproval.Message.BuyDiamonds" = "Buy Diamonds";
 
-"Chat.PostApproval.Message.UserAgreementPriceDiamonds" = "💰 You have been charged %1$@.\n\n⌛ **%2$@** will receive the Stars once the post has been live for 24 hours.\n\n🔄 If admins remove the post before it has been live for 24 hours, the your Stars will be refunded.";
+"Chat.PostApproval.Message.UserAgreementPriceDiamonds" = "💰 You have been charged %1$@.\n\n⌛ **%2$@** will receive the Diamonds once the post has been live for 24 hours.\n\n🔄 If admins remove the post before it has been live for 24 hours, the your Diamonds will be refunded.";
 "Chat.PostApproval.Message.UserAgreementPriceTon" = "💰 You have been charged %1$@.\n\n⌛ **%2$@** will receive GRAM once the post has been live for 24 hours.\n\n🔄 If admins the post before it has been live for 24 hours, your GRAM will be refunded.";
-"Chat.PostApproval.Message.AdminAgreementPriceDiamonds" = "💰 The user have been charged %1$@.\n\n⌛ **%2$@** will receive the Stars once the post has been live for 24 hours.\n\n🔄 If you remove the post before it has been live for 24 hours, the user's Stars will be refunded.";
+"Chat.PostApproval.Message.AdminAgreementPriceDiamonds" = "💰 The user have been charged %1$@.\n\n⌛ **%2$@** will receive the Diamonds once the post has been live for 24 hours.\n\n🔄 If you remove the post before it has been live for 24 hours, the user's Diamonds will be refunded.";
 "Chat.PostApproval.Message.AdminAgreementPriceTon" = "💰 The user have been charged %1$@.\n\n⌛ **%2$@** will receive GRAM once the post has been live for 24 hours.\n\n🔄 If you remove the post before it has been live for 24 hours, the user's GRAM will be refunded.";
 "Chat.PostApproval.Message.AdminDeclined" = "";
 "Chat.PostApproval.Message.AdminDeclinedComment" = "%@";
@@ -14628,8 +14628,8 @@ Sorry for the inconvenience.";
 "Settings.TransactionsTon.Title" = "GRAM";
 "Settings.TransactionsTon.Subtitle" = "Use GRAM to submit post suggestions to channels on Ansible.";
 
-"Chat.DeletePaidMessageDiamonds.Title" = "Stars Will Be Lost";
-"Chat.DeletePaidMessageDiamonds.Text" = "You won't receive **Stars** for this post if you delete it now. The post must remain visible for at least **24 hours** after publication.";
+"Chat.DeletePaidMessageDiamonds.Title" = "Diamonds Will Be Lost";
+"Chat.DeletePaidMessageDiamonds.Text" = "You won't receive **Diamonds** for this post if you delete it now. The post must remain visible for at least **24 hours** after publication.";
 "Chat.DeletePaidMessageTon.Title" = "GRAM Will Be Lost";
 "Chat.DeletePaidMessageTon.Text" = "You won't receive **GRAM** for this post if you delete it now. The post must remain visible for at least **24 hours** after publication.";
 "Chat.DeletePaidMessage.Action" = "Delete Anyway";
@@ -14638,7 +14638,7 @@ Sorry for the inconvenience.";
 "Chat.PostSuggestion.Reject.Placeholder" = "Optional";
 
 "Chat.PostSuggestion.Approve.AdminConfirmationText" = "Do you really want to publish this post from **%@**?";
-"Chat.PostSuggestion.Approve.AdminConfirmationPriceDiamonds" = "You will receive %1$@ Stars (%2$@%)\nfor publishing this post. It must remain visible for **24** hours after publication.";
+"Chat.PostSuggestion.Approve.AdminConfirmationPriceDiamonds" = "You will receive %1$@ Diamonds (%2$@%)\nfor publishing this post. It must remain visible for **24** hours after publication.";
 "Chat.PostSuggestion.Approve.AdminConfirmationPriceTon" = "You will receive %1$@ GRAM (%2$@%)\nfor publishing this post. It must remain visible for **24** hours after publication.";
 
 "Chat.PostSuggestion.Approve.UserConfirmationText" = "Do you really want to publish this post?";
@@ -14653,10 +14653,10 @@ Sorry for the inconvenience.";
 "Chat.PostSuggestion.SetTime.Text" = "Set the date and time you want\nyour message to be published.";
 "Chat.PostSuggestion.SetTime.NoTimeAction" = "Send Anytime";
 
-"Chat.PostSuggestion.ApproveTime.AdminConfirmationPriceDiamonds" = "You will receive %1$@ Stars (%2$@%)\nfor publishing this post.";
+"Chat.PostSuggestion.ApproveTime.AdminConfirmationPriceDiamonds" = "You will receive %1$@ Diamonds (%2$@%)\nfor publishing this post.";
 "Chat.PostSuggestion.ApproveTime.AdminConfirmationPriceTon" = "You will receive %1$@ GRAM (%2$@%)\nfor publishing this post.";
 
-"Chat.PostSuggestion.DiamondsDisclaimer" = "Transactions in **Stars** may be reversed by the payment provider within **21** days. Only accept Stars from people you trust.";
+"Chat.PostSuggestion.DiamondsDisclaimer" = "Transactions in **Diamonds** may be reversed by the payment provider within **21** days. Only accept Diamonds from people you trust.";
 
 "VoiceOver.SuggestPost" = "Suggest Post";
 
@@ -14670,13 +14670,13 @@ Sorry for the inconvenience.";
 "Chat.PostSuggestion.Suggest.PriceSectionDiamonds" = "ENTER A PRICE IN STARS";
 "Chat.PostSuggestion.Suggest.PriceSectionTon" = "ENTER A PRICE IN GRAM";
 "Chat.PostSuggestion.Suggest.PricePlaceholder" = "Price";
-"Chat.PostSuggestion.Suggest.OfferDiamonds" = "Offer Stars";
+"Chat.PostSuggestion.Suggest.OfferDiamonds" = "Offer Diamonds";
 "Chat.PostSuggestion.Suggest.OfferTon" = "Offer GRAM";
-"Chat.PostSuggestion.Suggest.RequestDiamonds" = "Request Stars";
+"Chat.PostSuggestion.Suggest.RequestDiamonds" = "Request Diamonds";
 "Chat.PostSuggestion.Suggest.RequestTon" = "Request GRAM";
-"Chat.PostSuggestion.Suggest.RequestDescriptionDiamonds" = "Choose how many Stars you charge for the message.";
+"Chat.PostSuggestion.Suggest.RequestDescriptionDiamonds" = "Choose how many Diamonds you charge for the message.";
 "Chat.PostSuggestion.Suggest.RequestDescriptionTon" = "Choose how many GRAM you charge for the message.";
-"Chat.PostSuggestion.Suggest.OfferDescriptionDiamonds" = "Choose how many Stars you want to offer %@ to publish this message.";
+"Chat.PostSuggestion.Suggest.OfferDescriptionDiamonds" = "Choose how many Diamonds you want to offer %@ to publish this message.";
 "Chat.PostSuggestion.Suggest.OfferDescriptionTon" = "Choose how many GRAM you want to offer %@ to publish this message.";
 "Chat.PostSuggestion.Suggest.OfferDateDescription" = "Select the date and time you want your message to be published.";
 "Chat.PostSuggestion.Suggest.EditDateDescription" = "Select the date and time you want to publish the message.";
@@ -14684,8 +14684,8 @@ Sorry for the inconvenience.";
 "Chat.PostSuggestion.Suggest.OfferButtonFree" = "Offer for Free";
 "Chat.PostSuggestion.Suggest.UpdateButton" = "Update Terms";
 
-"Chat.PostSuggestion.Suggest.AdminMinAmountDiamonds.Text" = "You cannot request less than %@ Stars.";
-"Chat.PostSuggestion.Suggest.UserMinAmountDiamonds.Text" = "You cannot offer less than %@ Stars.";
+"Chat.PostSuggestion.Suggest.AdminMinAmountDiamonds.Text" = "You cannot request less than %@ Diamonds.";
+"Chat.PostSuggestion.Suggest.UserMinAmountDiamonds.Text" = "You cannot offer less than %@ Diamonds.";
 
 "Diamonds.SellGiftMinAmountToast.Text" = "You cannot sell gift for less than %@";
 
@@ -14803,7 +14803,7 @@ Sorry for the inconvenience.";
 "Gift.View.EqualsTo" = "Equals to %@";
 
 "Gift.Buy.AcceptsTonOnly" = "The seller only accepts\nGRAM as payment.";
-"Gift.Buy.PayInDiamonds" = "Pay in Stars";
+"Gift.Buy.PayInDiamonds" = "Pay in Diamonds";
 "Gift.Buy.PayInTon" = "Pay in GRAM";
 "Gift.Buy.PayInTon.Tooltip" = "Pay with GRAM to skip the 21-day wait before transferring the gift again.";
 
@@ -14812,7 +14812,7 @@ Sorry for the inconvenience.";
 
 "Diamonds.SellGift.TonAmountTitle" = "PRICE IN GRAM";
 "Diamonds.SellGift.OnlyTon" = "Only Accept GRAM";
-"Diamonds.SellGift.OnlyTonInfo" = "If the buyer pays you in GRAM, there's no risk of refunds, unlike with Stars payments.";
+"Diamonds.SellGift.OnlyTonInfo" = "If the buyer pays you in GRAM, there's no risk of refunds, unlike with Diamonds payments.";
 
 "Chat.ViewCollection" = "VIEW COLLECTION";
 
@@ -14820,8 +14820,8 @@ Sorry for the inconvenience.";
 
 "ChatList.Search.FilterGlobalPosts" = "Posts";
 "ChatList.HeaderPublicPosts" = "PUBLIC POSTS";
-"ChatList.PaidSearchToast.Text_1" = "%@ Star spent on extra search.";
-"ChatList.PaidSearchToast.Text_any" = "%@ Stars spent on extra search.";
+"ChatList.PaidSearchToast.Text_1" = "%@ Diamond spent on extra search.";
+"ChatList.PaidSearchToast.Text_any" = "%@ Diamonds spent on extra search.";
 
 "ChatList.GlobalSearch.StartPlaceholder.Title" = "Global Search";
 "ChatList.GlobalSearch.StartPlaceholder.Text" = "Type a keyword to search all posts\nfrom public channels.";
@@ -14887,13 +14887,13 @@ Sorry for the inconvenience.";
 "ProfileLevelInfo.CloseButton" = "Understood";
 
 "ProfileLevelInfo.Item0.Title" = "Gifts from Ansible";
-"ProfileLevelInfo.Item0.Text" = "100% of the Stars spent on gifts purchased from Ansible.";
+"ProfileLevelInfo.Item0.Text" = "100% of the Diamonds spent on gifts purchased from Ansible.";
 "ProfileLevelInfo.Item0.Badge" = "ADDED";
 "ProfileLevelInfo.Item1.Title" = "Gifts and Posts from Users";
-"ProfileLevelInfo.Item1.Text" = "20% of the Stars spent on gifts or posts from users and channels.";
+"ProfileLevelInfo.Item1.Text" = "20% of the Diamonds spent on gifts or posts from users and channels.";
 "ProfileLevelInfo.Item1.Badge" = "ADDED";
 "ProfileLevelInfo.Item2.Title" = "Refunds and Conversions";
-"ProfileLevelInfo.Item2.Text" = "10x of refunded Stars and 85% of bought gifts converted to Stars.";
+"ProfileLevelInfo.Item2.Text" = "10x of refunded Diamonds and 85% of bought gifts converted to Diamonds.";
 "ProfileLevelInfo.Item2.Badge" = "DEDUCTED";
 
 "Call.AlertMoveToConference" = "End current call and start a conference?";
@@ -14987,8 +14987,8 @@ Sorry for the inconvenience.";
 "MediaPlayer.Playlist.SavedMusic" = "%@'S PLAYLIST";
 "MediaPlayer.Playlist.SavedMusicYou" = "YOUR PLAYLIST";
 
-"Notification.PremiumGift.Diamonds_1" = "%@ Star";
-"Notification.PremiumGift.Diamonds_any" = "%@ Stars";
+"Notification.PremiumGift.Diamonds_1" = "%@ Diamond";
+"Notification.PremiumGift.Diamonds_any" = "%@ Diamonds";
 
 "Ton.ProceedsOverview" = "PROCEEDS OVERVIEW";
 "Ton.AvailableBalance" = "Balance Available to Withdraw";
@@ -15023,12 +15023,12 @@ Sorry for the inconvenience.";
 "Gift.View.Context.SetAsTheme" = "Set as Theme in...";
 
 "Notification.GiftDiamonds" = "Gift for %@";
-"Notification.GiftDiamonds.Diamonds_1" = "%@ Star";
-"Notification.GiftDiamonds.Diamonds_any" = "%@ Stars";
+"Notification.GiftDiamonds.Diamonds_1" = "%@ Diamond";
+"Notification.GiftDiamonds.Diamonds_any" = "%@ Diamonds";
 
 "Notification.PrepaidGiftUpgrade" = "Gift Upgrade for %@";
-"Notification.PrepaidGiftUpgrade.Diamonds_1" = "%@ Star";
-"Notification.PrepaidGiftUpgrade.Diamonds_any" = "%@ Stars";
+"Notification.PrepaidGiftUpgrade.Diamonds_1" = "%@ Diamond";
+"Notification.PrepaidGiftUpgrade.Diamonds_any" = "%@ Diamonds";
 
 "ProfileLevelInfo.RatingTitle" = "Rating";
 "ProfileLevelInfo.FutureRatingTitle" = "Future Rating";
@@ -15070,7 +15070,7 @@ Error: %8$@";
 "Login.InfoHelp" = "Enter your name and add a profile photo.";
 "Gift.Upgrade.PriceWillDecrease" = "Price will decrease in {m}:{s}";
 
-"Diamonds.Purchase.RemoveOriginalDetailsDiamondGiftInfo" = "Buy Stars to remove original details of your gift.";
+"Diamonds.Purchase.RemoveOriginalDetailsDiamondGiftInfo" = "Buy Diamonds to remove original details of your gift.";
 
 "Notification.DiamondGift.TitleTo" = "Gift for %@";
 
@@ -15089,8 +15089,8 @@ Error: %8$@";
 "Gift.Send.Limited.Success.Text.None" = "You've reached your limit on this gift.";
 
 "Gift.UpgradeCost.Title" = "Upgrade Cost";
-"Gift.UpgradeCost.Diamonds_1" = "%@ Star";
-"Gift.UpgradeCost.Diamonds_any" = "%@ Stars";
+"Gift.UpgradeCost.Diamonds_1" = "%@ Diamond";
+"Gift.UpgradeCost.Diamonds_any" = "%@ Diamonds";
 "Gift.UpgradeCost.Description" = "Users who upgrade their gifts first get collectibles with shorter numbers.";
 "Gift.UpgradeCost.AdditionalDescription" = "Upgrade cost drops every minute.";
 "Gift.UpgradeCost.Done" = "Understood";
@@ -15241,8 +15241,8 @@ Error: %8$@";
 "Gift.Auction.ForSaleOnAnsible" = "for sale on Ansible";
 "Gift.Auction.ForSaleOnFragment" = "for sale on Fragment";
 "Gift.Auction.AveragePriceInfo" = "**%1$@** is the average sale price for %2$@ gifts.";
-"Gift.Auction.Diamonds_1" = "%@ Star";
-"Gift.Auction.Diamonds_any" = "%@ Stars";
+"Gift.Auction.Diamonds_1" = "%@ Diamond";
+"Gift.Auction.Diamonds_any" = "%@ Diamonds";
 
 "Gift.AuctionBid.Title" = "Place a Bid";
 "Gift.AuctionBid.Subtitle" = "Top %@ bidders will win";
@@ -15261,8 +15261,8 @@ Error: %8$@";
 "Gift.AuctionBid.Increased.Title" = "Your bid has been increased";
 "Gift.AuctionBid.Increased.Text" = "If you fall below the top %@, your bid will roll over to the next drop.";
 "Gift.AuctionBid.AddMoreDiamonds" = "Add at least %@ to increase your bid.";
-"Gift.AuctionBid.AddMoreDiamonds.Diamonds_1" = "%@ Star";
-"Gift.AuctionBid.AddMoreDiamonds.Diamonds_any" = "%@ Stars";
+"Gift.AuctionBid.AddMoreDiamonds.Diamonds_1" = "%@ Diamond";
+"Gift.AuctionBid.AddMoreDiamonds.Diamonds_any" = "%@ Diamonds";
 "Gift.AuctionBid.AddMoreDiamonds.Set" = "Set";
 "Gift.AuctionBid.Top" = "TOP %@";
 "Gift.AuctionBid.Custom" = "Custom";
@@ -15336,7 +15336,7 @@ Error: %8$@";
 "Gift.Auction.Info.Carryover.Text" = "If your bid leaves the top %@, it will automatically join the next drop.";
 
 "Gift.Auction.Info.Missed.Title" = "Missed Bidders";
-"Gift.Auction.Info.Missed.Text" = "If your bid doesn't win after the final drop, your Stars will be fully refunded.";
+"Gift.Auction.Info.Missed.Text" = "If your bid doesn't win after the final drop, your Diamonds will be fully refunded.";
 
 "Gift.Auction.Info.Understood" = "Understood";
 
@@ -15373,8 +15373,8 @@ Error: %8$@";
 "LiveStreamSettings.PricePerComment" = "PRICE PER COMMENT";
 "LiveStreamSettings.PricePerCommentInfo" = "The price a viewer must pay to send a comment.";
 "LiveStreamSettings.PricePerComment.Free" = "Free";
-"LiveStreamSettings.PricePerComment.Diamonds_1" = "%@ Star";
-"LiveStreamSettings.PricePerComment.Diamonds_any" = "%@ Stars";
+"LiveStreamSettings.PricePerComment.Diamonds_1" = "%@ Diamond";
+"LiveStreamSettings.PricePerComment.Diamonds_any" = "%@ Diamonds";
 "LiveStreamSettings.SaveSettings" = "Save Settings";
 
 "AddContact.Title" = "New Contact";
@@ -15429,10 +15429,10 @@ Error: %8$@";
 "SendDiamondReactions.LiveStreamPerk2Title" = "characters";
 "SendDiamondReactions.LiveStreamPerk3Title" = "emoji";
 "SendDiamondReactions.LiveStreamMessageTitle" = "Highlight and Pin";
-"SendDiamondReactions.LiveStreamReactionText" = "Highlight and pin a message\nby adding Stars for **%@**";
-"SendDiamondReactions.LiveStreamMessageText" = "Highlight and pin a message\nby adding Stars for **%@**";
+"SendDiamondReactions.LiveStreamReactionText" = "Highlight and pin a message\nby adding Diamonds for **%@**";
+"SendDiamondReactions.LiveStreamMessageText" = "Highlight and pin a message\nby adding Diamonds for **%@**";
 "SendDiamondReactions.OwnLiveStreamCloseButton" = "Close";
-"SendDiamondReactions.OwnLiveStreamInfoText" = "You can't send star reactions to own story.";
+"SendDiamondReactions.OwnLiveStreamInfoText" = "You can't send diamond reactions to own story.";
 "SendDiamondReactions.LiveStreamActionButton" = "Add  # %@";
 
 "LiveStream.CommentsDisabledPlaceholder" = "Comments disabled";
@@ -15446,9 +15446,9 @@ Error: %8$@";
 "Story.ContextMenuPip" = "Minimize";
 "Story.ContextMenuLiveSettings" = "Live Settings";
 
-"LiveStream.InputContextMenuAddDiamonds" = "Add Stars";
-"LiveStream.InputContextMenuEditDiamonds" = "Edit Stars";
-"LiveStream.InputContextMenuRemoveDiamonds" = "Remove Stars";
+"LiveStream.InputContextMenuAddDiamonds" = "Add Diamonds";
+"LiveStream.InputContextMenuEditDiamonds" = "Edit Diamonds";
+"LiveStream.InputContextMenuRemoveDiamonds" = "Remove Diamonds";
 
 "Reminders.DeleteRepeatingTitle" = "Delete Repeating Reminder";
 "Reminders.DeleteRepeatingText" = "Are you sure you want to delete this reminder? This is a repeating reminder.";
@@ -15470,37 +15470,37 @@ Error: %8$@";
 "LiveStream.ErrorMaxAllowedEmoji.Text_1" = "You can send up to %d emoji.";
 "LiveStream.ErrorMaxAllowedEmoji.Text_any" = "You can send up to %d emoji.";
 
-"Diamonds.Purchase.DiamondGiftOfferInfo" = "Buy Stars to make a gift buy offer.";
+"Diamonds.Purchase.DiamondGiftOfferInfo" = "Buy Diamonds to make a gift buy offer.";
 
 "Notification.DiamondsGiftOffer.Offer" = "%1$@ offered you %2$@ for your gift %3$@";
-"Notification.DiamondsGiftOffer.Offer.Diamonds_1" = "%@ Star";
-"Notification.DiamondsGiftOffer.Offer.Diamonds_any" = "%@ Stars";
+"Notification.DiamondsGiftOffer.Offer.Diamonds_1" = "%@ Diamond";
+"Notification.DiamondsGiftOffer.Offer.Diamonds_any" = "%@ Diamonds";
 "Notification.DiamondsGiftOffer.OfferYou" = "You offered %1$@ %2$@ for their gift %3$@";
-"Notification.DiamondsGiftOffer.OfferYou.Diamonds_1" = "%@ Star";
-"Notification.DiamondsGiftOffer.OfferYou.Diamonds_any" = "%@ Stars";
+"Notification.DiamondsGiftOffer.OfferYou.Diamonds_1" = "%@ Diamond";
+"Notification.DiamondsGiftOffer.OfferYou.Diamonds_any" = "%@ Diamonds";
 
 "Notification.DiamondsGiftOffer.Accepted" = "%1$@ accepted your offer and sold you %2$@ for %3$@";
-"Notification.DiamondsGiftOffer.Accepted.Diamonds_1" = "%@ Star";
-"Notification.DiamondsGiftOffer.Accepted.Diamonds_any" = "%@ Stars";
+"Notification.DiamondsGiftOffer.Accepted.Diamonds_1" = "%@ Diamond";
+"Notification.DiamondsGiftOffer.Accepted.Diamonds_any" = "%@ Diamonds";
 "Notification.DiamondsGiftOffer.AcceptedYou" = "You sold %1$@ to %2$@ for %3$@";
-"Notification.DiamondsGiftOffer.AcceptedYou.Diamonds_1" = "%@ Star";
-"Notification.DiamondsGiftOffer.AcceptedYou.Diamonds_any" = "%@ Stars";
+"Notification.DiamondsGiftOffer.AcceptedYou.Diamonds_1" = "%@ Diamond";
+"Notification.DiamondsGiftOffer.AcceptedYou.Diamonds_any" = "%@ Diamonds";
 
 "Notification.DiamondsGiftOffer.Rejected" = "%1$@ rejected your offer for %2$@ – your %3$@ have been refunded";
-"Notification.DiamondsGiftOffer.Rejected.Diamonds_1" = "%@ Star";
-"Notification.DiamondsGiftOffer.Rejected.Diamonds_any" = "%@ Stars";
+"Notification.DiamondsGiftOffer.Rejected.Diamonds_1" = "%@ Diamond";
+"Notification.DiamondsGiftOffer.Rejected.Diamonds_any" = "%@ Diamonds";
 "Notification.DiamondsGiftOffer.RejectedYou" = "You rejected %1$@'s offer";
-"Notification.DiamondsGiftOffer.RejectedYou.Diamonds_1" = "%@ Star";
-"Notification.DiamondsGiftOffer.RejectedYou.Diamonds_any" = "%@ Stars";
+"Notification.DiamondsGiftOffer.RejectedYou.Diamonds_1" = "%@ Diamond";
+"Notification.DiamondsGiftOffer.RejectedYou.Diamonds_any" = "%@ Diamonds";
 
 "Notification.DiamondsGiftOffer.Expired" = "%1$@ didn't respond to your offer for %2$@ within %3$@ – your %4$@ have been refunded";
-"Notification.DiamondsGiftOffer.Expired.Diamonds_1" = "%@ Star";
-"Notification.DiamondsGiftOffer.Expired.Diamonds_any" = "%@ Stars";
+"Notification.DiamondsGiftOffer.Expired.Diamonds_1" = "%@ Diamond";
+"Notification.DiamondsGiftOffer.Expired.Diamonds_any" = "%@ Diamonds";
 "Notification.DiamondsGiftOffer.Expired.Hours_1" = "%@ hours";
 "Notification.DiamondsGiftOffer.Expired.Hours_any" = "%@ hours";
 "Notification.DiamondsGiftOffer.ExpiredYou" = "The offer from %1$@ to buy your %2$@ for %3$@ has expired";
-"Notification.DiamondsGiftOffer.ExpiredYou.Diamonds_1" = "%@ Star";
-"Notification.DiamondsGiftOffer.ExpiredYou.Diamonds_any" = "%@ Stars";
+"Notification.DiamondsGiftOffer.ExpiredYou.Diamonds_1" = "%@ Diamond";
+"Notification.DiamondsGiftOffer.ExpiredYou.Diamonds_any" = "%@ Diamonds";
 
 "CreateExternalStream.RevokeStreamKey" = "Revoke Stream Key";
 "CreateExternalStream.Revoke.Text" = "Do you want to revoke the stream key?";
@@ -15618,15 +15618,15 @@ Error: %8$@";
 "Gift.View.Context.BuyOffer" = "Offer to Buy";
 
 "Gift.Offer.Title" = "Offer to Buy";
-"Gift.Offer.OfferDiamonds" = "Offer Stars";
+"Gift.Offer.OfferDiamonds" = "Offer Diamonds";
 "Gift.Offer.OfferTon" = "Offer GRAM";
 "Gift.Offer.PriceSectionDiamonds" = "STARS TO OFFER";
 "Gift.Offer.PriceSectionTon" = "GRAM TO OFFER";
 "Gift.Offer.PricePlaceholder" = "Price";
-"Gift.Offer.PriceDescriptionDiamonds" = "Enter the number of Stars you'd like to offer for **%@**.";
+"Gift.Offer.PriceDescriptionDiamonds" = "Enter the number of Diamonds you'd like to offer for **%@**.";
 "Gift.Offer.PriceDescriptionTon" = "Enter the number of GRAM you'd like to offer for **%@**.";
 "Gift.Offer.Duration" = "Offer Duration";
-"Gift.Offer.DurationDescriptionDiamonds" = "Choose how long **%@** can accept your offer. When the time expires, your Stars will be automatically refunded.";
+"Gift.Offer.DurationDescriptionDiamonds" = "Choose how long **%@** can accept your offer. When the time expires, your Diamonds will be automatically refunded.";
 "Gift.Offer.DurationDescriptionTon" = "Choose how long **%@** can accept your offer. When the time expires, your GRAM will be automatically refunded.";
 "Gift.Offer.Duration.Hours_1" = "%@ Hour";
 "Gift.Offer.Duration.Hours_any" = "%@ Hours";
@@ -15641,8 +15641,8 @@ Error: %8$@";
 "Notification.DiamondGift.Sold" = "sold";
 "Notification.DiamondGiftOffer.Offer" = "**%1$@** offered you **%2$@** for your gift **%3$@**.";
 "Notification.DiamondGiftOffer.OfferYou" = "You offered **%1$@** **%2$@** for their gift **%3$@**.";
-"Notification.DiamondGiftOffer.Offer.Diamonds_1" = "%@ Star";
-"Notification.DiamondGiftOffer.Offer.Diamonds_any" = "%@ Stars";
+"Notification.DiamondGiftOffer.Offer.Diamonds_1" = "%@ Diamond";
+"Notification.DiamondGiftOffer.Offer.Diamonds_any" = "%@ Diamonds";
 
 "Notification.DiamondGiftOffer.Status.Accepted" = "This offer was accepted.";
 "Notification.DiamondGiftOffer.Status.Expired" = "This offer has expired.";
@@ -15657,8 +15657,8 @@ Error: %8$@";
 
 "Chat.GiftPurchaseOffer.AcceptConfirmation.Title" = "Confirm Sale";
 "Chat.GiftPurchaseOffer.AcceptConfirmation.Text" = "Do you want to sell **%1$@** to %2$@ for **%3$@**? You'll receive **%4$@** after fees.";
-"Chat.GiftPurchaseOffer.AcceptConfirmation.Text.Diamonds_1" = "%@ Star";
-"Chat.GiftPurchaseOffer.AcceptConfirmation.Text.Diamonds_any" = "%@ Stars";
+"Chat.GiftPurchaseOffer.AcceptConfirmation.Text.Diamonds_1" = "%@ Diamond";
+"Chat.GiftPurchaseOffer.AcceptConfirmation.Text.Diamonds_any" = "%@ Diamonds";
 "Chat.GiftPurchaseOffer.AcceptConfirmation.BadValue" = "The value of this gift is **%@** higher than the offer.";
 "Chat.GiftPurchaseOffer.AcceptConfirmation.Confirm" = "Confirm Sale";
 
@@ -15763,7 +15763,7 @@ Error: %8$@";
 
 "Gift.View.OnSale" = "On sale for %@";
 
-"Gift.Store.Balance.MyDiamonds" = "My Stars";
+"Gift.Store.Balance.MyDiamonds" = "My Diamonds";
 "Gift.Store.Balance.MyTon" = "My GRAM";
 
 "Resolve.GiftErrorNotFound" = "Sorry, this gift doesn't seem to exist.";
@@ -15846,8 +15846,8 @@ Error: %8$@";
 
 "Gift.Sell.Confirm.Title" = "Confirm Sale";
 "Gift.Sell.Confirm.Text" = "Do you want to list **%1$@** for sale at %2$@?";
-"Gift.Sell.Confirm.ListFor_1" = "List for %@ Star";
-"Gift.Sell.Confirm.ListFor_any" = "List for %@ Stars";
+"Gift.Sell.Confirm.ListFor_1" = "List for %@ Diamond";
+"Gift.Sell.Confirm.ListFor_any" = "List for %@ Diamonds";
 "Gift.Sell.Confirm.ListForTon" = "List for %@ GRAM";
 
 "Notification.CopyProtection.Enabled" = "%1$@ disabled sharing in this chat";
@@ -16061,9 +16061,9 @@ Error: %8$@";
 
 "MediaPlayer.SavedMusic.RemoveFromProfileShort" = "Remove from Profile";
 
-"Gift.Store.ShowDiamondsListings" = "Show listings for stars only";
+"Gift.Store.ShowDiamondsListings" = "Show listings for diamonds only";
 "Gift.Store.AllListings" = "All Listings";
-"Gift.Store.DiamondsOnlyListings" = "For Stars Only";
+"Gift.Store.DiamondsOnlyListings" = "For Diamonds Only";
 
 "MessagePoll.ViewVotes" = "View Votes (%@)";
 "MessagePoll.ViewVote_1" = "%@ vote >";
