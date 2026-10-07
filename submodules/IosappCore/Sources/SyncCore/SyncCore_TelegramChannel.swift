@@ -666,7 +666,7 @@ public final class IosappChannel: Peer, Equatable {
         self.approximateBoostLevel = flatBuffersObject.approximateBoostLevel == Int32.min ? nil : flatBuffersObject.approximateBoostLevel
         self.subscriptionUntilDate = flatBuffersObject.subscriptionUntilDate == Int32.min ? nil : flatBuffersObject.subscriptionUntilDate
         self.verificationIconFileId = flatBuffersObject.verificationIconFileId == Int64.min ? nil : flatBuffersObject.verificationIconFileId
-        self.sendPaidMessageDiamonds = try flatBuffersObject.sendPaidMessageDiamonds.flatMap { try StarsAmount(flatBuffersObject: $0) }
+        self.sendPaidMessageDiamonds = try flatBuffersObject.sendPaidMessageStars.flatMap { try StarsAmount(flatBuffersObject: $0) }
         self.linkedMonoforumId = flatBuffersObject.linkedMonoforumId.flatMap { PeerId(flatBuffersObject: $0) }
         self.linkedCommunityId = flatBuffersObject.linkedCommunityId.flatMap { PeerId(flatBuffersObject: $0) }
     }
@@ -744,7 +744,7 @@ public final class IosappChannel: Peer, Equatable {
         IosappCore_IosappChannel.add(subscriptionUntilDate: self.subscriptionUntilDate ?? Int32.min, &builder)
         IosappCore_IosappChannel.add(verificationIconFileId: self.verificationIconFileId ?? Int64.min, &builder)
         if let sendPaidMessageDiamondsOffset {
-            IosappCore_IosappChannel.add(sendPaidMessageDiamonds: sendPaidMessageDiamondsOffset, &builder)
+            IosappCore_IosappChannel.add(sendPaidMessageStars: sendPaidMessageDiamondsOffset, &builder)
         }
         if let linkedMonoforumId = self.linkedMonoforumId {
             IosappCore_IosappChannel.add(linkedMonoforumId: linkedMonoforumId.asFlatBuffersObject(), &builder)
