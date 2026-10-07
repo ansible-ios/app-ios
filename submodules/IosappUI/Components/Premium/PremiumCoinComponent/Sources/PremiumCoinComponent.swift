@@ -9,7 +9,7 @@ import AppBundle
 import LegacyComponents
 import PremiumStarComponent
 
-private let sceneVersion: Int = 4
+private let sceneVersion: Int = 5
 
 private func deg2rad(_ number: Float) -> Float {
     return number * .pi / 180
