@@ -13,7 +13,7 @@ objc_library(
         "PublicHeaders",
     ],
     copts = [
-        "-DTELEGRAM_USE_BORINGSSL=1",
+        "-DANSIBLE_USE_BORINGSSL=1",
         "-Werror",
     ],
     deps = [

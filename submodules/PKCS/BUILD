@@ -14,7 +14,7 @@ objc_library(
         "PublicHeaders",
     ],
     copts = [
-        "-DTELEGRAM_USE_BORINGSSL=1",
+        "-DANSIBLE_USE_BORINGSSL=1",
     ],
     deps = [
         "//third-party/boringssl:crypto",
