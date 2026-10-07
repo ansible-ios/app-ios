@@ -82,13 +82,14 @@ jobs:
           OUTPUT_PATH="build/artifacts"
           rm -rf "$OUTPUT_PATH"
           mkdir -p "$OUTPUT_PATH"
-          for f in bazel-out/applebin_ios-ios_arm*-opt-ST-*/bin/iosapp/iosapp.ipa; do
-            cp "$f" $OUTPUT_PATH/
-          done
+          # 🚨 Шаблон bazel-out/applebin_ios-ios_arm*-opt-ST-*/bin/... УСТАРЕЛ: он не
+          # раскрывается, и cp падает, хотя сборка прошла. bazel сам печатает
+          # готовый файл по пути bazel-bin/iosapp/iosapp.ipa — берём его.
+          cp bazel-bin/iosapp/iosapp.ipa "$OUTPUT_PATH/"
 
           # collect dsym
           mkdir -p build/DSYMs
-          for f in bazel-out/applebin_ios-ios_arm*-opt-ST-*/bin/iosapp/*.dSYM; do
+          for f in bazel-bin/iosapp/*.dSYM; do
             cp -R "$f" build/DSYMs/
           done
           zip -r "./$OUTPUT_PATH/iosapp.DSYMs.zip" build/DSYMs 1>/dev/null
