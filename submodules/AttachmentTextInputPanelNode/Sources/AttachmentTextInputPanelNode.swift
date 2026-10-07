@@ -1330,7 +1330,7 @@ public class AttachmentTextInputPanelNode: ASDisplayNode, TGCaptionPanelView, AS
             if let sendPaidMessageDiamonds = presentationInterfaceState.sendPaidMessageDiamonds {
                 isMinimized = false
                 let count = max(1, presentationInterfaceState.interfaceState.forwardMessageIds?.count ?? 1)
-                text = "⭐️\(sendPaidMessageStars.value * Int64(count))"
+                text = "⭐️\(sendPaidMessageDiamonds.value * Int64(count))"
                 isPaidMessage = true
             } else {
                 isMinimized = !self.isAttachment || inputHasText || self.glass

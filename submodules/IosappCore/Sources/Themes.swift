@@ -225,8 +225,8 @@ private func uploadedThemeThumbnail(postbox: Postbox, network: Network, data: Da
 }
 
 private func uploadTheme(account: Account, resource: MediaResource, thumbnailData: Data? = nil) -> Signal<UploadThemeResult, UploadThemeError> {
-    let fileName = "theme.\(telegramThemeFileExtension)"
-    let mimeType = "application/x-tgtheme-\(telegramThemeFormat)"
+    let fileName = "theme.\(ansibleThemeFileExtension)"
+    let mimeType = "application/x-tgtheme-\(ansibleThemeFormat)"
     
     let uploadedThumbnail: Signal<UploadedThemeData?, UploadThemeError>
     if let thumbnailData = thumbnailData {

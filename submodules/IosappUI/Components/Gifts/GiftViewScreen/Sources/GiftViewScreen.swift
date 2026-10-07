@@ -5158,7 +5158,7 @@ private final class GiftViewSheetContent: CombinedComponent {
                     currencyAmount = formatTonAmountText(resellAmount.amount.value, dateTimeFormat: environment.dateTimeFormat, maxDecimalPositions: nil)
                     
                     if let starsAmount = uniqueGift?.resellAmounts?.first(where: { $0.currency == .stars }) {
-                        buttonAttributedSubtitleString = NSMutableAttributedString(string: strings.Gift_View_EqualsTo(" # \(formatStarsAmountText(starsAmount.amount, dateTimeFormat: environment.dateTimeFormat))").string, font: Font.medium(11.0), textColor: theme.list.itemCheckColors.foregroundColor.withAlphaComponent(0.7), paragraphAlignment: .center)
+                        buttonAttributedSubtitleString = NSMutableAttributedString(string: strings.Gift_View_EqualsTo(" # \(formatDiamondsAmountText(starsAmount.amount, dateTimeFormat: environment.dateTimeFormat))").string, font: Font.medium(11.0), textColor: theme.list.itemCheckColors.foregroundColor.withAlphaComponent(0.7), paragraphAlignment: .center)
                     }
                 }
                 buyString += "  \(currencySymbol) \(currencyAmount)"

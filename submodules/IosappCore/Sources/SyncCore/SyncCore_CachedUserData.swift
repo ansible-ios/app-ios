@@ -460,7 +460,7 @@ public struct PeerEmojiStatus: Equatable, Codable {
                 self = .emoji(fileId: emoji.fileId)
                 
             case .peeremojistatuscontentstargift:
-                guard let starGift = flatBuffersObject.value(type: IosappCore_PeerEmojiStatusContentDiamondGift.self) else {
+                guard let starGift = flatBuffersObject.value(type: IosappCore_PeerEmojiStatusContentStarGift.self) else {
                     throw FlatBuffersError.missingRequiredField()
                 }
                 self = .starGift(
@@ -494,17 +494,17 @@ public struct PeerEmojiStatus: Equatable, Codable {
                 valueType = .peeremojistatuscontentstargift
                 let titleOffset = builder.create(string: title)
                 let slugOffset = builder.create(string: slug)
-                let start = IosappCore_PeerEmojiStatusContentDiamondGift.startPeerEmojiStatusContentDiamondGift(&builder)
-                IosappCore_PeerEmojiStatusContentDiamondGift.add(id: id, &builder)
-                IosappCore_PeerEmojiStatusContentDiamondGift.add(fileId: fileId, &builder)
-                IosappCore_PeerEmojiStatusContentDiamondGift.add(title: titleOffset, &builder)
-                IosappCore_PeerEmojiStatusContentDiamondGift.add(slug: slugOffset, &builder)
-                IosappCore_PeerEmojiStatusContentDiamondGift.add(patternFileId: patternFileId, &builder)
-                IosappCore_PeerEmojiStatusContentDiamondGift.add(innerColor: innerColor, &builder)
-                IosappCore_PeerEmojiStatusContentDiamondGift.add(outerColor: outerColor, &builder)
-                IosappCore_PeerEmojiStatusContentDiamondGift.add(patternColor: patternColor, &builder)
-                IosappCore_PeerEmojiStatusContentDiamondGift.add(textColor: textColor, &builder)
-                valueOffset = IosappCore_PeerEmojiStatusContentDiamondGift.endPeerEmojiStatusContentDiamondGift(&builder, start: start)
+                let start = IosappCore_PeerEmojiStatusContentStarGift.startPeerEmojiStatusContentStarGift(&builder)
+                IosappCore_PeerEmojiStatusContentStarGift.add(id: id, &builder)
+                IosappCore_PeerEmojiStatusContentStarGift.add(fileId: fileId, &builder)
+                IosappCore_PeerEmojiStatusContentStarGift.add(title: titleOffset, &builder)
+                IosappCore_PeerEmojiStatusContentStarGift.add(slug: slugOffset, &builder)
+                IosappCore_PeerEmojiStatusContentStarGift.add(patternFileId: patternFileId, &builder)
+                IosappCore_PeerEmojiStatusContentStarGift.add(innerColor: innerColor, &builder)
+                IosappCore_PeerEmojiStatusContentStarGift.add(outerColor: outerColor, &builder)
+                IosappCore_PeerEmojiStatusContentStarGift.add(patternColor: patternColor, &builder)
+                IosappCore_PeerEmojiStatusContentStarGift.add(textColor: textColor, &builder)
+                valueOffset = IosappCore_PeerEmojiStatusContentStarGift.endPeerEmojiStatusContentStarGift(&builder, start: start)
             }
             
             let start = IosappCore_PeerEmojiStatusContent.startPeerEmojiStatusContent(&builder)

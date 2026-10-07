@@ -746,11 +746,11 @@ public class ChatMessageDateAndStatusNode: ASDisplayNode {
             if let diamondsCount = arguments.diamondsCount, diamondsCount > 0 {
                 let countString: String
                 if diamondsCount > 1000000 {
-                    countString = "\(starsCount / 1000000)M"
+                    countString = "\(diamondsCount / 1000000)M"
                 } else if diamondsCount > 1000 {
-                    countString = "\(starsCount / 1000)K"
+                    countString = "\(diamondsCount / 1000)K"
                 } else {
-                    countString = "\(starsCount)"
+                    countString = "\(diamondsCount)"
                 }
                 
                 let layoutAndApply = makeDiamondsCountLayout(TextNodeLayoutArguments(attributedString: NSAttributedString(string: countString, font: dateFont, textColor: dateColor), backgroundColor: nil, maximumNumberOfLines: 1, truncationType: .end, constrainedSize: CGSize(width: 100.0, height: 100.0)))

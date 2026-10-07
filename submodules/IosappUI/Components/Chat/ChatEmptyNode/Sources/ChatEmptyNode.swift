@@ -1128,11 +1128,11 @@ public final class ChatEmptyNodePremiumRequiredChatContent: ASDisplayNode, ChatE
             let rawText: String
             
             if let channel = interfaceState.renderedPeer?.peer as? IosappChannel, channel.isMonoForum {
-                rawText = interfaceState.strings.Chat_EmptyStateMonoforumPaid_Text(peerTitle, " $ \(starsString)").string
+                rawText = interfaceState.strings.Chat_EmptyStateMonoforumPaid_Text(peerTitle, " $ \(diamondsString)").string
             } else if self.isPremiumDisabled {
-                rawText = interfaceState.strings.Chat_EmptyStatePaidMessagingDisabled_Text(peerTitle, " $ \(starsString)").string
+                rawText = interfaceState.strings.Chat_EmptyStatePaidMessagingDisabled_Text(peerTitle, " $ \(diamondsString)").string
             } else {
-                rawText = interfaceState.strings.Chat_EmptyStatePaidMessaging_Text(peerTitle, " $ \(starsString)").string
+                rawText = interfaceState.strings.Chat_EmptyStatePaidMessaging_Text(peerTitle, " $ \(diamondsString)").string
             }
             let attributedString = parseMarkdownIntoAttributedString(rawText, attributes: attributes).mutableCopy() as! NSMutableAttributedString
             if let range = attributedString.string.range(of: "$") {

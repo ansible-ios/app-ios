@@ -416,7 +416,7 @@ private final class SheetContent: CombinedComponent {
                     }
                 ))
             case let .reaction(diamondsToTop, _):
-                let amountInfoString = NSMutableAttributedString(attributedString: parseMarkdownIntoAttributedString(environment.strings.Diamonds_SendDiamonds_AmountInfo("\(starsToTop ?? 0)").string, attributes: amountMarkdownAttributes, textAlignment: .natural))
+                let amountInfoString = NSMutableAttributedString(attributedString: parseMarkdownIntoAttributedString(environment.strings.Diamonds_SendDiamonds_AmountInfo("\(diamondsToTop ?? 0)").string, attributes: amountMarkdownAttributes, textAlignment: .natural))
                 amountFooter = AnyComponent(MultilineTextComponent(
                     text: .plain(amountInfoString),
                     maximumNumberOfLines: 0
@@ -435,7 +435,7 @@ private final class SheetContent: CombinedComponent {
                             amountRightLabel = "~\(formatTonUsdValue(Int64(starsValue), divide: false, rate: usdRate, dateTimeFormat: environment.dateTimeFormat))"
                         }
                     } else {
-                        amountInfoString = NSAttributedString(attributedString: parseMarkdownIntoAttributedString(environment.strings.Diamonds_SellGift_AmountInfo("\(resaleConfiguration.starGiftCommissionStarsPermille / 10)%").string, attributes: amountMarkdownAttributes, textAlignment: .natural))
+                        amountInfoString = NSAttributedString(attributedString: parseMarkdownIntoAttributedString(environment.strings.Diamonds_SellGift_AmountInfo("\(resaleConfiguration.diamondGiftCommissionDiamondsPermille / 10)%").string, attributes: amountMarkdownAttributes, textAlignment: .natural))
                     }
                 case .ton:
                     if let value = state.amount?.value, value > 0 {
@@ -447,7 +447,7 @@ private final class SheetContent: CombinedComponent {
                             amountRightLabel = "~\(formatTonUsdValue(tonValue, divide: true, rate: tonUsdRate, dateTimeFormat: environment.dateTimeFormat))"
                         }
                     } else {
-                        amountInfoString = NSAttributedString(attributedString: parseMarkdownIntoAttributedString(environment.strings.Diamonds_SellGift_AmountInfo("\(resaleConfiguration.starGiftCommissionTonPermille / 10)%").string, attributes: amountMarkdownAttributes, textAlignment: .natural))
+                        amountInfoString = NSAttributedString(attributedString: parseMarkdownIntoAttributedString(environment.strings.Diamonds_SellGift_AmountInfo("\(resaleConfiguration.diamondGiftCommissionTonPermille / 10)%").string, attributes: amountMarkdownAttributes, textAlignment: .natural))
                     }
                 }
                 amountFooter = AnyComponent(MultilineTextComponent(
@@ -1355,12 +1355,12 @@ public final class DiamondsWithdrawScreen: ViewControllerComponentContainer {
             case .stars:
                 switch mode {
                 case .admin:
-                    text = presentationData.strings.Chat_PostSuggestion_Suggest_AdminMinAmountDiamonds_Text("\(resaleConfiguration.channelMessageSuggestionMinStarsAmount)").string
+                    text = presentationData.strings.Chat_PostSuggestion_Suggest_AdminMinAmountDiamonds_Text("\(resaleConfiguration.channelMessageSuggestionMinDiamondsAmount)").string
                 case let .sender(_, isFromAdmin):
                     if isFromAdmin {
-                        text = presentationData.strings.Chat_PostSuggestion_Suggest_AdminMinAmountDiamonds_Text("\(resaleConfiguration.channelMessageSuggestionMinStarsAmount)").string
+                        text = presentationData.strings.Chat_PostSuggestion_Suggest_AdminMinAmountDiamonds_Text("\(resaleConfiguration.channelMessageSuggestionMinDiamondsAmount)").string
                     } else {
-                        text = presentationData.strings.Chat_PostSuggestion_Suggest_UserMinAmountDiamonds_Text("\(resaleConfiguration.channelMessageSuggestionMinStarsAmount)").string
+                        text = presentationData.strings.Chat_PostSuggestion_Suggest_UserMinAmountDiamonds_Text("\(resaleConfiguration.channelMessageSuggestionMinDiamondsAmount)").string
                     }
                 }
             case .ton:

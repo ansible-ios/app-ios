@@ -514,9 +514,9 @@ private final class MediaPickerPhotoToolbarComponent: Component {
 //            let doneFixedSize: CGSize?
 //            let doneAvailableSize: CGSize
 //            if component.hasSendStarsButton {
-//                let text = "\u{2b50}\u{fe0f} \(component.sendPaidMessageStars)"
+//                let text = "\u{2b50}\u{fe0f} \(component.sendPaidMessageDiamonds)"
 //                doneContent = AnyComponentWithIdentity(
-//                    id: "stars-\(component.sendPaidMessageStars)",
+//                    id: "stars-\(component.sendPaidMessageDiamonds)",
 //                    component: AnyComponent(Text(text: text, font: Font.with(size: 17.0, design: .round, weight: .semibold, traits: .monospacedNumbers), color: .white))
 //                )
 //                doneFixedSize = nil

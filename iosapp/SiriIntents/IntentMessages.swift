@@ -128,7 +128,7 @@ private func callWithIosappMessage(_ ansibleMessage: Message, account: Account) 
         return nil
     }
     
-    let identifier = "\(telegramMessage.id.peerId.toInt64())_\(telegramMessage.id.namespace)_\(telegramMessage.id.id)"
+    let identifier = "\(ansibleMessage.id.peerId.toInt64())_\(ansibleMessage.id.namespace)_\(ansibleMessage.id.id)"
     let personHandle: INPersonHandle
     if #available(iOSApplicationExtension 10.2, iOS 10.2, *) {
         var type: INPersonHandleType
@@ -167,7 +167,7 @@ private func messageWithIosappMessage(_ ansibleMessage: Message) -> INMessage? {
         return nil
     }
     
-    let identifier = "\(telegramMessage.id.peerId.toInt64())_\(telegramMessage.id.namespace)_\(telegramMessage.id.id)"
+    let identifier = "\(ansibleMessage.id.peerId.toInt64())_\(ansibleMessage.id.namespace)_\(ansibleMessage.id.id)"
     let personHandle: INPersonHandle
     if #available(iOSApplicationExtension 10.2, iOS 10.2, *) {
         var type: INPersonHandleType
@@ -232,7 +232,7 @@ private func messageWithIosappMessage(_ ansibleMessage: Message) -> INMessage? {
             return nil
         }
     
-        message = INMessage(identifier: identifier, conversationIdentifier: "\(telegramMessage.id.peerId.toInt64())", content: ansibleMessage.text, dateSent: date, sender: sender, recipients: [], groupName: nil, messageType: messageType)
+        message = INMessage(identifier: identifier, conversationIdentifier: "\(ansibleMessage.id.peerId.toInt64())", content: ansibleMessage.text, dateSent: date, sender: sender, recipients: [], groupName: nil, messageType: messageType)
     } else {
         if ansibleMessage.text.isEmpty {
             return nil

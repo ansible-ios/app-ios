@@ -292,10 +292,10 @@ public struct StarsAmount: Equatable, Comparable, Hashable, Codable, CustomStrin
     }
     
     public func encodeToFlatBuffers(builder: inout FlatBufferBuilder) -> Offset {
-        let start = IosappCore_StarsAmount.startDiamondsAmount(&builder)
+        let start = IosappCore_StarsAmount.startStarsAmount(&builder)
         IosappCore_StarsAmount.add(value: self.value, &builder)
         IosappCore_StarsAmount.add(nanos: self.nanos, &builder)
-        return IosappCore_StarsAmount.endDiamondsAmount(&builder, start: start)
+        return IosappCore_StarsAmount.endStarsAmount(&builder, start: start)
     }
     
     public var stringValue: String {

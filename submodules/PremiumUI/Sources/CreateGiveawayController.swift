@@ -802,7 +802,7 @@ private func createGiveawayControllerEntries(
             } else {
                 diamondsPerUser = product.giveawayOption.count / Int64(state.winners)
             }
-            let subtitle = presentationData.strings.BoostGift_Diamonds_PerUser("\(starsPerUser)").string
+            let subtitle = presentationData.strings.BoostGift_Diamonds_PerUser("\(diamondsPerUser)").string
             let label = product.storeProduct.price
             
             let isSelected = product.giveawayOption.count == state.stars
