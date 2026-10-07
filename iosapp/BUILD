@@ -1775,7 +1775,7 @@ ios_application(
     minimum_os_version = minimum_os_version,
     provisioning_profile = select({
         ":disableProvisioningProfilesSetting": None,
-        "//conditions:default": ":Telegram_xcode_profile" if telegram_use_xcode_managed_codesigning else "@build_configuration//provisioning:Telegram.mobileprovision",
+        "//conditions:default": ":Telegram_xcode_profile" if telegram_use_xcode_managed_codesigning else "@build_configuration//provisioning:Iosapp.mobileprovision",
     }),
     entitlements = ":TelegramEntitlements.entitlements",
     infoplists = [
@@ -1892,7 +1892,7 @@ ios_application(
     minimum_os_version = minimum_os_version,
     provisioning_profile = select({
         ":disableProvisioningProfilesSetting": None,
-        "//conditions:default": "@build_configuration//provisioning:Telegram.mobileprovision",
+        "//conditions:default": "@build_configuration//provisioning:Iosapp.mobileprovision",
     }),
     entitlements = ":TelegramEntitlements.entitlements",
     infoplists = [
@@ -1935,7 +1935,7 @@ ios_application(
     minimum_os_version = minimum_os_version,
     provisioning_profile = select({
         ":disableProvisioningProfilesSetting": None,
-        "//conditions:default": "@build_configuration//provisioning:Telegram.mobileprovision",
+        "//conditions:default": "@build_configuration//provisioning:Iosapp.mobileprovision",
     }),
     entitlements = ":TelegramEntitlements.entitlements",
     infoplists = [
@@ -1960,7 +1960,7 @@ ios_application(
     minimum_os_version = minimum_os_version,
     provisioning_profile = select({
         ":disableProvisioningProfilesSetting": None,
-        "//conditions:default": "@build_configuration//provisioning:Telegram.mobileprovision",
+        "//conditions:default": "@build_configuration//provisioning:Iosapp.mobileprovision",
     }),
     entitlements = ":TelegramEntitlements.entitlements",
     infoplists = [

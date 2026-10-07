@@ -150,7 +150,7 @@ ios_application(
     bundle_id = "org.telegram.Telegram-iOS",
     families = ["iphone", "ipad"],
     minimum_os_version = "12.0",
-    provisioning_profile = "@build_configuration//provisioning:Telegram.mobileprovision",
+    provisioning_profile = "@build_configuration//provisioning:Iosapp.mobileprovision",
     infoplists = [
         ":AppInfoPlist",
         ":BuildNumberInfoPlist",
