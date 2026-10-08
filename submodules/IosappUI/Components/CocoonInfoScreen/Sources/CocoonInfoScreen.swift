@@ -274,7 +274,7 @@ private final class CocoonInfoSheetContent: CombinedComponent {
                                 return
                             }
                             switch link {
-                            case "telegram":
+                            case "ansible":
                                 component.context.sharedContext.handleTextLinkAction(context: component.context, peerId: nil, navigateDisposable: navigateDisposable, controller: controller, action: .tap, itemLink: .url(url: "https://asme.su/cocoon", concealed: false))
                             case "web":
                                 component.context.sharedContext.openExternalUrl(context: component.context, urlContext: .generic, url: "https://cocoon.org", forceExternal: true, presentationData: component.context.sharedContext.currentPresentationData.with { $0 }, navigationController: nil, dismissInput: {})
