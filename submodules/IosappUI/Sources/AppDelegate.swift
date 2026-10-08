@@ -950,8 +950,8 @@ private func extractAccountManagerState(records: AccountRecordsView<IosappAccoun
             if #available(iOS 10.3, *) {
                 let icons = [
                     PresentationAppIcon(name: "BlueIcon", imageName: "BlueIcon", isDefault: true),
-                    PresentationAppIcon(name: "BH01", imageName: "BH01", isDefault: false),
-                    PresentationAppIcon(name: "BH02", imageName: "BH02", isDefault: false),
+                    PresentationAppIcon(name: "BH01", imageName: "BH01", isDefault: false, isPremium: true),
+                    PresentationAppIcon(name: "BH02", imageName: "BH02", isDefault: false, isPremium: true),
                     PresentationAppIcon(name: "BH03", imageName: "BH03", isDefault: false),
                     PresentationAppIcon(name: "BH04", imageName: "BH04", isDefault: false),
                     PresentationAppIcon(name: "BH05", imageName: "BH05", isDefault: false),
