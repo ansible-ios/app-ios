@@ -208,7 +208,7 @@ public final class StoryLiveChatMessageComponent: Component {
                 diamondsAmountTextSize = diamondsAmountText.update(
                     transition: .immediate,
                     component: AnyComponent(MultilineTextComponent(
-                        text: .plain(NSAttributedString(string: "\(paidStars)", font: Font.semibold(11.0), textColor: displayDiamondsAmountBackground ? primaryTextColor : secondaryTextColor))
+                        text: .plain(NSAttributedString(string: "\(paidDiamonds)", font: Font.semibold(11.0), textColor: displayDiamondsAmountBackground ? primaryTextColor : secondaryTextColor))
                     )),
                     environment: {},
                     containerSize: CGSize(width: 100.0, height: 100.0)
