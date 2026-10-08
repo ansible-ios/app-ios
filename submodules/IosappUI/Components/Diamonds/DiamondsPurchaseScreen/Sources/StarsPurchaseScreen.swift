@@ -863,7 +863,7 @@ private final class DiamondsPurchaseScreenComponent: CombinedComponent {
                 transition: .immediate
             )
             let balanceIcon = balanceIcon.update(
-                component: BundleIconComponent(name: "Premium/Stars/BalanceStar", tintColor: nil),
+                component: BundleIconComponent(name: "Premium/Stars/BalanceStar", tintColor: nil, maxSize: CGSize(width: 18.0, height: 18.0)),
                 availableSize: context.availableSize,
                 transition: .immediate
             )

@@ -706,8 +706,12 @@ private final class PeerComponent: Component {
                 amountView.frame = amountFrame
             }
             
-            if let icon = self.amountDiamond.image {
-                self.amountDiamond.frame = CGRect(origin: CGPoint(x: amountFrame.minX - icon.size.width - 2.0, y: floorToScreenPixels((size.height - icon.size.height) / 2.0) - UIScreenPixel), size: icon.size)
+            if self.amountDiamond.image != nil {
+                // Ассет Premium/Stars/BalanceStar нарисован в 48 pt, а плашка стоит
+                // рядом с текстом 14 pt. Размер задаём явно, как у двух других
+                // плашек баланса (там это maxSize у BundleIconComponent).
+                let iconSize = CGSize(width: 18.0, height: 18.0)
+                self.amountDiamond.frame = CGRect(origin: CGPoint(x: amountFrame.minX - iconSize.width - 2.0, y: floorToScreenPixels((size.height - iconSize.height) / 2.0) - UIScreenPixel), size: iconSize)
             }
             
             self.separator.backgroundColor = component.theme.list.itemPlainSeparatorColor.cgColor

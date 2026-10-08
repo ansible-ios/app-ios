@@ -1240,7 +1240,7 @@ final class GiftOptionsScreenComponent: Component {
             )
             let balanceIconSize = self.balanceIcon.update(
                 transition: .immediate,
-                component: AnyComponent(BundleIconComponent(name: "Premium/Stars/BalanceStar", tintColor: nil)),
+                component: AnyComponent(BundleIconComponent(name: "Premium/Stars/BalanceStar", tintColor: nil, maxSize: CGSize(width: 18.0, height: 18.0))),
                 environment: {},
                 containerSize: availableSize
             )
