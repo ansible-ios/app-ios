@@ -6648,7 +6648,7 @@ Sorry for the inconvenience.";
 "Privacy.PaymentsClear.AllInfoCleared" = "Информация о платежах и доставке удалена.";
 
 "Settings.Tips" = "Возможности Ansible";
-"Settings.TipsUsername" = "TelegramTips";
+"Settings.TipsUsername" = "tips";
 
 "Calls.NoVoiceAndVideoCallsPlaceholder" = "Здесь будут отображаться ваши недавние голосовые и видеозвонки.";
 "Calls.StartNewCall" = "Начать новый звонок";
