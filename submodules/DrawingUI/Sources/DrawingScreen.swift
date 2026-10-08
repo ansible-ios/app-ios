@@ -964,7 +964,7 @@ private final class DrawingScreenComponent: CombinedComponent {
                 ),
                 .action(
                     ContextMenuActionItem(
-                        text: strings.Paint_Star,
+                        text: strings.Paint_Diamond,
                         icon: { theme in return generateTintedImage(image: UIImage(bundleImageName: "Media Editor/ShapeStar"), color: theme.contextMenu.primaryColor)},
                         action: { [weak self] f in
                             f.dismissWithResult(.default)

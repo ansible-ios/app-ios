@@ -8639,7 +8639,7 @@ Sorry for the inconvenience.";
 "Paint.Rectangle" = "Rectangle";
 "Paint.Ellipse" = "Ellipse";
 "Paint.Bubble" = "Bubble";
-"Paint.Star" = "Star";
+"Paint.Diamond" = "Diamond";
 "Paint.Arrow" = "Arrow";
 
 "Paint.MoveForward" = "Move Forward";

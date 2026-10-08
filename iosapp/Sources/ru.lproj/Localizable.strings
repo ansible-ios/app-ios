@@ -8600,7 +8600,7 @@ Sorry for the inconvenience.";
 "Paint.Rectangle" = "Прямоугольник";
 "Paint.Ellipse" = "Эллипс";
 "Paint.Bubble" = "Облако";
-"Paint.Star" = "Звезда";
+"Paint.Diamond" = "Алмаз";
 "Paint.Arrow" = "Стрелка";
 
 "Paint.MoveForward" = "На передний план";
