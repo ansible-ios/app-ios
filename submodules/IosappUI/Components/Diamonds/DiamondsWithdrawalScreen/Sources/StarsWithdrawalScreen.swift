@@ -432,7 +432,7 @@ private final class SheetContent: CombinedComponent {
                         
                         if let usdWithdrawRate = withdrawConfiguration.usdWithdrawRate {
                             let usdRate = Double(usdWithdrawRate) / 1000.0 / 100.0
-                            amountRightLabel = "~\(formatTonUsdValue(Int64(starsValue), divide: false, rate: usdRate, dateTimeFormat: environment.dateTimeFormat))"
+                            amountRightLabel = "~\(formatTonUsdValue(Int64(diamondsValue), divide: false, rate: usdRate, dateTimeFormat: environment.dateTimeFormat))"
                         }
                     } else {
                         amountInfoString = NSAttributedString(attributedString: parseMarkdownIntoAttributedString(environment.strings.Diamonds_SellGift_AmountInfo("\(resaleConfiguration.diamondGiftCommissionDiamondsPermille / 10)%").string, attributes: amountMarkdownAttributes, textAlignment: .natural))

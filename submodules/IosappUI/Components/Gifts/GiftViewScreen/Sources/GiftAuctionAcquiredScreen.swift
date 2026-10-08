@@ -397,7 +397,7 @@ private final class GiftAuctionAcquiredScreenComponent: Component {
                     component: AnyComponent(MultilineTextComponent(text: .plain(NSAttributedString(string: stringForMediumDate(timestamp: gift.date, strings: environment.strings, dateTimeFormat: environment.dateTimeFormat), font: tableFont, textColor: tableTextColor))))
                 ))
                 
-                let valueString = "⭐️\(formatStarsAmountText(StarsAmount(value: gift.bidAmount, nanos: 0), dateTimeFormat: environment.dateTimeFormat))"
+                let valueString = "⭐️\(formatDiamondsAmountText(StarsAmount(value: gift.bidAmount, nanos: 0), dateTimeFormat: environment.dateTimeFormat))"
                 let valueAttributedString = NSMutableAttributedString(string: valueString, font: tableFont, textColor: tableTextColor)
                 let range = (valueAttributedString.string as NSString).range(of: "⭐️")
                 if range.location != NSNotFound {

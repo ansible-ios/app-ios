@@ -212,7 +212,7 @@ private final class SheetContent: Component {
                 currentLevel = pendingDiamondRating.rating.level
                 nextLevel = pendingDiamondRating.rating.nextLevelStars == nil ? nil : currentLevel + 1
                 if let nextLevelStars = pendingDiamondRating.rating.nextLevelStars {
-                    badgeTextSuffix = " / \(starCountString(Int64(nextLevelStars), decimalSeparator: "."))"
+                    badgeTextSuffix = " / \(diamondCountString(Int64(nextLevelStars), decimalSeparator: "."))"
                 }
                 if let nextLevelStars = pendingDiamondRating.rating.nextLevelStars, nextLevelStars > pendingDiamondRating.rating.stars {
                     levelFraction = Double(pendingDiamondRating.rating.stars - pendingDiamondRating.rating.currentLevelStars) / Double(nextLevelStars - pendingDiamondRating.rating.currentLevelStars)
@@ -224,7 +224,7 @@ private final class SheetContent: Component {
                 currentLevel = component.diamondRating.level
                 nextLevel = component.diamondRating.nextLevelStars == nil ? nil : currentLevel + 1
                 if let nextLevelStars = component.diamondRating.nextLevelStars {
-                    badgeTextSuffix = " / \(starCountString(Int64(nextLevelStars), decimalSeparator: "."))"
+                    badgeTextSuffix = " / \(diamondCountString(Int64(nextLevelStars), decimalSeparator: "."))"
                 }
                 if component.diamondRating.stars < 0 {
                     levelFraction = 0.5

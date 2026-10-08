@@ -290,7 +290,7 @@ public final class SelectablePeerNode: ASDisplayNode {
                 self.avatarNodeContainer.view.addSubview(avatarBadgeLabel)
             }
             
-            let badgeString = NSMutableAttributedString(string: "⭐️\(presentationStringsFormattedNumber(Int32(requiresStars), " "))", font: Font.with(size: 9.0, design: .round , weight: .bold), textColor: theme.list.itemCheckColors.foregroundColor)
+            let badgeString = NSMutableAttributedString(string: "⭐️\(presentationStringsFormattedNumber(Int32(requiresDiamonds), " "))", font: Font.with(size: 9.0, design: .round , weight: .bold), textColor: theme.list.itemCheckColors.foregroundColor)
             if let range = badgeString.string.range(of: "⭐️") {
                 badgeString.addAttribute(.attachment, value: UIImage(bundleImageName: "Premium/SendStarsPeerBadgeStarIcon")!, range: NSRange(range, in: badgeString.string))
                 badgeString.addAttribute(.baselineOffset, value: 1.5, range: NSRange(range, in: badgeString.string))

@@ -95,7 +95,7 @@ public func giftRemoveInfoAlertController(
         configuration: AlertScreen.Configuration(actionAlignment: .vertical),
         content: content,
         actions: [
-            .init(title: strings.Gift_RemoveDetails_Action(" $  \(presentationStringsFormattedNumber(Int32(clamping: removeInfoStars), presentationData.dateTimeFormat.groupingSeparator))").string, type: .default, action: {
+            .init(title: strings.Gift_RemoveDetails_Action(" $  \(presentationStringsFormattedNumber(Int32(clamping: removeInfoDiamonds), presentationData.dateTimeFormat.groupingSeparator))").string, type: .default, action: {
                 commit()
             }),
             .init(title: strings.Common_Cancel)

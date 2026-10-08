@@ -784,7 +784,7 @@ final class LiveStreamSettingsScreenComponent: Component {
                         value: Double(screenState.paidMessageStars) / Double(screenState.maxPaidMessageDiamonds),
                         minValue: 0,
                         lowerBoundTitle: "0",
-                        upperBoundTitle: "\(presentationStringsFormattedNumber(Int32(clamping: screenState.maxPaidMessageStars), environment.dateTimeFormat.groupingSeparator))",
+                        upperBoundTitle: "\(presentationStringsFormattedNumber(Int32(clamping: screenState.maxPaidMessageDiamonds), environment.dateTimeFormat.groupingSeparator))",
                         title: screenState.paidMessageStars == 0 ? strings.LiveStreamSettings_PricePerComment_Free : strings.LiveStreamSettings_PricePerComment_Diamonds(Int32(clamping: screenState.paidMessageStars)),
                         valueUpdated: { [weak self] value in
                             guard let self, let component = self.component else {

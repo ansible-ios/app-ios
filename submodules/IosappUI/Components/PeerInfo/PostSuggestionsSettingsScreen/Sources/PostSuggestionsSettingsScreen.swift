@@ -435,7 +435,7 @@ final class PostSuggestionsSettingsScreenComponent: Component {
             var contentSectionItems: [AnyComponentWithIdentity<Empty>] = []
             
             let usdRate = Double(component.usdWithdrawRate) / 1000.0 / 100.0
-            let price = self.diamondCount == 0 ? "" : "~\(formatTonUsdValue(Int64(self.starCount), divide: false, rate: usdRate, dateTimeFormat: presentationData.dateTimeFormat))"
+            let price = self.diamondCount == 0 ? "" : "~\(formatTonUsdValue(Int64(self.diamondCount), divide: false, rate: usdRate, dateTimeFormat: presentationData.dateTimeFormat))"
             
             contentSectionItems.append(AnyComponentWithIdentity(id: 0, component: AnyComponent(ListItemComponentAdaptor(
                 itemGenerator: MessagePriceItem(

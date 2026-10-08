@@ -95,7 +95,7 @@ final class BalanceComponent: Component {
             let presentationData = component.context.sharedContext.currentPresentationData.with { $0 }
 
             var rawString: String = ""
-            let diamondsBalanceString = "**⭐️\(presentationStringsFormattedNumber(Int32(clamping: self.starsBalance), presentationData.dateTimeFormat.groupingSeparator))**"
+            let diamondsBalanceString = "**⭐️\(presentationStringsFormattedNumber(Int32(clamping: self.diamondsBalance), presentationData.dateTimeFormat.groupingSeparator))**"
             // Ansible: TON removed — the gift-store balance chip shows the crystal balance only.
             rawString = presentationData.strings.Diamonds_Purchase_Balance + "\n" + diamondsBalanceString
             

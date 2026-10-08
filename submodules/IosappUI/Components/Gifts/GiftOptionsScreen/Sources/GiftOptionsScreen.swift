@@ -1430,7 +1430,7 @@ final class GiftOptionsScreenComponent: Component {
                         var label: String?
                         if showDiamondPrice {
                             if let diamondsPrice = product.diamondsPrice {
-                                label = strings.Gift_Options_Premium_OrDiamonds("**#\(presentationStringsFormattedNumber(Int32(starsPrice), environment.dateTimeFormat.groupingSeparator))**").string
+                                label = strings.Gift_Options_Premium_OrDiamonds("**#\(presentationStringsFormattedNumber(Int32(diamondsPrice), environment.dateTimeFormat.groupingSeparator))**").string
                             }
                         }
                         
