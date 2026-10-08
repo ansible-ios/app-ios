@@ -1588,7 +1588,15 @@ private func monetizationEntries(
     canJoinRefPrograms: Bool
 ) -> [StatsEntry] {
     var entries: [StatsEntry] = []
-    
+
+    // Витрина TON скрыта: доход/баланс/вывод в TON — это валюта, которую мы
+    // пока не показываем (перейдёт на кристаллы crystalpiece.su). Логику,
+    // типы и обработчик вывода оставляем на месте — вернуть витрину = снять
+    // этот флаг. Алмазная выручка (canViewStarsRevenue), номера и юзернеймы
+    // НЕ затронуты.
+    let showTonMonetization = false
+    let canViewRevenue = canViewRevenue && showTonMonetization
+
     var isBot = false
     if case let .user(user) = peer, let _ = user.botInfo {
         isBot = true
