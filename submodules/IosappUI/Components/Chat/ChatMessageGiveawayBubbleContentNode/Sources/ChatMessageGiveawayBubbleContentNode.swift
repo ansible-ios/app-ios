@@ -288,7 +288,7 @@ public class ChatMessageGiveawayBubbleContentNode: ChatMessageBubbleContentNode,
                 badgeString.addAttribute(.baselineOffset, value: 1.5, range: NSRange(range, in: badgeString.string))
             }
             
-            let badgeBackgroundColor = !incoming || !isDiamonds ? accentColor : UIColor(rgb: 0xffaf0a)
+            let badgeBackgroundColor = !incoming || !isDiamonds ? accentColor : UIColor(rgb: 0x0b80fe)
             var updatedBadgeImage: UIImage?
             if themeUpdated {
                 updatedBadgeImage = generateStretchableFilledCircleImage(diameter: 21.0, color: badgeBackgroundColor, strokeColor: backgroundColor, strokeWidth: 1.0 + UIScreenPixel, backgroundColor: nil)

@@ -78,7 +78,7 @@ final class DiamondReactionButtonBadgeComponent: Component {
             
             let backgroundTintColor: GlassBackgroundView.TintColor
             if component.isFilled {
-                backgroundTintColor = .init(kind: .custom(style: .default, color: UIColor(rgb: 0xFFB10D)))
+                backgroundTintColor = .init(kind: .custom(style: .default, color: UIColor(rgb: 0x0e81fe)))
             } else {
                 backgroundTintColor = .init(kind: .panel)
             }
@@ -336,7 +336,7 @@ final class DiamondReactionButtonComponent: Component {
             
             let backgroundTintColor: GlassBackgroundView.TintColor
             if component.isFilled {
-                backgroundTintColor = .init(kind: .custom(style: .default, color: UIColor(rgb: 0xFFB10D)))
+                backgroundTintColor = .init(kind: .custom(style: .default, color: UIColor(rgb: 0x0e81fe)))
             } else {
                 backgroundTintColor = .init(kind: .panel)
             }

@@ -136,7 +136,7 @@ private func makePeerBadgeImage(engine: IosappEngine, peer: EnginePeer, count: I
         }
         
         context.clear(CGRect(origin: CGPoint(), size: size))
-        context.setFillColor(UIColor(rgb: 0xFFB10D).cgColor)
+        context.setFillColor(UIColor(rgb: 0x0e81fe).cgColor)
         context.addPath(UIBezierPath(roundedRect: CGRect(origin: CGPoint(), size: size), cornerRadius: size.height * 0.5).cgPath)
         context.fillPath()
         
