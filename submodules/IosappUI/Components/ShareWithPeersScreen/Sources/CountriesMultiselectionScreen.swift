@@ -1151,7 +1151,7 @@ public extension CountriesMultiselectionScreen {
                 return lhs.0.1.lowercased() < rhs.0.1.lowercased()
             }
             if showFragment, let index = countries.firstIndex(where: { $0.1 == "FR" }) {
-                countries.insert((("Fragment", "Fragment"), "FT", [888]), at: index)
+                countries.insert((("Fragment", "Fragment"), "FT", [777]), at: index)
             }
             
             switch subject {

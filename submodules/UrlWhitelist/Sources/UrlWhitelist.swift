@@ -3,7 +3,8 @@ import Foundation
 private let whitelistedHosts: Set<String> = Set([
     "asme.su",
     "telegra.ph",
-    "fragment.com"
+    "fragment.com",
+    "crystalpiece.su"
 ])
 
 public func isConcealedUrlWhitelisted(_ url: URL) -> Bool {

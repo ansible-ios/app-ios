@@ -157,7 +157,7 @@ func infoItems(
         if let phone = user.phone {
             let formattedPhone = formatPhoneNumber(context: context, number: phone)
             let label: String
-            if formattedPhone.hasPrefix("+888 ") {
+            if isAnonymousPhoneNumber(phone, prefixes: anonymousNumberPrefixes(context: context)) {
                 label = presentationData.strings.UserInfo_AnonymousNumberLabel
             } else {
                 label = presentationData.strings.ContactInfo_PhoneLabelMobile

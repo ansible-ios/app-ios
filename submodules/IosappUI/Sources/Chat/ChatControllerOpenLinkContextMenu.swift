@@ -18,6 +18,7 @@ import UrlWhitelist
 import OpenInExternalAppUI
 import SafariServices
 import IosappPresentationData
+import PhoneNumberFormat
 
 private struct ChatLinkOpenMode {
     let shouldOpenInApp: Bool
@@ -230,7 +231,7 @@ extension ChatControllerImpl {
                 openText = self.presentationData.strings.UserInfo_PhoneCall
                 isPhoneNumber = true
 
-                if cleanUrl.hasPrefix("+888") {
+                if cleanUrl.hasPrefix("+"), isAnonymousPhoneNumber(cleanUrl, prefixes: anonymousNumberPrefixes(context: self.context)) {
                     hasOpenAction = false
                 }
             }

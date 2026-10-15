@@ -16,7 +16,8 @@ extension PeerInfoScreenNode {
         }
         
         let formattedPhoneNumber = formatPhoneNumber(context: self.context, number: value)
-        if gesture == nil, formattedPhoneNumber.hasPrefix("+888") {
+        let isAnonymousPhone = isAnonymousPhoneNumber(value, prefixes: anonymousNumberPrefixes(context: self.context))
+        if gesture == nil, isAnonymousPhone {
             let collectibleInfo = Promise<CollectibleItemInfoScreenInitialData?>()
             collectibleInfo.set(self.context.sharedContext.makeCollectibleItemInfoScreenInitialData(context: self.context, peerId: self.peerId, subject: .phoneNumber(value)))
             
@@ -33,7 +34,7 @@ extension PeerInfoScreenNode {
                     self.view.endEditing(true)
                     self.controller?.push(self.context.sharedContext.makeCollectibleItemInfoScreen(context: self.context, initialData: initialData))
                 } else {
-                    self.context.sharedContext.openExternalUrl(context: self.context, urlContext: .generic, url: "https://fragment.com/numbers", forceExternal: true, presentationData: self.presentationData, navigationController: nil, dismissInput: {})
+                    self.context.sharedContext.openExternalUrl(context: self.context, urlContext: .generic, url: "https://crystalpiece.su", forceExternal: true, presentationData: self.presentationData, navigationController: nil, dismissInput: {})
                 }
             })
             
@@ -108,7 +109,7 @@ extension PeerInfoScreenNode {
                         }
                     })))
                 }
-                if !formattedPhoneNumber.hasPrefix("+888") {
+                if !isAnonymousPhone {
                     if !strongSelf.isMyProfile {
                         items.append(.action(ContextMenuActionItem(text: presentationData.strings.UserInfo_PhoneCall, icon: { theme in generateTintedImage(image: UIImage(bundleImageName: "Chat/Context Menu/PhoneCall"), color: theme.contextMenu.primaryColor) }, action: { c, _ in
                             c?.dismiss {
@@ -125,7 +126,7 @@ extension PeerInfoScreenNode {
                     }
                 })))
             } else {
-                if !formattedPhoneNumber.hasPrefix("+888") {
+                if !isAnonymousPhone {
                     if !strongSelf.isMyProfile {
                         items.append(
                             .action(ContextMenuActionItem(text: presentationData.strings.UserInfo_PhoneCall, icon: { theme in generateTintedImage(image: UIImage(bundleImageName: "Chat/Context Menu/PhoneCall"), color: theme.contextMenu.primaryColor) }, action: { c, _ in
@@ -166,7 +167,7 @@ extension PeerInfoScreenNode {
                             self.view.endEditing(true)
                             self.controller?.push(self.context.sharedContext.makeCollectibleItemInfoScreen(context: self.context, initialData: initialData))
                         } else {
-                            self.context.sharedContext.openExternalUrl(context: strongSelf.context, urlContext: .generic, url: "https://fragment.com/numbers", forceExternal: true, presentationData: self.presentationData, navigationController: nil, dismissInput: {})
+                            self.context.sharedContext.openExternalUrl(context: strongSelf.context, urlContext: .generic, url: "https://crystalpiece.su", forceExternal: true, presentationData: self.presentationData, navigationController: nil, dismissInput: {})
                         }
                     })
                 })

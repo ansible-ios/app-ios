@@ -13,6 +13,7 @@ import OpenInExternalAppUI
 import BrowserUI
 import OverlayStatusController
 import PresentationDataUtils
+import PhoneNumberFormat
 
 public struct ParsedSecureIdUrl {
     public let peerId: EnginePeer.Id
@@ -363,7 +364,10 @@ private func makeIosappUrl(_ path: String, queryItems: [URLQueryItem] = []) -> S
 
 func openExternalUrlImpl(context: AccountContext, urlContext: OpenURLContext, url: String, forceExternal: Bool, presentationData: PresentationData, navigationController: NavigationController?, dismissInput: @escaping () -> Void) {
     if forceExternal || url.lowercased().hasPrefix("tel:") || url.lowercased().hasPrefix("calshow:") {
-        if url.lowercased().hasPrefix("tel:+888") {
+        // Только межд. форма (+777…) — анонимная. Голый национальный номер, начинающийся с 777
+        // (Мексика Cuernavaca, Индия и т. п.), набирается как обычно.
+        let telPhone = url.lowercased().hasPrefix("tel:") ? String(url.dropFirst(4)) : ""
+        if telPhone.hasPrefix("+"), isAnonymousPhoneNumber(telPhone, prefixes: anonymousNumberPrefixes(context: context)) {
             context.sharedContext.presentGlobalController(textAlertController(context: context, title: nil, text: presentationData.strings.Conversation_CantPhoneCallAnonymousNumberError, actions: [
                 TextAlertAction(type: .genericAction, title: presentationData.strings.Common_OK, action: {
                 }),

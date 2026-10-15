@@ -24,7 +24,12 @@ private func loadCountryCodes() -> [Country] {
     }
     
     let delimiter = ";"
-    let endOfLine = "\r\n"
+    // Запасную таблицу читаем терпимо к обоим концам строки: индекс git хранит файл в LF,
+    // рабочее дерево на Windows — CRLF, поэтому на разных платформах checkout даёт разный
+    // конец строки. Без этого на LF-копии (CI/Mac) таблица разобралась бы в одну строку и
+    // анонимный код 777 из неё бы не прочитался (как уже сделано в CountryList.swift).
+    let endOfLine1 = "\r\n"
+    let endOfLine2 = "\n"
     
     var result: [Country] = []
     var countriesByPrefix: [String: (Country, Country.CountryCode)] = [:]
@@ -52,7 +57,14 @@ private func loadCountryCodes() -> [Country] {
         
         let pattern = String(data[idRange.upperBound ..< patternRange.lowerBound])
         
-        let maybeNameRange = data.range(of: endOfLine, options: [], range: patternRange.upperBound ..< data.endIndex)
+        let nameRange1 = data.range(of: endOfLine1, options: [], range: patternRange.upperBound ..< data.endIndex)
+        let nameRange2 = data.range(of: endOfLine2, options: [], range: patternRange.upperBound ..< data.endIndex)
+        let maybeNameRange: Range<String.Index>?
+        if let nameRange1 = nameRange1, let nameRange2 = nameRange2 {
+            maybeNameRange = nameRange1.lowerBound < nameRange2.lowerBound ? nameRange1 : nameRange2
+        } else {
+            maybeNameRange = nameRange1 ?? nameRange2
+        }
         
         let countryName = locale.localizedString(forIdentifier: countryId) ?? ""
         if let _ = Int(countryCode) {
@@ -276,9 +288,14 @@ public final class AuthorizationSequenceCountrySelectionController: ViewControll
     
     public static func lookupPatternByNumber(_ number: String, preferredCountries: [String: String]) -> String? {
         let number = removePlus(number)
-        if let (_, code) = lookupCountryIdByNumber(number, preferredCountries: preferredCountries), !code.patterns.isEmpty {
+        if let (_, code) = lookupCountryIdByNumber(number, preferredCountries: preferredCountries) {
+            // Отфильтровать пустые шаблоны: у FT/анонимных сервер может прислать patterns=[] или [""].
+            let patterns = code.patterns.filter { !$0.isEmpty }
+            if patterns.isEmpty {
+                return nil
+            }
             var prefixes: [String: String] = [:]
-            for pattern in code.patterns {
+            for pattern in patterns {
                 let cleanPattern = pattern.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "X", with: "")
                 let cleanPrefix = "\(code.code)\(cleanPattern)"
                 prefixes[cleanPrefix] = pattern
@@ -289,7 +306,7 @@ public final class AuthorizationSequenceCountrySelectionController: ViewControll
                     return pattern
                 }
             }
-            return code.patterns.first
+            return patterns.first
         }
         return nil
     }

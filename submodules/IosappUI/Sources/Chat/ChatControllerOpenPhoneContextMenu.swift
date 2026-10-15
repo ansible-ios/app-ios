@@ -14,6 +14,7 @@ import UndoUI
 import MessageUI
 import PeerInfoUI
 import ChatControllerInteraction
+import PhoneNumberFormat
 
 extension ChatControllerImpl: MFMessageComposeViewControllerDelegate {
     func openPhoneContextMenu(number: String, params: ChatControllerInteraction.LongTapParams) -> Void {
@@ -125,7 +126,7 @@ extension ChatControllerImpl: MFMessageComposeViewControllerDelegate {
                     }))
                 )
             }
-            if number.hasPrefix("+888") {
+            if number.hasPrefix("+"), isAnonymousPhoneNumber(number, prefixes: anonymousNumberPrefixes(context: self.context)) {
                 
             } else {
                 items.append(

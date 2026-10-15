@@ -7,7 +7,8 @@ private let whitelistedHosts: Set<String> = Set([
     "telegram.org",
     "asme.su",
     "telegra.ph",
-    "fragment.com"
+    "fragment.com",
+    "crystalpiece.su"
 ])
 
 private let dataDetector = try? NSDataDetector(types: NSTextCheckingResult.CheckingType([.link]).rawValue)
