@@ -148,7 +148,6 @@ swift_library(
         "//submodules/IosappUI/Components/ListActionItemComponent",
         "//submodules/Utils/DeviceModel",
         "//submodules/PasscodeCore",
-        "//submodules/WalletContext",
     ],
     visibility = [
         "//visibility:public",

@@ -17,7 +17,6 @@ swift_library(
         "//submodules/IosappPresentationData",
         "//submodules/SSignalKit/SwiftSignalKit",
         "//submodules/AccountContext",
-        "//submodules/WalletContext",
         "//submodules/InstantPageUI",
         "//submodules/TextFormat:TextFormat",
         "//submodules/IosappUI/Components/Chat/ChatMessageBubbleContentNode",
