@@ -126,8 +126,6 @@ swift_library(
         "//submodules/UndoUI",
         "//submodules/MediaPlayer:UniversalMediaPlayer",
         "//submodules/WebUI",
-        "//submodules/WalletContext",
-        "//submodules/IosappUI/Components/Wallet/WalletSendScreen",
         "//submodules/IosappUI/Components/MultiScaleTextNode",
         "//submodules/GridMessageSelectionNode",
         "//submodules/ChatMessageInteractiveMediaBadge",

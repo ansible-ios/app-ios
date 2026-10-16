@@ -16,7 +16,6 @@ swift_library(
         "//submodules/ComponentFlow",
         "//submodules/ContextUI",
         "//submodules/IosappUI/Components/GlassBackgroundComponent",
-        "//submodules/IosappUI/Components/Wallet/WalletSendKeyboardComponent",
         "//submodules/IosappCore",
         "//submodules/IosappPresentationData",
         "//submodules/PresentationDataUtils",

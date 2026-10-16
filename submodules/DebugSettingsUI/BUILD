@@ -28,7 +28,6 @@ swift_library(
         "//submodules/ComponentFlow",
         "//submodules/IosappUI/Components/AlertComponent",
         "//submodules/IosappUI/Components/AlertComponent/AlertCheckComponent",
-        "//submodules/WalletContext",
         "//submodules/CpuProfiler:CpuProfiler",
     ],
     visibility = [

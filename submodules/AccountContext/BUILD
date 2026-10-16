@@ -25,7 +25,6 @@ swift_library(
         "//submodules/TextFormat:TextFormat",
         "//submodules/IosappUI/Components/AnimationCache:AnimationCache",
         "//submodules/IosappUI/Components/MultiAnimationRenderer:MultiAnimationRenderer",
-        "//submodules/WalletContext",
         "//submodules/LottieSettings:LottieSettings",
         "//submodules/IosappCore/FlatBuffers",
         "//submodules/IosappCore/FlatSerialization",

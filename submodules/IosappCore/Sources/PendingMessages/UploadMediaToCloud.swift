@@ -126,7 +126,7 @@ private func uploadImageToCloud(
                     |> mapToSignal { result -> Signal<CloudUploadEvent, PendingMessageUploadError> in
                         guard case let .messageMediaPhoto(data) = result,
                               let photo = data.photo,
-                              let cloudImage = telegramMediaImageFromApiPhoto(photo) else {
+                              let cloudImage = ansibleMediaImageFromApiPhoto(photo) else {
                             return .fail(.generic)
                         }
                         guard let referenceKey else {
@@ -229,7 +229,7 @@ func uploadFileToCloud(
                 |> mapToSignal { result -> Signal<CloudUploadEvent, PendingMessageUploadError> in
                     guard case let .messageMediaDocument(data) = result,
                           let document = data.document,
-                          let cloudFile = telegramMediaFileFromApiDocument(document, altDocuments: data.altDocuments) else {
+                          let cloudFile = ansibleMediaFileFromApiDocument(document, altDocuments: data.altDocuments) else {
                         return .fail(.generic)
                     }
                     return .single(.done(cloudFile))

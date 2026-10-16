@@ -16,7 +16,6 @@ swift_library(
         "//submodules/AccountContext:AccountContext",
         "//submodules/IosappUIPreferences:IosappUIPreferences",
         "//submodules/IosappNotices:IosappNotices",
-        "//submodules/WalletContext:WalletContext",
     ],
     visibility = [
         "//visibility:public",

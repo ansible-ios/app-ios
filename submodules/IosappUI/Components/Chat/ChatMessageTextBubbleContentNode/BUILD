@@ -24,7 +24,6 @@ swift_library(
         "//submodules/IosappAnimatedStickerNode",
         "//submodules/SSignalKit/SwiftSignalKit",
         "//submodules/AccountContext",
-        "//submodules/WalletContext",
         "//submodules/YuvConversion",
         "//submodules/IosappUI/Components/AnimationCache",
         "//submodules/IosappUI/Components/LottieAnimationCache",
