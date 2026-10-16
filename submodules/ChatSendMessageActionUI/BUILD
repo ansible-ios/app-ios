@@ -11,6 +11,7 @@ swift_library(
     ],
     deps = [
         "//submodules/SSignalKit/SwiftSignalKit:SwiftSignalKit",
+        "//submodules/LottieSettings:LottieSettings",
         "//submodules/AsyncDisplayKit:AsyncDisplayKit",
         "//submodules/Display:Display",
         "//submodules/IosappCore:IosappCore",
@@ -31,7 +32,6 @@ swift_library(
         "//submodules/WallpaperBackgroundNode",
         "//submodules/Components/MultilineTextWithEntitiesComponent",
         "//submodules/Components/MultilineTextComponent",
-        "//submodules/IosappUI/Components/LottieMetal",
         "//submodules/AnimatedStickerNode",
         "//submodules/IosappAnimatedStickerNode",
         "//submodules/ActivityIndicator",

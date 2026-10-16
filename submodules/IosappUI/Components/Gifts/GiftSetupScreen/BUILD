@@ -11,9 +11,11 @@ swift_library(
     ],
     deps = [
         "//submodules/AsyncDisplayKit",
+        "//submodules/CheckNode",
         "//submodules/Display",
         "//submodules/Postbox",
         "//submodules/IosappCore",
+        "//submodules/IosappNotices",
         "//submodules/SSignalKit/SwiftSignalKit",
         "//submodules/IosappPresentationData",
         "//submodules/IosappUIPreferences",
@@ -52,6 +54,7 @@ swift_library(
         "//submodules/IosappUI/Components/GlassBackgroundComponent",
         "//submodules/IosappUI/Components/MessageInputPanelComponent",
         "//submodules/IosappUI/Components/Gifts/GiftRemainingCountComponent",
+        "//submodules/UndoUI",
     ],
     visibility = [
         "//visibility:public",

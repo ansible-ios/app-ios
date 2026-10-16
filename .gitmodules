@@ -1,4 +1,3 @@
-
 [submodule "submodules/rlottie/rlottie"]
 	path = submodules/rlottie/rlottie
 	url = https://github.com/ansible-ios/rlottie.git
@@ -23,18 +22,15 @@
 [submodule "build-system/bazel-rules/rules_xcodeproj"]
 	path = build-system/bazel-rules/rules_xcodeproj
 	url = https://github.com/ansible-ios/rules_xcodeproj.git
-[submodule "submodules/LottieCpp/lottiecpp"]
-	path = submodules/LottieCpp/lottiecpp
-	url = https://github.com/ansible-ios/lottiecpp.git
 [submodule "third-party/dav1d/dav1d"]
 	path = third-party/dav1d/dav1d
 	url = https://github.com/ansible-ios/dav1d.git
 [submodule "third-party/td/td"]
 	path = third-party/td/td
 	url = https://github.com/asdlib/adlib.git
-[submodule "third-party/XcodeGen"]
-	path = third-party/XcodeGen
-	url = https://github.com/ansible-ios/XcodeGen.git
-[submodule "build-system/bazel-rules/sourcekit-bazel-bsp"]
-	path = build-system/bazel-rules/sourcekit-bazel-bsp
-	url = https://github.com/ansible-ios/sourcekit-bazel-bsp.git
+[submodule "submodules/tlottie/tlottie"]
+	path = submodules/tlottie/tlottie
+	url = https://github.com/ansible-ios/tlottie.git
+[submodule "third-party/mtproto-engine"]
+	path = third-party/mtproto-engine
+	url = https://github.com/ansible-ios/mtproto-engine.git

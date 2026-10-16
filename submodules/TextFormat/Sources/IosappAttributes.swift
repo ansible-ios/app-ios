@@ -31,6 +31,16 @@ public final class IosappTimecode {
     }
 }
 
+public final class IosappTonAddress {
+    public let address: String
+    public let range: NSRange
+
+    public init(address: String, range: NSRange) {
+        self.address = address
+        self.range = range
+    }
+}
+
 public struct IosappTextAttributes {
     public static let URL = "UrlAttributeT"
     public static let PeerMention = "IosappPeerMention"
@@ -38,6 +48,7 @@ public struct IosappTextAttributes {
     public static let BotCommand = "IosappBotCommand"
     public static let Hashtag = "IosappHashtag"
     public static let BankCard = "IosappBankCard"
+    public static let TonAddress = "IosappTonAddress"
     public static let Timecode = "IosappTimecode"
     public static let BlockQuote = "IosappBlockQuote"
     public static let Pre = "IosappPre"

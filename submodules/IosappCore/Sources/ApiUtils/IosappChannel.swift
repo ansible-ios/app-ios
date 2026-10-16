@@ -23,6 +23,7 @@ public enum IosappChannelPermission {
     case manageDirect
     case editRank
     case manageRanks
+    case manageWelcomeMessages
 }
 
 public extension IosappChannel {
@@ -277,6 +278,12 @@ public extension IosappChannel {
             case .manageRanks:
                 if let adminRights = self.adminRights {
                     return adminRights.rights.contains(.canManageRanks)
+                } else {
+                    return false
+                }
+            case .manageWelcomeMessages:
+                if let adminRights = self.adminRights {
+                    return adminRights.rights.contains(.canManageWelcomeMessages)
                 } else {
                     return false
                 }

@@ -30,13 +30,14 @@ public struct IosappChatAdminRightsFlags: OptionSet, Hashable {
     public static let canManageDirect = IosappChatAdminRightsFlags(rawValue: 1 << 17)
     public static let canManageRanks = IosappChatAdminRightsFlags(rawValue: 1 << 18)
     public static let canManageLinkedPeers = IosappChatAdminRightsFlags(rawValue: 1 << 19)
+    public static let canManageWelcomeMessages = IosappChatAdminRightsFlags(rawValue: 1 << 20)
     
     public static var all: IosappChatAdminRightsFlags {
-        return [.canChangeInfo, .canPostMessages, .canEditMessages, .canDeleteMessages, .canBanUsers, .canInviteUsers, .canPinMessages, .canAddAdmins, .canBeAnonymous, .canManageCalls, .canManageTopics, .canPostStories, .canEditStories, .canDeleteStories, .canManageRanks, .canManageLinkedPeers]
+        return [.canChangeInfo, .canPostMessages, .canEditMessages, .canDeleteMessages, .canBanUsers, .canInviteUsers, .canPinMessages, .canAddAdmins, .canBeAnonymous, .canManageCalls, .canManageTopics, .canPostStories, .canEditStories, .canDeleteStories, .canManageRanks, .canManageLinkedPeers, .canManageWelcomeMessages]
     }
     
     public static var allChannel: IosappChatAdminRightsFlags {
-        return [.canChangeInfo, .canPostMessages, .canEditMessages, .canDeleteMessages, .canBanUsers, .canInviteUsers, .canPinMessages, .canAddAdmins, .canManageCalls, .canManageTopics, .canPostStories, .canEditStories, .canDeleteStories, .canManageDirect]
+        return [.canChangeInfo, .canPostMessages, .canEditMessages, .canDeleteMessages, .canBanUsers, .canInviteUsers, .canPinMessages, .canAddAdmins, .canManageCalls, .canManageTopics, .canPostStories, .canEditStories, .canDeleteStories, .canManageDirect, .canManageWelcomeMessages]
     }
     
     public static var allCommunity: IosappChatAdminRightsFlags {
@@ -55,7 +56,8 @@ public struct IosappChatAdminRightsFlags: OptionSet, Hashable {
         .canPostStories,
         .canEditStories,
         .canDeleteStories,
-        .canManageRanks
+        .canManageRanks,
+        .canManageWelcomeMessages
     ]
     
     public static let internal_broadcastSpecific: IosappChatAdminRightsFlags = [
@@ -70,7 +72,8 @@ public struct IosappChatAdminRightsFlags: OptionSet, Hashable {
         .canEditStories,
         .canDeleteStories,
         .canManageDirect,
-        .canBanUsers
+        .canBanUsers,
+        .canManageWelcomeMessages
     ]
     
     public static func peerSpecific(peer: EnginePeer) -> IosappChatAdminRightsFlags {

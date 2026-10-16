@@ -1,4 +1,5 @@
 import Foundation
+import LottieSettings
 import UIKit
 import Display
 import AsyncDisplayKit
@@ -265,8 +266,8 @@ public final class GiftStoreContentComponent: Component {
                                                 acceptedPrice: nil,
                                                 skipConfirmation: false,
                                                 diamondsTopUpOptions: diamondsTopUpOptions,
-                                                buyGift: { [weak self] slug, peerId, price in
-                                                    return self?.diamondGiftsContext?.buyDiamondGift(slug: slug, peerId: peerId, price: price) ?? .complete()
+                                                buyGift: { [weak self] slug, peerId, price, hideName, text, entities in
+                                                    return self?.diamondGiftsContext?.buyDiamondGift(slug: slug, peerId: peerId, price: price, hideName: hideName, text: text, entities: entities) ?? .complete()
                                                 },
                                                 getController: controller,
                                                 updateProgress: { _ in },
@@ -300,8 +301,8 @@ public final class GiftStoreContentComponent: Component {
                                                     subject: .uniqueGift(uniqueGift, component.peerId),
                                                     allSubjects: allSubjects,
                                                     index: index,
-                                                    buyGift: { slug, peerId, price in
-                                                        return self.diamondGiftsContext?.buyDiamondGift(slug: slug, peerId: peerId, price: price) ?? .complete()
+                                                    buyGift: { slug, peerId, price, hideName, text, entities in
+                                                        return self.diamondGiftsContext?.buyDiamondGift(slug: slug, peerId: peerId, price: price, hideName: hideName, text: text, entities: entities) ?? .complete()
                                                     },
                                                     updateResellDiamonds: { _, price in
                                                         return self.diamondGiftsContext?.updateDiamondGiftResellPrice(slug: uniqueGift.slug, price: price) ?? .complete()
@@ -421,7 +422,8 @@ public final class GiftStoreContentComponent: Component {
                 let emptyResultsAnimationSize = self.emptyResultsAnimation.update(
                     transition: .immediate,
                     component: AnyComponent(LottieComponent(
-                        content: LottieComponent.AppBundleContent(name: "ChatListNoResults")
+                        content: LottieComponent.AppBundleContent(name: "ChatListNoResults"),
+                        lottieSettings: component.context.lottieRenderingSettings
                     )),
                     environment: {},
                     containerSize: CGSize(width: emptyAnimationHeight, height: emptyAnimationHeight)
@@ -1204,6 +1206,7 @@ final class GiftStoreScreenComponent: Component {
         
         override init(frame: CGRect) {
             self.balanceBackgroundView = GlassContextExtractableContainer()
+            self.balanceBackgroundView.morphsIntoContextMenu = true
             
             self.scrollView = ScrollView()
             self.scrollView.showsVerticalScrollIndicator = true

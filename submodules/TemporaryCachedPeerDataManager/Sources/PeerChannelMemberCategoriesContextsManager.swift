@@ -368,7 +368,7 @@ public final class PeerChannelMemberCategoriesContextsManager {
     
     public func updateMemberBannedRights(engine: IosappEngine, peerId: PeerId, memberId: PeerId, bannedRights: IosappChatBannedRights?) -> Signal<Void, NoError> {
         return engine.data.get(IosappEngine.EngineData.Item.Peer.Peer(id: peerId))
-        |> mapToSignal { peer -> Signal<Void, NoError> in
+        |> mapToSignal { [self] peer -> Signal<Void, NoError> in
             if bannedRights == nil, case .community = peer {
                 return engine.peers.toggleCommunityParticipantBanned(communityId: peerId, participantId: memberId, banned: false)
                 |> `catch` { _ -> Signal<Void, NoError> in

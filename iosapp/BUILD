@@ -1,3 +1,5 @@
+load("@rules_cc//cc:objc_library.bzl", "objc_library")
+
 load("@bazel_skylib//rules:common_settings.bzl",
     "bool_flag",
 )
@@ -10,6 +12,7 @@ load("@build_bazel_rules_apple//apple:ios.bzl",
     "ios_framework",
     "ios_ui_test",
     "ios_ui_test_suite",
+    "ios_unit_test",
 )
 
 load(
@@ -24,6 +27,8 @@ load("@build_bazel_rules_apple//apple:resources.bzl",
 load("@build_bazel_rules_swift//swift:swift.bzl",
     "swift_library",
 )
+
+load("@rules_shell//shell:sh_binary.bzl", "sh_binary")
 
 load(
     "@rules_xcodeproj//xcodeproj:defs.bzl",
@@ -160,7 +165,7 @@ genrule(
     ],
 )
 
-minimum_os_version = "13.0"
+minimum_os_version = "15.0"
 
 notificationServiceExtensionVersion = "v1"
 
@@ -415,6 +420,9 @@ plist_fragment(
     defaults = {"buildNumber": "1"},
 )
 
+# Fork deep-link schemes: ansible:// and as://.  The extra schemes upstream 13.0 registers
+# next to tonsite (ton, tc) are intentionally NOT registered: that feature is cut/dark here,
+# and claiming those schemes would take links away from other apps.
 plist_fragment(
     name = "UrlTypesInfoPlist",
     extension = "plist",
@@ -455,15 +463,15 @@ official_apple_pay_merchants = [
     "merchant.sberbank.test.ph.telegra.Telegraph",
     "merchant.privatbank.test.telergramios",
     "merchant.privatbank.prod.telergram",
-    "merchant.paymaster.test.telegramios",
-    "merchant.paymaster.prod.telegramios",
-    "merchant.smartglocal.prod.telegramios",
-    "merchant.smartglocal.test.telegramios",
-    "merchant.yoomoney.test.telegramios",
-    "merchant.yoomoney.prod.telegramios",
+    "merchant.paymaster.test.iosappios",
+    "merchant.paymaster.prod.iosappios",
+    "merchant.smartglocal.prod.iosappios",
+    "merchant.smartglocal.test.iosappios",
+    "merchant.yoomoney.test.iosappios",
+    "merchant.yoomoney.prod.iosappios",
     "merchant.org.telegram.Best2pay.test",
-    "merchant.psbank.test.telegramios",
-    "merchant.psbank.prod.telegramios",
+    "merchant.psbank.test.iosappios",
+    "merchant.psbank.prod.iosappios",
     "merchant.org.telegram.billinenet.test",
     "merchant.org.telegram.billinenet.prod",
     "merchant.org.telegram.portmone.test",
@@ -473,7 +481,7 @@ official_apple_pay_merchants = [
 
 official_bundle_ids = [
     "ph.telegra.Telegraph",
-    "org.telegram.Telegram-iOS",
+    "org.telegram.Iosapp-iOS",
 ]
 
 store_bundle_ids = [
@@ -582,7 +590,7 @@ official_background_gpu_fragment = """
 background_gpu_fragment = official_background_gpu_fragment if telegram_bundle_id == "ph.telegra.Telegraph" else ""
 
 plist_fragment(
-    name = "TelegramEntitlements",
+    name = "IosappEntitlements",
     extension = "entitlements",
     template = "".join([
         aps_fragment,
@@ -773,11 +781,11 @@ plist_fragment(
     template =
     """
     <key>CFBundleIdentifier</key>
-    <string>{telegram_bundle_id}.TelegramApi</string>
+    <string>{telegram_bundle_id}.IosappApi</string>
     <key>CFBundleDevelopmentRegion</key>
     <string>en</string>
     <key>CFBundleName</key>
-    <string>TelegramApi</string>
+    <string>IosappApi</string>
     <key>CFBundlePackageType</key>
     <string>FMWK</string>
     """.format(
@@ -791,11 +799,11 @@ plist_fragment(
     template =
     """
     <key>CFBundleIdentifier</key>
-    <string>{telegram_bundle_id}.TelegramCore</string>
+    <string>{telegram_bundle_id}.IosappCore</string>
     <key>CFBundleDevelopmentRegion</key>
     <string>en</string>
     <key>CFBundleName</key>
-    <string>TelegramCore</string>
+    <string>IosappCore</string>
     <key>CFBundlePackageType</key>
     <string>FMWK</string>
     """.format(
@@ -805,7 +813,7 @@ plist_fragment(
 
 ios_framework(
     name = "IosappCoreFramework",
-    bundle_id = "{telegram_bundle_id}.TelegramCore".format(
+    bundle_id = "{telegram_bundle_id}.IosappCore".format(
         telegram_bundle_id = telegram_bundle_id,
     ),
     families = [
@@ -919,11 +927,11 @@ plist_fragment(
     template =
     """
     <key>CFBundleIdentifier</key>
-    <string>{telegram_bundle_id}.TelegramUI</string>
+    <string>{telegram_bundle_id}.IosappUI</string>
     <key>CFBundleDevelopmentRegion</key>
     <string>en</string>
     <key>CFBundleName</key>
-    <string>TelegramUI</string>
+    <string>IosappUI</string>
     <key>CFBundlePackageType</key>
     <string>FMWK</string>
     """.format(
@@ -933,7 +941,10 @@ plist_fragment(
 
 ios_framework(
     name = "IosappUIFramework",
-    bundle_id = "{telegram_bundle_id}.TelegramUI".format(
+    additional_linker_inputs = [
+        "//third-party/boringssl:crypto",
+    ],
+    bundle_id = "{telegram_bundle_id}.IosappUI".format(
         telegram_bundle_id = telegram_bundle_id,
     ),
     families = [
@@ -955,6 +966,9 @@ ios_framework(
     minimum_os_version = minimum_os_version,
     extension_safe = True,
     ipa_post_processor = strip_framework,
+    linkopts = [
+        "$(location //third-party/boringssl:crypto)",
+    ],
     deps = [
         "//submodules/IosappUI:IosappUI",
     ] + debug_deps,
@@ -970,7 +984,7 @@ plist_fragment(
     <key>CFBundleIdentifier</key>
     <string>{telegram_bundle_id}.Share</string>
     <key>CFBundleName</key>
-    <string>Telegram</string>
+    <string>Ansible</string>
     <key>CFBundlePackageType</key>
     <string>XPC!</string>
     <key>NSExtension</key>
@@ -1021,6 +1035,7 @@ swift_library(
     ],
     deps = [
         "//submodules/IosappUI",
+        "//submodules/PasscodeCore",
         "//submodules/IosappUI/Components/ShareExtensionContext"
     ],
 )
@@ -1062,7 +1077,7 @@ plist_fragment(
     <key>CFBundleIdentifier</key>
     <string>{telegram_bundle_id}.NotificationContent</string>
     <key>CFBundleName</key>
-    <string>Telegram</string>
+    <string>Ansible</string>
     <key>CFBundlePackageType</key>
     <string>XPC!</string>
     <key>NSExtension</key>
@@ -1108,6 +1123,7 @@ swift_library(
     ],
     deps = [
         "//submodules/IosappUI:IosappUI",
+        "//submodules/PasscodeCore",
         ":NotificationContentExtensionLink",
     ],
 )
@@ -1169,7 +1185,7 @@ plist_fragment(
     <key>CFBundleIdentifier</key>
     <string>{telegram_bundle_id}.Widget</string>
     <key>CFBundleName</key>
-    <string>Telegram</string>
+    <string>Ansible</string>
     <key>CFBundlePackageType</key>
     <string>XPC!</string>
     <key>NSExtension</key>
@@ -1212,6 +1228,7 @@ swift_library(
         "//submodules/SSignalKit/SwiftSignalKit:SwiftSignalKit",
         "//submodules/Postbox:Postbox",
         "//submodules/IosappCore:IosappCore",
+        "//submodules/PasscodeCore",
         "//submodules/OpenSSLEncryptionProvider:OpenSSLEncryptionProvider",
         "//iosapp:GeneratedSources",
     ],
@@ -1253,7 +1270,11 @@ ios_extension(
         ":AppNameInfoPlist",
     ],
     minimum_os_version = minimum_os_version, # maintain the same minimum OS version across extensions
-    ipa_post_processor = ":SetMinOsVersionWidgetExtension",
+    # Deliberately NOT patched down: this used to stamp MinimumOSVersion=14.0 so a WidgetKit
+    # extension could ship while the app min was 13.0. Now that the app min is >= 14, stamping
+    # a plist minimum *below* the binary's minos makes App Store validation reject the bundle
+    # (error 90208). Same reason the other extensions' patches are commented out.
+    #ipa_post_processor = ":SetMinOsVersionWidgetExtension",
     #provides_main = True,
     provisioning_profile = select({
         ":disableProvisioningProfilesSetting": None,
@@ -1282,7 +1303,7 @@ plist_fragment(
     <key>CFBundleIdentifier</key>
     <string>{telegram_bundle_id}.SiriIntents</string>
     <key>CFBundleName</key>
-    <string>Telegram</string>
+    <string>Ansible</string>
     <key>CFBundlePackageType</key>
     <string>XPC!</string>
     <key>NSExtension</key>
@@ -1349,8 +1370,41 @@ swift_library(
         "//submodules/BuildConfig:BuildConfig",
         "//submodules/OpenSSLEncryptionProvider:OpenSSLEncryptionProvider",
         "//submodules/AppLockState:AppLockState",
+        "//submodules/PasscodeCore",
         "//iosapp:GeneratedSources",
         "//submodules/WidgetItems:WidgetItems",
+    ],
+)
+
+swift_library(
+    name = "IntentsExtensionTestsLib",
+    testonly = True,
+    srcs = glob([
+        "SiriIntentsTests/**/*.swift",
+    ]),
+    deps = [
+        ":IntentsExtensionLib",
+        "//submodules/Postbox:Postbox",
+        "//submodules/IosappCore:IosappCore",
+        "//submodules/SSignalKit/SwiftSignalKit:SwiftSignalKit",
+    ],
+)
+
+ios_test_runner(
+    name = "IntentsExtensionTestRunner",
+    device_type = "iPhone 17",
+    os_version = "26.5",
+)
+
+ios_unit_test(
+    name = "IntentsExtensionTests",
+    minimum_os_version = minimum_os_version,
+    runner = ":IntentsExtensionTestRunner",
+    deps = [
+        ":IntentsExtensionTestsLib",
+    ],
+    visibility = [
+        "//visibility:public",
     ],
 )
 
@@ -1413,7 +1467,7 @@ plist_fragment(
     <key>CFBundleIdentifier</key>
     <string>{telegram_bundle_id}.BroadcastUpload</string>
     <key>CFBundleName</key>
-    <string>Telegram</string>
+    <string>Ansible</string>
     <key>CFBundlePackageType</key>
     <string>XPC!</string>
     <key>NSExtension</key>
@@ -1507,7 +1561,7 @@ plist_fragment(
     <key>CFBundleIdentifier</key>
     <string>{telegram_bundle_id}.NotificationService</string>
     <key>CFBundleName</key>
-    <string>Telegram</string>
+    <string>Ansible</string>
     <key>CFBundlePackageType</key>
     <string>XPC!</string>
     <key>NSExtension</key>
@@ -1561,7 +1615,7 @@ ios_extension(
 )
 
 plist_fragment(
-    name = "TelegramInfoPlist",
+    name = "IosappInfoPlist",
     extension = "plist",
     template = 
     """
@@ -1638,17 +1692,17 @@ plist_fragment(
     <key>NSCameraUsageDescription</key>
     <string>We need this so that you can take and share photos and videos.</string>
     <key>NSContactsUsageDescription</key>
-    <string>Telegram stores your contacts heavily encrypted in the cloud to let you connect with your friends across all your devices.</string>
+    <string>Ansible stores your contacts heavily encrypted in the cloud to let you connect with your friends across all your devices.</string>
     <key>NSFaceIDUsageDescription</key>
     <string>You can use Face ID to unlock the app.</string>
     <key>NSLocationAlwaysUsageDescription</key>
-    <string>When you send your location to your friends, Telegram needs access to show them a map. You also need this to send locations from an Apple Watch.</string>
+    <string>When you send your location to your friends, Ansible needs access to show them a map. You also need this to send locations from an Apple Watch.</string>
     <key>NSLocationWhenInUseUsageDescription</key>
-    <string>When you send your location to your friends, Telegram needs access to show them a map.</string>
+    <string>When you send your location to your friends, Ansible needs access to show them a map.</string>
     <key>NSMicrophoneUsageDescription</key>
     <string>We need this so that you can record and share voice messages and videos with sound.</string>
     <key>NSMotionUsageDescription</key>
-    <string>When you send your location to your friends, Telegram needs access to show them a map.</string>
+    <string>When you send your location to your friends, Ansible needs access to show them a map.</string>
     <key>NSPhotoLibraryAddUsageDescription</key>
     <string>We need this so that you can share photos and videos from your photo library.</string>
     <key>NSPhotoLibraryUsageDescription</key>
@@ -1667,6 +1721,23 @@ plist_fragment(
         <string>AremacFS-Regular.otf</string>
         <string>AremacFS-Semibold.otf</string>
     </array>
+    <key>UIApplicationSceneManifest</key>
+    <dict>
+        <key>UIApplicationSupportsMultipleScenes</key>
+        <false/>
+        <key>UISceneConfigurations</key>
+        <dict>
+            <key>UIWindowSceneSessionRoleApplication</key>
+            <array>
+                <dict>
+                    <key>UISceneConfigurationName</key>
+                    <string>Default Configuration</string>
+                    <key>UISceneDelegateClassName</key>
+                    <string>SceneDelegate</string>
+                </dict>
+            </array>
+        </dict>
+    </dict>
     <key>UIBackgroundModes</key>
     <array>
         <string>audio</string>
@@ -1716,7 +1787,7 @@ plist_fragment(
                 <string>public.data</string>
             </array>
             <key>UTTypeDescription</key>
-            <string>Telegram iOS Color Theme File</string>
+            <string>Ansible iOS Color Theme File</string>
             <key>UTTypeIconFiles</key>
             <array>
                 <string>BlueIcon@3x.png</string>
@@ -1742,15 +1813,15 @@ plist_fragment(
 )
 
 local_provisioning_profile(
-    name = "Telegram_local_profile",
+    name = "Iosapp_local_profile",
     profile_name = "iOS Team Provisioning Profile: {}".format(telegram_bundle_id),
     team_id = telegram_team_id,
 )
 
 xcode_provisioning_profile(
-   name = "Telegram_xcode_profile",
+   name = "Iosapp_xcode_profile",
    managed_by_xcode = True,
-   provisioning_profile = ":Telegram_local_profile",
+   provisioning_profile = ":Iosapp_local_profile",
 )
 
 apple_prebuilt_watchos_application(
@@ -1775,11 +1846,11 @@ ios_application(
     minimum_os_version = minimum_os_version,
     provisioning_profile = select({
         ":disableProvisioningProfilesSetting": None,
-        "//conditions:default": ":Telegram_xcode_profile" if telegram_use_xcode_managed_codesigning else "@build_configuration//provisioning:Iosapp.mobileprovision",
+        "//conditions:default": ":Iosapp_xcode_profile" if telegram_use_xcode_managed_codesigning else "@build_configuration//provisioning:Iosapp.mobileprovision",
     }),
-    entitlements = ":TelegramEntitlements.entitlements",
+    entitlements = ":IosappEntitlements.entitlements",
     infoplists = [
-        ":TelegramInfoPlist",
+        ":IosappInfoPlist",
         ":BuildNumberInfoPlist",
         ":VersionInfoPlist",
         ":RequiredDeviceCapabilitiesPlist",
@@ -1870,7 +1941,7 @@ swift_library(
 
 ios_ui_test_suite(
     name = "iOSAppUITestSuite",
-    bundle_id = "org.telegram.Telegram-iOS-uitests",
+    bundle_id = "org.telegram.Iosapp-iOS-uitests",
     minimum_os_version = minimum_os_version,
     runners = [
         ":iPhone-17__26.2",
@@ -1894,9 +1965,9 @@ ios_application(
         ":disableProvisioningProfilesSetting": None,
         "//conditions:default": "@build_configuration//provisioning:Iosapp.mobileprovision",
     }),
-    entitlements = ":TelegramEntitlements.entitlements",
+    entitlements = ":IosappEntitlements.entitlements",
     infoplists = [
-        ":TelegramInfoPlist",
+        ":IosappInfoPlist",
         ":BuildNumberInfoPlist",
         ":VersionInfoPlist",
         ":RequiredDeviceCapabilitiesPlist",
@@ -1937,9 +2008,9 @@ ios_application(
         ":disableProvisioningProfilesSetting": None,
         "//conditions:default": "@build_configuration//provisioning:Iosapp.mobileprovision",
     }),
-    entitlements = ":TelegramEntitlements.entitlements",
+    entitlements = ":IosappEntitlements.entitlements",
     infoplists = [
-        ":TelegramInfoPlist",
+        ":IosappInfoPlist",
         ":BuildNumberInfoPlist",
         ":VersionInfoPlist",
         ":RequiredDeviceCapabilitiesPlist",
@@ -1962,9 +2033,9 @@ ios_application(
         ":disableProvisioningProfilesSetting": None,
         "//conditions:default": "@build_configuration//provisioning:Iosapp.mobileprovision",
     }),
-    entitlements = ":TelegramEntitlements.entitlements",
+    entitlements = ":IosappEntitlements.entitlements",
     infoplists = [
-        ":TelegramInfoPlist",
+        ":IosappInfoPlist",
         ":BuildNumberInfoPlist",
         ":VersionInfoPlist",
         ":RequiredDeviceCapabilitiesPlist",
@@ -1973,4 +2044,15 @@ ios_application(
     deps = [
         "//third-party/libvpx:vpx",
     ],
+)
+
+# Actual generated localization resources for unhosted preview integration tests.
+filegroup(
+    name = "InstantPagePreviewTestStrings",
+    testonly = True,
+    srcs = [
+        ":GeneratedPresentationStrings/Resources/PresentationStrings.data",
+        "Sources/en.lproj/Localizable.strings",
+    ],
+    visibility = ["//submodules/ChatListUI:__pkg__"],
 )

@@ -27,11 +27,11 @@ private enum ResourceFileData {
     case file(path: String, size: Int)
 }
 
-public func largestRepresentationForPhoto(_ photo: IosappMediaImage) -> IosappMediaImageRepresentation? {
+public func largestRepresentationForPhoto(_ photo: IosappMediaImage, maxSize: PixelDimensions = PixelDimensions(width: 1280, height: 1280)) -> IosappMediaImageRepresentation? {
     if let progressiveRepresentation = progressiveImageRepresentation(photo.representations) {
         return progressiveRepresentation
     }
-    return photo.representationForDisplayAtSize(PixelDimensions(width: 1280, height: 1280))
+    return photo.representationForDisplayAtSize(maxSize)
 }
 
 private let progressiveRangeMap: [(Int, [Int])] = [

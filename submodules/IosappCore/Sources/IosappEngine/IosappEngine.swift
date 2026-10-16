@@ -17,6 +17,10 @@ public final class IosappEngine {
         return Payments(account: self.account)
     }()
 
+    public lazy var wallet: Wallet = {
+        return Wallet(account: self.account)
+    }()
+
     public lazy var peers: Peers = {
         return Peers(account: self.account)
     }()

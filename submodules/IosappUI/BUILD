@@ -21,6 +21,21 @@ filegroup(
     visibility = ["//visibility:public"],
 )
 
+# Sources the composer flat-rebuild guard test scans. A Bazel-sandboxed XCTest only sees what is
+# declared, so these are wired as `data` on ChatRichTextEditorComposerTestsLib. See
+# ChatRichTextEditorComposer/Tests/ComposerFlatRebuildGuardTests.swift.
+filegroup(
+    name = "composer_state_writer_sources",
+    srcs = [
+        "Sources/CommandChatInputContextPanelNode.swift",
+        "Sources/CommandMenuChatInputContextPanelNode.swift",
+        "Sources/EmojisChatInputContextPanelNode.swift",
+        "Sources/HashtagChatInputContextPanelNode.swift",
+        "Sources/MentionChatInputContextPanelNode.swift",
+    ],
+    visibility = ["//visibility:public"],
+)
+
 #filegroup(
 #    name = "Icons",
 #    srcs = glob([
@@ -56,6 +71,7 @@ swift_library(
         "//submodules/Display:Display",
         "//submodules/Postbox:Postbox",
         "//submodules/IosappCore:IosappCore",
+        "//submodules/WebProxyTransport:WebProxyTransport",
         "//submodules/MtProtoKit:MtProtoKit",
         "//submodules/IosappPresentationData:IosappPresentationData",
         "//submodules/AccountContext:AccountContext",
@@ -73,7 +89,8 @@ swift_library(
         "//submodules/Utils/DeviceModel",
         "//submodules/BuildConfig:BuildConfig",
         "//submodules/BuildConfigExtra:BuildConfigExtra",
-        "//submodules/rlottie:RLottieBinding",
+        "//submodules/LottieBinding:LottieBinding",
+        "//submodules/LottieSettings:LottieSettings",
         "//submodules/IosappUpdateUI:IosappUpdateUI",
         "//submodules/MergeLists:MergeLists",
         "//submodules/ActivityIndicator:ActivityIndicator",
@@ -311,6 +328,7 @@ swift_library(
         "//submodules/IosappUI/Components/SendInviteLinkScreen",
         "//submodules/IosappUI/Components/ChatFolderLinkPreviewScreen",
         "//submodules/IosappUI/Components/SliderContextItem:SliderContextItem",
+        "//submodules/IosappUI/Components/CoreList:CoreList",
         "//submodules/IosappUI/Components/Stories/StoryContainerScreen",
         "//submodules/IosappUI/Components/CameraScreen",
         "//submodules/IosappUI/Components/MediaEditorScreen",
@@ -405,6 +423,8 @@ swift_library(
         "//submodules/IosappUI/Components/Chat/ChatMessageDisableCopyProtectionBubbleContentNode",
         "//submodules/IosappUI/Components/Chat/ChatMessageGiveawayBubbleContentNode",
         "//submodules/IosappUI/Components/Chat/ChatMessageBubbleItemNode",
+        "//submodules/IosappUI/Components/Chat/ChatMessageTransferBubbleContentNode",
+        "//submodules/IosappUI/Components/Premium/PremiumDiamondComponent",
         "//submodules/IosappUI/Components/Chat/ChatRecentActionsController",
         "//submodules/IosappUI/Components/Chat/ChatNavigationButton",
         "//submodules/IosappUI/Components/Chat/ChatLoadingNode",
@@ -463,6 +483,17 @@ swift_library(
         "//submodules/IosappUI/Components/SpaceWarpView",
         "//submodules/IosappUI/Components/MiniAppListScreen",
         "//submodules/IosappUI/Components/Diamonds/DiamondsIntroScreen",
+        "//submodules/IosappUI/Components/Wallet/WalletScreen",
+        "//submodules/IosappUI/Components/Wallet/WalletReceiveScreen",
+        "//submodules/IosappUI/Components/Wallet/WalletImportScreen",
+        "//submodules/IosappUI/Components/Wallet/WalletSettingsScreen",
+        "//submodules/IosappUI/Components/Wallet/WalletAppsScreen",
+        "//submodules/IosappUI/Components/Wallet/WalletWordsScreen",
+        "//submodules/IosappUI/Components/Wallet/WalletInfoScreen",
+        "//submodules/IosappUI/Components/Wallet/WalletConnectScreen",
+        "//submodules/IosappUI/Components/Wallet/WalletSendScreen",
+        "//submodules/IosappUI/Components/Wallet/WalletTransactionScreen",
+        "//submodules/IosappUI/Components/Wallet/WalletCollectibleScreen",
         "//submodules/IosappUI/Components/Gifts/GiftOptionsScreen",
         "//submodules/IosappUI/Components/Gifts/GiftStoreScreen",
         "//submodules/IosappUI/Components/Gifts/GiftSetupScreen",
@@ -498,6 +529,7 @@ swift_library(
         "//submodules/IosappUI/Components/Chat/ChatTextInputPanelNode",
         "//submodules/ContactsHelper",
         "//submodules/IosappUI/Components/GlassBackgroundComponent",
+        "//submodules/IosappUI/Components/LiquidGlassShapes",
         "//submodules/IosappUI/Components/Chat/ChatInputAccessoryPanel",
         "//submodules/IosappUI/Components/Chat/ChatInputMessageAccessoryPanel",
         "//submodules/IosappUI/Components/Chat/ChatRecordingViewOnceButtonNode",
@@ -538,6 +570,9 @@ swift_library(
         "//submodules/IosappUI/Components/RichTextEditor:RichTextEditorUIKit",
         "//submodules/IosappUI/Components/RichTextEditorMediaView",
         "//submodules/IosappUI/Components/Chat/ChatRichTextEditorComposer",
+        "//submodules/WalletContext",
+        "//submodules/PasscodeCore",
+        "//submodules/MTProtoRustEngine:MTProtoRustEngine",
     ] + select({
         "@build_bazel_rules_apple//apple:ios_arm64": appcenter_targets,
         "//build-system:ios_sim_arm64": [],

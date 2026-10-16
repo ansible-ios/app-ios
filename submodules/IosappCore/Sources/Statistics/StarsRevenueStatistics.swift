@@ -365,6 +365,7 @@ public enum RequestDiamondsRevenueWithdrawalError : Equatable {
     case limitExceeded
     case requestPassword
     case invalidPassword
+    case amountTooSmall
     case serverProvided(text: String)
 }
 
@@ -411,7 +412,7 @@ func _internal_requestDiamondsRevenueWithdrawalUrl(account: Account, ton: Bool, 
         }
         |> mapToSignal { authData -> Signal<Api.InputCheckPasswordSRP, RequestDiamondsRevenueWithdrawalError> in
             if let currentPasswordDerivation = authData.currentPasswordDerivation, let srpSessionData = authData.srpSessionData {
-                guard let kdfResult = passwordKDF(encryptionProvider: account.network.encryptionProvider, password: password, derivation: currentPasswordDerivation, srpSessionData: srpSessionData) else {
+                guard let kdfResult = passwordKDF(encryptionProvider: account.network.encryptionProvider, keychain: account.network.context.keychain, password: password, derivation: currentPasswordDerivation, srpSessionData: srpSessionData) else {
                     return .fail(.generic)
                 }
                 return .single(.inputCheckPasswordSRP(.init(srpId: kdfResult.id, A: Buffer(data: kdfResult.A), M1: Buffer(data: kdfResult.M1))))
@@ -448,6 +449,8 @@ func _internal_requestDiamondsRevenueWithdrawalUrl(account: Account, ton: Bool, 
                     if let value = Int32(timeout) {
                         return .authSessionTooFresh(value)
                     }
+                } else if error.errorDescription == "AMOUNT_TOO_SMALL" {
+                    return .amountTooSmall
                 }
                 return .generic
             }

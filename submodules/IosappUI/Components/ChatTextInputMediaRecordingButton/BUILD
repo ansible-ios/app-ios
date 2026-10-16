@@ -11,6 +11,7 @@ swift_library(
     ],
     deps = [
         "//submodules/Display",
+        "//submodules/LottieSettings:LottieSettings",
         "//submodules/AsyncDisplayKit",
         "//submodules/IosappCore",
         "//submodules/SSignalKit/SwiftSignalKit",
@@ -25,6 +26,7 @@ swift_library(
         "//submodules/IosappUI/Components/LottieComponent",
         "//submodules/IosappUI/Components/LegacyInstantVideoController",
         "//submodules/IosappUI/Components/GlassBackgroundComponent",
+        "//submodules/IosappUI/Components/LiquidGlassShapes",
         "//submodules/Components/ComponentDisplayAdapters",
     ],
     visibility = [

@@ -13,6 +13,7 @@ swift_library(
         "//submodules/SSignalKit/SwiftSignalKit:SwiftSignalKit",
         "//submodules/AsyncDisplayKit:AsyncDisplayKit",
         "//submodules/Display:Display",
+        "//submodules/UIKitRuntimeUtils:UIKitRuntimeUtils",
         "//submodules/IosappCore:IosappCore",
         "//submodules/IosappPresentationData:IosappPresentationData",
         "//submodules/IosappUIPreferences:IosappUIPreferences",

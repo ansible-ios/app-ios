@@ -11,6 +11,7 @@ swift_library(
     ],
     deps = [
         "//submodules/AsyncDisplayKit",
+        "//submodules/LottieSettings:LottieSettings",
         "//submodules/Display",
         "//submodules/IosappCore",
         "//submodules/SSignalKit/SwiftSignalKit",
@@ -61,6 +62,7 @@ swift_library(
         "//submodules/BotPaymentsUI",
         "//submodules/IosappUI/Components/SegmentControlComponent",
         "//submodules/IosappUI/Components/Gifts/GiftRemainingCountComponent",
+        "//submodules/IosappUI/Components/Gifts/GiftSetupScreen",
         "//submodules/IosappUI/Components/Gifts/InfoParagraphComponent",
         "//submodules/IosappUI/Components/Gifts/TableComponent",
         "//submodules/IosappUI/Components/Gifts/PeerTableCellComponent",
@@ -70,7 +72,12 @@ swift_library(
         "//submodules/IosappUI/Components/AlertComponent/AlertTableComponent",
         "//submodules/IosappUI/Components/AlertComponent/AlertInputFieldComponent",
         "//submodules/IosappUI/Components/GlassControls",
+        "//submodules/IosappUI/Components/EdgeEffect",
         "//submodules/Components/ResizableSheetComponent",
+        "//submodules/Pasteboard",
+        "//submodules/Speak",
+        "//submodules/TextSelectionNode",
+        "//submodules/TranslateUI",
     ],
     visibility = [
         "//visibility:public",

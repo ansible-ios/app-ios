@@ -29,6 +29,7 @@ swift_library(
         "//submodules/LegacyComponents:LegacyComponents",
         "//submodules/LegacyMediaPickerUI",
         "//submodules/IosappUI/Components/MediaEditor",
+        "//submodules/IosappUI/Components/AlertComponent",
         "//submodules/DrawingUI:DrawingUI",
         "//submodules/Components/LottieAnimationComponent:LottieAnimationComponent",
         "//submodules/Components/BundleIconComponent:BundleIconComponent",

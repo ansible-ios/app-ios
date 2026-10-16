@@ -11,6 +11,7 @@ swift_library(
     ],
     deps = [
         "//submodules/AsyncDisplayKit",
+        "//submodules/LottieSettings:LottieSettings",
         "//submodules/IosappPresentationData",
         "//submodules/ChatPresentationInterfaceState",
         "//submodules/ChatSendMessageActionUI",
