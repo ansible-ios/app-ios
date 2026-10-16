@@ -25,6 +25,11 @@ swift_library(
         "//third-party/ZipArchive:ZipArchive",
         "//submodules/InAppPurchaseManager:InAppPurchaseManager",
         "//submodules/IosappVoip",
+        "//submodules/ComponentFlow",
+        "//submodules/IosappUI/Components/AlertComponent",
+        "//submodules/IosappUI/Components/AlertComponent/AlertCheckComponent",
+        "//submodules/WalletContext",
+        "//submodules/CpuProfiler:CpuProfiler",
     ],
     visibility = [
         "//visibility:public",

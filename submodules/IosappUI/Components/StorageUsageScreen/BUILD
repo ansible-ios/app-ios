@@ -11,6 +11,7 @@ swift_library(
     ],
     deps = [
         "//submodules/AsyncDisplayKit:AsyncDisplayKit",
+        "//submodules/LottieSettings:LottieSettings",
         "//submodules/Display:Display",
         "//submodules/IosappCore:IosappCore",
         "//submodules/SSignalKit/SwiftSignalKit:SwiftSignalKit",
@@ -18,6 +19,7 @@ swift_library(
         "//submodules/Components/ViewControllerComponent:ViewControllerComponent",
         "//submodules/Components/ComponentDisplayAdapters:ComponentDisplayAdapters",
         "//submodules/Components/MultilineTextComponent:MultilineTextComponent",
+        "//submodules/Components/BalancedTextComponent:BalancedTextComponent",
         "//submodules/IosappUI/Components/ButtonComponent",
         "//submodules/IosappPresentationData:IosappPresentationData",
         "//submodules/AccountContext:AccountContext",

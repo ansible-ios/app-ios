@@ -1,4 +1,6 @@
 load("@build_bazel_rules_swift//swift:swift.bzl", "swift_library")
+load("@build_bazel_rules_apple//apple:ios.bzl", "ios_unit_test")
+load("@build_bazel_rules_apple//apple/testing/default_runner:ios_test_runner.bzl", "ios_test_runner")
 load(
     "@build_bazel_rules_apple//apple:resources.bzl",
     "apple_resource_bundle",
@@ -54,6 +56,7 @@ swift_library(
     ],
     deps = [
         "//submodules/SSignalKit/SSignalKit",
+        "//submodules/LottieSettings:LottieSettings",
     	"//submodules/SSignalKit/SwiftSignalKit:SwiftSignalKit",
         "//submodules/Display:Display",
         "//submodules/IosappPresentationData:IosappPresentationData",
@@ -121,6 +124,7 @@ swift_library(
         "//third-party/td:TdBinding",
         "//submodules/IosappUI/Components/AnimatedTextComponent",
         "//submodules/IosappUI/Components/GlassBackgroundComponent",
+        "//submodules/IosappUI/Components/LiquidGlassShapes",
         "//submodules/ChatPresentationInterfaceState",
         "//submodules/IosappUI/Components/MessageInputPanelComponent",
         "//submodules/IosappUI/Components/TextFieldComponent",
@@ -132,6 +136,39 @@ swift_library(
         "//submodules/IosappUI/Components/AlertComponent",
         "//submodules/IosappUI/Components/AlertComponent/AlertInputFieldComponent",
         "//submodules/IosappUI/Components/GlassControls",
+    ],
+    visibility = [
+        "//visibility:public",
+    ],
+)
+
+swift_library(
+    name = "IosappCallsUITestsLib",
+    testonly = True,
+    srcs = glob([
+        "Tests/**/*.swift",
+    ]),
+    deps = [
+        ":IosappCallsUI",
+        "//submodules/IosappAudio:IosappAudio",
+        "//submodules/IosappUI/Components/Calls/CallScreen",
+        "//submodules/IosappCore:IosappCore",
+        "//submodules/SSignalKit/SwiftSignalKit:SwiftSignalKit",
+    ],
+)
+
+ios_test_runner(
+    name = "IosappCallsUITestRunner",
+    device_type = "iPhone 17",
+    os_version = "26.5",
+)
+
+ios_unit_test(
+    name = "IosappCallsUITests",
+    minimum_os_version = "15.0",
+    runner = ":IosappCallsUITestRunner",
+    deps = [
+        ":IosappCallsUITestsLib",
     ],
     visibility = [
         "//visibility:public",

@@ -28,8 +28,10 @@ swift_library(
         "//submodules/Components/BundleIconComponent",
         "//submodules/Components/MultilineTextComponent",
         "//submodules/Components/SheetComponent",
+        "//submodules/Components/ResizableSheetComponent",
         "//submodules/IosappUI/Components/RichTextEditor:RichTextEditorCore",
         "//submodules/IosappUI/Components/RichTextEditor:RichTextEditorUIKit",
+        "//submodules/IosappUI/Components/RichTextButtonIcons",
         "//submodules/IosappUI/Components/RichTextEditorMediaView",
         "//submodules/Components/ViewControllerComponent",
         "//submodules/IosappUI/Components/EntityKeyboard",
@@ -45,6 +47,7 @@ swift_library(
         "//submodules/IosappUI/Components/Chat/ChatRichTextEditorComposer",
         "//submodules/ChatTextLinkEditUI",
         "//submodules/UndoUI",
+        "//submodules/ChatSendMessageActionUI",
     ],
     visibility = [
         "//visibility:public",

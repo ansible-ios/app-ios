@@ -11,6 +11,7 @@ swift_library(
     ],
     deps = [
         "//submodules/ComponentFlow:ComponentFlow",
+        "//submodules/LottieSettings:LottieSettings",
         "//submodules/AnimatedStickerNode:AnimatedStickerNode",
         "//submodules/IosappAnimatedStickerNode:IosappAnimatedStickerNode",
         "//submodules/Components/HierarchyTrackingLayer:HierarchyTrackingLayer",

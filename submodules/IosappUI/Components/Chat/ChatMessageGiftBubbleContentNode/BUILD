@@ -11,6 +11,7 @@ swift_library(
     ],
     deps = [
         "//submodules/AsyncDisplayKit",
+        "//submodules/LottieSettings:LottieSettings",
         "//submodules/Display",
         "//submodules/SSignalKit/SwiftSignalKit",
         "//submodules/IosappCore",
@@ -25,6 +26,7 @@ swift_library(
         "//submodules/ReactionSelectionNode",
         "//submodules/AnimatedStickerNode",
         "//submodules/IosappAnimatedStickerNode",
+        "//submodules/AvatarNode",
         "//submodules/IosappUI/Components/ChatControllerInteraction",
         "//submodules/ShimmerEffect",
         "//submodules/Markdown",
@@ -34,6 +36,7 @@ swift_library(
         "//submodules/InvisibleInkDustNode",
         "//submodules/IosappUI/Components/PeerInfo/PeerInfoCoverComponent",
         "//submodules/IosappUI/Components/Gifts/GiftItemComponent",
+        "//submodules/TextSelectionNode",
     ],
     visibility = [
         "//visibility:public",

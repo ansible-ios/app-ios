@@ -62,8 +62,10 @@ swift_library(
     ],
     deps = [
         "//submodules/SSignalKit/SwiftSignalKit:SwiftSignalKit",
+        "//submodules/LottieSettings:LottieSettings",
         "//submodules/AsyncDisplayKit:AsyncDisplayKit",
         "//submodules/Display:Display",
+        "//submodules/UIKitRuntimeUtils:UIKitRuntimeUtils",
         "//submodules/IosappCore:IosappCore",
         "//submodules/IosappPresentationData:IosappPresentationData",
         "//submodules/LegacyComponents:LegacyComponents",
@@ -103,6 +105,7 @@ swift_library(
         "//submodules/ReactionSelectionNode",
         "//submodules/IosappUI/Components/EntityKeyboard",
         "//submodules/Camera",
+        "//submodules/Camera/CameraLegacy",
         "//submodules/IosappUI/Components/DustEffect",
         "//submodules/IosappUI/Components/DynamicCornerRadiusView",
         "//submodules/IosappUI/Components/StickerPickerScreen",

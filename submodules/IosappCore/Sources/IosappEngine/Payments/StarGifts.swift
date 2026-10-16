@@ -1487,10 +1487,11 @@ public enum UpdateDiamondGiftPriceError {
 
 public enum UpgradeDiamondGiftError {
     case generic
+    case alreadyUpgraded
 }
 
-func _internal_buyDiamondGift(account: Account, slug: String, peerId: EnginePeer.Id, price: CurrencyAmount?) -> Signal<Never, BuyDiamondGiftError> {
-    let source: BotPaymentInvoiceSource = .diamondGiftResale(slug: slug, toPeerId: peerId, ton: price?.currency == .ton)
+func _internal_buyDiamondGift(account: Account, slug: String, peerId: EnginePeer.Id, price: CurrencyAmount?, hideName: Bool = true, text: String? = nil, entities: [MessageTextEntity]? = nil) -> Signal<Never, BuyDiamondGiftError> {
+    let source: BotPaymentInvoiceSource = .diamondGiftResale(slug: slug, toPeerId: peerId, ton: price?.currency == .ton, hideName: hideName, text: text, entities: entities)
     return _internal_fetchBotPaymentForm(accountPeerId: account.peerId, postbox: account.postbox, network: account.network, source: source, themeParams: nil)
     |> map(Optional.init)
     |> `catch` { error -> Signal<BotPaymentForm?, BuyDiamondGiftError> in
@@ -1549,7 +1550,7 @@ func _internal_dropDiamondGiftOriginalDetails(account: Account, reference: Diamo
                             storeForwardInfo = StoreMessageForwardInfo(authorId: forwardInfo.author?.id, sourceId: forwardInfo.source?.id, sourceMessageId: forwardInfo.sourceMessageId, date: forwardInfo.date, authorSignature: forwardInfo.authorSignature, psaType: forwardInfo.psaType, flags: forwardInfo.flags)
                         }
                         var media = currentMessage.media
-                        if let action = media.first(where: { $0 is IosappMediaAction }) as? IosappMediaAction, case let .starGiftUnique(gift, isUpgrade, isTransferred, savedToProfile, canExportDate, transferStars, isRefunded, isPrepaidUpgrade, peerId, senderId, savedId, resaleAmount, canTransferDate, canResaleDate, _, assigned, fromOffer, canCraftAt, isCrafted) = action.action, case let .unique(uniqueGift) = gift {
+                        if let action = media.first(where: { $0 is IosappMediaAction }) as? IosappMediaAction, case let .starGiftUnique(gift, isUpgrade, isTransferred, savedToProfile, canExportDate, transferStars, isRefunded, isPrepaidUpgrade, peerId, senderId, savedId, resaleAmount, canTransferDate, canResaleDate, _, assigned, fromOffer, canCraftAt, isCrafted, text, entities, nameHidden) = action.action, case let .unique(uniqueGift) = gift {
                             let updatedAttributes = uniqueGift.attributes.filter { $0.attributeType != .originalInfo }
                             media = [
                                 IosappMediaAction(
@@ -1572,7 +1573,10 @@ func _internal_dropDiamondGiftOriginalDetails(account: Account, reference: Diamo
                                         assigned: assigned,
                                         fromOffer: fromOffer,
                                         canCraftAt: canCraftAt,
-                                        isCrafted: isCrafted
+                                        isCrafted: isCrafted,
+                                        text: text,
+                                        entities: entities,
+                                        nameHidden: nameHidden
                                     )
                                 )
                             ]
@@ -1641,17 +1645,21 @@ func _internal_transferDiamondGift(account: Account, prepaid: Bool, reference: D
 }
 
 func _internal_upgradeDiamondGift(account: Account, formId: Int64?, reference: DiamondGiftReference, keepOriginalInfo: Bool) -> Signal<ProfileGiftsContext.State.StarGift, UpgradeDiamondGiftError> {
+    let signal: Signal<ProfileGiftsContext.State.StarGift, UpgradeDiamondGiftError>
     if let formId {
         let source: BotPaymentInvoiceSource = .diamondGiftUpgrade(keepOriginalInfo: keepOriginalInfo, reference: reference)
-        return _internal_sendDiamondsPaymentForm(account: account, formId: formId, source: source)
-        |> mapError { _ -> UpgradeDiamondGiftError in
+        signal = _internal_sendDiamondsPaymentForm(account: account, formId: formId, source: source)
+        |> mapError { error -> UpgradeDiamondGiftError in
+            if case .serverProvided("STARGIFT_ALREADY_UPGRADED") = error {
+                return .alreadyUpgraded
+            }
             return .generic
         }
         |> mapToSignal { result in
             if case let .done(_, _, gift) = result, let gift {
                 return .single(gift)
             } else {
-                return .complete()
+                return .fail(.generic)
             }
         }
     } else {
@@ -1659,7 +1667,7 @@ func _internal_upgradeDiamondGift(account: Account, formId: Int64?, reference: D
         if keepOriginalInfo {
             flags |= (1 << 0)
         }
-        return account.postbox.transaction { transaction in
+        signal = account.postbox.transaction { transaction in
             return reference.apiDiamondGiftReference(transaction: transaction)
         }
         |> castError(UpgradeDiamondGiftError.self)
@@ -1668,7 +1676,10 @@ func _internal_upgradeDiamondGift(account: Account, formId: Int64?, reference: D
                 return .fail(.generic)
             }
             return account.network.request(Api.functions.payments.upgradeStarGift(flags: flags, stargift: starGift))
-            |> mapError { _ -> UpgradeDiamondGiftError in
+            |> mapError { error -> UpgradeDiamondGiftError in
+                if error.errorDescription == "STARGIFT_ALREADY_UPGRADED" {
+                    return .alreadyUpgraded
+                }
                 return .generic
             }
             |> mapToSignal { updates in
@@ -1679,7 +1690,7 @@ func _internal_upgradeDiamondGift(account: Account, formId: Int64?, reference: D
                         let message = updateNewMessageData.message
                         if let message = StoreMessage(apiMessage: message, accountPeerId: account.peerId, peerIsForum: false) {
                             for media in message.media {
-                                if let action = media as? IosappMediaAction, case let .starGiftUnique(gift, _, _, savedToProfile, canExportDate, transferStars, _, _, peerId, _, savedId, _, canTransferDate, canResaleDate, dropOriginalDetailsStars, _, _, canCraftAt, _) = action.action, case let .Id(messageId) = message.id {
+                                if let action = media as? IosappMediaAction, case let .starGiftUnique(gift, _, _, savedToProfile, canExportDate, transferStars, _, _, peerId, _, savedId, _, canTransferDate, canResaleDate, dropOriginalDetailsStars, _, _, canCraftAt, _, text, entities, nameHidden) = action.action, case let .Id(messageId) = message.id {
                                     let reference: DiamondGiftReference
                                     if let peerId, let savedId {
                                         reference = .peer(peerId: peerId, id: savedId)
@@ -1691,9 +1702,9 @@ func _internal_upgradeDiamondGift(account: Account, formId: Int64?, reference: D
                                         reference: reference,
                                         fromPeer: nil,
                                         date: message.timestamp,
-                                        text: nil,
-                                        entities: nil,
-                                        nameHidden: false,
+                                        text: text,
+                                        entities: entities,
+                                        nameHidden: nameHidden,
                                         savedToProfile: savedToProfile,
                                         pinnedToTop: false,
                                         convertStars: nil,
@@ -1719,6 +1730,49 @@ func _internal_upgradeDiamondGift(account: Account, formId: Int64?, reference: D
                     }
                 }
                 return .fail(.generic)
+            }
+        }
+    }
+
+    return signal
+    |> `catch` { error -> Signal<ProfileGiftsContext.State.StarGift, UpgradeDiamondGiftError> in
+        guard case .alreadyUpgraded = error else {
+            return .fail(error)
+        }
+
+        return account.postbox.transaction { transaction in
+            return reference.apiDiamondGiftReference(transaction: transaction)
+        }
+        |> castError(UpgradeDiamondGiftError.self)
+        |> mapToSignal { starGift -> Signal<ProfileGiftsContext.State.StarGift, UpgradeDiamondGiftError> in
+            guard let starGift else {
+                return .fail(error)
+            }
+            return account.network.request(Api.functions.payments.getSavedStarGift(stargift: [starGift]))
+            |> mapError { _ in error }
+            |> mapToSignal { result -> Signal<ProfileGiftsContext.State.StarGift, UpgradeDiamondGiftError> in
+                return account.postbox.transaction { transaction -> Signal<ProfileGiftsContext.State.StarGift, UpgradeDiamondGiftError> in
+                    let peerId: PeerId
+                    if case let .peer(referencePeerId, _) = reference {
+                        peerId = referencePeerId
+                    } else {
+                        peerId = account.peerId
+                    }
+                    switch result {
+                    case let .savedStarGifts(data):
+                        let parsedPeers = AccumulatedPeers(transaction: transaction, chats: data.chats, users: data.users)
+                        updatePeers(transaction: transaction, accountPeerId: account.peerId, peers: parsedPeers)
+
+                        for apiGift in data.gifts {
+                            if let gift = ProfileGiftsContext.State.StarGift(apiSavedDiamondGift: apiGift, peerId: peerId, transaction: transaction), case .unique = gift.gift {
+                                return .single(gift)
+                            }
+                        }
+                        return .fail(error)
+                    }
+                }
+                |> castError(UpgradeDiamondGiftError.self)
+                |> switchToLatest
             }
         }
     }
@@ -2317,7 +2371,7 @@ private final class ProfileGiftsContextImpl {
         return _internal_transferDiamondGift(account: self.account, prepaid: prepaid, reference: reference, peerId: peerId)
     }
     
-    func buyDiamondGift(slug: String, peerId: EnginePeer.Id, price: CurrencyAmount?) -> Signal<Never, BuyDiamondGiftError> {
+    func buyDiamondGift(slug: String, peerId: EnginePeer.Id, price: CurrencyAmount?, hideName: Bool, text: String?, entities: [MessageTextEntity]?) -> Signal<Never, BuyDiamondGiftError> {
         var listingPrice: CurrencyAmount?
         if let gift = self.gifts.first(where: { gift in
             if case let .unique(uniqueGift) = gift.gift, uniqueGift.slug == slug {
@@ -2339,7 +2393,7 @@ private final class ProfileGiftsContextImpl {
             }
         }
                 
-        return _internal_buyDiamondGift(account: self.account, slug: slug, peerId: peerId, price: price ?? listingPrice)
+        return _internal_buyDiamondGift(account: self.account, slug: slug, peerId: peerId, price: price ?? listingPrice, hideName: hideName, text: text, entities: entities)
         |> afterCompleted { [weak self] in
             guard let self else {
                 return
@@ -3095,11 +3149,11 @@ public final class ProfileGiftsContext {
         }
     }
     
-    public func buyDiamondGift(slug: String, peerId: EnginePeer.Id, price: CurrencyAmount? = nil) -> Signal<Never, BuyDiamondGiftError> {
+    public func buyDiamondGift(slug: String, peerId: EnginePeer.Id, price: CurrencyAmount? = nil, hideName: Bool = true, text: String? = nil, entities: [MessageTextEntity]? = nil) -> Signal<Never, BuyDiamondGiftError> {
         return Signal { subscriber in
             let disposable = MetaDisposable()
             self.impl.with { impl in
-                disposable.set(impl.buyDiamondGift(slug: slug, peerId: peerId, price: price).start(error: { error in
+                disposable.set(impl.buyDiamondGift(slug: slug, peerId: peerId, price: price, hideName: hideName, text: text, entities: entities).start(error: { error in
                     subscriber.putError(error)
                 }, completed: {
                     subscriber.putCompletion()
@@ -3448,7 +3502,7 @@ func _internal_craftDiamondGift(account: Account, references: [DiamondGiftRefere
                     let message = updateNewMessageData.message
                     if let message = StoreMessage(apiMessage: message, accountPeerId: account.peerId, peerIsForum: false) {
                         for media in message.media {
-                            if let action = media as? IosappMediaAction, case let .starGiftUnique(gift, _, _, savedToProfile, canExportDate, transferStars, _, _, peerId, _, savedId, _, canTransferDate, canResaleDate, dropOriginalDetailsStars, _, _, canCraftAt, _) = action.action, case let .Id(messageId) = message.id {
+                            if let action = media as? IosappMediaAction, case let .starGiftUnique(gift, _, _, savedToProfile, canExportDate, transferStars, _, _, peerId, _, savedId, _, canTransferDate, canResaleDate, dropOriginalDetailsStars, _, _, canCraftAt, _, text, entities, nameHidden) = action.action, case let .Id(messageId) = message.id {
                                 let reference: DiamondGiftReference
                                 if let peerId, let savedId {
                                     reference = .peer(peerId: peerId, id: savedId)
@@ -3460,9 +3514,9 @@ func _internal_craftDiamondGift(account: Account, references: [DiamondGiftRefere
                                     reference: reference,
                                     fromPeer: nil,
                                     date: message.timestamp,
-                                    text: nil,
-                                    entities: nil,
-                                    nameHidden: false,
+                                    text: text,
+                                    entities: entities,
+                                    nameHidden: nameHidden,
                                     savedToProfile: savedToProfile,
                                     pinnedToTop: false,
                                     convertStars: nil,
@@ -3801,7 +3855,7 @@ func _internal_requestDiamondGiftWithdrawalUrl(account: Account, reference: Diam
         }
         |> mapToSignal { authData -> Signal<Api.InputCheckPasswordSRP, RequestDiamondGiftWithdrawalError> in
             if let currentPasswordDerivation = authData.currentPasswordDerivation, let srpSessionData = authData.srpSessionData {
-                guard let kdfResult = passwordKDF(encryptionProvider: account.network.encryptionProvider, password: password, derivation: currentPasswordDerivation, srpSessionData: srpSessionData) else {
+                guard let kdfResult = passwordKDF(encryptionProvider: account.network.encryptionProvider, keychain: account.network.context.keychain, password: password, derivation: currentPasswordDerivation, srpSessionData: srpSessionData) else {
                     return .fail(.generic)
                 }
                 return .single(.inputCheckPasswordSRP(.init(srpId: kdfResult.id, A: Buffer(data: kdfResult.A), M1: Buffer(data: kdfResult.M1))))
@@ -4135,7 +4189,7 @@ private final class ResaleGiftsContextImpl {
         self.loadMore()
     }
     
-    func buyDiamondGift(slug: String, peerId: EnginePeer.Id, price: CurrencyAmount?) -> Signal<Never, BuyDiamondGiftError> {
+    func buyDiamondGift(slug: String, peerId: EnginePeer.Id, price: CurrencyAmount?, hideName: Bool, text: String?, entities: [MessageTextEntity]?) -> Signal<Never, BuyDiamondGiftError> {
         var listingPrice: CurrencyAmount?
         if let gift = self.gifts.first(where: { gift in
             if case let .unique(uniqueGift) = gift, uniqueGift.slug == slug {
@@ -4146,7 +4200,7 @@ private final class ResaleGiftsContextImpl {
             listingPrice = uniqueGift.resellAmounts?.first(where: { $0.currency == .stars })
         }
         
-        return _internal_buyDiamondGift(account: self.account, slug: slug, peerId: peerId, price: price ?? listingPrice)
+        return _internal_buyDiamondGift(account: self.account, slug: slug, peerId: peerId, price: price ?? listingPrice, hideName: hideName, text: text, entities: entities)
         |> afterCompleted { [weak self] in
             guard let self else {
                 return
@@ -4306,11 +4360,11 @@ public final class ResaleGiftsContext {
         }
     }
     
-    public func buyDiamondGift(slug: String, peerId: EnginePeer.Id, price: CurrencyAmount? = nil) -> Signal<Never, BuyDiamondGiftError> {
+    public func buyDiamondGift(slug: String, peerId: EnginePeer.Id, price: CurrencyAmount? = nil, hideName: Bool = true, text: String? = nil, entities: [MessageTextEntity]? = nil) -> Signal<Never, BuyDiamondGiftError> {
         return Signal { subscriber in
             let disposable = MetaDisposable()
             self.impl.with { impl in
-                disposable.set(impl.buyDiamondGift(slug: slug, peerId: peerId, price: price).start(error: { error in
+                disposable.set(impl.buyDiamondGift(slug: slug, peerId: peerId, price: price, hideName: hideName, text: text, entities: entities).start(error: { error in
                     subscriber.putError(error)
                 }, completed: {
                     subscriber.putCompletion()

@@ -13,6 +13,8 @@ import OpenInExternalAppUI
 import BrowserUI
 import OverlayStatusController
 import PresentationDataUtils
+import UrlWhitelist
+import OpenUserGeneratedUrl
 import PhoneNumberFormat
 
 public struct ParsedSecureIdUrl {
@@ -25,6 +27,11 @@ public struct ParsedSecureIdUrl {
 }
 
 public func parseProxyUrl(sharedContext: SharedAccountContext, url: URL) -> ProxyServerSettings? {
+    // Checked first: a WEB link is a distinct scheme/path and must never be
+    // downgraded into an .mtp entry by the generic proxy parser.
+    if let webSettings = parseWebProxySettingsLink(url.absoluteString) {
+        return webSettings
+    }
     guard let proxy = parseProxyUrl(sharedContext: sharedContext, url: url.absoluteString) else {
         return nil
     }
@@ -136,19 +143,6 @@ func formattedConfirmationCode(_ code: Int) -> String {
         result.append(c)
     }
     return result
-}
-
-private func canonicalExternalUrl(from url: String) -> URL? {
-    var urlWithScheme = url
-    if !url.contains("://") && !url.hasPrefix("mailto:") {
-        urlWithScheme = "http://" + url
-    }
-    if let parsed = URL(string: urlWithScheme) {
-        return parsed
-    } else if let encoded = (urlWithScheme as NSString).addingPercentEncoding(withAllowedCharacters: .urlQueryValueAllowed) {
-        return URL(string: encoded)
-    }
-    return nil
 }
 
 private func makeResolvedUrlHandler(
@@ -363,6 +357,25 @@ private func makeIosappUrl(_ path: String, queryItems: [URLQueryItem] = []) -> S
 }
 
 func openExternalUrlImpl(context: AccountContext, urlContext: OpenURLContext, url: String, forceExternal: Bool, presentationData: PresentationData, navigationController: NavigationController?, dismissInput: @escaping () -> Void) {
+    // A login part hides the host a link opens (see `externalUrlWithLoginPart`). Every external link leaves through
+    // here, whoever opens it, so here it is confirmed, unless a prompt that showed the real host was just accepted.
+    if let loginPartUrl = externalUrlWithLoginPart(url), !consumeLoginPartConfirmation(loginPartUrl) {
+        let controller = openLinkConfirmationController(
+            context: context,
+            presentationData: presentationData,
+            updatedPresentationData: .single(presentationData),
+            displayUrl: urlRemovingLoginPart(loginPartUrl).absoluteString,
+            open: {
+                openCheckedExternalUrl(context: context, urlContext: urlContext, url: url, forceExternal: forceExternal, presentationData: presentationData, navigationController: navigationController, dismissInput: dismissInput)
+            }
+        )
+        context.sharedContext.presentGlobalController(controller, nil)
+        return
+    }
+    openCheckedExternalUrl(context: context, urlContext: urlContext, url: url, forceExternal: forceExternal, presentationData: presentationData, navigationController: navigationController, dismissInput: dismissInput)
+}
+
+private func openCheckedExternalUrl(context: AccountContext, urlContext: OpenURLContext, url: String, forceExternal: Bool, presentationData: PresentationData, navigationController: NavigationController?, dismissInput: @escaping () -> Void) {
     if forceExternal || url.lowercased().hasPrefix("tel:") || url.lowercased().hasPrefix("calshow:") {
         // Только межд. форма (+777…) — анонимная. Голый национальный номер, начинающийся с 777
         // (Мексика Cuernavaca, Индия и т. п.), набирается как обычно.
@@ -432,6 +445,14 @@ func openExternalUrlImpl(context: AccountContext, urlContext: OpenURLContext, ur
         if let scheme = parsedUrl.scheme, (scheme == "as" || scheme == context.sharedContext.applicationBindings.appSpecificScheme) {
             var convertedUrl: String?
             let host = parsedUrl.host?.lowercased() ?? ""
+            if host == "sendgrams" {
+                guard parsedUrl.path.isEmpty || parsedUrl.path == "/",
+                      let components = URLComponents(url: parsedUrl, resolvingAgainstBaseURL: false) else {
+                    return
+                }
+                handleInternalUrl("https://asme.su/sendgrams" + (components.percentEncodedQuery.map { "?" + $0 } ?? ""))
+                return
+            }
             if let query = parsedUrl.query, let params = QueryParameters(query) {
                 switch host {
                 case "localpeer":
@@ -474,6 +495,16 @@ func openExternalUrlImpl(context: AccountContext, urlContext: OpenURLContext, ur
                             queryItems.append(URLQueryItem(name: "text", value: shareText))
                         }
                         convertedUrl = makeIosappUrl("/share/url", queryItems: queryItems)
+                    }
+                case "webproxy":
+                    // A WEB relay has no port (always 443) and no user/pass, so it cannot
+                    // reuse the socks/proxy conversion below without being read back as .mtp.
+                    // `host` is a legacy input alias for `server`.
+                    if let server = params["server"] ?? params["host"], !server.isEmpty, let secret = params["secret"], !secret.isEmpty {
+                        convertedUrl = makeIosappUrl("/webproxy", queryItems: [
+                            URLQueryItem(name: "server", value: server),
+                            URLQueryItem(name: "secret", value: secret)
+                        ])
                     }
                 case "socks", "proxy":
                     let server = params["server"] ?? params["proxy"]

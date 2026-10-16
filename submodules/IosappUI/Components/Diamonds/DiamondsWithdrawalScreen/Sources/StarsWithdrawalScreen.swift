@@ -1213,7 +1213,7 @@ private final class DiamondsWithdrawSheetComponent: CombinedComponent {
                         }
                     )),
                     style: .glass,
-                    backgroundColor: .color(environment.theme.list.blocksBackgroundColor),
+                    backgroundColor: .color(environment.theme.list.modalBlocksBackgroundColor),
                     followContentSizeChanges: false,
                     clipsContent: true,
                     isScrollEnabled: false,
@@ -1270,7 +1270,8 @@ private final class DiamondsWithdrawSheetComponent: CombinedComponent {
                     statusBarHeight: environment.statusBarHeight,
                     inputHeight: nil,
                     inputHeightIsInteractivellyChanging: false,
-                    inVoiceOver: false
+                    inVoiceOver: false,
+                    presentedInFormSheet: false
                 )
                 controller.presentationContext.containerLayoutUpdated(layout, transition: context.transition.containedViewLayoutTransition)
             }
@@ -1871,7 +1872,6 @@ public final class AmountFieldComponent: Component {
             var leftInset: CGFloat = 16.0
             
             let iconName: String
-            var iconTintColor: UIColor?
             let iconMaxSize: CGSize?
             var iconOffset = CGPoint()
             switch component.currency {
@@ -1879,8 +1879,7 @@ public final class AmountFieldComponent: Component {
                 iconName = "Premium/Stars/StarLarge"
                 iconMaxSize = CGSize(width: 22.0, height: 22.0)
             case .ton:
-                iconName = "Ads/TonBig"
-                iconTintColor = component.accentColor
+                iconName = "Ads/GramBig"
                 iconMaxSize = CGSize(width: 18.0, height: 18.0)
                 iconOffset = CGPoint(x: 3.0, y: 1.0)
             }
@@ -1888,7 +1887,7 @@ public final class AmountFieldComponent: Component {
                 transition: .immediate,
                 component: AnyComponent(BundleIconComponent(
                     name: iconName,
-                    tintColor: iconTintColor,
+                    tintColor: nil,
                     maxSize: iconMaxSize
                 )),
                 environment: {},
@@ -2097,22 +2096,20 @@ private final class BalanceComponent: CombinedComponent {
             let iconSize: CGSize
             let iconName: String
             var iconOffset = CGPoint()
-            var iconTintColor: UIColor?
             switch context.component.currency {
             case .stars:
                 iconSize = CGSize(width: 18.0, height: 18.0)
                 iconName = "Premium/Stars/StarLarge"
             case .ton:
                 iconSize = CGSize(width: 13.0, height: 13.0)
-                iconName = "Ads/TonBig"
-                iconTintColor = context.component.theme.list.itemAccentColor
+                iconName = "Ads/GramBig"
                 iconOffset = CGPoint(x: 0.0, y: 2.33)
             }
             
             let icon = icon.update(
                 component: BundleIconComponent(
                     name: iconName,
-                    tintColor: iconTintColor
+                    tintColor: nil
                 ),
                 availableSize: iconSize,
                 transition: context.transition
@@ -2218,8 +2215,8 @@ private final class CurrencyTabItemComponent: Component {
             let iconSize = self.icon.update(
                 transition: .immediate,
                 component: AnyComponent(BundleIconComponent(
-                    name: component.icon == .stars ? "Premium/Stars/StarLarge" : "Ads/TonAbout",
-                    tintColor: component.icon == .stars ? nil : component.theme.list.itemAccentColor
+                    name: component.icon == .stars ? "Premium/Stars/StarLarge" : "Wallet/TopGram",
+                    tintColor: nil
                 )),
                 environment: {},
                 containerSize: CGSize(width: 100.0, height: 100.0)

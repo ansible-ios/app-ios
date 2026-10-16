@@ -12,6 +12,7 @@ swift_library(
     deps = [
         "//submodules/SSignalKit/SwiftSignalKit",
         "//submodules/IosappCore",
+        "//submodules/IosappStringFormatting",
         "//submodules/AccountContext",
         "//submodules/IosappUIPreferences",
         "//submodules/IosappCallsUI",

@@ -69,8 +69,10 @@ public extension IosappEngine {
             })
         }
 
-        public func updatePeerPhotoExisting(reference: IosappMediaImageReference) -> Signal<IosappMediaImage?, NoError> {
-            return _internal_updatePeerPhotoExisting(network: self.account.network, reference: reference)
+        /// `representations` and `videoRepresentations` are the photo's own sizes; the downloaded
+        /// ones are reused for the photo the server returns instead of being downloaded again.
+        public func updatePeerPhotoExisting(reference: IosappMediaImageReference, representations: [IosappMediaImageRepresentation] = [], videoRepresentations: [IosappMediaImage.VideoRepresentation] = []) -> Signal<IosappMediaImage?, NoError> {
+            return _internal_updatePeerPhotoExisting(account: self.account, reference: reference, representations: representations, videoRepresentations: videoRepresentations)
         }
 
         public func removeAccountPhoto(reference: IosappMediaImageReference?) -> Signal<Void, NoError> {

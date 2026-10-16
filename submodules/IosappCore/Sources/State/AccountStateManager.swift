@@ -37,7 +37,7 @@ private enum CustomOperationEvent<T, E> {
 }
 
 private final class UpdatedWebpageSubscriberContext {
-    let subscribers = Bag<(IosappMediaWebpage) -> Void>()
+    let subscribers = Bag<(IosappMediaWebpage?) -> Void>()
 }
 
 private final class UpdatedDiamondsBalanceSubscriberContext {
@@ -330,6 +330,14 @@ public final class AccountStateManager {
         public var storyUpdates: Signal<[InternalStoryUpdate], NoError> {
             return self.storyUpdatesPipe.signal()
         }
+
+        fileprivate let walletTransferUpdatesPipe = ValuePipe<[WalletTransferUpdate]>()
+        fileprivate let walletTonConnectUpdatesPipe = ValuePipe<[WalletTonConnectEvent]>()
+
+        fileprivate let walletStateUpdatesPipe = ValuePipe<Api.WalletState>()
+        var walletStateUpdates: Signal<Api.WalletState, NoError> {
+            return self.walletStateUpdatesPipe.signal()
+        }
         
         fileprivate let botPreviewUpdatesPipe = ValuePipe<[InternalBotPreviewUpdate]>()
         public var botPreviewUpdates: Signal<[InternalBotPreviewUpdate], NoError> {
@@ -424,7 +432,7 @@ public final class AccountStateManager {
         }
         
         public func reset() {
-            self.queue.async {
+            self.queue.async { [self] in
                 if self.updateService == nil {
                     self.updateService = UpdateMessageService(peerId: self.accountPeerId)
                     self.updateServiceDisposable.set(self.updateService!.pipe.signal().start(next: { [weak self] groups in
@@ -432,7 +440,7 @@ public final class AccountStateManager {
                             strongSelf.addUpdateGroups(groups)
                         }
                     }))
-                    self.network.mtProto.add(self.updateService)
+                    self.network.addUpdateSink(self.updateService!)
                 }
                 self.operationDisposable.set(nil)
                 self.replaceOperations(with: .pollDifference(self.getNextId(), AccountFinalStateEvents()))
@@ -1133,6 +1141,15 @@ public final class AccountStateManager {
                             if !events.updatedTonBalance.isEmpty {
                                 strongSelf.notifyUpdatedTonBalance(events.updatedTonBalance)
                             }
+                            if !events.walletTransferUpdates.isEmpty {
+                                strongSelf.walletTransferUpdatesPipe.putNext(events.walletTransferUpdates)
+                            }
+                            if !events.walletTonConnectEvents.isEmpty {
+                                strongSelf.walletTonConnectUpdatesPipe.putNext(events.walletTonConnectEvents)
+                            }
+                            if let updatedWalletState = events.updatedWalletState {
+                                strongSelf.walletStateUpdatesPipe.putNext(updatedWalletState)
+                            }
                             if !events.updatedDiamondsRevenueStatus.isEmpty {
                                 strongSelf.notifyUpdatedDiamondsRevenueStatus(events.updatedDiamondsRevenueStatus)
                             }
@@ -1626,7 +1643,7 @@ public final class AccountStateManager {
             }
         }
         
-        public func updatedWebpage(_ webpageId: MediaId) -> Signal<IosappMediaWebpage, NoError> {
+        public func updatedWebpage(_ webpageId: MediaId) -> Signal<IosappMediaWebpage?, NoError> {
             let queue = self.queue
             return Signal { [weak self] subscriber in
                 let disposable = MetaDisposable()
@@ -1660,8 +1677,9 @@ public final class AccountStateManager {
             }
         }
         
-        private func notifyUpdatedWebpages(_ updatedWebpages: [MediaId: IosappMediaWebpage]) {
+        private func notifyUpdatedWebpages(_ updatedWebpages: [MediaId: IosappMediaWebpage?]) {
             for (id, context) in self.updatedWebpageContexts {
+                // Unwraps the lookup only: a key holding nil is a removal and is delivered.
                 if let media = updatedWebpages[id] {
                     for subscriber in context.subscribers.copyItems() {
                         subscriber(media)
@@ -2226,13 +2244,30 @@ public final class AccountStateManager {
             return impl.updatedTonBalance().start(next: subscriber.putNext, error: subscriber.putError, completed: subscriber.putCompletion)
         }
     }
+
+    func walletTransferUpdates() -> Signal<[WalletTransferUpdate], NoError> {
+        return self.impl.signalWith { impl, subscriber in
+            return impl.walletTransferUpdatesPipe.signal().start(next: subscriber.putNext, error: subscriber.putError, completed: subscriber.putCompletion)
+        }
+    }
+
+    func walletTonConnectUpdates() -> Signal<[WalletTonConnectEvent], NoError> {
+        return self.impl.signalWith { impl, subscriber in
+            return impl.walletTonConnectUpdatesPipe.signal().start(next: subscriber.putNext, error: subscriber.putError, completed: subscriber.putCompletion)
+        }
+    }
+
+    func walletStateUpdates() -> Signal<Api.WalletState, NoError> {
+        return self.impl.signalWith { impl, subscriber in
+            return impl.walletStateUpdates.start(next: subscriber.putNext, error: subscriber.putError, completed: subscriber.putCompletion)
+        }
+    }
     
     public func updatedDiamondsRevenueStatus() -> Signal<[PeerId: StarsRevenueStats.Balances], NoError> {
         return self.impl.signalWith { impl, subscriber in
             return impl.updatedDiamondsRevenueStatus().start(next: subscriber.putNext, error: subscriber.putError, completed: subscriber.putCompletion)
         }
     }
-    
     
     public func updatedDiamondGiftAuctionState() -> Signal<[Int64: GiftAuctionContext.State.AuctionState], NoError> {
         return self.impl.signalWith { impl, subscriber in
@@ -2258,7 +2293,9 @@ public final class AccountStateManager {
         }
     }
     
-    public func updatedWebpage(_ webpageId: MediaId) -> Signal<IosappMediaWebpage, NoError> {
+    /// The web page's states as they arrive from the update stream; nil when the server resolved
+    /// it to `webPageEmpty`, i.e. no preview exists for its URL.
+    public func updatedWebpage(_ webpageId: MediaId) -> Signal<IosappMediaWebpage?, NoError> {
         return self.impl.signalWith { impl, subscriber in
             return impl.updatedWebpage(webpageId).start(next: subscriber.putNext, error: subscriber.putError, completed: subscriber.putCompletion)
         }
@@ -2395,7 +2432,7 @@ func resolveNotificationSettings(list: [IosappPeerNotificationSettings], default
 }
 
 public func messagesForNotification(transaction: Transaction, id: MessageId, alwaysReturnMessage: Bool) -> (messages: [Message], notify: Bool, sound: PeerMessageSound, displayContents: Bool, threadData: MessageHistoryThreadData?) {
-    if id.namespace == Namespaces.Message.EphemeralLocal {
+    if id.namespace == Namespaces.Message.EphemeralLocal || Namespaces.Message.allWelcomeMessages.contains(id.namespace) {
         return ([], false, defaultCloudPeerNotificationSound, false, nil)
     }
 

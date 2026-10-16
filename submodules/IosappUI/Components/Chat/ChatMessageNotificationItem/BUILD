@@ -22,6 +22,7 @@ swift_library(
         "//submodules/StickerResources",
         "//submodules/PhotoResources",
         "//submodules/IosappStringFormatting",
+        "//submodules/PlatformRestrictionMatching",
         "//submodules/TextFormat",
         "//submodules/InvisibleInkDustNode",
         "//submodules/IosappUI/Components/TextNodeWithEntities",
