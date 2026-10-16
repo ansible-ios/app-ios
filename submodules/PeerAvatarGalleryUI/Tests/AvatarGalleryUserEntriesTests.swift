@@ -207,7 +207,7 @@ private func makeEntries(photos: [IosappPeerPhoto], firstEntry: AvatarGalleryEnt
     return avatarGalleryUserEntries(peer: peer, peerReference: .user(id: 1, accessHash: 1), photos: photos, firstEntry: firstEntry, secondEntry: secondEntry, lastEntry: lastEntry)
 }
 
-/// A list photo as `telegramMediaImageFromApiPhoto` makes it: cloud photo-size resources.
+/// A list photo as `ansibleMediaImageFromApiPhoto` makes it: cloud photo-size resources.
 private func makePhoto(id: Int64) -> IosappPeerPhoto {
     let representations = [(160, "a"), (640, "c")].map { side, sizeSpec in
         return IosappMediaImageRepresentation(dimensions: PixelDimensions(width: Int32(side), height: Int32(side)), resource: CloudPhotoSizeMediaResource(datacenterId: 2, photoId: id, accessHash: 1, sizeSpec: sizeSpec, size: nil, fileReference: nil), progressiveSizes: [], immediateThumbnailData: nil, hasVideo: false, isPersonal: false)
