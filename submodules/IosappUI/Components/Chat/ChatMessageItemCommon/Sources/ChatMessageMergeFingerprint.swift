@@ -125,7 +125,7 @@ public struct ChatMessageMergeFingerprint: Equatable {
             self.importedForwardDate = nil
         }
 
-        self.hasPaidStars = message.paidStarsAttribute != nil
+        self.hasPaidStars = message.paidDiamondsAttribute != nil
 
         var mediaMergeStyle = ChatMessageMerge.fullyMerged.rawValue
         for media in message.media {
