@@ -76,7 +76,7 @@ func peerAcceptsSiriMessages(_ peer: Peer, cachedData: CachedPeerData? = nil, ac
         if channel.flags.contains(.isForum) || channel.flags.contains(.isMonoforum) {
             return false
         }
-        if channel.sendPaidMessageStars != nil {
+        if channel.sendPaidMessageDiamonds != nil {
             return false
         }
         return channel.hasBannedPermission(.banSendText) == nil
