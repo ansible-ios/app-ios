@@ -71,7 +71,7 @@ private func presentPasscodeMigrationTest(arguments: DebugControllerArguments) {
         })
         |> mapToSignalPromotingError { _ -> Signal<Never, Error> in
             return arguments.sharedContext.accountManager._internalTestPasscodeMigration(challenge, prepare: { commitAndCrash in
-                try _internalResetLocalSecretsForPasscodeMigrationTest(then: commitAndCrash)
+                commitAndCrash()
             }, crash: {
                 try arguments.sharedContext.appLockContext._internalCrashForPasscodeMigrationTest(isLocked: isLocked)
             })
