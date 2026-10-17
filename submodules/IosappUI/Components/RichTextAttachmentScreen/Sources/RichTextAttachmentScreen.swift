@@ -511,7 +511,7 @@ public class RichTextAttachmentScreen: ViewControllerComponentContainer, Attachm
                     canMakePaidContent: false,
                     currentPrice: nil,
                     hasTimers: false,
-                    sendPaidMessageStars: nil,
+                    sendPaidMessageDiamonds: nil,
                     isMonoforum: peer.isMonoForum
                 )),
                 hasEntityKeyboard: false,
