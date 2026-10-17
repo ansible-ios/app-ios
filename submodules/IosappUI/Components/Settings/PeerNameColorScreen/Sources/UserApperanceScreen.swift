@@ -630,7 +630,7 @@ final class UserAppearanceScreenComponent: Component {
                     let _ = (self.diamondsTopUpOptionsPromise.get()
                     |> filter { $0 != nil }
                     |> take(1)
-                    |> deliverOnMainQueue).startStandalone(next: { [weak self, weak controller, starsContext] options in
+                    |> deliverOnMainQueue).startStandalone(next: { [weak self, weak controller, diamondsContext] options in
                         guard let self, let controller else {
                             return
                         }

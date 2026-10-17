@@ -595,7 +595,7 @@ private final class SheetContent: CombinedComponent {
                     isEnabled: true,
                     displaysProgress: state.inProgress,
                     action: { [weak state, weak controller] in
-                        state?.buy(requestTopUp: { [weak controller, starsContext] completion in
+                        state?.buy(requestTopUp: { [weak controller, diamondsContext] completion in
                             let premiumConfiguration = PremiumConfiguration.with(appConfiguration: accountContext.currentAppConfiguration.with { $0 })
                             if !premiumConfiguration.isPremiumDisabled {
                                 let purpose: DiamondsPurchasePurpose
