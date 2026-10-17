@@ -16,7 +16,6 @@ import AccountUtils
 import PremiumUI
 import StorageUsageScreen
 import IosappStringFormatting
-import WalletContext
 
 private struct LogoutOptionsItemArguments {
     let addAccount: () -> Void
@@ -320,21 +319,5 @@ public func logoutOptionsController(context: AccountContext, navigationControlle
 }
 
 public func logoutConfirmationText(context: AccountContext, presentationData: PresentationData) -> Signal<String, NoError> {
-    guard WalletConfiguration.with(appConfiguration: context.currentAppConfiguration.with { $0 }).isAvailable,
-          let walletContext = context.walletContext else {
-        return .single(presentationData.strings.Settings_LogoutConfirmationText)
-    }
-    return walletContext.logoutWarningBalance()
-    |> map { balance in
-        guard let balance else {
-            return presentationData.strings.Settings_LogoutConfirmationText
-        }
-        let amount = formatTonAmountText(
-            balance,
-            dateTimeFormat: presentationData.dateTimeFormat,
-            maxDecimalPositions: 1,
-            formatString: presentationData.strings.Currency_Grams
-        )
-        return presentationData.strings.Settings_LogoutConfirmationTextWithWallets(amount).string
-    }
+    return .single(presentationData.strings.Settings_LogoutConfirmationText)
 }

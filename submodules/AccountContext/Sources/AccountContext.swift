@@ -14,7 +14,6 @@ import AnimationCache
 import MultiAnimationRenderer
 import Photos
 import TextFormat
-import WalletContext
 import LottieSettings
 
 public final class IosappApplicationOpenUrlCompletion {
@@ -319,21 +318,6 @@ public enum ResolvedBotStartPeerType {
     case channel
 }
 
-public struct WalletSendRequest {
-    public enum Recipient {
-        case peer(EnginePeer, resolvedAddress: WalletUserAddress? = nil)
-        case address(String)
-    }
-
-    public let recipient: Recipient
-    public let amountNanograms: Int64?
-
-    public init(recipient: Recipient, amountNanograms: Int64?) {
-        self.recipient = recipient
-        self.amountNanograms = amountNanograms
-    }
-}
-
 public enum ResolvedUrl {
     case externalUrl(String)
     case urlAuth(String)
@@ -376,7 +360,6 @@ public enum ResolvedUrl {
     case storyFolder(peerId: EnginePeer.Id, id: Int64)
     case giftCollection(peerId: EnginePeer.Id, id: Int64)
     case sendGift(peerId: EnginePeer.Id?)
-    case sendGrams(transfer: WalletSendRequest?, tonConnectUrl: String? = nil)
     case unknownDeepLink(path: String)
     case oauth(url: String)
     case createBot(parentBot: EnginePeer.Id, username: String?, title: String?)
@@ -1383,27 +1366,6 @@ public enum EmojiStatusSelectionControllerMode {
     case quickReactionSelection(completion: () -> Void)
 }
 
-public enum WalletInfoScreenMode: Equatable, CaseIterable {
-    case wallet
-    case gram
-    case firstGrams
-    case recovery
-}
-
-public enum WalletImportScreenMode: Equatable {
-    case importWallet
-    case enterRecoveryPhrase
-    case enableBackup(expectedAddress: String)
-    case verify(words: [String], keyRotation: Bool = false, allowsRepeatedCompletion: Bool = false)
-}
-
-public enum WalletWordsScreenMode: Equatable {
-    case view
-    case verify
-    case replacement
-    case backupDisable(updateSecretPhrase: Bool)
-}
-
 public protocol SharedAccountContext: AnyObject {
     var sharedContainerPath: String { get }
     var basePath: String { get }
@@ -1598,27 +1560,6 @@ public protocol SharedAccountContext: AnyObject {
     func makeDiamondsGiftScreen(context: AccountContext, message: EngineMessage) -> ViewController
     func makeDiamondsGiveawayBoostScreen(context: AccountContext, peerId: EnginePeer.Id, boost: ChannelBoostersContext.State.Boost) -> ViewController
     func makeDiamondsIntroScreen(context: AccountContext) -> ViewController
-    func makeWalletScreen(context: AccountContext) -> ViewController
-    func makeWalletReceiveScreen(context: AccountContext, address: String) -> ViewController
-    func makeWalletReceiveScreen(context: AccountContext, address: String, appeared: @escaping () -> Void) -> ViewController
-    func makeWalletImportScreen(context: AccountContext, mode: WalletImportScreenMode, completion: (() -> Void)?) -> ViewController
-    func makeWalletSettingsScreen(context: AccountContext) -> ViewController
-    func makeWalletAppsScreen(context: AccountContext) -> ViewController
-    func makeWalletWordsScreen(context: AccountContext, words: [String], verify: Bool, dismissOnBackgroundOrLock: Bool, completion: (() -> Void)?) -> ViewController
-    func makeWalletWordsScreen(context: AccountContext, words: [String], mode: WalletWordsScreenMode, completion: (() -> Void)?) -> ViewController
-    func makeWalletInfoScreen(context: AccountContext, mode: WalletInfoScreenMode, completion: (() -> Void)?) -> ViewController
-    func makeWalletInfoScreen(context: AccountContext, updatedPresentationData: (initial: PresentationData, signal: Signal<PresentationData, NoError>), mode: WalletInfoScreenMode, completion: (() -> Void)?) -> ViewController
-    func makeWalletConnectScreen(context: AccountContext, walletContext: WalletContext, request: WalletContext.TonConnectRequest, cancelled: @escaping () -> Void, connect: @escaping (@escaping (Result<Void, WalletContext.WalletError>) -> Void) -> Void) -> ViewController
-    func makeWalletTransferScreen(context: AccountContext, walletContext: WalletContext, request: WalletContext.TonConnectOperationRequest, cancelled: @escaping () -> Void, confirm: @escaping (@escaping (Result<Void, WalletContext.WalletError>) -> Void) -> Void) -> ViewController
-    func makeWalletTransactionScreen(context: AccountContext, transaction: WalletContext.Transaction, fromChat: Bool, decryptCommentOnOpen: Bool) -> ViewController
-    func makeWalletTransactionScreen(context: AccountContext, walletContext: WalletContext, transaction: WalletContext.Transaction, fromChat: Bool, decryptCommentOnOpen: Bool) -> ViewController
-    func makeWalletTransactionScreen(context: AccountContext, updatedPresentationData: (initial: PresentationData, signal: Signal<PresentationData, NoError>), walletContext: WalletContext, transaction: WalletContext.Transaction, fromChat: Bool, decryptCommentOnOpen: Bool) -> ViewController
-    func makeWalletTransactionPreviewScreen(context: AccountContext, walletContext: WalletContext, preparedTransfer: WalletContext.PreparedTransfer, dismissSendScreen: @escaping () -> Void) -> ViewController
-    func makeWalletTransactionPreviewScreen(context: AccountContext, walletContext: WalletContext, address: String, amount: Int64, sendAll: Bool, comment: String?, initialFee: Int64?, dismissSendScreen: @escaping () -> Void) -> ViewController
-    func makeWalletTransactionPreviewScreen(context: AccountContext, updatedPresentationData: (initial: PresentationData, signal: Signal<PresentationData, NoError>), walletContext: WalletContext, address: String, amount: Int64, sendAll: Bool, comment: String?, initialFee: Int64?, dismissSendScreen: @escaping () -> Void) -> ViewController
-    func makeWalletTransactionPreviewScreen(context: AccountContext, walletContext: WalletContext, address: String, recipientPeer: EnginePeer?, collectible: WalletContext.Collectible, comment: String?, dismissSendScreen: @escaping () -> Void) -> ViewController
-    func makeWalletCollectibleScreen(context: AccountContext, walletContext: WalletContext, collectible: WalletContext.Collectible, collectibleSent: @escaping (String) -> Void) -> ViewController
-    func authorizeWalletAccess(context: AccountContext, completion: @escaping (Bool) -> Void)
     func makeGiftViewScreen(context: AccountContext, message: EngineMessage, shareStory: ((StarGift.UniqueGift) -> Void)?) -> ViewController
     func makeGiftViewScreen(context: AccountContext, gift: StarGift.UniqueGift, shareStory: ((StarGift.UniqueGift) -> Void)?, openChatTheme: (() -> Void)?, dismissed: (() -> Void)?) -> ViewController
     func makeGiftWearPreviewScreen(context: AccountContext, gift: StarGift, attributes: [StarGift.UniqueGift.Attribute]?) -> ViewController
@@ -1798,7 +1739,6 @@ public protocol AccountContext: AnyObject {
     var inAppPurchaseManager: InAppPurchaseManager? { get }
     var diamondsContext: DiamondsContext? { get }
     var tonContext: DiamondsContext? { get }
-    var walletContext: WalletContext? { get }
     var giftAuctionsManager: GiftAuctionsManager? { get }
     
     var currentLimitsConfiguration: Atomic<LimitsConfiguration> { get }

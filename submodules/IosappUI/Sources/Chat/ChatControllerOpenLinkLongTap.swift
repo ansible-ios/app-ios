@@ -19,8 +19,8 @@ extension ChatControllerImpl {
             return
         }
         switch action {
-        case let .tonAddress(address):
-            self.openTonAddressContextMenu(address: address, params: params)
+        case .tonAddress:
+            break
         case let .url(url):
             self.openLinkContextMenu(url: url, params: params)
         case let .mention(mention):

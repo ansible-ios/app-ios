@@ -16,7 +16,6 @@ import PeerInfoVisualMediaPaneNode
 import PhotoResources
 import PeerInfoPaneNode
 import WebUI
-import WalletContext
 
 enum PeerInfoUpdatingAvatar {
     case none
@@ -297,7 +296,6 @@ final class IosappGlobalSettings {
     let hasPassport: Bool
     let hasWatchApp: Bool
     let enableQRLogin: Bool
-    let walletBalance: Int64?
     
     init(
         suggestPhoneNumberConfirmation: Bool,
@@ -320,8 +318,7 @@ final class IosappGlobalSettings {
         bots: [AttachMenuBot],
         hasPassport: Bool,
         hasWatchApp: Bool,
-        enableQRLogin: Bool,
-        walletBalance: Int64?
+        enableQRLogin: Bool
     ) {
         self.suggestPhoneNumberConfirmation = suggestPhoneNumberConfirmation
         self.suggestPasswordConfirmation = suggestPasswordConfirmation
@@ -344,7 +341,6 @@ final class IosappGlobalSettings {
         self.hasPassport = hasPassport
         self.hasWatchApp = hasWatchApp
         self.enableQRLogin = enableQRLogin
-        self.walletBalance = walletBalance
     }
 }
 
@@ -955,19 +951,6 @@ func peerInfoScreenSettingsData(context: AccountContext, peerId: EnginePeer.Id, 
         tonState = .single(nil)
     }
 
-    let walletBalance: Signal<Int64?, NoError>
-    if let walletContext = context.walletContext {
-        walletBalance = walletContext.state
-        |> map { state -> Int64? in
-            guard case .wallet = state.phase else {
-                return nil
-            }
-            return state.balance.currentValue
-        }
-        |> distinctUntilChanged
-    } else {
-        walletBalance = .single(nil)
-    }
     
     let profileGiftsContext = ProfileGiftsContext(account: context.account, peerId: peerId)
     
@@ -1011,10 +994,9 @@ func peerInfoScreenSettingsData(context: AccountContext, peerId: EnginePeer.Id, 
         peerInfoPersonalOrLinkedChannel(context: context, peerId: peerId, isSettings: true),
         diamondsState,
         tonState,
-        businessConnectedBot,
-        walletBalance
+        businessConnectedBot
     )
-    |> map { peerView, accountsAndPeers, accountSessions, privacySettings, sharedPreferences, notifications, stickerPacks, hasPassport, accountPreferences, suggestions, limits, hasPassword, isPowerSavingEnabled, hasStories, bots, personalChannel, diamondsState, tonState, businessConnectedBot, walletBalance -> PeerInfoScreenData in
+    |> map { peerView, accountsAndPeers, accountSessions, privacySettings, sharedPreferences, notifications, stickerPacks, hasPassport, accountPreferences, suggestions, limits, hasPassword, isPowerSavingEnabled, hasStories, bots, personalChannel, diamondsState, tonState, businessConnectedBot -> PeerInfoScreenData in
         let (notificationExceptions, notificationsAuthorizationStatus, notificationsWarningSuppressed) = notifications
         let (featuredStickerPacks, archivedStickerPacks) = stickerPacks
         
@@ -1058,8 +1040,7 @@ func peerInfoScreenSettingsData(context: AccountContext, peerId: EnginePeer.Id, 
             bots: bots,
             hasPassport: hasPassport,
             hasWatchApp: false,
-            enableQRLogin: enableQRLogin,
-            walletBalance: walletBalance
+            enableQRLogin: enableQRLogin
         )
         
         return PeerInfoScreenData(
@@ -1673,8 +1654,7 @@ func peerInfoScreenData(
                         bots: [],
                         hasPassport: false,
                         hasWatchApp: false,
-                        enableQRLogin: false,
-                        walletBalance: nil)
+                        enableQRLogin: false)
                 }
                 
                 let linkedCommunityData: Signal<PeerInfoLinkedCommunityData?, NoError>

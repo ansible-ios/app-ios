@@ -18,7 +18,6 @@ import TextLoadingEffect
 import TextSelectionNode
 import StreamingTextReveal
 import ShimmeringLinkNode
-import WalletContext
 
 public class ChatMessageRichDataBubbleContentNode: ChatMessageBubbleContentNode {
     public final class ContainerNode: ASDisplayNode {
@@ -2004,18 +2003,7 @@ public class ChatMessageRichDataBubbleContentNode: ChatMessageBubbleContentNode 
     }
 
     private func entityTapContent(_ attributes: [NSAttributedString.Key: Any]) -> ChatMessageBubbleContentTapAction.Content? {
-        if let tonAddress = attributes[NSAttributedString.Key(rawValue: IosappTextAttributes.TonAddress)] as? InstantPageTonAddressItem {
-            if attributes[NSAttributedString.Key(rawValue: IosappTextAttributes.Spoiler)] != nil, !self.displayContentsUnderSpoilers {
-                return nil
-            }
-            if let item = self.item, item.associatedData.isSuspiciousPeer, item.message.effectivelyIncoming(item.context.account.peerId) {
-                return nil
-            }
-            guard tonAddress.address.utf8.count == 48, WalletContext.transferAddress(from: tonAddress.address) != nil else {
-                return nil
-            }
-            return .tonAddress(tonAddress.address)
-        } else if let mention = attributes[NSAttributedString.Key(rawValue: IosappTextAttributes.PeerMention)] as? IosappPeerMention {
+        if let mention = attributes[NSAttributedString.Key(rawValue: IosappTextAttributes.PeerMention)] as? IosappPeerMention {
             return .peerMention(peerId: mention.peerId, mention: mention.mention, openProfile: false)
         } else if let peerName = attributes[NSAttributedString.Key(rawValue: IosappTextAttributes.PeerTextMention)] as? String {
             return .textMention(peerName)

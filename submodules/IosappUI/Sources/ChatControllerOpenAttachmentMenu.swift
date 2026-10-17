@@ -39,8 +39,6 @@ import RichTextAttachmentScreen
 import RichTextEditorMessageConversion
 import ChatRichTextEditorComposer
 import Postbox
-import WalletContext
-import WalletSendScreen
 
 extension ChatControllerImpl {
     enum AttachMenuSubject {
@@ -287,14 +285,6 @@ extension ChatControllerImpl {
                 isScheduledMessages = true
             }
 
-            switch subject {
-            case .default, .gift:
-                if WalletConfiguration.with(appConfiguration: self.context.currentAppConfiguration.with { $0 }).isAvailable, !isScheduledMessages, banSendText == nil, let user = self.presentationInterfaceState.renderedPeer?.peer as? IosappUser, user.id != self.context.account.peerId, !user.isDeleted, !isServicePeer(user), user.botInfo == nil, !user.flags.contains(.isSupport), let fileIndex = availableButtons.firstIndex(of: .file) {
-                    availableButtons.insert(.money, at: fileIndex + 1)
-                }
-            case .edit, .bot:
-                break
-            }
 
             var isPaidMessages = false
             if let _ = self.presentationInterfaceState.sendPaidMessageDiamonds {
@@ -615,39 +605,6 @@ extension ChatControllerImpl {
                             }
                             completion(controller, controller.mediaPickerContext)
                         }
-                        return true
-                    case .money:
-                        guard let peer = strongSelf.presentationInterfaceState.renderedPeer?.peer.flatMap(EnginePeer.init) else {
-                            return true
-                        }
-                        guard let walletContext = strongSelf.context.walletContext else {
-                            return true
-                        }
-                        var acceptedTransferAnimation = false
-                        let controller = WalletSendScreen(
-                            context: strongSelf.context,
-                            updatedPresentationData: strongSelf.updatedPresentationData,
-                            useDefaultAccent: false,
-                            peer: peer,
-                            walletContext: walletContext,
-                            allowOpenRecipientChat: false,
-                            transferAnimation: { [weak self] id, source in
-                                guard let self else { return false }
-                                acceptedTransferAnimation = self.walletTransferAnimationCoordinator().receive(id: id, source: source)
-                                return acceptedTransferAnimation
-                            },
-                            completed: { [weak self, weak attachmentController] in
-                                attachmentController?.attachmentButton = nil
-                                if !acceptedTransferAnimation {
-                                    self?.scrollToEndOfHistory()
-                                }
-                            }
-                        )
-                        controller.transferAnimationWillStart = { [weak self] id in
-                            self?.walletTransferAnimationCoordinator().prepare(id: id)
-                        }
-                        completion(controller, controller.mediaPickerContext)
-                        strongSelf.controllerNavigationDisposable.set(nil)
                         return true
                     case .audio:
                         strongSelf.controllerNavigationDisposable.set(nil)

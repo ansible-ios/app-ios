@@ -6,7 +6,6 @@ import IosappCore
 import IosappPresentationData
 import PasscodeInputFieldNode
 import ComponentFlow
-import WalletSendKeyboardComponent
 
 enum PasscodeSetupInitialState {
     case createPasscode
@@ -22,9 +21,7 @@ final class PasscodeSetupControllerNode: ASDisplayNode {
     private var presentationData: PresentationData
     private var mode: PasscodeSetupControllerMode
     private let useCustomNumericKeyboard: Bool
-    private let keyboard = ComponentView<Empty>()
     private var isCustomInputActive = true
-    private var previousDisplaysCustomKeyboard: Bool?
 
     private var displaysCustomKeyboard: Bool {
         guard self.useCustomNumericKeyboard else { return false }
@@ -66,7 +63,8 @@ final class PasscodeSetupControllerNode: ASDisplayNode {
     init(presentationData: PresentationData, mode: PasscodeSetupControllerMode, useCustomNumericKeyboard: Bool) {
         self.presentationData = presentationData
         self.mode = mode
-        self.useCustomNumericKeyboard = useCustomNumericKeyboard
+        // The custom numeric keyboard component was removed; the system keyboard is always used.
+        self.useCustomNumericKeyboard = false
         
         self.wrapperNode = ASDisplayNode()
         
@@ -136,7 +134,6 @@ final class PasscodeSetupControllerNode: ASDisplayNode {
     
     func containerLayoutUpdated(_ layout: ContainerViewLayout, navigationBarHeight: CGFloat, transition: ContainedViewLayoutTransition) {
         self.validLayout = (layout, navigationBarHeight)
-        self.updateCustomKeyboard(layout: layout, transition: transition)
         
         let standardInputHeight = layout.deviceMetrics.standardInputHeight(inLandscape: layout.orientation == .landscape)
         var insets = layout.insets(options: [.statusBar])
@@ -166,93 +163,21 @@ final class PasscodeSetupControllerNode: ASDisplayNode {
         self.view.disablesInteractiveKeyboardGestureRecognizer = true
     }
 
-    private func updateCustomKeyboard(layout: ContainerViewLayout, transition: ContainedViewLayoutTransition) {
-        let isVisible = self.displaysCustomKeyboard
-        let visibilityChanged = self.previousDisplaysCustomKeyboard.map { $0 != isVisible } ?? false
-        self.previousDisplaysCustomKeyboard = isVisible
-        guard isVisible || self.keyboard.view != nil else { return }
-
-        var minimumKeyboardHeight = layout.deviceMetrics.standardInputHeight(inLandscape: layout.orientation == .landscape) - 49.0
-        if UIDevice.current.userInterfaceIdiom == .pad {
-            minimumKeyboardHeight = min(minimumKeyboardHeight, 270.0)
-        }
-        let isEnabled = isVisible && self.authenticationInputEnabled && self.isCustomInputActive
-        let keyboardSize = self.keyboard.update(
-            transition: .immediate,
-            component: AnyComponent(WalletSendKeyboardComponent(
-                theme: self.presentationData.theme,
-                safeInsets: layout.safeInsets,
-                isLandscape: layout.size.width > layout.size.height && layout.metrics.widthClass == .compact,
-                minimumHeight: minimumKeyboardHeight,
-                mode: .numeric,
-                deleteTitle: self.presentationData.strings.Common_Delete,
-                isEnabled: isEnabled,
-                action: { [weak self] action in
-                    guard let self, self.displaysCustomKeyboard, self.authenticationInputEnabled, self.isCustomInputActive, self.view.isUserInteractionEnabled else { return }
-                    self.hapticFeedback.impact(.light)
-                    switch action {
-                    case let .insertText(text):
-                        self.inputFieldNode.append(text)
-                    case .deleteBackward:
-                        let _ = self.inputFieldNode.delete()
-                    }
-                }
-            )),
-            environment: {},
-            containerSize: layout.size
-        )
-        if let keyboardView = self.keyboard.view {
-            if keyboardView.superview == nil {
-                self.view.addSubview(keyboardView)
-                keyboardView.frame = CGRect(x: 0.0, y: layout.size.height, width: keyboardSize.width, height: keyboardSize.height)
-            }
-            if isVisible {
-                keyboardView.isHidden = false
-            }
-            keyboardView.isUserInteractionEnabled = isEnabled
-            keyboardView.accessibilityElementsHidden = !isEnabled
-            let keyboardFrame = CGRect(
-                x: 0.0,
-                y: isVisible ? layout.size.height - layout.additionalInsets.bottom - keyboardSize.height : layout.size.height,
-                width: keyboardSize.width,
-                height: keyboardSize.height
-            )
-            // Input activation and system keyboard updates can repeat the same target during the slide.
-            if keyboardView.frame != keyboardFrame {
-                var keyboardTransition = transition
-                if visibilityChanged || (!transition.isAnimated && keyboardView.layer.animation(forKey: "position") != nil) {
-                    keyboardTransition = .animated(duration: 0.25, curve: .easeInOut)
-                }
-                keyboardTransition.updateFrame(view: keyboardView, frame: keyboardFrame, beginWithCurrentState: true, completion: { [weak self, weak keyboardView] completed in
-                    guard completed, let self, let keyboardView,
-                          !self.displaysCustomKeyboard, keyboardView.frame == keyboardFrame else { return }
-                    keyboardView.isHidden = true
-                })
-            }
-        }
-    }
 
     func deactivateCustomInput() {
         guard self.useCustomNumericKeyboard else { return }
         self.isCustomInputActive = false
         self.inputFieldNode.isInputEnabled = false
         self.inputFieldNode.cancelPendingCompletion()
-        if let validLayout = self.validLayout {
-            self.updateCustomKeyboard(layout: validLayout.0, transition: .immediate)
-        }
     }
 
     func updateInputEnabled(_ enabled: Bool) {
         self.authenticationInputEnabled = enabled
         self.inputFieldNode.isInputEnabled = enabled && (!self.useCustomNumericKeyboard || self.isCustomInputActive)
         self.modeButtonNode.isUserInteractionEnabled = enabled
-        if let validLayout = self.validLayout {
-            self.updateCustomKeyboard(layout: validLayout.0, transition: .immediate)
-        }
     }
     
     func updateMode(_ mode: PasscodeSetupControllerMode) {
-        (self.keyboard.view as? WalletSendKeyboardComponent.View)?.cancelKeyPresses()
         self.mode = mode
         self.inputFieldNode.reset()
         
@@ -279,7 +204,6 @@ final class PasscodeSetupControllerNode: ASDisplayNode {
         if case let .setup(_, type) = self.mode, let maxLength = type.maxLength, self.currentPasscode.count != maxLength {
             return
         }
-        (self.keyboard.view as? WalletSendKeyboardComponent.View)?.cancelKeyPresses()
         guard !self.currentPasscode.isEmpty else {
             self.animateError()
             return
@@ -356,9 +280,6 @@ final class PasscodeSetupControllerNode: ASDisplayNode {
         self.isCustomInputActive = true
         self.inputFieldNode.isInputEnabled = true
         self.inputFieldNode.activateInput()
-        if let validLayout = self.validLayout {
-            self.updateCustomKeyboard(layout: validLayout.0, transition: .immediate)
-        }
         
         UIAccessibility.post(notification: UIAccessibility.Notification.announcement, argument: self.titleNode.attributedText?.string)
     }

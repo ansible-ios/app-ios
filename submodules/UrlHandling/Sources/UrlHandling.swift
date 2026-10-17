@@ -7,7 +7,6 @@ import IosappPresentationData
 import IosappUIPreferences
 import IosappNotices
 import AccountContext
-import WalletContext
 
 private let baseIosappMePaths = ["www.asme.su", "asme.su"]
 // Upstream lists the t.me web-client short-link hosts (a./k./z.t.me) here.
@@ -152,7 +151,6 @@ public enum ParsedInternalUrl {
     case oauth(url: String)
     case createBot(parentBot: String, username: String?, title: String?)
     case textStyle(slug: String)
-    case sendGrams(queryItems: [URLQueryItem])
     case externalUrl(url: String)
 }
 
@@ -175,9 +173,6 @@ public func parseInternalUrl(sharedContext: SharedAccountContext, context: Accou
                 reference += "_" + ref.lowercased()
             }
             return .premiumOffer(reference: reference)
-        }
-        if components.path.lowercased() == "/sendgrams" || components.path.lowercased() == "/sendgrams/" {
-            return .sendGrams(queryItems: components.queryItems ?? [])
         }
     }
     if query.hasSuffix("/") {
@@ -894,39 +889,6 @@ private func resolveInternalUrl(context: AccountContext, url: ParsedInternalUrl)
     switch url {
         case let .premiumOffer(reference):
             return .single(.result(.premiumOffer(reference: reference)))
-        case let .sendGrams(queryItems):
-            var walletUrl = URLComponents(string: "https://asme.su/sendgrams")!
-            walletUrl.queryItems = queryItems
-            walletUrl.percentEncodedQuery = walletUrl.percentEncodedQuery?.replacingOccurrences(of: "+", with: "%2B")
-            if let value = walletUrl.string, WalletContext.isTonConnectUrl(value) {
-                return .single(.result(.sendGrams(transfer: nil, tonConnectUrl: value)))
-            }
-            guard let link = SendGramsLink(queryItems: queryItems) else {
-                return .complete()
-            }
-            guard let recipient = link.recipient else {
-                return .single(.result(.sendGrams(transfer: nil)))
-            }
-            if recipient.hasPrefix("@") {
-                return context.engine.peers.resolvePeerByName(name: String(recipient.dropFirst()), referrer: nil)
-                |> map { result -> ResolveInternalUrlResult in
-                    switch result {
-                    case .progress:
-                        return .progress
-                    case let .result(peer):
-                        guard let peer, case let .user(user) = peer,
-                              user.isGenericUser, !peer.isService, peer.id != context.account.peerId else {
-                            return .result(.inaccessiblePeer)
-                        }
-                        return .result(.sendGrams(transfer: WalletSendRequest(recipient: .peer(peer), amountNanograms: link.amountNanograms)))
-                    }
-                }
-            } else {
-                guard WalletContext.transferAddress(from: recipient) != nil else {
-                    return .complete()
-                }
-                return .single(.result(.sendGrams(transfer: WalletSendRequest(recipient: .address(recipient), amountNanograms: link.amountNanograms))))
-            }
         case let .phone(phone, attach, startAttach, text):
             return context.engine.peers.resolvePeerByPhone(phone: phone)
             |> mapToSignal { peer -> Signal<ResolveInternalUrlResult, NoError> in

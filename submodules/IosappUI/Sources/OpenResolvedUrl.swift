@@ -22,7 +22,6 @@ import SettingsUI
 import UrlHandling
 import IosappCallsUI
 import UndoUI
-import WalletContext
 import ImportStickerPackUI
 import PeerInfoUI
 import Markdown
@@ -45,7 +44,6 @@ import ProxyServerPreviewScreen
 import AuthConfirmationScreen
 import OpenInExternalAppUI
 import CreateBotScreen
-import WalletSendScreen
 
 private func defaultNavigationForPeerId(_ peerId: PeerId?, navigation: ChatControllerInteractionNavigateToPeer) -> ChatControllerInteractionNavigateToPeer {
     if case .default = navigation {
@@ -1137,52 +1135,6 @@ func openResolvedUrlImpl(
                 if let navigationController {
                     navigationController.pushViewController(controller, animated: true)
                 }
-            }
-        case let .sendGrams(transfer, tonConnectUrl):
-            guard WalletConfiguration.with(appConfiguration: context.currentAppConfiguration.with { $0 }).isAvailable else {
-                present(UndoOverlayController(presentationData: presentationData, content: .info(title: nil, text: presentationData.strings.Wallet_Unavailable, timeout: nil, customUndoText: nil), action: { _ in return false }), nil)
-                return
-            }
-            if let tonConnectUrl {
-                dismissInput()
-                context.walletContext?.processTonConnectUrl(tonConnectUrl)
-                return
-            }
-            guard let walletContext = context.walletContext, let navigationController else {
-                return
-            }
-            dismissInput()
-            if let transfer {
-                let controller: WalletSendScreen
-                switch transfer.recipient {
-                case let .peer(peer, resolvedAddress):
-                    controller = WalletSendScreen(
-                        context: context,
-                        peer: peer,
-                        walletContext: walletContext,
-                        resolvedAddress: resolvedAddress,
-                        initialAmountNanograms: transfer.amountNanograms,
-                        completed: { [weak navigationController] in
-                            guard let navigationController else {
-                                return
-                            }
-                            context.sharedContext.navigateToChatController(NavigateToChatControllerParams(navigationController: navigationController, context: context, chatLocation: .peer(peer), keepStack: .default, useExisting: true, completion: { chatController in
-                                chatController.scrollToEndOfHistory()
-                            }, forceOpenChat: true))
-                        }
-                    )
-                case let .address(address):
-                    controller = WalletSendScreen(
-                        context: context,
-                        walletContext: walletContext,
-                        address: address,
-                        initialAmountNanograms: transfer.amountNanograms
-                    )
-                }
-                controller.navigationPresentation = .modal
-                navigationController.pushViewController(controller, animated: true)
-            } else {
-                navigationController.pushViewController(context.sharedContext.makeWalletScreen(context: context), animated: true)
             }
         case .ton:
             // Ansible: TON removed as a user-facing currency — the ton deep link no longer

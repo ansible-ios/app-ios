@@ -46,8 +46,6 @@ import NavigationBarImpl
 import ContextUI
 import ContextControllerImpl
 import ProxyServerPreviewScreen
-import WalletContext
-import WalletSendScreen
 import PasscodeCore
 import LiquidGlassShapes
 import MTProtoRustEngine
@@ -63,10 +61,6 @@ import AppCenterCrashes
 
 private let handleVoipNotifications = false
 
-private func isTonTransferUrl(_ url: URL) -> Bool {
-    return url.scheme?.lowercased() == "ton" && url.host?.lowercased() == "transfer"
-        && WalletContext.transferAddress(from: url.absoluteString) != nil
-}
 
 private var testIsLaunched = false
 
@@ -559,7 +553,7 @@ private func extractAccountManagerState(records: AccountRecordsView<IosappAccoun
         
         let baseAppBundleId = Bundle.main.bundleIdentifier!
         let appGroupName = "group.\(baseAppBundleId)"
-        try! PasscodeEnvironment.shared.configure(PasscodeConfiguration(appGroupIdentifier: appGroupName, processRole: .mainApp, biometricKeychainService: walletBiometricKeychainService), privateAccessGroup: {
+        try! PasscodeEnvironment.shared.configure(PasscodeConfiguration(appGroupIdentifier: appGroupName, processRole: .mainApp), privateAccessGroup: {
             BuildConfig.keychainAccessGroup(baseAppBundleId: baseAppBundleId)
         })
         let maybeAppGroupUrl = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appGroupName)
@@ -1047,7 +1041,6 @@ private func extractAccountManagerState(records: AccountRecordsView<IosappAccoun
         })
         
         let accountManager: AccountManager<IosappAccountManagerTypes> = setupAccountManager(basePath: rootPath + "/accounts-metadata", isTemporary: false, isReadOnly: false, useCaches: true, removeDatabaseOnError: true, resetLocalSecrets: {
-            try resetWalletLocalSecrets()
         })
         self.accountManager = accountManager
 
@@ -1562,9 +1555,9 @@ private func extractAccountManagerState(records: AccountRecordsView<IosappAccoun
         })
         
         if let url = launchOptions?[.url] {
-            if let url = url as? URL, url.scheme == "as" || url.scheme == "ton" || url.scheme == buildConfig.appSpecificUrlScheme || WalletContext.isTonConnectUrl(url.absoluteString) {
+            if let url = url as? URL, url.scheme == "as" || url.scheme == buildConfig.appSpecificUrlScheme {
                 self.openUrlWhenReady(url: url, external: true)
-            } else if let urlString = url as? String, urlString.lowercased().hasPrefix("as:") || urlString.lowercased().hasPrefix("ton:") || urlString.lowercased().hasPrefix("\(buildConfig.appSpecificUrlScheme):") || WalletContext.isTonConnectUrl(urlString), let url = URL(string: urlString) {
+            } else if let urlString = url as? String, urlString.lowercased().hasPrefix("as:") || urlString.lowercased().hasPrefix("\(buildConfig.appSpecificUrlScheme):"), let url = URL(string: urlString) {
                 self.openUrlWhenReady(url: url, external: true)
             }
         }
@@ -1781,7 +1774,7 @@ private func extractAccountManagerState(records: AccountRecordsView<IosappAccoun
 
         for context in connectionOptions.urlContexts {
             let url = context.url
-            if let buildConfig = self.buildConfig, url.scheme == "as" || url.scheme == "ton" || url.scheme == buildConfig.appSpecificUrlScheme || WalletContext.isTonConnectUrl(url.absoluteString) {
+            if let buildConfig = self.buildConfig, url.scheme == "as" || url.scheme == buildConfig.appSpecificUrlScheme {
                 self.openUrlWhenReady(url: url, external: true)
             } else {
                 self.handleOpenURL(url)
@@ -2587,10 +2580,6 @@ private func extractAccountManagerState(records: AccountRecordsView<IosappAccoun
         self.openUrl(url: url)
     }
 
-    private func presentWalletUnavailable(in context: AuthorizedApplicationContext) {
-        let presentationData = context.context.sharedContext.currentPresentationData.with { $0 }
-        context.context.sharedContext.presentGlobalController(UndoOverlayController(presentationData: presentationData, content: .info(title: nil, text: presentationData.strings.Wallet_Unavailable, timeout: nil, customUndoText: nil), action: { _ in return false }), nil)
-    }
 
     private func openUrl(url: URL) {
         let _ = (self.sharedContextPromise.get()
@@ -2607,21 +2596,7 @@ private func extractAccountManagerState(records: AccountRecordsView<IosappAccoun
             if let authContext = authContext, let confirmationCode = parseConfirmationCodeUrl(sharedContext: sharedContext, url: url) {
                 authContext.rootController.applyConfirmationCode(confirmationCode)
             } else if let context = context {
-                if (WalletContext.isTonConnectUrl(url.absoluteString) || url.scheme?.lowercased() == "ton"), !WalletConfiguration.with(appConfiguration: context.context.currentAppConfiguration.with { $0 }).isAvailable {
-                    self.presentWalletUnavailable(in: context)
-                } else if WalletContext.isTonConnectUrl(url.absoluteString) {
-                    context.context.walletContext?.processTonConnectUrl(url.absoluteString)
-                } else if url.scheme?.lowercased() == "ton" {
-                    if isTonTransferUrl(url), let walletContext = context.context.walletContext {
-                        context.rootController.pushViewController(WalletSendScreen(
-                            context: context.context,
-                            walletContext: walletContext,
-                            address: url.absoluteString
-                        ))
-                    }
-                } else {
-                    context.openUrl(url, external: true)
-                }
+                context.openUrl(url, external: true)
             } else if let authContext = authContext {
                 if let proxyData = parseProxyUrl(sharedContext: sharedContext, url: url) {
                     authContext.rootController.view.endEditing(true)
@@ -2891,13 +2866,6 @@ private func extractAccountManagerState(records: AccountRecordsView<IosappAccoun
     }
     
     private func openChatWhenReady(accountId: AccountRecordId?, peerId: PeerId, threadId: Int64?, messageId: MessageId? = nil, activateInput: Bool = false, storyId: StoryId?, openAppIfAny: Bool = false, alwaysKeepMessageId: Bool = false) {
-        if let messageId, messageId.namespace == Namespaces.Message.Cloud,
-           peerId == PeerId(namespace: Namespaces.Peer.CloudUser, id: PeerId.Id._internalFromInt64Value(777000)) {
-            if self.walletTonConnectNotifications.enqueue(accountId: accountId, messageId: messageId, alwaysKeepMessageId: alwaysKeepMessageId) {
-                self.openNextWalletTonConnectNotification()
-            }
-            return
-        }
 
         let signal = self.sharedContextPromise.get()
         |> take(1)
@@ -2921,42 +2889,6 @@ private func extractAccountManagerState(records: AccountRecordsView<IosappAccoun
         }))
     }
     
-    private var walletTonConnectNotifications = WalletTonConnectNotificationQueue<AccountRecordId, MessageId>()
-    private let walletTonConnectNotificationDisposable = MetaDisposable()
-
-    private func openNextWalletTonConnectNotification() {
-        guard let route = self.walletTonConnectNotifications.next() else { return }
-        let signal = self.sharedContextPromise.get()
-        |> take(1)
-        |> deliverOnMainQueue
-        |> mapToSignal { sharedContext -> Signal<AuthorizedApplicationContext, NoError> in
-            if let id = route.accountId {
-                sharedContext.sharedContext.switchToAccount(id: id)
-                return self.authorizedContext() |> filter { $0.context.account.id == id } |> take(1)
-            }
-            return self.authorizedContext() |> take(1)
-        }
-        |> mapToSignal { context -> Signal<(AuthorizedApplicationContext, EngineMessage?), NoError> in
-            context.context.engine.messages.downloadMessage(messageId: route.messageId)
-            |> map { (context, $0) }
-        }
-        |> deliverOnMainQueue
-        self.walletTonConnectNotificationDisposable.set(signal.start(next: { [weak self] context, message in
-            guard let self else { return }
-            let isWalletAvailable = WalletConfiguration.with(appConfiguration: context.context.currentAppConfiguration.with { $0 }).isAvailable
-            if isWalletAvailable, let message, let request = walletTonConnectRequestRoute(message: message._asMessage(), accountPeerId: context.context.account.peerId) {
-                context.context.walletContext?.openTonConnectRequest(sessionId: request.sessionId, messageId: request.messageId)
-            } else {
-                context.openChatWithPeerId(peerId: route.messageId.peerId, threadId: nil, messageId: route.messageId,
-                    activateInput: false, storyId: nil, openAppIfAny: false, alwaysKeepMessageId: route.alwaysKeepMessageId)
-                if !isWalletAvailable {
-                    self.presentWalletUnavailable(in: context)
-                }
-            }
-            self.walletTonConnectNotifications.complete()
-            Queue.mainQueue().async { [weak self] in self?.openNextWalletTonConnectNotification() }
-        }))
-    }
 
     private var openUrlInProgress: URL?
     private func openUrlWhenReady(accountId: AccountRecordId? = nil, url: URL, external: Bool = false) {
@@ -2980,21 +2912,7 @@ private func extractAccountManagerState(records: AccountRecordsView<IosappAccoun
         }
         self.openUrlWhenReadyDisposable.set((signal
         |> deliverOnMainQueue).start(next: { [weak self] context in
-            if (WalletContext.isTonConnectUrl(url.absoluteString) || url.scheme?.lowercased() == "ton"), !WalletConfiguration.with(appConfiguration: context.context.currentAppConfiguration.with { $0 }).isAvailable {
-                self?.presentWalletUnavailable(in: context)
-            } else if WalletContext.isTonConnectUrl(url.absoluteString) {
-                context.context.walletContext?.processTonConnectUrl(url.absoluteString)
-            } else if url.scheme?.lowercased() == "ton" {
-                if isTonTransferUrl(url), let walletContext = context.context.walletContext {
-                    context.rootController.pushViewController(WalletSendScreen(
-                        context: context.context,
-                        walletContext: walletContext,
-                        address: url.absoluteString
-                    ))
-                }
-            } else {
-                context.openUrl(url, external: external)
-            }
+            context.openUrl(url, external: external)
             
             Queue.mainQueue().after(1.0, {
                 self?.openUrlInProgress = nil

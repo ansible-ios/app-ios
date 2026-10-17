@@ -28,7 +28,6 @@ import ChatControllerInteraction
 import InteractiveTextComponent
 import ShimmeringMask
 import StreamingTextReveal
-import WalletContext
 
 private final class CachedChatMessageText {
     let text: String
@@ -1184,12 +1183,6 @@ public class ChatMessageTextBubbleContentNode: ChatMessageBubbleContentNode {
             
             if let _ = attributes[NSAttributedString.Key(rawValue: IosappTextAttributes.Spoiler)], !self.displayContentsUnderSpoilers.value {
                 return ChatMessageBubbleContentTapAction(content: .none)
-            } else if let tonAddress = attributes[NSAttributedString.Key(rawValue: IosappTextAttributes.TonAddress)] as? IosappTonAddress {
-                guard tonAddress.range.length == 48, tonAddress.address.utf8.count == 48,
-                      WalletContext.transferAddress(from: tonAddress.address) != nil else {
-                    return ChatMessageBubbleContentTapAction(content: .none)
-                }
-                return ChatMessageBubbleContentTapAction(content: .tonAddress(tonAddress.address), rects: self.textNode.textNode.rangeRects(in: tonAddress.range)?.rects, activate: makeActivate(tonAddress.range))
             } else if let url = attributes[NSAttributedString.Key(rawValue: IosappTextAttributes.URL)] as? String {
                 var concealed = true
                 var urlRange: NSRange?

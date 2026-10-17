@@ -38,7 +38,6 @@ import ChatMessageItemView
 import ChatMessageBubbleItemNode
 import AdsInfoScreen
 import AdsReportScreen
-import WalletContext
  
 private struct MessageContextMenuData {
     let diamondStatus: Bool?
@@ -1226,21 +1225,6 @@ func contextMenuForChatPresentationInterfaceState(chatPresentationInterfaceState
             })))
         }
         
-        if WalletConfiguration.with(appConfiguration: context.currentAppConfiguration.with { $0 }).isAvailable,
-           let peer = message.peers[message.id.peerId].flatMap(EnginePeer.init), case .user = peer,
-           message.media.contains(where: { media in
-               if let action = media as? IosappMediaAction, case .gramTransfer = action.action {
-                   return true
-               }
-               return false
-           }) {
-            actions.append(.action(ContextMenuActionItem(text: "Send Money", icon: { theme in
-                return generateTintedImage(image: UIImage(bundleImageName: "Chat/Context Menu/Ton"), color: theme.actionSheet.primaryTextColor)
-            }, action: { _, f in
-                f(.dismissWithoutContent)
-                (interfaceInteraction.chatController() as? ChatControllerImpl)?.openResolved(result: .sendGrams(transfer: WalletSendRequest(recipient: .peer(peer), amountNanograms: nil)), sourceMessageId: message.id)
-            })))
-        }
         
         if data.messageActions.options.contains(.sendScheduledNow) {
             actions.append(.action(ContextMenuActionItem(text: chatPresentationInterfaceState.strings.ScheduledMessages_SendNow, icon: { theme in

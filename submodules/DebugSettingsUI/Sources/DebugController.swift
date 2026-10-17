@@ -19,7 +19,6 @@ import IosappVoip
 import ComponentFlow
 import AlertComponent
 import AlertCheckComponent
-import WalletContext
 import CpuProfiler
 
 @objc private final class DebugControllerMailComposeDelegate: NSObject, MFMailComposeViewControllerDelegate {

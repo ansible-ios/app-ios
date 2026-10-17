@@ -15,7 +15,6 @@ import DeviceAccess
 import TextFormat
 import IosappBaseController
 import AccountContext
-import WalletContext
 import IosappStringFormatting
 import OverlayStatusController
 import DeviceLocationManager
@@ -548,7 +547,6 @@ public final class ChatControllerImpl: IosappBaseController, ChatController, Gal
     
     var chatLocationContextHolder: Atomic<ChatLocationContextHolder?>
     
-    var walletTransferAnimation: ChatWalletTransferAnimation?
     weak var attachmentController: AttachmentController?
     
     weak var currentImportMessageTooltip: UndoOverlayController?
@@ -874,14 +872,6 @@ public final class ChatControllerImpl: IosappBaseController, ChatController, Gal
                 return false
             }
             
-            if let request = walletTonConnectRequestRoute(message: message, accountPeerId: self.context.account.peerId) {
-                guard WalletConfiguration.with(appConfiguration: self.context.currentAppConfiguration.with { $0 }).isAvailable else {
-                    self.present(UndoOverlayController(presentationData: self.presentationData, content: .info(title: nil, text: self.presentationData.strings.Wallet_Unavailable, timeout: nil, customUndoText: nil), action: { _ in return false }), in: .window(.root))
-                    return true
-                }
-                self.context.walletContext?.openTonConnectRequest(sessionId: request.sessionId, messageId: request.messageId)
-                return true
-            }
 
             if let contextController = self.currentContextController {
                 self.present(contextController, in: .window(.root))
@@ -1154,67 +1144,6 @@ public final class ChatControllerImpl: IosappBaseController, ChatController, Gal
                                 })
                             } else {
                                 self.present(BotReceiptController(context: self.context, messageId: message.id), in: .window(.root), with: ViewControllerPresentationArguments(presentationAnimation: .modalSheet))
-                            }
-                            return true
-                        case let .gramTransfer(amount, peerAddress, transactionId, messageComment, commentEncrypted):
-                            guard WalletConfiguration.with(appConfiguration: self.context.currentAppConfiguration.with { $0 }).isAvailable else {
-                                self.present(UndoOverlayController(presentationData: self.presentationData, content: .info(title: nil, text: self.presentationData.strings.Wallet_Unavailable, timeout: nil, customUndoText: nil), action: { _ in return false }), in: .window(.root))
-                                return true
-                            }
-                            let pendingTransfer = message.attributes.compactMap { $0 as? PendingWalletTransferMessageAttribute }.first
-                            let direction: WalletContext.Transaction.Direction
-                            if message.effectivelyIncoming(self.context.account.peerId) {
-                                direction = .incoming
-                            } else {
-                                direction = .outgoing
-                            }
-
-                            let comment: String?
-                            if let messageComment, !messageComment.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                                comment = messageComment
-                            } else {
-                                comment = nil
-                            }
-
-                            let peer: WalletContext.Transaction.Peer
-                            if let enginePeer = message.peers[message.id.peerId].flatMap(EnginePeer.init),
-                               enginePeer.id.namespace == Namespaces.Peer.CloudUser,
-                               !enginePeer.id.isIosappNotifications {
-                                peer = .user(enginePeer, address: peerAddress, domain: nil)
-                            } else if !peerAddress.isEmpty {
-                                peer = .address(peerAddress, domain: nil)
-                            } else {
-                                peer = .unsupported
-                            }
-
-                            let logicalTime = transactionId.split(separator: ":", maxSplits: 1).first.map(String.init) ?? transactionId
-                            let transaction = WalletContext.Transaction(
-                                id: pendingTransfer.map { "pending:\($0.operationId)" } ?? transactionId,
-                                logicalTime: pendingTransfer == nil ? logicalTime : "0",
-                                timestamp: message.timestamp,
-                                direction: direction,
-                                amount: pendingTransfer == nil ? amount : -amount,
-                                fee: 0,
-                                peer: peer,
-                                comment: comment,
-                                commentEncrypted: commentEncrypted,
-                                status: pendingTransfer == nil ? .completed : .pending
-                            )
-                            if pendingTransfer != nil, let walletContext = self.context.walletContext {
-                                self.push(self.context.sharedContext.makeWalletTransactionScreen(
-                                    context: self.context,
-                                    walletContext: walletContext,
-                                    transaction: transaction,
-                                    fromChat: true,
-                                    decryptCommentOnOpen: params.decryptWalletComment
-                                ))
-                            } else {
-                                self.push(self.context.sharedContext.makeWalletTransactionScreen(
-                                    context: self.context,
-                                    transaction: transaction,
-                                    fromChat: true,
-                                    decryptCommentOnOpen: params.decryptWalletComment
-                                ))
                             }
                             return true
                         case let .setChatTheme(chatTheme):
@@ -6032,15 +5961,6 @@ public final class ChatControllerImpl: IosappBaseController, ChatController, Gal
         controllerInteraction.enableFullTranslucency = context.sharedContext.energyUsageSettings.fullTranslucency
         
         self.controllerInteraction = controllerInteraction
-        controllerInteraction.requestWalletTransferArrival = { [weak self] message in
-            self?.walletTransferAnimationCoordinator().requestArrival(message)
-        }
-        controllerInteraction.walletTransferArrivalState = { [weak self] id in
-            self?.walletTransferAnimation?.arrivalState(id)
-        }
-        controllerInteraction.cancelWalletTransferArrival = { [weak self] id in
-            self?.walletTransferAnimation?.cancelArrival(id)
-        }
         
         self.navigationBar?.allowsCustomTransition = { [weak self] in
             guard let strongSelf = self else {
@@ -8306,7 +8226,6 @@ public final class ChatControllerImpl: IosappBaseController, ChatController, Gal
             self.context.engine.messages.forceSendPostponedPaidMessage(peerId: peerId)
         }
         
-        self.walletTransferAnimation?.cancelAll()
     }
     
     func saveInterfaceState(includeScrollState: Bool = true) {
