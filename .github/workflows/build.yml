@@ -49,8 +49,10 @@ jobs:
           mv /Users/Shared/$(basename $GITHUB_WORKSPACE) /Users/Shared/telegram-ios
 
       - name: Build the App
+        env:
+          ANSIBLE_IOS_API_HASH: ${{ secrets.ANSIBLE_IOS_API_HASH }}
         run: |
-          set -x
+          set -euo pipefail
 
           # source code paths are included in the final binary, so we need to make them stable across builds
           SOURCE_DIR=/Users/Shared/telegram-ios
@@ -69,12 +71,22 @@ jobs:
           echo "BUILD_NUMBER=$(echo $BUILD_NUMBER)" >> $GITHUB_ENV
           echo "APP_VERSION=$(echo $APP_VERSION)" >> $GITHUB_ENV
 
-          python3 build-system/Make/ImportCertificates.py --path build-system/fake-codesigning/certs
+          # Disposable self-signed material matches our bundle ID. It is not
+          # Apple distribution signing; the published IPA must be re-signed.
+          SIGNING_PATH="$RUNNER_TEMP/ansible-ios-ci-signing"
+          python3 build-system/Make/PrepareAnsibleCI.py \
+            --configuration build-system/ansible-configuration.json \
+            --destination "$SIGNING_PATH"
+          python3 build-system/Make/ImportCertificates.py \
+            --path "$SIGNING_PATH/certs" \
+            --passwordFile "$SIGNING_PATH/certs/password.txt" \
+            --keychainPath "$SIGNING_PATH/ci.keychain-db"
           python3 -u build-system/Make/Make.py \
             --bazelUserRoot="$BAZEL_USER_ROOT" \
+            --overrideXcodeVersion \
             build \
-            --configurationPath="build-system/appstore-configuration.json" \
-            --codesigningInformationPath=build-system/fake-codesigning \
+            --configurationPath="build-system/ansible-configuration.json" \
+            --codesigningInformationPath="$SIGNING_PATH" \
             --configuration=release_arm64 \
             --buildNumber="$BUILD_NUMBER"
 
@@ -86,6 +98,7 @@ jobs:
           # раскрывается, и cp падает, хотя сборка прошла. bazel сам печатает
           # готовый файл по пути bazel-bin/iosapp/iosapp.ipa — берём его.
           cp bazel-bin/iosapp/iosapp.ipa "$OUTPUT_PATH/"
+          python3 build-system/Make/VerifyAnsibleIPA.py "$OUTPUT_PATH/iosapp.ipa"
 
           # collect dsym
           mkdir -p build/DSYMs
@@ -93,6 +106,12 @@ jobs:
             cp -R "$f" build/DSYMs/
           done
           zip -r "./$OUTPUT_PATH/iosapp.DSYMs.zip" build/DSYMs 1>/dev/null
+
+      - name: Remove disposable signing material
+        if: always()
+        run: |
+          security delete-keychain "$RUNNER_TEMP/ansible-ios-ci-signing/ci.keychain-db" || true
+          rm -rf "$RUNNER_TEMP/ansible-ios-ci-signing"
 
       # 🚨 Было три шага на actions/create-release@v1 и upload-release-asset@v1 —
       # оба архивированы GitHub и работают на Node 12, то есть на современном
@@ -104,7 +123,10 @@ jobs:
           tag_name: build-${{ env.BUILD_NUMBER }}
           name: Ansible ${{ env.APP_VERSION }} (${{ env.BUILD_NUMBER }})
           body: |
-            Неподписанная сборка Ansible for iOS ${{ env.APP_VERSION }} (${{ env.BUILD_NUMBER }})
+            Ansible for iOS ${{ env.APP_VERSION }} (${{ env.BUILD_NUMBER }})
+            Bundle ID: su.ansible.messenger.
+            IPA с временной тестовой подписью: перед установкой требуется переподпись.
+            Это не сборка для App Store/TestFlight; тестовая подпись не даёт доступ к APNs.
           files: |
             /Users/Shared/telegram-ios/build/artifacts/iosapp.ipa
             /Users/Shared/telegram-ios/build/artifacts/iosapp.DSYMs.zip

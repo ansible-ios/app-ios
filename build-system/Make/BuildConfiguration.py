@@ -67,6 +67,12 @@ def build_configuration_from_json(path):
         sys.exit(1)
     with open(path) as file:
         configuration_dict = json.load(file)
+        # The first-party Ansible API credential is supplied locally or by CI,
+        # rather than stored in the public configuration file.
+        if not configuration_dict.get('api_hash'):
+            configuration_dict['api_hash'] = os.environ.get('ANSIBLE_IOS_API_HASH', '')
+            if not configuration_dict['api_hash']:
+                raise ValueError('Set ANSIBLE_IOS_API_HASH before building Ansible for iOS')
         required_keys = [
             'bundle_id',
             'api_id',

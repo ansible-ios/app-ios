@@ -1,93 +1,40 @@
-# Ansible iOS — Production Checklist
+# Ansible iOS release configuration
 
-Текущая конфигурация настроена для **development** с Personal Team.
-Для выпуска в App Store нужно выполнить следующие шаги.
+GitHub Actions builds `release_arm64` using `build-system/ansible-configuration.json`.
+The application bundle ID is `su.ansible.messenger`, its app group is
+`group.su.ansible.messenger`, and the primary URL scheme is `as`.
 
----
+## API configuration
 
-## 1. Apple Developer Account ($99/год)
-- Зарегистрировать платный Apple Developer Program
-- Или использовать существующий (Digital Fortress LLC — C67CF9S4VU)
+The official iOS API ID is `21000003`. Supply its matching hash through the repository
+Actions secret `ANSIBLE_IOS_API_HASH`. The same environment variable is required for
+local builds and project generation. Do not commit the hash or print build variables.
+An absent secret fails the build before compilation.
 
-## 2. variables.bzl — переключить на production
-Файл: `build-input/configuration-repository/variables.bzl`
+## GitHub IPA for re-signing
 
-```python
-# БЫЛО (development):
-telegram_use_xcode_managed_codesigning = True
-telegram_team_id = "D24RCNW45L"              # Personal Team
-telegram_is_internal_build = "true"
-telegram_is_appstore_build = "false"
-telegram_aps_environment = ""
-telegram_enable_watch = False
+This lane publishes an IPA for re-signing, not an App Store or TestFlight distribution.
+`PrepareAnsibleCI.py` creates a fresh temporary certificate and matching profiles on
+every runner. `ANSIBLECI0` is an artificial CI signing identifier, not an Apple Developer
+Team ID. Certificate, profiles and PKCS#12 password remain in the runner temporary
+directory and are removed after the build. No Telegram signing materials are used.
 
-# НУЖНО (production):
-telegram_use_xcode_managed_codesigning = False
-telegram_team_id = "ВАША_TEAM_ID"            # Платный Developer аккаунт
-telegram_is_internal_build = "false"
-telegram_is_appstore_build = "true"
-telegram_appstore_id = "ВАША_APP_ID"         # ID из App Store Connect
-telegram_aps_environment = "production"
-telegram_enable_watch = True                  # опционально
-```
+The release disables the App Store flag, Siri and iCloud. The existing default keeps
+extensions disabled; the Watch app is not embedded. The profile carries an APNs
+production entitlement for packaging, but a self-signed certificate does not authorize
+APNs or installation on a stock device. Installation requires re-signing with a valid
+Apple identity and matching capabilities/profiles.
 
-## 3. Telegram/BUILD — включить extensions обратно
-```python
-# БЫЛО (development):
-bool_flag(name = "disableExtensions", build_setting_default = True)
+Before publishing, `VerifyAnsibleIPA.py` checks the actual bundle ID, `as` scheme,
+app group, code signature, unexpired embedded profile, profile/certificate agreement,
+and the system API hash embedded in Mach-O binaries. It never prints that hash.
 
-# НУЖНО (production):
-bool_flag(name = "disableExtensions", build_setting_default = False)
-```
+## Apple distribution
 
-## 4. Provisioning Profiles
-Создать в Apple Developer Portal для bundle ID `app.behappy.messenger`:
-- **App Store** profile для основного приложения
-- **Development** profiles для каждого extension:
-  - `app.behappy.messenger.Share`
-  - `app.behappy.messenger.Widget`
-  - `app.behappy.messenger.NotificationService`
-  - `app.behappy.messenger.NotificationContent`
-  - `app.behappy.messenger.SiriIntents`
-  - `app.behappy.messenger.BroadcastUpload`
-  - `app.behappy.messenger.watchkitapp` (если Watch включён)
-  - `app.behappy.messenger.watchkitapp.watchkitextension`
-
-Положить в `build-input/configuration-repository/provisioning/`
-
-## 5. Capabilities (в Developer Portal для App ID)
-Включить для `app.behappy.messenger`:
-- [x] Push Notifications
-- [x] App Groups (`group.app.behappy.messenger`)
-- [ ] Siri (опционально)
-- [ ] iCloud (опционально)
-
-## 6. API Credentials
-Файл: `build-input/configuration-repository/variables.bzl`
-```python
-telegram_api_id = "РЕАЛЬНЫЙ_API_ID"    # сейчас "1"
-telegram_api_hash = "РЕАЛЬНЫЙ_HASH"    # сейчас "stub"
-```
-
-## 7. Пересгенерировать Xcode проект
-```bash
-build-input/bazel-8.4.2-darwin-arm64 run //Telegram:Telegram_xcodeproj
-```
-
-## 8. Собрать и отправить в App Store
-```bash
-# Или через Xcode: Product → Archive → Distribute App
-```
-
----
-
-## Текущее состояние (development)
-- Название: Ansible
-- Bundle ID: app.behappy.messenger
-- Team: D24RCNW45L (Personal Team)
-- Extensions: отключены
-- Push Notifications: отключены
-- Provisioning: Xcode Managed
-- Иконка: DefaultGrey (серая)
-- useTempAuthKeys: true
-- Сервер: 144.31.238.115:10443
+A future Apple distribution lane requires Ansible-owned Apple Developer membership,
+registered App IDs and app group, certificates and provisioning profiles for
+`su.ansible.messenger` and the extensions being shipped, plus APNs credentials.
+Replace the artificial CI Team ID with the actual Ansible Team ID, configure the
+App Store Connect application, then enable the intended extensions/capabilities and
+validate a signed archive on devices. Telegram Team ID `C67CF9S4VU` is not an Ansible
+signing identity and must not be used as one.
