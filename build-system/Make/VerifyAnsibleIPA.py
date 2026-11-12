@@ -21,6 +21,9 @@ def verify(ipa):
             raise ValueError('Expected one application in the release IPA')
         app = apps[0]
         info = plistlib.loads((app / 'Info.plist').read_bytes())
+        expected_version = os.environ.get('APP_VERSION')
+        if expected_version and info.get('CFBundleShortVersionString') != expected_version:
+            raise ValueError('Release IPA version does not match the requested version')
         if info['CFBundleIdentifier'] != 'su.ansible.messenger':
             raise ValueError('Unexpected release bundle ID')
         schemes = {scheme for item in info.get('CFBundleURLTypes', [])

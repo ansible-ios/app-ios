@@ -10,6 +10,12 @@ repository.
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.4.3] - 2026-11-12
+
+### Fixed
+- Updated the widget engine security fixes while preserving the native iOS runtime.
+- Validate packaged app versions and preserve private build artifacts before publication.
+
 ## [Unreleased]
 
 ### Added

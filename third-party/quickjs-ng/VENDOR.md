@@ -314,3 +314,11 @@ Re-apply these after upgrading; `git diff 55b3934a98 -- third-party/quickjs-ng/q
       passed on the patched native engine under ASan/UBSan with leak detection.
       QuickJSSecurityTests records the JS regressions as a portable Bazel cc_test.
       Linux native-engine results do not establish Apple application interoperability.
+
+14. **Normal-frame suspension security fix for 0.4.3** (2026-11-12).
+    - Apply only the 23-line `quickjs.c` delta from 8f0d3b6193a01bda29d69b0cab4f03320bcaa027
+      to b526a817f188ef861eea7666d68361c7851673a0, the merge preserving all earlier hardening.
+    - Reject `await using` declarations outside async contexts and refuse suspending opcodes
+      in a normal interpreter frame. Preserve this native fork's C API, allocator, runtime hooks
+      and regenerated Array.fromAsync builtin.
+    - QuickJSSecurityTests includes the ten upstream compile-only positive/negative cases.

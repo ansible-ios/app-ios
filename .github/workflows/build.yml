@@ -5,6 +5,12 @@ on:
     branches: [ master ]
 
   workflow_dispatch:
+    inputs:
+      publish:
+        description: 'Publish the qualified IPA (off keeps artifacts private).'
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: write   # создание релиза и загрузка артефактов
@@ -117,7 +123,24 @@ jobs:
       # оба архивированы GitHub и работают на Node 12, то есть на современном
       # бегунке не запускаются. Заменено на то же действие, что уже используется
       # в репозитории андроида.
+      - name: Record immutable artifact provenance
+        run: |
+          cd /Users/Shared/telegram-ios
+          git rev-parse HEAD > build/artifacts/source-sha.txt
+          cp versions.json build/artifacts/versions.json
+          cd build/artifacts
+          shasum -a 256 iosapp.ipa iosapp.DSYMs.zip > SHA256SUMS
+
+      - name: Preserve private release artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ansible-ios-${{ env.APP_VERSION }}-${{ github.sha }}
+          path: /Users/Shared/telegram-ios/build/artifacts/
+          if-no-files-found: error
+          retention-days: 30
+
       - name: Publish unsigned build
+        if: github.event_name == 'workflow_dispatch' && inputs.publish
         uses: softprops/action-gh-release@v2
         with:
           tag_name: build-${{ env.BUILD_NUMBER }}
