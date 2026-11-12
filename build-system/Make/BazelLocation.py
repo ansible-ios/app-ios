@@ -122,6 +122,9 @@ def locate_bazel(base_path, cache_host_or_path, cache_dir):
                 print(f"Bazel at {bazel_path} does not match SHA256 {versions.bazel_version_sha256}, removing")
                 os.remove(bazel_path)
 
+        if not os.path.isfile(bazel_path):
+            raise RuntimeError('Verified Bazel download is unavailable for ' + bazel_name)
+
         if resolved_cache_host is not None and versions.bazel_version_sha256 is not None:
             http_cache_host = transform_cache_host_into_http(resolved_cache_host)
             print(f"Uploading bazel@{versions.bazel_version_sha256} to bazel-remote")

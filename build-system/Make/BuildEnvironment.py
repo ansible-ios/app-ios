@@ -161,6 +161,13 @@ class BuildEnvironmentVersions:
                 bazel_version, bazel_version_sha256 = configuration_dict['bazel'].split(':')
                 self.bazel_version = bazel_version
                 self.bazel_version_sha256 = bazel_version_sha256
+                host_checksums = configuration_dict.get('bazel_host_sha256')
+                if host_checksums is not None:
+                    host = 'darwin-arm64' if is_apple_silicon() else 'darwin-x86_64'
+                    checksum = host_checksums[bazel_version][host]
+                    if not isinstance(checksum, str) or len(checksum) != 64 or any(c not in '0123456789abcdef' for c in checksum):
+                        raise ValueError('Invalid Bazel checksum for ' + host)
+                    self.bazel_version_sha256 = checksum
             if configuration_dict['xcode'] is None:
                 raise Exception('Missing xcode version in {}'.format(configuration_path))
             else:
