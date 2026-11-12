@@ -5,7 +5,7 @@ import IosappCore
 /// A bot that runs on the user's own AI provider key: one of `appConfig.agent_bot_ids`. Its profile manages the keys
 /// and its chat uses the agent composer.
 public func isAgentBotPeer(appConfiguration: AppConfiguration, peerId: EnginePeer.Id) -> Bool {
-    guard peerId.namespace == Namespaces.Peer.CloudUser, let data = appConfiguration.data, let botIds = data["agent_bot_ids"] as? [Any] else {
+    guard agentApiIsAvailable, peerId.namespace == Namespaces.Peer.CloudUser, let data = appConfiguration.data, let botIds = data["agent_bot_ids"] as? [Any] else {
         return false
     }
     let id = peerId.id._internalGetInt64Value()
