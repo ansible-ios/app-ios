@@ -348,7 +348,7 @@ public final class ChatMessageWidgetBubbleContentNode: ChatMessageBubbleContentN
                     }
                     var viewCount: Int?
                     var dateReplies = 0
-                    var starsCount: Int64?
+                    var diamondsCount: Int64?
                     var dateReactionsAndPeers = mergedMessageReactionsAndPeers(accountPeerId: item.context.account.peerId, accountPeer: item.associatedData.accountPeer, message: item.message)
                     if item.message.isRestricted(platform: "ios", contentSettings: item.context.currentContentSettings.with { $0 }) {
                         dateReactionsAndPeers = ([], [])
@@ -363,7 +363,7 @@ public final class ChatMessageWidgetBubbleContentNode: ChatMessageBubbleContentN
                                 dateReplies = Int(attribute.count)
                             }
                         } else if let attribute = attribute as? PaidDiamondsMessageAttribute, item.message.id.peerId.namespace == Namespaces.Peer.CloudChannel {
-                            starsCount = attribute.stars.value
+                            diamondsCount = attribute.stars.value
                         }
                     }
                     var isReplyThread = false
@@ -386,10 +386,10 @@ public final class ChatMessageWidgetBubbleContentNode: ChatMessageBubbleContentN
                         reactionPeers: dateReactionsAndPeers.peers,
                         displayAllReactionPeers: item.message.id.peerId.namespace == Namespaces.Peer.CloudUser,
                         areReactionsTags: item.topMessage.areReactionsTags(accountPeerId: item.context.account.peerId),
-                        areStarReactionsEnabled: item.associatedData.areStarReactionsEnabled,
+                        areDiamondReactionsEnabled: item.associatedData.areDiamondReactionsEnabled,
                         messageEffect: item.topMessage.messageEffect(availableMessageEffects: item.associatedData.availableMessageEffects),
                         replyCount: dateReplies,
-                        starsCount: starsCount,
+                        diamondsCount: diamondsCount,
                         isPinned: item.message.tags.contains(.pinned) && !item.associatedData.isInPinnedListMode && !isReplyThread,
                         hasAutoremove: item.message.isSelfExpiring,
                         canViewReactionList: canViewMessageReactionList(message: EngineMessage(item.topMessage)),

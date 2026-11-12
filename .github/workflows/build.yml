@@ -123,6 +123,7 @@ jobs:
             --overrideXcodeVersion \
             "${CACHE_ARGS[@]}" \
             build \
+            --continueOnError \
             --configurationPath="build-system/ansible-configuration.json" \
             --codesigningInformationPath="$SIGNING_PATH" \
             --configuration=release_arm64 \

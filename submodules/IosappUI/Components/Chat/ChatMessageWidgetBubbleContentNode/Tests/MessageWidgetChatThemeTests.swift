@@ -141,7 +141,7 @@ final class MessageWidgetChatThemeTests: XCTestCase {
 /// log's synthetic ids, a preview) keeps its storage in memory and never writes it.
 final class MessageWidgetStoragePersistsTests: XCTestCase {
     private func associatedData(isRecentActions: Bool) -> ChatMessageItemAssociatedData {
-        return ChatMessageItemAssociatedData(automaticDownloadPeerType: .contact, automaticDownloadPeerId: nil, automaticDownloadNetworkType: .wifi, isRecentActions: isRecentActions, availableReactions: nil, availableMessageEffects: nil, savedMessageTags: nil, defaultReaction: nil, areStarReactionsEnabled: false, isPremium: false, accountPeer: nil)
+        return ChatMessageItemAssociatedData(automaticDownloadPeerType: .contact, automaticDownloadPeerId: nil, automaticDownloadNetworkType: .wifi, isRecentActions: isRecentActions, availableReactions: nil, availableMessageEffects: nil, savedMessageTags: nil, defaultReaction: nil, areDiamondReactionsEnabled: false, isPremium: false, accountPeer: nil)
     }
 
     func testAChatMessagePersists() {
