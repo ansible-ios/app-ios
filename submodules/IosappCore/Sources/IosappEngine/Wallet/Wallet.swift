@@ -280,7 +280,7 @@ public enum WalletOperationError: Error, Equatable {
 }
 
 extension WalletState {
-    public init(apiState: Api.WalletState) {
+    init(apiState: Api.WalletState) {
         switch apiState {
         case let .walletState(state):
             self = .ready(
