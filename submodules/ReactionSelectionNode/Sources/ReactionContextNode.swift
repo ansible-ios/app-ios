@@ -274,7 +274,7 @@ func reactionContextItemAccessibilityLabel(_ item: ReactionContextItem, strings:
             // Read from the file only when VoiceOver asks (ReactionNode.accessibilityLabel).
             return nil
         case .stars:
-            return strings.Stars_Intro_Transaction_Reaction_Title
+            return strings.Diamonds_Intro_Transaction_Reaction_Title
         }
     case .premium:
         return strings.VoiceOver_Reactions_Premium
