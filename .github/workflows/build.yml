@@ -37,6 +37,11 @@ jobs:
           submodules: 'recursive'
           fetch-depth: '0'
 
+      - name: Select the qualified build-tools Python runtime
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
       - name: Set active Xcode path
         run: |
           set -x

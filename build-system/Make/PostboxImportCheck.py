@@ -103,8 +103,20 @@ def strip_comments_and_strings(text):
     """
     # Common tokens are replaced in one regex traversal. Nested comments and
     # expressions restart the same input with the full state machine below.
+    # Repeated short literals/comments share a bounded per-file replacement cache.
+    replacements = {}
+
+    def replace(match):
+        token = match.group(0)
+        result = replacements.get(token)
+        if result is None:
+            result = _blank_simple_token(match)
+            if len(replacements) < 256 and len(token) <= 1024:
+                replacements[token] = result
+        return result
+
     try:
-        return _CODE_STOPS.sub(_blank_simple_token, text)
+        return _CODE_STOPS.sub(replace, text)
     except _ComplexSwiftToken:
         pass
     out = []
