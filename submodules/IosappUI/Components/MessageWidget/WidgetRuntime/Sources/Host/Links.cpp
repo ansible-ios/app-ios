@@ -4,7 +4,7 @@
 #include <string_view>
 
 #include "Sources/Host/HostState.h"
-#include "Sources/Host/TelegramWidget.h"
+#include "Sources/Host/IosappWidget.h"
 #include "Sources/Runtime/Runtime.h"
 #include "Sources/Support/Errors.h"
 

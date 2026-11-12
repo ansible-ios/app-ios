@@ -1,4 +1,4 @@
-#include "Sources/Host/TelegramWidget.h"
+#include "Sources/Host/IosappWidget.h"
 
 #include "Sources/Host/Inert.h"
 #include "Sources/Host/Links.h"

@@ -11,6 +11,6 @@
 #include "Sources/Host/Storage.h"
 #include "Sources/Host/Location.h"
 #include "Sources/Host/Performance.h"
-#include "Sources/Host/TelegramWidget.h"
+#include "Sources/Host/IosappWidget.h"
 #include "Sources/Host/URL.h"
 #include "Sources/Host/Window.h"

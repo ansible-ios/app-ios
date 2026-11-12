@@ -1,5 +1,5 @@
 #include "Sources/Host/Window.h"
-#include "Sources/Host/TelegramWidget.h"
+#include "Sources/Host/IosappWidget.h"
 
 #include "Generated/Bindings.h"
 #include "Sources/DOM/DOM.h"

@@ -1,5 +1,5 @@
 #include "Sources/Host/HostState.h"
-#include "Sources/Host/TelegramWidget.h"
+#include "Sources/Host/IosappWidget.h"
 
 #include <algorithm>
 #include <new>

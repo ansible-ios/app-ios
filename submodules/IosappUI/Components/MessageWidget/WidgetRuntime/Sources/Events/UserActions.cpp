@@ -13,7 +13,7 @@
 #include "Sources/Host/HostState.h"
 #include "Sources/Host/Links.h"
 #include "Sources/Host/Task.h"
-#include "Sources/Host/TelegramWidget.h"
+#include "Sources/Host/IosappWidget.h"
 #include "Sources/Host/Window.h"
 #include "Sources/Render/RenderTree.h"
 
