@@ -7,7 +7,7 @@ import EncryptionProvider
 
 /// Stars, the wallet, paid reactions and paid messages, gift auctions and the emoji game.
 extension UpdateInterpreter {
-    mutating func applyStarsBalance(_ updateStarsBalanceData: Api.Update.Cons_updateStarsBalance) {
+    mutating func applyStarsBalance(_ updateStarsBalanceData: Api.Update.Cons_updateDiamondsBalance) {
         let amount = CurrencyAmount(apiAmount: updateStarsBalanceData.balance)
         updatedState.updateStarsBalance(peerId: accountPeerId, currency: amount.currency, balance: amount.amount)
     }
@@ -38,8 +38,8 @@ extension UpdateInterpreter {
     }
 #endif
     
-    mutating func applyStarsRevenueStatus(_ updateStarsRevenueStatusData: Api.Update.Cons_updateStarsRevenueStatus) {
-        updatedState.updateStarsRevenueStatus(peerId: updateStarsRevenueStatusData.peer.peerId, status: StarsRevenueStats.Balances(apiStarsRevenueStatus: updateStarsRevenueStatusData.status))
+    mutating func applyStarsRevenueStatus(_ updateStarsRevenueStatusData: Api.Update.Cons_updateDiamondsRevenueStatus) {
+        updatedState.updateStarsRevenueStatus(peerId: updateStarsRevenueStatusData.peer.peerId, status: StarsRevenueStats.Balances(apiDiamondsRevenueStatus: updateStarsRevenueStatusData.status))
     }
     
     mutating func applyPaidReactionPrivacy(_ updatePaidReactionPrivacyData: Api.Update.Cons_updatePaidReactionPrivacy) {
@@ -83,14 +83,14 @@ extension UpdateInterpreter {
         updatedState.updateMonoForumNoPaidException(peerId: PeerId(namespace: Namespaces.Peer.CloudChannel, id: PeerId.Id._internalFromInt64Value(channelId)), threadId: savedPeerId.peerId.toInt64(), isFree: (flags & (1 << 0)) != 0)
     }
     
-    mutating func applyStarGiftAuctionState(_ updateStarGiftAuctionStateData: Api.Update.Cons_updateStarGiftAuctionState) {
+    mutating func applyStarGiftAuctionState(_ updateStarGiftAuctionStateData: Api.Update.Cons_updateDiamondGiftAuctionState) {
         let (giftId, state) = (updateStarGiftAuctionStateData.giftId, updateStarGiftAuctionStateData.state)
         if let state = GiftAuctionContext.State.AuctionState(apiAuctionState: state, peers: updatedState.peers) {
             updatedState.updateStarGiftAuctionState(giftId: giftId, state: state)
         }
     }
     
-    mutating func applyStarGiftAuctionUserState(_ updateStarGiftAuctionUserStateData: Api.Update.Cons_updateStarGiftAuctionUserState) {
+    mutating func applyStarGiftAuctionUserState(_ updateStarGiftAuctionUserStateData: Api.Update.Cons_updateDiamondGiftAuctionUserState) {
         let (giftId, userState) = (updateStarGiftAuctionUserStateData.giftId, updateStarGiftAuctionUserStateData.userState)
         updatedState.updateDiamondGiftAuctionMyState(giftId: giftId, state: GiftAuctionContext.State.MyState(apiAuctionUserState: userState))
     }

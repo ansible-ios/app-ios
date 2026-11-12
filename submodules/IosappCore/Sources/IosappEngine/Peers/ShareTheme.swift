@@ -101,7 +101,7 @@ extension IosappShareTheme {
                 self = .emojiBackdrop(emojis: emojis, backdropId: data.backdropId)
             }
         case let .shareThemeGift(data):
-            guard let gift = StarGift(apiStarGift: data.stargift) else {
+            guard let gift = StarGift(apiDiamondGift: data.stargift) else {
                 return nil
             }
             self = .gift(gift)

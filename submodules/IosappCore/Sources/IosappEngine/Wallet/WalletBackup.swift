@@ -1,7 +1,7 @@
 import Foundation
 import MtProtoKit
 import SwiftSignalKit
-import IosappApi
+internal import IosappApi
 
 public struct WalletBackupHolder: Equatable {
     public let datacenterId: Int32

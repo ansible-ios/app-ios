@@ -2,7 +2,7 @@ import Foundation
 import MtProtoKit
 import Postbox
 import SwiftSignalKit
-import IosappApi
+internal import IosappApi
 
 public struct TonApiRequestError: Error, Equatable, Sendable {
     public let code: Int32
@@ -322,7 +322,7 @@ private extension WalletTransactionPeer {
             self = .address(peer.address, domain: peer.domain)
         case let .walletTransactionPeerOnramp(peer):
             self = .onramp(address: peer.address, domain: peer.domain, providerName: peer.providerName)
-        case .walletTransactionPeerUnsupported:
+        case .walletTransactionPeerUnsupported, .walletTransactionPeerChannel, .walletTransactionPeerTelegramGift:
             self = .unsupported
         case let .walletTransactionPeerUser(apiPeer):
             let peerId = EnginePeer.Id(

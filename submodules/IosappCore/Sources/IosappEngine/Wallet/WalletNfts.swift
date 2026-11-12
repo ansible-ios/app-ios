@@ -1,6 +1,6 @@
 import Foundation
 import SwiftSignalKit
-import IosappApi
+internal import IosappApi
 
 public struct WalletNftFile: Codable, Equatable, Sendable {
     public let url: String

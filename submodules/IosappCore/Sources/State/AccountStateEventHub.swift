@@ -161,9 +161,9 @@ final class AccountStateEventHub {
         return self.botPreviewUpdatesPipe.signal()
     }
 
-    let forceSendPendingStarsReactionPipe = ValuePipe<MessageId>()
+    let forceSendPendingDiamondsReactionPipe = ValuePipe<MessageId>()
     var forceSendPendingDiamondsReaction: Signal<MessageId, NoError> {
-        return self.forceSendPendingStarsReactionPipe.signal()
+        return self.forceSendPendingDiamondsReactionPipe.signal()
     }
 
     let forceSendPendingPaidMessagePipe = ValuePipe<PeerId>()
@@ -181,9 +181,9 @@ final class AccountStateEventHub {
         return self.sentScheduledMessageIdsPipe.signal()
     }
 
-    let starRefBotConnectionEventsPipe = ValuePipe<DiamondRefBotConnectionEvent>()
+    let diamondRefBotConnectionEventsPipe = ValuePipe<DiamondRefBotConnectionEvent>()
     var diamondRefBotConnectionEvents: Signal<DiamondRefBotConnectionEvent, NoError> {
-        return self.starRefBotConnectionEventsPipe.signal()
+        return self.diamondRefBotConnectionEventsPipe.signal()
     }
 
     let installedStickerPacksArchivedEventsPipe = ValuePipe<Int>()
@@ -625,6 +625,6 @@ final class AccountStateEventHub {
     }
 
     func addDiamondRefBotConnectionEvent(event: DiamondRefBotConnectionEvent) {
-        self.starRefBotConnectionEventsPipe.putNext(event)
+        self.diamondRefBotConnectionEventsPipe.putNext(event)
     }
 }

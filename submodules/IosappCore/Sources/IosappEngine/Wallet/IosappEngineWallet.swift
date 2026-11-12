@@ -2,7 +2,7 @@ import Foundation
 import MtProtoKit
 import Postbox
 import SwiftSignalKit
-import IosappApi
+internal import IosappApi
 
 public extension IosappEngine {
     final class Wallet {

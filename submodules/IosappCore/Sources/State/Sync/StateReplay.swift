@@ -566,7 +566,7 @@ final class ReplayContext {
                     self.applyUpdateAgentSettings(settings)
                 case let .UpdateStarsRevenueStatus(peerId, status):
                     self.applyUpdateStarsRevenueStatus(peerId, status)
-                case let .UpdateStarsReactionsDefaultPrivacy(value):
+                case let .UpdateDiamondsReactionsDefaultPrivacy(value):
                     self.applyUpdateStarsReactionsDefaultPrivacy(value)
                 case let .ReportMessageDelivery(messageIds):
                     self.applyReportMessageDelivery(messageIds)
@@ -576,7 +576,7 @@ final class ReplayContext {
                     self.applyUpdateReadFeed(filterId, maxPosition)
                 case let .UpdateStarGiftAuctionState(giftId, state):
                     self.applyUpdateStarGiftAuctionState(giftId, state)
-                case let .UpdateStarGiftAuctionMyState(giftId, state):
+                case let .UpdateDiamondGiftAuctionMyState(giftId, state):
                     self.applyUpdateStarGiftAuctionMyState(giftId, state)
                 case let .UpdateEmojiGameInfo(info):
                     self.applyUpdateEmojiGameInfo(info)
