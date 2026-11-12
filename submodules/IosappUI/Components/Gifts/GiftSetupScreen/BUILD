@@ -13,7 +13,6 @@ swift_library(
         "//submodules/AsyncDisplayKit",
         "//submodules/CheckNode",
         "//submodules/Display",
-        "//submodules/Postbox",
         "//submodules/IosappCore",
         "//submodules/IosappNotices",
         "//submodules/SSignalKit/SwiftSignalKit",

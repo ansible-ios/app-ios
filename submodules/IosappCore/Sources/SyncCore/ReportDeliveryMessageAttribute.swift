@@ -1,6 +1,6 @@
 import Foundation
 import Postbox
-import IosappApi
+internal import IosappApi
 
 public final class ReportDeliveryMessageAttribute: Equatable, MessageAttribute {
     public let untilDate: Int32

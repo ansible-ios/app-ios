@@ -14,6 +14,7 @@ swift_library(
         "//submodules/IosappPresentationData",
         "//submodules/CheckNode",
         "//submodules/IosappCore",
+        "//submodules/IosappUI/Components/Chat/ChatMessageItemCommon",
     ],
     visibility = [
         "//visibility:public",

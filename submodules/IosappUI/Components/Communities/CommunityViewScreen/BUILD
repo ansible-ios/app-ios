@@ -10,6 +10,7 @@ swift_library(
         "-warnings-as-errors",
     ],
     deps = [
+        "//submodules/IosappUI/Components/SideColumnLayout",
         "//submodules/AccountContext",
         "//submodules/AlertUI",
         "//submodules/AsyncDisplayKit",
@@ -23,7 +24,6 @@ swift_library(
         "//submodules/ContextUI",
         "//submodules/Display",
         "//submodules/ItemListUI",
-        "//submodules/Postbox",
         "//submodules/SSignalKit/SwiftSignalKit",
         "//submodules/IosappCore",
         "//submodules/IosappPresentationData",
@@ -34,6 +34,7 @@ swift_library(
         "//submodules/IosappUI/Components/AlertComponent",
         "//submodules/IosappUI/Components/ButtonComponent",
         "//submodules/IosappUI/Components/ChatListHeaderComponent",
+        "//submodules/IosappUI/Components/NavigationBarComponent",
         "//submodules/IosappUI/Components/ChatListTitleView",
         "//submodules/IosappUI/Components/Communities/CommunityPrivateChatScreen",
         "//submodules/IosappUI/Components/EdgeEffect",

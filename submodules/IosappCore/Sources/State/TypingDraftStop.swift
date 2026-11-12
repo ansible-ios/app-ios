@@ -1,7 +1,7 @@
 import Foundation
 import Postbox
 import SwiftSignalKit
-import IosappApi
+internal import IosappApi
 
 // Applies a stop to the live draft at `peerAndThreadId`. Shared by the incoming
 // sendMessageStopDraftAction update and by the local Stop button, which cannot wait for a

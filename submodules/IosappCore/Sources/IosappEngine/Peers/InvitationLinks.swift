@@ -1,7 +1,7 @@
 import Foundation
 import Postbox
 import SwiftSignalKit
-import IosappApi
+internal import IosappApi
 import MtProtoKit
 
 private func _internal_updateInvitationRequest(account: Account, peerId: PeerId, userId: PeerId, approve: Bool) -> Signal<Never, NoError> {

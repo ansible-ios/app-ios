@@ -444,6 +444,14 @@ final class DiamondsTransactionsPanelContainerComponent: Component {
         private var transitionFraction: CGFloat = 0.0
         private var animatingTransition: Bool = false
         
+        /// VoiceOver: the tabs before the page (the page container starts above them, at the top of the panel).
+        override var accessibilityElements: [Any]? {
+            get {
+                return [self.tabsBackgroundContainer, self.clippingView]
+            } set(value) {
+            }
+        }
+        
         override init(frame: CGRect) {
             self.topPanelClippingView = UIView()
             self.topPanelClippingView.clipsToBounds = true
@@ -669,8 +677,7 @@ final class DiamondsTransactionsPanelContainerComponent: Component {
                 }
             }
             
-            let sideInset: CGFloat = 16.0 + component.insets.left
-            let condensedPanelWidth: CGFloat = availableSize.width - sideInset * 2.0
+            let condensedPanelWidth: CGFloat = availableSize.width - 32.0 - component.insets.left - component.insets.right
             let headerSize = self.header.update(
                 transition: transition,
                 component: AnyComponent(DiamondsTransactionsHeaderComponent(
@@ -798,6 +805,11 @@ final class DiamondsTransactionsPanelContainerComponent: Component {
                     if let panelView = panel.view {
                         if panelView.superview == nil {
                             self.clippingView.addSubview(panelView)
+                        }
+                        // VoiceOver reads only the shown page; the tabs switch pages.
+                        let isAccessibilityHidden = self.currentId != panelItem.id
+                        if panelView.accessibilityElementsHidden != isAccessibilityHidden {
+                            panelView.accessibilityElementsHidden = isAccessibilityHidden
                         }
                         
                         panelTransition.setFrame(view: panelView, frame: itemFrame, completion: { [weak self] _ in

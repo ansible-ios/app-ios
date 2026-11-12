@@ -1,7 +1,7 @@
 import Foundation
 import Postbox
 import SwiftSignalKit
-import IosappApi
+internal import IosappApi
 
 func _internal_confirmBotConnectionReview(account: Account, botId: PeerId) -> Signal<Never, NoError> {
     return account.network.request(Api.functions.account.getConnectedBots())

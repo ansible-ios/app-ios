@@ -1,7 +1,7 @@
 import Foundation
 import SwiftSignalKit
 import Postbox
-import IosappApi
+internal import IosappApi
 
 public final class EngineStoryViewListContext {
     public struct LoadMoreToken: Equatable {

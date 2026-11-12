@@ -10,6 +10,7 @@ swift_library(
         "-warnings-as-errors",
     ],
     deps = [
+        "//submodules/AsyncDisplayKit:AsyncDisplayKit",
         "//submodules/Display:Display",
         "//submodules/IosappPresentationData:IosappPresentationData",
         "//submodules/ComponentFlow",
@@ -35,6 +36,7 @@ swift_library(
         "//submodules/IosappUI/Components/ListSectionComponent",
         "//submodules/IosappUI/Components/ListItemSliderSelectorComponent",
         "//submodules/IosappUI/Components/ListSwitchItemComponent",
+        "//submodules/TextSelectionNode:TextSelectionNode",
     ],
     visibility = [
         "//visibility:public",

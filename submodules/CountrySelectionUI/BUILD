@@ -18,6 +18,8 @@ swift_library(
         "//submodules/IosappStringFormatting:IosappStringFormatting",
         "//submodules/SearchBarNode:SearchBarNode",
         "//submodules/AppBundle:AppBundle",
+        "//submodules/AnimatedStickerNode:AnimatedStickerNode",
+        "//submodules/IosappAnimatedStickerNode:IosappAnimatedStickerNode",
         "//submodules/ComponentFlow",
         "//submodules/Components/BundleIconComponent",
         "//submodules/IosappUI/Components/EdgeEffect",

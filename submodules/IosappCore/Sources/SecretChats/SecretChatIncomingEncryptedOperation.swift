@@ -1,6 +1,6 @@
 import Foundation
 import Postbox
-import IosappApi
+internal import IosappApi
 
 
 private func keyFingerprintFromBytes(_ bytes: Buffer) -> Int64 {

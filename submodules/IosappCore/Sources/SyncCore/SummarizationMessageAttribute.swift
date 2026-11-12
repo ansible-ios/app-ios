@@ -1,6 +1,6 @@
 import Foundation
 import Postbox
-import IosappApi
+internal import IosappApi
 
 public final class SummarizationMessageAttribute: Equatable, MessageAttribute {
     public struct Summary: Equatable, Codable, PostboxCoding {

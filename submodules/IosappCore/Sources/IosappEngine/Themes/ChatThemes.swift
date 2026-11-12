@@ -1,7 +1,7 @@
 import Foundation
 import Postbox
 import SwiftSignalKit
-import IosappApi
+internal import IosappApi
 
 public final class ChatThemes: Codable, Equatable {
     public let chatThemes: [IosappTheme]

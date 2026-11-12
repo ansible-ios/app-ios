@@ -1,5 +1,5 @@
 import Foundation
-import IosappApi
+internal import IosappApi
 import Postbox
 import SwiftSignalKit
 
@@ -8,7 +8,7 @@ public enum StandaloneUploadMediaError {
     case generic
 }
 
-public enum StandaloneUploadMediaThumbnailResult {
+enum StandaloneUploadMediaThumbnailResult {
     case pending
     case file(Api.InputFile)
     case none

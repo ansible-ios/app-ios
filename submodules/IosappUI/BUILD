@@ -1,17 +1,18 @@
 load("@build_bazel_rules_swift//swift:swift.bzl", "swift_library")
 
-load(
-    "@build_configuration//:variables.bzl",
-    "telegram_bundle_id",
-)
-
-
 filegroup(
     name = "IosappUIResources",
     srcs = glob([
         "Sounds/**/*",
         "Resources/**/*",
     ], exclude = ["Sounds/**/.*", "Resources/**/.*"]),
+    visibility = ["//visibility:public"],
+)
+
+# The static glass assets alone (they are also in IosappUIResources), for hosts that need only them.
+filegroup(
+    name = "StaticGlassResources",
+    srcs = glob(["Resources/StaticGlass/*.bin"]),
     visibility = ["//visibility:public"],
 )
 
@@ -43,17 +44,6 @@ filegroup(
 #    ], exclude = ["Sources/Icons.xcassets/**/.*"]),
 #)
 
-internal_bundle_ids = [
-    "org.telegram.Telegram-iOS",
-]
-
-available_appcenter_targets = [
-    "@appcenter_sdk//:AppCenter",
-    "@appcenter_sdk//:AppCenterCrashes",
-]
-
-appcenter_targets = available_appcenter_targets if telegram_bundle_id in internal_bundle_ids else []
-
 swift_library(
     name = "IosappUI",
     module_name = "IosappUI",
@@ -63,7 +53,19 @@ swift_library(
     copts = [
         "-warnings-as-errors",
     ],
+    # DEBUG builds only: widget-sandbox's conformance set and the client's game examples, for Debug Settings' widget insertion
+    # (DebugSettingsUI/Sources/WidgetDebugPosts.swift reads them from this framework's bundle).
+    data = select({
+        "//third-party/widget-sandbox:debug_build": [
+            "//third-party/widget-sandbox:WidgetConformanceBundle",
+            "//submodules/IosappUI/Components/MessageWidget/Fixtures:WidgetGamesBundle",
+            # The renderer stress kit, for Debug Settings' "Run widget stress kit" (widget-sandbox v0.3.0).
+            "//third-party/widget-sandbox:WidgetStressBundle",
+        ],
+        "//conditions:default": [],
+    }),
     deps = [
+        "//submodules/CrashReporting:CrashReporting",
         "//third-party/recaptcha:RecaptchaEnterprise",
         "//submodules/SSignalKit/SwiftSignalKit:SwiftSignalKit",
         "//submodules/SSignalKit/SSignalKit:SSignalKit",
@@ -90,7 +92,6 @@ swift_library(
         "//submodules/BuildConfig:BuildConfig",
         "//submodules/BuildConfigExtra:BuildConfigExtra",
         "//submodules/LottieBinding:LottieBinding",
-        "//submodules/LottieSettings:LottieSettings",
         "//submodules/IosappUpdateUI:IosappUpdateUI",
         "//submodules/MergeLists:MergeLists",
         "//submodules/ActivityIndicator:ActivityIndicator",
@@ -138,6 +139,7 @@ swift_library(
         "//submodules/DirectionalPanGesture:DirectionalPanGesture",
         "//submodules/UndoUI:UndoUI",
         "//submodules/PhotoResources:PhotoResources",
+        "//submodules/PassRenderer:PassRenderer",
         "//submodules/TinyThumbnail:TinyThumbnail",
         "//submodules/ImageTransparency:ImageTransparency",
         "//submodules/IosappNotices:IosappNotices",
@@ -329,9 +331,17 @@ swift_library(
         "//submodules/IosappUI/Components/ChatFolderLinkPreviewScreen",
         "//submodules/IosappUI/Components/SliderContextItem:SliderContextItem",
         "//submodules/IosappUI/Components/CoreList:CoreList",
+        "//submodules/IosappUI/Components/CoreListComponentHost",
+        "//submodules/IosappUI/Components/ListViewItemCoreListHost",
+        "//submodules/IosappUI/Components/Chat/ChatHistoryListViewBackend",
+        "//submodules/IosappUI/Components/News/NewsScreen",
+        "//submodules/IosappUI/Components/News/NewsFeedSupport",
         "//submodules/IosappUI/Components/Stories/StoryContainerScreen",
         "//submodules/IosappUI/Components/CameraScreen",
         "//submodules/IosappUI/Components/MediaEditorScreen",
+        "//submodules/IosappUI/Components/ChatMediaEditorScreen",
+        "//submodules/IosappUI/Components/MediaEditorBottomControls",
+        "//submodules/IosappUI/Components/ChatMediaSend",
         "//submodules/IosappUI/Components/ChatScheduleTimeController",
         "//submodules/ICloudResources",
         "//submodules/IosappUI/Components/LegacyCamera",
@@ -371,6 +381,7 @@ swift_library(
         "//submodules/IosappUI/Components/Chat/ChatUserInfoItem",
         "//submodules/IosappUI/Components/Chat/ChatNewThreadInfoItem",
         "//submodules/IosappUI/Components/Chat/ChatInputPanelNode",
+        "//submodules/IosappUI/Components/TabBarLayout",
         "//submodules/IosappUI/Components/Chat/ChatButtonKeyboardInputNode",
         "//submodules/IosappUI/Components/Chat/ChatChannelSubscriberInputPanelNode",
         "//submodules/IosappUI/Components/Chat/ChatContextResultPeekContent",
@@ -427,6 +438,7 @@ swift_library(
         "//submodules/IosappUI/Components/Chat/ChatRecentActionsController",
         "//submodules/IosappUI/Components/Chat/ChatNavigationButton",
         "//submodules/IosappUI/Components/Chat/ChatLoadingNode",
+        "//submodules/IosappUI/Components/DebugCompanionScreen",
         "//submodules/IosappUI/Components/Settings/PeerNameColorScreen",
         "//submodules/IosappUI/Components/ContextMenuScreen",
         "//submodules/IosappUI/Components/PeerAllowedReactionsScreen",
@@ -435,6 +447,7 @@ swift_library(
         "//submodules/IosappUI/Components/PeerInfo/PeerInfoScreen",
         "//submodules/IosappUI/Components/Chat/ChatMessageSelectionInputPanelNode",
         "//submodules/IosappUI/Components/Chat/ChatQrCodeScreen",
+        "//submodules/IosappUI/Components/QrStudioScreen",
         "//submodules/UIKitRuntimeUtils",
         "//submodules/IosappUI/Components/SavedMessages/SavedMessagesScreen",
         "//submodules/IosappUI/Components/Settings/WallpaperGalleryScreen",
@@ -492,6 +505,7 @@ swift_library(
         "//submodules/IosappUI/Components/Settings/AccountFreezeInfoScreen",
         "//submodules/IosappUI/Components/JoinSubjectScreen",
         "//submodules/IosappUI/Components/Chat/QuickShareScreen",
+        "//submodules/IosappUI/Components/ShareScreen",
         "//submodules/IosappUI/Components/ButtonComponent",
         "//submodules/Components/BlurredBackgroundComponent",
         "//submodules/IosappUI/Components/CheckComponent",
@@ -506,6 +520,7 @@ swift_library(
         "//submodules/IosappUI/Components/PeerInfo/PostSuggestionsSettingsScreen",
         "//submodules/IosappUI/Components/ForumSettingsScreen",
         "//submodules/IosappUI/Components/Chat/ChatSideTopicsPanel",
+        "//submodules/IosappUI/Components/Chat/ChatSideListPanel",
         "//submodules/IosappUI/Components/GifVideoLayer",
         "//submodules/IosappUI/Components/BatchVideoRendering",
         "//submodules/IosappUI/Components/ComposeTodoScreen",
@@ -526,13 +541,19 @@ swift_library(
         "//submodules/IosappUI/Components/AttachmentFileController",
         "//submodules/IosappUI/Components/Contacts/NewContactScreen",
         "//submodules/IosappUI/Components/Chat/ChatSendAsContextMenu",
-        "//submodules/IosappUI/Components/NavigationBarImpl",
+        "//submodules/IosappUI/Components/NavigationBarNode",
+        "//submodules/IosappUI/Components/NavigationExpansionTransition",
+        "//submodules/IosappUI/Components/NavigationBarComponent",
+        "//submodules/IosappUI/Components/GlassBarButtonComponent",
+        "//submodules/IosappUI/Components/SideColumnLayout",
         "//submodules/IosappUI/Components/GlobalControlPanelsContext",
         "//submodules/IosappUI/Components/MediaPlaybackHeaderPanelComponent",
         "//submodules/IosappUI/Components/LiveLocationHeaderPanelComponent",
         "//submodules/IosappUI/Components/TranslateHeaderPanelComponent",
         "//submodules/IosappUI/Components/AdPanelHeaderPanelComponent",
         "//submodules/IosappUI/Components/MessageFeeHeaderPanelComponent",
+        "//submodules/IosappUI/Components/MessageWidget/MessageWidget",
+        "//submodules/IosappUI/Components/Chat/ChatMessageWidgetBubbleContentNode",
         "//submodules/IosappUI/Components/LegacyChatHeaderPanelComponent",
         "//submodules/IosappUI/Components/GroupCallHeaderPanelComponent",
         "//submodules/IosappUI/Components/Chat/ChatSearchNavigationContentNode",
@@ -540,6 +561,8 @@ swift_library(
         "//submodules/IosappUI/Components/Gifts/GiftDemoScreen",
         "//submodules/IosappUI/Components/EmojiGameStakeScreen",
         "//submodules/IosappUI/Components/AlertComponent",
+        "//submodules/IosappUI/Components/AlertComponent/AlertHeaderComponent",
+        "//submodules/IosappUI/Components/AlertComponent/AlertCheckComponent",
         "//submodules/IosappUI/Components/Chat/ChatAgeRestrictionAlertController",
         "//submodules/IosappUI/Components/CocoonInfoScreen",
         "//submodules/IosappUI/Components/ProxyServerPreviewScreen",
@@ -560,10 +583,7 @@ swift_library(
         "//submodules/IosappUI/Components/Chat/ChatRichTextEditorComposer",
         "//submodules/PasscodeCore",
         "//submodules/MTProtoRustEngine:MTProtoRustEngine",
-    ] + select({
-        "@build_bazel_rules_apple//apple:ios_arm64": appcenter_targets,
-        "//build-system:ios_sim_arm64": [],
-    }),
+    ],
     visibility = [
         "//visibility:public",
     ],

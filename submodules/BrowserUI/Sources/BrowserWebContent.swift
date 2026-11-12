@@ -1,5 +1,4 @@
 import Foundation
-import LottieSettings
 import UIKit
 import Display
 import ComponentFlow
@@ -804,8 +803,7 @@ final class BrowserWebContent: UIView, BrowserContent, WKNavigationDelegate, WKU
                         theme: self.presentationData.theme,
                         title: self.presentationData.strings.Browser_ErrorTitle,
                         text: error.localizedDescription,
-                        insets: insets,
-                        lottieSettings: self.context.lottieRenderingSettings
+                        insets: insets
                     )
                 ),
                 environment: {},
@@ -951,7 +949,7 @@ final class BrowserWebContent: UIView, BrowserContent, WKNavigationDelegate, WKU
                 if (navigationAction.targetFrame == nil || navigationAction.targetFrame?.isMainFrame == true) && (isIosappMeLink(url) || url.hasPrefix("as://")) && !url.contains("/auth/push?") && !self._state.url.contains("/auth/push?") {
                     decisionHandler(.cancel, preferences)
                     if !url.contains("domain=oauth") {
-                        self.minimize()
+                        self.minimizeBeforeOpening(url)
                     }
                     self.openAppUrl(url)
                 } else {
@@ -1002,7 +1000,7 @@ final class BrowserWebContent: UIView, BrowserContent, WKNavigationDelegate, WKU
         if let url = navigationAction.request.url?.absoluteString {
             if (navigationAction.targetFrame == nil || navigationAction.targetFrame?.isMainFrame == true) && (isIosappMeLink(url) || isTelegraPhLink(url) || url.hasPrefix("as://")) {
                 decisionHandler(.cancel)
-                self.minimize()
+                self.minimizeBeforeOpening(url)
                 self.openAppUrl(url)
             } else {
                 self.updatePendingMainFrameUrl(for: navigationAction)
@@ -1406,7 +1404,7 @@ final class BrowserWebContent: UIView, BrowserContent, WKNavigationDelegate, WKU
         if navigationAction.targetFrame == nil {
             if let url = navigationAction.request.url?.absoluteString {
                 if isIosappMeLink(url) || isTelegraPhLink(url) || url.hasPrefix("as://") {
-                    self.minimize()
+                    self.minimizeBeforeOpening(url)
                     self.openAppUrl(url)
                 } else {
                     return self.open(url: url, configuration: configuration, new: true)
@@ -1414,6 +1412,11 @@ final class BrowserWebContent: UIView, BrowserContent, WKNavigationDelegate, WKU
             }
         }
         return nil
+    }
+    
+    // A TON Connect request presents its sheet over the page, which stays open behind it.
+    private func minimizeBeforeOpening(_ url: String) {
+        self.minimize()
     }
     
     func webViewDidClose(_ webView: WKWebView) {
@@ -1596,7 +1599,7 @@ final class BrowserWebContent: UIView, BrowserContent, WKNavigationDelegate, WKU
     
     private func share(url: String) {
         let presentationData = self.context.sharedContext.currentPresentationData.with { $0 }
-        let shareController = self.context.sharedContext.makeShareController(context: self.context, params: ShareControllerParams(subject: .url(url), actionCompleted: { [weak self] in
+        let shareController = self.context.sharedContext.makeShareScreen(context: self.context, params: ShareControllerParams(subject: .url(url), actionCompleted: { [weak self] in
             self?.present(UndoOverlayController(presentationData: presentationData, content: .linkCopied(title: nil, text: presentationData.strings.Conversation_LinkCopied), elevatedLayout: false, animateInAsReplacement: false, action: { _ in return false }), nil)
         }))
         self.present(shareController, nil)
@@ -1770,20 +1773,17 @@ private final class ErrorComponent: CombinedComponent {
     let text: String
     let insets: UIEdgeInsets
   
-    let lottieSettings: LottieRenderingSettings
 
     init(
         theme: PresentationTheme,
         title: String,
         text: String,
-        insets: UIEdgeInsets,
-        lottieSettings: LottieRenderingSettings
+        insets: UIEdgeInsets
     ) {
         self.theme = theme
         self.title = title
         self.text = text
         self.insets = insets
-        self.lottieSettings = lottieSettings
     }
     
     static func ==(lhs: ErrorComponent, rhs: ErrorComponent) -> Bool {
@@ -1827,8 +1827,7 @@ private final class ErrorComponent: CombinedComponent {
             
             let animation = animation.update(
                 component: LottieComponent(
-                    content: LottieComponent.AppBundleContent(name: "ChatListNoResults"),
-                    lottieSettings: context.component.lottieSettings
+                    content: LottieComponent.AppBundleContent(name: "ChatListNoResults")
                 ),
                 environment: {},
                 availableSize: CGSize(width: animationSize, height: animationSize),

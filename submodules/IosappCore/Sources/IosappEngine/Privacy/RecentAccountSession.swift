@@ -1,5 +1,5 @@
 import Foundation
-import IosappApi
+internal import IosappApi
 
 public struct AccountSessionFlags: OptionSet {
     public var rawValue: Int32

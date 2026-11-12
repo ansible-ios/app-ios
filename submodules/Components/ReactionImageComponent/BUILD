@@ -17,7 +17,6 @@ swift_library(
         "//submodules/AccountContext:AccountContext",
         "//submodules/WebPBinding:WebPBinding",
         "//submodules/LottieBinding:LottieBinding",
-        "//submodules/LottieSettings:LottieSettings",
         "//submodules/GZip:GZip",
         "//submodules/IosappUI/Components/AnimationCache:AnimationCache",
         "//submodules/IosappUI/Components/EmojiTextAttachmentView:EmojiTextAttachmentView",

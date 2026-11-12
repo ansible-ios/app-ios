@@ -11,7 +11,6 @@ swift_library(
     ],
     deps = [
         "//submodules/AsyncDisplayKit:AsyncDisplayKit",
-        "//submodules/LottieSettings:LottieSettings",
         "//submodules/Display:Display",
         "//submodules/IosappCore:IosappCore",
         "//submodules/SSignalKit/SwiftSignalKit:SwiftSignalKit",
@@ -27,6 +26,7 @@ swift_library(
         "//submodules/PresentationDataUtils:PresentationDataUtils",
         "//submodules/IosappUI/Components/EmojiStatusComponent",
         "//submodules/ContextUI",
+        "//submodules/IosappUI/Components/ChatEntityKeyboardInputNode",
         "//submodules/UndoUI",
         "//submodules/AnimatedStickerNode",
         "//submodules/IosappAnimatedStickerNode",

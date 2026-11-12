@@ -11,7 +11,6 @@ swift_library(
     ],
     deps = [
         "//submodules/Display:Display",
-        "//submodules/Postbox:Postbox",
         "//submodules/IosappCore:IosappCore",
         "//submodules/IosappPresentationData:IosappPresentationData",
         "//submodules/IosappUIPreferences:IosappUIPreferences",

@@ -10,6 +10,7 @@ swift_library(
         "-warnings-as-errors",
     ],
     deps = [
+        "//submodules/IosappUI/Components/SideColumnLayout",
         "//submodules/Display",
         "//submodules/AsyncDisplayKit",
         "//submodules/AppBundle",
@@ -22,6 +23,7 @@ swift_library(
         "//submodules/PresentationDataUtils",
         "//submodules/ContactsPeerItem",
         "//submodules/IosappUI/Components/ChatListHeaderComponent",
+        "//submodules/IosappUI/Components/NavigationBarComponent",
         "//submodules/SearchBarNode",
         "//submodules/Components/ViewControllerComponent",
         "//submodules/ComponentFlow",

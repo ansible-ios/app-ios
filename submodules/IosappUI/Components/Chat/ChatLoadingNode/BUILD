@@ -27,6 +27,7 @@ swift_library(
         "//submodules/IosappUI/Components/Chat/ChatMessageAnimatedStickerItemNode",
         "//submodules/IosappUI/Components/Chat/ChatMessageBubbleItemNode",
         "//submodules/IosappUI/Components/Chat/ChatMessageItemImpl",
+        "//submodules/IosappUI/Components/Chat/ChatMessageItemCommon",
     ],
     visibility = [
         "//visibility:public",

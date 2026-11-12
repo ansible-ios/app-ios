@@ -2,7 +2,7 @@ import Foundation
 import Postbox
 import MtProtoKit
 import SwiftSignalKit
-import IosappApi
+internal import IosappApi
 
 public final class DiamondGiftsList: Codable, Equatable {
     public let items: [StarGift]
@@ -1428,6 +1428,45 @@ func _internal_convertDiamondGift(account: Account, reference: DiamondGiftRefere
     }
 }
 
+func _internal_deleteStarGift(account: Account, reference: DiamondGiftReference) -> Signal<Never, NoError> {
+    return account.postbox.transaction { transaction in
+        return reference.apiDiamondGiftReference(transaction: transaction)
+    }
+    |> mapToSignal { starGift in
+        guard let starGift else {
+            return .complete()
+        }
+        return account.network.request(Api.functions.payments.deleteStarGift(stargift: starGift))
+        |> map(Optional.init)
+        |> `catch` { _ -> Signal<Api.Bool?, NoError> in
+            return .single(nil)
+        }
+        |> mapToSignal { result in
+            if let result, case .boolTrue = result {
+                let ownerPeerId: EnginePeer.Id
+                if case let .peer(peerId, _) = reference {
+                    ownerPeerId = peerId
+                } else {
+                    ownerPeerId = account.peerId
+                }
+                return account.postbox.transaction { transaction -> Void in
+                    transaction.updatePeerCachedData(peerIds: Set([ownerPeerId]), update: { _, cachedData -> CachedPeerData? in
+                        if let cachedData = cachedData as? CachedUserData, let diamondGiftsCount = cachedData.diamondGiftsCount {
+                            return cachedData.withUpdatedDiamondGiftsCount(max(0, diamondGiftsCount - 1))
+                        } else if let cachedData = cachedData as? CachedChannelData, let diamondGiftsCount = cachedData.diamondGiftsCount {
+                            return cachedData.withUpdatedDiamondGiftsCount(max(0, diamondGiftsCount - 1))
+                        } else {
+                            return cachedData
+                        }
+                    })
+                }
+            }
+            return .complete()
+        }
+        |> ignoreValues
+    }
+}
+
 func _internal_updateDiamondGiftAddedToProfile(account: Account, reference: DiamondGiftReference, added: Bool) -> Signal<Never, NoError> {
     var flags: Int32 = 0
     if !added {
@@ -2360,6 +2399,18 @@ private final class ProfileGiftsContextImpl {
         self.pushState()
     }
     
+    func deleteStarGift(reference: DiamondGiftReference) {
+        self.actionDisposable.set(
+            _internal_deleteStarGift(account: self.account, reference: reference).startStrict()
+        )
+        if let count = self.count {
+            self.count = max(0, count - 1)
+        }
+        self.gifts.removeAll(where: { $0.reference == reference })
+        self.filteredGifts.removeAll(where: { $0.reference == reference })
+        self.pushState()
+    }
+    
     func transferStarGift(prepaid: Bool, reference: DiamondGiftReference, peerId: EnginePeer.Id) -> Signal<Never, TransferDiamondGiftError> {
         if let count = self.count {
             self.count = max(0, count - 1)
@@ -2371,6 +2422,27 @@ private final class ProfileGiftsContextImpl {
         return _internal_transferDiamondGift(account: self.account, prepaid: prepaid, reference: reference, peerId: peerId)
     }
     
+    func withdrawStarGift(reference: DiamondGiftReference, keepOnProfile: Bool, password: String?) -> Signal<Never, WithdrawStarGiftError> {
+        return _internal_withdrawStarGift(account: self.account, reference: reference, keepOnProfile: keepOnProfile, password: password)
+        |> afterCompleted { [weak self] in
+            guard let self else {
+                return
+            }
+            self.queue.async {
+                if keepOnProfile {
+                    self.reload()
+                } else {
+                    if let count = self.count {
+                        self.count = max(0, count - 1)
+                    }
+                    self.gifts.removeAll(where: { $0.reference == reference })
+                    self.filteredGifts.removeAll(where: { $0.reference == reference })
+                    self.pushState()
+                }
+            }
+        }
+    }
+
     func buyDiamondGift(slug: String, peerId: EnginePeer.Id, price: CurrencyAmount?, hideName: Bool, text: String?, entities: [MessageTextEntity]?) -> Signal<Never, BuyDiamondGiftError> {
         var listingPrice: CurrencyAmount?
         if let gift = self.gifts.first(where: { gift in
@@ -3149,6 +3221,12 @@ public final class ProfileGiftsContext {
         }
     }
     
+    public func deleteStarGift(reference: DiamondGiftReference) {
+        self.impl.with { impl in
+            impl.deleteStarGift(reference: reference)
+        }
+    }
+    
     public func buyDiamondGift(slug: String, peerId: EnginePeer.Id, price: CurrencyAmount? = nil, hideName: Bool = true, text: String? = nil, entities: [MessageTextEntity]? = nil) -> Signal<Never, BuyDiamondGiftError> {
         return Signal { subscriber in
             let disposable = MetaDisposable()
@@ -3192,6 +3270,20 @@ public final class ProfileGiftsContext {
             let disposable = MetaDisposable()
             self.impl.with { impl in
                 disposable.set(impl.transferStarGift(prepaid: prepaid, reference: reference, peerId: peerId).start(error: { error in
+                    subscriber.putError(error)
+                }, completed: {
+                    subscriber.putCompletion()
+                }))
+            }
+            return disposable
+        }
+    }
+
+    public func withdrawStarGift(reference: DiamondGiftReference, keepOnProfile: Bool, password: String?) -> Signal<Never, WithdrawStarGiftError> {
+        return Signal { subscriber in
+            let disposable = MetaDisposable()
+            self.impl.with { impl in
+                disposable.set(impl.withdrawStarGift(reference: reference, keepOnProfile: keepOnProfile, password: password).start(error: { error in
                     subscriber.putError(error)
                 }, completed: {
                     subscriber.putCompletion()
@@ -3662,6 +3754,19 @@ public enum GetUniqueDiamondGiftError {
     case alreadyBurned
 }
 
+private func cachedUniqueStarGiftEntryId(slug: String) -> ItemCacheEntryId {
+    return ItemCacheEntryId(collectionId: Namespaces.CachedItemCollection.cachedUniqueStarGifts, key: ValueBoxKey(slug))
+}
+
+func _internal_cachedUniqueStarGift(account: Account, slug: String) -> Signal<StarGift.UniqueGift?, NoError> {
+    return account.postbox.transaction { transaction -> StarGift.UniqueGift? in
+        guard case let .unique(gift) = transaction.retrieveItemCacheEntry(id: cachedUniqueStarGiftEntryId(slug: slug))?.get(StarGift.self) else {
+            return nil
+        }
+        return gift
+    }
+}
+
 func _internal_getUniqueDiamondGift(account: Account, slug: String) -> Signal<StarGift.UniqueGift, GetUniqueDiamondGiftError> {
     return account.network.request(Api.functions.payments.getUniqueStarGift(slug: slug))
     |> mapError { error -> GetUniqueDiamondGiftError in
@@ -3681,6 +3786,9 @@ func _internal_getUniqueDiamondGift(account: Account, slug: String) -> Signal<St
                 updatePeers(transaction: transaction, accountPeerId: account.peerId, peers: parsedPeers)
                 guard case let .unique(uniqueGift) = StarGift(apiDiamondGift: gift) else {
                     return .fail(.invalidSlug)
+                }
+                if let entry = CodableEntry(StarGift.unique(uniqueGift)) {
+                    transaction.putItemCacheEntry(id: cachedUniqueStarGiftEntryId(slug: slug), entry: entry)
                 }
                 return .single(uniqueGift)
             }
@@ -3804,102 +3912,62 @@ public enum RequestDiamondGiftWithdrawalError : Equatable {
 }
 
 func _internal_checkDiamondGiftWithdrawalAvailability(account: Account, reference: DiamondGiftReference) -> Signal<Never, RequestDiamondGiftWithdrawalError> {
-    return account.postbox.transaction { transaction in
-        return reference.apiDiamondGiftReference(transaction: transaction)
-    }
-    |> castError(RequestDiamondGiftWithdrawalError.self)
-    |> mapToSignal { starGift in
-        guard let starGift else {
-            return .fail(.generic)
-        }
-        return account.network.request(Api.functions.payments.getStarGiftWithdrawalUrl(stargift: starGift, password: .inputCheckPasswordEmpty))
-        |> mapError { error -> RequestDiamondGiftWithdrawalError in
-            if error.errorDescription == "PASSWORD_HASH_INVALID" {
-                return .requestPassword
-            } else if error.errorDescription == "PASSWORD_MISSING" {
-                return .twoStepAuthMissing
-            } else if error.errorDescription.hasPrefix("PASSWORD_TOO_FRESH_") {
-                let timeout = String(error.errorDescription[error.errorDescription.index(error.errorDescription.startIndex, offsetBy: "PASSWORD_TOO_FRESH_".count)...])
-                if let value = Int32(timeout) {
-                    return .twoStepAuthTooFresh(value)
-                }
-            } else if error.errorDescription.hasPrefix("SESSION_TOO_FRESH_") {
-                let timeout = String(error.errorDescription[error.errorDescription.index(error.errorDescription.startIndex, offsetBy: "SESSION_TOO_FRESH_".count)...])
-                if let value = Int32(timeout) {
-                    return .authSessionTooFresh(value)
-                }
-            }
-            return .generic
-        }
-        |> ignoreValues
+    // TON withdrawal is unavailable in this product.
+    return .fail(.generic)
+}
+
+public enum WithdrawStarGiftError: Equatable {
+    case generic
+    case twoStepAuthMissing
+    case twoStepAuthTooFresh(Int32)
+    case authSessionTooFresh(Int32)
+    case limitExceeded
+    case requestPassword
+    case invalidPassword
+    case serverProvided(text: String)
+}
+
+public struct StarGiftDepositPayload: Equatable {
+    public let nftAddress: String
+    public let payload: Data
+    public let amount: Int64
+
+    public init(nftAddress: String, payload: Data, amount: Int64) {
+        self.nftAddress = nftAddress
+        self.payload = payload
+        self.amount = amount
     }
 }
 
-func _internal_requestDiamondGiftWithdrawalUrl(account: Account, reference: DiamondGiftReference, password: String) -> Signal<String, RequestDiamondGiftWithdrawalError> {
-    guard !password.isEmpty else {
-        return .fail(.invalidPassword)
-    }
-    
-    return account.postbox.transaction { transaction -> Signal<String, RequestDiamondGiftWithdrawalError> in
-        guard let starGift = reference.apiDiamondGiftReference(transaction: transaction) else {
-            return .fail(.generic)
-        }
-            
-        let checkPassword = _internal_twoStepAuthData(account.network)
-        |> mapError { error -> RequestDiamondGiftWithdrawalError in
-            if error.errorDescription.hasPrefix("FLOOD_WAIT") {
-                return .limitExceeded
-            } else {
-                return .generic
-            }
-        }
-        |> mapToSignal { authData -> Signal<Api.InputCheckPasswordSRP, RequestDiamondGiftWithdrawalError> in
-            if let currentPasswordDerivation = authData.currentPasswordDerivation, let srpSessionData = authData.srpSessionData {
-                guard let kdfResult = passwordKDF(encryptionProvider: account.network.encryptionProvider, keychain: account.network.context.keychain, password: password, derivation: currentPasswordDerivation, srpSessionData: srpSessionData) else {
-                    return .fail(.generic)
-                }
-                return .single(.inputCheckPasswordSRP(.init(srpId: kdfResult.id, A: Buffer(data: kdfResult.A), M1: Buffer(data: kdfResult.M1))))
-            } else {
-                return .fail(.twoStepAuthMissing)
-            }
-        }
-        
-        return checkPassword
-        |> mapToSignal { password -> Signal<String, RequestDiamondGiftWithdrawalError> in
-            return account.network.request(Api.functions.payments.getStarGiftWithdrawalUrl(stargift: starGift, password: password), automaticFloodWait: false)
-            |> mapError { error -> RequestDiamondGiftWithdrawalError in
-                if error.errorCode == 406 {
-                    return .serverProvided(text: error.errorDescription)
-                } else if error.errorDescription.hasPrefix("FLOOD_WAIT") {
-                    return .limitExceeded
-                } else if error.errorDescription == "PASSWORD_HASH_INVALID" {
-                    return .invalidPassword
-                } else if error.errorDescription == "PASSWORD_MISSING" {
-                    return .twoStepAuthMissing
-                } else if error.errorDescription.hasPrefix("PASSWORD_TOO_FRESH_") {
-                    let timeout = String(error.errorDescription[error.errorDescription.index(error.errorDescription.startIndex, offsetBy: "PASSWORD_TOO_FRESH_".count)...])
-                    if let value = Int32(timeout) {
-                        return .twoStepAuthTooFresh(value)
-                    }
-                } else if error.errorDescription.hasPrefix("SESSION_TOO_FRESH_") {
-                    let timeout = String(error.errorDescription[error.errorDescription.index(error.errorDescription.startIndex, offsetBy: "SESSION_TOO_FRESH_".count)...])
-                    if let value = Int32(timeout) {
-                        return .authSessionTooFresh(value)
-                    }
-                }
-                return .generic
-            }
-            |> map { result -> String in
-                switch result {
-                case let .starGiftWithdrawalUrl(diamondGiftWithdrawalUrlData):
-                    let url = diamondGiftWithdrawalUrlData.url
-                    return url
-                }
-            }
-        }
-    }
-    |> mapError { _ -> RequestDiamondGiftWithdrawalError in }
-    |> switchToLatest
+public enum DepositStarGiftError {
+    case generic
+}
+
+public enum DisplayStarGiftError {
+    case generic
+}
+
+func _internal_requestDiamondGiftWithdrawalUrl(account: Account, reference: DiamondGiftReference, password: String?) -> Signal<String, RequestDiamondGiftWithdrawalError> {
+    // TON operations are unavailable in this product.
+    return .fail(.generic)
+}
+
+
+func _internal_withdrawStarGift(account: Account, reference: DiamondGiftReference, keepOnProfile: Bool, password: String?) -> Signal<Never, WithdrawStarGiftError> {
+    // TON operations are unavailable in this product.
+    return .fail(.generic)
+}
+
+
+func _internal_depositStarGift(account: Account, peerId: EnginePeer.Id, slug: String, hideSender: Bool) -> Signal<StarGiftDepositPayload, DepositStarGiftError> {
+    // TON operations are unavailable in this product.
+    return .fail(.generic)
+}
+
+
+func _internal_displayStarGift(account: Account, peerId: EnginePeer.Id?, slug: String) -> Signal<Never, DisplayStarGiftError> {
+    // TON operations are unavailable in this product.
+    return .fail(.generic)
 }
 
 func _internal_toggleDiamondGiftsNotifications(account: Account, peerId: EnginePeer.Id, enabled: Bool) -> Signal<Never, NoError> {

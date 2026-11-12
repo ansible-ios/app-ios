@@ -57,6 +57,7 @@ public enum PremiumGiftSource: Equatable {
     case chatList([EnginePeer.Id: IosappBirthday]?)
     case stars([EnginePeer.Id: IosappBirthday]?)
     case diamondGiftTransfer([EnginePeer.Id: IosappBirthday]?, DiamondGiftReference, StarGift.UniqueGift, Int64, Int32?, Bool)
+    case starGiftDeposit([EnginePeer.Id: IosappBirthday]?, StarGift.UniqueGift)
     case channelBoost
     case deeplink(String?)
 }

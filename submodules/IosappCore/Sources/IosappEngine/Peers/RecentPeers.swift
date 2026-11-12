@@ -1,6 +1,6 @@
 import Foundation
 import Postbox
-import IosappApi
+internal import IosappApi
 import SwiftSignalKit
 
 public enum RecentPeers {

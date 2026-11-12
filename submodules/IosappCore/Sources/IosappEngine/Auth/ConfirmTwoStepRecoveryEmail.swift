@@ -1,7 +1,7 @@
 import Foundation
 import SwiftSignalKit
 import MtProtoKit
-import IosappApi
+internal import IosappApi
 
 
 public enum ConfirmTwoStepRecoveryEmailError {

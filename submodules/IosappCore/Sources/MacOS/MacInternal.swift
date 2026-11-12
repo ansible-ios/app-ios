@@ -1,5 +1,5 @@
 
-import IosappApi
+internal import IosappApi
 import SwiftSignalKit
 import Postbox
 import Foundation

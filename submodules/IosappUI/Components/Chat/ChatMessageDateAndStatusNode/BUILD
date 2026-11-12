@@ -27,6 +27,7 @@ swift_library(
         "//submodules/Components/ReactionImageComponent",
         "//submodules/IosappUI/Components/AnimationCache",
         "//submodules/IosappUI/Components/MultiAnimationRenderer",
+        "//submodules/IosappUI/Components/StaticGlassBackground",
     ],
     visibility = [
         "//visibility:public",

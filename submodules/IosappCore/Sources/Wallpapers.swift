@@ -1,7 +1,7 @@
 import Foundation
 import Postbox
 import SwiftSignalKit
-import IosappApi
+internal import IosappApi
 
 
 func _internal_telegramWallpapers(postbox: Postbox, network: Network, forceUpdate: Bool = false) -> Signal<[IosappWallpaper], NoError> {

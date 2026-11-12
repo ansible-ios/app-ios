@@ -25,6 +25,8 @@ swift_library(
         "//submodules/TextFormat",
         "//submodules/AvatarNode",
         "//submodules/Components/BundleIconComponent",
+        "//submodules/IosappUI/Components/PeerInfo/PeerInfoPaneNode",
+        "//submodules/IosappStringFormatting",
     ],
     visibility = [
         "//visibility:public",

@@ -15,5 +15,5 @@ filegroup(
             ".gitignore",
         ],
     ),
-    visibility = ["//Iosapp:__pkg__"],
+    visibility = ["//iosapp:__pkg__"],
 )

@@ -35,7 +35,6 @@ swift_library(
         "//submodules/IosappUI/Components/VideoAnimationCache:VideoAnimationCache",
         "//submodules/IosappUI/Components/LottieAnimationCache:LottieAnimationCache",
         "//submodules/LottieBinding:LottieBinding",
-        "//submodules/LottieSettings:LottieSettings",
     ],
 )
 

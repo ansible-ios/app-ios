@@ -172,6 +172,10 @@ public extension IosappEngine {
             return _internal_convertDiamondGift(account: self.account, reference: reference)
         }
         
+        public func deleteStarGift(reference: DiamondGiftReference) -> Signal<Never, NoError> {
+            return _internal_deleteStarGift(account: self.account, reference: reference)
+        }
+        
         public func updateDiamondGiftAddedToProfile(reference: DiamondGiftReference, added: Bool) -> Signal<Never, NoError> {
             return _internal_updateDiamondGiftAddedToProfile(account: self.account, reference: reference, added: added)
         }
@@ -184,6 +188,18 @@ public extension IosappEngine {
             return _internal_transferDiamondGift(account: self.account, prepaid: prepaid, reference: reference, peerId: peerId)
         }
         
+        public func withdrawStarGift(reference: DiamondGiftReference, keepOnProfile: Bool, password: String?) -> Signal<Never, WithdrawStarGiftError> {
+            return _internal_withdrawStarGift(account: self.account, reference: reference, keepOnProfile: keepOnProfile, password: password)
+        }
+
+        public func depositStarGift(peerId: EnginePeer.Id, slug: String, hideSender: Bool) -> Signal<StarGiftDepositPayload, DepositStarGiftError> {
+            return _internal_depositStarGift(account: self.account, peerId: peerId, slug: slug, hideSender: hideSender)
+        }
+
+        public func displayStarGift(peerId: EnginePeer.Id?, slug: String) -> Signal<Never, DisplayStarGiftError> {
+            return _internal_displayStarGift(account: self.account, peerId: peerId, slug: slug)
+        }
+
         public func buyDiamondGift(slug: String, peerId: EnginePeer.Id, price: CurrencyAmount?, hideName: Bool = true, text: String? = nil, entities: [MessageTextEntity]? = nil) -> Signal<Never, BuyDiamondGiftError> {
             return _internal_buyDiamondGift(account: self.account, slug: slug, peerId: peerId, price: price, hideName: hideName, text: text, entities: entities)
         }
@@ -204,6 +220,10 @@ public extension IosappEngine {
             return _internal_getUniqueDiamondGift(account: self.account, slug: slug)
         }
         
+        public func cachedUniqueStarGift(slug: String) -> Signal<StarGift.UniqueGift?, NoError> {
+            return _internal_cachedUniqueStarGift(account: self.account, slug: slug)
+        }
+        
         public func getUniqueStarGiftValueInfo(slug: String) -> Signal<StarGift.UniqueGift.ValueInfo?, NoError> {
             return _internal_getUniqueDiamondGiftValueInfo(account: self.account, slug: slug)
         }
@@ -212,7 +232,7 @@ public extension IosappEngine {
             return _internal_checkDiamondGiftWithdrawalAvailability(account: self.account, reference: reference)
         }
         
-        public func requestDiamondGiftWithdrawalUrl(reference: DiamondGiftReference, password: String) -> Signal<String, RequestDiamondGiftWithdrawalError> {
+        public func requestDiamondGiftWithdrawalUrl(reference: DiamondGiftReference, password: String?) -> Signal<String, RequestDiamondGiftWithdrawalError> {
             return _internal_requestDiamondGiftWithdrawalUrl(account: account, reference: reference, password: password)
         }
         

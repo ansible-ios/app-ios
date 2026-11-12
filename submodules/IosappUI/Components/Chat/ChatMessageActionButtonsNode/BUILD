@@ -22,6 +22,8 @@ swift_library(
         "//submodules/ComponentFlow",
         "//submodules/Components/ComponentDisplayAdapters",
         "//submodules/IosappUI/Components/EmojiStatusComponent",
+        "//submodules/IosappUI/Components/Chat/ChatMessageItemCommon",
+        "//submodules/IosappUI/Components/StaticGlassBackground",
     ],
     visibility = [
         "//visibility:public",

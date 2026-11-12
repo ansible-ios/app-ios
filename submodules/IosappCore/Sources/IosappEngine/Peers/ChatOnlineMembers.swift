@@ -1,7 +1,7 @@
 import Foundation
 import SwiftSignalKit
 import Postbox
-import IosappApi
+internal import IosappApi
 
 func _internal_chatOnlineMembers(postbox: Postbox, network: Network, peerId: PeerId) -> Signal<Int32, NoError> {
     return postbox.transaction { transaction -> Api.InputPeer? in

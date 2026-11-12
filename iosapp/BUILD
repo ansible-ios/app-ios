@@ -1,3 +1,4 @@
+load(":framework_exported_symbols.bzl", "framework_exported_symbols")
 load("@rules_cc//cc:objc_library.bzl", "objc_library")
 
 load("@bazel_skylib//rules:common_settings.bzl",
@@ -40,7 +41,7 @@ load(
 
 load("@build_bazel_rules_apple//apple:apple.bzl", "local_provisioning_profile")
 
-load("//Iosapp:prebuilt_watchos.bzl",
+load("//iosapp:prebuilt_watchos.bzl",
     "apple_prebuilt_watchos_application",
 )
 
@@ -61,10 +62,6 @@ load(
 
 load("@build_bazel_rules_apple//apple:resources.bzl",
     "swift_intent_library",
-)
-
-load("//build-system/bazel-utils:spm.bzl",
-    "generate_spm",
 )
 
 config_setting(
@@ -163,6 +160,10 @@ genrule(
         "GeneratedPresentationStrings/Sources/PresentationStrings.m",
         "GeneratedPresentationStrings/Resources/PresentationStrings.data",
     ],
+    # //Tests/ComposerHarness bundles the .data output. `-[_PresentationStrings
+    # initWithPrimaryComponent:…]` asserts when it cannot load it, so a standalone app that builds
+    # a PresentationData dies at launch without it.
+    visibility = ["//Tests:__subpackages__"],
 )
 
 minimum_os_version = "15.0"
@@ -277,6 +278,10 @@ filegroup(
     ] + [
         "{}.lproj/Localizable.strings".format(language) for language in empty_languages
     ],
+    # //Tests/ComposerHarness bundles these. `defaultPresentationStrings` FORCE-UNWRAPS
+    # `getAppBundle().path(forResource: "Localizable" …)`, so any standalone app that builds a
+    # PresentationData traps at launch without them.
+    visibility = ["//Tests:__subpackages__"],
 )
 
 filegroup(
@@ -811,6 +816,31 @@ plist_fragment(
     )
 )
 
+# IosappCoreFramework exports only what its clients use: IosappUI (linked into
+# IosappUIFramework), the app binary and every extension. See framework_exported_symbols.bzl.
+framework_exported_symbols(
+    name = "IosappCoreFrameworkExportedSymbols",
+    framework_deps = [
+        "//submodules/IosappCore:IosappCore",
+    ],
+    provided_by_frameworks = [
+        "//submodules/MtProtoKit:MtProtoKit",
+        "//submodules/SSignalKit/SwiftSignalKit:SwiftSignalKit",
+        "//submodules/Postbox:Postbox",
+    ],
+    clients = [
+        "//submodules/IosappUI:IosappUI",
+        ":Main",
+        ":Lib",
+        ":ShareExtensionLib",
+        ":NotificationContentExtensionLib",
+        ":BroadcastUploadExtensionLib",
+        ":WidgetExtensionLib",
+        ":IntentsExtensionLib",
+        "//iosapp/NotificationService:NotificationServiceExtensionLib",
+    ],
+)
+
 ios_framework(
     name = "IosappCoreFramework",
     bundle_id = "{telegram_bundle_id}.IosappCore".format(
@@ -834,6 +864,13 @@ ios_framework(
     minimum_os_version = minimum_os_version,
     extension_safe = True,
     ipa_post_processor = strip_framework,
+    # Exports only what IosappUI, the app binary and the extensions use. IosappApi, private to
+    # IosappCore, is therefore never exported (it used to need -unexported_symbol patterns).
+    # Release only: debug keeps every symbol exported (debugger, faster edit-build cycle).
+    exported_symbols_lists = select({
+        ":debug": [],
+        "//conditions:default": [":IosappCoreFrameworkExportedSymbols"],
+    }),
     deps = [
         "//submodules/IosappCore:IosappCore",
     ],
@@ -939,6 +976,29 @@ plist_fragment(
     )
 )
 
+# IosappUIFramework exports only what the app binary and the extensions that link it use:
+# 194 of its 161,496 public symbols at the time of writing. See framework_exported_symbols.bzl.
+framework_exported_symbols(
+    name = "IosappUIFrameworkExportedSymbols",
+    framework_deps = [
+        "//submodules/IosappUI:IosappUI",
+    ],
+    provided_by_frameworks = [
+        "//submodules/MtProtoKit:MtProtoKit",
+        "//submodules/SSignalKit/SwiftSignalKit:SwiftSignalKit",
+        "//submodules/Postbox:Postbox",
+        "//submodules/IosappCore:IosappCore",
+    ],
+    clients = [
+        ":Main",
+        ":Lib",
+        ":ShareExtensionLib",
+        ":NotificationContentExtensionLib",
+        ":BroadcastUploadExtensionLib",
+        "//iosapp/NotificationService:NotificationServiceExtensionLib",
+    ],
+)
+
 ios_framework(
     name = "IosappUIFramework",
     additional_linker_inputs = [
@@ -966,6 +1026,11 @@ ios_framework(
     minimum_os_version = minimum_os_version,
     extension_safe = True,
     ipa_post_processor = strip_framework,
+    # Release only: debug keeps every symbol exported (debugger, faster edit-build cycle).
+    exported_symbols_lists = select({
+        ":debug": [],
+        "//conditions:default": [":IosappUIFrameworkExportedSymbols"],
+    }),
     linkopts = [
         "$(location //third-party/boringssl:crypto)",
     ],
@@ -1040,8 +1105,20 @@ swift_library(
     ],
 )
 
+plist_fragment(
+    name = "ShareExtensionEntitlements",
+    extension = "entitlements",
+    template = """
+<key>com.apple.security.application-groups</key>
+<array>
+    <string>group.{telegram_bundle_id}</string>
+</array>
+""".format(telegram_bundle_id = telegram_bundle_id),
+)
+
 ios_extension(
     name = "ShareExtension",
+    entitlements = ":ShareExtensionEntitlements.entitlements",
     bundle_id = "{telegram_bundle_id}.Share".format(
         telegram_bundle_id = telegram_bundle_id,
     ),
@@ -1226,7 +1303,6 @@ swift_library(
         "//submodules/WidgetItemsUtils:WidgetItemsUtils",
         "//submodules/AppLockState:AppLockState",
         "//submodules/SSignalKit/SwiftSignalKit:SwiftSignalKit",
-        "//submodules/Postbox:Postbox",
         "//submodules/IosappCore:IosappCore",
         "//submodules/PasscodeCore",
         "//submodules/OpenSSLEncryptionProvider:OpenSSLEncryptionProvider",
@@ -1365,7 +1441,6 @@ swift_library(
     deps = [
         "//submodules/SSignalKit/SwiftSignalKit:SwiftSignalKit",
         "//submodules/Postbox:Postbox",
-        "//submodules/IosappApi:IosappApi",
         "//submodules/IosappCore:IosappCore",
         "//submodules/BuildConfig:BuildConfig",
         "//submodules/OpenSSLEncryptionProvider:OpenSSLEncryptionProvider",
@@ -1953,49 +2028,6 @@ ios_ui_test_suite(
 )
 
 # Temporary targets used to simplify build tests
-
-ios_application(
-    name = "spm_build_app",
-    bundle_id = "{telegram_bundle_id}".format(
-        telegram_bundle_id = telegram_bundle_id,
-    ),
-    families = ["iphone", "ipad"],
-    minimum_os_version = minimum_os_version,
-    provisioning_profile = select({
-        ":disableProvisioningProfilesSetting": None,
-        "//conditions:default": "@build_configuration//provisioning:Iosapp.mobileprovision",
-    }),
-    entitlements = ":IosappEntitlements.entitlements",
-    infoplists = [
-        ":IosappInfoPlist",
-        ":BuildNumberInfoPlist",
-        ":VersionInfoPlist",
-        ":RequiredDeviceCapabilitiesPlist",
-        ":UrlTypesInfoPlist",
-    ],
-    deps = [
-        #"//submodules/Display",
-        #"//submodules/IosappCore",
-        #"//submodules/FFMpegBinding",
-        #"//third-party/webrtc",
-        #"//third-party/webrtc:webrtc_objc",
-        #"//submodules/AsyncDisplayKit",
-        #"//submodules/ObjCRuntimeUtils",
-        #"//submodules/OpusBinding",
-        #"//third-party/boringssl:ssl",
-        #"//third-party/boringssl:crypto",
-        #"//submodules/IosappVoip",
-        #"//third-party/recaptcha:RecaptchaEnterprise",
-        "//submodules/IosappUI",
-    ],
-)
-
-generate_spm(
-    name = "spm_build_root",
-    deps = [
-        ":spm_build_app",
-    ]
-)
 
 ios_application(
     name = "webrtc_build_test",

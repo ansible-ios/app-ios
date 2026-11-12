@@ -14,6 +14,8 @@ swift_library(
         "//submodules/ComponentFlow",
         "//submodules/AppBundle",
         "//submodules/Components/BundleIconComponent",
+        "//submodules/IosappUI/Components/GlassBackgroundComponent",
+        "//submodules/IosappUI/Components/GlassBarButtonComponent",
     ],
     visibility = [
         "//visibility:public",

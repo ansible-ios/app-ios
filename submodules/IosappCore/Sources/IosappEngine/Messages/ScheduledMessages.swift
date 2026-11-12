@@ -1,7 +1,7 @@
 import Foundation
 import Postbox
 import SwiftSignalKit
-import IosappApi
+internal import IosappApi
 
 
 func _internal_sendScheduledMessageNowInteractively(postbox: Postbox, messageId: MessageId) -> Signal<Never, NoError> {

@@ -1,4 +1,6 @@
 load("@build_bazel_rules_swift//swift:swift.bzl", "swift_library")
+load("@build_bazel_rules_apple//apple:ios.bzl", "ios_unit_test")
+load("@build_bazel_rules_apple//apple/testing/default_runner:ios_test_runner.bzl", "ios_test_runner")
 
 swift_library(
     name = "EntityKeyboard",
@@ -46,7 +48,6 @@ swift_library(
         "//submodules/IosappNotices:IosappNotices",
         "//submodules/GZip",
         "//submodules/LottieBinding:LottieBinding",
-        "//submodules/LottieSettings:LottieSettings",
         "//submodules/lottie-ios:Lottie",
         "//submodules/IosappUI/Components/Utils/GenerateStickerPlaceholderImage",
         "//submodules/IosappUIPreferences",
@@ -58,6 +59,36 @@ swift_library(
         "//submodules/IosappUI/Components/EdgeEffect",
         "//submodules/IosappUI/Components/LiquidLens",
         "//submodules/IosappUI/Components/TabSelectionRecognizer",
+    ],
+    visibility = [
+        "//visibility:public",
+    ],
+)
+
+swift_library(
+    name = "EntityKeyboardTestsLib",
+    testonly = True,
+    srcs = glob([
+        "Tests/**/*.swift",
+    ]),
+    deps = [
+        ":EntityKeyboard",
+        "//submodules/Display:Display",
+    ],
+)
+
+ios_test_runner(
+    name = "EntityKeyboardTestRunner",
+    device_type = "iPhone 17",
+    os_version = "26.5",
+)
+
+ios_unit_test(
+    name = "EntityKeyboardTests",
+    minimum_os_version = "15.0",
+    runner = ":EntityKeyboardTestRunner",
+    deps = [
+        ":EntityKeyboardTestsLib",
     ],
     visibility = [
         "//visibility:public",

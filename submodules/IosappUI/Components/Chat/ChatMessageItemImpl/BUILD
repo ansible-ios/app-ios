@@ -10,7 +10,8 @@ swift_library(
         "-warnings-as-errors",
     ],
     deps = [
-        "//submodules/Postbox",
+        "//submodules/IosappUI/Components/StaticGlassBackground",
+        "//submodules/IosappUI/Components/GlassBackgroundComponent",
         "//submodules/AsyncDisplayKit",
         "//submodules/Display",
         "//submodules/SSignalKit/SwiftSignalKit",

@@ -56,7 +56,7 @@ swift_library(
     ],
     deps = [
         "//submodules/SSignalKit/SSignalKit",
-        "//submodules/LottieSettings:LottieSettings",
+        "//submodules/Postbox:Postbox",
     	"//submodules/SSignalKit/SwiftSignalKit:SwiftSignalKit",
         "//submodules/Display:Display",
         "//submodules/IosappPresentationData:IosappPresentationData",
@@ -150,6 +150,11 @@ swift_library(
     ]),
     deps = [
         ":IosappCallsUI",
+        "//submodules/AccountContext:AccountContext",
+        "//submodules/AsyncDisplayKit:AsyncDisplayKit",
+        "//submodules/ChatTitleActivityNode:ChatTitleActivityNode",
+        "//submodules/ContextUI:ContextUI",
+        "//submodules/Display:Display",
         "//submodules/IosappAudio:IosappAudio",
         "//submodules/IosappUI/Components/Calls/CallScreen",
         "//submodules/IosappCore:IosappCore",

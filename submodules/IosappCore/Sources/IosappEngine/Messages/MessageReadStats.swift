@@ -1,6 +1,6 @@
 import Postbox
 import SwiftSignalKit
-import IosappApi
+internal import IosappApi
 
 public final class MessageReadStats {
     public let reactionCount: Int

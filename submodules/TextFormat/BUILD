@@ -36,9 +36,6 @@ swift_library(
         "//submodules/IosappCore:IosappCore",
         "//submodules/IosappPresentationData:IosappPresentationData",
         "//submodules/Postbox:Postbox",
-        # Needed by ReplyMarkupButtonActionTests to construct Api.ButtonType /
-        # Api.InlineButtonType values for the shared action mappers.
-        "//submodules/IosappApi:IosappApi",
         # Needed by the FlatBuffers round-trip tests: the flatc-generated
         # IosappCore_* types live in the FlatSerialization module.
         "//submodules/IosappCore/FlatSerialization",

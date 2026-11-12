@@ -2,7 +2,7 @@ import Foundation
 import Postbox
 import MtProtoKit
 import SwiftSignalKit
-import IosappApi
+internal import IosappApi
 
 public struct PremiumGiftCodeInfo: Equatable {
     public let slug: String

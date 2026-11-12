@@ -30,6 +30,7 @@ swift_library(
     deps = [
         ":RichTextEditorMessageConversion",
         "//submodules/IosappCore",
+        "//submodules/TextFormat",
         "//submodules/Postbox:Postbox",
         "//submodules/IosappUI/Components/RichTextEditor:RichTextEditorCore",
     ],

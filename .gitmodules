@@ -1,6 +1,3 @@
-[submodule "submodules/rlottie/rlottie"]
-	path = submodules/rlottie/rlottie
-	url = https://github.com/ansible-ios/rlottie.git
 [submodule "build-system/bazel-rules/rules_apple"]
 	path = build-system/bazel-rules/rules_apple
 	url = https://github.com/ansible-ios/rules_apple.git

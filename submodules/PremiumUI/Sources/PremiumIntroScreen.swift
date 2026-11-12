@@ -573,7 +573,6 @@ public enum PremiumPerk: CaseIterable {
             .messageEffects,
             .todo,
             .copyProtection,
-            .aiTools,
             .richText
         ]
     }
@@ -907,7 +906,6 @@ struct PremiumIntroConfiguration {
     static var defaultValue: PremiumIntroConfiguration {
         return PremiumIntroConfiguration(perks: [
             .stories,
-            .aiTools,
             .richText,
             .moreUpload,
             .doubleLimits,
@@ -948,7 +946,7 @@ struct PremiumIntroConfiguration {
     let businessPerks: [PremiumPerk]
     
     fileprivate init(perks: [PremiumPerk], businessPerks: [PremiumPerk]) {
-        self.perks = perks
+        self.perks = perks.filter { $0 != .aiTools }
         self.businessPerks = businessPerks
     }
     
@@ -956,6 +954,9 @@ struct PremiumIntroConfiguration {
         if let data = appConfiguration.data, let values = data["premium_promo_order"] as? [String] {
             var perks: [PremiumPerk] = []
             for value in values {
+                if value == PremiumPerk.aiTools.identifier {
+                    continue
+                }
                 if let perk = PremiumPerk(identifier: value, business: false) {
                     if !perks.contains(perk) {
                         perks.append(perk)
@@ -1105,12 +1106,14 @@ final class SectionGroupComponent: Component {
     public final class Item: Equatable {
         public let content: AnyComponentWithIdentity<Empty>
         public let accessibilityLabel: String
+        public let isSelected: Bool
         public let isEnabled: Bool
         public let action: () -> Void
         
-        public init(_ content: AnyComponentWithIdentity<Empty>, accessibilityLabel: String, isEnabled: Bool = true, action: @escaping () -> Void) {
+        public init(_ content: AnyComponentWithIdentity<Empty>, accessibilityLabel: String, isSelected: Bool = false, isEnabled: Bool = true, action: @escaping () -> Void) {
             self.content = content
             self.accessibilityLabel = accessibilityLabel
+            self.isSelected = isSelected
             self.isEnabled = isEnabled
             self.action = action
         }
@@ -1120,6 +1123,9 @@ final class SectionGroupComponent: Component {
                 return false
             }
             if lhs.accessibilityLabel != rhs.accessibilityLabel {
+                return false
+            }
+            if lhs.isSelected != rhs.isSelected {
                 return false
             }
             if lhs.isEnabled != rhs.isEnabled {
@@ -1215,6 +1221,13 @@ final class SectionGroupComponent: Component {
                     self.addSubview(buttonView)
                 }
                 buttonView.accessibilityLabel = item.accessibilityLabel
+                // The check mark beside the chosen option.
+                var buttonTraits: UIAccessibilityTraits = item.isSelected ? [.button, .selected] : .button
+                if !item.isEnabled {
+                    // A plan shorter than the current subscription cannot be chosen (dimmed).
+                    buttonTraits.insert(.notEnabled)
+                }
+                buttonView.accessibilityTraits = buttonTraits
                 
                 if let current = self.itemViews[item.content.id] {
                     itemView = current
@@ -1237,6 +1250,8 @@ final class SectionGroupComponent: Component {
                 buttonView.frame = CGRect(origin: itemFrame.origin, size: CGSize(width: availableSize.width, height: itemSize.height + UIScreenPixel))
                 itemView.frame = CGRect(origin: CGPoint(x: itemFrame.minX + sideInset, y: itemFrame.minY + floor((itemFrame.height - itemSize.height) / 2.0)), size: itemSize)
                 itemView.isUserInteractionEnabled = false
+                // The button over the row reads it (its label is the row's text).
+                itemView.accessibilityElementsHidden = true
                 
                 buttonView.highligthedChanged = { [weak buttonView] highlighted in
                     if highlighted {
@@ -1655,7 +1670,7 @@ private final class PremiumIntroScreenContentComponent: CombinedComponent {
             
             super.init()
             
-            self.newPerks = [PremiumPerk.aiTools.identifier, PremiumPerk.richText.identifier]
+            self.newPerks = [PremiumPerk.richText.identifier]
             
             let premiumIntroConfiguration: Signal<PremiumIntroConfiguration, NoError>
             let accountPeer: Signal<EnginePeer?, NoError>
@@ -1837,6 +1852,9 @@ private final class PremiumIntroScreenContentComponent: CombinedComponent {
             
             let availableWidth = context.availableSize.width
             let sideInsets = sideInset * 2.0 + environment.safeInsets.left + environment.safeInsets.right
+            // iPhone Duo: the content is centered in the band between the side safe insets (one of them is the
+            // side strip). With equal insets this is the full width's center.
+            let bandCenterX = environment.safeInsets.left + (availableWidth - environment.safeInsets.left - environment.safeInsets.right) / 2.0
             var size = CGSize(width: context.availableSize.width, height: 0.0)
             
             var topBackgroundColor = theme.list.plainBackgroundColor
@@ -1963,7 +1981,7 @@ private final class PremiumIntroScreenContentComponent: CombinedComponent {
                 transition: .immediate
             )
             context.add(text
-                .position(CGPoint(x: size.width / 2.0, y: size.height + text.size.height / 2.0))
+                .position(CGPoint(x: bandCenterX, y: size.height + text.size.height / 2.0))
                 .appear(.default(alpha: true))
                 .disappear(.default(alpha: true))
             )
@@ -2055,20 +2073,16 @@ private final class PremiumIntroScreenContentComponent: CombinedComponent {
                         }
                         
                         var subtitle = ""
-                        var accessibilitySubtitle = ""
                         var pricePerMonth = product.price
                         if product.months > 1 {
                             pricePerMonth = product.pricePerMonth
                             
                             if discountValue > 0 {
                                 subtitle = "**\(defaultPrice)** \(product.price)"
-                                accessibilitySubtitle = product.price
                                 if product.months == 24 {
                                     subtitle = environment.strings.Premium_PricePer2Years(subtitle).string
-                                    accessibilitySubtitle = environment.strings.Premium_PricePer2Years(accessibilitySubtitle).string
                                 } else if product.months == 12 {
                                     subtitle = environment.strings.Premium_PricePerYear(subtitle).string
-                                    accessibilitySubtitle = environment.strings.Premium_PricePerYear(accessibilitySubtitle).string
                                 }
                                 subtitle = "\(environment.strings.Gift_Options_Premium_Months(product.months)) • \(product.price)"
                             } else {
@@ -2077,7 +2091,6 @@ private final class PremiumIntroScreenContentComponent: CombinedComponent {
                         }
                         if product.isCurrent {
                             subtitle = environment.strings.Premium_CurrentPlan
-                            accessibilitySubtitle = subtitle
                         }
                         pricePerMonth = environment.strings.Premium_PricePerMonth(pricePerMonth).string
                                                 
@@ -2100,7 +2113,8 @@ private final class PremiumIntroScreenContentComponent: CombinedComponent {
                                         )
                                     )
                                 ),
-                                accessibilityLabel: "\(giftTitle). \(accessibilitySubtitle). \(pricePerMonth)",
+                                accessibilityLabel: [giftTitle, discount, subtitle, pricePerMonth].filter { !$0.isEmpty }.joined(separator: ", "),
+                                isSelected: !product.isCurrent && product.id == state.selectedProductId,
                                 isEnabled: product.months > currentProductMonths,
                                 action: {
                                     selectProduct(product.id)
@@ -2122,7 +2136,7 @@ private final class PremiumIntroScreenContentComponent: CombinedComponent {
                         transition: context.transition
                     )
                     context.add(optionsSection
-                        .position(CGPoint(x: availableWidth / 2.0, y: size.height + optionsSection.size.height / 2.0))
+                        .position(CGPoint(x: bandCenterX, y: size.height + optionsSection.size.height / 2.0))
                         .clipsToBounds(true)
                         .cornerRadius(26.0)
                     )
@@ -2308,7 +2322,7 @@ private final class PremiumIntroScreenContentComponent: CombinedComponent {
                     transition: context.transition
                 )
                 context.add(perksSection
-                    .position(CGPoint(x: availableWidth / 2.0, y: size.height + perksSection.size.height / 2.0))
+                    .position(CGPoint(x: bandCenterX, y: size.height + perksSection.size.height / 2.0))
                     .disappear(.default(alpha: true))
                 )
                 size.height += perksSection.size.height
@@ -2536,7 +2550,7 @@ private final class PremiumIntroScreenContentComponent: CombinedComponent {
                     transition: context.transition
                 )
                 context.add(businessSection
-                    .position(CGPoint(x: availableWidth / 2.0, y: size.height + businessSection.size.height / 2.0))
+                    .position(CGPoint(x: bandCenterX, y: size.height + businessSection.size.height / 2.0))
                 )
                 size.height += businessSection.size.height
                 size.height += 23.0
@@ -2687,7 +2701,7 @@ private final class PremiumIntroScreenContentComponent: CombinedComponent {
                     transition: context.transition
                 )
                 context.add(moreBusinessSection
-                    .position(CGPoint(x: availableWidth / 2.0, y: size.height + moreBusinessSection.size.height / 2.0))
+                    .position(CGPoint(x: bandCenterX, y: size.height + moreBusinessSection.size.height / 2.0))
                 )
                 size.height += moreBusinessSection.size.height
                 size.height += 23.0
@@ -2780,7 +2794,7 @@ private final class PremiumIntroScreenContentComponent: CombinedComponent {
                     transition: context.transition
                 )
                 context.add(adsSettingsSection
-                    .position(CGPoint(x: availableWidth / 2.0, y: size.height + adsSettingsSection.size.height / 2.0))
+                    .position(CGPoint(x: bandCenterX, y: size.height + adsSettingsSection.size.height / 2.0))
                 )
                 size.height += adsSettingsSection.size.height
                 size.height += 23.0
@@ -2802,11 +2816,13 @@ private final class PremiumIntroScreenContentComponent: CombinedComponent {
                                 copyLink(link)
                             }
                         ),
-                        availableSize: CGSize(width: context.availableSize.width - sideInset * 2.0, height: 50.0),
+                        // Centred on the band, so measured within it beside iPhone Duo's side strip (strip-only, so
+                        // equal insets keep the width they had).
+                        availableSize: CGSize(width: context.availableSize.width - sideInset * 2.0 - (environment.safeInsets.left != environment.safeInsets.right ? environment.safeInsets.left + environment.safeInsets.right : 0.0), height: 50.0),
                         transition: .immediate
                     )
                     context.add(linkButton
-                        .position(CGPoint(x: availableWidth / 2.0, y: size.height + linkButton.size.height / 2.0))
+                        .position(CGPoint(x: bandCenterX, y: size.height + linkButton.size.height / 2.0))
                         .disappear(.default(alpha: true))
                     )
                     size.height += linkButton.size.height
@@ -2843,6 +2859,7 @@ private final class PremiumIntroScreenContentComponent: CombinedComponent {
                     )
                     context.add(infoTitle
                         .position(CGPoint(x: sideInset + environment.safeInsets.left + textSideInset + infoTitle.size.width / 2.0, y: size.height + infoTitle.size.height / 2.0))
+                        .accessibilityTraits(.header)
                     )
                     size.height += infoTitle.size.height
                     size.height += 3.0
@@ -2872,7 +2889,7 @@ private final class PremiumIntroScreenContentComponent: CombinedComponent {
                         transition: context.transition
                     )
                     context.add(infoBackground
-                        .position(CGPoint(x: size.width / 2.0, y: size.height + infoBackground.size.height / 2.0))
+                        .position(CGPoint(x: bandCenterX, y: size.height + infoBackground.size.height / 2.0))
                     )
                     context.add(infoText
                         .position(CGPoint(x: sideInset + environment.safeInsets.left + textSideInset + infoText.size.width / 2.0, y: size.height + textPadding + infoText.size.height / 2.0))
@@ -3474,6 +3491,11 @@ private final class PremiumIntroScreenComponent: CombinedComponent {
             let topInset: CGFloat = environment.navigationHeight - 56.0
             let headerSize = CGSize(width: min(414.0, context.availableSize.width), height: 220.0)
             let headerOriginY = topInset - 30.0
+            // iPhone Duo: the header and the titles are centered in the band between the side safe
+            // insets (one of them is the side strip), and the titles narrowed by the difference. With equal
+            // insets this is the full width's center and width.
+            let bandCenterX = environment.safeInsets.left + (context.availableSize.width - environment.safeInsets.left - environment.safeInsets.right) / 2.0
+            let bandWidthReduction = abs(environment.safeInsets.left - environment.safeInsets.right)
             let headerVisibleOriginY = headerOriginY - (state.topContentOffset ?? 0.0)
             let diamondIsVisible = headerVisibleOriginY + headerSize.height > 0.0 && headerVisibleOriginY < context.availableSize.height
 
@@ -3571,7 +3593,7 @@ private final class PremiumIntroScreenComponent: CombinedComponent {
                     truncationType: .end,
                     maximumNumberOfLines: 1
                 ),
-                availableSize: context.availableSize,
+                availableSize: CGSize(width: context.availableSize.width - bandWidthReduction, height: context.availableSize.height),
                 transition: context.transition
             )
 
@@ -3712,7 +3734,7 @@ private final class PremiumIntroScreenComponent: CombinedComponent {
                         }
                     }
                 ),
-                availableSize: CGSize(width: context.availableSize.width - 32.0, height: context.availableSize.width),
+                availableSize: CGSize(width: context.availableSize.width - 32.0 - bandWidthReduction, height: context.availableSize.width),
                 transition: context.transition
             )
             
@@ -3782,7 +3804,7 @@ private final class PremiumIntroScreenComponent: CombinedComponent {
 
             if let scrollView = state.scrollExternalState.scrollView {
                 context.addWithExternalContainer(header
-                    .position(CGPoint(x: context.availableSize.width / 2.0, y: headerOriginY + header.size.height / 2.0)),
+                    .position(CGPoint(x: bandCenterX, y: headerOriginY + header.size.height / 2.0)),
                     container: scrollView
                 )
             }
@@ -3837,14 +3859,15 @@ private final class PremiumIntroScreenComponent: CombinedComponent {
             }
             
             context.addWithExternalContainer(title
-                .position(CGPoint(x: context.availableSize.width / 2.0, y: max(topInset + 160.0 - titleOffset, navigationTitleCenterY)))
+                .position(CGPoint(x: bandCenterX, y: max(topInset + 160.0 - titleOffset, navigationTitleCenterY)))
                 .scale(titleScale)
-                .opacity(titleAlpha),
+                .opacity(titleAlpha)
+                .accessibilityTraits(.header),
                 container: context.component.overNavigationContainer
             )
             
             context.addWithExternalContainer(secondaryTitle
-                .position(CGPoint(x: context.availableSize.width / 2.0, y: max(topInset + 160.0 - titleOffset, navigationTitleCenterY)))
+                .position(CGPoint(x: bandCenterX, y: max(topInset + 160.0 - titleOffset, navigationTitleCenterY)))
                 .scale(titleScale)
                 .opacity(max(0.0, 1.0 - titleAlpha * 1.8)),
                 container: context.component.overNavigationContainer
@@ -3904,6 +3927,9 @@ private final class PremiumIntroScreenComponent: CombinedComponent {
                 }
                 
                 let controller = environment.controller
+                // A bottom button spans iPhone Duo's side strip; it keeps clear only of a corner block at the bottom.
+                let buttonBottomInsets = environment.bottomEdgeSideInsets()
+                let buttonCenterX = buttonBottomInsets.left + (context.availableSize.width - buttonBottomInsets.left - buttonBottomInsets.right) / 2.0
                 let buttonGradientColors = [
                     UIColor(rgb: 0x0077ff),
                     UIColor(rgb: 0x6b93ff),
@@ -3959,7 +3985,7 @@ private final class PremiumIntroScreenComponent: CombinedComponent {
                             }
                         }
                     ),
-                    availableSize: CGSize(width: context.availableSize.width - buttonInsets.left - buttonInsets.right - environment.safeInsets.left - environment.safeInsets.right, height: 52.0),
+                    availableSize: CGSize(width: context.availableSize.width - buttonInsets.left - buttonInsets.right - buttonBottomInsets.left - buttonBottomInsets.right, height: 52.0),
                     transition: context.transition)
                                
                 let bottomEdgeEffectHeight = 13.0 + buttonInsets.bottom + button.size.height
@@ -3988,7 +4014,7 @@ private final class PremiumIntroScreenComponent: CombinedComponent {
                     })
                 )
                 context.add(button
-                    .position(CGPoint(x: context.availableSize.width / 2.0, y: context.availableSize.height - buttonInsets.bottom - button.size.height / 2.0))
+                    .position(CGPoint(x: buttonCenterX, y: context.availableSize.height - buttonInsets.bottom - button.size.height / 2.0))
                     .disappear(ComponentTransition.Disappear { view, transition, completion in
                         if case .none = transition.animation {
                             completion()

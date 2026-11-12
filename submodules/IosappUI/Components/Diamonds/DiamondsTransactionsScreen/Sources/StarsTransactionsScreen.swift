@@ -77,6 +77,20 @@ final class DiamondsTransactionsScreenComponent: Component {
     }
     
     private final class ScrollViewImpl: UIScrollView {
+        /// VoiceOver: the content top to bottom (the transactions container starts at the top of the content).
+        var accessibilityOrder: (() -> [UIView])?
+        
+        override var accessibilityElements: [Any]? {
+            get {
+                if let accessibilityOrder = self.accessibilityOrder {
+                    return accessibilityOrder().filter { $0.superview === self }
+                }
+                return super.accessibilityElements
+            } set(value) {
+                super.accessibilityElements = value
+            }
+        }
+        
         override func touchesShouldCancel(in view: UIView) -> Bool {
             return true
         }
@@ -125,6 +139,9 @@ final class DiamondsTransactionsScreenComponent: Component {
         private var component: DiamondsTransactionsScreenComponent?
         private weak var state: EmptyComponentState?
         private var navigationMetrics: (navigationHeight: CGFloat, statusBarHeight: CGFloat)?
+        /// iPhone Duo: the center of the band between the side safe insets (one of them is the side strip), which
+        /// the header and the content are centered on; the full width's center elsewhere.
+        private var bandCenterX: CGFloat?
         private var controller: (() -> ViewController?)?
         
         private var enableVelocityTracking: Bool = false
@@ -178,6 +195,21 @@ final class DiamondsTransactionsScreenComponent: Component {
             self.addSubview(self.scrollView)
             
             self.scrollView.addSubview(self.scrollContainerView)
+            self.scrollView.accessibilityOrder = { [weak self] in
+                guard let self else {
+                    return []
+                }
+                return [
+                    self.diamondView.view,
+                    self.descriptionView.view,
+                    self.proceedsView.view,
+                    self.balanceView.view,
+                    self.earnDiamondsSection.view,
+                    self.subscriptionsView.view,
+                    self.scrollContainerView
+                ].compactMap { $0 }
+            }
+
         }
         
         required init?(coder: NSCoder) {
@@ -286,13 +318,13 @@ final class DiamondsTransactionsScreenComponent: Component {
                 let headerTransition: ComponentTransition = .immediate
                 
                 if let diamondView = self.diamondView.view {
-                    let diamondPosition = CGPoint(x: self.scrollView.frame.width / 2.0, y: topInset + diamondView.bounds.height / 2.0 - 30.0 - titleOffset * titleScale)
+                    let diamondPosition = CGPoint(x: self.bandCenterX ?? self.scrollView.frame.width / 2.0, y: topInset + diamondView.bounds.height / 2.0 - 30.0 - titleOffset * titleScale)
                     headerTransition.setPosition(view: diamondView, position: diamondPosition)
                     headerTransition.setScale(view: diamondView, scale: titleScale)
                 }
                 
                 if let titleView = self.titleView.view {
-                    let titlePosition = CGPoint(x: scrollBounds.width / 2.0, y: max(topInset + 160.0 - titleOffset, navigationMetrics.statusBarHeight + (navigationMetrics.navigationHeight - navigationMetrics.statusBarHeight) / 2.0))
+                    let titlePosition = CGPoint(x: self.bandCenterX ?? scrollBounds.width / 2.0, y: max(topInset + 160.0 - titleOffset, navigationMetrics.statusBarHeight + (navigationMetrics.navigationHeight - navigationMetrics.statusBarHeight) / 2.0))
                     
                     headerTransition.setPosition(view: titleView, position: titlePosition)
                     headerTransition.setScale(view: titleView, scale: titleScale)
@@ -410,6 +442,8 @@ final class DiamondsTransactionsScreenComponent: Component {
             self.controller = environment.controller
             
             self.navigationMetrics = (environment.navigationHeight, environment.statusBarHeight)
+            let bandCenterX = environment.safeInsets.left + (availableSize.width - environment.safeInsets.left - environment.safeInsets.right) / 2.0
+            self.bandCenterX = bandCenterX
             
             self.backgroundColor = environment.theme.list.blocksBackgroundColor
             
@@ -518,7 +552,9 @@ final class DiamondsTransactionsScreenComponent: Component {
             if let titleView = self.titleView.view {
                 if titleView.superview == nil {
                     if let navigationBar = environment.controller()?.navigationBar {
-                        navigationBar.view.insertSubview(titleView, aboveSubview: navigationBar.backgroundView)
+                        // The page title ("Iosapp Stars", "Gram Balance").
+                        titleView.accessibilityTraits = .header
+                        navigationBar.customOverBackgroundContentView.insertSubview(titleView, at: 0)
                     }
                 }
                 diamondTransition.setBounds(view: titleView, bounds: CGRect(origin: .zero, size: titleSize))
@@ -570,30 +606,30 @@ final class DiamondsTransactionsScreenComponent: Component {
             
             let navigationHeight = environment.navigationHeight - environment.statusBarHeight
             let topBalanceOriginY = environment.statusBarHeight + (navigationHeight - topBalanceTitleSize.height - topBalanceValueSize.height) / 2.0
-            let topBalanceTitleFrame = CGRect(origin: CGPoint(x: availableSize.width - topBalanceTitleSize.width - 16.0 - environment.safeInsets.right, y: topBalanceOriginY), size: topBalanceTitleSize)
+            let topBalanceTitleFrame = CGRect(origin: CGPoint(x: availableSize.width - topBalanceTitleSize.width - 16.0 - environment.safeInsets.right - environment.navigationBarTrailingButtonsInset, y: topBalanceOriginY), size: topBalanceTitleSize)
             if let topBalanceTitleView = self.topBalanceTitleView.view {
                 if topBalanceTitleView.superview == nil {
                     topBalanceTitleView.alpha = 0.0
                     if let navigationBar = environment.controller()?.navigationBar {
                         if let titleView = self.titleView.view, titleView.superview != nil {
-                            navigationBar.view.insertSubview(topBalanceTitleView, aboveSubview: titleView)
+                            navigationBar.customOverBackgroundContentView.insertSubview(topBalanceTitleView, aboveSubview: titleView)
                         } else {
-                            navigationBar.view.insertSubview(topBalanceTitleView, aboveSubview: navigationBar.backgroundView)
+                            navigationBar.customOverBackgroundContentView.insertSubview(topBalanceTitleView, at: 0)
                         }
                     }
                 }
                 diamondTransition.setFrame(view: topBalanceTitleView, frame: topBalanceTitleFrame)
             }
     
-            let topBalanceValueFrame = CGRect(origin: CGPoint(x: availableSize.width - topBalanceValueSize.width - 16.0 - environment.safeInsets.right, y: topBalanceTitleFrame.maxY), size: topBalanceValueSize)
+            let topBalanceValueFrame = CGRect(origin: CGPoint(x: availableSize.width - topBalanceValueSize.width - 16.0 - environment.safeInsets.right - environment.navigationBarTrailingButtonsInset, y: topBalanceTitleFrame.maxY), size: topBalanceValueSize)
             if let topBalanceValueView = self.topBalanceValueView.view {
                 if topBalanceValueView.superview == nil {
                     topBalanceValueView.alpha = 0.0
                     if let navigationBar = environment.controller()?.navigationBar {
                         if let titleView = self.titleView.view, titleView.superview != nil {
-                            navigationBar.view.insertSubview(topBalanceValueView, aboveSubview: titleView)
+                            navigationBar.customOverBackgroundContentView.insertSubview(topBalanceValueView, aboveSubview: titleView)
                         } else {
-                            navigationBar.view.insertSubview(topBalanceValueView, aboveSubview: navigationBar.backgroundView)
+                            navigationBar.customOverBackgroundContentView.insertSubview(topBalanceValueView, at: 0)
                         }
                     }
                 }
@@ -609,9 +645,9 @@ final class DiamondsTransactionsScreenComponent: Component {
                     topBalanceIconView.alpha = 0.0
                     if let navigationBar = environment.controller()?.navigationBar {
                         if let titleView = self.titleView.view, titleView.superview != nil {
-                            navigationBar.view.insertSubview(topBalanceIconView, aboveSubview: titleView)
+                            navigationBar.customOverBackgroundContentView.insertSubview(topBalanceIconView, aboveSubview: titleView)
                         } else {
-                            navigationBar.view.insertSubview(topBalanceIconView, aboveSubview: navigationBar.backgroundView)
+                            navigationBar.customOverBackgroundContentView.insertSubview(topBalanceIconView, at: 0)
                         }
                     }
                 }
@@ -633,7 +669,7 @@ final class DiamondsTransactionsScreenComponent: Component {
                 environment: {},
                 containerSize: CGSize(width: availableSize.width - sideInsets - 8.0, height: 240.0)
             )
-            let descriptionFrame = CGRect(origin: CGPoint(x: floorToScreenPixels((availableSize.width - descriptionSize.width) / 2.0), y: contentHeight + 20.0 - floor(descriptionSize.height / 2.0)), size: descriptionSize)
+            let descriptionFrame = CGRect(origin: CGPoint(x: floorToScreenPixels(bandCenterX - descriptionSize.width / 2.0), y: contentHeight + 20.0 - floor(descriptionSize.height / 2.0)), size: descriptionSize)
             if let descriptionView = self.descriptionView.view {
                 if descriptionView.superview == nil {
                     self.scrollView.addSubview(descriptionView)
@@ -683,7 +719,7 @@ final class DiamondsTransactionsScreenComponent: Component {
                     environment: {},
                     containerSize: CGSize(width: availableSize.width - sideInsets, height: availableSize.height)
                 )
-                let proceedsFrame = CGRect(origin: CGPoint(x: floorToScreenPixels((availableSize.width - proceedsSize.width) / 2.0), y: contentHeight), size: proceedsSize)
+                let proceedsFrame = CGRect(origin: CGPoint(x: floorToScreenPixels(bandCenterX - proceedsSize.width / 2.0), y: contentHeight), size: proceedsSize)
                 if let proceedsView = self.proceedsView.view {
                     if proceedsView.superview == nil {
                         self.scrollView.addSubview(proceedsView)
@@ -790,7 +826,7 @@ final class DiamondsTransactionsScreenComponent: Component {
                 environment: {},
                 containerSize: CGSize(width: availableSize.width - sideInsets, height: availableSize.height)
             )
-            let balanceFrame = CGRect(origin: CGPoint(x: floorToScreenPixels((availableSize.width - balanceSize.width) / 2.0), y: contentHeight), size: balanceSize)
+            let balanceFrame = CGRect(origin: CGPoint(x: floorToScreenPixels(bandCenterX - balanceSize.width / 2.0), y: contentHeight), size: balanceSize)
             if let balanceView = self.balanceView.view {
                 if balanceView.superview == nil {
                     self.scrollView.addSubview(balanceView)
@@ -821,7 +857,7 @@ final class DiamondsTransactionsScreenComponent: Component {
                             AnyComponentWithIdentity(id: 0, component: AnyComponent(ListItemComponentAdaptor(
                                 itemGenerator: ItemListDisclosureItem(presentationData: ItemListPresentationData(presentationData), icon: PresentationResourcesSettings.earnDiamonds, title: environment.strings.Monetization_EarnDiamondsInfo_Title, titleBadge: nil, label: environment.strings.Monetization_EarnDiamondsInfo_Text, labelStyle: .multilineDetailText, sectionId: 0, style: .blocks, action: {
                                 }),
-                                params: ListViewItemLayoutParams(width: availableSize.width, leftInset: 0.0, rightInset: 0.0, availableHeight: 10000.0, isStandalone: true),
+                                params: ListViewItemLayoutParams(width: availableSize.width - sideInsets, leftInset: 0.0, rightInset: 0.0, availableHeight: 10000.0, isStandalone: true),
                                 action: { [weak self] in
                                     guard let self, let component = self.component else {
                                         return
@@ -841,7 +877,7 @@ final class DiamondsTransactionsScreenComponent: Component {
                     environment: {},
                     containerSize: CGSize(width: availableSize.width - sideInsets, height: availableSize.height)
                 )
-                let earnDiamondsSectionFrame = CGRect(origin: CGPoint(x: sideInsets * 0.5, y: contentHeight), size: earnDiamondsSectionSize)
+                let earnDiamondsSectionFrame = CGRect(origin: CGPoint(x: bandCenterX - earnDiamondsSectionSize.width / 2.0, y: contentHeight), size: earnDiamondsSectionSize)
                 if let earnDiamondsSectionView = self.earnDiamondsSection.view {
                     if earnDiamondsSectionView.superview == nil {
                         self.scrollView.addSubview(earnDiamondsSectionView)
@@ -1024,7 +1060,7 @@ final class DiamondsTransactionsScreenComponent: Component {
                     environment: {},
                     containerSize: CGSize(width: availableSize.width - sideInsets, height: availableSize.height)
                 )
-                let subscriptionsFrame = CGRect(origin: CGPoint(x: floorToScreenPixels((availableSize.width - subscriptionsSize.width) / 2.0), y: contentHeight), size: subscriptionsSize)
+                let subscriptionsFrame = CGRect(origin: CGPoint(x: floorToScreenPixels(bandCenterX - subscriptionsSize.width / 2.0), y: contentHeight), size: subscriptionsSize)
                 if let subscriptionsView = self.subscriptionsView.view {
                     if subscriptionsView.superview == nil {
                         self.scrollView.addSubview(subscriptionsView)

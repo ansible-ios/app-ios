@@ -18,7 +18,6 @@ swift_library(
         "//submodules/CheckNode:CheckNode",
         "//submodules/Display:Display",
         "//submodules/UIKitRuntimeUtils:UIKitRuntimeUtils",
-        "//submodules/Postbox:Postbox",
         "//submodules/IosappCore:IosappCore",
         "//submodules/IosappUIPreferences:IosappUIPreferences",
         "//submodules/TextFormat:TextFormat",
@@ -60,6 +59,7 @@ swift_library(
     ]),
     deps = [
         ":InstantPageUI",
+        "//submodules/SSignalKit/SwiftSignalKit:SwiftSignalKit",
         "//submodules/IosappUI/Components/RichTextEditor:RichTextEditorUIKit",
         "//submodules/IosappUI/Components/RichTextEditor:RichTextEditorCore",
         "//submodules/IosappPresentationData:IosappPresentationData",
@@ -70,6 +70,8 @@ swift_library(
         "//submodules/IosappUI/Components/UnsupportedContentPill",
         "//submodules/IosappUI/Components/RichTextButtonIcons",
         "//submodules/IosappUI/Components/RichTextEditorMessageConversion",
+        "//submodules/SemanticStatusNode:SemanticStatusNode",
+        "//submodules/MediaPlayer:UniversalMediaPlayer",
     ],
 )
 

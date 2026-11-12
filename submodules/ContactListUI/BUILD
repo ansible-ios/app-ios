@@ -11,7 +11,6 @@ swift_library(
     ],
     deps = [
         "//submodules/SSignalKit/SwiftSignalKit:SwiftSignalKit",
-        "//submodules/LottieSettings:LottieSettings",
         "//submodules/AsyncDisplayKit:AsyncDisplayKit",
         "//submodules/Display:Display",
         "//submodules/IosappCore:IosappCore",
@@ -41,6 +40,7 @@ swift_library(
         "//submodules/IosappUI/Components/Stories/StoryPeerListComponent",
         "//submodules/IosappUI/Components/ChatListTitleView",
         "//submodules/IosappUI/Components/ChatListHeaderComponent",
+        "//submodules/IosappUI/Components/NavigationBarComponent",
         "//submodules/ComponentFlow",
         "//submodules/TooltipUI",
         "//submodules/UndoUI",

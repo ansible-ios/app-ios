@@ -1,7 +1,7 @@
 import Foundation
 import SwiftSignalKit
 import Postbox
-import IosappApi
+internal import IosappApi
 
 public func canShareLinkToPeer(peer: EnginePeer) -> Bool {
     var isEnabled = false

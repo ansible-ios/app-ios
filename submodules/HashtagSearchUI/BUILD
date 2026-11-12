@@ -21,7 +21,6 @@ swift_library(
         "//submodules/SegmentedControlNode:SegmentedControlNode",
         "//submodules/ListMessageItem:ListMessageItem",
         "//submodules/ChatListSearchItemHeader:ChatListSearchItemHeader",
-        "//submodules/Postbox:Postbox",
         "//submodules/IosappUI/Components/AnimationCache:AnimationCache",
         "//submodules/IosappUI/Components/MultiAnimationRenderer:MultiAnimationRenderer",
         "//submodules/ComponentFlow",

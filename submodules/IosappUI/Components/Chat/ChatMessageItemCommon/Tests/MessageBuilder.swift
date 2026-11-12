@@ -32,7 +32,35 @@ func makeUser(id: Int64) -> IosappUser {
     )
 }
 
-func makeChannel(id: Int64, info: IosappChannelInfo, flags: IosappChannelFlags = IosappChannelFlags(), adminRights: IosappChatAdminRights? = nil, defaultBannedRights: IosappChatBannedRights? = nil) -> IosappChannel {
+func makeBot(id: Int64) -> IosappUser {
+    return IosappUser(
+        id: makeUserPeerId(id),
+        accessHash: nil,
+        firstName: "B\(id)",
+        lastName: nil,
+        username: nil,
+        phone: nil,
+        photo: [],
+        botInfo: BotUserInfo(flags: [], inlinePlaceholder: nil),
+        restrictionInfo: nil,
+        flags: UserInfoFlags(),
+        emojiStatus: nil,
+        usernames: [],
+        storiesHidden: nil,
+        nameColor: nil,
+        backgroundEmojiId: nil,
+        profileColor: nil,
+        profileBackgroundEmojiId: nil,
+        subscriberCount: nil,
+        verificationIconFileId: nil
+    )
+}
+
+func makeSecretChat(id: Int64, with userId: Int64) -> IosappSecretChat {
+    return IosappSecretChat(id: PeerId(namespace: Namespaces.Peer.SecretChat, id: PeerId.Id._internalFromInt64Value(id)), creationDate: 0, regularPeerId: makeUserPeerId(userId), accessHash: 0, role: .creator, embeddedState: .active, messageAutoremoveTimeout: nil)
+}
+
+func makeChannel(id: Int64, info: IosappChannelInfo, flags: IosappChannelFlags = IosappChannelFlags(), adminRights: IosappChatAdminRights? = nil, defaultBannedRights: IosappChatBannedRights? = nil, linkedMonoforumId: PeerId? = nil) -> IosappChannel {
     return IosappChannel(
         id: PeerId(namespace: Namespaces.Peer.CloudChannel, id: PeerId.Id._internalFromInt64Value(id)),
         accessHash: nil,
@@ -59,7 +87,7 @@ func makeChannel(id: Int64, info: IosappChannelInfo, flags: IosappChannelFlags =
         subscriptionUntilDate: nil,
         verificationIconFileId: nil,
         sendPaidMessageStars: nil,
-        linkedMonoforumId: nil
+        linkedMonoforumId: linkedMonoforumId
     )
 }
 

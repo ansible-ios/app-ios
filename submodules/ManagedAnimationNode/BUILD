@@ -16,7 +16,6 @@ swift_library(
         "//submodules/IosappCore:IosappCore",
         "//submodules/GZip:GZip",
         "//submodules/LottieBinding:LottieBinding",
-        "//submodules/LottieSettings:LottieSettings",
         "//submodules/AppBundle:AppBundle",
     ],
     visibility = [

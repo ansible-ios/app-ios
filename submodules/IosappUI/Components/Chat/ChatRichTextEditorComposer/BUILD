@@ -22,6 +22,10 @@ swift_library(
         "//submodules/TextFormat",
         "//submodules/IosappUI/Components/RichTextEditor:RichTextEditorCore",
         "//submodules/IosappUI/Components/RichTextEditor:RichTextEditorUIKit",
+        # The engine-backed editor, selected at runtime by the Debug Settings flag. Safe to link
+        # only because upstream 442f395 removed the engine's pre-main() +load; see that target's
+        # comment in the RichTextEditor BUILD.
+        "//submodules/IosappUI/Components/RichTextEditor:RichTextEngineEditor",
         "//submodules/IosappUI/Components/RichTextButtonIcons",
         "//submodules/IosappUI/Components/Chat/ChatInputTextNode",
         "//submodules/IosappUI/Components/PlainButtonComponent",

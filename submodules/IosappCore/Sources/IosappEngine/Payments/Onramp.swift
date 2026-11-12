@@ -1,6 +1,6 @@
 import Foundation
 import SwiftSignalKit
-import IosappApi
+internal import IosappApi
 
 public struct OnrampMethodAvailability: Equatable {
     public let paymentMethod: String

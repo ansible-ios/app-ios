@@ -1,5 +1,5 @@
 import Postbox
-import IosappApi
+internal import IosappApi
 
 public enum ReplyMarkupButtonRequestPeerType: Codable, Equatable {
     enum CodingKeys: String, CodingKey {

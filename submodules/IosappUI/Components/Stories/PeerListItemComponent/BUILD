@@ -18,7 +18,6 @@ swift_library(
         "//submodules/AccountContext",
         "//submodules/IosappUI/Components/ButtonComponent",
         "//submodules/IosappCore",
-        "//submodules/Postbox",
         "//submodules/Components/MultilineTextComponent",
         "//submodules/Components/BundleIconComponent",
         "//submodules/AvatarNode",

@@ -1,6 +1,6 @@
 import Foundation
 import Postbox
-import IosappApi
+internal import IosappApi
 
 public class ReplyMessageAttribute: MessageAttribute {
     public let messageId: MessageId

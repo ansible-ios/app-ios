@@ -11,7 +11,6 @@ swift_library(
     ],
     deps = [
         "//submodules/SSignalKit/SwiftSignalKit:SwiftSignalKit",
-        "//submodules/LottieSettings:LottieSettings",
         "//submodules/AsyncDisplayKit:AsyncDisplayKit",
         "//submodules/Display:Display",
         "//submodules/IosappCore:IosappCore",
@@ -36,7 +35,6 @@ swift_library(
         "//submodules/FileMediaResourceStatus:FileMediaResourceStatus",
         "//submodules/ManagedAnimationNode:ManagedAnimationNode",
         "//submodules/WallpaperResources:WallpaperResources",
-        "//submodules/Postbox:Postbox",
         "//submodules/ShimmerEffect:ShimmerEffect",
     ],
     visibility = [

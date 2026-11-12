@@ -19,7 +19,6 @@ swift_library(
         "//submodules/IosappUI/Components/EmojiStatusSelectionComponent",
         "//submodules/IosappUI/Components/EntityKeyboard",
         "//submodules/ItemListUI",
-        "//submodules/Postbox",
         "//submodules/PresentationDataUtils",
         "//submodules/Components/ReactionImageComponent",
         "//submodules/ReactionSelectionNode",

@@ -1,6 +1,5 @@
 import Foundation
 import UIKit
-import Postbox
 import IosappCore
 import SwiftSignalKit
 import IosappPresentationData
@@ -9,7 +8,7 @@ import MediaResources
 import AccountContext
 
 private extension IosappWallpaper {
-    var mainResource: MediaResource? {
+    var mainResource: IosappMediaResource? {
         switch self {
             case let .image(representations, _):
                 return largestImageRepresentation(representations)?.resource
@@ -35,7 +34,7 @@ private final class WallpaperUploadContext {
     }
 }
 
-private func areMediaResourcesEqual(_ lhs: MediaResource?, _ rhs: MediaResource?) -> Bool {
+private func areMediaResourcesEqual(_ lhs: IosappMediaResource?, _ rhs: IosappMediaResource?) -> Bool {
     if let lhs = lhs, let rhs = rhs {
         return lhs.isEqual(to: rhs)
     } else {
@@ -96,7 +95,7 @@ final class WallpaperUploadManagerImpl: WallpaperUploadManager {
                             case let .complete(wallpaper):
                                 if case let .file(file) = wallpaper {
                                     sharedContext.accountManager.resources.moveResourceData(from: EngineMediaResource.Id(currentResource.id), to: EngineMediaResource.Id(file.file.resource.id))
-                                    account.postbox.mediaBox.moveResourceData(from: currentResource.id, to: file.file.resource.id)
+                                    IosappEngine(account: account).resources.moveResourceData(from: EngineMediaResource.Id(currentResource.id), to: EngineMediaResource.Id(file.file.resource.id))
                                 }
                             default:
                                 break
@@ -109,7 +108,7 @@ final class WallpaperUploadManagerImpl: WallpaperUploadManager {
                         if case let .complete(wallpaper) = status {
                             let updateWallpaper: (IosappWallpaper) -> Void = { wallpaper in
                                 if let resource = wallpaper.mainResource {
-                                    let _ = account.postbox.mediaBox.cachedResourceRepresentation(resource, representation: CachedScaledImageRepresentation(size: CGSize(width: 720.0, height: 720.0), mode: .aspectFit), complete: true, fetch: true).start(completed: {})
+                                    let _ = IosappEngine(account: account).resources.cachedRepresentation(resource: EngineMediaResource(resource), representation: CachedScaledImageRepresentation(size: CGSize(width: 720.0, height: 720.0), mode: .aspectFit), complete: true, fetch: true).start(completed: {})
                                     let _ = sharedContext.accountManager.mediaBox.cachedResourceRepresentation(resource, representation: CachedScaledImageRepresentation(size: CGSize(width: 720.0, height: 720.0), mode: .aspectFit), complete: true, fetch: true).start(completed: {})
                                 }
                                 
@@ -134,7 +133,7 @@ final class WallpaperUploadManagerImpl: WallpaperUploadManager {
                             }
                             
                             if case let .file(file) = wallpaper, file.settings.blur {
-                                let _ = account.postbox.mediaBox.cachedResourceRepresentation(file.file.resource, representation: CachedBlurredWallpaperRepresentation(), complete: true, fetch: true).start(completed: {
+                                let _ = IosappEngine(account: account).resources.cachedRepresentation(resource: EngineMediaResource(file.file.resource), representation: CachedBlurredWallpaperRepresentation(), complete: true, fetch: true).start(completed: {
                                 })
                                 let _ = sharedContext.accountManager.mediaBox.cachedResourceRepresentation(file.file.resource, representation: CachedBlurredWallpaperRepresentation(), complete: true, fetch: true).start(completed: {
                                     updateWallpaper(wallpaper)

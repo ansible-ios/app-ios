@@ -1,7 +1,7 @@
 
 import Foundation
 import Postbox
-import IosappApi
+internal import IosappApi
 
 public class InvertMediaMessageAttribute: MessageAttribute, Equatable {
     public let associatedPeerIds: [PeerId] = []

@@ -11,7 +11,6 @@ swift_library(
     ],
     deps = [
         "//submodules/IosappCore:IosappCore",
-        "//submodules/LottieSettings:LottieSettings",
         "//submodules/MtProtoKit:MtProtoKit",
         "//submodules/SSignalKit/SwiftSignalKit:SwiftSignalKit",
         "//submodules/AsyncDisplayKit:AsyncDisplayKit",
@@ -45,6 +44,7 @@ swift_library(
         "//submodules/IosappUI/Components/PlainButtonComponent",
         "//submodules/IosappUI/Components/SegmentControlComponent",
         "//submodules/UrlEscaping:UrlEscaping",
+        "//submodules/IosappUI/Components/ChatMediaSend",
     ],
     visibility = [
         "//visibility:public",

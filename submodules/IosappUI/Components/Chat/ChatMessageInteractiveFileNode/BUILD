@@ -11,7 +11,6 @@ swift_library(
     ],
     deps = [
         "//submodules/AsyncDisplayKit",
-        "//submodules/Postbox",
         "//submodules/SSignalKit/SwiftSignalKit",
         "//submodules/Display",
         "//submodules/IosappCore",
@@ -45,6 +44,7 @@ swift_library(
         "//submodules/AnimatedCountLabelNode",
         "//submodules/AudioWaveform",
         "//submodules/DeviceProximity",
+        "//submodules/IosappUI/Components/StaticGlassBackground",
     ],
     visibility = [
         "//visibility:public",

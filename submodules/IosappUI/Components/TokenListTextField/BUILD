@@ -17,6 +17,7 @@ swift_library(
         "//submodules/IosappCore",
         "//submodules/AvatarNode",
         "//submodules/AccountContext",
+        "//submodules/CountrySelectionUI",
         "//submodules/Components/ComponentDisplayAdapters",
     ],
     visibility = [

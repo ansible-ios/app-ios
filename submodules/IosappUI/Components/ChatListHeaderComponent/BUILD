@@ -23,9 +23,10 @@ swift_library(
         "//submodules/IosappUI/Components/Stories/StoryPeerListComponent",
         "//submodules/Components/ComponentDisplayAdapters",
         "//submodules/SearchUI",
-        "//submodules/IosappUI/Components/MoreHeaderButton",
         "//submodules/IosappUI/Components/EdgeEffect",
         "//submodules/IosappUI/Components/GlassBackgroundComponent",
+        "//submodules/IosappUI/Components/SideColumnLayout",
+        "//submodules/IosappUI/Components/NavigationBarComponent",
     ],
     visibility = [
         "//visibility:public",

@@ -1,7 +1,7 @@
 import Foundation
 import Postbox
 import SwiftSignalKit
-import IosappApi
+internal import IosappApi
 
 public struct Country: Codable, Equatable {
     public static func == (lhs: Country, rhs: Country) -> Bool {

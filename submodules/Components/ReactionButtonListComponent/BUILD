@@ -25,6 +25,7 @@ swift_library(
         "//submodules/TextFormat:TextFormat",
         "//submodules/AppBundle",
         "//submodules/IosappUI/Components/AnimatedTextComponent",
+        "//submodules/IosappUI/Components/StaticGlassBackground",
     ],
     visibility = [
         "//visibility:public",

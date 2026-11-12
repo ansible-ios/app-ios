@@ -16,6 +16,7 @@ swift_library(
         "//submodules/TextFormat:TextFormat",
         "//submodules/RadialStatusNode:RadialStatusNode",
         "//submodules/AppBundle:AppBundle",
+        "//submodules/IosappUI/Components/StaticGlassBackground",
     ],
     visibility = [
         "//visibility:public",

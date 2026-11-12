@@ -1,6 +1,6 @@
 import Foundation
 import Postbox
-import IosappApi
+internal import IosappApi
 
 func dimensionsForFileAttributes(_ attributes: [IosappMediaFileAttribute]) -> PixelDimensions? {
     for attribute in attributes {

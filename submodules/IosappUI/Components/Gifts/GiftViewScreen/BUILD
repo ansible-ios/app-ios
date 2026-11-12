@@ -11,7 +11,6 @@ swift_library(
     ],
     deps = [
         "//submodules/AsyncDisplayKit",
-        "//submodules/LottieSettings:LottieSettings",
         "//submodules/Display",
         "//submodules/IosappCore",
         "//submodules/SSignalKit/SwiftSignalKit",
@@ -71,6 +70,7 @@ swift_library(
         "//submodules/IosappUI/Components/AlertComponent/AlertTransferHeaderComponent",
         "//submodules/IosappUI/Components/AlertComponent/AlertTableComponent",
         "//submodules/IosappUI/Components/AlertComponent/AlertInputFieldComponent",
+        "//submodules/PhoneNumberFormat",
         "//submodules/IosappUI/Components/GlassControls",
         "//submodules/IosappUI/Components/EdgeEffect",
         "//submodules/Components/ResizableSheetComponent",

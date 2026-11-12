@@ -44,6 +44,13 @@ public func buyDiamondGiftImpl(
             return
         }
         
+        let finalPrice: CurrencyAmount
+        if let acceptedPrice, acceptedPrice.currency == currency {
+            finalPrice = acceptedPrice
+        } else {
+            finalPrice = resellAmount
+        }
+        
         let proceed: () -> Void = {
             updateProgress(true)
             
@@ -58,7 +65,6 @@ public func buyDiamondGiftImpl(
                 }
             }
             
-            let finalPrice = acceptedPrice ?? resellAmount
             let _ = (buyGiftImpl(uniqueGift.slug, recipientPeerId, finalPrice, message.hideName, message.text, message.entities)
             |> deliverOnMainQueue).start(error: { error in
                 guard let controller = getController() else {
@@ -75,11 +81,11 @@ public func buyDiamondGiftImpl(
                 case let .priceChanged(newPrice):
                     let errorTitle = presentationData.strings.Gift_Buy_ErrorPriceChanged_Title
                     let originalPriceString: String
-                    switch resellAmount.currency {
+                    switch finalPrice.currency {
                     case .stars:
-                        originalPriceString = presentationData.strings.Gift_Buy_ErrorPriceChanged_Text_Diamonds(Int32(clamping: resellAmount.amount.value))
+                        originalPriceString = presentationData.strings.Gift_Buy_ErrorPriceChanged_Text_Diamonds(Int32(clamping: finalPrice.amount.value))
                     case .ton:
-                        originalPriceString = formatTonAmountText(resellAmount.amount.value, dateTimeFormat: presentationData.dateTimeFormat, maxDecimalPositions: nil, formatString: presentationData.strings.Currency_Grams)
+                        originalPriceString = formatTonAmountText(finalPrice.amount.value, dateTimeFormat: presentationData.dateTimeFormat, maxDecimalPositions: nil, formatString: presentationData.strings.Currency_Grams)
                     }
                     
                     let newPriceString: String
@@ -87,7 +93,7 @@ public func buyDiamondGiftImpl(
                     switch newPrice.currency {
                     case .stars:
                         newPriceString = presentationData.strings.Gift_Buy_ErrorPriceChanged_Text_Diamonds(Int32(clamping: newPrice.amount.value))
-                        buttonText = presentationData.strings.Gift_Buy_Confirm_BuyFor(Int32(newPrice.amount.value))
+                        buttonText = presentationData.strings.Gift_Buy_Confirm_BuyFor(Int32(clamping: newPrice.amount.value))
                     case .ton:
                         let tonValueString = formatTonAmountText(newPrice.amount.value, dateTimeFormat: presentationData.dateTimeFormat, maxDecimalPositions: nil)
                         newPriceString = formatTonAmountText(newPrice.amount.value, dateTimeFormat: presentationData.dateTimeFormat, maxDecimalPositions: nil, formatString: presentationData.strings.Currency_Grams)
@@ -143,7 +149,7 @@ public func buyDiamondGiftImpl(
             })
         }
         
-        if resellAmount.currency == .stars, let diamondsContext = context.diamondsContext, let diamondsState = context.diamondsContext?.currentState, diamondsState.balance < resellAmount.amount {
+        if finalPrice.currency == .stars, let diamondsContext = context.diamondsContext, let diamondsState = context.diamondsContext?.currentState, diamondsState.balance < finalPrice.amount {
             let _ = (diamondsTopUpOptions
              |> filter { $0 != nil }
              |> take(1)
@@ -155,7 +161,7 @@ public func buyDiamondGiftImpl(
                     context: context,
                     diamondsContext: diamondsContext,
                     options: options ?? [],
-                    purpose: .buyDiamondGift(requiredDiamonds: resellAmount.amount.value),
+                    purpose: .buyDiamondGift(requiredDiamonds: finalPrice.amount.value),
                     targetPeerId: nil,
                     customTheme: nil,
                     completion: { stars in
@@ -171,7 +177,7 @@ public func buyDiamondGiftImpl(
                                 guard let diamondsContext = context.diamondsContext, let diamondsState = diamondsContext.currentState else {
                                     return
                                 }
-                                if diamondsState.balance < resellAmount.amount {
+                                if diamondsState.balance < finalPrice.amount {
                                     updateProgress(false)
                                     
                                     buyDiamondGiftImpl(
@@ -198,11 +204,11 @@ public func buyDiamondGiftImpl(
                 )
                 controller.push(purchaseController)
             })
-        } else if resellAmount.currency == .ton, let tonState = context.tonContext?.currentState, tonState.balance < resellAmount.amount {
+        } else if finalPrice.currency == .ton, let tonState = context.tonContext?.currentState, tonState.balance < finalPrice.amount {
             guard let controller = getController() else {
                 return
             }
-            let needed = resellAmount.amount - tonState.balance
+            let needed = finalPrice.amount - tonState.balance
             var fragmentUrl = "https://fragment.com/ads/topup"
             if let data = context.currentAppConfiguration.with({ $0 }).data, let value = data["ton_topup_url"] as? String {
                 fragmentUrl = value

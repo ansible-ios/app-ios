@@ -185,6 +185,8 @@ public struct IosappChannelFlags: OptionSet {
     public static let autoTranslateEnabled = IosappChannelFlags(rawValue: 1 << 12)
     public static let isMonoforum = IosappChannelFlags(rawValue: 1 << 13)
     public static let displayForumAsTabs = IosappChannelFlags(rawValue: 1 << 14)
+    public static let isInNews = IosappChannelFlags(rawValue: 1 << 15)
+    public static let displayForumAsSidebar = IosappChannelFlags(rawValue: 1 << 16)
 }
 
 public final class IosappChannel: Peer, Equatable {

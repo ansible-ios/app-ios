@@ -25,6 +25,7 @@ swift_library(
         "//submodules/TextFormat",
         "//submodules/IosappUI/Components/CompositeTextNode",
         "//submodules/ChatInterfaceState",
+        "//submodules/IosappNotices",
     ],
     visibility = [
         "//visibility:public",

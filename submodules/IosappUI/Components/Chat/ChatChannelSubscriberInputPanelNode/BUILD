@@ -29,6 +29,10 @@ swift_library(
         "//submodules/IosappUI/Components/GlassControls",
         "//submodules/Components/BundleIconComponent",
         "//submodules/Components/MultilineTextComponent",
+        "//submodules/ContextUI",
+        "//submodules/IosappUI/Components/News/NewsFeedSupport",
+        "//submodules/IosappUI/Components/News/NewsChannelIsland",
+        "//submodules/IosappUI/Components/Chat/ChatOverscrollIsland",
     ],
     visibility = [
         "//visibility:public",

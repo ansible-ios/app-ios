@@ -59,7 +59,7 @@ public final class HashtagSearchController: IosappBaseController {
         }
         self.presentationData = presentationData
         
-        super.init(context: context, navigationBarPresentationData: NavigationBarPresentationData(presentationData: self.presentationData, style: .glass))
+        super.init(context: context, navigationBarPresentationData: NavigationBarPresentationData(presentationData: self.presentationData))
         
         self.statusBar.statusBarStyle = self.presentationData.theme.rootController.statusBarStyle.style
         
@@ -87,7 +87,7 @@ public final class HashtagSearchController: IosappBaseController {
                 if previousTheme !== presentationData.theme || previousStrings !== presentationData.strings {
                     self.statusBar.statusBarStyle = self.presentationData.theme.rootController.statusBarStyle.style
                     
-                    self.navigationBar?.updatePresentationData(NavigationBarPresentationData(presentationData: self.presentationData, style: .glass), transition: .immediate)
+                    self.navigationBar?.updatePresentationData(NavigationBarPresentationData(presentationData: self.presentationData), transition: .immediate)
                     self.controllerNode.updatePresentationData(self.presentationData)
                 }
             }

@@ -18,6 +18,8 @@ swift_library(
         "//submodules/IosappUI/Components/GlassBackgroundComponent",
         "//submodules/ComponentFlow",
         "//submodules/Components/ComponentDisplayAdapters",
+        "//submodules/IosappUI/Components/HorizontalTabsComponent",
+        "//submodules/Components/BundleIconComponent",
     ],
     visibility = [
         "//visibility:public",

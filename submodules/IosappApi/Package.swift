@@ -1,27 +1,37 @@
 // swift-tools-version:5.5
-// The swift-tools-version declares the minimum version of Swift required to build this package.
-
 import PackageDescription
 
 let package = Package(
     name: "IosappApi",
     platforms: [.macOS(.v10_13)],
     products: [
-        // Products define the executables and libraries a package produces, and make them visible to other packages.
-        .library(
-            name: "IosappApi",
-            targets: ["IosappApi"]),
+        .library(name: "IosappApi", targets: ["IosappApi"]),
     ],
-    dependencies: [
-        // Dependencies declare other packages that this package depends on.
-        // .package(url: /* package url */, from: "1.0.0"),
-    ],
+    dependencies: [],
     targets: [
-        // Targets are the basic building blocks of a package. A target can define a module or a test suite.
-        // Targets can depend on other targets in this package, and on products in packages this package depends on.
+        .target(
+            name: "IosappApiObjC",
+            path: "ObjC",
+            // SwiftPMGenerated (and Sources/SwiftPMGenerated, Tests/SwiftPMGenerated) hold the
+            // generated sources, written by generate-swiftpm.sh and gitignored: run it before
+            // building. Bazel generates its own.
+            sources: ["Sources", "SwiftPMGenerated"],
+            publicHeadersPath: "PublicHeaders",
+            // The TLObject root implements retain/release itself (MRC); SwiftPM defaults to ARC.
+            cSettings: [.unsafeFlags(["-fno-objc-arc"])],
+            linkerSettings: [.linkedFramework("Foundation"), .linkedLibrary("z")]),
         .target(
             name: "IosappApi",
-            dependencies: [],
+            dependencies: ["IosappApiObjC"],
             path: "Sources"),
+        .target(
+            name: "TLRuntimeFixture",
+            dependencies: ["IosappApiObjC"],
+            path: "TestSupport/RuntimeFixture",
+            cSettings: [.unsafeFlags(["-fno-objc-arc"])]),
+        .testTarget(
+            name: "IosappApiTests",
+            dependencies: ["IosappApi", "IosappApiObjC", "TLRuntimeFixture"],
+            path: "Tests"),
     ]
 )

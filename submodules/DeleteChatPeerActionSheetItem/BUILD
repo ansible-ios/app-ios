@@ -19,6 +19,9 @@ swift_library(
         "//submodules/ComponentFlow",
         "//submodules/Components/MultilineTextComponent",
         "//submodules/Components/BalancedTextComponent",
+        "//submodules/IosappUI/Components/AlertComponent",
+        "//submodules/IosappUI/Components/AlertComponent/AlertHeaderComponent",
+        "//submodules/IosappUI/Components/AvatarComponent",
     ],
     visibility = [
         "//visibility:public",

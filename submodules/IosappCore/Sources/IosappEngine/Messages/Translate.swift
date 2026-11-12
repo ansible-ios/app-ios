@@ -1,7 +1,7 @@
 import Foundation
 import Postbox
 import SwiftSignalKit
-import IosappApi
+internal import IosappApi
 import MtProtoKit
 
 public enum ComposedRichMessage: Equatable {
@@ -32,9 +32,6 @@ public enum TranslationTone: String {
 func _internal_translate(network: Network, text: String, toLang: String, entities: [MessageTextEntity] = [], tone: TranslationTone = .neutral, peer: Api.InputPeer? = nil, messageId: Int32? = nil) -> Signal<(String, [MessageTextEntity])?, TranslationError> {
     var flags: Int32 = 0
 
-    if tone != .neutral {
-        flags |= (1 << 2)
-    }
 
     let apiText: [Api.TextWithEntities]?
     if peer != nil && messageId != nil {
@@ -45,7 +42,7 @@ func _internal_translate(network: Network, text: String, toLang: String, entitie
         apiText = [.textWithEntities(.init(text: text, entities: apiEntitiesFromMessageTextEntities(entities, associatedPeers: SimpleDictionary())))]
     }
 
-    return network.request(Api.functions.messages.translateText(flags: flags, peer: peer, id: messageId.flatMap { [$0] }, text: apiText, toLang: toLang, tone: tone.rawValue))
+    return network.request(Api.functions.messages.translateText(flags: flags, peer: peer, id: messageId.flatMap { [$0] }, text: apiText, toLang: toLang, tone: nil))
     |> mapError { error -> TranslationError in
         if error.errorDescription.hasPrefix("FLOOD_WAIT") {
             return .limitExceeded
@@ -78,95 +75,28 @@ func _internal_translate(network: Network, text: String, toLang: String, entitie
 }
 
 func _internal_composeMessageWithAI(account: Account, text: String, entities: [MessageTextEntity], proofread: Bool = false, translateToLang: String? = nil, changeStyle: IosappComposeAIMessageMode.CloudStyle.Reference? = nil, emojify: Bool = false) -> Signal<(String, [MessageTextEntity]), TranslationError> {
-    var flags: Int32 = 0
-    if proofread {
-        flags |= (1 << 0)
+    guard let language = translateToLang, !proofread, changeStyle == nil, !emojify else {
+        return .fail(.generic)
     }
-    if translateToLang != nil {
-        flags |= (1 << 1)
-    }
-    
-    var changeTone: Api.InputAiComposeTone?
-    if let changeStyle {
-        flags |= (1 << 2)
-        changeTone = changeStyle.apiInputStyle
-    }
-    if emojify {
-        flags |= (1 << 3)
-    }
-    
-    let apiText: Api.TextWithEntities = .textWithEntities(.init(text: text, entities: apiEntitiesFromMessageTextEntities(entities, associatedPeers: SimpleDictionary())))
-
-    return account.network.request(Api.functions.messages.composeMessageWithAI(flags: flags, text: apiText, translateToLang: translateToLang, tone: changeTone))
-    |> mapError { error -> TranslationError in
-        if error.errorDescription.hasPrefix("FLOOD_WAIT") {
-            return .limitExceeded
-        } else if error.errorDescription == "INPUT_TEXT_EMPTY" {
-            return .textIsEmpty
-        } else if error.errorDescription == "INPUT_TEXT_TOO_LONG" {
-            return .textTooLong
-        } else if error.errorDescription.hasPrefix("AICOMPOSE_FLOOD_PREMIUM ") {
-            return .limitExceeded
-        } else {
-            return .generic
-        }
-    }
-    |> map { result -> (String, [MessageTextEntity]) in
-        switch result {
-        case let .composedMessageWithAI(data):
-            switch data.resultText {
-            case let .textWithEntities(textData):
-                return (textData.text, messageTextEntitiesFromApiEntities(textData.entities))
-            }
-        }
+    return _internal_translate(network: account.network, text: text, toLang: language, entities: entities)
+    |> mapToSignal { result -> Signal<(String, [MessageTextEntity]), TranslationError> in
+        guard let result else { return .fail(.generic) }
+        return .single(result)
     }
 }
 
 func _internal_composeRichMessageWithAI(account: Account, instantPage: InstantPage?, proofread: Bool = false, translateToLang: String? = nil, changeStyle: IosappComposeAIMessageMode.CloudStyle.Reference? = nil, customPrompt: String? = nil, emojify: Bool = false) -> Signal<InstantPage, TranslationError> {
-    var flags: Int32 = 0
-    if proofread {
-        flags |= (1 << 0)
+    guard let language = translateToLang, let instantPage, !proofread, changeStyle == nil, customPrompt == nil, !emojify else {
+        return .fail(.generic)
     }
-    if translateToLang != nil {
-        flags |= (1 << 1)
-    }
-
-    var changeTone: Api.InputAiComposeTone?
-    if let customPrompt {
-        flags |= (1 << 2)
-        changeTone = .inputAiComposeToneSingleUse(Api.InputAiComposeTone.Cons_inputAiComposeToneSingleUse(customPrompt: customPrompt))
-    } else if let changeStyle {
-        flags |= (1 << 2)
-        changeTone = changeStyle.apiInputStyle
-    }
-    if emojify {
-        flags |= (1 << 3)
-    }
-
-    var inputRichMessage: Api.InputRichMessage?
-    if let instantPage {
-        flags |= (1 << 4)
-        inputRichMessage = RichTextMessageAttribute(instantPage: instantPage, fullInstantPage: nil).apiInputRichMessage()
-    }
-
-    return account.network.request(Api.functions.messages.composeRichMessageWithAI(flags: flags, text: inputRichMessage, translateToLang: translateToLang, tone: changeTone))
-    |> mapError { error -> TranslationError in
-        if error.errorDescription.hasPrefix("FLOOD_WAIT") {
-            return .limitExceeded
-        } else if error.errorDescription == "INPUT_TEXT_EMPTY" {
-            return .textIsEmpty
-        } else if error.errorDescription == "INPUT_TEXT_TOO_LONG" {
-            return .textTooLong
-        } else if error.errorDescription.hasPrefix("AICOMPOSE_FLOOD_PREMIUM ") {
-            return .limitExceeded
-        } else {
-            return .generic
-        }
-    }
-    |> map { result -> InstantPage in
+    let input = RichTextMessageAttribute(instantPage: instantPage, fullInstantPage: nil).apiInputRichMessage(users: [])
+    return account.network.request(Api.functions.messages.translateRichMessage(flags: 1 << 1, peer: nil, id: nil, text: [input], toLang: language, tone: nil))
+    |> mapError { _ -> TranslationError in return .generic }
+    |> mapToSignal { result -> Signal<InstantPage, TranslationError> in
         switch result {
-        case let .composedRichMessageWithAI(data):
-            return RichTextMessageAttribute(apiRichMessage: data.result).instantPage
+        case let .translatedRichMessage(data):
+            guard let page = data.result.first else { return .fail(.generic) }
+            return .single(RichTextMessageAttribute(apiRichMessage: page).instantPage)
         }
     }
 }
@@ -175,16 +105,13 @@ func _internal_translateTexts(network: Network, texts: [(String, [MessageTextEnt
     var flags: Int32 = 0
     flags |= (1 << 1)
     
-    if tone != .neutral {
-        flags |= (1 << 2)
-    }
     
     var apiTexts: [Api.TextWithEntities] = []
     for text in texts {
         apiTexts.append(.textWithEntities(.init(text: text.0, entities: apiEntitiesFromMessageTextEntities(text.1, associatedPeers: SimpleDictionary()))))
     }
 
-    return network.request(Api.functions.messages.translateText(flags: flags, peer: nil, id: nil, text: apiTexts, toLang: toLang, tone: tone.rawValue))
+    return network.request(Api.functions.messages.translateText(flags: flags, peer: nil, id: nil, text: apiTexts, toLang: toLang, tone: nil))
     |> mapError { error -> TranslationError in
         if error.errorDescription.hasPrefix("FLOOD_WAIT") {
             return .limitExceeded
@@ -237,10 +164,7 @@ public var engineExperimentalInternalTranslationService: ExperimentalInternalTra
 func _internal_translateRichMessages(account: Account, inputPeer: Api.InputPeer, messageIds: [EngineMessage.Id], toLang: String, tone: TranslationTone = .neutral) -> Signal<[EngineMessage.Id: InstantPage], TranslationError> {
     var flags: Int32 = 0
     flags |= (1 << 0)
-    if tone != .neutral {
-        flags |= (1 << 2)
-    }
-    return account.network.request(Api.functions.messages.translateRichMessage(flags: flags, peer: inputPeer, id: messageIds.map { $0.id }, text: nil, toLang: toLang, tone: tone != .neutral ? tone.rawValue : nil))
+    return account.network.request(Api.functions.messages.translateRichMessage(flags: flags, peer: inputPeer, id: messageIds.map { $0.id }, text: nil, toLang: toLang, tone: nil))
     |> mapError { error -> TranslationError in
         if error.errorDescription.hasPrefix("FLOOD_WAIT") {
             return .limitExceeded
@@ -322,9 +246,6 @@ private func _internal_translateMessagesByPeerId(account: Account, peerId: Engin
         
         var flags: Int32 = 0
         flags |= (1 << 0)
-        if tone != .neutral {
-            flags |= (1 << 2)
-        }
 
         // Rich messages (a `RichTextMessageAttribute`) translate through `messages.translateRichMessage`
         // (per the layer-228 contract: pick translateText vs translateRichMessage by message type).
@@ -381,7 +302,7 @@ private func _internal_translateMessagesByPeerId(account: Account, peerId: Engin
                     }
                 }
             } else {
-                msgs = account.network.request(Api.functions.messages.translateText(flags: flags, peer: inputPeer, id: id, text: nil, toLang: toLang, tone: tone != .neutral ? tone.rawValue : nil))
+                msgs = account.network.request(Api.functions.messages.translateText(flags: flags, peer: inputPeer, id: id, text: nil, toLang: toLang, tone: nil))
                 |> map(Optional.init)
                 |> mapError { error -> TranslationError in
                     if error.errorDescription.hasPrefix("FLOOD_WAIT") {
@@ -853,126 +774,26 @@ public enum IosappAIComposeMessageError {
 }
 
 func _internal_composeAIMessage(account: Account, text: ComposedRichMessage, mode: IosappComposeAIMessageMode) -> Signal<IosappAIComposeMessageResult, IosappAIComposeMessageError> {
-    var flags: Int32 = 0
-    var translateToLang: String?
-    var changeTone: Api.InputAiComposeTone?
-    switch mode {
-    case let .translate(toLanguage, emojify, style):
-        translateToLang = toLanguage
-        flags |= (1 << 1)
-        
-        if emojify {
-            flags |= (1 << 3)
-        }
-        
-        if case let .style(reference) = style {
-            changeTone = reference.apiInputStyle
-            flags |= (1 << 2)
-        }
-    case let .stylize(emojify, style):
-        if emojify {
-            flags |= (1 << 3)
-        }
-        
-        if case let .style(reference) = style {
-            changeTone = reference.apiInputStyle
-            flags |= (1 << 2)
-        } else if case let .prompt(prompt) = style {
-            changeTone = .inputAiComposeToneSingleUse(Api.InputAiComposeTone.Cons_inputAiComposeToneSingleUse(customPrompt: prompt))
-            flags |= (1 << 2)
-        }
-    case .proofread:
-        flags |= (1 << 0)
-    case let .generate(prompt):
-        flags = 0
-        flags |= (1 << 2)
-        return account.network.request(Api.functions.messages.composeRichMessageWithAI(flags: flags, text: nil, translateToLang: nil, tone: .inputAiComposeToneSingleUse(Api.InputAiComposeTone.Cons_inputAiComposeToneSingleUse(customPrompt: prompt))))
-        |> `catch` { error -> Signal<Api.messages.ComposedRichMessageWithAI, IosappAIComposeMessageError> in
-            if error.errorDescription == "AICOMPOSE_FLOOD_PREMIUM" {
-                return .fail(.nonPremiumFlood)
-            } else {
-                return .fail(.generic)
-            }
-        }
-        |> mapToSignal { result -> Signal<IosappAIComposeMessageResult, IosappAIComposeMessageError> in
-            switch result {
-            case let .composedRichMessageWithAI(composedMessageWithAI):
-                let diffRanges: [Range<Int>] = []
-                return .single(IosappAIComposeMessageResult(
-                    text: .rich(instantPage: RichTextMessageAttribute(apiRichMessage: composedMessageWithAI.result).instantPage),
-                    diffRanges: diffRanges
-                ))
-            }
-        }
+    // This screen also serves ordinary translation. Keep that path on the
+    // translation RPCs while rejecting retired generation and styling modes.
+    guard case let .translate(language, emojify, style) = mode,
+          !emojify, case .neutral = style else {
+        return .fail(.generic)
     }
-    
     switch text {
-    case .empty, .plain:
-        let inputText: Api.TextWithEntities
-        if case let .plain(text, entities) = text {
-            inputText = .textWithEntities(Api.TextWithEntities.Cons_textWithEntities(text: text, entities: apiEntitiesFromMessageTextEntities(entities, associatedPeers: SimpleDictionary())))
-        } else {
-            inputText = .textWithEntities(Api.TextWithEntities.Cons_textWithEntities(text: "", entities: []))
-        }
-        
-        return account.network.request(Api.functions.messages.composeMessageWithAI(flags: flags, text: inputText, translateToLang: translateToLang, tone: changeTone))
-        |> `catch` { error -> Signal<Api.messages.ComposedMessageWithAI, IosappAIComposeMessageError> in
-            if error.errorDescription == "AICOMPOSE_FLOOD_PREMIUM" {
-                return .fail(.nonPremiumFlood)
-            } else {
-                return .fail(.generic)
-            }
-        }
-        |> mapToSignal { result -> Signal<IosappAIComposeMessageResult, IosappAIComposeMessageError> in
-            switch result {
-            case let .composedMessageWithAI(composedMessageWithAI):
-                var diffRanges: [Range<Int>] = []
-                if let diffText = composedMessageWithAI.diffText {
-                    switch diffText {
-                    case let .textWithEntities(textWithEntities):
-                        for entity in textWithEntities.entities {
-                            switch entity {
-                            case let .messageEntityDiffReplace(messageEntityDiffReplace):
-                                if messageEntityDiffReplace.length >= 0 {
-                                    diffRanges.append(Int(messageEntityDiffReplace.offset) ..< Int(messageEntityDiffReplace.offset + messageEntityDiffReplace.length))
-                                }
-                            case let .messageEntityDiffInsert(messageEntityDiffInsert):
-                                if messageEntityDiffInsert.length >= 0 {
-                                    diffRanges.append(Int(messageEntityDiffInsert.offset) ..< Int(messageEntityDiffInsert.offset + messageEntityDiffInsert.length))
-                                }
-                            default:
-                                break
-                            }
-                        }
-                    }
-                }
-                let resultText = TextWithEntities(apiValue: composedMessageWithAI.resultText)
-                return .single(IosappAIComposeMessageResult(
-                    text: .plain(text: resultText.text, entities: resultText.entities),
-                    diffRanges: diffRanges
-                ))
-            }
+    case .empty:
+        return .single(IosappAIComposeMessageResult(text: .empty, diffRanges: []))
+    case let .plain(text, entities):
+        return _internal_composeMessageWithAI(account: account, text: text, entities: entities, translateToLang: language)
+        |> mapError { _ -> IosappAIComposeMessageError in return .generic }
+        |> map { text, entities in
+            return IosappAIComposeMessageResult(text: .plain(text: text, entities: entities), diffRanges: [])
         }
     case let .rich(instantPage):
-        flags |= (1 << 4)
-        let inputText = RichTextMessageAttribute(instantPage: instantPage, fullInstantPage: nil).apiInputRichMessage()
-        return account.network.request(Api.functions.messages.composeRichMessageWithAI(flags: flags, text: inputText, translateToLang: translateToLang, tone: changeTone))
-        |> `catch` { error -> Signal<Api.messages.ComposedRichMessageWithAI, IosappAIComposeMessageError> in
-            if error.errorDescription == "AICOMPOSE_FLOOD_PREMIUM" {
-                return .fail(.nonPremiumFlood)
-            } else {
-                return .fail(.generic)
-            }
-        }
-        |> mapToSignal { result -> Signal<IosappAIComposeMessageResult, IosappAIComposeMessageError> in
-            switch result {
-            case let .composedRichMessageWithAI(composedMessageWithAI):
-                let diffRanges: [Range<Int>] = []
-                return .single(IosappAIComposeMessageResult(
-                    text: .rich(instantPage: RichTextMessageAttribute(apiRichMessage: composedMessageWithAI.result).instantPage),
-                    diffRanges: diffRanges
-                ))
-            }
+        return _internal_composeRichMessageWithAI(account: account, instantPage: instantPage, translateToLang: language)
+        |> mapError { _ -> IosappAIComposeMessageError in return .generic }
+        |> map { page in
+            return IosappAIComposeMessageResult(text: .rich(instantPage: page), diffRanges: [])
         }
     }
 }
@@ -1001,20 +822,7 @@ extension AIMessageStylePreview {
 }
 
 public func _internal_requestAIMessageStylePreview(account: Account, reference: IosappComposeAIMessageMode.CloudStyle.Reference, index: Int) -> Signal<AIMessageStylePreview?, NoError> {
-    return account.network.request(Api.functions.aicompose.getToneExample(tone: reference.apiInputStyle, num: Int32(index)))
-    |> map(Optional.init)
-    |> `catch` { _ -> Signal<Api.AiComposeToneExample?, NoError> in
-        return .single(nil)
-    }
-    |> map { result -> AIMessageStylePreview? in
-        guard let result else {
-            return nil
-        }
-        return AIMessageStylePreview(
-            apiPreview: result,
-            index: index
-        )
-    }
+    return .single(nil)
 }
 
 public enum CreateAITextStyleError {
@@ -1023,34 +831,7 @@ public enum CreateAITextStyleError {
 }
 
 func _internal_createAITextStyle(account: Account, displayAuthor: Bool, emojiFileId: Int64, title: String, prompt: String) -> Signal<IosappComposeAIMessageMode.CloudStyle, CreateAITextStyleError> {
-    var flags: Int32 = 0
-    if displayAuthor {
-        flags |= (1 << 0)
-    }
-    return account.network.request(Api.functions.aicompose.createTone(
-        flags: flags,
-        emojiId: emojiFileId,
-        title: title,
-        prompt: prompt
-    ))
-    |> mapError { error -> CreateAITextStyleError in
-        if error.errorDescription == "TONES_SAVED_TOO_MANY" {
-            return .premiumRequired
-        }
-        return .generic
-    }
-    |> mapToSignal { result -> Signal<IosappComposeAIMessageMode.CloudStyle, CreateAITextStyleError> in
-        return account.postbox.transaction { transaction -> IosappComposeAIMessageMode.CloudStyle in
-            let style = IosappComposeAIMessageMode.CloudStyle(apiTone: result)
-            
-            let styles = _internal_cachedCloudAITextStyles(transaction: transaction)
-            var items = styles?.items ?? []
-            items.insert(style, at: 0)
-            _internal_setCachedCloudAITextStyles(transaction: transaction, styles: CachedCloudAITextStyles(items: items, hash: 0))
-            return style
-        }
-        |> castError(CreateAITextStyleError.self)
-    }
+    return .fail(.generic)
 }
 
 public enum EditAITextStyleError {
@@ -1058,36 +839,7 @@ public enum EditAITextStyleError {
 }
 
 func _internal_editAITextStyle(account: Account, id: Int64, accessHash: Int64, displayAuthor: Bool, emojiFileId: Int64, title: String, prompt: String) -> Signal<IosappComposeAIMessageMode.CloudStyle, EditAITextStyleError> {
-    var flags: Int32 = 0
-    flags |= (1 << 0)
-    flags |= (1 << 1)
-    flags |= (1 << 2)
-    flags |= (1 << 3)
-    return account.network.request(Api.functions.aicompose.updateTone(
-        flags: flags,
-        tone: .inputAiComposeToneID(Api.InputAiComposeTone.Cons_inputAiComposeToneID(id: id, accessHash: accessHash)),
-        displayAuthor: displayAuthor ? .boolTrue : .boolFalse,
-        emojiId: emojiFileId,
-        title: title,
-        prompt: prompt
-    ))
-    |> mapError { _ -> EditAITextStyleError in
-        return .generic
-    }
-    |> mapToSignal { result -> Signal<IosappComposeAIMessageMode.CloudStyle, EditAITextStyleError> in
-        return account.postbox.transaction { transaction -> IosappComposeAIMessageMode.CloudStyle in
-            let style = IosappComposeAIMessageMode.CloudStyle(apiTone: result)
-            
-            let styles = _internal_cachedCloudAITextStyles(transaction: transaction)
-            var items = styles?.items ?? []
-            if let index = items.firstIndex(where: { $0.id == .style(.custom(id)) }) {
-                items[index] = style
-            }
-            _internal_setCachedCloudAITextStyles(transaction: transaction, styles: CachedCloudAITextStyles(items: items, hash: 0))
-            return style
-        }
-        |> castError(EditAITextStyleError.self)
-    }
+    return .fail(.generic)
 }
 
 public struct IosappAIComposeToneExample: Equatable {
@@ -1107,23 +859,11 @@ private func _internal_mapToneExample(_ apiExample: Api.AiComposeToneExample) ->
 }
 
 func _internal_getAIComposeToneExample(network: Network, tone: IosappComposeAIMessageMode.CloudStyle.Reference, num: Int32) -> Signal<IosappAIComposeToneExample?, NoError> {
-    return network.request(Api.functions.aicompose.getToneExample(tone: tone.apiInputStyle, num: num))
-    |> map { apiExample -> IosappAIComposeToneExample? in
-        return _internal_mapToneExample(apiExample)
-    }
-    |> `catch` { _ -> Signal<IosappAIComposeToneExample?, NoError> in
-        return .single(nil)
-    }
+    return .single(nil)
 }
 
 func _internal_getAIComposeToneExample(network: Network, slug: String, num: Int32) -> Signal<IosappAIComposeToneExample?, NoError> {
-    return network.request(Api.functions.aicompose.getToneExample(tone: .inputAiComposeToneSlug(Api.InputAiComposeTone.Cons_inputAiComposeToneSlug(slug: slug)), num: num))
-    |> map { apiExample -> IosappAIComposeToneExample? in
-        return _internal_mapToneExample(apiExample)
-    }
-    |> `catch` { _ -> Signal<IosappAIComposeToneExample?, NoError> in
-        return .single(nil)
-    }
+    return .single(nil)
 }
 
 public enum DeleteAITextStyleError {
@@ -1131,37 +871,11 @@ public enum DeleteAITextStyleError {
 }
 
 func _internal_deleteAITextStyle(account: Account, id: Int64, accessHash: Int64) -> Signal<Never, DeleteAITextStyleError> {
-    return account.network.request(Api.functions.aicompose.deleteTone(tone: .inputAiComposeToneID(Api.InputAiComposeTone.Cons_inputAiComposeToneID(id: id, accessHash: accessHash))))
-    |> mapError { _ -> DeleteAITextStyleError in
-        return .generic
-    }
-    |> mapToSignal { result -> Signal<Never, DeleteAITextStyleError> in
-        return account.postbox.transaction { transaction -> Void in
-            let styles = _internal_cachedCloudAITextStyles(transaction: transaction)
-            var items = styles?.items ?? []
-            items.removeAll(where: { $0.id == .style(.custom(id)) })
-            _internal_setCachedCloudAITextStyles(transaction: transaction, styles: CachedCloudAITextStyles(items: items, hash: 0))
-        }
-        |> castError(DeleteAITextStyleError.self)
-        |> ignoreValues
-    }
+    return .fail(.generic)
 }
 
 func _internal_unsaveAITextStyle(account: Account, id: Int64, accessHash: Int64) -> Signal<Never, DeleteAITextStyleError> {
-    return account.network.request(Api.functions.aicompose.saveTone(tone: .inputAiComposeToneID(Api.InputAiComposeTone.Cons_inputAiComposeToneID(id: id, accessHash: accessHash)), unsave: .boolTrue))
-    |> mapError { _ -> DeleteAITextStyleError in
-        return .generic
-    }
-    |> mapToSignal { _ -> Signal<Never, DeleteAITextStyleError> in
-        return account.postbox.transaction { transaction -> Void in
-            let styles = _internal_cachedCloudAITextStyles(transaction: transaction)
-            var items = styles?.items ?? []
-            items.removeAll(where: { $0.id == .style(.custom(id)) })
-            _internal_setCachedCloudAITextStyles(transaction: transaction, styles: CachedCloudAITextStyles(items: items, hash: 0))
-        }
-        |> castError(DeleteAITextStyleError.self)
-        |> ignoreValues
-    }
+    return .fail(.generic)
 }
 
 final class CachedCloudAITextStyles: Codable {
@@ -1202,28 +916,7 @@ func _internal_setCachedCloudAITextStyles(transaction: Transaction, styles: Cach
 }
 
 func _internal_requestAIMessageStyle(account: Account, slug: String) -> Signal<(style: IosappComposeAIMessageMode.CloudStyle, initialPreview: AIMessageStylePreview?)?, NoError> {
-    return account.network.request(Api.functions.aicompose.getTone(tone: .inputAiComposeToneSlug(Api.InputAiComposeTone.Cons_inputAiComposeToneSlug(slug: slug))))
-    |> map(Optional.init)
-    |> `catch` { _ -> Signal<Api.aicompose.Tones?, NoError> in
-        return .single(nil)
-    }
-    |> mapToSignal { result -> Signal<(style: IosappComposeAIMessageMode.CloudStyle, initialPreview: AIMessageStylePreview?)?, NoError> in
-        guard let result else {
-            return .single(nil)
-        }
-        return account.postbox.transaction { transaction -> (style: IosappComposeAIMessageMode.CloudStyle, initialPreview: AIMessageStylePreview?)? in
-            switch result {
-            case let .tones(tones):
-                guard let tone = tones.tones.first else {
-                    return nil
-                }
-                updatePeers(transaction: transaction, accountPeerId: account.peerId, peers: AccumulatedPeers(users: tones.users))
-                return (IosappComposeAIMessageMode.CloudStyle(apiTone: tone), nil)
-            case .tonesNotModified:
-                return nil
-            }
-        }
-    }
+    return .single(nil)
 }
 
 public enum InstallAIMessageStyleError {
@@ -1231,72 +924,9 @@ public enum InstallAIMessageStyleError {
 }
 
 func _internal_installAIMessageStyle(account: Account, style: IosappComposeAIMessageMode.CloudStyle.Custom) -> Signal<Never, InstallAIMessageStyleError> {
-    return account.network.request(Api.functions.aicompose.saveTone(tone: .inputAiComposeToneID(Api.InputAiComposeTone.Cons_inputAiComposeToneID(id: style.id, accessHash: style.accessHash)), unsave: .boolFalse))
-    |> map(Optional.init)
-    |> `catch` { _ -> Signal<Api.Bool?, NoError> in
-        return .single(nil)
-    }
-    |> castError(InstallAIMessageStyleError.self)
-    |> mapToSignal { result -> Signal<Never, InstallAIMessageStyleError> in
-        if result != nil {
-            return account.postbox.transaction { transaction -> Void in
-                var items = _internal_cachedCloudAITextStyles(transaction: transaction)?.items ?? []
-                if let index = items.firstIndex(where: { $0.id == .style(.custom(style.id)) }) {
-                    items.remove(at: index)
-                }
-                items.insert(IosappComposeAIMessageMode.CloudStyle(content: .custom(style)), at: 0)
-                _internal_setCachedCloudAITextStyles(transaction: transaction, styles: CachedCloudAITextStyles(items: items, hash: 0))
-            }
-            |> ignoreValues
-            |> castError(InstallAIMessageStyleError.self)
-        } else {
-            return .fail(.generic)
-        }
-    }
+    return .fail(.generic)
 }
 
 func managedSynchronizeCloudAITextStyles(postbox: Postbox, network: Network) -> Signal<Never, NoError> {
-    let poll = Signal<Never, NoError> { subscriber in
-        let signal: Signal<Never, NoError> = _internal_cachedCloudAITextStyles(postbox: postbox)
-        |> mapToSignal { current in
-            return (network.request(Api.functions.aicompose.getTones(hash: current?.hash ?? 0))
-            |> map(Optional.init)
-            |> `catch` { _ -> Signal<Api.aicompose.Tones?, NoError> in
-                return .single(nil)
-            }
-            |> mapToSignal { result -> Signal<Never, NoError> in
-                return postbox.transaction { transaction -> Signal<Never, NoError> in
-                    guard let result = result else {
-                        return .complete()
-                    }
-                    
-                    switch result {
-                    case let .tones(tones):
-                        _internal_setCachedCloudAITextStyles(transaction: transaction, styles: CachedCloudAITextStyles(
-                            items: tones.tones.map(IosappComposeAIMessageMode.CloudStyle.init(apiTone:)),
-                            hash: tones.hash
-                        ))
-                    case .tonesNotModified:
-                        break
-                    }
-                    
-                    return .complete()
-                }
-                |> switchToLatest
-            })
-        }
-                
-        return signal.start(completed: {
-            subscriber.putCompletion()
-        })
-    }
-    
-    return (
-        poll
-        |> then(
-            .complete()
-            |> suspendAwareDelay(1.0 * 60.0 * 60.0, queue: Queue.concurrentDefaultQueue())
-        )
-    )
-    |> restart
+    return .complete()
 }

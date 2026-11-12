@@ -11,7 +11,6 @@ swift_library(
     ],
     deps = [
         "//submodules/SSignalKit/SwiftSignalKit:SwiftSignalKit",
-        "//submodules/LottieSettings:LottieSettings",
         "//submodules/AsyncDisplayKit:AsyncDisplayKit",
         "//submodules/Display:Display",
         "//submodules/IosappCore:IosappCore",
@@ -63,6 +62,8 @@ swift_library(
         "//submodules/IosappUI/Components/TextNodeWithEntities",
         "//submodules/IosappUI/Components/ButtonComponent",
         "//submodules/ComponentFlow",
+        "//submodules/IosappUI/Components/GlassBackgroundComponent",
+        "//submodules/Components/ComponentDisplayAdapters",
         "//submodules/Components/MultilineTextComponent",
     ],
     visibility = [

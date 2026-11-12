@@ -7,6 +7,7 @@ import AccountContext
 import PhotoResources
 import UniversalMediaPlayer
 import ChatMessageInteractiveMediaNode
+import IosappUniversalVideoContent
 
 private final class PrefetchMediaContext {
     let fetchDisposable = MetaDisposable()
@@ -81,14 +82,18 @@ final class InChatPrefetchManager {
             
             if let ansibleImage = media as? IosappMediaImage {
                 mediaResource = largestRepresentationForPhoto(ansibleImage)?.resource
-                if shouldDownloadMediaAutomatically(settings: self.settings, peerType: options.peerType, networkType: options.networkType, authorPeerId: nil, contactsPeerIds: [], media: ansibleImage) {
+                if shouldDownloadMediaAutomatically(settings: self.settings, peerType: options.peerType, networkType: options.networkType, authorPeerId: nil, contactsPeerIds: [], media: .image(ansibleImage)) {
                     automaticDownload = .full
                 }
             } else if let ansibleFile = media as? IosappMediaFile {
                 mediaResource = ansibleFile.resource
-                if shouldDownloadMediaAutomatically(settings: self.settings, peerType: options.peerType, networkType: options.networkType, authorPeerId: nil, contactsPeerIds: [], media: ansibleFile) {
+                // An adaptive (HLS) video plays from its quality files, never from the original: prefetching the original
+                // (its first seconds, or all of it) only costs data. The bubble preloads the HLS preload quality when it is
+                // shown.
+                if NativeVideoContent.isHLSVideo(file: ansibleFile) {
+                } else if shouldDownloadMediaAutomatically(settings: self.settings, peerType: options.peerType, networkType: options.networkType, authorPeerId: nil, contactsPeerIds: [], media: .file(ansibleFile)) {
                     automaticDownload = .full
-                } else if shouldPredownloadMedia(settings: self.settings, peerType: options.peerType, networkType: options.networkType, media: ansibleFile) {
+                } else if shouldPredownloadMedia(settings: self.settings, peerType: options.peerType, networkType: options.networkType, media: .file(ansibleFile)) {
                     automaticDownload = .prefetch
                 }
             }

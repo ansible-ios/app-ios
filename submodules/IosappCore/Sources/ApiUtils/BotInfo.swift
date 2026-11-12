@@ -1,6 +1,6 @@
 import Foundation
 import Postbox
-import IosappApi
+internal import IosappApi
 
 extension BotMenuButton {
     init(apiBotMenuButton: Api.BotMenuButton) {

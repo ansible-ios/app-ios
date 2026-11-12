@@ -1,4 +1,4 @@
-load("@build_bazel_rules_swift//swift:swift.bzl", "swift_library")
+load("@build_bazel_rules_swift//swift:swift.bzl", "swift_library", "swift_test")
 
 swift_library(
     name = "PeerInfoVisualMediaPaneNode",
@@ -11,10 +11,8 @@ swift_library(
     ],
     deps = [
         "//submodules/SSignalKit/SwiftSignalKit",
-        "//submodules/LottieSettings:LottieSettings",
         "//submodules/AsyncDisplayKit",
         "//submodules/IosappCore",
-        "//submodules/Postbox",
         "//submodules/IosappPresentationData",
         "//submodules/AccountContext",
         "//submodules/ContextUI",
@@ -62,8 +60,21 @@ swift_library(
         "//submodules/IosappUI/Components/EmojiTextAttachmentView",
         "//submodules/IosappUI/Components/PeerInfo/CollectionTabItemComponent",
         "//submodules/IosappUI/Components/EdgeEffect",
+        "//submodules/IosappUI/Components/DustEffect",
+        "//submodules/IosappUI/Components/MediaGrid",
     ],
     visibility = [
         "//visibility:public",
+    ],
+)
+
+swift_test(
+    name = "MediaGridPaneDecisionsTests",
+    srcs = [
+        "Sources/MediaGridPaneDecisions.swift",
+        "Tests/MediaGridPaneDecisionsTests.swift",
+    ],
+    copts = [
+        "-warnings-as-errors",
     ],
 )

@@ -1,6 +1,6 @@
 import Foundation
 import Postbox
-import IosappApi
+internal import IosappApi
 
 public final class SuggestedPostMessageAttribute: Equatable, MessageAttribute {
     public enum State: Int32 {

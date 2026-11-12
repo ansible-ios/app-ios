@@ -30,6 +30,7 @@ import QuickReactionSetupController
 import AvatarEditorScreen
 import PeerSelectionScreen
 import DeviceModel
+import DebugSettingsUI
 
 enum SettingsSearchableItemIcon {
     case profile
@@ -4057,6 +4058,19 @@ private func appearanceSearchableItems(context: AccountContext) -> [SettingsSear
             )
         )
     }
+    // Without bubbles Appearance hides Chat Themes and Chat Background, so search leaves out their screens too.
+    if !context.sharedContext.currentPresentationData.with({ $0 }).chatBubbleCorners.bubbleMode {
+        let hiddenIds: Set<AnyHashable> = [
+            "appearance/wallpapers",
+            "appearance/wallpapers/edit",
+            "appearance/wallpapers/set",
+            "appearance/wallpapers/choose-photo",
+            "appearance/themes",
+            "appearance/themes/edit",
+            "appearance/themes/create"
+        ]
+        items = items.filter { !hiddenIds.contains($0.id) }
+    }
     return items
 }
 
@@ -4361,6 +4375,16 @@ func settingsSearchableItems(
         let strings = context.sharedContext.currentPresentationData.with { $0 }.strings
         
         var allItems: [SettingsSearchableItem] = []
+
+        allItems.append(SettingsSearchableItem(
+            id: "debug/crash_reports",
+            title: "Crash Logs",
+            icon: .support,
+            breadcrumbs: ["Debug Settings"],
+            present: { context, _, present in
+                present(.push, crashReportsController(sharedContext: context.sharedContext, context: context))
+            }
+        ))
         
         let profileItems = profileSearchableItems(context: context, canAddAccount: canAddAccount)
         allItems.append(contentsOf: profileItems)

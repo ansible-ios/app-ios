@@ -14,7 +14,6 @@ swift_library(
         "//submodules/AsyncDisplayKit:AsyncDisplayKit",
         "//submodules/Display:Display",
         "//submodules/IosappCore:IosappCore",
-        "//submodules/Postbox",
         "//submodules/ListSectionHeaderNode:ListSectionHeaderNode",
         "//submodules/HorizontalPeerItem:HorizontalPeerItem",
         "//submodules/MergeLists:MergeLists",

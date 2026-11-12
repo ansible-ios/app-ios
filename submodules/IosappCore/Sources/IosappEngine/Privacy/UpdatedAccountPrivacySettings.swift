@@ -1,6 +1,6 @@
 import Foundation
 import Postbox
-import IosappApi
+internal import IosappApi
 import SwiftSignalKit
 
 func _internal_updateGlobalPrivacySettings(account: Account) -> Signal<Never, NoError> {

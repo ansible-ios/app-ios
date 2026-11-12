@@ -13,10 +13,8 @@ swift_library(
     ],
     deps = [
         "//submodules/SSignalKit/SwiftSignalKit:SwiftSignalKit",
-        "//submodules/LottieSettings:LottieSettings",
         "//submodules/AsyncDisplayKit:AsyncDisplayKit",
         "//submodules/Display:Display",
-        "//submodules/Postbox:Postbox",
         "//submodules/IosappCore:IosappCore",
         "//submodules/MtProtoKit:MtProtoKit",
         "//submodules/IosappPresentationData:IosappPresentationData",
@@ -140,6 +138,7 @@ swift_library(
         "//submodules/IosappUI/Components/SliderComponent",
         "//submodules/IosappUI/Components/AlertComponent",
         "//submodules/IosappUI/Components/AlertComponent/AlertInputFieldComponent",
+        "//submodules/IosappUI/Components/AlertComponent/AlertCheckComponent",
         "//submodules/IosappUI/Components/EdgeEffect",
         "//submodules/IosappUI/Components/AvatarEditorScreen",
         "//submodules/IosappUI/Components/Settings/PeerSelectionScreen",

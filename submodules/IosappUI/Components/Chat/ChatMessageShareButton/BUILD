@@ -20,6 +20,7 @@ swift_library(
         "//submodules/IosappUI/Components/Chat/ChatMessageItemCommon",
         "//submodules/ContextUI",
         "//submodules/Components/HierarchyTrackingLayer",
+        "//submodules/IosappUI/Components/StaticGlassBackground",
     ],
     visibility = [
         "//visibility:public",

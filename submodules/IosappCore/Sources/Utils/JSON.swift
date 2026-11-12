@@ -1,6 +1,6 @@
 import Foundation
 import Postbox
-import IosappApi
+internal import IosappApi
 
 extension JSON {
     private init?(_ object: Any) {
@@ -375,7 +375,7 @@ public extension JSON {
         }
     }
     
-    init?(apiJson: Api.JSONValue) {
+    internal init?(apiJson: Api.JSONValue) {
         self.init(apiJson: apiJson, root: true)
     }
 }

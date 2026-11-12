@@ -1,7 +1,7 @@
 import Postbox
 import SwiftSignalKit
 import MtProtoKit
-import IosappApi
+internal import IosappApi
 
 
 public enum RequestLocalizationPreviewError {

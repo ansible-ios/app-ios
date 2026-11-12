@@ -1,0 +1,97 @@
+# Swift files that may still `import Postbox`. Checked by build-system/Make/PostboxImportCheck.py
+# before every Make.py build and test.
+#
+# This list only shrinks. When a refactor wave removes a file's last Postbox import, delete its
+# line in the same commit: the check fails while a listed file no longer imports Postbox.
+# Adding a line is a deliberate exception, made in review. New code uses IosappEngine and its
+# wrappers instead (CLAUDE.md, "Postbox -> IosappEngine refactor").
+#
+# Not checked: test sources (directories named `Tests` or ending in `Tests`), and Postbox and
+# IosappCore themselves. Keep the entries sorted (byte order, as `LC_ALL=C sort`).
+
+Iosapp/NotificationService/Sources/NotificationService.swift
+Iosapp/SiriIntents/IntentContacts.swift
+Iosapp/SiriIntents/IntentHandler.swift
+Iosapp/SiriIntents/IntentMessages.swift
+Iosapp/SiriIntents/SiriSendMessageTarget.swift
+submodules/AccountContext/Sources/FetchMediaUtils.swift
+submodules/AccountContext/Sources/UniversalVideoNode.swift
+submodules/AvatarNode/Sources/AvatarNode.swift
+submodules/AvatarNode/Sources/PeerAvatar.swift
+submodules/ChatListUI/Sources/ChatListController.swift
+submodules/ChatListUI/Sources/ChatListSearchListPaneNode.swift
+submodules/ChatListUI/Sources/Node/ChatListNodeLocation.swift
+submodules/ChatPresentationInterfaceState/Sources/ChatPresentationInterfaceState.swift
+submodules/DirectMediaImageCache/Sources/DirectMediaImageCache.swift
+submodules/FeaturedStickersScreen/Sources/FeaturedStickersScreen.swift
+submodules/FetchManagerImpl/Sources/FetchManagerImpl.swift
+submodules/GalleryUI/Sources/GalleryController.swift
+submodules/GalleryUI/Sources/Items/ChatAnimationGalleryItem.swift
+submodules/GalleryUI/Sources/Items/ChatImageGalleryItem.swift
+submodules/GalleryUI/Sources/Items/UniversalVideoGalleryItem.swift
+submodules/GalleryUI/Sources/SecretMediaPreviewController.swift
+submodules/LegacyMediaPickerUI/Sources/LegacyPaintStickersContext.swift
+submodules/MediaPlayer/Sources/ChunkMediaPlayer.swift
+submodules/MediaPlayer/Sources/ChunkMediaPlayerV2.swift
+submodules/MediaPlayer/Sources/FFMpegFileReader.swift
+submodules/MediaPlayer/Sources/FFMpegMediaFrameSource.swift
+submodules/MediaPlayer/Sources/FFMpegMediaFrameSourceContext.swift
+submodules/MediaPlayer/Sources/MediaPlayer.swift
+submodules/MediaPlayer/Sources/MediaPlayerFramePreview.swift
+submodules/MediaPlayer/Sources/TimeBasedVideoPreload.swift
+submodules/MediaPlayer/Sources/UniversalSoftwareVideoSource.swift
+submodules/PassportUI/Sources/LegacySecureIdAttachmentMenu.swift
+submodules/PassportUI/Sources/SecureIdLocalResource.swift
+submodules/PhotoResources/Sources/PassResources.swift
+submodules/PhotoResources/Sources/PhotoResources.swift
+submodules/PremiumUI/Sources/PremiumIntroScreen.swift
+submodules/ShareController/Sources/ShareController.swift
+submodules/ShareController/Sources/ShareControllerNode.swift
+submodules/ShareItems/Sources/ShareItems.swift
+submodules/StatisticsUI/Sources/ChannelStatsController.swift
+submodules/StickerResources/Sources/StickerResources.swift
+submodules/IosappAnimatedStickerNode/Sources/IosappAnimatedStickerNode.swift
+submodules/IosappCallsUI/Sources/PresentationGroupCall.swift
+submodules/IosappPermissionsUI/Sources/PermissionSplitTest.swift
+submodules/IosappPresentationData/Sources/ChatControllerBackgroundNode.swift
+submodules/IosappPresentationData/Sources/MakePresentationTheme.swift
+submodules/IosappPresentationData/Sources/PresentationData.swift
+submodules/IosappUI/Components/Chat/ChatMessageBubbleItemNode/Sources/ChatMessageBubbleItemNode.swift
+submodules/IosappUI/Components/Chat/ChatRecentActionsController/Sources/ChatRecentActionsHistoryTransition.swift
+submodules/IosappUI/Components/ChatEntityKeyboardInputNode/Sources/ChatEntityKeyboardInputNode.swift
+submodules/IosappUI/Components/DebugCompanionScreen/Sources/CompanionCatalog.swift
+submodules/IosappUI/Components/DebugCompanionScreen/Sources/DebugCompanionScreen.swift
+submodules/IosappUI/Components/EmojiStatusComponent/Sources/EmojiStatusComponent.swift
+submodules/IosappUI/Components/EmojiTextAttachmentView/Sources/EmojiTextAttachmentView.swift
+submodules/IosappUI/Components/EntityKeyboard/Sources/EmojiPagerContentSignals.swift
+submodules/IosappUI/Components/EntityKeyboard/Sources/InlineFileIconLayer.swift
+submodules/IosappUI/Components/MediaEditor/Sources/MediaEditorComposer.swift
+submodules/IosappUI/Components/MediaEditor/Sources/MediaEditorComposerEntity.swift
+submodules/IosappUI/Components/MediaEditor/Sources/MediaEditorDraft.swift
+submodules/IosappUI/Components/MediaEditor/Sources/MediaEditorVideoExport.swift
+submodules/IosappUI/Components/MediaEditorScreen/Sources/StorySource.swift
+submodules/IosappUI/Components/Resources/FetchVideoMediaResource/Sources/FetchVideoMediaResource.swift
+submodules/IosappUI/Components/StickerPickerScreen/Sources/StickerPickerScreen.swift
+submodules/IosappUI/Components/Stories/StoryContainerScreen/Sources/StoryChatContent.swift
+submodules/IosappUI/Components/IosappAccountAuxiliaryMethods/Sources/IosappAccountAuxiliaryMethods.swift
+submodules/IosappUI/Sources/AppDelegate.swift
+submodules/IosappUI/Sources/ChatController.swift
+submodules/IosappUI/Sources/ChatControllerContentData.swift
+submodules/IosappUI/Sources/ChatControllerNode.swift
+submodules/IosappUI/Sources/ChatControllerOpenAttachmentMenu.swift
+submodules/IosappUI/Sources/ChatHistoryEntriesForView.swift
+submodules/IosappUI/Sources/ChatHistoryListNode.swift
+submodules/IosappUI/Sources/ChatHistoryViewForLocation.swift
+submodules/IosappUI/Sources/CreateGroupController.swift
+submodules/IosappUI/Sources/DocumentPreviewController.swift
+submodules/IosappUI/Sources/FetchCachedRepresentations.swift
+submodules/IosappUI/Sources/InChatPrefetchManager.swift
+submodules/IosappUI/Sources/StoreDownloadedMedia.swift
+submodules/IosappUI/Sources/TransformOutgoingMessageMedia.swift
+submodules/IosappUniversalVideoContent/Sources/HLSVideoContent.swift
+submodules/IosappUniversalVideoContent/Sources/NativeVideoContent.swift
+submodules/IosappUniversalVideoContent/Sources/PlatformVideoContent.swift
+submodules/IosappUniversalVideoContent/Sources/SystemVideoContent.swift
+submodules/IosappUniversalVideoContent/Sources/WebEmbedVideoContent.swift
+submodules/TemporaryCachedPeerDataManager/Sources/ChannelMemberCategoryListContext.swift
+submodules/TemporaryCachedPeerDataManager/Sources/PeerChannelMemberCategoriesContextsManager.swift

@@ -1,7 +1,7 @@
 import Foundation
 import Postbox
 import SwiftSignalKit
-import IosappApi
+internal import IosappApi
 
 public enum ServerProvidedSuggestion: Equatable {
     case autoarchivePopular

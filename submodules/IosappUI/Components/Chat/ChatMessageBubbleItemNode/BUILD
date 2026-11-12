@@ -11,7 +11,6 @@ swift_library(
     ],
     deps = [
         "//submodules/AsyncDisplayKit",
-        "//submodules/LottieSettings:LottieSettings",
         "//submodules/Display",
         "//submodules/SSignalKit/SwiftSignalKit",
         "//submodules/Postbox",
@@ -80,6 +79,7 @@ swift_library(
         "//submodules/IosappUI/Components/Chat/ChatMessageRestrictedBubbleContentNode",
         "//submodules/IosappUI/Components/Chat/ChatMessageStoryMentionContentNode",
         "//submodules/IosappUI/Components/Chat/ChatMessageUnsupportedBubbleContentNode",
+        "//submodules/IosappUI/Components/Chat/ChatMessageWidgetBubbleContentNode",
         "//submodules/IosappUI/Components/Chat/ChatMessageWallpaperBubbleContentNode",
         "//submodules/IosappUI/Components/Chat/ChatMessageGiftBubbleContentNode",
         "//submodules/IosappUI/Components/Chat/ChatMessageGiftOfferBubbleContentNode",

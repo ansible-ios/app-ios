@@ -9,6 +9,7 @@ import Emoji
 import UniversalMediaPlayer
 import ChatMessageInteractiveMediaNode
 import ChatMessageAnimatedStickerItemNode
+import IosappUniversalVideoContent
 
 private final class PrefetchMediaContext {
     let fetchDisposable = MetaDisposable()
@@ -76,7 +77,7 @@ private final class PrefetchManagerInnerImpl {
                     for emoji in popularEmoji {
                         if let sticker = animatedEmojiStickers[emoji] {
                             let stickerFile = sticker.file._parse()
-                            if let _ = account.postbox.mediaBox.completedResourcePath(stickerFile.resource) {
+                            if let _ = IosappEngine(account: account).resources.completedResourcePath(id: EngineMediaResource.Id(stickerFile.resource.id)) {
                             } else {
                                 stickerItems.append(.animatedEmojiSticker(stickerFile))
                             }
@@ -142,14 +143,18 @@ private final class PrefetchManagerInnerImpl {
                     
                     if let ansibleImage = mediaItem.media.media as? IosappMediaImage {
                         mediaResource = (largestRepresentationForPhoto(ansibleImage)?.resource).flatMap(EngineMediaResource.init)
-                        if shouldDownloadMediaAutomatically(settings: automaticDownloadSettings, peerType: peerType, networkType: networkType, authorPeerId: nil, contactsPeerIds: [], media: ansibleImage) {
+                        if shouldDownloadMediaAutomatically(settings: automaticDownloadSettings, peerType: peerType, networkType: networkType, authorPeerId: nil, contactsPeerIds: [], media: .image(ansibleImage)) {
                             automaticDownload = .full
                         }
                     } else if let ansibleFile = mediaItem.media.media as? IosappMediaFile {
                         mediaResource = EngineMediaResource(ansibleFile.resource)
-                        if shouldDownloadMediaAutomatically(settings: automaticDownloadSettings, peerType: peerType, networkType: networkType, authorPeerId: nil, contactsPeerIds: [], media: ansibleFile) {
+                        // An adaptive (HLS) video plays from its quality files, never from the original: prefetching the original
+                        // (its first seconds, or all of it) only costs data. The bubble preloads the HLS preload quality when it is
+                        // shown.
+                        if NativeVideoContent.isHLSVideo(file: ansibleFile) {
+                        } else if shouldDownloadMediaAutomatically(settings: automaticDownloadSettings, peerType: peerType, networkType: networkType, authorPeerId: nil, contactsPeerIds: [], media: .file(ansibleFile)) {
                             automaticDownload = .full
-                        } else if shouldPredownloadMedia(settings: automaticDownloadSettings, peerType: peerType, networkType: networkType, media: ansibleFile) {
+                        } else if shouldPredownloadMedia(settings: automaticDownloadSettings, peerType: peerType, networkType: networkType, media: .file(ansibleFile)) {
                             automaticDownload = .prefetch
                         }
                     }
@@ -199,7 +204,7 @@ private final class PrefetchManagerInnerImpl {
                     var automaticDownload: InteractiveMediaNodeAutodownloadMode = .none
                     let peerType = MediaAutoDownloadPeerType.contact
                     
-                    if shouldDownloadMediaAutomatically(settings: automaticDownloadSettings, peerType: peerType, networkType: networkType, authorPeerId: nil, contactsPeerIds: [], media: media) {
+                    if shouldDownloadMediaAutomatically(settings: automaticDownloadSettings, peerType: peerType, networkType: networkType, authorPeerId: nil, contactsPeerIds: [], media: .file(media)) {
                         automaticDownload = .full
                     }
                 

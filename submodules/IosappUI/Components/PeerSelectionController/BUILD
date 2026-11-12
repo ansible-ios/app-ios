@@ -11,7 +11,6 @@ swift_library(
     ],
     deps = [
         "//submodules/SSignalKit/SwiftSignalKit",
-        "//submodules/LottieSettings:LottieSettings",
         "//submodules/Display",
         "//submodules/IosappCore",
         "//submodules/IosappPresentationData",
@@ -40,6 +39,7 @@ swift_library(
         "//submodules/Components/ComponentDisplayAdapters",
         "//submodules/IosappUI/Components/EdgeEffect",
         "//submodules/UndoUI",
+        "//submodules/IosappUI/Components/GlassBackgroundComponent",
     ],
     visibility = [
         "//visibility:public",

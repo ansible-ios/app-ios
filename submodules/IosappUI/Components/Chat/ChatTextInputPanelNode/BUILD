@@ -20,7 +20,6 @@ swift_library(
     ],
     deps = [
         "//submodules/Display",
-        "//submodules/LottieSettings:LottieSettings",
         "//submodules/AsyncDisplayKit",
         "//submodules/SSignalKit/SwiftSignalKit",
         "//submodules/IosappCore",
@@ -57,6 +56,7 @@ swift_library(
         "//submodules/IosappUI/Components/Chat/ChatInputTextNode",
         "//submodules/IosappUI/Components/Chat/ChatRichTextEditorComposer",
         "//submodules/IosappUI/Components/Chat/ChatInputPanelNode",
+        "//submodules/IosappUI/Components/Chat/ChatOverscrollIsland",
         "//submodules/IosappNotices",
         "//submodules/AnimatedCountLabelNode",
         "//submodules/IosappStringFormatting",
@@ -93,11 +93,13 @@ swift_library(
     ]),
     deps = [
         ":ChatTextInputPanelNode",
+        "//submodules/IosappUI/Components/Chat/ChatInputPanelNode",
         "//submodules/IosappUI/Components/Chat/ChatInputTextNode",
         "//submodules/TextFormat",
         "//submodules/IosappUIPreferences",
         "//submodules/IosappPresentationData",
         "//submodules/Display",
+        "//submodules/IosappUI/Components/Chat/ChatTextInputActionButtonsNode",
     ],
 )
 

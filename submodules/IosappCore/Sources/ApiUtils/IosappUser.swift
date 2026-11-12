@@ -1,6 +1,6 @@
 import Foundation
 import Postbox
-import IosappApi
+internal import IosappApi
 
 func parsedIosappProfilePhoto(_ photo: Api.UserProfilePhoto) -> [IosappMediaImageRepresentation] {
     var representations: [IosappMediaImageRepresentation] = []
@@ -55,6 +55,8 @@ extension PeerVerification {
     }
 }
 
+
+private let botFlagsKeptOnMinUpdate: BotUserInfoFlags = [.canEdit, .isBusiness, .hasWebApp, .hasForum, .forumManagedByUser, .canManageBots, .isGuestChat, .isGuardBot, .displayForumAsSidebar]
 
 extension IosappUser {
     convenience init(user: Api.User) {
@@ -144,6 +146,9 @@ extension IosappUser {
                 }
                 if (flags2 & (1 << 20)) != 0 {
                     botFlags.insert(.isGuardBot)
+                }
+                if (flags2 & (1 << 22)) != 0 {
+                    botFlags.insert(.displayForumAsSidebar)
                 }
                 botInfo = BotUserInfo(flags: botFlags, inlinePlaceholder: botInlinePlaceholder)
             }
@@ -258,8 +263,8 @@ extension IosappUser {
                             if (flags & (1 << 27)) != 0 {
                                 botFlags.insert(.canBeAddedToAttachMenu)
                             }
-                            if let botInfo = lhs.botInfo, botInfo.flags.contains(.canEdit) {
-                                botFlags.insert(.canEdit)
+                            if let botInfo = lhs.botInfo {
+                                botFlags.formUnion(botInfo.flags.intersection(botFlagsKeptOnMinUpdate))
                             }
                             botInfo = BotUserInfo(flags: botFlags, inlinePlaceholder: botInlinePlaceholder)
                         }
@@ -357,7 +362,10 @@ extension IosappUser {
                 userFlags.insert(.isPremium)
             }
 
-            let botInfo: BotUserInfo? = rhs.botInfo
+            var botInfo: BotUserInfo? = rhs.botInfo
+            if let rhsBotInfo = rhs.botInfo, let lhsBotInfo = lhs.botInfo {
+                botInfo = BotUserInfo(flags: rhsBotInfo.flags.union(lhsBotInfo.flags.intersection(botFlagsKeptOnMinUpdate)), inlinePlaceholder: rhsBotInfo.inlinePlaceholder)
+            }
             
             let emojiStatus = rhs.emojiStatus
             

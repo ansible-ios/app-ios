@@ -1,6 +1,6 @@
 import Foundation
 import Postbox
-import IosappApi
+internal import IosappApi
 
 public final class ScheduledRepeatAttribute: Equatable, MessageAttribute {
     public let repeatPeriod: Int32

@@ -1,6 +1,6 @@
 import Foundation
 import Postbox
-import IosappApi
+internal import IosappApi
 
 
 func updateMessageMedia(transaction: Transaction, id: MediaId, media: Media?) {

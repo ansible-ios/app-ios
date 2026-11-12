@@ -28,6 +28,7 @@ swift_library(
         "//submodules/IosappUI/Components/Chat/ChatMessageItemCommon",
         "//submodules/IosappUI/Components/Chat/MessageInlineBlockBackgroundView",
         "//submodules/IosappUI/Components/EmojiTextAttachmentView",
+        "//submodules/ShimmerEffect",
     ],
     visibility = [
         "//visibility:public",

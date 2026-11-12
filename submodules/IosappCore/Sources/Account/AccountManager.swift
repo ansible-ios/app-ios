@@ -1,7 +1,7 @@
 import Foundation
 import Postbox
 import SwiftSignalKit
-import IosappApi
+internal import IosappApi
 import MtProtoKit
 
 private enum AccountKind {
@@ -186,6 +186,7 @@ private var declaredEncodables: Void = {
     declareEncodable(SynchronizeAppLogEventsOperation.self, f: { SynchronizeAppLogEventsOperation(decoder: $0) })
     declareEncodable(IosappMediaPoll.self, f: { IosappMediaPoll(decoder: $0) })
     declareEncodable(IosappMediaUnsupported.self, f: { IosappMediaUnsupported(decoder: $0) })
+    declareEncodable(IosappMediaWidget.self, f: { IosappMediaWidget(decoder: $0) })
     declareEncodable(EmojiKeywordCollectionInfo.self, f: { EmojiKeywordCollectionInfo(decoder: $0) })
     declareEncodable(EmojiKeywordItem.self, f: { EmojiKeywordItem(decoder: $0) })
     declareEncodable(SynchronizeEmojiKeywordsOperation.self, f: { SynchronizeEmojiKeywordsOperation(decoder: $0) })

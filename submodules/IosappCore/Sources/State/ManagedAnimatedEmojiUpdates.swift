@@ -1,7 +1,7 @@
 import Foundation
 import Postbox
 import SwiftSignalKit
-import IosappApi
+internal import IosappApi
 import MtProtoKit
 
 func managedAnimatedEmojiUpdates(postbox: Postbox, network: Network) -> Signal<Void, NoError> {

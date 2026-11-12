@@ -10,11 +10,10 @@ swift_library(
         "-warnings-as-errors",
     ],
     deps = [
+        "//submodules/IosappUI/Components/StaticGlassBackground",
         "//submodules/AsyncDisplayKit",
-        "//submodules/LottieSettings:LottieSettings",
         "//submodules/Display",
         "//submodules/SSignalKit/SwiftSignalKit",
-        "//submodules/Postbox",
         "//submodules/IosappCore",
         "//submodules/IosappPresentationData",
         "//submodules/TextFormat",

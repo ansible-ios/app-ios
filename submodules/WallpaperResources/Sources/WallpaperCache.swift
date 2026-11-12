@@ -1,7 +1,6 @@
 import Foundation
 import UIKit
 import SwiftSignalKit
-import IosappApi
 import IosappCore
 import IosappUIPreferences
 import PersistentStringHash

@@ -12,6 +12,7 @@ import ChatTextInputPanelNode
 import RichTextEditorMediaView
 import RichTextEditorUIKit
 import InstantPageUI
+import BrowserUI
 
 func chatInputFormulaRenderResult(context: RichTextFormulaRenderContext) -> RichTextFormulaRenderResult? {
     guard let attachment = instantPageMathAttachment(
@@ -505,7 +506,7 @@ func inputPanelForChatPresentationIntefaceState(_ chatPresentationInterfaceState
                 panel.formulaRenderer = chatInputFormulaRenderResult
                 if let data = context.currentAppConfiguration.with({ $0 }).data, let value = data["ios_disable_ai_chat"] as? Double, value == 1.0 {
                 } else if let peerId = chatPresentationInterfaceState.chatLocation.peerId, peerId.namespace != Namespaces.Peer.SecretChat {
-                    panel.isAIEnabled = true
+                    panel.isAIEnabled = false
                 }
                 panel.textInputAccessoryPanel = textInputAccessoryPanel
                 panel.textInputContextPanel = textInputContextPanel
@@ -513,7 +514,7 @@ func inputPanelForChatPresentationIntefaceState(_ chatPresentationInterfaceState
                 panel.interfaceInteraction = interfaceInteraction
                 panel.context = context
                 panel.pastedMarkdownParser = { context, text in
-                    return chatInputContentFromPastedMarkdown(context: context, plainText: text)
+                    return chatInputContentFromPastedMarkdown(context: context, plainText: text, keepsBlankLines: true)
                 }
                 return (panel, nil)
             }

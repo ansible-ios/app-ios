@@ -33,6 +33,10 @@ swift_library(
         ":ChatMessageBackground",
         "//submodules/Display:Display",
         "//submodules/AsyncDisplayKit:AsyncDisplayKit",
+        "//submodules/SSignalKit/SwiftSignalKit:SwiftSignalKit",
+        "//submodules/IosappCore:IosappCore",
+        "//submodules/IosappPresentationData:IosappPresentationData",
+        "//submodules/WallpaperBackgroundNode:WallpaperBackgroundNode",
     ],
 )
 

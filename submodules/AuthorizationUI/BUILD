@@ -11,7 +11,6 @@ swift_library(
     ],
     deps = [
         "//submodules/AsyncDisplayKit:AsyncDisplayKit",
-        "//submodules/LottieSettings:LottieSettings",
         "//submodules/IosappCore:IosappCore",
         "//submodules/Display:Display",
         "//submodules/SSignalKit/SSignalKit",

@@ -1,6 +1,6 @@
 import Foundation
 import Postbox
-import IosappApi
+internal import IosappApi
 
 public final class CachedPeerBotInfo: PostboxCoding, Equatable {
     public let peerId: PeerId

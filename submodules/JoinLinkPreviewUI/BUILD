@@ -22,6 +22,8 @@ swift_library(
         "//submodules/SelectablePeerNode:SelectablePeerNode",
         "//submodules/UndoUI:UndoUI",
         "//submodules/SolidRoundedButtonNode:SolidRoundedButtonNode",
+        "//submodules/IosappUI/Components/ButtonComponent",
+        "//submodules/Components/ComponentDisplayAdapters",
         "//submodules/ComponentFlow",
         "//submodules/IosappUI/Components/EmojiStatusComponent",
         "//submodules/IosappUI/Components/PeerManagement/OldChannelsController",

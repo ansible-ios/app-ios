@@ -46,9 +46,13 @@ swift_library(
         ":IosappCore",
         "//submodules/SSignalKit/SwiftSignalKit:SwiftSignalKit",
         "//submodules/IosappApi:IosappApi",
+        "//submodules/Utils/RangeSet:RangeSet",
         "//submodules/MtProtoKit:MtProtoKit",
         "//submodules/Postbox:Postbox",
         "//submodules/WebProxyTransport:WebProxyTransport",
+        # InstantPageButtonLinkStyleTests round-trips through the flatc-generated IosappCore_* types.
+        "//submodules/IosappCore/FlatBuffers",
+        "//submodules/IosappCore/FlatSerialization",
     ],
 )
 

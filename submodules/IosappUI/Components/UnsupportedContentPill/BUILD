@@ -17,6 +17,7 @@ swift_library(
         "//submodules/IosappPresentationData",
         "//submodules/WallpaperBackgroundNode",
         "//submodules/AppBundle",
+        "//submodules/IosappUI/Components/StaticGlassBackground",
     ],
     visibility = [
         "//visibility:public",
@@ -30,6 +31,7 @@ swift_library(
         "Tests/**/*.swift",
     ]),
     deps = [
+        "//submodules/IosappUI/Components/StaticGlassBackground",
         ":UnsupportedContentPill",
         "//submodules/Display",
     ],

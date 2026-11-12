@@ -12,7 +12,6 @@ swift_library(
     deps = [
         "//submodules/AsyncDisplayKit",
         "//submodules/Display",
-        "//submodules/Postbox",
         "//submodules/IosappCore",
         "//submodules/SSignalKit/SwiftSignalKit",
         "//submodules/IosappPresentationData",
@@ -37,6 +36,9 @@ swift_library(
         "//submodules/IosappUI/Components/Settings/ThemeAccentColorScreen",
         "//submodules/IosappUI/Components/PremiumLockButtonSubtitleComponent",
         "//submodules/IosappUI/Components/Settings/BoostLevelIconComponent",
+        "//submodules/IosappUI/Components/GlassBackgroundComponent",
+        "//submodules/IosappUI/Components/EdgeEffect",
+        "//submodules/Components/ComponentDisplayAdapters",
     ],
     visibility = [
         "//visibility:public",

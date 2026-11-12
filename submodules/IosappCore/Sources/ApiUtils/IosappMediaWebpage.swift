@@ -1,7 +1,7 @@
 
 import Foundation
 import Postbox
-import IosappApi
+internal import IosappApi
 
 
 func ansibleMediaWebpageAttributeFromApiWebpageAttribute(_ attribute: Api.WebPageAttribute) -> IosappMediaWebpageAttribute? {

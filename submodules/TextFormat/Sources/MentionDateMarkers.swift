@@ -8,23 +8,58 @@ import IosappCore
 /// (a real text mention is a `.TextMention` entity, never a `as://user` textUrl) and accepted rather
 /// than adding dedicated model fields; revisit if it ever surfaces in practice.
 ///
-/// Private markdown-link URL carrying a text mention's peer id between the chat composer's
-/// `NSAttributedString` currency and the RichTextEditor `Document` (which stores it in the generic
-/// `link` field, keeping the Core model markdown-clean). Mirrors `customEmojiMarkdownURL`. The peer id
-/// is encoded as the single `Int64` the draft persistence already uses (`EnginePeer.Id.toInt64()`),
-/// so the peer namespace round-trips inside it.
-public func mentionMarkdownURL(peerId: EnginePeer.Id) -> String {
-    return "as://user?id=\(peerId.toInt64())"
-}
-
-/// Parses the peer id out of a `as://user?id=<int64>` marker URL. Returns nil for any other URL
-/// (ordinary links flow through unchanged).
-public func parseMentionPeerId(fromURL url: String) -> EnginePeer.Id? {
-    let prefix = "as://user?id="
-    guard url.hasPrefix(prefix), let raw = Int64(url.dropFirst(prefix.count)) else {
+/// Private markdown-link URL carrying a text mention between the chat composer's `NSAttributedString`
+/// currency and the RichTextEditor `Document` (which stores it in the generic `link` field, keeping the
+/// Core model markdown-clean). Mirrors `customEmojiMarkdownURL`. It carries the raw user id, as Iosapp's
+/// own raw-user links and a rich page's `textMentionName` do, not a packed `PeerId` (the two differ
+/// for every id of 2^32 and above), so a pasted external link means the same user. Only a user can be
+/// mentioned by name: any other peer has no marker, and its text stays plain.
+/// New owned markers carry v=2; unversioned as:// markers retain their previous packed-ID meaning.
+public func mentionMarkdownURL(peerId: EnginePeer.Id) -> String? {
+    let userId = peerId.id._internalGetInt64Value()
+    guard peerId.namespace == Namespaces.Peer.CloudUser, isMentionableUserId(userId) else {
         return nil
     }
-    return EnginePeer.Id(raw)
+    return "as://user?id=\(userId)&v=2"
+}
+
+/// A user id a `PeerId` can hold: positive, and below 2^52 (larger ones trip `PeerId`'s packing).
+private func isMentionableUserId(_ userId: Int64) -> Bool {
+    return userId > 0 && userId < (1 << 52)
+}
+
+/// Reads new raw-ID markers and the owned packed-PeerId markers written before 0.4.2.
+/// The explicit v=2 suffix separates the representations, which differ above 2^32.
+/// Official tg:// raw-user links remain accepted when rich text is pasted from another app.
+public func parseMentionPeerId(fromURL url: String) -> EnginePeer.Id? {
+    let ownedPrefix = "as://user?id="
+    let rawPrefix = "tg://user?id="
+    let rawValue: String
+    if url.hasPrefix(ownedPrefix) {
+        let value = String(url.dropFirst(ownedPrefix.count))
+        if value.hasSuffix("&v=2") {
+            rawValue = String(value.dropLast("&v=2".count))
+        } else {
+            // Validate before constructing PeerId: its unpacker asserts on malformed bit patterns.
+            guard let packed = Int64(value), packed >= 0, packed < (1 << 55),
+                  ((packed >> 32) & 7) == Int64(Namespaces.Peer.CloudUser._internalGetInt32Value()) else {
+                return nil
+            }
+            let peerId = EnginePeer.Id(packed)
+            guard isMentionableUserId(peerId.id._internalGetInt64Value()) else {
+                return nil
+            }
+            return peerId
+        }
+    } else if url.hasPrefix(rawPrefix) {
+        rawValue = String(url.dropFirst(rawPrefix.count))
+    } else {
+        return nil
+    }
+    guard let userId = Int64(rawValue), isMentionableUserId(userId) else {
+        return nil
+    }
+    return EnginePeer.Id(namespace: Namespaces.Peer.CloudUser, id: EnginePeer.Id.Id._internalFromInt64Value(userId))
 }
 
 /// Private markdown-link URL carrying a `FormattedDate` entity's Unix timestamp through the

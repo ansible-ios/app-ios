@@ -11,7 +11,6 @@ swift_library(
     ],
     deps = [
         "//submodules/AsyncDisplayKit",
-        "//submodules/LottieSettings:LottieSettings",
         "//submodules/Display",
     	"//submodules/SSignalKit/SwiftSignalKit",
         "//submodules/AnimatedStickerNode",
@@ -20,6 +19,7 @@ swift_library(
         "//submodules/ComponentFlow",
         "//submodules/Components/ComponentDisplayAdapters",
         "//submodules/IosappUI/Components/TabBarComponent",
+        "//submodules/IosappUI/Components/TabBarLayout",
         "//submodules/IosappUI/Components/GlassControls",
     ],
     visibility = [

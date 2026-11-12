@@ -239,7 +239,7 @@ final class TextProcessingTranslateContentComponent: Component {
                 
                 switch component.mode {
                 case .translate:
-                    mappedMode = .translate(toLanguage: result.language, emojify: component.externalState.emojify, style: component.externalState.style)
+                    mappedMode = .translate(toLanguage: result.language, emojify: false, style: .neutral)
                 case .stylize:
                     if case let .stylize(isComposeWithAI) = component.mode, isComposeWithAI {
                         if let appliedPrompt = component.appliedPrompt, !appliedPrompt.isEmpty {
@@ -599,7 +599,7 @@ final class TextProcessingTranslateContentComponent: Component {
                 )))
             }
             
-            if case let .stylize(isComposeWithAI) = component.mode {
+            if case .stylize = component.mode {
                 let styleSelectionSize = self.styleSelection.update(
                     transition: transition,
                     component: AnyComponent(TextProcessingStyleSelectionComponent(
@@ -642,7 +642,7 @@ final class TextProcessingTranslateContentComponent: Component {
                 )
                 var styleSelectionFrame = CGRect(origin: CGPoint(x: sideInset, y: topInset + contentHeight), size: styleSelectionSize)
                 
-                let displayStyleSelection = !isComposeWithAI
+                let displayStyleSelection = false
                 if displayStyleSelection {
                     contentHeight += topInset + styleSelectionSize.height
                 } else {
@@ -714,9 +714,9 @@ final class TextProcessingTranslateContentComponent: Component {
             
             var displayEmojify = false
             if isTranslate {
-                displayEmojify = true
+                displayEmojify = false
             } else if case let .stylize(isComposeWithAI) = component.mode, !isComposeWithAI {
-                displayEmojify = true
+                displayEmojify = false
             }
             
             let targetTextSize = self.targetText.update(
@@ -731,7 +731,7 @@ final class TextProcessingTranslateContentComponent: Component {
                         guard let self, let component = self.component, let result = component.externalState.result else {
                             return
                         }
-                        component.displayLanguageSelectionMenu(sourceView, result.language, component.externalState.style.id, true, { [weak self] language, style in
+                        component.displayLanguageSelectionMenu(sourceView, result.language, .neutral, false, { [weak self] language, style in
                             guard let self, let component = self.component else {
                                 return
                             }

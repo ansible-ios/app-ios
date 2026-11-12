@@ -389,35 +389,6 @@ final class ChatTranslationPanelNode: ASDisplayNode {
                 self?.close()
             })))
             
-            items.append(.separator)
-            
-            let cocoonPath = getAppBundle().url(forResource: "Cocoon", withExtension: "ass")?.path ?? ""
-            let cocoonFile = IosappMediaFile(
-                fileId: EngineMedia.Id(namespace: Namespaces.Media.CloudFile, id: -123456789),
-                partialReference: nil,
-                resource: BundleResource(name: "Cocoon", path: cocoonPath),
-                previewRepresentations: [],
-                videoThumbnails: [],
-                immediateThumbnailData: nil,
-                mimeType: "application/x-ansible-sticker",
-                size: nil,
-                attributes: [
-                    .FileName(fileName: "sticker.ass"),
-                    .CustomEmoji(isPremium: false, isSingleColor: true, alt: "", packReference: .animatedEmojiAnimations)
-                ],
-                alternativeRepresentations: []
-            )
-
-            let (cocoonText, entities) = parseCocoonMenuTextEntities(presentationData.strings.Conversation_Translation_CocoonInfo, emojiFileId: cocoonFile.fileId.id)
-            items.append(.action(ContextMenuActionItem(text: cocoonText, entities: entities, entityFiles: [cocoonFile.fileId.id: cocoonFile], enableEntityAnimations: true, textLayout: .multiline, textFont: .small, icon: { _ in return nil }, action: { [weak self] c, _ in
-                c?.dismiss(completion: nil)
-                
-                if let controller = self?.controller() {
-                    let infoController = context.sharedContext.makeCocoonInfoScreen(context: context)
-                    controller.push(infoController)
-                }
-            })))
-            
             return ContextController.Items(content: .list(items))
         }
             
@@ -442,7 +413,7 @@ private final class TranslationContextReferenceContentSource: ContextReferenceCo
     }
     
     func transitionInfo() -> ContextControllerReferenceViewInfo? {
-        return ContextControllerReferenceViewInfo(referenceView: self.sourceNode.view, contentAreaInScreenSpace: UIScreen.main.bounds)
+        return ContextControllerReferenceViewInfo(referenceView: self.sourceNode.view, contentAreaInScreenSpace: mainWindowScreenBounds)
     }
 }
 

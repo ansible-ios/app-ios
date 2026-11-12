@@ -2,7 +2,7 @@ import Foundation
 import Postbox
 import SwiftSignalKit
 import MtProtoKit
-import IosappApi
+internal import IosappApi
 
 public enum UpdatePeerPhotoStatus {
     case progress(Float)

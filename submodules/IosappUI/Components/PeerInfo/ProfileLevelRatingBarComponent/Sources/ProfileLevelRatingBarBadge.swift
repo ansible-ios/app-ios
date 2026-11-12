@@ -1,5 +1,4 @@
 import Foundation
-import LottieSettings
 import UIKit
 import Display
 import IosappPresentationData
@@ -281,8 +280,7 @@ final class ProfileLevelRatingBarBadge: Component {
                     size: badgeShapeSize,
                     renderingScale: UIScreenScale,
                     loop: false,
-                    playOnce: nil,
-                    lottieSettings: .noAccountFallback
+                    playOnce: nil
                 )),
                 environment: {},
                 containerSize: badgeShapeSize

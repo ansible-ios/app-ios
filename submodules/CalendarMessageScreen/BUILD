@@ -21,6 +21,9 @@ swift_library(
         "//submodules/DirectMediaImageCache:DirectMediaImageCache",
         "//submodules/IosappStringFormatting:IosappStringFormatting",
         "//submodules/TooltipUI:TooltipUI",
+        "//submodules/IosappUI/Components/ButtonComponent",
+        "//submodules/Components/ComponentDisplayAdapters",
+        "//submodules/IosappUI/Components/EdgeEffect",
     ],
     visibility = [
         "//visibility:public",

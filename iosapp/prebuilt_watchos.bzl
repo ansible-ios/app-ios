@@ -193,7 +193,7 @@ apple_prebuilt_watchos_application = rule(
         "bundle_name": attr.string(default = "tgwatch Watch App"),
         "minimum_os_version": attr.string(default = "26.0"),
         "srcs": attr.label(
-            default = "//Iosapp/WatchApp:sources",
+            default = "//iosapp/WatchApp:sources",
             allow_files = True,
             doc = "Committed in-repo watch source snapshot (tracked inputs).",
         ),
@@ -207,11 +207,11 @@ apple_prebuilt_watchos_application = rule(
             doc = "Source of the marketing version (key 'app'), kept in sync with the host app.",
         ),
         "_compile_worker": attr.label(
-            default = "//Iosapp:prebuilt_watchos_compile.sh",
+            default = "//iosapp:prebuilt_watchos_compile.sh",
             allow_single_file = True,
         ),
         "_patch_worker": attr.label(
-            default = "//Iosapp:prebuilt_watchos_patch.sh",
+            default = "//iosapp:prebuilt_watchos_patch.sh",
             allow_single_file = True,
         ),
     },
