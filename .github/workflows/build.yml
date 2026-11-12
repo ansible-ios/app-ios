@@ -54,6 +54,9 @@ jobs:
           cp -R $GITHUB_WORKSPACE /Users/Shared/
           mv /Users/Shared/$(basename $GITHUB_WORKSPACE) /Users/Shared/telegram-ios
 
+      - name: Verify Postbox architecture checks
+        run: python3 -m unittest discover -s build-system/Make/tests -p test_postbox_import_check.py
+
       - name: Build the App
         env:
           ANSIBLE_IOS_API_HASH: ${{ secrets.ANSIBLE_IOS_API_HASH }}

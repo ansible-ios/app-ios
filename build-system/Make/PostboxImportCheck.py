@@ -15,7 +15,7 @@ lists that only shrink:
 It also fails on any in-scope declaration that conforms to Postbox's `Media` (or `EngineRawMedia`)
 without `EngineCustomMedia`: `EngineMedia.init(_:)` has no case for such a type and traps on it.
 
-In scope: Swift files under submodules/ and Iosapp/, except Postbox and IosappCore
+In scope: Swift files under submodules/ and iosapp/, except Postbox and IosappCore
 themselves and test sources (any directory named `Tests` or ending in `Tests`).
 
 Make.py runs this before `build` and `test`. To run it alone:
@@ -33,7 +33,7 @@ ALLOWLIST_PATH = 'submodules/Postbox/AllowedImporters.txt'
 
 ACCESS_ALLOWLIST_PATH = 'submodules/Postbox/AllowedPostboxAccess.txt'
 
-SCAN_ROOTS = ('submodules', 'Iosapp')
+SCAN_ROOTS = ('submodules', 'iosapp')
 
 EXEMPT_PREFIXES = ('submodules/Postbox/', 'submodules/IosappCore/')
 

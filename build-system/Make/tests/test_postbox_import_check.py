@@ -99,15 +99,15 @@ class ScopeTests(TreeTestCase):
         self.assertEqual(self.errors(), [])
 
     def test_app_and_extension_sources_are_checked(self):
-        self.write('Iosapp/SiriIntents/A.swift', 'import Postbox\n')
-        self.write('Iosapp/NotificationService/Sources/B.swift', 'import Postbox\n')
+        self.write('iosapp/SiriIntents/A.swift', 'import Postbox\n')
+        self.write('iosapp/NotificationService/Sources/B.swift', 'import Postbox\n')
         self.assertEqual(len(self.errors()), 2)
 
     def test_test_paths_are_exempt(self):
         for path in [
             'submodules/Foo/Tests/T.swift',
             'submodules/Foo/Tests/Nested/T.swift',
-            'Iosapp/SiriIntentsTests/T.swift',
+            'iosapp/SiriIntentsTests/T.swift',
             'Tests/ComposerHarness/AppContext/H.swift',
         ]:
             self.write(path, '@testable import Postbox\n')
