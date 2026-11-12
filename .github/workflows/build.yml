@@ -113,6 +113,14 @@ jobs:
           done
           zip -r "./$OUTPUT_PATH/iosapp.DSYMs.zip" build/DSYMs 1>/dev/null
 
+      - name: Verify native widget runtime and engine on macOS
+        run: |
+          set -euo pipefail
+          cd /Users/Shared/telegram-ios
+          BAZEL=$(find build-input -maxdepth 1 -type f -name 'bazel-*-darwin-*' -print -quit)
+          test -n "$BAZEL"
+          "$BAZEL" --output_user_root=/private/var/tmp/_bazel_containerhost test             -c opt --test_output=errors             //third-party/quickjs-ng:QuickJSSmokeTests             //third-party/quickjs-ng:QuickJSHostTests             //third-party/quickjs-ng:QuickJSSecurityTests             //submodules/IosappUI/Components/MessageWidget/WidgetRuntime:WidgetRuntimeTests
+
       - name: Remove disposable signing material
         if: always()
         run: |
