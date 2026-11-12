@@ -904,7 +904,7 @@ private func resolveInternalUrl(context: AccountContext, url: ParsedInternalUrl)
     switch url {
         case let .premiumOffer(reference):
             return .single(.result(.premiumOffer(reference: reference)))
-        case let .phone(phone, attach, startAttach, text):
+        case let .phone(phone, attach, startAttach, text, noPaidMessagesToken):
             return context.engine.peers.resolvePeerByPhone(phone: phone)
             |> mapToSignal { peer -> Signal<ResolveInternalUrlResult, NoError> in
                 if let noPaidMessagesToken, let peer {
