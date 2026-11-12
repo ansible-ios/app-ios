@@ -60,16 +60,39 @@ MEMBER_RE = re.compile(r'\.postbox\b(?:\.([A-Za-z_]\w*))?')
 # Where the scanner may stop next, per state. Everything between two stops is copied (code) or
 # blanked (strings, comments) in one slice, so the scan runs at regex speed rather than one
 # Python step per character.
-_CODE_STOPS = re.compile(r'//|/\*|"')
-_INTERPOLATION_STOPS = re.compile(r'//|/\*|"|[()]')
+_TOKEN_AFTER_FIRST = (
+    r'(?:(?<=/)(?:(?P<line>/[^\n]*)'
+    r'|(?P<block>\*(?:[^/*]|\*(?!/)|/(?!\*))*\*/)|(?P<complex_comment>\*))'
+    r'|(?<=")(?:(?P<string>(?!"")(?:[^"\\\n]|\\(?!\()[^\n])*")'
+    r'|(?P<interpolated>(?!"")(?:[^"\\\n]|\\(?!\()[^\n])*'
+    r'\\\((?P<expression>[^/"\\()\n]*)\)(?:[^"\\\n]|\\(?!\()[^\n])*")'
+    r'|(?P<complex_string>)))'
+)
+_CODE_STOPS = re.compile(r'[/"]' + _TOKEN_AFTER_FIRST)
+_INTERPOLATION_STOPS = re.compile(r'[/"()]' + r'(?:' + _TOKEN_AFTER_FIRST + r'|(?<=[()]))')
 _BLOCK_COMMENT_STOPS = re.compile(r'/\*|\*/')
 _STRING_STOPS = re.compile(r'\\|"|\n')
 _MULTILINE_STRING_STOPS = re.compile(r'\\|"""')
-_NOT_NEWLINE = re.compile(r'[^\n]')
 
 
 def _blank(text):
-    return _NOT_NEWLINE.sub(' ', text)
+    if '\n' not in text:
+        return ' ' * len(text)
+    return '\n'.join(' ' * len(line) for line in text.split('\n'))
+
+
+class _ComplexSwiftToken(Exception):
+    pass
+
+
+def _blank_simple_token(match):
+    if match.lastgroup in ('complex_comment', 'complex_string'):
+        raise _ComplexSwiftToken
+    if match.lastgroup == 'interpolated':
+        start, end = match.span('expression')
+        return (' ' * (start - match.start()) + match.group('expression')
+                + ' ' * (match.end() - end))
+    return _blank(match.group(0))
 
 
 def strip_comments_and_strings(text):
@@ -78,6 +101,12 @@ def strip_comments_and_strings(text):
     Code inside string interpolation `\\( ... )` is kept, so `"\\(account.postbox)"` still reads as
     access. Handles `//`, nested `/* */`, `"..."` and multi-line triple-quoted literals.
     """
+    # Common tokens are replaced in one regex traversal. Nested comments and
+    # expressions restart the same input with the full state machine below.
+    try:
+        return _CODE_STOPS.sub(_blank_simple_token, text)
+    except _ComplexSwiftToken:
+        pass
     out = []
     i = 0
     n = len(text)
@@ -93,6 +122,10 @@ def strip_comments_and_strings(text):
             out.append(text[i:match.start()])
             i = match.start()
             stop = match.group(0)
+            if match.lastgroup in ('line', 'block', 'string', 'interpolated'):
+                out.append(_blank_simple_token(match))
+                i = match.end()
+                continue
             if stop == '//':
                 j = text.find('\n', i)
                 j = n if j < 0 else j
