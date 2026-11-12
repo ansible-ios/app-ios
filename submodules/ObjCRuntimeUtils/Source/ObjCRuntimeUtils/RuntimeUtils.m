@@ -2,6 +2,40 @@
 #include <Foundation/Foundation.h>
 
 #import <objc/runtime.h>
+#import <objc/message.h>
+#include <string.h>
+
+NSArray<NSValue *> *AnsibleActiveReservedRegionFrames(UIView *view, BOOL division) {
+    // Public UIKit 27.1 API, resolved at runtime so builds with older SDKs retain support.
+    Class kindClass = NSClassFromString(@"UIViewReservedRegionKind");
+    SEL kindSelector = NSSelectorFromString(division ? @"divisionRegionKind" : @"occlusionRegionKind");
+    SEL querySelector = NSSelectorFromString(@"reservedRegionsOfKind:options:");
+    if (kindClass == Nil || ![kindClass respondsToSelector:kindSelector] || ![view respondsToSelector:querySelector]) {
+        return @[];
+    }
+    id kind = ((id (*)(id, SEL))objc_msgSend)((id)kindClass, kindSelector);
+    if (kind == nil) {
+        return @[];
+    }
+    id regions = ((id (*)(id, SEL, id, NSUInteger))objc_msgSend)(view, querySelector, kind, 0);
+    if (![regions isKindOfClass:[NSArray class]]) {
+        return @[];
+    }
+    NSMutableArray<NSValue *> *frames = [[NSMutableArray alloc] init];
+    SEL activeSelector = NSSelectorFromString(@"isActive");
+    for (id region in regions) {
+        if (![region respondsToSelector:activeSelector] || ![region respondsToSelector:@selector(frame)]
+            || !((BOOL (*)(id, SEL))objc_msgSend)(region, activeSelector)) {
+            continue;
+        }
+        // KVC boxes CGRect with the platform ABI, including Intel simulator builds.
+        id frame = [region valueForKey:@"frame"];
+        if ([frame isKindOfClass:[NSValue class]] && strcmp([frame objCType], @encode(CGRect)) == 0) {
+            [frames addObject:frame];
+        }
+    }
+    return frames;
+}
 
 @interface CALayer ()
 

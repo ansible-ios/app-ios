@@ -1,5 +1,6 @@
 import Foundation
 import UIKit
+import ObjCRuntimeUtils
 import AsyncDisplayKit
 import SwiftSignalKit
 
@@ -293,7 +294,7 @@ public final class WindowHostView {
     /// coordinates. Nil before iOS 27.1.
     fileprivate var activeDivision: CGRect? {
         if #available(iOS 27.1, *) {
-            return self.eventView.reservedRegions(kind: .division).first(where: \.isActive)?.frame
+            return AnsibleActiveReservedRegionFrames(self.eventView, true).first?.cgRectValue
         }
         return nil
     }

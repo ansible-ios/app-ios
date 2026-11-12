@@ -1,4 +1,5 @@
 import UIKit
+import ObjCRuntimeUtils
 
 /// The block the system reserves in each corner of a layout (iPhone Duo's status corner), measured
 /// from that corner: `width` along the horizontal edge, `height` along the vertical one. `nil` means
@@ -161,7 +162,7 @@ var iPhoneDuoSystemReportIsSettled: Bool {
 /// camera), in the view's coordinates. Empty before iOS 27.1.
 func activeOcclusionFrames(in view: UIView) -> [CGRect] {
     if #available(iOS 27.1, *) {
-        return view.reservedRegions(kind: .occlusion).filter(\.isActive).map(\.frame)
+        return AnsibleActiveReservedRegionFrames(view, false).map(\.cgRectValue)
     }
     return []
 }

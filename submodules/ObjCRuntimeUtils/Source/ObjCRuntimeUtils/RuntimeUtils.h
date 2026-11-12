@@ -33,3 +33,6 @@ typedef enum {
 
 SEL _Nonnull makeSelectorFromString(NSString * _Nonnull string);
 
+/// Active public UIKit reserved-region frames; empty on systems without this API.
+NSArray<NSValue *> * _Nonnull AnsibleActiveReservedRegionFrames(UIView * _Nonnull view, BOOL division);
+
