@@ -74,7 +74,9 @@ jobs:
         with:
           path: ${{ runner.temp }}/ansible-ios-action-cache
           key: ios-actions-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('versions.json', 'MODULE.bazel', 'MODULE.bazel.lock') }}-${{ github.run_id }}
-          restore-keys: ios-actions-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('versions.json', 'MODULE.bazel', 'MODULE.bazel.lock') }}-
+          restore-keys: |
+            ios-actions-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('versions.json', 'MODULE.bazel', 'MODULE.bazel.lock') }}-
+            ios-actions-${{ runner.os }}-${{ runner.arch }}-
 
       - name: Build the App
         env:

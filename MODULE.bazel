@@ -1,6 +1,7 @@
 http_file = use_repo_rule("@bazel_tools//tools/build_defs/repo:http.bzl", "http_file")
 
 http_archive = use_repo_rule("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+wasi_sdk_macos = use_repo_rule("//:wasi_sdk.bzl", "wasi_sdk_macos")
 
 _WASI_SDK_BUILD = """
 exports_files(["bin/clang++"])
@@ -11,11 +12,8 @@ filegroup(
 )
 """
 
-http_archive(
+wasi_sdk_macos(
     name = "wasi_sdk_macos",
-    urls = ["https://github.com/WebAssembly/wasi-sdk/releases/download/wasi-sdk-33/wasi-sdk-33.0-arm64-macos.tar.gz"],
-    sha256 = "85c997a2665ead91673b5bb88b7d0df3fc8900df3bfa244f720d478187bbdc78",
-    strip_prefix = "wasi-sdk-33.0-arm64-macos",
     build_file_content = _WASI_SDK_BUILD,
 )
 
