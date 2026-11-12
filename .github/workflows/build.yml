@@ -57,6 +57,14 @@ jobs:
       - name: Verify Postbox architecture checks
         run: python3 -m unittest discover -s build-system/Make/tests -p test_postbox_import_check.py
 
+      - name: Restore qualified Bazel action cache
+        id: bazel-cache
+        uses: actions/cache/restore@v4
+        with:
+          path: ${{ runner.temp }}/ansible-ios-action-cache
+          key: ios-actions-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('versions.json', 'MODULE.bazel', 'MODULE.bazel.lock') }}-${{ github.run_id }}
+          restore-keys: ios-actions-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('versions.json', 'MODULE.bazel', 'MODULE.bazel.lock') }}-
+
       - name: Build the App
         env:
           ANSIBLE_IOS_API_HASH: ${{ secrets.ANSIBLE_IOS_API_HASH }}
@@ -70,6 +78,13 @@ jobs:
           BAZEL_USER_ROOT="/private/var/tmp/_bazel_containerhost"
 
           cd $SOURCE_DIR
+          printf '\nbuild --experimental_ui_max_stdouterr_bytes=8388608\n' >> .bazelrc
+          AVAILABLE_GB=$(df -g "$RUNNER_TEMP" | tail -1 | awk '{print $4}')
+          CACHE_ARGS=()
+          if [ "$AVAILABLE_GB" -ge 30 ]; then
+            CACHE_ARGS=(--cacheDir="$RUNNER_TEMP/ansible-ios-action-cache")
+            printf 'build --experimental_disk_cache_gc_max_size=4G\nbuild --experimental_disk_cache_gc_idle_delay=1s\n' >> .bazelrc
+          fi
 
           BUILD_NUMBER_OFFSET="$(cat build_number_offset)"
 
@@ -93,6 +108,7 @@ jobs:
           python3 -u build-system/Make/Make.py \
             --bazelUserRoot="$BAZEL_USER_ROOT" \
             --overrideXcodeVersion \
+            "${CACHE_ARGS[@]}" \
             build \
             --configurationPath="build-system/ansible-configuration.json" \
             --codesigningInformationPath="$SIGNING_PATH" \
@@ -123,6 +139,24 @@ jobs:
           BAZEL=$(find build-input -maxdepth 1 -type f -name 'bazel-*-darwin-*' -print -quit)
           test -n "$BAZEL"
           "$BAZEL" --output_user_root=/private/var/tmp/_bazel_containerhost test             -c opt --test_output=errors             //third-party/quickjs-ng:QuickJSSmokeTests             //third-party/quickjs-ng:QuickJSHostTests             //third-party/quickjs-ng:QuickJSSecurityTests             //submodules/IosappUI/Components/MessageWidget/WidgetRuntime:WidgetRuntimeTests
+
+      - name: Collect bounded compiler diagnostics
+        if: always()
+        run: |
+          python3 build-system/Make/CollectAnsibleBuildErrors.py \
+            /private/var/tmp/_bazel_containerhost build/diagnostics/compiler-errors.json
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: ios-compiler-diagnostics-${{ github.sha }}
+          path: build/diagnostics/compiler-errors.json
+          if-no-files-found: error
+      - name: Preserve reusable Bazel actions
+        if: always() && steps.bazel-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: ${{ runner.temp }}/ansible-ios-action-cache
+          key: ${{ steps.bazel-cache.outputs.cache-primary-key }}
 
       - name: Remove disposable signing material
         if: always()
