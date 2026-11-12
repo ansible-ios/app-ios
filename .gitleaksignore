@@ -1,0 +1,17 @@
+# Exact historical non-credential findings in the full public upstream import.
+# No rule, file or future commit is excluded. Provenance: official iOS24638bc69.
+
+# Deterministic repeated-hex local editor protocol fixture, no external service
+9606c7e99dcd5c55c77cfa1baddec2c3849fa3ba:submodules/IosappUI/Components/RichTextEditor/Host/Engine/Scripts/tests/test_text_input_group_protocol.py:generic-api-key:13
+
+# Deterministic repeated-hex alternate local editor protocol fixture
+9606c7e99dcd5c55c77cfa1baddec2c3849fa3ba:submodules/IosappUI/Components/RichTextEditor/Host/Engine/Scripts/tests/test_text_input_group_protocol.py:generic-api-key:14
+
+# Public mathematical FNV-1a offset basis, not a credential
+9606c7e99dcd5c55c77cfa1baddec2c3849fa3ba:third-party/twidget/LiteHTML/LHContainer.mm:generic-api-key:2779
+
+# Public mathematical FNV-1a offset basis, not a credential
+9606c7e99dcd5c55c77cfa1baddec2c3849fa3ba:third-party/twidget/LiteHTML/LHContainer.mm:generic-api-key:2824
+
+# Public demo localStorage key, no authentication or network credential
+9606c7e99dcd5c55c77cfa1baddec2c3849fa3ba:third-party/widget-sandbox/corpus/showcase/life/04-habit-tracker.html:generic-api-key:41
