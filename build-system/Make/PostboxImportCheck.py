@@ -101,22 +101,19 @@ def strip_comments_and_strings(text):
     Code inside string interpolation `\\( ... )` is kept, so `"\\(account.postbox)"` still reads as
     access. Handles `//`, nested `/* */`, `"..."` and multi-line triple-quoted literals.
     """
-    # Common tokens are replaced in one regex traversal. Nested comments and
-    # expressions restart the same input with the full state machine below.
-    # Repeated short literals/comments share a bounded per-file replacement cache.
+    # Complete ordinary lines share a bounded per-file replacement cache.
+    # A multiline/nested token restarts the input with the full state machine.
     replacements = {}
-
-    def replace(match):
-        token = match.group(0)
-        result = replacements.get(token)
-        if result is None:
-            result = _blank_simple_token(match)
-            if len(replacements) < 256 and len(token) <= 1024:
-                replacements[token] = result
-        return result
-
     try:
-        return _CODE_STOPS.sub(replace, text)
+        lines = []
+        for line in text.split('\n'):
+            result = replacements.get(line)
+            if result is None:
+                result = _CODE_STOPS.sub(_blank_simple_token, line)
+                if len(replacements) < 256 and len(line) <= 1024:
+                    replacements[line] = result
+            lines.append(result)
+        return '\n'.join(lines)
     except _ComplexSwiftToken:
         pass
     out = []
