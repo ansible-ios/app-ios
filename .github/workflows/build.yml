@@ -6,6 +6,15 @@ on:
 
   workflow_dispatch:
     inputs:
+      runner_label:
+        description: 'macOS host for the same ARM64 iOS build and native checks.'
+        required: false
+        default: macos-latest
+        type: choice
+        options:
+          - macos-latest
+          - macos-26-intel
+          - macos-15-intel
       publish:
         description: 'Publish the qualified IPA (off keeps artifacts private).'
         required: false
@@ -17,12 +26,9 @@ permissions:
 
 jobs:
   build:
-    # macos-13 выведен из обращения: бегунок не выделялся НИ РАЗУ (runner_name
-    # пуст, шагов 0), и запуск убивал лимит очереди в 24 часа. macos-latest
-    # существует всегда, а нужную версию Xcode выбирает шаг ниже.
-    # timeout-minutes считается с НАЧАЛА ВЫПОЛНЕНИЯ и от неверной метки не
-    # спасает, поэтому метка обязана быть существующей.
-    runs-on: macos-latest
+    # Both supported host architectures cross-compile the same ARM64 iOS target.
+    # A manual Intel host avoids unavailable ARM64 hosted runner capacity.
+    runs-on: ${{ inputs.runner_label || 'macos-latest' }}
     timeout-minutes: 300
 
     steps:
