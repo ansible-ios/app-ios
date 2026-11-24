@@ -18752,3 +18752,4 @@ Error: %8$@";
 
 "Appearance.ThemeCarouselNeutral" = "Нейтральная";
 "Appearance.ThemeCarouselNeutralNight" = "Нейтральная ночная";
+"VoiceOver.Gallery.PlaybackPosition" = "Позиция воспроизведения";
