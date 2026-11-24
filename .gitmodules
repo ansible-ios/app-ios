@@ -1,33 +1,33 @@
 [submodule "build-system/bazel-rules/rules_apple"]
 	path = build-system/bazel-rules/rules_apple
-	url = https://github.com/ansible-ios/rules_apple.git
+	url = https://github.com/ansible-ios/as-rules-apple.git
 [submodule "build-system/bazel-rules/rules_swift"]
 	path = build-system/bazel-rules/rules_swift
-	url = https://github.com/ansible-ios/rules_swift.git
+	url = https://github.com/ansible-ios/as-rules-swift.git
 [submodule "build-system/bazel-rules/apple_support"]
 	path = build-system/bazel-rules/apple_support
-	url = https://github.com/ansible-ios/apple_support.git
+	url = https://github.com/ansible-ios/as-apple-support.git
 [submodule "submodules/TgVoipWebrtc/tgcalls"]
 	path = submodules/TgVoipWebrtc/tgcalls
-	url = https://github.com/ansible-ios/tgcalls.git
+	url = https://github.com/ansible-ios/as-calls.git
 [submodule "third-party/libvpx/libvpx"]
 	path = third-party/libvpx/libvpx
-	url = https://github.com/ansible-ios/libvpx.git
+	url = https://github.com/ansible-ios/as-libvpx.git
 [submodule "third-party/webrtc/webrtc"]
 	path = third-party/webrtc/webrtc
-	url = https://github.com/ansible-ios/webrtc.git
+	url = https://github.com/ansible-ios/as-webrtc.git
 [submodule "build-system/bazel-rules/rules_xcodeproj"]
 	path = build-system/bazel-rules/rules_xcodeproj
-	url = https://github.com/ansible-ios/rules_xcodeproj.git
+	url = https://github.com/ansible-ios/as-rules-xcodeproj.git
 [submodule "third-party/dav1d/dav1d"]
 	path = third-party/dav1d/dav1d
-	url = https://github.com/ansible-ios/dav1d.git
+	url = https://github.com/ansible-ios/as-dav1d.git
 [submodule "third-party/td/td"]
 	path = third-party/td/td
 	url = https://github.com/asdlib/adlib.git
 [submodule "submodules/tlottie/tlottie"]
 	path = submodules/tlottie/tlottie
-	url = https://github.com/ansible-ios/tlottie.git
+	url = https://github.com/ansible-ios/as-tlottie.git
 [submodule "third-party/mtproto-engine"]
 	path = third-party/mtproto-engine
-	url = https://github.com/ansible-ios/mtproto-engine.git
+	url = https://github.com/ansible-ios/as-mtproto-engine.git

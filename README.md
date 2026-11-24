@@ -1,104 +1,39 @@
-# Ansible for iOS
+# Ansible для iOS
 
-iOS client for the [Ansible](https://ansible.su) messaging service.
+> [!NOTE]
+> **Происхождение кода.** Форк [TelegramMessenger/Telegram-iOS](https://github.com/TelegramMessenger/Telegram-iOS), который сопровождает проект Ansible Messenger. Сведения об авторах и лицензиях приведены в исходной документации.
 
-> **This project is a fork of [Telegram for iOS](https://github.com/TelegramMessenger/Telegram-iOS).**
-> We are grateful to the Telegram-iOS contributors for their work —
-> without it this fork would not exist.
->
-> **Important:** the upstream Telegram-iOS repository does not contain
-> a top-level LICENSE file. This fork is created in good-faith reliance
-> on the permissions implied by the upstream README and is distributed
-> under GPL v2 (or later) by the fork authors. See [NOTICE](NOTICE) for
-> the full discussion of the upstream license situation.
->
-> Ansible for iOS is **not affiliated with, endorsed by, or sponsored
-> by Telegram FZ-LLC**. It connects to Ansible servers, not Telegram
-> servers, and cannot be used to access Telegram accounts.
+Клиент мессенджера Ansible для iPhone и iPad. Это независимый **форк Telegram для iOS**. Приложение использует инфраструктуру и учётные записи Ansible. [Исходный проект Telegram](https://github.com/TelegramMessenger/Telegram-iOS).
 
-[![Upstream](https://img.shields.io/badge/forked%20from-Telegram--iOS-orange.svg)](https://github.com/TelegramMessenger/Telegram-iOS)
+## Сборка на Mac
 
----
-
-## What this is
-
-Ansible for iOS is the official iOS client for the Ansible messenger.
-It is built on top of the Telegram-iOS codebase, with the following
-high-level modifications:
-
-- Networking layer rewritten to use the **MVSy 1.0** protocol and
-  connect to Ansible backend servers (instead of MTProto 2.0 / Telegram
-  DCs).
-- Branding, visual identity, and product naming replaced throughout.
-- Telegram-specific features removed where not applicable to Ansible
-  (e.g., Telegram Premium subscriptions, Telegram Stars, Fragment
-  integration, sponsored messages).
-- Additional features added that are unique to Ansible.
-
-The complete list of changes is tracked in [`CHANGELOG.md`](CHANGELOG.md).
-
-## Compliance with upstream README requirements
-
-The upstream Telegram-iOS README requests the following from forks. We
-comply as follows:
-
-| Upstream request | Status in this fork |
-|---|---|
-| Obtain your own api_id | N/A — Ansible uses MVSy 1.0, not MTProto |
-| Don't use the name "Telegram" | ✅ Rebranded to Ansible |
-| Don't use Telegram's logo | ✅ Independent Ansible logo |
-| Follow security guidelines | ✅ Inherited from upstream |
-| Publish your code | ✅ This repository is public |
-
-## Relationship to upstream
-
-| | Telegram for iOS | Ansible for iOS |
-|---|---|---|
-| Upstream LICENSE file | Not present | (See NOTICE — fork author license: GPL v2+) |
-| Backend | Telegram DCs | Ansible servers (`mvsy.ansible.su`) |
-| Protocol | MTProto 2.0 | MVSy 1.0 |
-| Trademarks | Telegram | Ansible |
-| Account compatibility | Telegram accounts | Ansible accounts (separate system) |
-| Source repository | [TelegramMessenger/Telegram-iOS](https://github.com/TelegramMessenger/Telegram-iOS) | [Ansible-ios/Telegram-iOS](https://github.com/Ansible-ios/Telegram-iOS) |
-
-We do **not** merge updates from upstream automatically. The fork is
-independently maintained.
-
-## Building from source
-
-The build process is unchanged from upstream. Refer to the upstream
-README's compilation instructions; substitute the Ansible backend
-endpoint for the Telegram DC list in the configuration step.
+Сборка использует Xcode и Bazel. Для начала клонируйте репозиторий вместе с зависимостями:
 
 ```sh
-git clone --recursive -j8 https://github.com/Ansible-ios/Telegram-iOS.git
+git clone --recursive https://github.com/ansible-ios/as-ios.git
+cd as-ios
 ```
 
-Then follow the upstream Xcode setup, configuration, and project
-generation steps.
+- Перед установкой инструментов сверьте версии macOS, Xcode и Bazel с [версией конфигурации в репозитории](versions.json).
+- Параметры приложения находятся в [конфигурации Ansible](build-system/ansible-configuration.json). Сборкой управляет [Make.py](build-system/Make/Make.py).
+- Для установки подписанного IPA на устройство нужны сертификат и профиль подготовки. Последовательность подготовки подписи, сборки и проверки IPA приведена в [сценарии CI](.github/workflows/build.yml).
 
-## License
+## Лицензия и авторство
 
-See the [NOTICE](NOTICE) file for a complete discussion of the upstream
-license situation and the fork-author license.
+Авторы Ansible распространяют свои изменения по GNU GPL версии 2 или более поздней. В исходном проекте Telegram для iOS отсутствует единый корневой файл лицензии. Для заимствованных файлов и подмодулей действуют соответствующие им условия. Происхождение кода и позиция авторов форка подробно изложены в [NOTICE](NOTICE).
 
-For modifications introduced by the Ansible iOS Authors, the applicable
-license is **GNU General Public License v2 (or any later version)**.
+[Сайт Ansible](https://ansible.su) · [История изменений](CHANGELOG.md) · [Выпуски для iOS](https://github.com/ansible-ios/as-ios/releases)
 
-By contributing to this repository, you agree that your contributions
-will be licensed under the same terms.
-
-## Trademarks
-
-"Telegram" is a registered trademark of Telegram FZ-LLC. It is used in
-this README and in source code comments solely to identify the upstream
-project from which this fork is derived. It is **not** used as a
-trademark of this product.
-
-"Ansible" is a trademark of the Ansible iOS Authors.
-
-## Contact
-
-- General: <https://ansible.su>
-- Source code questions: open an issue on this repository
-- License compliance / DMCA: <legal@ansible.su>
+## Происхождение модулей организации
+| Модуль Ansible | Исходный проект |
+| --- | --- |
+| [as-rules-apple](https://github.com/ansible-ios/as-rules-apple) | [github.com/ali-fareed/rules_apple](https://github.com/ali-fareed/rules_apple) |
+| [as-rules-swift](https://github.com/ansible-ios/as-rules-swift) | [github.com/bazelbuild/rules_swift](https://github.com/bazelbuild/rules_swift) |
+| [as-apple-support](https://github.com/ansible-ios/as-apple-support) | [github.com/bazelbuild/apple_support](https://github.com/bazelbuild/apple_support) |
+| [as-calls](https://github.com/ansible-ios/as-calls) | [github.com/ali-fareed/tgcalls](https://github.com/ali-fareed/tgcalls) |
+| [as-libvpx](https://github.com/ansible-ios/as-libvpx) | [github.com/webmproject/libvpx](https://github.com/webmproject/libvpx) |
+| [as-webrtc](https://github.com/ansible-ios/as-webrtc) | [github.com/ali-fareed/webrtc](https://github.com/ali-fareed/webrtc) |
+| [as-rules-xcodeproj](https://github.com/ansible-ios/as-rules-xcodeproj) | [github.com/MobileNativeFoundation/rules_xcodeproj](https://github.com/MobileNativeFoundation/rules_xcodeproj) |
+| [as-dav1d](https://github.com/ansible-ios/as-dav1d) | [github.com/ali-fareed/dav1d](https://github.com/ali-fareed/dav1d) |
+| [as-tlottie](https://github.com/ansible-ios/as-tlottie) | [github.com/dkaraush/tlottie](https://github.com/dkaraush/tlottie) |
+| [as-mtproto-engine](https://github.com/ansible-ios/as-mtproto-engine) | [github.com/TelegramMessenger/mtproto-engine](https://github.com/TelegramMessenger/mtproto-engine) |
