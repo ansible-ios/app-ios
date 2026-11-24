@@ -32,8 +32,8 @@ final class ShareScreenMessagingBadge: UIView {
         guard !self.isHidden else { return }
         self.outline.tintColor = theme.list.modalPlainBackgroundColor
         if let stars = requirement.stars, stars.value > 0 {
-            self.outline.image = PresentationResourcesChatList.shareAvatarStarsLockBadgeBackground(theme)
-            self.background.image = PresentationResourcesChatList.shareAvatarStarsLockBadgeInnerBackground(theme)
+            self.outline.image = PresentationResourcesChatList.shareAvatarDiamondsLockBadgeBackground(theme)
+            self.background.image = PresentationResourcesChatList.shareAvatarDiamondsLockBadgeInnerBackground(theme)
             self.background.tintColor = theme.actionSheet.controlAccentColor
             self.label.isHidden = false
             let text = NSMutableAttributedString(string: "⭐️\(presentationStringsFormattedNumber(Int32(clamping: stars.value), " "))", font: Font.with(size: 9.0, design: .round, weight: .bold), textColor: theme.list.itemCheckColors.foregroundColor)

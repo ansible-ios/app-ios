@@ -2243,7 +2243,7 @@ extension ChatControllerImpl {
             mediaGrouping: mediaGrouping,
             initialCaption: inputText,
             hasSchedule: hasSchedule,
-            sendPaidMessageDiamonds: self.presentationInterfaceState.sendPaidMessageDiamonds?.value ?? 0,
+            sendPaidMessageStars: self.presentationInterfaceState.sendPaidMessageDiamonds?.value ?? 0,
             getCaptionPanelView: { [weak self] in
                 return self?.getCaptionPanelView(isFile: false)
             },

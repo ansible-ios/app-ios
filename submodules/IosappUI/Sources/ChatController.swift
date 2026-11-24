@@ -7732,7 +7732,6 @@ public final class ChatControllerImpl: IosappBaseController, ChatController, Gal
         super.viewWillAppear(animated)
         self.forwardSideListAppearance(.willAppear, animated: animated)
 
-        self.walletTransferAnimationsVisible = true
         self.chatDisplayNode.historyNode.forEachVisibleMessageItemNode { itemNode in
             itemNode.unreadMessageRangeUpdated()
         }
@@ -8357,7 +8356,6 @@ public final class ChatControllerImpl: IosappBaseController, ChatController, Gal
         super.viewWillDisappear(animated)
         self.forwardSideListAppearance(.willDisappear, animated: animated)
 
-        self.walletTransferAnimationsVisible = false
         
         if #available(iOS 18.0, *) {
         } else {

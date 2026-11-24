@@ -136,7 +136,7 @@ final class ShareScreenSendCoordinator {
                 if case let .stars(amount) = requirements[peer.id] {
                     stars[peer.id] = amount
                 } else if let currentPeer = currentPeers[peer.id] ?? nil, case let .channel(channel) = currentPeer {
-                    stars[peer.id] = channel.sendPaidMessageStars
+                    stars[peer.id] = channel.sendPaidMessageDiamonds
                 }
             }
             let total = stars.values.reduce(StarsAmount.zero, +)

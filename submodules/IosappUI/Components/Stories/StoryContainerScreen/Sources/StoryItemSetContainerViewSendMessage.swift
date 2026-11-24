@@ -625,7 +625,7 @@ final class StoryItemSetContainerSendMessage: @unchecked(Sendable) {
                         guard let view, let component = view.component, let navigationController = component.controller()?.navigationController as? NavigationController else {
                             return
                         }
-                        let controller = component.context.sharedContext.makeDiamondsPurchaseScreen(context: component.context, diamondsContext: diamondsContext, options: options, purpose: .sendMessage(peerId: peerId, requiredStars: totalAmount), targetPeerId: nil, customTheme: component.theme, completion: { stars in
+                        let controller = component.context.sharedContext.makeDiamondsPurchaseScreen(context: component.context, diamondsContext: diamondsContext, options: options, purpose: .sendMessage(peerId: peerId, requiredDiamonds: totalAmount), targetPeerId: nil, customTheme: component.theme, completion: { stars in
                             diamondsContext.add(balance: StarsAmount(value: stars, nanos: 0))
                             let _ = (diamondsContext.onUpdate
                             |> take(1)
@@ -2933,7 +2933,7 @@ final class StoryItemSetContainerSendMessage: @unchecked(Sendable) {
             mediaGrouping: options.mediaGrouping,
             initialCaption: inputText,
             hasSchedule: peer.id.namespace != Namespaces.Peer.SecretChat,
-            sendPaidMessageDiamonds: 0,
+            sendPaidMessageStars: 0,
             getCaptionPanelView: { [weak self, weak view] in
                 guard let self, let view else {
                     return nil

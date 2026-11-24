@@ -640,15 +640,8 @@ final class TextProcessingTranslateContentComponent: Component {
                     environment: {},
                     containerSize: CGSize(width: availableSize.width - sideInset * 2.0, height: 46.0)
                 )
-                var styleSelectionFrame = CGRect(origin: CGPoint(x: sideInset, y: topInset + contentHeight), size: styleSelectionSize)
-                
-                let displayStyleSelection = false
-                if displayStyleSelection {
-                    contentHeight += topInset + styleSelectionSize.height
-                } else {
-                    styleSelectionFrame.origin.y -= styleSelectionSize.height
-                }
-                
+                let styleSelectionFrame = CGRect(origin: CGPoint(x: sideInset, y: topInset + contentHeight - styleSelectionSize.height), size: styleSelectionSize)
+
                 if let styleSelectionView = self.styleSelection.view {
                     if styleSelectionView.superview == nil {
                         self.styleSelection.parentState = state
@@ -656,7 +649,7 @@ final class TextProcessingTranslateContentComponent: Component {
                         self.addSubview(self.styleSelectionContainer)
                     }
                     transition.setFrame(view: styleSelectionView, frame: styleSelectionFrame)
-                    transition.setAlpha(view: styleSelectionView, alpha: displayStyleSelection ? 1.0 : 0.0)
+                    transition.setAlpha(view: styleSelectionView, alpha: 0.0)
                 }
             } else {
                 contentHeight += topInset

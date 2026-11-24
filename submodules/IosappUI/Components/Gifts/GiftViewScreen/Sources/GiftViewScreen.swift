@@ -967,14 +967,7 @@ private final class GiftViewSheetContent: CombinedComponent {
             }
         }
         
-        func isMyWalletGift(_ gift: StarGift.UniqueGift) -> Bool {
-            return false
-        }
-        
         func onchainProfileDisplayState(_ gift: StarGift.UniqueGift) -> Bool? {
-            if self.isMyWalletGift(gift) {
-                return gift.hostPeerId != nil
-            }
             if let hostPeerId = gift.hostPeerId {
                 if hostPeerId == self.context.account.peerId {
                     return true
@@ -1751,35 +1744,7 @@ private final class GiftViewSheetContent: CombinedComponent {
             }
         }
         
-        func depositGift(_ gift: StarGift.UniqueGift) {
-            guard let controller = self.getController() as? GiftViewScreen else {
-                return
-            }
-            controller.dismissAllTooltips()
-            
-            let context = self.context
-            let _ = (context.account.stateManager.contactBirthdays
-            |> take(1)
-            |> deliverOnMainQueue).start(next: { [weak controller] birthdays in
-                guard let controller else {
-                    return
-                }
-                let transferController = context.sharedContext.makePremiumGiftController(context: context, source: .starGiftDeposit(birthdays, gift), completion: { peerIds in
-                    guard let peerId = peerIds.first else {
-                        return .complete()
-                    }
-                    return depositStarGiftFromWallet(context: context, gift: gift, peerId: peerId)
-                    |> deliverOnMainQueue
-                })
-                controller.push(transferController)
-            })
-        }
-        
         func transferGift() {
-            if let arguments = self.subject.arguments, case let .unique(gift) = arguments.gift, self.isMyWalletGift(gift) {
-                self.depositGift(gift)
-                return
-            }
             guard let arguments = self.subject.arguments, let controller = self.getController() as? GiftViewScreen, case let .unique(gift) = arguments.gift, let reference = arguments.reference, let transferStars = arguments.transferStars else {
                 return
             }
@@ -1854,7 +1819,7 @@ private final class GiftViewSheetContent: CombinedComponent {
                 return
             }
             
-            guard gift.hostPeerId == nil && !self.isMyWalletGift(gift) else {
+            guard gift.hostPeerId == nil else {
                 self.presentActionLockedForHostedGift(gift: gift)
                 return
             }
@@ -2266,7 +2231,7 @@ private final class GiftViewSheetContent: CombinedComponent {
                     })))
                 }
                 
-                if arguments.transferStars != nil || self.isMyWalletGift(gift) {
+                if arguments.transferStars != nil {
                     if case let .channel(channel) = peer, !channel.flags.contains(.isCreator) {
                         
                     } else {
@@ -3232,7 +3197,6 @@ private final class GiftViewSheetContent: CombinedComponent {
             var isChannelGift = false
             var isMyOwnedUniqueGift = false
             var isMyHostedUniqueGift = false
-            var isMyWalletGift = false
             var releasedByPeer: EnginePeer?
             var canGiftUpgrade = false
             var isDismantled = false
@@ -3287,7 +3251,6 @@ private final class GiftViewSheetContent: CombinedComponent {
                     limitTotal = nil
                     convertStars = nil
                     uniqueGift = gift
-                    isMyWalletGift = state.isMyWalletGift(gift)
                     if let hostPeerId = gift.hostPeerId {
                         if hostPeerId == component.context.account.peerId {
                             isMyHostedUniqueGift = true
@@ -3451,7 +3414,7 @@ private final class GiftViewSheetContent: CombinedComponent {
             }
                                     
             var originY: CGFloat = 0.0
-            let displaysHeaderButtons = isMyOwnedUniqueGift || isMyHostedUniqueGift || isMyWalletGift || isChannelGift
+            let displaysHeaderButtons = isMyOwnedUniqueGift || isMyHostedUniqueGift || isChannelGift
             let headerButtonHeight: CGFloat = 58.0
             let headerButtonsBottomInset: CGFloat = 16.0
                         
@@ -4856,7 +4819,7 @@ private final class GiftViewSheetContent: CombinedComponent {
                                 canTransfer = false
                             }
                             canResell = false
-                        } else if subject.arguments?.transferStars == nil && !isMyWalletGift {
+                        } else if subject.arguments?.transferStars == nil {
                             canTransfer = false
                         }
                         
@@ -4884,7 +4847,7 @@ private final class GiftViewSheetContent: CombinedComponent {
                                     title: strings.Gift_View_Header_Transfer,
                                     buttonColor: buttonColor,
                                     iconName: "Premium/Collectible/Transfer",
-                                    isLocked: isMyHostedUniqueGift && !isMyWalletGift,
+                                    isLocked: isMyHostedUniqueGift,
                                     action: { [weak state] in
                                         state?.transferGift()
                                     }
@@ -4968,7 +4931,7 @@ private final class GiftViewSheetContent: CombinedComponent {
                                     title: (uniqueGift.resellAmounts ?? []).isEmpty ? strings.Gift_View_Sell : strings.Gift_View_Unlist,
                                     buttonColor: buttonColor,
                                     iconName: (uniqueGift.resellAmounts ?? []).isEmpty ? "Premium/Collectible/Sell" : "Premium/Collectible/Unlist",
-                                    isLocked: isMyHostedUniqueGift || isMyWalletGift,
+                                    isLocked: isMyHostedUniqueGift,
                                     action: { [weak state] in
                                         state?.resellGift()
                                     }

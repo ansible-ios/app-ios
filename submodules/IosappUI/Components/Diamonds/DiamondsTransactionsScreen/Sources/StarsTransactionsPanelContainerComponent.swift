@@ -447,7 +447,7 @@ final class DiamondsTransactionsPanelContainerComponent: Component {
         /// VoiceOver: the tabs before the page (the page container starts above them, at the top of the panel).
         override var accessibilityElements: [Any]? {
             get {
-                return [self.tabsBackgroundContainer, self.clippingView]
+                return [self.header.view, self.clippingView].compactMap { $0 }
             } set(value) {
             }
         }

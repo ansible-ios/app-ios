@@ -274,7 +274,7 @@ final class BottomPanelComponent: Component {
                     strings: component.strings,
                     style: .gift,
                     placeholder: .plain(component.strings.ShareScreen_Caption),
-                    sendPaidMessageStars: nil,
+                    sendPaidMessageDiamonds: nil,
                     maxLength: 1024,
                     queryTypes: [],
                     alwaysDarkWhenHasText: false,

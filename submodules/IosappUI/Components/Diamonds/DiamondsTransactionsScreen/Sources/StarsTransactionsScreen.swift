@@ -516,11 +516,7 @@ final class DiamondsTransactionsScreenComponent: Component {
             if let diamondView = self.diamondView.view {
                 if diamondView.superview == nil {
                     if let navigationBar = environment.controller()?.navigationBar {
-                        if let titleView = self.titleView.view, titleView.superview != nil {
-                            navigationBar.view.insertSubview(diamondView, belowSubview: titleView)
-                        } else {
-                            navigationBar.view.insertSubview(diamondView, aboveSubview: navigationBar.backgroundView)
-                        }
+                        navigationBar.customOverBackgroundContentView.insertSubview(diamondView, at: 0)
                     }
                 }
                 diamondTransition.setBounds(view: diamondView, bounds: diamondFrame)
@@ -554,7 +550,7 @@ final class DiamondsTransactionsScreenComponent: Component {
                     if let navigationBar = environment.controller()?.navigationBar {
                         // The page title ("Iosapp Stars", "Gram Balance").
                         titleView.accessibilityTraits = .header
-                        navigationBar.customOverBackgroundContentView.insertSubview(titleView, at: 0)
+                        navigationBar.customOverBackgroundContentView.addSubview(titleView)
                     }
                 }
                 diamondTransition.setBounds(view: titleView, bounds: CGRect(origin: .zero, size: titleSize))

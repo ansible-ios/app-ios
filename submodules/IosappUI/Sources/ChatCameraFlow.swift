@@ -177,7 +177,7 @@ final class ChatCameraFlow {
         self.output = output
 
         let editingContext = TGMediaEditingContext()
-        editingContext.sendPaidMessageStars = parameters.sendPaidMessageStars
+        editingContext.sendPaidMessageDiamonds = parameters.sendPaidMessageStars
         if parameters.initialCaption.length > 0 {
             editingContext.setForcedCaption(parameters.initialCaption)
         }

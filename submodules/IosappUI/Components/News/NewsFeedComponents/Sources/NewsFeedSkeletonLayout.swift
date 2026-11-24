@@ -37,7 +37,7 @@ public func newsFeedSkeletonRowLayout(context: AccountContext, theme: Presentati
         approximateBoostLevel: nil,
         subscriptionUntilDate: nil,
         verificationIconFileId: nil,
-        sendPaidMessageStars: nil,
+        sendPaidMessageDiamonds: nil,
         linkedMonoforumId: nil
     ))
     let timestamp = Int32(Date().timeIntervalSince1970) - 60 * 60

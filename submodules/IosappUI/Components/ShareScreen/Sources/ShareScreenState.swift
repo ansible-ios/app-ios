@@ -97,7 +97,7 @@ final class ShareScreenState {
 
     func messagingRequirement(for peer: EnginePeer) -> ShareScreenMessagingRequirement {
         if let requirement = self.messagingRequirements[peer.id] { return requirement }
-        if case let .channel(channel) = peer { return ShareScreenMessagingRequirement(stars: channel.sendPaidMessageStars) }
+        if case let .channel(channel) = peer { return ShareScreenMessagingRequirement(stars: channel.sendPaidMessageDiamonds) }
         return ShareScreenMessagingRequirement()
     }
 
@@ -124,7 +124,7 @@ final class ShareScreenState {
         }))
         let refreshIds = Set(peers.compactMap { peer -> EnginePeer.Id? in
             guard newIds.contains(peer.id), case let .user(user) = peer,
-                  user.flags.contains(.requirePremium) || user.flags.contains(.requireStars) else { return nil }
+                  user.flags.contains(.requirePremium) || user.flags.contains(.requireDiamonds) else { return nil }
             return peer.id
         })
         if !refreshIds.isEmpty {
@@ -132,7 +132,7 @@ final class ShareScreenState {
         }
         self.requirementsDisposable.set((self.context.engine.data.subscribe(
             EngineDataMap(ids.map(IosappEngine.EngineData.Item.Peer.IsPremiumRequiredForMessaging.init(id:))),
-            EngineDataMap(ids.map(IosappEngine.EngineData.Item.Peer.SendPaidMessageStars.init(id:)))
+            EngineDataMap(ids.map(IosappEngine.EngineData.Item.Peer.SendPaidMessageDiamonds.init(id:)))
         ) |> deliverOnMainQueue).start(next: { [weak self] premium, stars in
             guard let self else { return }
             var changed = false
