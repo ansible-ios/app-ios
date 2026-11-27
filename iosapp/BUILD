@@ -599,6 +599,9 @@ plist_fragment(
     extension = "entitlements",
     template = "".join([
         aps_fragment,
+        # Only an Apple-issued production profile can authorize this entitlement.
+        ("<key>com.apple.developer.devicecheck.appattest-environment</key><string>production</string>"
+         if telegram_bundle_id == "su.ansible.messenger" and telegram_team_id != "ANSIBLECI0" else ""),
         app_groups_fragment,
         siri_fragment,
         associated_domains_fragment,

@@ -1,4 +1,8 @@
 import Foundation
+#if os(iOS)
+import DeviceCheck
+import CryptoKit
+#endif
 import Postbox
 import SwiftSignalKit
 internal import IosappApi
@@ -1489,6 +1493,72 @@ public enum SignUpError {
     case invalidLastName
 }
 
+#if os(iOS)
+private let signupDeviceKeys: NSCache<NSString, NSString> = {
+    let cache = NSCache<NSString, NSString>()
+    cache.countLimit = 4
+    return cache
+}()
+
+private let signupAttestations: NSCache<NSString, NSData> = {
+    let cache = NSCache<NSString, NSData>()
+    cache.countLimit = 4
+    return cache
+}()
+
+private func signupDeviceProof(codeHash: String) -> Signal<Data, MTRpcError> {
+    return Signal { subscriber in
+        let failure = { subscriber.putError(MTRpcError(errorCode: 403, errorDescription: "SIGNUP_DEVICE_ATTESTATION_REQUIRED")) }
+        guard #available(iOS 14.0, *), DCAppAttestService.shared.isSupported else {
+            failure()
+            return EmptyDisposable
+        }
+        let service = DCAppAttestService.shared
+        let challenge = Data(SHA256.hash(data: Data(("ansible.signup.v1\n" + codeHash).utf8)))
+        let attest: (String) -> Void = { key in
+            guard let keyBytes = Data(base64Encoded: key), keyBytes.count == 32 else { failure(); return }
+            let sign: (Data) -> Void = { attestation in
+                service.generateAssertion(key, clientDataHash: challenge) { assertion, error in
+                    guard let assertion, error == nil else { failure(); return }
+                    var length = UInt32(attestation.count).bigEndian
+                    var proof = keyBytes
+                    withUnsafeBytes(of: &length) { proof.append(contentsOf: $0) }
+                    proof.append(attestation)
+                    proof.append(assertion)
+                    subscriber.putNext(proof)
+                    subscriber.putCompletion()
+                }
+            }
+            if let cached = signupAttestations.object(forKey: key as NSString) {
+                sign(cached as Data)
+            } else {
+                service.attestKey(key, clientDataHash: challenge) { attestation, error in
+                    guard let attestation, error == nil, attestation.count < 60000 else {
+                        if (error as NSError?)?.code == DCError.Code.invalidKey.rawValue {
+                            signupDeviceKeys.removeObject(forKey: codeHash as NSString)
+                        }
+                        failure()
+                        return
+                    }
+                    signupAttestations.setObject(attestation as NSData, forKey: key as NSString)
+                    sign(attestation)
+                }
+            }
+        }
+        if let key = signupDeviceKeys.object(forKey: codeHash as NSString) {
+            attest(key as String)
+        } else {
+            service.generateKey { key, error in
+                guard let key, error == nil else { failure(); return }
+                signupDeviceKeys.setObject(key as NSString, forKey: codeHash as NSString)
+                attest(key)
+            }
+        }
+        return EmptyDisposable
+    }
+}
+#endif
+
 public func signUpWithName(accountManager: AccountManager<IosappAccountManagerTypes>, account: UnauthorizedAccount, firstName: String, lastName: String, avatarData: Data?, avatarVideo: Signal<UploadedPeerPhotoData?, NoError>?, videoStartTimestamp: Double?, disableJoinNotifications: Bool = false, forcedPasswordSetupNotice: @escaping (Int32) -> (NoticeEntryKey, CodableEntry)?) -> Signal<Void, SignUpError> {
     return account.postbox.transaction { transaction -> Signal<Void, SignUpError> in
         if let state = transaction.getState() as? UnauthorizedAccountState, case let .signUp(number, codeHash, _, _, _, syncContacts) = state.contents {
@@ -1496,7 +1566,15 @@ public func signUpWithName(accountManager: AccountManager<IosappAccountManagerTy
             if disableJoinNotifications {
                 flags |= (1 << 0)
             }
-            return account.network.request(Api.functions.auth.signUp(flags: flags, phoneNumber: number, phoneCodeHash: codeHash, firstName: firstName, lastName: lastName))
+            #if os(iOS)
+            let signup = signupDeviceProof(codeHash: codeHash)
+            |> mapToSignal { proof in
+                account.network.request(Api.functions.auth.signUpAttested(flags: flags, phoneNumber: number, phoneCodeHash: codeHash, firstName: firstName, lastName: lastName, proof: Buffer(data: proof)))
+            }
+            #else
+            let signup = account.network.request(Api.functions.auth.signUp(flags: flags, phoneNumber: number, phoneCodeHash: codeHash, firstName: firstName, lastName: lastName))
+            #endif
+            return signup
             |> mapError { error -> SignUpError in
                 if error.errorDescription.hasPrefix("FLOOD_WAIT") {
                     return .limitExceeded
